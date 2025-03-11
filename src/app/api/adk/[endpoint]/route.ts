@@ -2,11 +2,17 @@ import { NextRequest, NextResponse } from 'next/server';
 import path from 'path';
 import fs from 'fs/promises';
 
+type RouteParams = {
+  params: {
+    endpoint: string;
+  };
+};
+
 export async function GET(
   request: NextRequest,
-  { params }: { params: { endpoint: string } }
+  context: RouteParams
 ) {
-  const { endpoint } = params;
+  const { endpoint } = context.params;
   
   try {
     // Define path to data file
