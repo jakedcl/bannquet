@@ -3,7 +3,7 @@ import path from 'path';
 import fs from 'fs/promises';
 
 export async function GET(
-  _request: NextRequest,
+  request: NextRequest,
   { params }: { params: { endpoint: string } }
 ) {
   const { endpoint } = params;
