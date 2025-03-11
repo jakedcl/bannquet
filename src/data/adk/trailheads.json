@@ -1,0 +1,108 @@
+[
+    {
+        "name": "Trombley Landing Trailhead",
+        "coordinates": [
+            -74.3580849,
+            44.2438615
+        ],
+        "elevation": null,
+        "type": "trailheads",
+        "source": "Trailheads"
+    },
+    {
+        "name": "Moose Pond Trailhead",
+        "coordinates": [
+            -74.0865722,
+            44.3751756
+        ],
+        "elevation": null,
+        "type": "trailheads",
+        "source": "Trailheads"
+    },
+    {
+        "name": "Garden Trail Register",
+        "coordinates": [
+            -73.8163314,
+            44.1888713
+        ],
+        "elevation": null,
+        "type": "trailheads",
+        "source": "Parking"
+    },
+    {
+        "name": "Indian Head Trailhead",
+        "coordinates": [
+            -73.7678897,
+            44.149747
+        ],
+        "elevation": null,
+        "type": "trailheads",
+        "source": "Trailheads"
+    },
+    {
+        "name": "Floodwood Mountain Trailhead Sign",
+        "coordinates": [
+            -74.4449059,
+            44.3372909
+        ],
+        "elevation": null,
+        "type": "trailheads",
+        "source": "Trailheads"
+    },
+    {
+        "name": "Scarface Mountain Trailhead",
+        "coordinates": [
+            -74.083438,
+            44.2981378
+        ],
+        "elevation": null,
+        "type": "trailheads",
+        "source": "Trailheads"
+    },
+    {
+        "name": "Sunshine City trailhead register",
+        "coordinates": [
+            -73.7236116,
+            44.1273552
+        ],
+        "elevation": null,
+        "type": "trailheads",
+        "source": "Trailheads"
+    },
+    {
+        "name": "cascade mountain summit",
+        "coordinates": [
+            -73.860204,
+            44.218563
+        ],
+        "category": "trailheads",
+        "source": "mapbox_pins_combined"
+    },
+    {
+        "name": "roostercomb trail head",
+        "coordinates": [
+            -73.787012,
+            44.187497
+        ],
+        "category": "trailheads",
+        "source": "mapbox_pins_combined"
+    },
+    {
+        "name": "cascade mountain foot trail",
+        "coordinates": [
+            -73.887455,
+            44.218483
+        ],
+        "category": "trailheads",
+        "source": "mapbox_pins_combined"
+    },
+    {
+        "name": "henry's woods",
+        "coordinates": [
+            -73.982532,
+            44.263777
+        ],
+        "category": "trailheads",
+        "source": "mapbox_pins_combined"
+    }
+]

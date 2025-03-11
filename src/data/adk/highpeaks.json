@@ -1,0 +1,324 @@
+[
+    {
+        "name": "Mount Marcy",
+        "coordinates": [-73.923000, 44.113000],
+        "elevation": "5344",
+        "type": "peaks",
+        "source": "Peaks"
+    },
+    {
+        "name": "Algonquin Peak",
+        "coordinates": [-73.987000, 44.144000],
+        "elevation": "5114",
+        "type": "peaks",
+        "source": "Peaks"
+    },
+    {
+        "name": "Haystack Mountain",
+        "coordinates": [-73.901000, 44.106000],
+        "elevation": "4960",
+        "type": "peaks",
+        "source": "Peaks"
+    },
+    {
+        "name": "Mount Skylight",
+        "coordinates": [-73.931000, 44.099000],
+        "elevation": "4926",
+        "type": "peaks",
+        "source": "Peaks"
+    },
+    {
+        "name": "Whiteface Mountain",
+        "coordinates": [-73.903000, 44.366000],
+        "elevation": "4867",
+        "type": "peaks",
+        "source": "Peaks"
+    },
+    {
+        "name": "Dix Mountain",
+        "coordinates": [-73.786700, 44.082400],
+        "elevation": "4857",
+        "type": "peaks",
+        "source": "Peaks"
+    },
+    {
+        "name": "Gray Peak",
+        "coordinates": [-73.935000, 44.111000],
+        "elevation": "4840",
+        "type": "peaks",
+        "source": "Peaks"
+    },
+    {
+        "name": "Iroquois Peak",
+        "coordinates": [-73.999000, 44.137000],
+        "elevation": "4840",
+        "type": "peaks",
+        "source": "Peaks"
+    },
+    {
+        "name": "Basin Mountain",
+        "coordinates": [-73.887000, 44.121000],
+        "elevation": "4827",
+        "type": "peaks",
+        "source": "Peaks"
+    },
+    {
+        "name": "Gothics Mountain",
+        "coordinates": [-73.858000, 44.128000],
+        "elevation": "4736",
+        "type": "peaks",
+        "source": "Peaks"
+    },
+    {
+        "name": "Mount Colden",
+        "coordinates": [-73.960000, 44.127000],
+        "elevation": "4714",
+        "type": "peaks",
+        "source": "Peaks"
+    },
+    {
+        "name": "Giant Mountain",
+        "coordinates": [-73.720400, 44.161300],
+        "elevation": "4627",
+        "type": "peaks",
+        "source": "Peaks"
+    },
+    {
+        "name": "Nippletop Mountain",
+        "coordinates": [-73.816000, 44.089000],
+        "elevation": "4620",
+        "type": "peaks",
+        "source": "Peaks"
+    },
+    {
+        "name": "Santanoni Peak",
+        "coordinates": [-74.131000, 44.082000],
+        "elevation": "4607",
+        "type": "peaks",
+        "source": "Peaks"
+    },
+    {
+        "name": "Redfield Peak",
+        "coordinates": [-73.950000, 44.095000],
+        "elevation": "4606",
+        "type": "peaks",
+        "source": "Peaks"
+    },
+    {
+        "name": "Wright Peak",
+        "coordinates": [-73.981000, 44.152000],
+        "elevation": "4580",
+        "type": "peaks",
+        "source": "Peaks"
+    },
+    {
+        "name": "Saddleback Mountain",
+        "coordinates": [-73.875000, 44.126000],
+        "elevation": "4515",
+        "type": "peaks",
+        "source": "Peaks"
+    },
+    {
+        "name": "Panther Peak",
+        "coordinates": [-74.133000, 44.098000],
+        "elevation": "4442",
+        "type": "peaks",
+        "source": "Peaks"
+    },
+    {
+        "name": "Tabletop Mountain",
+        "coordinates": [-73.916400, 44.140600],
+        "elevation": "4427",
+        "type": "peaks",
+        "source": "Peaks"
+    },
+    {
+        "name": "Rocky Peak Ridge",
+        "coordinates": [-73.705500, 44.154400],
+        "elevation": "4420",
+        "type": "peaks",
+        "source": "Peaks"
+    },
+    {
+        "name": "Macomb Mountain",
+        "coordinates": [-73.781000, 44.052000],
+        "elevation": "4405",
+        "type": "peaks",
+        "source": "Peaks"
+    },
+    {
+        "name": "Armstrong Mountain",
+        "coordinates": [-73.849700, 44.134600],
+        "elevation": "4400",
+        "type": "peaks",
+        "source": "Peaks"
+    },
+    {
+        "name": "Hough Peak",
+        "coordinates": [-73.778000, 44.069000],
+        "elevation": "4400",
+        "type": "peaks",
+        "source": "Peaks"
+    },
+    {
+        "name": "Seward Mountain",
+        "coordinates": [-74.199300, 44.159800],
+        "elevation": "4361",
+        "type": "peaks",
+        "source": "Peaks"
+    },
+    {
+        "name": "Mount Marshall",
+        "coordinates": [-74.011800, 44.127600],
+        "elevation": "4360",
+        "type": "peaks",
+        "source": "Peaks"
+    },
+    {
+        "name": "Allen Mountain",
+        "coordinates": [-73.939900, 44.070900],
+        "elevation": "4340",
+        "type": "peaks",
+        "source": "Peaks"
+    },
+    {
+        "name": "Big Slide Mountain",
+        "coordinates": [-73.870400, 44.182300],
+        "elevation": "4240",
+        "type": "peaks",
+        "source": "Peaks"
+    },
+    {
+        "name": "Esther Mountain",
+        "coordinates": [-73.889900, 44.387200],
+        "elevation": "4240",
+        "type": "peaks",
+        "source": "Peaks"
+    },
+    {
+        "name": "Upper Wolfjaw Mountain",
+        "coordinates": [-73.845300, 44.140400],
+        "elevation": "4185",
+        "type": "peaks",
+        "source": "Peaks"
+    },
+    {
+        "name": "Lower Wolfjaw Mountain",
+        "coordinates": [-73.832600, 44.148400],
+        "elevation": "4175",
+        "type": "peaks",
+        "source": "Peaks"
+    },
+    {
+        "name": "Street Mountain",
+        "coordinates": [-74.026960, 44.179430],
+        "elevation": "4166",
+        "type": "peaks",
+        "source": "Peaks"
+    },
+    {
+        "name": "Phelps Mountain",
+        "coordinates": [-73.921000, 44.157000],
+        "elevation": "4161",
+        "type": "peaks",
+        "source": "Peaks"
+    },
+    {
+        "name": "Donaldson Mountain",
+        "coordinates": [-74.211600, 44.154000],
+        "elevation": "4140",
+        "type": "peaks",
+        "source": "Peaks"
+    },
+    {
+        "name": "Seymour Mountain",
+        "coordinates": [-74.172600, 44.158000],
+        "elevation": "4120",
+        "type": "peaks",
+        "source": "Peaks"
+    },
+    {
+        "name": "Sawteeth Mountain",
+        "coordinates": [-73.850400, 44.113900],
+        "elevation": "4100",
+        "type": "peaks",
+        "source": "Peaks"
+    },
+    {
+        "name": "Cascade Mountain",
+        "coordinates": [-73.860100, 44.218700],
+        "elevation": "4098",
+        "type": "peaks",
+        "source": "Peaks"
+    },
+    {
+        "name": "South Dix Mountain",
+        "coordinates": [-73.774300, 44.060100],
+        "elevation": "4060",
+        "type": "peaks",
+        "source": "Peaks"
+    },
+    {
+        "name": "Porter Mountain",
+        "coordinates": [-73.853800, 44.212400],
+        "elevation": "4059",
+        "type": "peaks",
+        "source": "Peaks"
+    },
+    {
+        "name": "Mount Colvin",
+        "coordinates": [-73.834300, 44.093900],
+        "elevation": "4057",
+        "type": "peaks",
+        "source": "Peaks"
+    },
+    {
+        "name": "Mount Emmons",
+        "coordinates": [-74.214300, 44.143800],
+        "elevation": "4040",
+        "type": "peaks",
+        "source": "Peaks"
+    },
+    {
+        "name": "Dial Mountain",
+        "coordinates": [-73.796000, 44.105900],
+        "elevation": "4020",
+        "type": "peaks",
+        "source": "Peaks"
+    },
+    {
+        "name": "Grace Peak",
+        "coordinates": [-73.757400, 44.065300],
+        "elevation": "4012",
+        "type": "peaks",
+        "source": "Peaks"
+    },
+    {
+        "name": "Blake Peak",
+        "coordinates": [-73.844500, 44.081300],
+        "elevation": "3960",
+        "type": "peaks",
+        "source": "Peaks"
+    },
+    {
+        "name": "Cliff Mountain",
+        "coordinates": [-73.975100, 44.103100],
+        "elevation": "3960",
+        "type": "peaks",
+        "source": "Peaks"
+    },
+    {
+        "name": "Nye Mountain",
+        "coordinates": [-74.023840, 44.187200],
+        "elevation": "3895",
+        "type": "peaks",
+        "source": "Peaks"
+    },
+    {
+        "name": "Couchsachraga Peak",
+        "coordinates": [-74.160300, 44.095500],
+        "elevation": "3820",
+        "type": "peaks",
+        "source": "Peaks"
+    }
+]

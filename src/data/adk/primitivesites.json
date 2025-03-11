@@ -1,0 +1,2552 @@
+[
+    {
+        "name": "Cooper Kill Pond Trailhead",
+        "coordinates": [
+            -73.8004588,
+            44.4318349
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "Mountain Camp Dam",
+        "coordinates": [
+            -74.5627795,
+            44.139187
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Water Bodies_Waterways"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -73.939981,
+            44.1533083
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "Lincoln Pond Interior Campsites",
+        "coordinates": [
+            -73.5738884,
+            44.1539396
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "Lincoln Pond Interior Campsites",
+        "coordinates": [
+            -73.5553918,
+            44.1650232
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -73.8089247,
+            44.0602741
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -73.9430052,
+            44.1311257
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "Wanika Falls campsite",
+        "coordinates": [
+            -74.0563812,
+            44.1994209
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.2413566,
+            44.1835075
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "Calamity Brook",
+        "coordinates": [
+            -74.0217619,
+            44.1047831
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -73.9934824,
+            44.1133289
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -73.9930069,
+            44.1134933
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -73.9393362,
+            44.1535663
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -73.9543799,
+            44.1465875
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -73.9546684,
+            44.1448749
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -73.9551506,
+            44.1145491
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -73.9543999,
+            44.11415
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -73.7497468,
+            44.0848325
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -73.9788616,
+            44.1593535
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "Sno-bird",
+        "coordinates": [
+            -73.895828,
+            44.1153933
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -73.85689,
+            44.1618136
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -73.8573232,
+            44.1620887
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -73.8573795,
+            44.1619867
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -73.8647927,
+            44.1572769
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -73.8647178,
+            44.1575667
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -73.8639892,
+            44.1582656
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -73.8838673,
+            44.1457956
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -73.8843811,
+            44.1438113
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -73.8991963,
+            44.1268339
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -73.8991802,
+            44.1266308
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -73.8998831,
+            44.1260138
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -73.8506657,
+            44.155073
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -73.9712779,
+            44.129049
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -73.9434228,
+            44.1314126
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -73.9816502,
+            44.1248405
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -73.8132083,
+            44.1147914
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -73.8144868,
+            44.1139013
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -73.8171531,
+            44.1105126
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -73.738957,
+            44.1424184
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -73.7389285,
+            44.1425385
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -73.738823,
+            44.141717
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "East River Trail",
+        "coordinates": [
+            -74.0036527,
+            44.0891918
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -73.7311569,
+            44.1238069
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -73.7321588,
+            44.1238209
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -73.8256627,
+            44.0957939
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -73.8252816,
+            44.0963332
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -73.8232806,
+            44.1449319
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "Gulf Brook Campsite #2",
+        "coordinates": [
+            -73.717334,
+            44.2532838
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "Gulf Brook Campsite #1",
+        "coordinates": [
+            -73.7179645,
+            44.2527787
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "Lost Pond Campsite",
+        "coordinates": [
+            -73.7123513,
+            44.2600333
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -73.7140606,
+            44.0879937
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -73.8090746,
+            44.0608854
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -73.8056897,
+            44.0443871
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -73.8057339,
+            44.0449183
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -73.8057996,
+            44.0454466
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -73.8280258,
+            44.1808748
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -73.9138202,
+            44.1000361
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -73.7508506,
+            44.1422608
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -73.7516043,
+            44.141643
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -73.7504831,
+            44.1412926
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -73.749893,
+            44.1418605
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -73.7500995,
+            44.141899
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -73.6869098,
+            44.105721
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "#2",
+        "coordinates": [
+            -74.3168132,
+            44.2015651
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "#3",
+        "coordinates": [
+            -74.3102944,
+            44.1999093
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "#7",
+        "coordinates": [
+            -74.2907514,
+            44.1978026
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "#6",
+        "coordinates": [
+            -74.2991061,
+            44.1967616
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "#5",
+        "coordinates": [
+            -74.3010693,
+            44.1961912
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "#8",
+        "coordinates": [
+            -74.282219,
+            44.1977249
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "#9",
+        "coordinates": [
+            -74.2697701,
+            44.1941429
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.1835606,
+            44.1828022
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.1833514,
+            44.1826848
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -73.8622467,
+            44.1462806
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -73.8622943,
+            44.1464832
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -73.8625042,
+            44.1465857
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -73.83312,
+            44.1777021
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "#4",
+        "coordinates": [
+            -74.3073451,
+            44.1980426
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "#10",
+        "coordinates": [
+            -74.2698842,
+            44.195576
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3084302,
+            44.3818311
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.366727,
+            44.0287829
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3811177,
+            44.0075206
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.0531432,
+            44.1476819
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -73.8490193,
+            44.1614993
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "Cold River Campsite",
+        "coordinates": [
+            -74.2645794,
+            44.0893729
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -73.7180262,
+            44.1087311
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "Lillypad Pond campsite",
+        "coordinates": [
+            -73.7253365,
+            44.1017038
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -73.7110528,
+            44.1127706
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -73.7094005,
+            44.1128907
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "Designated Campsite",
+        "coordinates": [
+            -73.7390596,
+            44.093141
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "Designated Campsite",
+        "coordinates": [
+            -73.7354413,
+            44.0942718
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "Designated Campsite",
+        "coordinates": [
+            -73.7753767,
+            44.1068168
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "Camping site",
+        "coordinates": [
+            -73.8777593,
+            44.0616839
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.1881122,
+            44.4507315
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3265357,
+            44.3841473
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3296899,
+            44.3815403
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3210267,
+            44.3836832
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3190526,
+            44.3868422
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3130444,
+            44.3867655
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3045472,
+            44.3784383
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3135379,
+            44.3787604
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3081306,
+            44.375463
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3161129,
+            44.3738065
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3025266,
+            44.3828938
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3009353,
+            44.3836228
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.2977167,
+            44.3810924
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.2976094,
+            44.3870577
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.2912794,
+            44.3881311
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.2946268,
+            44.3922098
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.2907,
+            44.3942644
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.2873741,
+            44.3927465
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.2902923,
+            44.3994006
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.2848206,
+            44.3968555
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3575382,
+            44.3192557
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3576455,
+            44.3223414
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3535042,
+            44.3246133
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3620658,
+            44.3247207
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3556714,
+            44.3268391
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3558645,
+            44.3331937
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3536115,
+            44.3304923
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3529248,
+            44.3310449
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3519592,
+            44.3324109
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3507147,
+            44.3350815
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3532252,
+            44.3352043
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.356358,
+            44.3355266
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3574953,
+            44.3382891
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.345994,
+            44.3395169
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3496632,
+            44.3394555
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.352088,
+            44.3398085
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3808198,
+            44.3402842
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.379189,
+            44.3232931
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3830299,
+            44.3225102
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3862486,
+            44.3222492
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3880296,
+            44.3226484
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3927073,
+            44.3181964
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3773973,
+            44.3233776
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3737817,
+            44.316569
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3768072,
+            44.315003
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3735456,
+            44.3139283
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3478179,
+            44.3125771
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3482685,
+            44.3131759
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3498778,
+            44.3131452
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3448138,
+            44.3151105
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3465304,
+            44.3155404
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3462729,
+            44.3163541
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3437409,
+            44.3171831
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3535685,
+            44.3142967
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3550491,
+            44.3136826
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.352839,
+            44.3169375
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3536544,
+            44.3169835
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3511653,
+            44.3184574
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3501568,
+            44.3193631
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3562078,
+            44.3192403
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3521094,
+            44.3218348
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3380761,
+            44.3201461
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3385911,
+            44.3207448
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3406296,
+            44.3219115
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.341445,
+            44.3221878
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.343183,
+            44.3224488
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3468738,
+            44.3218348
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3489337,
+            44.3224488
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3474531,
+            44.3233392
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3483543,
+            44.3260102
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3498349,
+            44.3252273
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3473726,
+            44.3295406
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3434244,
+            44.3319198
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3439609,
+            44.3320809
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3411821,
+            44.3332474
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3414611,
+            44.3354575
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3434244,
+            44.3368618
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3453127,
+            44.3371688
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.4032645,
+            44.3619035
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3907118,
+            44.3583137
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.375913,
+            44.3614233
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3781729,
+            44.3646718
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3820773,
+            44.3666373
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.4046593,
+            44.3388263
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.40202,
+            44.332457
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.4029856,
+            44.3325951
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.4034147,
+            44.331843
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.4028997,
+            44.3314132
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.4122553,
+            44.3072952
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3887806,
+            44.3082626
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3440094,
+            44.3474071
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3575444,
+            44.3482581
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3510654,
+            44.3528482
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3523636,
+            44.3532865
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3559577,
+            44.3571284
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3582296,
+            44.358727
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3627493,
+            44.3587528
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.36317,
+            44.3626631
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3692524,
+            44.365499
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3851972,
+            44.3607683
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3905453,
+            44.3634555
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3961191,
+            44.3598018
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.4019771,
+            44.3573471
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3948531,
+            44.3563499
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3974495,
+            44.3529898
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3977928,
+            44.3503507
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.4004393,
+            44.3476848
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.4063544,
+            44.3495682
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.4111395,
+            44.3481258
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.4170533,
+            44.3477823
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.4052172,
+            44.3585591
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.4092941,
+            44.36017
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.4014192,
+            44.3314439
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3998313,
+            44.3314439
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3985009,
+            44.3295099
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3962049,
+            44.3320425
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3950677,
+            44.330876
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3866777,
+            44.3278368
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3851757,
+            44.3320579
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3831158,
+            44.3342834
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.4048524,
+            44.3288653
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.4071484,
+            44.3282052
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -73.7305245,
+            44.1261417
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.386724,
+            44.3802556
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.4111173,
+            44.3701442
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -73.7508799,
+            44.1415555
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -73.7509625,
+            44.1422136
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.4850625,
+            44.2132495
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.4849338,
+            44.2109733
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.4851913,
+            44.2076049
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.4870152,
+            44.2027442
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.5349262,
+            44.1578092
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.5342913,
+            44.1546853
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.5349565,
+            44.1372864
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.5380893,
+            44.1354538
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.5374242,
+            44.1336828
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.5646539,
+            44.1635522
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3323072,
+            44.1393691
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3181732,
+            44.1491495
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3163942,
+            44.1489613
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3173343,
+            44.1669466
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3171995,
+            44.1988452
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3282189,
+            44.2031474
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3441504,
+            44.2036403
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.349944,
+            44.2049478
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3661881,
+            44.2089179
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.368176,
+            44.2090709
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3783962,
+            44.213426
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3737466,
+            44.2130637
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3784412,
+            44.2176117
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3771945,
+            44.2193343
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3757812,
+            44.2267247
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3848746,
+            44.2279999
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3840321,
+            44.2333183
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3836528,
+            44.2360967
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3998169,
+            44.2324727
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.4032099,
+            44.2334995
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.0558212,
+            44.1148316
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.4437166,
+            44.345828
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "Lake Colden Campground",
+        "coordinates": [
+            -73.9818525,
+            44.1189171
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.1696224,
+            44.1770859
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.1708267,
+            44.1769606
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Primitive Campsites"
+    },
+    {
+        "name": "The Mark Twain Camp",
+        "coordinates": [
+            -74.1584373,
+            44.321661
+        ],
+        "elevation": null,
+        "type": "primitive_sites",
+        "source": "Hotels_Motels_Hostels_Lodges_Inns"
+    }
+]

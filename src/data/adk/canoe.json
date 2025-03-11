@@ -1,0 +1,572 @@
+[
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.4279244,
+            44.340283
+        ],
+        "elevation": null,
+        "type": "canoe_access_points",
+        "source": "Canoe Access Points"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3612627,
+            44.3131371
+        ],
+        "elevation": null,
+        "type": "canoe_access_points",
+        "source": "Canoe Access Points"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.295759,
+            44.3589178
+        ],
+        "elevation": null,
+        "type": "canoe_access_points",
+        "source": "Canoe Access Points"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.2941467,
+            44.3591983
+        ],
+        "elevation": null,
+        "type": "canoe_access_points",
+        "source": "Canoe Access Points"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.4093949,
+            44.324651
+        ],
+        "elevation": null,
+        "type": "canoe_access_points",
+        "source": "Canoe Access Points"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.398241,
+            44.3299367
+        ],
+        "elevation": null,
+        "type": "canoe_access_points",
+        "source": "Canoe Access Points"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3031132,
+            44.3615732
+        ],
+        "elevation": null,
+        "type": "canoe_access_points",
+        "source": "Canoe Access Points"
+    },
+    {
+        "name": "Moose Pond Hand Launch",
+        "coordinates": [
+            -74.0596639,
+            44.378863
+        ],
+        "elevation": null,
+        "type": "canoe_access_points",
+        "source": "Canoe Access Points"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3907224,
+            44.36855
+        ],
+        "elevation": null,
+        "type": "canoe_access_points",
+        "source": "Canoe Access Points"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3910301,
+            44.3691353
+        ],
+        "elevation": null,
+        "type": "canoe_access_points",
+        "source": "Canoe Access Points"
+    },
+    {
+        "name": "Lake Colby Hand Launch",
+        "coordinates": [
+            -74.1453542,
+            44.3486694
+        ],
+        "elevation": null,
+        "type": "canoe_access_points",
+        "source": "Canoe Access Points"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3784397,
+            44.3123186
+        ],
+        "elevation": null,
+        "type": "canoe_access_points",
+        "source": "Canoe Access Points"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3849155,
+            44.3118724
+        ],
+        "elevation": null,
+        "type": "canoe_access_points",
+        "source": "Canoe Access Points"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3996797,
+            44.3047636
+        ],
+        "elevation": null,
+        "type": "canoe_access_points",
+        "source": "Canoe Access Points"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3791523,
+            44.3097655
+        ],
+        "elevation": null,
+        "type": "canoe_access_points",
+        "source": "Canoe Access Points"
+    },
+    {
+        "name": "Axton Landing Hand Launch",
+        "coordinates": [
+            -74.326871,
+            44.2035397
+        ],
+        "elevation": null,
+        "type": "canoe_access_points",
+        "source": "Canoe Access Points"
+    },
+    {
+        "name": "Little Clear Pond Hand Launch",
+        "coordinates": [
+            -74.2918012,
+            44.3558485
+        ],
+        "elevation": null,
+        "type": "canoe_access_points",
+        "source": "Canoe Access Points"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3437572,
+            44.3379881
+        ],
+        "elevation": null,
+        "type": "canoe_access_points",
+        "source": "Canoe Access Points"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3447526,
+            44.336887
+        ],
+        "elevation": null,
+        "type": "canoe_access_points",
+        "source": "Canoe Access Points"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3531598,
+            44.3242777
+        ],
+        "elevation": null,
+        "type": "canoe_access_points",
+        "source": "Canoe Access Points"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3526366,
+            44.3246119
+        ],
+        "elevation": null,
+        "type": "canoe_access_points",
+        "source": "Canoe Access Points"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3620329,
+            44.326142
+        ],
+        "elevation": null,
+        "type": "canoe_access_points",
+        "source": "Canoe Access Points"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3610557,
+            44.3255993
+        ],
+        "elevation": null,
+        "type": "canoe_access_points",
+        "source": "Canoe Access Points"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.360453,
+            44.3279761
+        ],
+        "elevation": null,
+        "type": "canoe_access_points",
+        "source": "Canoe Access Points"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3592668,
+            44.3281985
+        ],
+        "elevation": null,
+        "type": "canoe_access_points",
+        "source": "Canoe Access Points"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3485531,
+            44.3361435
+        ],
+        "elevation": null,
+        "type": "canoe_access_points",
+        "source": "Canoe Access Points"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3471691,
+            44.3360394
+        ],
+        "elevation": null,
+        "type": "canoe_access_points",
+        "source": "Canoe Access Points"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.358527,
+            44.3138705
+        ],
+        "elevation": null,
+        "type": "canoe_access_points",
+        "source": "Canoe Access Points"
+    },
+    {
+        "name": "Follensby Clear Pond Hand Launch #1",
+        "coordinates": [
+            -74.3359283,
+            44.3197489
+        ],
+        "elevation": null,
+        "type": "canoe_access_points",
+        "source": "Canoe Access Points"
+    },
+    {
+        "name": "Follensby Clear Pond Hand Launch #2",
+        "coordinates": [
+            -74.3468937,
+            44.3105604
+        ],
+        "elevation": null,
+        "type": "canoe_access_points",
+        "source": "Canoe Access Points"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3461524,
+            44.3394261
+        ],
+        "elevation": null,
+        "type": "canoe_access_points",
+        "source": "Canoe Access Points"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.401656,
+            44.3476582
+        ],
+        "elevation": null,
+        "type": "canoe_access_points",
+        "source": "Canoe Access Points"
+    },
+    {
+        "name": "Floodwood Pond Hand Launch",
+        "coordinates": [
+            -74.4051092,
+            44.3386485
+        ],
+        "elevation": null,
+        "type": "canoe_access_points",
+        "source": "Canoe Access Points"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.4102506,
+            44.3234746
+        ],
+        "elevation": null,
+        "type": "canoe_access_points",
+        "source": "Canoe Access Points"
+    },
+    {
+        "name": "The Dock",
+        "coordinates": [
+            -74.2702489,
+            44.4339218
+        ],
+        "elevation": null,
+        "type": "canoe_access_points",
+        "source": "Water Bodies_Waterways"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.3902804,
+            44.365925
+        ],
+        "elevation": null,
+        "type": "canoe_access_points",
+        "source": "Canoe Access Points"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.4049618,
+            44.3625616
+        ],
+        "elevation": null,
+        "type": "canoe_access_points",
+        "source": "Canoe Access Points"
+    },
+    {
+        "name": "Mirror Lake Hand Launch",
+        "coordinates": [
+            -73.9776016,
+            44.2962659
+        ],
+        "elevation": null,
+        "type": "canoe_access_points",
+        "source": "Canoe Access Points"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.4174884,
+            44.3478493
+        ],
+        "elevation": null,
+        "type": "canoe_access_points",
+        "source": "Canoe Access Points"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.4090389,
+            44.3606452
+        ],
+        "elevation": null,
+        "type": "canoe_access_points",
+        "source": "Canoe Access Points"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.2909299,
+            44.2534524
+        ],
+        "elevation": null,
+        "type": "canoe_access_points",
+        "source": "Canoe Access Points"
+    },
+    {
+        "name": "Indian Carry Hand Launch (Upper Saranac Lake)",
+        "coordinates": [
+            -74.3149721,
+            44.238796
+        ],
+        "elevation": null,
+        "type": "canoe_access_points",
+        "source": "Canoe Access Points"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.1310699,
+            44.323868
+        ],
+        "elevation": null,
+        "type": "canoe_access_points",
+        "source": "Canoe Access Points"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.1329364,
+            44.3253162
+        ],
+        "elevation": null,
+        "type": "canoe_access_points",
+        "source": "Canoe Access Points"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.406947,
+            44.3695515
+        ],
+        "elevation": null,
+        "type": "canoe_access_points",
+        "source": "Canoe Access Points"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.411089,
+            44.3700652
+        ],
+        "elevation": null,
+        "type": "canoe_access_points",
+        "source": "Canoe Access Points"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.2698388,
+            44.3953903
+        ],
+        "elevation": null,
+        "type": "canoe_access_points",
+        "source": "Canoe Access Points"
+    },
+    {
+        "name": "Ampersand Bay Hand Launch",
+        "coordinates": [
+            -74.1549761,
+            44.3257843
+        ],
+        "elevation": null,
+        "type": "canoe_access_points",
+        "source": "Canoe Access Points"
+    },
+    {
+        "name": "Hoel Pond Hand Launch",
+        "coordinates": [
+            -74.3441185,
+            44.3477591
+        ],
+        "elevation": null,
+        "type": "canoe_access_points",
+        "source": "Canoe Access Points"
+    },
+    {
+        "name": "East Pine Pond Hand Launch",
+        "coordinates": [
+            -74.4120906,
+            44.3395478
+        ],
+        "elevation": null,
+        "type": "canoe_access_points",
+        "source": "Canoe Access Points"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.4244274,
+            44.3380856
+        ],
+        "elevation": null,
+        "type": "canoe_access_points",
+        "source": "Canoe Access Points"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.4235496,
+            44.3385231
+        ],
+        "elevation": null,
+        "type": "canoe_access_points",
+        "source": "Canoe Access Points"
+    },
+    {
+        "name": "Polliwog Pond Hand Launch",
+        "coordinates": [
+            -74.351258,
+            44.3399386
+        ],
+        "elevation": null,
+        "type": "canoe_access_points",
+        "source": "Canoe Access Points"
+    },
+    {
+        "name": "South Creek Hand Launch (Middle Saranac Lake)",
+        "coordinates": [
+            -74.2690475,
+            44.2444788
+        ],
+        "elevation": null,
+        "type": "canoe_access_points",
+        "source": "Canoe Access Points"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.1513448,
+            44.3294761
+        ],
+        "elevation": null,
+        "type": "canoe_access_points",
+        "source": "Canoe Access Points"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.4154309,
+            44.3239381
+        ],
+        "elevation": null,
+        "type": "canoe_access_points",
+        "source": "Canoe Access Points"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.4153809,
+            44.3237849
+        ],
+        "elevation": null,
+        "type": "canoe_access_points",
+        "source": "Canoe Access Points"
+    }
+]
