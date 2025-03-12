@@ -13,7 +13,7 @@ export interface Project {
   staticPath?: string;  // For static exports
 }
 
-export const projects: Project[] = [
+export const projects: Project[] = [ 
   {
     id: 'mountain-weather',
     title: 'Mountain Weather Platform',
