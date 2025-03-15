@@ -1,0 +1,38 @@
+[
+  {
+    "name": "elk lake",
+    "coordinates": [
+      -73.83023502080478,
+      44.029201758214725
+    ],
+    "categoryId": "primitivesites",
+    "description": "asasaksjaksj",
+    "submitterName": "jakeddd d",
+    "submitterEmail": "jacobdecorelurker@gmail.com",
+    "includeSubmitterName": true,
+    "includeSubmitterEmail": true,
+    "requestType": "addition",
+    "status": "approved",
+    "submittedAt": "2025-03-12T21:07:28.525Z",
+    "id": "ffd1fd90-a9cd-4e12-b123-f59ec1781966",
+    "updatedAt": "2025-03-14T12:47:33.923Z"
+  },
+  {
+    "name": "test1",
+    "coordinates": [
+      -73.83241549462443,
+      44.019895750544094
+    ],
+    "categoryId": "highpeaks",
+    "description": "aassfsfd",
+    "submitterName": "jakeddcl",
+    "submitterEmail": "jacobdecorelurker@gmail.com",
+    "includeSubmitterName": true,
+    "includeSubmitterEmail": true,
+    "elevation": "1971",
+    "requestType": "addition",
+    "status": "pending",
+    "submittedAt": "2025-03-14T12:37:16.918Z",
+    "id": "b3c609e8-f778-48e3-8ad6-5c116720894a"
+  }
+]

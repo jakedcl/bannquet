@@ -7,9 +7,9 @@ import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const navItems = [
-  { href: '/projects', label: 'Projects' },
-  { href: '/about', label: 'About' },
-  { href: '/contact', label: 'Contact' },
+  { href: '/projects', label: 'projects' },
+  { href: '/about', label: 'more' },
+  { href: '/contact', label: 'connect' },
 ];
 
 export default function Header() {
@@ -40,25 +40,25 @@ export default function Header() {
         scrolled ? 'shadow-lg' : ''
       }`}
     >
-      <div className="max-w-container mx-auto px-4 h-full flex items-center justify-between">
-        <Link href="/" className="flex items-center z-20">
+      <div className="max-w-container mx-auto px-4 h-full flex items-center justify-between w-full">
+        <Link href="/" className="flex items-center z-20 mr-auto">
           <Image
             src="/logo.png"
             alt="BNQT Logo"
             width={160}
             height={40}
             priority
-            className="object-contain w-auto h-[32px] md:h-[40px] hover:opacity-90 transition-opacity"
+            className="object-contain w-auto h-auto max-h-[32px] md:max-h-[40px] hover:opacity-90 transition-opacity"
           />
         </Link>
 
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex gap-6 lg:gap-8">
+        <nav className="hidden md:flex gap-6 lg:gap-8 ml-auto">
           {navItems.map((item) => (
             <Link
               key={item.href}
               href={item.href}
-              className={`relative px-2 py-1 text-sm font-medium tracking-wide uppercase transition-colors
+              className={`relative px-2 py-1 text-lg font-medium tracking-wide transition-colors
                 ${pathname === item.href ? 'text-white' : 'text-white/80 hover:text-white'}
               `}
             >
