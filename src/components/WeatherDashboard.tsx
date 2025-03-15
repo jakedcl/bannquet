@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { WeatherData } from '@/types/weather';
 import { getWeather } from '@/lib/weather';
+import Image from 'next/image';
 
 type Mountain = {
   name: string;
@@ -70,43 +71,92 @@ export default function WeatherDashboard({ mountain }: WeatherDashboardProps) {
 
   if (!weather) return null;
 
+  // Calculate wind chill if wind speed is available
+  // Using the simplified formula: 35.74 + 0.6215T - 35.75(V^0.16) + 0.4275T(V^0.16)
+  // where T is temperature in F and V is wind speed in mph
+  const windSpeedNum = parseInt(weather.windSpeed.replace(/[^0-9]/g, '')) || 0;
+  let windChill = null;
+  if (windSpeedNum > 3 && weather.temperature <= 50) {
+    windChill = Math.round(
+      35.74 + 
+      (0.6215 * weather.temperature) - 
+      (35.75 * Math.pow(windSpeedNum, 0.16)) + 
+      (0.4275 * weather.temperature * Math.pow(windSpeedNum, 0.16))
+    );
+  }
+
   return (
-    <div className="bg-white rounded-lg shadow-sm overflow-hidden">
-      <div className="border-b border-gray-100 bg-gray-50 px-4 py-3">
-        <h2 className="font-medium">{mountain.name}</h2>
-        <p className="text-sm text-gray-500">Elevation: {mountain.elevation}ft</p>
+    <div className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
+      <div className="border-b border-gray-100 bg-brand-green/5 px-5 py-4 flex items-center justify-between">
+        <div>
+          <h2 className="font-semibold text-gray-900 text-lg">{mountain.name}</h2>
+          <p className="text-sm text-gray-600">Elevation: {mountain.elevation}ft</p>
+        </div>
+        {weather.icon && (
+          <div className="flex-shrink-0">
+            <Image 
+              src={weather.icon} 
+              alt={weather.conditions[0]} 
+              width={48} 
+              height={48} 
+              className="w-12 h-12 object-contain"
+            />
+          </div>
+        )}
       </div>
       
-      <div className="p-4">
-        <div className="grid grid-cols-2 gap-4">
-          {/* Temperature */}
-          <div>
-            <p className="text-sm text-gray-500">Temperature</p>
-            <p className="text-2xl font-semibold">{Math.round(weather.temperature)}°F</p>
+      <div className="p-5">
+        <div className="grid grid-cols-2 gap-5">
+          {/* Temperature Section */}
+          <div className="col-span-2 mb-2 border-b border-gray-100 pb-3">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-500 mb-1">Current Temperature</p>
+                <p className="text-3xl font-bold text-brand-green">{Math.round(weather.temperature)}°F</p>
+              </div>
+              <div className="text-right">
+                <p className="text-sm text-gray-500 mb-1">Feels Like</p>
+                <p className="text-xl font-medium">
+                  {windChill !== null ? `${windChill}°F` : `${Math.round(weather.temperature)}°F`}
+                </p>
+              </div>
+            </div>
           </div>
           
           {/* Conditions */}
           <div>
             <p className="text-sm text-gray-500">Conditions</p>
-            <p className="text-lg">{weather.conditions[0]}</p>
+            <p className="text-base font-medium">{weather.conditions[0]}</p>
           </div>
           
           {/* Wind */}
           <div>
             <p className="text-sm text-gray-500">Wind</p>
-            <p className="text-lg">{weather.windSpeed} {weather.windDirection}</p>
+            <p className="text-base font-medium">{weather.windSpeed} {weather.windDirection}</p>
           </div>
           
           {/* Precipitation */}
           <div>
-            <p className="text-sm text-gray-500">Chance of Precipitation</p>
-            <p className="text-lg">{weather.precipitation}%</p>
+            <p className="text-sm text-gray-500">Precipitation</p>
+            <p className="text-base font-medium">{weather.precipitation}%</p>
+          </div>
+          
+          {/* Region */}
+          <div>
+            <p className="text-sm text-gray-500">Region</p>
+            <p className="text-base font-medium">{mountain.region}</p>
           </div>
         </div>
         
-        <p className="text-xs text-gray-400 mt-4">
-          Last updated: {new Date(weather.timestamp).toLocaleTimeString()}
-        </p>
+        <div className="mt-4 pt-2 border-t border-gray-100 flex justify-between items-center text-xs text-gray-500">
+          <p>
+            Last updated: {new Date(weather.timestamp).toLocaleTimeString([], {
+              hour: 'numeric',
+              minute: '2-digit'
+            })}
+          </p>
+          <p>Data: <span className="text-brand-green">weather.gov</span></p>
+        </div>
       </div>
     </div>
   );

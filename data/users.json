@@ -1,0 +1,29 @@
+[
+  {
+    "id": "ecfbc442-a52f-47f1-a2db-cb3a608ebaf7",
+    "name": "Regular User",
+    "email": "user@example.com",
+    "password": "e606e38b0d8c19b24cf0ee3808183162ea7cd63ff7912dbb22b5e803286b4446",
+    "isAdmin": false,
+    "createdAt": "2025-03-12T20:37:38.227Z",
+    "pinnedPins": 0
+  },
+  {
+    "id": "e6b07b5a-6d32-4b01-9ddd-8b1516adbdb6",
+    "name": "jake dcl",
+    "email": "jakedcl73@gmail.com",
+    "password": "d396b441c62bb0f46343ba676f1e11f6e40cbcc6ee6968ff15c46a2b03fb1e3e",
+    "isAdmin": true,
+    "createdAt": "2025-03-12T20:47:01.970Z",
+    "pinnedPins": 0
+  },
+  {
+    "id": "22154089-91ea-44ba-8846-399acc096c05",
+    "name": "Jake",
+    "email": "jacobdecorelurker@gmail.com",
+    "password": "a4e4f9163ec0b5bc436a627e44ff05eda028228379f518f03e02b428047751ab",
+    "isAdmin": false,
+    "createdAt": "2025-03-12T21:23:36.805Z",
+    "pinnedPins": 0
+  }
+]

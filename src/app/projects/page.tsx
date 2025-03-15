@@ -15,7 +15,7 @@ export default function ProjectsPage() {
           animate={{ opacity: 1, y: 0 }}
           className="text-4xl md:text-5xl font-bold text-white mb-8"
         >
-          Projects
+          web projects
         </motion.h1>
         
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-2">
