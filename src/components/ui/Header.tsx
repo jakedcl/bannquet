@@ -59,7 +59,7 @@ export default function Header() {
               key={item.href}
               href={item.href}
               className={`relative px-2 py-1 text-lg font-medium tracking-wide transition-colors
-                ${pathname === item.href ? 'text-white' : 'text-white/80 hover:text-white'}
+                ${pathname === item.href ? 'text-white' : 'text-white hover:text-white'}
               `}
             >
               {pathname === item.href && (
@@ -127,17 +127,17 @@ export default function Header() {
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "spring", damping: 25, stiffness: 300 }}
-              className="fixed top-0 right-0 bottom-0 w-4/5 max-w-xs bg-brand-green z-10 md:hidden flex flex-col p-6 pt-24"
+              className="fixed top-0 right-0 bottom-0 w-4/5 max-w-xs bg-white z-10 md:hidden flex flex-col p-6 pt-24"
             >
               <div className="flex flex-col gap-4">
                 {navItems.map((item) => (
                   <Link
                     key={item.href}
                     href={item.href}
-                    className={`px-2 py-3 text-lg font-medium border-b border-white/10 ${
+                    className={`px-2 py-3 text-lg font-medium border-b border-gray-200 ${
                       pathname === item.href 
-                        ? 'text-white font-semibold' 
-                        : 'text-white/80 hover:text-white'
+                        ? 'text-black font-semibold' 
+                        : 'text-black hover:text-brand-green'
                     }`}
                   >
                     {item.label}
