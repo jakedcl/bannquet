@@ -4,7 +4,7 @@ import path from 'path';
 import { User } from '@/components/projects/adk-map/types';
 import crypto from 'crypto';
 
-// Path to the users data file
+// Path to the users data file 
 const getUsersDataFilePath = () => {
   return path.join(process.cwd(), 'data', 'users.json');
 };
