@@ -103,24 +103,44 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
     const email = searchParams.get('email');
     const requestType = searchParams.get('requestType');
+    const forceLog = searchParams.get('debug') === 'true';
+    
+    // Load all submissions
     const submissions = await getSubmissions();
+    
+    // Always log this for debugging
+    console.log(`GET /api/map-submissions - Loaded ${submissions.length} total submissions from storage`);
+    
+    if (submissions.length === 0) {
+      console.warn("WARNING: No submissions found in storage. Check if map-submissions.json exists and is valid.");
+    }
+    
+    if (forceLog || submissions.length < 10) {
+      // Only log full data if there aren't too many submissions or debug is enabled
+      console.log(`Submissions data: ${JSON.stringify(submissions)}`);
+    }
     
     // Apply requestType filter if provided
     let filteredSubmissions = submissions;
     if (requestType && (requestType === 'addition' || requestType === 'deletion')) {
       filteredSubmissions = submissions.filter(sub => sub.requestType === requestType);
+      console.log(`Filtered to ${filteredSubmissions.length} submissions of type: ${requestType}`);
     }
     
     // If email is provided, filter submissions for that user
     if (email) {
+      console.log(`Filtering submissions for email: ${email}`);
       const userSubmissions = filteredSubmissions.filter(sub => 
         sub.submitterEmail.toLowerCase() === email.toLowerCase()
       );
+      console.log(`Found ${userSubmissions.length} submissions for user ${email}`);
       
       // Separate user submissions by status
       const pendingSubmissions = userSubmissions.filter(sub => sub.status === 'pending');
       const approvedSubmissions = userSubmissions.filter(sub => sub.status === 'approved');
       const rejectedSubmissions = userSubmissions.filter(sub => sub.status === 'rejected');
+      
+      console.log(`User submissions by status: pending=${pendingSubmissions.length}, approved=${approvedSubmissions.length}, rejected=${rejectedSubmissions.length}`);
       
       return NextResponse.json({
         pending: pendingSubmissions,
@@ -130,11 +150,12 @@ export async function GET(request: Request) {
     }
     
     // If no email is provided, return all submissions (admin view)
+    console.log(`Returning all ${filteredSubmissions.length} submissions for admin view`);
     return NextResponse.json(filteredSubmissions);
   } catch (error) {
     console.error('Error retrieving submissions:', error);
     return NextResponse.json(
-      { message: 'Failed to retrieve submissions' },
+      { message: 'Failed to retrieve submissions', error: error instanceof Error ? error.message : 'Unknown error' },
       { status: 500 }
     );
   }

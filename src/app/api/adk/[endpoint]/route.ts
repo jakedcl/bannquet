@@ -6,7 +6,19 @@ export async function GET(
   request: NextRequest,
   { params }: { params: { endpoint: string } }
 ) {
-  const { endpoint } = params;
+  // Ensure params is properly handled
+  if (!params || !params.endpoint) {
+    return NextResponse.json(
+      {
+        success: false,
+        message: 'Invalid endpoint parameter',
+        error: 'Missing endpoint'
+      },
+      { status: 400 }
+    );
+  }
+
+  const endpoint = params.endpoint;
   
   try {
     // Define path to data file
