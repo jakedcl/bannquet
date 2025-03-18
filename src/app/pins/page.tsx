@@ -15,7 +15,7 @@ const pinTypes = ['High Peak', 'Low Peak', 'Campsite', 'Lean-to', 'Lake', 'Pond'
 // Extend the Pin type to include categoryId and status which are added dynamically
 interface PinWithCategory extends Pin {
   categoryId?: string;
-  status?: 'approved' | 'pending' | 'rejected';
+  status?: 'approved' | 'pending' | 'rejected' | 'legacy';
 }
 
 export default function PinsPage() {
@@ -152,21 +152,14 @@ export default function PinsPage() {
     }
   };
   
-  // Set a selected pin for editing (when Edit button is clicked)
+  // Handle editing a pin
   const handleEdit = (item: PinWithCategory) => {
-    console.log("Selected pin for editing:", item);
+    console.log("Editing pin:", item);
     
-    // Ensure the pin has an ID before proceeding
-    if (!item.id) {
-      console.error("Cannot edit a pin without an ID");
-      alert("Error: This pin has no ID and cannot be edited.");
-      return;
-    }
-    
-    // Determine the category ID based on the pin type
-    const derivedCategoryId = 
-      item.type === 'High Peak' ? 'highpeaks' : 
-      item.type === 'Low Peak' ? 'lowpeaks' : 
+    // Determine category ID based on pin type if not already present
+    const derivedCategoryId = (
+      item.type === 'High Peak' || item.type === 'peaks' ? 'highpeaks' :
+      item.type === 'Low Peak' ? 'lowpeaks' :
       item.type === 'Primitive Sites' ? 'primitivesites' :
       item.type === 'Lean-to' ? 'leantos' :
       item.type === 'Parking' ? 'parking' :
@@ -175,13 +168,16 @@ export default function PinsPage() {
       item.type === 'Food' ? 'food' :
       item.type === 'Canoe Launch' ? 'canoe' :
       item.type === 'Waterfalls' ? 'waterfalls' :
-      'other';
+      'other');
     
     // Create a pinToEdit object with the correct structure including ID
     const pinToEdit: PinWithCategory = {
       ...item,
-      id: item.id, // Ensure ID is included
-      categoryId: item.categoryId || derivedCategoryId
+      // For legacy pins that don't have an ID, create a temporary one based on name and coordinates
+      id: item.id || `legacy-${item.name.replace(/\s+/g, '-').toLowerCase()}-${item.coordinates[0]}-${item.coordinates[1]}`,
+      categoryId: item.categoryId || derivedCategoryId,
+      // Mark as legacy pin if it doesn't have an ID
+      status: item.id ? (item.status || 'approved') : 'legacy'
     };
     
     console.log("Prepared pin for editing:", pinToEdit);
@@ -203,7 +199,7 @@ export default function PinsPage() {
       
       // Determine the category ID for the pin
       const categoryId = (
-        editedPin.type === 'High Peak' ? 'highpeaks' :
+        editedPin.type === 'High Peak' || editedPin.type === 'peaks' ? 'highpeaks' :
         editedPin.type === 'Low Peak' ? 'lowpeaks' :
         editedPin.type === 'Primitive Sites' ? 'primitivesites' :
         editedPin.type === 'Lean-to' ? 'leantos' :
@@ -216,17 +212,24 @@ export default function PinsPage() {
         'other');
       
       console.log("Determined categoryId:", categoryId, "Pin ID:", editedPin.id);
+      console.log("Pin status:", editedPin.status);
       
       // Check if the pin has an ID (existing pin)
       if (!editedPin.id) {
-        console.error("Missing pin ID for edit operation");
-        alert("Cannot edit a pin without an ID. This appears to be a new pin which should be created through the submission process.");
+        console.error("Cannot edit a pin without an ID");
+        alert("Error: This pin has no ID and cannot be edited.");
         return;
       }
       
+      // Check if this is a legacy pin (from original dataset without an ID)
+      const isLegacyPin = editedPin.status === 'legacy' || editedPin.id.startsWith('legacy-');
+      console.log("Is legacy pin:", isLegacyPin);
+      
       const pinData = {
         ...editedPin,
-        categoryId
+        categoryId,
+        // If it's a legacy pin being edited, make sure it's marked as approved after edit
+        status: isLegacyPin ? 'approved' : editedPin.status
       };
       
       console.log("Sending pin data to API:", JSON.stringify(pinData, null, 2));
@@ -243,7 +246,8 @@ export default function PinsPage() {
             ...pinData,
             id: editedPin.id // Ensure the ID is explicitly included
           },
-          categoryId: categoryId
+          categoryId: categoryId,
+          isLegacyPin: isLegacyPin // Send flag to API to handle legacy pins differently if needed
         }),
       });
       

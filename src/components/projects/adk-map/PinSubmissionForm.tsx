@@ -155,7 +155,7 @@ export default function PinSubmissionForm({
           // Create pin-style marker
           el.style.width = '24px';
           el.style.height = '36px';
-          el.style.backgroundImage = 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 36\'%3E%3Cpath fill=\'%231F3F28\' d=\'M12 0C5.383 0 0 5.383 0 12c0 9 12 24 12 24s12-15 12-24c0-6.617-5.383-12-12-12zm0 18a6 6 0 1 1 0-12 6 6 0 0 1 0 12z\'/%3E%3Ccircle fill=\'white\' cx=\'12\' cy=\'12\' r=\'6\'/%3E%3C/svg%3E")';
+          el.style.backgroundImage = 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 36\'%3E%3Cpath fill=\'%231F3F28\' stroke=\'white\' stroke-width=\'1.5\' d=\'M12 0C5.383 0 0 5.383 0 12c0 9 12 24 12 24s12-15 12-24c0-6.617-5.383-12-12-12zm0 18a6 6 0 1 1 0-12 6 6 0 0 1 0 12z\'/%3E%3Ccircle fill=\'white\' cx=\'12\' cy=\'12\' r=\'6\'/%3E%3C/svg%3E")';
           el.style.backgroundSize = 'contain';
           el.style.backgroundRepeat = 'no-repeat';
           el.style.cursor = 'pointer';

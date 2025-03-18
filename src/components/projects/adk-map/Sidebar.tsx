@@ -442,6 +442,33 @@ export default function Sidebar({
           >
             ← Back to Projects
           </Link>
+
+          {/* Admin-specific links */}
+          {userSession?.isAdmin && (
+            <>
+              <div className="mt-3 pt-3 border-t border-white/20">
+                <h4 className="font-semibold text-sm text-white/70 mb-1">Admin</h4>
+                <Link 
+                  href="/admin/pins" 
+                  className="block text-white/90 hover:text-white py-1 text-sm"
+                >
+                  Pin Directory
+                </Link>
+                <Link 
+                  href="/admin/users" 
+                  className="block text-white/90 hover:text-white py-1 text-sm"
+                >
+                  User Management
+                </Link>
+                <Link 
+                  href="/admin/submissions" 
+                  className="block text-white/90 hover:text-white py-1 text-sm"
+                >
+                  View Submissions
+                </Link>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </>

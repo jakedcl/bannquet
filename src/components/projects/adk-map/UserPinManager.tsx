@@ -65,6 +65,8 @@ export default function UserPinManager({ isOpen, onClose }: UserPinManagerProps)
     setIsLoading(true);
     setError(null);
     
+    console.log("Fetching pins for user:", userSession.email);
+    
     try {
       const response = await fetch(`/api/map-submissions?email=${encodeURIComponent(userSession.email)}`);
       
@@ -73,10 +75,11 @@ export default function UserPinManager({ isOpen, onClose }: UserPinManagerProps)
       }
       
       const data = await response.json();
+      console.log("Received user pins data:", data);
       setUserPins(data);
     } catch (err) {
+      console.error("Error fetching user pins:", err);
       setError('Failed to load your pins. Please try again.');
-      console.error(err);
     } finally {
       setIsLoading(false);
     }

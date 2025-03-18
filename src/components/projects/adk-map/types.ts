@@ -39,7 +39,7 @@ export interface PinSubmission {
   submitterEmail: string;
   includeSubmitterName: boolean;
   includeSubmitterEmail: boolean;
-  status: 'pending' | 'approved' | 'rejected';
+  status: 'pending' | 'approved' | 'rejected' | 'legacy';
   submittedAt: string;
   updatedAt?: string;
   requestType: 'addition' | 'deletion';

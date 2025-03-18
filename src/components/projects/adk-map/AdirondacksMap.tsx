@@ -410,6 +410,29 @@ export default function AdirondacksMap() {
     }
     setSubmissionCoordinates(null);
     setIsSubmitFormOpen(true);
+    
+    // Change cursor style when the form opens
+    if (map && map.getCanvas()) {
+      map.getCanvas().style.cursor = 'crosshair';
+      
+      // Add a class to the body to show a special cursor everywhere
+      document.body.classList.add('adding-location-mode');
+      
+      // Add the special cursor style if not already added
+      if (!document.getElementById('cursor-style')) {
+        const style = document.createElement('style');
+        style.id = 'cursor-style';
+        style.textContent = `
+          .adding-location-mode {
+            cursor: crosshair !important;
+          }
+          .adding-location-mode button {
+            cursor: pointer !important;
+          }
+        `;
+        document.head.appendChild(style);
+      }
+    }
   };
 
   // Handle submission form close
@@ -421,6 +444,12 @@ export default function AdirondacksMap() {
       setSubmissionMarker(null);
     }
     setSubmissionCoordinates(null);
+    
+    // Reset cursor style
+    if (map && map.getCanvas()) {
+      map.getCanvas().style.cursor = '';
+      document.body.classList.remove('adding-location-mode');
+    }
   };
 
   // Handle pin submission

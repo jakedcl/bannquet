@@ -31,8 +31,66 @@
     "includeSubmitterEmail": true,
     "elevation": "1971",
     "requestType": "addition",
-    "status": "pending",
+    "status": "rejected",
     "submittedAt": "2025-03-14T12:37:16.918Z",
-    "id": "b3c609e8-f778-48e3-8ad6-5c116720894a"
+    "id": "b3c609e8-f778-48e3-8ad6-5c116720894a",
+    "updatedAt": "2025-03-18T16:31:19.628Z"
+  },
+  {
+    "name": "Delete: No name",
+    "coordinates": [
+      -74.2510581,
+      44.4315831
+    ],
+    "categoryId": "other",
+    "description": "Request to delete the pin \"No name\" at coordinates -74.2510581, 44.4315831",
+    "submitterName": "Jake",
+    "submitterEmail": "jacobdecorelurker@gmail.com",
+    "includeSubmitterName": false,
+    "includeSubmitterEmail": false,
+    "requestType": "deletion",
+    "targetPinId": "No name",
+    "status": "approved",
+    "submittedAt": "2025-03-18T16:32:47.839Z",
+    "id": "1762f4f9-bf79-4166-a1d0-0a3bbc78a7ec",
+    "updatedAt": "2025-03-18T16:44:54.665Z"
+  },
+  {
+    "name": "Delete: No name",
+    "coordinates": [
+      -74.2510581,
+      44.4315831
+    ],
+    "categoryId": "other",
+    "description": "Request to delete the pin \"No name\" at coordinates -74.2510581, 44.4315831",
+    "submitterName": "Jake",
+    "submitterEmail": "jacobdecorelurker@gmail.com",
+    "includeSubmitterName": false,
+    "includeSubmitterEmail": false,
+    "requestType": "deletion",
+    "targetPinId": "No name",
+    "status": "approved",
+    "submittedAt": "2025-03-18T16:43:06.128Z",
+    "id": "9d4910d2-28f3-4d56-a0fa-3fe9b388a8de",
+    "updatedAt": "2025-03-18T16:45:04.975Z"
+  },
+  {
+    "name": "aaaaaaa",
+    "coordinates": [
+      -74.25083699350314,
+      44.415523135239795
+    ],
+    "categoryId": "highpeaks",
+    "description": "",
+    "submitterName": "jakeabc",
+    "submitterEmail": "jj@gmail.com",
+    "includeSubmitterName": true,
+    "includeSubmitterEmail": true,
+    "elevation": "1622",
+    "requestType": "addition",
+    "status": "approved",
+    "submittedAt": "2025-03-18T16:43:57.273Z",
+    "id": "7d24db0a-3595-4fb7-8fac-b514acf8936d",
+    "updatedAt": "2025-03-18T16:45:05.979Z"
   }
 ]

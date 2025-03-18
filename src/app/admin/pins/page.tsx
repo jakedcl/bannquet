@@ -15,7 +15,7 @@ const pinTypes = ['High Peak', 'Low Peak', 'Campsite', 'Lean-to', 'Lake', 'Pond'
 // Extend the Pin type to include categoryId which is added dynamically when fetching pins
 interface PinWithCategory extends Pin {
   categoryId?: string;
-  status?: 'approved' | 'pending' | 'rejected';
+  status?: 'approved' | 'pending' | 'rejected' | 'legacy';
 }
 
 export default function AdminPinsPage() {
@@ -213,9 +213,11 @@ export default function AdminPinsPage() {
     }
   };
   
-  // Handle saving edits
+  // Handle saving edits to a pin
   const handleSaveEdit = async (editedPin: PinWithCategory) => {
     try {
+      console.log("Editing pin:", editedPin);
+      
       // Get session for auth
       const savedSession = localStorage.getItem('adkMapUserSession');
       if (!savedSession) {
@@ -224,46 +226,88 @@ export default function AdminPinsPage() {
       
       const session = JSON.parse(savedSession);
       
-      // Determine correct category ID based on pin type
-      const categoryId = editedPin.categoryId || 
-                        (editedPin.type === 'High Peak' ? 'highpeaks' : 
-                        editedPin.type === 'Low Peak' ? 'lowpeaks' : 
-                        editedPin.type === 'Primitive Sites' ? 'primitivesites' :
-                        editedPin.type === 'Lean-to' ? 'leantos' :
-                        editedPin.type === 'Parking' ? 'parking' :
-                        editedPin.type === 'Viewpoints' ? 'viewpoints' :
-                        editedPin.type === 'Stay' ? 'stay' :
-                        editedPin.type === 'Food' ? 'food' :
-                        editedPin.type === 'Canoe Launch' ? 'canoe' :
-                        editedPin.type === 'Waterfalls' ? 'waterfalls' :
-                        'other');
+      // Determine the category ID for the pin
+      const categoryId = (
+        editedPin.type === 'High Peak' || editedPin.type === 'peaks' ? 'highpeaks' :
+        editedPin.type === 'Low Peak' ? 'lowpeaks' :
+        editedPin.type === 'Primitive Sites' ? 'primitivesites' :
+        editedPin.type === 'Lean-to' ? 'leantos' :
+        editedPin.type === 'Parking' ? 'parking' :
+        editedPin.type === 'Viewpoints' ? 'viewpoints' :
+        editedPin.type === 'Stay' ? 'stay' :
+        editedPin.type === 'Food' ? 'food' :
+        editedPin.type === 'Canoe Launch' ? 'canoe' :
+        editedPin.type === 'Waterfalls' ? 'waterfalls' :
+        'other');
       
-      const isNewPin = !editedPin.id;
+      console.log("Determined categoryId:", categoryId);
+      console.log("Pin ID:", editedPin.id);
+      console.log("Pin status:", editedPin.status);
+      
+      // Check if the pin has an ID (existing pin)
+      if (!editedPin.id) {
+        console.error("Cannot edit a pin without an ID");
+        alert("Error: This pin has no ID and cannot be edited.");
+        return;
+      }
+      
+      // Check if this is a legacy pin (from original dataset without an ID)
+      const isLegacyPin = editedPin.status === 'legacy' || (editedPin.id && editedPin.id.startsWith('legacy-'));
+      console.log("Is legacy pin:", isLegacyPin);
+      
       const pinData = {
         ...editedPin,
-        categoryId
+        categoryId,
+        // If it's a legacy pin being edited, make sure it's marked as approved after edit
+        status: isLegacyPin ? 'approved' : editedPin.status
       };
       
+      console.log("Sending pin data to API:", JSON.stringify(pinData, null, 2));
+      
+      // Update the pin via API
       const response = await fetch('/api/admin/pins', {
-        method: isNewPin ? 'POST' : 'PUT',
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${session.email}`
         },
         body: JSON.stringify({
-          pin: pinData,
-          categoryId: categoryId
+          pin: {
+            ...pinData,
+            id: editedPin.id // Ensure the ID is explicitly included
+          },
+          categoryId: categoryId,
+          isLegacyPin: isLegacyPin // Send flag to API to handle legacy pins differently if needed
         }),
       });
       
-      if (!response.ok) {
-        throw new Error(`Failed to ${isNewPin ? 'create' : 'update'} pin`);
+      // Get the response text first before trying to parse it
+      const responseText = await response.text();
+      console.log("API Response Text:", responseText);
+      
+      // Try to parse the response as JSON if possible
+      let responseData;
+      try {
+        responseData = JSON.parse(responseText);
+        console.log("API Response Data:", responseData);
+      } catch (jsonError) {
+        console.warn("Could not parse response as JSON:", jsonError);
       }
       
-      // Show success message
+      if (!response.ok) {
+        console.error("API Error Details:", {
+          status: response.status,
+          statusText: response.statusText,
+          responseText,
+          responseData
+        });
+        throw new Error(`Failed to update pin: ${response.status} ${response.statusText}`);
+      }
+      
+      // Show success toast
       const toast = document.createElement('div');
-      toast.className = 'fixed top-20 left-1/2 transform -translate-x-1/2 bg-green-600 text-white px-4 py-2 rounded-lg shadow-lg z-50 text-sm font-medium';
-      toast.textContent = `Pin "${editedPin.name}" has been ${isNewPin ? 'created' : 'updated'}.`;
+      toast.className = 'fixed top-20 left-1/2 transform -translate-x-1/2 bg-green-600 text-white px-4 py-2 rounded-lg shadow-lg';
+      toast.textContent = `Pin "${editedPin.name}" has been updated successfully.`;
       document.body.appendChild(toast);
       
       // Remove toast after 3 seconds
@@ -271,18 +315,14 @@ export default function AdminPinsPage() {
         document.body.removeChild(toast);
       }, 3000);
       
-      // Update local state and refresh
-      if (isNewPin) {
-        fetchPins(); // Refresh all pins to get the new one with its server-assigned ID
-      } else {
-        setPins(pins.map(p => p.id === editedPin.id ? editedPin : p));
-      }
+      // Update pin in local state
+      setPins(pins.map(p => p.id === editedPin.id ? editedPin : p));
       
-      // Close edit modal
+      // Close modal
       setSelectedPin(null);
     } catch (error) {
       console.error('Error saving pin:', error);
-      alert(`Failed to ${!editedPin.id ? 'create' : 'update'} pin. Please try again.`);
+      alert('Failed to save pin changes: ' + (error instanceof Error ? error.message : 'Unknown error'));
     }
   };
 
@@ -457,336 +497,392 @@ export default function AdminPinsPage() {
     setSelectedPin(newPin);
   };
   
+  // Handle edit button click - prepare the pin for editing
+  const handleEdit = (item: PinWithCategory) => {
+    console.log("Editing pin:", item);
+    
+    // Determine category ID based on pin type if not already present
+    const derivedCategoryId = (
+      item.type === 'High Peak' || item.type === 'peaks' ? 'highpeaks' :
+      item.type === 'Low Peak' ? 'lowpeaks' :
+      item.type === 'Primitive Sites' ? 'primitivesites' :
+      item.type === 'Lean-to' ? 'leantos' :
+      item.type === 'Parking' ? 'parking' :
+      item.type === 'Viewpoints' ? 'viewpoints' :
+      item.type === 'Stay' ? 'stay' :
+      item.type === 'Food' ? 'food' :
+      item.type === 'Canoe Launch' ? 'canoe' :
+      item.type === 'Waterfalls' ? 'waterfalls' :
+      'other');
+    
+    // Create a pinToEdit object with the correct structure including ID
+    const pinToEdit: PinWithCategory = {
+      ...item,
+      // For legacy pins that don't have an ID, create a temporary one based on name and coordinates
+      id: item.id || `legacy-${item.name.replace(/\s+/g, '-').toLowerCase()}-${item.coordinates[0]}-${item.coordinates[1]}`,
+      categoryId: item.categoryId || derivedCategoryId,
+      // Mark as legacy pin if it doesn't have an ID
+      status: item.id ? (item.status || 'approved') : 'legacy'
+    };
+    
+    console.log("Prepared pin for editing:", pinToEdit);
+    setSelectedPin(pinToEdit);
+  };
+  
   return (
     <AdminPageWrapper title="Pin Directory (Admin)">
-      {/* Back to Map and Add New Pin buttons */}
-      <div className="flex justify-between mb-6">
-        <Link href="/adkmap" className="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white rounded-md border border-gray-300 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-green">
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-          </svg>
-          Back to Map
-        </Link>
-        <button
-          onClick={handleAddNewPin}
-          className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-brand-green rounded-md border border-transparent hover:bg-brand-green-light focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-green"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-          </svg>
-          Add New Pin
-        </button>
-      </div>
-      
-      <div className="space-y-4">
-        {/* Filter and Search Controls */}
-        <div className="flex flex-wrap gap-3 items-center mb-4 bg-gray-50 p-3 rounded-lg">
-          {/* Type Filter */}
-          <div className="flex items-center">
-            <label htmlFor="type-filter" className="text-sm font-medium text-gray-700 mr-2">Type:</label>
-            <select
-              id="type-filter"
-              value={typeFilter}
-              onChange={(e) => setTypeFilter(e.target.value)}
-              className="block rounded-md border-gray-300 shadow-sm focus:border-brand-green focus:ring-brand-green sm:text-sm"
-            >
-              <option value="all">All Types</option>
-              {pinTypes.map(type => (
-                <option key={type} value={type}>{type}</option>
-              ))}
-            </select>
+      {/* Controls */}
+      <div className="mb-8 flex flex-col sm:flex-row justify-between gap-4">
+        <div className="flex flex-col sm:flex-row gap-4">
+          {/* Back to Map and Add New Pin buttons */}
+          <div className="flex justify-between mb-6">
+            <Link href="/adkmap" className="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white rounded-md border border-gray-300 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-green">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+              </svg>
+              Back to Map
+            </Link>
+            
+            <div className="flex space-x-3">
+              <Link
+                href="/admin/submissions"
+                className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md border border-transparent hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                </svg>
+                View Submissions
+              </Link>
+              
+              <button
+                onClick={handleAddNewPin}
+                className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-brand-green rounded-md border border-transparent hover:bg-brand-green-light focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-green"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                </svg>
+                Add New Pin
+              </button>
+            </div>
           </div>
-          
-          {/* Status Filter */}
-          <div className="flex items-center">
-            <label htmlFor="status-filter" className="text-sm font-medium text-gray-700 mr-2">Status:</label>
-            <select
-              id="status-filter"
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
-              className="block rounded-md border-gray-300 shadow-sm focus:border-brand-green focus:ring-brand-green sm:text-sm"
-            >
-              <option value="all">All Statuses</option>
-              <option value="approved">Approved</option>
-              <option value="pending">Pending</option>
-              <option value="rejected">Rejected</option>
-            </select>
-          </div>
-          
-          {/* Search */}
-          <div className="flex items-center ml-auto">
-            <label htmlFor="search-pins" className="text-sm font-medium text-gray-700 mr-2">Search:</label>
-            <input
-              id="search-pins"
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search pins..."
-              className="block rounded-md border-gray-300 shadow-sm focus:border-brand-green focus:ring-brand-green sm:text-sm"
-            />
+
+          <div className="flex flex-wrap gap-3 items-center mb-4 bg-gray-50 p-3 rounded-lg">
+            {/* Type Filter */}
+            <div className="flex items-center">
+              <label htmlFor="type-filter" className="text-sm font-medium text-gray-700 mr-2">Type:</label>
+              <select
+                id="type-filter"
+                value={typeFilter}
+                onChange={(e) => setTypeFilter(e.target.value)}
+                className="block rounded-md border-gray-300 shadow-sm focus:border-brand-green focus:ring-brand-green sm:text-sm"
+              >
+                <option value="all">All Types</option>
+                {pinTypes.map(type => (
+                  <option key={type} value={type}>{type}</option>
+                ))}
+              </select>
+            </div>
+            
+            {/* Status Filter */}
+            <div className="flex items-center">
+              <label htmlFor="status-filter" className="text-sm font-medium text-gray-700 mr-2">Status:</label>
+              <select
+                id="status-filter"
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value)}
+                className="block rounded-md border-gray-300 shadow-sm focus:border-brand-green focus:ring-brand-green sm:text-sm"
+              >
+                <option value="all">All Statuses</option>
+                <option value="approved">Approved</option>
+                <option value="pending">Pending</option>
+                <option value="rejected">Rejected</option>
+              </select>
+            </div>
+            
+            {/* Search */}
+            <div className="flex items-center ml-auto">
+              <label htmlFor="search-pins" className="text-sm font-medium text-gray-700 mr-2">Search:</label>
+              <input
+                id="search-pins"
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search pins..."
+                className="block rounded-md border-gray-300 shadow-sm focus:border-brand-green focus:ring-brand-green sm:text-sm"
+              />
+            </div>
           </div>
         </div>
+      </div>
 
-        {loading || loadingSubmissions ? (
-          <div className="bg-white p-4 rounded-md shadow-sm text-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-brand-green mx-auto mb-2"></div>
-            <p className="text-sm text-gray-600">Loading pins...</p>
-          </div>
-        ) : error ? (
-          <div className="bg-white p-4 rounded-md shadow-sm text-center text-red-500">
-            {error}
-          </div>
-        ) : (
-          <div className="bg-white overflow-hidden rounded-md shadow-sm">
-            <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
+      {loading || loadingSubmissions ? (
+        <div className="bg-white p-4 rounded-md shadow-sm text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-brand-green mx-auto mb-2"></div>
+          <p className="text-sm text-gray-600">Loading pins...</p>
+        </div>
+      ) : error ? (
+        <div className="bg-white p-4 rounded-md shadow-sm text-center text-red-500">
+          {error}
+        </div>
+      ) : (
+        <div className="bg-white overflow-hidden rounded-md shadow-sm">
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th 
+                    scope="col" 
+                    className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
+                    onClick={() => handleSort('name')}
+                  >
+                    <div className="flex items-center">
+                      Name
+                      {sortField === 'name' && (
+                        <span className="ml-1">
+                          {sortDirection === 'asc' ? '↑' : '↓'}
+                        </span>
+                      )}
+                    </div>
+                  </th>
+                  <th 
+                    scope="col" 
+                    className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
+                    onClick={() => handleSort('type')}
+                  >
+                    <div className="flex items-center">
+                      Type
+                      {sortField === 'type' && (
+                        <span className="ml-1">
+                          {sortDirection === 'asc' ? '↑' : '↓'}
+                        </span>
+                      )}
+                    </div>
+                  </th>
+                  <th 
+                    scope="col" 
+                    className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
+                    onClick={() => handleSort('elevation')}
+                  >
+                    <div className="flex items-center">
+                      Elevation
+                      {sortField === 'elevation' && (
+                        <span className="ml-1">
+                          {sortDirection === 'asc' ? '↑' : '↓'}
+                        </span>
+                      )}
+                    </div>
+                  </th>
+                  <th scope="col" className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Status
+                  </th>
+                  <th scope="col" className="px-3 py-2 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Actions
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {filteredItems.length === 0 ? (
                   <tr>
-                    <th 
-                      scope="col" 
-                      className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
-                      onClick={() => handleSort('name')}
-                    >
-                      <div className="flex items-center">
-                        Name
-                        {sortField === 'name' && (
-                          <span className="ml-1">
-                            {sortDirection === 'asc' ? '↑' : '↓'}
-                          </span>
-                        )}
-                      </div>
-                    </th>
-                    <th 
-                      scope="col" 
-                      className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
-                      onClick={() => handleSort('type')}
-                    >
-                      <div className="flex items-center">
-                        Type
-                        {sortField === 'type' && (
-                          <span className="ml-1">
-                            {sortDirection === 'asc' ? '↑' : '↓'}
-                          </span>
-                        )}
-                      </div>
-                    </th>
-                    <th 
-                      scope="col" 
-                      className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
-                      onClick={() => handleSort('elevation')}
-                    >
-                      <div className="flex items-center">
-                        Elevation
-                        {sortField === 'elevation' && (
-                          <span className="ml-1">
-                            {sortDirection === 'asc' ? '↑' : '↓'}
-                          </span>
-                        )}
-                      </div>
-                    </th>
-                    <th scope="col" className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Status
-                    </th>
-                    <th scope="col" className="px-3 py-2 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Actions
-                    </th>
+                    <td colSpan={5} className="px-3 py-3 text-center text-gray-500">
+                      No pins match your filters. Try adjusting your search criteria.
+                    </td>
                   </tr>
-                </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
-                  {filteredItems.length === 0 ? (
-                    <tr>
-                      <td colSpan={5} className="px-3 py-3 text-center text-gray-500">
-                        No pins match your filters. Try adjusting your search criteria.
+                ) : (
+                  filteredItems.map((item, index) => (
+                    <tr key={`${item.id}-${index}`} className="hover:bg-gray-50">
+                      <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-900">
+                        {item.name}
                       </td>
-                    </tr>
-                  ) : (
-                    filteredItems.map((item, index) => (
-                      <tr key={`${item.id}-${index}`} className="hover:bg-gray-50">
-                        <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-900">
-                          {item.name}
-                        </td>
-                        <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-500">
-                          {item.type}
-                        </td>
-                        <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-500">
-                          {item.elevation ? `${item.elevation} ft` : 'N/A'}
-                        </td>
-                        <td className="px-3 py-2 whitespace-nowrap text-sm">
-                          <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                            item.status === 'approved' ? 'bg-green-100 text-green-800' : 
-                            item.status === 'pending' ? 'bg-yellow-100 text-yellow-800' : 
-                            item.status === 'rejected' ? 'bg-red-100 text-red-800' : 
-                            'bg-gray-100 text-gray-800'
-                          }`}>
-                            {item.status || 'approved'}
-                          </span>
-                        </td>
-                        <td className="px-3 py-2 whitespace-nowrap text-right text-sm font-medium">
-                          {/* For regular pins or approved submissions */}
-                          {(!item.status || item.status === 'approved') && (
-                            <>
-                              <button
-                                onClick={() => setSelectedPin(item)}
-                                className="text-blue-600 hover:text-blue-900 mr-3"
-                              >
-                                Edit
-                              </button>
-                              <button
-                                onClick={() => handleDelete(item)}
-                                className="text-red-600 hover:text-red-900"
-                              >
-                                Delete
-                              </button>
-                            </>
-                          )}
-                          
-                          {/* For pending submissions */}
-                          {item.status === 'pending' && (
-                            <>
-                              <button
-                                onClick={() => handleApproveSubmission(item)}
-                                className="text-green-600 hover:text-green-900 mr-3"
-                              >
-                                Approve
-                              </button>
-                              <button
-                                onClick={() => handleRejectSubmission(item)}
-                                className="text-red-600 hover:text-red-900"
-                              >
-                                Reject
-                              </button>
-                            </>
-                          )}
-                          
-                          {/* For rejected submissions - allow reconsideration */}
-                          {item.status === 'rejected' && (
+                      <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-500">
+                        {item.type}
+                      </td>
+                      <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-500">
+                        {item.elevation ? `${item.elevation} ft` : 'N/A'}
+                      </td>
+                      <td className="px-3 py-2 whitespace-nowrap text-sm">
+                        <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                          item.status === 'approved' ? 'bg-green-100 text-green-800' : 
+                          item.status === 'pending' ? 'bg-yellow-100 text-yellow-800' : 
+                          item.status === 'rejected' ? 'bg-red-100 text-red-800' : 
+                          'bg-gray-100 text-gray-800'
+                        }`}>
+                          {item.status || 'approved'}
+                        </span>
+                      </td>
+                      <td className="px-3 py-2 whitespace-nowrap text-right text-sm font-medium">
+                        {/* For regular pins or approved submissions */}
+                        {(!item.status || item.status === 'approved') && (
+                          <>
+                            <button
+                              onClick={() => handleEdit(item)}
+                              className="text-blue-600 hover:text-blue-900 mr-3"
+                            >
+                              Edit
+                            </button>
+                            <button
+                              onClick={() => handleDelete(item)}
+                              className="text-red-600 hover:text-red-900"
+                            >
+                              Delete
+                            </button>
+                          </>
+                        )}
+                        
+                        {/* For pending submissions */}
+                        {item.status === 'pending' && (
+                          <>
                             <button
                               onClick={() => handleApproveSubmission(item)}
-                              className="text-blue-600 hover:text-blue-900"
+                              className="text-green-600 hover:text-green-900 mr-3"
+                            >
+                              Approve
+                            </button>
+                            <button
+                              onClick={() => handleRejectSubmission(item)}
+                              className="text-red-600 hover:text-red-900"
+                            >
+                              Reject
+                            </button>
+                          </>
+                        )}
+                        
+                        {/* For rejected submissions - allow reconsideration */}
+                        {item.status === 'rejected' && (
+                          <>
+                            <button
+                              onClick={() => handleApproveSubmission(item)}
+                              className="text-blue-600 hover:text-blue-900 mr-3"
                             >
                               Reconsider
                             </button>
-                          )}
-                        </td>
-                      </tr>
-                    ))
-                  )}
-                </tbody>
-              </table>
+                            <button
+                              onClick={() => handleEdit(item)}
+                              className="text-blue-600 hover:text-blue-900"
+                            >
+                              Edit
+                            </button>
+                          </>
+                        )}
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+      
+      {/* Edit Modal */}
+      {selectedPin && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-lg shadow-xl w-full max-w-lg overflow-hidden">
+            <div className="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+              <h3 className="text-lg font-medium text-gray-900">Edit Pin</h3>
+              <button 
+                onClick={() => setSelectedPin(null)}
+                className="text-gray-400 hover:text-gray-500"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            
+            <div className="p-6">
+              <form className="space-y-4" onSubmit={(event) => {
+                event.preventDefault();
+                if (selectedPin) {
+                  handleSaveEdit(selectedPin);
+                }
+              }}>
+                <div>
+                  <label htmlFor="pin-name" className="block text-sm font-medium text-gray-700">Name</label>
+                  <input 
+                    type="text"
+                    id="pin-name"
+                    value={selectedPin.name}
+                    onChange={(e) => setSelectedPin({...selectedPin, name: e.target.value})}
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand-green focus:ring-brand-green sm:text-sm"
+                    required
+                  />
+                </div>
+                
+                <div>
+                  <label htmlFor="pin-type" className="block text-sm font-medium text-gray-700">Type</label>
+                  <select
+                    id="pin-type"
+                    value={selectedPin.type}
+                    onChange={(e) => setSelectedPin({...selectedPin, type: e.target.value})}
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand-green focus:ring-brand-green sm:text-sm"
+                    required
+                  >
+                    {pinTypes.map(type => (
+                      <option key={type} value={type}>{type}</option>
+                    ))}
+                  </select>
+                </div>
+                
+                <div>
+                  <label htmlFor="pin-elevation" className="block text-sm font-medium text-gray-700">Elevation (ft)</label>
+                  <input 
+                    type="text"
+                    id="pin-elevation"
+                    value={selectedPin.elevation || ''}
+                    onChange={(e) => setSelectedPin({...selectedPin, elevation: e.target.value})}
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand-green focus:ring-brand-green sm:text-sm"
+                  />
+                </div>
+                
+                <div>
+                  <label htmlFor="pin-coordinates" className="block text-sm font-medium text-gray-700">Coordinates (lat, lng)</label>
+                  <input 
+                    type="text"
+                    id="pin-coordinates"
+                    value={selectedPin.coordinates.join(', ')}
+                    onChange={(e) => {
+                      const parts = e.target.value.split(',').map(p => parseFloat(p.trim()));
+                      if (parts.length === 2 && !isNaN(parts[0]) && !isNaN(parts[1])) {
+                        setSelectedPin({...selectedPin, coordinates: [parts[0], parts[1]]});
+                      }
+                    }}
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand-green focus:ring-brand-green sm:text-sm"
+                    required
+                  />
+                </div>
+                
+                <div>
+                  <label htmlFor="pin-description" className="block text-sm font-medium text-gray-700">Description</label>
+                  <textarea
+                    id="pin-description"
+                    rows={3}
+                    value={selectedPin.description || ''}
+                    onChange={(e) => setSelectedPin({...selectedPin, description: e.target.value})}
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand-green focus:ring-brand-green sm:text-sm"
+                  />
+                </div>
+                
+                <div className="flex justify-end space-x-3 pt-4">
+                  <button
+                    type="button"
+                    onClick={() => setSelectedPin(null)}
+                    className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-brand-green hover:bg-brand-green-light"
+                  >
+                    Save Changes
+                  </button>
+                </div>
+              </form>
             </div>
           </div>
-        )}
-        
-        {/* Edit Modal */}
-        {selectedPin && (
-          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-            <div className="bg-white rounded-lg shadow-xl w-full max-w-lg overflow-hidden">
-              <div className="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
-                <h3 className="text-lg font-medium text-gray-900">Edit Pin</h3>
-                <button 
-                  onClick={() => setSelectedPin(null)}
-                  className="text-gray-400 hover:text-gray-500"
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
-              </div>
-              
-              <div className="p-6">
-                <form className="space-y-4" onSubmit={(event) => {
-                  event.preventDefault();
-                  if (selectedPin) {
-                    handleSaveEdit(selectedPin);
-                  }
-                }}>
-                  <div>
-                    <label htmlFor="pin-name" className="block text-sm font-medium text-gray-700">Name</label>
-                    <input 
-                      type="text"
-                      id="pin-name"
-                      value={selectedPin.name}
-                      onChange={(e) => setSelectedPin({...selectedPin, name: e.target.value})}
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand-green focus:ring-brand-green sm:text-sm"
-                      required
-                    />
-                  </div>
-                  
-                  <div>
-                    <label htmlFor="pin-type" className="block text-sm font-medium text-gray-700">Type</label>
-                    <select
-                      id="pin-type"
-                      value={selectedPin.type}
-                      onChange={(e) => setSelectedPin({...selectedPin, type: e.target.value})}
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand-green focus:ring-brand-green sm:text-sm"
-                      required
-                    >
-                      {pinTypes.map(type => (
-                        <option key={type} value={type}>{type}</option>
-                      ))}
-                    </select>
-                  </div>
-                  
-                  <div>
-                    <label htmlFor="pin-elevation" className="block text-sm font-medium text-gray-700">Elevation (ft)</label>
-                    <input 
-                      type="text"
-                      id="pin-elevation"
-                      value={selectedPin.elevation || ''}
-                      onChange={(e) => setSelectedPin({...selectedPin, elevation: e.target.value})}
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand-green focus:ring-brand-green sm:text-sm"
-                    />
-                  </div>
-                  
-                  <div>
-                    <label htmlFor="pin-coordinates" className="block text-sm font-medium text-gray-700">Coordinates (lat, lng)</label>
-                    <input 
-                      type="text"
-                      id="pin-coordinates"
-                      value={selectedPin.coordinates.join(', ')}
-                      onChange={(e) => {
-                        const parts = e.target.value.split(',').map(p => parseFloat(p.trim()));
-                        if (parts.length === 2 && !isNaN(parts[0]) && !isNaN(parts[1])) {
-                          setSelectedPin({...selectedPin, coordinates: [parts[0], parts[1]]});
-                        }
-                      }}
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand-green focus:ring-brand-green sm:text-sm"
-                      required
-                    />
-                  </div>
-                  
-                  <div>
-                    <label htmlFor="pin-description" className="block text-sm font-medium text-gray-700">Description</label>
-                    <textarea
-                      id="pin-description"
-                      rows={3}
-                      value={selectedPin.description || ''}
-                      onChange={(e) => setSelectedPin({...selectedPin, description: e.target.value})}
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand-green focus:ring-brand-green sm:text-sm"
-                    />
-                  </div>
-                  
-                  <div className="flex justify-end space-x-3 pt-4">
-                    <button
-                      type="button"
-                      onClick={() => setSelectedPin(null)}
-                      className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      type="submit"
-                      className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-brand-green hover:bg-brand-green-light"
-                    >
-                      Save Changes
-                    </button>
-                  </div>
-                </form>
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
+        </div>
+      )}
     </AdminPageWrapper>
   );
 } 
