@@ -1,12 +1,16 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { MOUNTAINS } from '@/lib/weather';
 import WeatherDashboard from '@/components/WeatherDashboard';
 import PageWrapper from '@/components/ui/PageWrapper';
 import Link from 'next/link';
+import { useRegion } from '@/contexts/RegionContext';
+import { getMountainsForRegion } from '@/lib/weather';
 
 export default function MountainWeatherProject() {
+  const { region } = useRegion();
+  const mountains = getMountainsForRegion(region);
+  
   return (
     <PageWrapper className="bg-gray-50">
       <div className="max-w-container mx-auto px-4 py-12">
@@ -33,10 +37,10 @@ export default function MountainWeatherProject() {
           transition={{ delay: 0.2 }}
           className="grid gap-6 md:grid-cols-2"
         >
-          {MOUNTAINS.map((mountain) => (
+          {mountains.map((spot) => (
             <WeatherDashboard
-              key={mountain.name}
-              mountain={mountain}
+              key={spot.id}
+              spot={spot}
             />
           ))}
         </motion.div>

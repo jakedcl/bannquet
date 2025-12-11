@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import AdminPageWrapper from '@/components/admin/AdminPageWrapper';
-import { PinSubmission } from '@/components/projects/adk-map/types';
-import { categories } from '@/components/projects/adk-map/MarkerStyle';
+import { PinSubmission } from '@/components/adk-map/types';
+import { categories } from '@/components/adk-map/MarkerStyle';
 import Link from 'next/link';
 
 export default function SubmissionsPage() {
