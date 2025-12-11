@@ -247,8 +247,9 @@ export function UserMapProvider({ children }: { children: ReactNode }) {
     setSocket(newSocket);
 
     return () => {
-      messageTimeoutsRef.current.forEach(timeout => clearTimeout(timeout));
-      messageTimeoutsRef.current.clear();
+      const timeouts = messageTimeoutsRef.current;
+      timeouts.forEach(timeout => clearTimeout(timeout));
+      timeouts.clear();
       newSocket.close();
       socketRef.current = null;
     };
@@ -334,7 +335,7 @@ export function UserMapProvider({ children }: { children: ReactNode }) {
       },
       { enableHighAccuracy: false, timeout: 10000, maximumAge: 300000 }
     );
-  }, [hasDroppedPin, visitorId]);
+  }, [visitorId]);
 
   // Update nickname
   const setNickname = useCallback((newNickname: string) => {
