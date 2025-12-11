@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
-import { useUserMap, Message } from '@/contexts/UserMapContext';
+import { useUserMap } from '@/contexts/UserMapContext';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function UserMapClient() {
@@ -38,7 +38,6 @@ export default function UserMapClient() {
   const [mapLoaded, setMapLoaded] = useState(false);
   const [chatOpen, setChatOpen] = useState(true);
   const [showPinSuccess, setShowPinSuccess] = useState(false);
-  const [showNameSuccess, setShowNameSuccess] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
   const [showNameModal, setShowNameModal] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
