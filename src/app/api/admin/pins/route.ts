@@ -1,11 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
-import { Pin, UserSession } from '@/components/projects/adk-map/types';
+import { Pin, UserSession } from '@/components/adk-map/types';
+import { DEFAULT_REGION, RegionCode, isRegionCode } from '@/lib/regions';
 
 // Path to the pin data files
-const getDataFilePath = (categoryId: string) => {
-  return path.join(process.cwd(), 'src', 'data', 'adk', `${categoryId}.json`);
+const getDataFilePath = (region: RegionCode, categoryId: string) => {
+  return path.join(process.cwd(), 'src', 'data', 'regions', region, `${categoryId}.json`);
+};
+
+const resolveRegionFromRequest = (request: NextRequest, fallback?: string | null): RegionCode => {
+  const queryRegion = request.nextUrl.searchParams.get('region');
+  if (isRegionCode(queryRegion)) return queryRegion;
+  if (isRegionCode(fallback)) return fallback;
+  return DEFAULT_REGION;
 };
 
 // Check if user is admin
@@ -50,9 +58,9 @@ const isAdmin = async (request: NextRequest) => {
 };
 
 // Load pin data from file
-const loadPinData = async (categoryId: string) => {
+const loadPinData = async (region: RegionCode, categoryId: string) => {
   try {
-    const filePath = getDataFilePath(categoryId);
+    const filePath = getDataFilePath(region, categoryId);
     
     if (!fs.existsSync(filePath)) {
       return { pins: [] };
@@ -67,9 +75,9 @@ const loadPinData = async (categoryId: string) => {
 };
 
 // Save pin data to file
-const savePinData = async (categoryId: string, data: { pins: Pin[] }): Promise<boolean> => {
+const savePinData = async (region: RegionCode, categoryId: string, data: { pins: Pin[] }): Promise<boolean> => {
   try {
-    const filePath = getDataFilePath(categoryId);
+    const filePath = getDataFilePath(region, categoryId);
     const dirPath = path.dirname(filePath);
     
     // Ensure directory exists
@@ -94,21 +102,22 @@ export async function GET(request: NextRequest) {
   }
   
   try {
+    const region = resolveRegionFromRequest(request);
     // Get query parameters
     const searchParams = request.nextUrl.searchParams;
     const categoryId = searchParams.get('categoryId');
     
     if (categoryId) {
       // Fetch pins for specific category
-      const data = await loadPinData(categoryId);
-      return NextResponse.json({ data }, { status: 200 });
+      const data = await loadPinData(region, categoryId);
+      return NextResponse.json({ data, region }, { status: 200 });
     } else {
       // Fetch all pins from all categories
       // In a real app with many pins, you'd add pagination
       // For this demo, we'll return everything
       
-      // Get all category files from the data/adk directory
-      const dataDir = path.join(process.cwd(), 'src', 'data', 'adk');
+      // Get all category files from the region directory
+      const dataDir = path.join(process.cwd(), 'src', 'data', 'regions', region);
       const files = fs.readdirSync(dataDir);
       
       const allPins: Pin[] = [];
@@ -116,7 +125,7 @@ export async function GET(request: NextRequest) {
       for (const file of files) {
         if (file.endsWith('.json')) {
           const categoryId = file.replace('.json', '');
-          const data = await loadPinData(categoryId);
+          const data = await loadPinData(region, categoryId);
           
           // Add category to each pin
           if (data.pins && Array.isArray(data.pins)) {
@@ -129,7 +138,7 @@ export async function GET(request: NextRequest) {
         }
       }
       
-      return NextResponse.json({ pins: allPins }, { status: 200 });
+      return NextResponse.json({ pins: allPins, region }, { status: 200 });
     }
   } catch (error) {
     console.error('Error in GET request:', error);
@@ -147,14 +156,15 @@ export async function PUT(request: NextRequest) {
   
   try {
     const body = await request.json();
-    const { pin, categoryId } = body;
+    const { pin, categoryId, region: regionFromBody } = body;
+    const region = resolveRegionFromRequest(request, regionFromBody);
     
     if (!pin || !categoryId || !pin.id) {
       return NextResponse.json({ error: 'Missing required data' }, { status: 400 });
     }
     
     // Load current data
-    const data = await loadPinData(categoryId);
+    const data = await loadPinData(region, categoryId);
     
     // Find the pin by ID
     const pinIndex = data.pins.findIndex((p: Pin) => p.id === pin.id);
@@ -170,13 +180,13 @@ export async function PUT(request: NextRequest) {
     };
     
     // Save the updated data
-    const saveResult = await savePinData(categoryId, data);
+    const saveResult = await savePinData(region, categoryId, data);
     
     if (!saveResult) {
       return NextResponse.json({ error: 'Failed to save pin' }, { status: 500 });
     }
     
-    return NextResponse.json({ success: true, pin: data.pins[pinIndex] }, { status: 200 });
+    return NextResponse.json({ success: true, pin: data.pins[pinIndex], region }, { status: 200 });
   } catch (error) {
     console.error('Error in PUT request:', error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
@@ -193,14 +203,15 @@ export async function DELETE(request: NextRequest) {
   
   try {
     const body = await request.json();
-    const { pinId, categoryId, coordinates } = body;
+    const { pinId, categoryId, coordinates, region: regionFromBody } = body;
+    const region = resolveRegionFromRequest(request, regionFromBody);
     
     if (!categoryId || (!pinId && !coordinates)) {
       return NextResponse.json({ error: 'Missing required data' }, { status: 400 });
     }
     
     // Load current data
-    const data = await loadPinData(categoryId);
+    const data = await loadPinData(region, categoryId);
     
     // Find the pin by ID or coordinates
     let pinIndex = -1;
@@ -225,13 +236,13 @@ export async function DELETE(request: NextRequest) {
     data.pins.splice(pinIndex, 1);
     
     // Save the updated data
-    const saveResult = await savePinData(categoryId, data);
+    const saveResult = await savePinData(region, categoryId, data);
     
     if (!saveResult) {
       return NextResponse.json({ error: 'Failed to delete pin' }, { status: 500 });
     }
     
-    return NextResponse.json({ success: true, pin: deletedPin }, { status: 200 });
+    return NextResponse.json({ success: true, pin: deletedPin, region }, { status: 200 });
   } catch (error) {
     console.error('Error in DELETE request:', error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });

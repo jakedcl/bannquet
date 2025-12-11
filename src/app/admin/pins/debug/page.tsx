@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import AdminPageWrapper from '@/components/admin/AdminPageWrapper';
 import Link from 'next/link';
-import { PinSubmission } from '@/components/projects/adk-map/types';
+import { PinSubmission } from '@/components/adk-map/types';
 
 export default function AdminPinsDebugPage() {
   const [submissions, setSubmissions] = useState<PinSubmission[]>([]);
@@ -21,15 +21,15 @@ export default function AdminPinsDebugPage() {
         
         // Redirect if not admin
         if (!session.isAdmin) {
-          window.location.href = '/adkmap';
+          window.location.href = '/map';
         }
       } catch (err) {
         console.error('Error parsing user session:', err);
-        window.location.href = '/adkmap';
+        window.location.href = '/map';
       }
     } else {
       // No session, redirect to map
-      window.location.href = '/adkmap';
+      window.location.href = '/map';
     }
   }, []);
   

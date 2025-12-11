@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
-import { User, UserSession } from '@/components/projects/adk-map/types';
+import { User, UserSession } from '@/components/adk-map/types';
 import crypto from 'crypto';
 
 // Path to the users data file

@@ -30,7 +30,7 @@ export const projects: Project[] = [
     type: 'nextjs',
     image: '/projects/adirondacks-map.jpg',
     tags: ['Mapbox GL', '3D Visualization', 'Interactive', 'Next.js'],
-    link: '/adkmap'
+    link: '/map'
   },
   // Example of an iframe project
   {
