@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import MapClientWrapper from '@/components/projects/adk-map/MapClientWrapper';
+import MapClientWrapper from '@/components/adk-map/MapClientWrapper';
 
 export const metadata: Metadata = {
   title: 'Adirondacks Interactive Map | Bannquet',

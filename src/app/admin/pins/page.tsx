@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Pin, PinSubmission } from '@/components/projects/adk-map/types';
-import { categories } from '@/components/projects/adk-map/MarkerStyle';
+import { Pin, PinSubmission } from '@/components/adk-map/types';
+import { categories } from '@/components/adk-map/MarkerStyle';
 import AdminPageWrapper from '@/components/admin/AdminPageWrapper';
 
 type SortDirection = 'asc' | 'desc';
@@ -42,15 +42,15 @@ export default function AdminPinsPage() {
         
         // Redirect if not admin
         if (!session.isAdmin) {
-          window.location.href = '/adkmap';
+          window.location.href = '/map';
         }
       } catch (err) {
         console.error('Error parsing user session:', err);
-        window.location.href = '/adkmap';
+        window.location.href = '/map';
       }
     } else {
       // No session, redirect to map
-      window.location.href = '/adkmap';
+      window.location.href = '/map';
     }
   }, []);
   
@@ -536,7 +536,7 @@ export default function AdminPinsPage() {
         <div className="flex flex-col sm:flex-row gap-4">
           {/* Back to Map and Add New Pin buttons */}
           <div className="flex justify-between mb-6">
-            <Link href="/adkmap" className="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white rounded-md border border-gray-300 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-green">
+            <Link href="/map" className="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white rounded-md border border-gray-300 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-green">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
               </svg>

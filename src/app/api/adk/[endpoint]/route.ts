@@ -1,13 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server';
 import path from 'path';
 import fs from 'fs/promises';
+import { DEFAULT_REGION, RegionCode, isRegionCode } from '@/lib/regions';
+
+type EndpointParams = {
+  endpoint?: string;
+};
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { endpoint: string } }
+  { params }: { params: Promise<EndpointParams> }
 ) {
-  // Ensure params is properly handled
-  if (!params || !params.endpoint) {
+  const resolvedParams = await params;
+
+  if (!resolvedParams?.endpoint) {
     return NextResponse.json(
       {
         success: false,
@@ -18,11 +24,14 @@ export async function GET(
     );
   }
 
-  const endpoint = params.endpoint;
+  const endpoint = resolvedParams.endpoint;
+  const searchParams = request.nextUrl.searchParams;
+  const regionParam = searchParams.get('region');
+  const region: RegionCode = isRegionCode(regionParam) ? regionParam : DEFAULT_REGION;
   
   try {
     // Define path to data file
-    const dataPath = path.join(process.cwd(), 'src', 'data', 'adk', `${endpoint}.json`);
+    const dataPath = path.join(process.cwd(), 'src', 'data', 'regions', region, `${endpoint}.json`);
     
     // Check if file exists
     try {
@@ -44,8 +53,9 @@ export async function GET(
     
     return NextResponse.json({
       success: true,
-      message: `Successfully retrieved ${endpoint} data`,
+      message: `Successfully retrieved ${endpoint} data for ${region.toUpperCase()}`,
       data: {
+        region,
         category: endpoint,
         pins: jsonData
       }

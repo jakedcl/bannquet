@@ -16,15 +16,49 @@ export type CloudLayer = {
   amount: string;
 };
 
+export interface WeatherHazard {
+  id: string;
+  event: string;
+  headline?: string;
+  description?: string;
+  severity?: string;
+  instruction?: string;
+  areaDesc?: string;
+}
+
 export interface WeatherData {
   temperature: number;
+  apparentTemperature?: number | null;
   conditions: string[];
   windSpeed: string;
   windDirection: string;
+  windGust?: number | null;
+  summitWind?: number | null;
   precipitation: number;
+  snowLevel?: number | null;
+  snowAmount?: number | null;
+  iceAccumulation?: number | null;
+  visibility?: number | null;
+  skyCover?: number | null;
+  ceilingHeight?: number | null;
+  hazards: WeatherHazard[];
   timestamp: string;
   icon?: string;
+  hourlyForecast?: ForecastSnippet[];
+  dailyForecast?: ForecastSnippet[];
 }
+
+export type ForecastSnippet = {
+  name: string;
+  startTime: string;
+  temperature: number;
+  windSpeed?: string;
+  shortForecast?: string;
+  isDaytime?: boolean;
+  icon?: string;
+  secondaryTemp?: number;
+  secondaryForecast?: string;
+};
 
 export type WeatherAlert = {
   id: string;

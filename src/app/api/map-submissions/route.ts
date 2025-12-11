@@ -1,8 +1,7 @@
 import { NextResponse } from 'next/server';
 import fs from 'fs/promises';
 import path from 'path';
-import { v4 as uuidv4 } from 'uuid';
-import { PinSubmission } from '@/components/projects/adk-map/types';
+import { PinSubmission } from '@/components/adk-map/types';
 
 // In a production environment, you would use a proper database
 // This is a simple file-based approach for demonstration purposes
@@ -73,7 +72,7 @@ export async function POST(request: Request) {
       ...data,
       status: 'pending',
       submittedAt: new Date().toISOString(),
-      id: uuidv4(),
+      id: crypto.randomUUID(),
       requestType: data.requestType || 'addition' // Default to addition if not specified
     };
 
