@@ -29,8 +29,9 @@ const server = createServer(app);
 // Socket.io server with CORS configured
 const io = new Server(server, {
   cors: {
-    origin: "*", // Allow connections from Next.js dev server
-    methods: ["GET", "POST"]
+    origin: process.env.ALLOWED_ORIGINS?.split(',') || "*", // Allow specific origins in production
+    methods: ["GET", "POST"],
+    credentials: true
   }
 });
 
