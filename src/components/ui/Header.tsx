@@ -28,10 +28,10 @@ export default function Header() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Region-dependent nav items (grouped together)
-  const regionNavItems = [
-    { href: '/weather', label: 'weather dashboard' },
-    { href: '/map', label: 'map + pins' },
+  // Navigation items
+  const navItems = [
+    { href: '/mountain-weather', label: 'mountain weather' },
+    { href: '/trip-reports', label: 'trip reports' },
   ];
 
   return (
@@ -56,43 +56,37 @@ export default function Header() {
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center gap-3 lg:gap-4 ml-auto">
-          {/* Region Group: State selector + Weather + Map */}
-          <div className="relative flex items-center gap-2 bg-brand-green-light/40 rounded-full px-2 py-1 border border-white/30 hover:border-white transition-all group">
-            <div className="absolute inset-0 rounded-full bg-white/0 group-hover:bg-white/10 transition-all pointer-events-none"></div>
-            <div className="relative flex items-center gap-2 z-10">
-            <RegionSelector alignment="left" size="desktop" embedded />
-            
-            {regionNavItems.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`relative px-4 py-1.5 text-sm font-semibold tracking-wide transition-colors rounded-full border isolate
-                  ${pathname === item.href 
-                    ? 'bg-white text-brand-green border-white' 
-                    : 'bg-brand-green text-white border-white/30 hover:border-white hover:bg-white/10'}
-                `}
-              >
-                {item.label}
-              </Link>
-            ))}
+          {navItems.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className={`relative px-4 py-2 text-sm font-semibold tracking-wide transition-colors rounded-full border
+                ${pathname === item.href 
+                  ? 'bg-white text-brand-green border-white' 
+                  : 'text-white border-white/30 hover:border-white hover:bg-white/10'}
+              `}
+            >
+              {item.label}
+            </Link>
+          ))}
+          
+          {/* Region selector - only show on weather pages */}
+          {(pathname === '/weather' || pathname.startsWith('/weather/')) && (
+            <div className="relative flex items-center gap-2 bg-brand-green-light/40 rounded-full px-2 py-1 border border-white/30 hover:border-white transition-all">
+              <RegionSelector alignment="left" size="desktop" embedded />
             </div>
-          </div>
-
-          {/* Community Map - Independent */}
-          <Link
-            href="/usermap"
-            className={`relative px-4 py-2 text-sm font-semibold tracking-wide transition-colors rounded-full border
-              ${pathname === '/usermap' 
-                ? 'bg-white text-brand-green border-white' 
-                : 'text-white border-white/30 hover:border-white hover:bg-white/10'}
-            `}
-          >
-            live visitors
-          </Link>
+          )}
         </nav>
 
-        {/* Mobile Menu Button */}
+        {/* Mobile: Region selector + Menu Button */}
         <div className="flex items-center gap-2 md:hidden ml-auto">
+          {/* Region selector - only show on weather pages */}
+          {(pathname === '/weather' || pathname.startsWith('/weather/')) && (
+            <div className="relative">
+              <RegionSelector alignment="right" size="mobile" embedded />
+            </div>
+          )}
+          
           <button 
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className="z-20 p-2 focus:outline-none"
@@ -142,13 +136,11 @@ export default function Header() {
               transition={{ type: "spring", damping: 25, stiffness: 300 }}
               className="fixed top-0 right-0 bottom-0 w-4/5 max-w-xs bg-brand-green z-10 md:hidden flex flex-col p-6 pt-24"
             >
-              {/* Region Group for Mobile */}
+              {/* Navigation Items for Mobile */}
               <div className="mb-6">
-                <p className="text-white/60 text-xs uppercase tracking-wider mb-3 px-2">Mountain Region</p>
+                <p className="text-white/60 text-xs uppercase tracking-wider mb-3 px-2">Navigation</p>
                 <div className="bg-brand-green-light/40 rounded-2xl p-3 border border-white/10 space-y-2">
-                  <RegionSelector alignment="left" size="mobile" fullWidth />
-                  
-                  {regionNavItems.map((item) => {
+                  {navItems.map((item) => {
                     const isActive = pathname === item.href;
                     return (
                       <Link
@@ -165,21 +157,6 @@ export default function Header() {
                     );
                   })}
                 </div>
-              </div>
-
-              {/* Independent Items */}
-              <div>
-                <p className="text-white/60 text-xs uppercase tracking-wider mb-3 px-2">Community</p>
-                <Link
-                  href="/usermap"
-                  className={`block px-4 py-3 text-base font-semibold rounded-xl border text-center transition-colors ${
-                    pathname === '/usermap'
-                      ? 'bg-white text-brand-green border-white'
-                      : 'text-white border-white/30 hover:border-white hover:bg-white/10'
-                  }`}
-                >
-                  live visitors
-                </Link>
               </div>
             </motion.nav>
           )}
@@ -216,8 +193,12 @@ function RegionSelector({ className = '', alignment = 'right', size = 'desktop',
   // Different styles based on context
   let buttonClasses: string;
   if (embedded) {
-    // Embedded in group: no border, larger text
-    buttonClasses = 'px-3 py-1.5 text-lg font-bold tracking-wide rounded-full';
+    // Embedded in group: compact for mobile header
+    if (size === 'mobile') {
+      buttonClasses = 'px-2.5 py-1.5 text-sm font-bold tracking-wide rounded-full';
+    } else {
+      buttonClasses = 'px-3 py-1.5 text-lg font-bold tracking-wide rounded-full';
+    }
   } else if (size === 'desktop') {
     buttonClasses = 'px-4 py-1.5 text-sm font-bold tracking-wide rounded-full border';
   } else {
