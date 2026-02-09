@@ -1,31 +1,77 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { useEffect } from 'react';
+import Link from 'next/link';
 import PageWrapper from '@/components/ui/PageWrapper';
-import { useRegion } from '@/contexts/RegionContext';
-import { REGION_OPTIONS } from '@/lib/regions';
-import { useRouter } from 'next/navigation';
 
 export default function Home() {
-  const { region, setRegion } = useRegion();
-  const router = useRouter();
-  useEffect(() => {
-    if (!region) return;
-  }, [region]);
-
-  const handleSelect = (code: (typeof REGION_OPTIONS)[number]['code']) => {
-    setRegion(code);
-    router.push('/weather');
-  };
-
   return (
     <PageWrapper>
       <section className="relative min-h-[calc(100vh-72px)] bg-brand-green text-white flex items-center justify-center overflow-hidden">
         <div className="max-w-container mx-auto px-4 w-full">
-          <div className="space-y-10">
-            <AnimatedHero />
-            <RegionPicker onSelect={handleSelect} />
+          <div className="space-y-12 text-center">
+            {/* Hero Section */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              className="space-y-6"
+            >
+              <h1 className="text-5xl md:text-7xl font-bold tracking-tight">
+                <br/>Bannquet
+              </h1>
+              <p className="text-xl md:text-2xl text-white/80 max-w-2xl mx-auto">
+                Tools and Info for the Mountains of the United States
+              </p>
+            </motion.div>
+
+            {/* CTA Buttons */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2, duration: 0.6 }}
+              className="flex flex-col sm:flex-row items-center justify-center gap-4"
+            >
+              <Link
+                href="/mountain-weather"
+                className="group relative px-8 py-4 bg-white text-brand-green rounded-full font-semibold text-lg transition-all hover:scale-105 hover:shadow-xl"
+              >
+                <span className="relative z-10">Mountain Weather</span>
+                <div className="absolute inset-0 bg-white/90 rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
+              </Link>
+              <Link
+                href="/trip-reports"
+                className="group relative px-8 py-4 bg-white/10 text-white border-2 border-white/30 rounded-full font-semibold text-lg transition-all hover:bg-white/20 hover:border-white hover:scale-105"
+              >
+                Trip Reports
+              </Link>
+            </motion.div>
+
+            {/* Features Grid */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.4, duration: 0.6 }}
+              className="pt-12 space-y-8"
+            >
+              <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+                <FeatureCard
+                  title="Real-time Weather"
+                  description="Summit vs. valley conditions for NY, VT, NH, and ME"
+                  delay={0.5}
+                />
+                <FeatureCard
+                  title="Trip Reports"
+                  description="Share and explore adventures from our crew across the US"
+                  delay={0.6}
+                />
+                <FeatureCard
+                  title="Detailed Forecasts"
+                  description="Hourly and daily forecasts with wind, precipitation, and alerts"
+                  delay={0.7}
+                />
+              </div>
+            </motion.div>
           </div>
         </div>
       </section>
@@ -33,57 +79,24 @@ export default function Home() {
   );
 }
 
-function AnimatedHero() {
-  const words = ['northeast', 'mountain', 'GIS'];
-  return (
-    <div className="flex flex-col items-center text-center">
-      <div className="flex items-center gap-3 mb-6">
-        {words.map((word, idx) => (
-          <motion.span
-            key={word}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: idx * 0.2, duration: 0.6 }}
-            className="text-4xl md:text-6xl font-bold"
-          >
-            {word}
-          </motion.span>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function RegionPicker({ onSelect }: { onSelect: (code: (typeof REGION_OPTIONS)[number]['code']) => void }) {
+function FeatureCard({ 
+  title, 
+  description, 
+  delay 
+}: { 
+  title: string; 
+  description: string; 
+  delay: number;
+}) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 30 }}
+      initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.8, duration: 0.6 }}
-      className="bg-white/5 border border-white/10 rounded-3xl p-6"
+      transition={{ delay, duration: 0.6 }}
+      className="bg-white/5 border border-white/10 rounded-2xl p-6 backdrop-blur"
     >
-      <h3 className="text-2xl font-semibold text-white mb-4 text-center">
-        Choose your state
-      </h3>
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {REGION_OPTIONS.map((opt, idx) => (
-          <motion.button
-            key={opt.code}
-            onClick={() => onSelect(opt.code)}
-            className="relative overflow-hidden rounded-2xl bg-white/10 border border-white/20 p-4 text-left backdrop-blur hover:bg-white/20 transition shadow-lg"
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 + idx * 0.05 }}
-          >
-            <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-white/0 pointer-events-none" />
-            <p className="text-xl font-bold text-white">{opt.label}</p>
-            <p className="text-xs text-white/70 mt-1">Pins + Weather</p>
-          </motion.button>
-        ))}
-      </div>
+      <h3 className="text-lg font-semibold mb-2">{title}</h3>
+      <p className="text-sm text-white/70">{description}</p>
     </motion.div>
   );
 }
-
