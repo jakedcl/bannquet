@@ -1,5 +1,4 @@
 import { Mountain } from '@/types/weather';
-import type { Category } from '@/components/adk-map/types';
 
 export const REGIONS = ['ny', 'vt', 'nh', 'me'] as const;
 
@@ -30,7 +29,6 @@ export type MapRegionConfig = {
   bounds: [[number, number], [number, number]];
   defaultStyle: string;
   enable3D?: boolean;
-  categories?: Category[];
 };
 
 export const REGION_MAP_CONFIG: Record<RegionCode, MapRegionConfig> = {
