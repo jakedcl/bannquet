@@ -1,9 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { sanityWriteClient } from '@/lib/sanity';
 
-// Simple password protection for uploads
-const SUBMIT_PASSWORD = process.env.TRIP_REPORT_PASSWORD || '';
-
 export async function POST(request: NextRequest) {
   try {
     if (!sanityWriteClient) {
@@ -18,18 +15,6 @@ export async function POST(request: NextRequest) {
 
     const formData = await request.formData();
     const file = formData.get('file') as File;
-    const password = formData.get('password') as string | null;
-
-    // Password protection (if enabled)
-    if (SUBMIT_PASSWORD && password !== SUBMIT_PASSWORD) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: 'Unauthorized: Invalid password',
-        },
-        { status: 401 }
-      );
-    }
 
     if (!file) {
       return NextResponse.json(
@@ -52,13 +37,13 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Validate file size (max 10MB)
-    const maxSize = 10 * 1024 * 1024; // 10MB
+    // Validate file size (max 4MB for Vercel serverless function limit)
+    const maxSize = 4 * 1024 * 1024; // 4MB (Vercel limit is 4.5MB)
     if (file.size > maxSize) {
       return NextResponse.json(
         {
           success: false,
-          error: 'File size must be less than 10MB',
+          error: 'File size must be less than 4MB',
         },
         { status: 400 }
       );

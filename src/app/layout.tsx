@@ -1,11 +1,10 @@
-import '@/styles/globals.css';
 import Header from '@/components/ui/Header';
 import './globals.css';
 import Providers from './providers';
 
 export const metadata = {
   title: 'Bannquet',
-  description: 'Mountain weather and 3D models',
+  description: 'Mountain weather dashboard and trip reports for the northeastern United States',
 };
 
 export default function RootLayout({

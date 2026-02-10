@@ -6,8 +6,8 @@ export default defineConfig({
   name: 'bannquet',
   title: 'Bannquet Studio',
   
-  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || '',
-  dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || 'production',
+  projectId: 'o42pyqmm',
+  dataset: 'production',
   
   plugins: [structureTool()],
   

@@ -56,62 +56,50 @@ export function getImageUrl(
 }
 
 // GROQ query helpers
-export const tripReportsQuery = `*[_type == "tripReport"] | order(publishedAt desc) {
+export const tripReportsQuery = `*[_type == "tripReport" && published == true] | order(publishedAt desc) {
   _id,
   _type,
   _createdAt,
   _updatedAt,
   title,
-  author,
-  date,
-  location,
-  description,
-  images,
+  authorName,
+  authorEmail,
+  tripDate,
+  locationPin,
+  body,
   tags,
+  published,
   publishedAt
 }`;
 
-export const tripReportByIdQuery = (id: string) => `*[_type == "tripReport" && _id == $id][0] {
+export const tripReportByIdQuery = (id: string) => `*[_type == "tripReport" && _id == $id && published == true][0] {
   _id,
   _type,
   _createdAt,
   _updatedAt,
   title,
-  author,
-  date,
-  location,
-  description,
-  images,
+  authorName,
+  authorEmail,
+  tripDate,
+  locationPin,
+  body,
   tags,
+  published,
   publishedAt
 }`;
 
-export const tripReportsByAuthorQuery = (author: string) => `*[_type == "tripReport" && author == $author] | order(publishedAt desc) {
+export const tripReportsByAuthorQuery = (author: string) => `*[_type == "tripReport" && authorName == $author && published == true] | order(publishedAt desc) {
   _id,
   _type,
   _createdAt,
   _updatedAt,
   title,
-  author,
-  date,
-  location,
-  description,
-  images,
+  authorName,
+  authorEmail,
+  tripDate,
+  locationPin,
+  body,
   tags,
-  publishedAt
-}`;
-
-export const tripReportsByTagQuery = (tag: string) => `*[_type == "tripReport" && $tag in tags] | order(publishedAt desc) {
-  _id,
-  _type,
-  _createdAt,
-  _updatedAt,
-  title,
-  author,
-  date,
-  location,
-  description,
-  images,
-  tags,
+  published,
   publishedAt
 }`;

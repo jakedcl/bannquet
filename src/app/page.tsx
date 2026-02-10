@@ -62,7 +62,7 @@ export default function Home() {
                 />
                 <FeatureCard
                   title="Trip Reports"
-                  description="Share and explore adventures from our crew across the US"
+                  description="Share and explore trips across the US"
                   delay={0.6}
                 />
                 <FeatureCard
