@@ -46,7 +46,7 @@ export async function GET(
       );
     }
 
-    const tripReport = await sanityClient.fetch(tripReportByIdQuery(id));
+    const tripReport = await sanityClient.fetch(tripReportByIdQuery(id), { id });
 
     if (!tripReport) {
       return NextResponse.json(

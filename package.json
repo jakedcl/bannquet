@@ -6,8 +6,7 @@
     "dev": "next dev",
     "build": "next build --debug",
     "start": "next start",
-    "lint": "next lint",
-    "deploy-schema": "cd sanity-studio && npm install && npm run deploy"
+    "lint": "next lint"
   },
   "dependencies": {
     "@sanity/client": "^6.29.1",
@@ -17,9 +16,21 @@
     "framer-motion": "^12.4.10",
     "mapbox-gl": "^3.10.0",
     "next": "^16.0.9",
+    "next-sanity": "^7.0.0",
+    "@portabletext/react": "^3.0.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "react-icons": "^5.4.0"
+    "react-icons": "^5.4.0",
+    "@tiptap/react": "^2.1.13",
+    "@tiptap/starter-kit": "^2.1.13",
+    "@tiptap/extension-image": "^2.1.13",
+    "@tiptap/extension-link": "^2.1.13",
+    "@tiptap/extension-text-align": "^2.1.13",
+    "@tiptap/extension-underline": "^2.1.13",
+    "browser-image-compression": "^2.0.2",
+    "sanity": "^3.0.0",
+    "styled-components": "^6.0.0",
+    "resend": "^3.2.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

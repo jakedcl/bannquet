@@ -1,47 +1,44 @@
+// Portable Text types (simplified)
+export interface PortableTextBlock {
+  _type: 'block' | 'image';
+  _key: string;
+  [key: string]: any;
+}
+
 export interface TripReport {
   _id: string;
   _type: 'tripReport';
   _createdAt: string;
   _updatedAt: string;
   title: string;
-  author: string;
-  date: string; // ISO date string
-  location: {
-    name: string;
-    region?: string;
-    coordinates?: {
-      lat: number;
-      lng: number;
-      alt?: number;
-    };
+  authorName: string;
+  authorEmail: string;
+  tripDate: string; // ISO date string
+  locationPin: {
+    _type: 'geopoint';
+    lat: number;
+    lng: number;
+    alt?: number;
   };
-  description: string;
-  images: Array<{
-    _key: string;
-    asset: {
-      _ref: string;
-      _type: 'reference';
-    };
-    alt?: string;
-  }>;
-  tags: string[];
+  body: PortableTextBlock[];
+  tags?: string[];
+  published: boolean;
   publishedAt: string;
 }
 
 export interface TripReportFormData {
   title: string;
-  author: string;
-  date: string;
-  location: {
-    name: string;
-    region?: string;
-    coordinates?: {
-      lat: number;
-      lng: number;
-    };
+  authorName: string;
+  tripDate: string;
+  locationPin: {
+    lat: number;
+    lng: number;
   };
-  description: string;
-  images: File[];
-  tags: string[];
-  password?: string; // For simple password protection
+  body: Array<{
+    type: 'text' | 'image';
+    content?: string; // For text blocks
+    image?: File; // For image blocks
+    caption?: string; // For image captions
+    alt?: string; // For image alt text
+  }>;
 }

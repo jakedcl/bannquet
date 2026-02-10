@@ -27,8 +27,10 @@ export default function TripReportsPage() {
       const params = new URLSearchParams();
 
       if (filter === 'author' && filterValue) {
-        params.append('author', filterValue);
-      } else if (filter === 'tag' && filterValue) {
+        params.append('authorName', filterValue);
+      }
+
+      if (filter === 'tag' && filterValue) {
         params.append('tag', filterValue);
       }
 
@@ -52,8 +54,23 @@ export default function TripReportsPage() {
   };
 
   // Get unique authors and tags for filters
-  const authors = Array.from(new Set(trips.map(t => t.author))).sort();
+  const authors = Array.from(new Set(trips.map(t => t.authorName))).sort();
   const allTags = Array.from(new Set(trips.flatMap(t => t.tags || []))).sort();
+  
+  const availableTags = [
+    'trail-running',
+    'hiking',
+    'mountaineering',
+    'climbing',
+    'ice-climb',
+    'scramble',
+    'bike',
+    'ski-split-tour',
+    'backpacking',
+    'camping',
+    'snowshoeing',
+    'rock-climbing',
+  ];
 
   return (
     <PageWrapper className="bg-gray-50">
@@ -63,10 +80,10 @@ export default function TripReportsPage() {
           <div className="space-y-3">
             <p className="text-sm uppercase tracking-[0.3em] text-brand-green/70">trip reports</p>
             <h1 className="text-4xl md:text-5xl font-bold text-gray-900">
-              Our Adventures
+              Trip Reports
             </h1>
             <p className="text-gray-600 max-w-2xl">
-              Stories and photos from our mountain adventures across the US
+              Stories and photos from mountain adventures across the US
             </p>
           </div>
 
@@ -120,12 +137,13 @@ export default function TripReportsPage() {
               className="px-4 py-2 rounded-full border border-gray-300 text-sm font-medium bg-white focus:ring-2 focus:ring-brand-green focus:border-transparent"
             >
               <option value="">Filter by Tag</option>
-              {allTags.map(tag => (
+              {availableTags.map(tag => (
                 <option key={tag} value={tag}>
-                  {tag}
+                  {tag.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())}
                 </option>
               ))}
             </select>
+
           </div>
         </div>
 

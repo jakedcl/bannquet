@@ -57,18 +57,18 @@ export default function Header() {
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center gap-3 lg:gap-4 ml-auto">
           {navItems.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
+              <Link
+                key={item.href}
+                href={item.href}
               className={`relative px-4 py-2 text-sm font-semibold tracking-wide transition-colors rounded-full border
-                ${pathname === item.href 
-                  ? 'bg-white text-brand-green border-white' 
+                  ${pathname === item.href 
+                    ? 'bg-white text-brand-green border-white' 
                   : 'text-white border-white/30 hover:border-white hover:bg-white/10'}
-              `}
-            >
-              {item.label}
-            </Link>
-          ))}
+                `}
+              >
+                {item.label}
+              </Link>
+            ))}
           
           {/* Region selector - only show on weather pages */}
           {(pathname === '/weather' || pathname.startsWith('/weather/')) && (
@@ -197,7 +197,7 @@ function RegionSelector({ className = '', alignment = 'right', size = 'desktop',
     if (size === 'mobile') {
       buttonClasses = 'px-2.5 py-1.5 text-sm font-bold tracking-wide rounded-full';
     } else {
-      buttonClasses = 'px-3 py-1.5 text-lg font-bold tracking-wide rounded-full';
+    buttonClasses = 'px-3 py-1.5 text-lg font-bold tracking-wide rounded-full';
     }
   } else if (size === 'desktop') {
     buttonClasses = 'px-4 py-1.5 text-sm font-bold tracking-wide rounded-full border';

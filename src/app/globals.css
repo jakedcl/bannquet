@@ -1,10 +1,38 @@
+/* Mapbox GL CSS - must be first */
+@import 'mapbox-gl/dist/mapbox-gl.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+@layer components {
+  .container-wrapper {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+  
+  .heading-1 {
+    @apply text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl;
+  }
+  
+  .heading-2 {
+    @apply text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl;
+  }
+  
+  .text-body {
+    @apply text-base text-gray-600;
+  }
+
+  .nav-item {
+    @apply w-full px-6 py-3 text-lg font-medium transition-colors duration-200 rounded-lg hover:bg-white/10;
+  }
+}
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --brand-green: #1F3F28;
+  --background-beige: #E8E6E1;
+  --text-primary: #1f2937;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -18,4 +46,122 @@ body {
   color: var(--foreground);
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+/* TipTap Editor Styles */
+.ProseMirror {
+  outline: none;
+  min-height: 400px;
+  padding: 1rem;
+}
+
+.ProseMirror p {
+  margin-bottom: 1rem;
+}
+
+.ProseMirror p.is-editor-empty:first-child::before {
+  color: #adb5bd;
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+}
+
+.ProseMirror img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.5rem;
+  margin: 1rem 0;
+  cursor: pointer;
+  display: block;
+  transition: outline 0.15s ease;
+}
+
+/* Selected image highlighting - ProseMirror adds this class when image node is selected */
+.ProseMirror-selectednode img,
+.ProseMirror img.ProseMirror-selectednode {
+  outline: 3px solid #3b82f6 !important;
+  outline-offset: 2px !important;
+  background-color: rgba(59, 130, 246, 0.15) !important;
+  border-radius: 0.5rem;
+}
+
+/* When image node itself is selected (ProseMirror selection) */
+.ProseMirror .selected img,
+.ProseMirror [data-selected-node="true"] img {
+  outline: 3px solid #3b82f6 !important;
+  outline-offset: 2px !important;
+  background-color: rgba(59, 130, 246, 0.15) !important;
+}
+
+/* Selection highlighting for text */
+.ProseMirror ::selection {
+  background-color: rgba(59, 130, 246, 0.3);
+}
+
+/* Make images selectable and show selection */
+.ProseMirror img.selectable-image {
+  user-select: all;
+  -webkit-user-select: all;
+  position: relative;
+}
+
+/* Image selection wrapper */
+.ProseMirror-selectednode {
+  outline: 3px solid #3b82f6 !important;
+  outline-offset: 2px !important;
+  border-radius: 0.5rem;
+}
+
+/* When selecting text that includes images */
+.ProseMirror img::selection {
+  background: rgba(59, 130, 246, 0.3);
+}
+
+.ProseMirror a {
+  color: #22c55e;
+  text-decoration: underline;
+}
+
+.ProseMirror a:hover {
+  color: #16a34a;
+}
+
+.ProseMirror h1 {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-top: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.ProseMirror h2 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-top: 1.25rem;
+  margin-bottom: 0.75rem;
+}
+
+.ProseMirror h3 {
+  font-size: 1.25rem;
+  font-weight: bold;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.ProseMirror blockquote {
+  border-left: 4px solid #22c55e;
+  padding-left: 1rem;
+  margin: 1rem 0;
+  font-style: italic;
+  color: #6b7280;
+}
+
+.ProseMirror ul,
+.ProseMirror ol {
+  padding-left: 1.5rem;
+  margin: 1rem 0;
+}
+
+.ProseMirror li {
+  margin: 0.5rem 0;
 }

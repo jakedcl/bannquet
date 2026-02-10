@@ -15,48 +15,74 @@ export async function GET(request: NextRequest) {
     }
 
     const searchParams = request.nextUrl.searchParams;
-    const author = searchParams.get('author');
+    const authorName = searchParams.get('authorName');
     const tag = searchParams.get('tag');
     const limit = searchParams.get('limit');
     
     let query = tripReportsQuery;
+    const params: any = {};
     
     // Apply filters if provided
-    if (author) {
-      query = `*[_type == "tripReport" && author == $author] | order(publishedAt desc) {
+    if (authorName) {
+      query = `*[_type == "tripReport" && authorName == $authorName && published == true] | order(publishedAt desc) {
         _id,
         _type,
         _createdAt,
         _updatedAt,
         title,
-        author,
-        date,
-        location,
-        description,
-        images,
+        authorName,
+        authorEmail,
+        tripDate,
+        locationPin,
+        body,
         tags,
+        published,
         publishedAt
       }`;
+      params.authorName = authorName;
     }
     
     if (tag) {
-      query = `*[_type == "tripReport" && $tag in tags] | order(publishedAt desc) {
+      query = `*[_type == "tripReport" && $tag in tags && published == true] | order(publishedAt desc) {
         _id,
         _type,
         _createdAt,
         _updatedAt,
         title,
-        author,
-        date,
-        location,
-        description,
-        images,
+        authorName,
+        authorEmail,
+        tripDate,
+        locationPin,
+        body,
         tags,
+        published,
         publishedAt
       }`;
+      params.tag = tag;
     }
     
-    const trips = await sanityClient!.fetch(query, { author, tag });
+    // Combine filters
+    if (authorName && tag) {
+      query = `*[_type == "tripReport" && authorName == $authorName && $tag in tags && published == true] | order(publishedAt desc) {
+        _id,
+        _type,
+        _createdAt,
+        _updatedAt,
+        title,
+        authorName,
+        authorEmail,
+        tripDate,
+        locationPin,
+        body,
+        tags,
+        published,
+        publishedAt
+      }`;
+      params.authorName = authorName;
+      params.tag = tag;
+    }
+    
+    const trips = await sanityClient!.fetch(query, params);
     
     // Apply limit if provided
     const limitedTrips = limit ? trips.slice(0, parseInt(limit)) : trips;
