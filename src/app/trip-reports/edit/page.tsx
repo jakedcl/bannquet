@@ -1,11 +1,11 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import PageWrapper from '@/components/ui/PageWrapper';
 import TripSubmitForm from '@/components/trip-reports/TripSubmitForm';
 
-export default function EditTripReportPage() {
+function EditTripReportContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const [loading, setLoading] = useState(true);
@@ -86,5 +86,22 @@ export default function EditTripReportPage() {
         </div>
       </div>
     </PageWrapper>
+  );
+}
+
+export default function EditTripReportPage() {
+  return (
+    <Suspense fallback={
+      <PageWrapper className="bg-gray-50">
+        <div className="max-w-4xl mx-auto px-4 py-12">
+          <div className="text-center">
+            <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-brand-green"></div>
+            <p className="mt-4 text-gray-600">Loading...</p>
+          </div>
+        </div>
+      </PageWrapper>
+    }>
+      <EditTripReportContent />
+    </Suspense>
   );
 }
