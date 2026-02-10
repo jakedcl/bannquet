@@ -30,11 +30,11 @@ export async function POST(request: NextRequest) {
     } = body;
 
     // Validation
-    if (!title || !authorName || !authorEmail || !tripDate || !locationPin?.lat || !locationPin?.lng) {
+    if (!title || !authorName || !authorEmail || !tripDate) {
       return NextResponse.json(
         {
           success: false,
-          error: 'Missing required fields: title, authorName, authorEmail, tripDate, locationPin',
+          error: 'Missing required fields: title, authorName, authorEmail, tripDate',
         },
         { status: 400 }
       );
@@ -74,22 +74,26 @@ export async function POST(request: NextRequest) {
     }
 
     // Create trip report document
-    const tripReport = {
+    const tripReport: any = {
       _type: 'tripReport',
       title,
       authorName,
       authorEmail,
       tripDate,
-      locationPin: {
-        _type: 'geopoint',
-        lat: locationPin.lat,
-        lng: locationPin.lng,
-      },
       body: bodyContent, // Portable text array
       tags: tags && Array.isArray(tags) ? tags : [],
       published: published === true,
       publishedAt: new Date().toISOString(),
     };
+
+    // Add locationPin only if provided
+    if (locationPin?.lat && locationPin?.lng) {
+      tripReport.locationPin = {
+        _type: 'geopoint',
+        lat: locationPin.lat,
+        lng: locationPin.lng,
+      };
+    }
 
     // Submit to Sanity
     const result = await sanityWriteClient!.create(tripReport);
