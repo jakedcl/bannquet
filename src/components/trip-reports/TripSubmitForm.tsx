@@ -439,10 +439,6 @@ export default function TripSubmitForm({ initialData, editToken, tripId }: TripS
         throw new Error('Please fill in all required fields');
       }
 
-      if (formData.locationLat === null || formData.locationLng === null) {
-        throw new Error('Please select a location on the map');
-      }
-
       // Validate email format (only for new submissions)
       if (!isEditMode) {
         if (!formData.authorEmail) {
@@ -483,10 +479,12 @@ export default function TripSubmitForm({ initialData, editToken, tripId }: TripS
           authorName: formData.authorName,
           ...(isEditMode ? {} : { authorEmail: formData.authorEmail }),
           tripDate: formData.tripDate,
-          locationPin: {
-            lat: formData.locationLat,
-            lng: formData.locationLng,
-          },
+          ...(formData.locationLat !== null && formData.locationLng !== null ? {
+            locationPin: {
+              lat: formData.locationLat,
+              lng: formData.locationLng,
+            },
+          } : {}),
           body,
           tags: formData.tags,
           ...(isEditMode ? {} : { published: false }), // Start as draft only for new submissions
@@ -654,7 +652,7 @@ export default function TripSubmitForm({ initialData, editToken, tripId }: TripS
       {/* Location Pin */}
       <div>
         <label className="block text-sm font-semibold text-gray-900 mb-2">
-          Location *
+          Location <span className="text-gray-500 font-normal">(optional)</span>
         </label>
         <LocationPicker
           lat={formData.locationLat}

@@ -128,20 +128,29 @@ export async function PUT(request: NextRequest) {
     } = body;
 
     // Update trip report
+    const updateData: any = {
+      title,
+      authorName,
+      tripDate,
+      body: bodyContent,
+      tags: tags && Array.isArray(tags) ? tags : [],
+    };
+
+    // Add locationPin only if provided
+    if (locationPin?.lat && locationPin?.lng) {
+      updateData.locationPin = {
+        _type: 'geopoint',
+        lat: locationPin.lat,
+        lng: locationPin.lng,
+      };
+    } else {
+      // Remove locationPin if not provided
+      updateData.locationPin = null;
+    }
+
     await sanityWriteClient
       .patch(id)
-      .set({
-        title,
-        authorName,
-        tripDate,
-        locationPin: {
-          _type: 'geopoint',
-          lat: locationPin.lat,
-          lng: locationPin.lng,
-        },
-        body: bodyContent,
-        tags: tags && Array.isArray(tags) ? tags : [],
-      })
+      .set(updateData)
       .commit();
 
     return NextResponse.json({

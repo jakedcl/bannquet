@@ -16,10 +16,7 @@ export default function SubmitTripReportPage() {
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900">
             Trip Report
           </h1>
-          <p className="text-gray-600">
-            Include location, weather, details, photos, etc below.
-          </p>
-        </div>
+          </div>
 
         <div className="bg-white rounded-3xl shadow-lg p-6 md:p-8">
           <TripSubmitForm />
