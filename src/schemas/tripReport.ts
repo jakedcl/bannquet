@@ -40,7 +40,7 @@ export default defineType({
       name: 'locationPin',
       title: 'Location Pin',
       type: 'geopoint',
-      validation: (Rule) => Rule.required(),
+      description: 'Location pin for the trip',
     }),
     defineField({
       name: 'body',
