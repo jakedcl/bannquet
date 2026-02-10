@@ -8,24 +8,21 @@ export const metadata: Metadata = {
 };
 
 export default function SubmitTripReportPage() {
-  // Optional: Get password from env or query param
-  const password = process.env.TRIP_REPORT_PASSWORD || undefined;
-
   return (
     <PageWrapper className="bg-gray-50">
       <div className="max-w-2xl mx-auto px-4 py-12">
         <div className="space-y-6 mb-8">
           <p className="text-sm uppercase tracking-[0.3em] text-brand-green/70">submit</p>
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900">
-            Share Your Adventure
+            Trip Report
           </h1>
           <p className="text-gray-600">
-            Upload photos and tell us about your mountain adventure. All 12 of us can submit trip reports here.
+            Include location, weather, details, photos, etc below.
           </p>
         </div>
 
         <div className="bg-white rounded-3xl shadow-lg p-6 md:p-8">
-          <TripSubmitForm password={password} />
+          <TripSubmitForm />
         </div>
       </div>
     </PageWrapper>

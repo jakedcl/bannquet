@@ -12,9 +12,27 @@ interface TripCardProps {
 }
 
 export default function TripCard({ trip, index }: TripCardProps) {
-  const heroImage = trip.images?.[0];
-  const imageUrl = heroImage ? getImageUrl(heroImage, 800, 600) : null;
-  const formattedDate = format(new Date(trip.date), 'MMM d, yyyy');
+  // Extract first image from body
+  const firstImageBlock = trip.body?.find((block: any) => block._type === 'image');
+  const heroImage = firstImageBlock?.asset;
+  const imageUrl = heroImage ? getImageUrl(
+    {
+      asset: {
+        _ref: heroImage._ref || heroImage,
+        _type: 'reference',
+      },
+    },
+    800,
+    600
+  ) : null;
+  const formattedDate = format(new Date(trip.tripDate), 'MMM d, yyyy');
+  
+  // Extract text preview from body
+  const textBlocks = trip.body?.filter((block: any) => block._type === 'block') || [];
+  const previewText = textBlocks
+    .map((block: any) => block.children?.map((child: any) => child.text).join('') || '')
+    .join(' ')
+    .substring(0, 150);
 
   return (
     <Link href={`/trip-reports/${trip._id}`}>
@@ -39,7 +57,7 @@ export default function TripCard({ trip, index }: TripCardProps) {
           )}
           <div className="absolute top-4 right-4">
             <span className="bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-semibold text-gray-900">
-              {trip.images?.length || 0} photos
+              {trip.body?.filter((b: any) => b._type === 'image').length || 0} photos
             </span>
           </div>
         </div>
@@ -53,47 +71,28 @@ export default function TripCard({ trip, index }: TripCardProps) {
           </div>
 
           <div className="flex items-center gap-3 text-sm text-gray-600 mb-3">
-            <span className="font-medium">{trip.author}</span>
+            <span className="font-medium">{trip.authorName}</span>
             <span>•</span>
             <span>{formattedDate}</span>
           </div>
 
-          <p className="text-gray-700 line-clamp-2 mb-4">
-            {trip.description}
-          </p>
-
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <span className="text-sm font-medium text-brand-green">
-                {trip.location.name}
-              </span>
-              {trip.location.region && (
-                <>
-                  <span className="text-gray-400">•</span>
-                  <span className="text-sm text-gray-500">
-                    {trip.location.region}
-                  </span>
-                </>
-              )}
-            </div>
-          </div>
+          {previewText && (
+            <p className="text-gray-700 line-clamp-2 mb-4">
+              {previewText}...
+            </p>
+          )}
 
           {/* Tags */}
           {trip.tags && trip.tags.length > 0 && (
-            <div className="flex flex-wrap gap-2 mt-4">
-              {trip.tags.slice(0, 3).map(tag => (
+            <div className="flex flex-wrap gap-2">
+              {trip.tags.map((tag) => (
                 <span
                   key={tag}
-                  className="px-2 py-1 bg-gray-100 text-gray-700 rounded-full text-xs font-medium"
+                  className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded-full"
                 >
-                  {tag}
+                  {tag.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())}
                 </span>
               ))}
-              {trip.tags.length > 3 && (
-                <span className="px-2 py-1 text-gray-500 text-xs">
-                  +{trip.tags.length - 3}
-                </span>
-              )}
             </div>
           )}
         </div>

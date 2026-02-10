@@ -6,8 +6,8 @@ import { motion } from 'framer-motion';
 import Link from 'next/link';
 import PageWrapper from '@/components/ui/PageWrapper';
 import { TripReport } from '@/types/trip-reports';
-import { getImageUrl } from '@/lib/sanity';
 import { format } from 'date-fns';
+import PortableTextRenderer from '@/components/trip-reports/PortableTextRenderer';
 
 export default function TripReportDetailPage() {
   const params = useParams();
@@ -15,7 +15,6 @@ export default function TripReportDetailPage() {
   const [trip, setTrip] = useState<TripReport | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
   useEffect(() => {
     if (params.id) {
@@ -74,10 +73,7 @@ export default function TripReportDetailPage() {
     );
   }
 
-  const formattedDate = format(new Date(trip.date), 'MMMM d, yyyy');
-  const images = trip.images || [];
-  const selectedImage = images[selectedImageIndex];
-  const selectedImageUrl = selectedImage ? getImageUrl(selectedImage, 1200, 800) : null;
+  const formattedDate = format(new Date(trip.tripDate), 'MMMM d, yyyy');
 
   return (
     <PageWrapper className="bg-gray-50">
@@ -90,67 +86,6 @@ export default function TripReportDetailPage() {
           ← Back to Trip Reports
         </Link>
 
-        {/* Hero Image */}
-        {selectedImageUrl && (
-          <div className="relative h-[500px] rounded-2xl overflow-hidden mb-8 bg-gray-200">
-            <img
-              src={selectedImageUrl}
-              alt={trip.title}
-              className="w-full h-full object-cover"
-            />
-            {images.length > 1 && (
-              <>
-                <button
-                  onClick={() => setSelectedImageIndex(prev => (prev > 0 ? prev - 1 : images.length - 1))}
-                  className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/90 backdrop-blur-sm p-3 rounded-full hover:bg-white transition-colors"
-                  aria-label="Previous image"
-                >
-                  ←
-                </button>
-                <button
-                  onClick={() => setSelectedImageIndex(prev => (prev < images.length - 1 ? prev + 1 : 0))}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/90 backdrop-blur-sm p-3 rounded-full hover:bg-white transition-colors"
-                  aria-label="Next image"
-                >
-                  →
-                </button>
-                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-white/90 backdrop-blur-sm px-4 py-2 rounded-full text-sm font-medium">
-                  {selectedImageIndex + 1} / {images.length}
-                </div>
-              </>
-            )}
-          </div>
-        )}
-
-        {/* Thumbnail Gallery */}
-        {images.length > 1 && (
-          <div className="grid grid-cols-4 md:grid-cols-6 gap-2 mb-8">
-            {images.map((image, index) => {
-              const thumbUrl = getImageUrl(image, 200, 200);
-              return (
-                <button
-                  key={index}
-                  onClick={() => setSelectedImageIndex(index)}
-                  className={`relative aspect-square rounded-lg overflow-hidden border-2 transition-all ${
-                    selectedImageIndex === index
-                      ? 'border-brand-green ring-2 ring-brand-green/50'
-                      : 'border-transparent hover:border-gray-300'
-                  }`}
-                >
-                  {thumbUrl ? (
-                    <img
-                      src={thumbUrl}
-                      alt={`Thumbnail ${index + 1}`}
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <div className="w-full h-full bg-gray-200"></div>
-                  )}
-                </button>
-              );
-            })}
-          </div>
-        )}
 
         {/* Content */}
         <div className="bg-white rounded-2xl shadow-lg p-6 md:p-8">
@@ -159,45 +94,32 @@ export default function TripReportDetailPage() {
             <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
               {trip.title}
             </h1>
-            <div className="flex flex-wrap items-center gap-4 text-gray-600">
+            <div className="flex flex-wrap items-center gap-4 text-gray-600 mb-4">
               <div className="flex items-center gap-2">
-                <span className="font-medium">{trip.author}</span>
+                <span className="font-medium">{trip.authorName}</span>
               </div>
               <span>•</span>
               <span>{formattedDate}</span>
-              {trip.location.region && (
-                <>
-                  <span>•</span>
-                  <span>{trip.location.region}</span>
-                </>
-              )}
             </div>
-            <div className="mt-3">
-              <span className="text-lg font-semibold text-brand-green">
-                {trip.location.name}
-              </span>
-            </div>
+
+            {/* Tags */}
+            {trip.tags && trip.tags.length > 0 && (
+              <div className="flex flex-wrap gap-2 mb-4">
+                {trip.tags.map((tag) => (
+                  <span
+                    key={tag}
+                    className="px-3 py-1 bg-brand-green/10 text-brand-green text-sm rounded-full font-medium"
+                  >
+                    {tag.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                  </span>
+                ))}
+              </div>
+            )}
           </div>
 
-          {/* Tags */}
-          {trip.tags && trip.tags.length > 0 && (
-            <div className="flex flex-wrap gap-2 mb-6">
-              {trip.tags.map(tag => (
-                <span
-                  key={tag}
-                  className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium"
-                >
-                  {tag}
-                </span>
-              ))}
-            </div>
-          )}
-
-          {/* Description */}
-          <div className="prose max-w-none">
-            <p className="text-gray-700 leading-relaxed whitespace-pre-line">
-              {trip.description}
-            </p>
+          {/* Body Content */}
+          <div className="mt-6">
+            <PortableTextRenderer content={trip.body} />
           </div>
         </div>
       </div>
