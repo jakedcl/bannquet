@@ -29,8 +29,8 @@
     "@tiptap/extension-underline": "^2.1.13",
     "browser-image-compression": "^2.0.2",
     "sanity": "^3.0.0",
-    "styled-components": "^6.0.0",
-    "resend": "^3.2.0"
+    "resend": "^3.2.0",
+    "styled-components": "^6.0.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

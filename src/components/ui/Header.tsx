@@ -7,6 +7,7 @@ import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRegion } from '@/contexts/RegionContext';
 import { REGION_OPTIONS } from '@/lib/regions';
+import WeatherTicker from './WeatherTicker';
 
 export default function Header() {
   const pathname = usePathname();
@@ -34,52 +35,77 @@ export default function Header() {
     { href: '/trip-reports', label: 'trip reports' },
   ];
 
+  // Hide header logo on homepage
+  const isHomepage = pathname === '/';
+  // Hide header completely on studio route
+  const isStudio = pathname?.startsWith('/studio');
+
+  if (isStudio) {
+    return null;
+  }
+
   return (
     <motion.header 
       initial={{ y: -20, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
-      className={`fixed w-full bg-brand-green text-white h-header z-50 transition-shadow duration-300 ${
+      className={`fixed w-full retro-banner text-white h-header z-50 rounded-none ${
         scrolled ? 'shadow-lg' : ''
-      }`}
+      } ${isHomepage ? '!pl-0 !pr-0' : ''}`}
     >
-      <div className="w-full px-4 h-full flex items-center justify-between">
-        <Link href="/" className="flex items-center z-20 mr-auto">
-          <Image
-            src="/logo.png"
-            alt="BNQT Logo"
-            width={160}
-            height={40}
-            priority
-            className="object-contain w-auto h-auto max-h-[32px] md:max-h-[40px] hover:opacity-90 transition-opacity"
-          />
-        </Link>
+      <div className="w-full h-full flex items-center justify-between">
+        {!isHomepage && (
+          <Link href="/" className="flex items-center z-20 mr-auto">
+            <motion.div
+              layoutId="header-logo"
+              transition={{ type: "spring", stiffness: 200, damping: 25, duration: 0.8 }}
+            >
+              <Image
+                src="/logo.png"
+                alt="BNQT Logo"
+                width={160}
+                height={40}
+                priority
+                className="object-contain w-auto h-auto max-h-[32px] md:max-h-[40px] hover:opacity-90 transition-opacity"
+              />
+            </motion.div>
+          </Link>
+        )}
+        
+        {isHomepage && (
+          <div className="flex-1 flex items-center z-20 min-w-0 w-full">
+            <WeatherTicker />
+          </div>
+        )}
 
-        {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center gap-3 lg:gap-4 ml-auto">
-          {navItems.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-              className={`relative px-4 py-2 text-sm font-semibold tracking-wide transition-colors rounded-full border
-                  ${pathname === item.href 
-                    ? 'bg-white text-brand-green border-white' 
-                  : 'text-white border-white/30 hover:border-white hover:bg-white/10'}
-                `}
-              >
-                {item.label}
-              </Link>
-            ))}
-          
-          {/* Region selector - only show on weather pages */}
-          {(pathname === '/weather' || pathname.startsWith('/weather/')) && (
-            <div className="relative flex items-center gap-2 bg-brand-green-light/40 rounded-full px-2 py-1 border border-white/30 hover:border-white transition-all">
-              <RegionSelector alignment="left" size="desktop" embedded />
-            </div>
-          )}
-        </nav>
+        {/* Desktop Navigation - Hide on homepage */}
+        {pathname !== '/' && (
+          <nav className="hidden md:flex items-center gap-3 lg:gap-4 ml-auto">
+            {navItems.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`px-4 py-2 text-sm font-bold tracking-wide uppercase transition-all
+                    ${pathname === item.href 
+                      ? 'retro-button-yellow' 
+                    : 'retro-button-blue text-white'}
+                  `}
+                  className="rounded-none"
+                >
+                  {item.label}
+                </Link>
+              ))}
+            
+            {/* Region selector - only show on weather pages */}
+            {(pathname === '/weather' || pathname.startsWith('/weather/')) && (
+              <div className="relative flex items-center gap-2 bg-brand-green-light/40 rounded-full px-2 py-1 border border-white/30 hover:border-white transition-all">
+                <RegionSelector alignment="left" size="desktop" embedded />
+              </div>
+            )}
+          </nav>
+        )}
 
-        {/* Mobile: Region selector + Menu Button */}
-        <div className="flex items-center gap-2 md:hidden ml-auto">
+        {/* Mobile: Region selector + Menu Button (homepage: header has no horizontal padding, keep tap margin) */}
+        <div className={`flex items-center gap-2 md:hidden ml-auto ${isHomepage ? 'pr-3' : ''}`}>
           {/* Region selector - only show on weather pages */}
           {(pathname === '/weather' || pathname.startsWith('/weather/')) && (
             <div className="relative">

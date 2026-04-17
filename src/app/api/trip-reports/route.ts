@@ -20,7 +20,7 @@ export async function GET(request: NextRequest) {
     const limit = searchParams.get('limit');
     
     let query = tripReportsQuery;
-    const params: any = {};
+    const params: Record<string, string> = {};
     
     // Apply filters if provided
     if (authorName) {
@@ -87,11 +87,16 @@ export async function GET(request: NextRequest) {
     // Apply limit if provided
     const limitedTrips = limit ? trips.slice(0, parseInt(limit)) : trips;
     
-    return NextResponse.json({
+    const response = NextResponse.json({
       success: true,
       data: limitedTrips,
       count: limitedTrips.length,
     });
+
+    // Cache trip reports for 2 minutes (they don't change frequently)
+    response.headers.set('Cache-Control', 'public, s-maxage=120, stale-while-revalidate=300');
+    
+    return response;
   } catch (error) {
     console.error('Error fetching trip reports:', error);
     return NextResponse.json(

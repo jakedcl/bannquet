@@ -29,6 +29,9 @@ export interface WeatherHazard {
 export interface WeatherData {
   temperature: number;
   apparentTemperature?: number | null;
+  windChill?: number | null;
+  heatIndex?: number | null;
+  relativeHumidity?: number | null;
   conditions: string[];
   windSpeed: string;
   windDirection: string;

@@ -6,46 +6,219 @@
 @tailwind utilities;
 
 @layer components {
-  .container-wrapper {
-    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
-  }
-  
-  .heading-1 {
-    @apply text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl;
-  }
-  
-  .heading-2 {
-    @apply text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl;
-  }
-  
-  .text-body {
-    @apply text-base text-gray-600;
-  }
-
-  .nav-item {
-    @apply w-full px-6 py-3 text-lg font-medium transition-colors duration-200 rounded-lg hover:bg-white/10;
-  }
+  /* Removed unused utility classes - using Tailwind directly instead */
 }
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-  --brand-green: #1F3F28;
-  --background-beige: #E8E6E1;
-  --text-primary: #1f2937;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --background: #f0f0f0;
+  --foreground: #1a1a1a;
+  --brand-green: #2d5016;
+  --brand-green-light: #4a7c2a;
+  --brand-green-dark: #1a3009;
+  --background-beige: #e8e6e1;
+  --text-primary: #1a1a1a;
+  --accent-yellow: #ffd700;
+  --accent-orange: #ff8c00;
+  --border-gray: #999999;
+  --shadow-color: rgba(0, 0, 0, 0.3);
 }
 
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Verdana', 'Trebuchet MS', Arial, Helvetica, sans-serif;
+  background-image: 
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0, 0, 0, 0.02) 2px,
+      rgba(0, 0, 0, 0.02) 4px
+    );
+}
+
+/* Classic 2000s fonts */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Trebuchet MS', 'Verdana', Arial, sans-serif;
+  font-weight: bold;
+}
+
+button, .retro-button {
+  font-family: 'Verdana', 'Trebuchet MS', Arial, sans-serif;
+}
+
+/* Retro 2000s Button Styles */
+.retro-button {
+  background: linear-gradient(to bottom, #ffffff 0%, #e0e0e0 100%);
+  border: 2px outset #cccccc;
+  box-shadow: 
+    2px 2px 4px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  padding: 8px 16px;
+  font-weight: bold;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.1s;
+}
+
+.retro-button:hover {
+  background: linear-gradient(to bottom, #f0f0f0 0%, #d0d0d0 100%);
+  box-shadow: 
+    1px 1px 2px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+
+.retro-button:active {
+  border: 2px inset #cccccc;
+  box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.retro-button-primary {
+  background: linear-gradient(to bottom, var(--brand-green-light) 0%, var(--brand-green) 100%);
+  border: 2px outset var(--brand-green-dark);
+  color: white;
+  box-shadow: 
+    3px 3px 6px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.retro-button-primary:hover {
+  background: linear-gradient(to bottom, var(--brand-green) 0%, var(--brand-green-dark) 100%);
+}
+
+/* Wacky accent color buttons */
+.retro-button-yellow {
+  background: linear-gradient(to bottom, #ffd700 0%, #ffb300 100%);
+  border: 3px outset #cc9900;
+  color: #1a3009;
+  box-shadow: 
+    4px 4px 8px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  font-weight: bold;
+}
+
+.retro-button-yellow:hover {
+  background: linear-gradient(to bottom, #ffb300 0%, #ff9900 100%);
+}
+
+.retro-button-orange {
+  background: linear-gradient(to bottom, #ff8c00 0%, #ff6600 100%);
+  border: 3px outset #cc6600;
+  color: white;
+  box-shadow: 
+    4px 4px 8px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  font-weight: bold;
+}
+
+.retro-button-orange:hover {
+  background: linear-gradient(to bottom, #ff6600 0%, #cc5500 100%);
+}
+
+.retro-button-pink {
+  background: linear-gradient(to bottom, #ff69b4 0%, #ff1493 100%);
+  border: 3px outset #cc1180;
+  color: white;
+  box-shadow: 
+    4px 4px 8px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  font-weight: bold;
+}
+
+.retro-button-pink:hover {
+  background: linear-gradient(to bottom, #ff1493 0%, #cc1180 100%);
+}
+
+.retro-button-blue {
+  background: linear-gradient(to bottom, #00bfff 0%, #0080ff 100%);
+  border: 3px outset #0066cc;
+  color: white;
+  box-shadow: 
+    4px 4px 8px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  font-weight: bold;
+}
+
+.retro-button-blue:hover {
+  background: linear-gradient(to bottom, #0080ff 0%, #0066cc 100%);
+}
+
+.retro-button-green {
+  background: linear-gradient(to bottom, #4a7c2a 0%, #2d5016 100%);
+  border: 3px outset #1a3009;
+  color: white;
+  box-shadow: 
+    4px 4px 8px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  font-weight: bold;
+}
+
+.retro-button-green:hover {
+  background: linear-gradient(to bottom, #2d5016 0%, #1a3009 100%);
+}
+
+.retro-button-purple {
+  background: linear-gradient(to bottom, #9370db 0%, #8a2be2 100%);
+  border: 3px outset #6a1bb2;
+  color: white;
+  box-shadow: 
+    4px 4px 8px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  font-weight: bold;
+}
+
+.retro-button-purple:hover {
+  background: linear-gradient(to bottom, #8a2be2 0%, #6a1bb2 100%);
+}
+
+/* Weather Ticker Animation */
+.weather-ticker-scroll {
+  animation: scroll-ticker linear infinite;
+}
+
+@keyframes scroll-ticker {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+/* Retro Card/Box Styles */
+.retro-box {
+  background: white;
+  border: 3px outset #cccccc;
+  box-shadow: 
+    4px 4px 8px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  padding: 16px;
+}
+
+.retro-box-inset {
+  border: 3px inset #cccccc;
+  box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Retro Header Banner */
+.retro-banner {
+  background: linear-gradient(to bottom, var(--brand-green-light) 0%, var(--brand-green) 50%, var(--brand-green-dark) 100%);
+  border-bottom: 4px solid var(--brand-green-dark);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  padding: 12px 16px;
+}
+
+/* Retro Text Effects */
+.retro-text-shadow {
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.retro-text-outline {
+  text-shadow: 
+    -1px -1px 0 #000,
+    1px -1px 0 #000,
+    -1px 1px 0 #000,
+    1px 1px 0 #000;
 }
 
 /* TipTap Editor Styles */

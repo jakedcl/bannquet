@@ -64,17 +64,8 @@ export default function WeatherDashboard({ spot }: WeatherDashboardProps) {
 
   if (!weather) return null;
 
-  const windSpeedNum = parseInt(weather.windSpeed.replace(/[^0-9]/g, '')) || 0;
-  const computedWindChill = windSpeedNum > 3 && weather.temperature <= 50
-    ? Math.round(
-      35.74 + 
-        0.6215 * weather.temperature -
-        35.75 * Math.pow(windSpeedNum, 0.16) +
-        0.4275 * weather.temperature * Math.pow(windSpeedNum, 0.16)
-      )
-    : null;
-
-  const feelsLike = weather.apparentTemperature ?? computedWindChill ?? weather.temperature;
+  // Use API values - windChill and heatIndex come from gridpoint API
+  const feelsLike = weather.heatIndex ?? weather.windChill ?? weather.apparentTemperature ?? weather.temperature;
 
   const visibilityMiles = weather.visibility ? weather.visibility / 5280 : null;
 
@@ -129,7 +120,12 @@ export default function WeatherDashboard({ spot }: WeatherDashboardProps) {
           
           <div className="grid grid-cols-3 gap-3">
             <MetricCard label="Precip chance" value={`${weather.precipitation}%`} />
-            <MetricCard label="Past snowfall" value={snowfall} hint="past 24h" />
+            <MetricCard 
+              label="Humidity" 
+              value={weather.relativeHumidity !== null && weather.relativeHumidity !== undefined 
+                ? `${Math.round(weather.relativeHumidity)}%` 
+                : '—'} 
+            />
             <MetricCard label="Visibility" value={visibilityLabel} />
           </div>
           
