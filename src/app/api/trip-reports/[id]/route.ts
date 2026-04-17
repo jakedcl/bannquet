@@ -58,10 +58,15 @@ export async function GET(
       );
     }
 
-    return NextResponse.json({
+    const response = NextResponse.json({
       success: true,
       data: tripReport,
     });
+
+    // Cache individual trip reports for 5 minutes (they rarely change after publishing)
+    response.headers.set('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=600');
+    
+    return response;
   } catch (error) {
     console.error('Error fetching trip report:', error);
     return NextResponse.json(

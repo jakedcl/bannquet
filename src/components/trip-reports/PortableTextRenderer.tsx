@@ -1,10 +1,31 @@
 'use client';
 
 import { PortableText } from '@portabletext/react';
+import Image from 'next/image';
 import { getImageUrl } from '@/lib/sanity';
 
 interface PortableTextRendererProps {
-  content: any[];
+  content: PortableTextContent[];
+}
+
+interface PortableTextContent {
+  _type: string;
+  asset?: {
+    _ref?: string;
+    _type?: string;
+  };
+  alt?: string;
+  caption?: string;
+  [key: string]: unknown;
+}
+
+interface ImageValue {
+  asset?: {
+    _ref?: string;
+    _type?: string;
+  };
+  alt?: string;
+  caption?: string;
 }
 
 export default function PortableTextRenderer({ content }: PortableTextRendererProps) {
@@ -18,7 +39,7 @@ export default function PortableTextRenderer({ content }: PortableTextRendererPr
         value={content}
         components={{
           types: {
-            image: ({ value }: any) => {
+            image: ({ value }: { value: ImageValue }) => {
               const imageUrl = value?.asset?._ref 
                 ? getImageUrl(
                     {
@@ -36,11 +57,15 @@ export default function PortableTextRenderer({ content }: PortableTextRendererPr
 
               return (
                 <figure className="my-8">
-                  <img
-                    src={imageUrl}
-                    alt={value.alt || 'Trip photo'}
-                    className="w-full rounded-lg"
-                  />
+                  <div className="relative w-full aspect-video">
+                    <Image
+                      src={imageUrl}
+                      alt={value.alt || 'Trip photo'}
+                      fill
+                      className="object-contain rounded-lg"
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
+                    />
+                  </div>
                   {value.caption && (
                     <figcaption className="mt-2 text-sm text-gray-600 text-center italic">
                       {value.caption}

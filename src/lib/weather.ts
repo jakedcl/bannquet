@@ -11,11 +11,17 @@ export function getMountainsForRegion(region: RegionCode) {
 // Simple helper to fetch data
 async function fetchWeather<T = unknown>(url: string): Promise<T> {
   const response = await fetch(url, {
-    headers: { 'User-Agent': USER_AGENT }
+    headers: {
+      'User-Agent': USER_AGENT,
+      Accept: 'application/geo+json',
+    },
   });
   
   if (!response.ok) {
-    throw new Error(`Weather API Error: ${response.statusText}`);
+    const body = await response.text().catch(() => '');
+    throw new Error(
+      `Weather API Error: ${response.status} ${response.statusText} (${url})${body ? ` :: ${body.slice(0, 200)}` : ''}`
+    );
   }
   
   return response.json() as Promise<T>;
@@ -126,6 +132,9 @@ export async function getWeather(lat: number, lon: number): Promise<WeatherData>
   
   const temperatureF = currentPeriod.temperature;
   const apparentTemperature = normalizeValue(gridProps.apparentTemperature);
+  const windChill = normalizeValue(gridProps.windChill);
+  const heatIndex = normalizeValue(gridProps.heatIndex);
+  const relativeHumidity = normalizeValue(gridProps.relativeHumidity);
   const summitWind = normalizeValue(gridProps.windSpeed);
   const windGust = normalizeValue(gridProps.windGust);
   const snowLevel = normalizeValue(gridProps.snowLevel);
@@ -140,6 +149,9 @@ export async function getWeather(lat: number, lon: number): Promise<WeatherData>
   return {
     temperature: temperatureF,
     apparentTemperature,
+    windChill,
+    heatIndex,
+    relativeHumidity,
     conditions: [currentPeriod.shortForecast],
     windSpeed: currentPeriod.windSpeed,
     windDirection: currentPeriod.windDirection,

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { sanityWriteClient } from '@/lib/sanity';
 import { Resend } from 'resend';
+import { getBaseUrl } from '@/lib/utils';
 
 // Allowed author names (optional whitelist)
 const ALLOWED_AUTHORS = process.env.ALLOWED_AUTHORS?.split(',') || [];
@@ -74,7 +75,22 @@ export async function POST(request: NextRequest) {
     }
 
     // Create trip report document
-    const tripReport: any = {
+    const tripReport: {
+      _type: string;
+      title: string;
+      authorName: string;
+      authorEmail: string;
+      tripDate: string;
+      body: unknown[];
+      tags: string[];
+      published: boolean;
+      publishedAt: string;
+      locationPin?: {
+        _type: string;
+        lat: number;
+        lng: number;
+      };
+    } = {
       _type: 'tripReport',
       title,
       authorName,
@@ -104,15 +120,7 @@ export async function POST(request: NextRequest) {
     const editToken = crypto.randomBytes(32).toString('hex');
     
     // Get base URL for email links
-    let baseUrl = 'https://bannquet.com';
-    // Prioritize development mode
-    if (process.env.NODE_ENV === 'development') {
-      baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
-    } else if (process.env.NEXT_PUBLIC_APP_URL) {
-      baseUrl = process.env.NEXT_PUBLIC_APP_URL;
-    } else if (process.env.VERCEL_URL && process.env.VERCEL_URL !== 'bannquet.com') {
-      baseUrl = `https://${process.env.VERCEL_URL}`;
-    }
+    const baseUrl = getBaseUrl();
     
     // Store tokens in Sanity
     await sanityWriteClient!.create({

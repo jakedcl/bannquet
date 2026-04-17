@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { sanityWriteClient } from '@/lib/sanity';
+import { getBaseUrl } from '@/lib/utils';
 
 export async function GET(request: NextRequest) {
   try {
@@ -18,9 +19,7 @@ export async function GET(request: NextRequest) {
     const id = searchParams.get('id');
 
     if (!token || !id) {
-      // Get base URL for redirect
-      const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 
-        (process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://bannquet.com');
+      const baseUrl = getBaseUrl();
       return NextResponse.redirect(`${baseUrl}/trip-reports?error=invalid-token`);
     }
 
@@ -32,15 +31,13 @@ export async function GET(request: NextRequest) {
 
     if (!verification) {
       console.error('Verification not found:', { token, id });
-      const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 
-        (process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://bannquet.com');
+      const baseUrl = getBaseUrl();
       return NextResponse.redirect(`${baseUrl}/trip-reports?error=token-not-found`);
     }
 
     // Check if expired (only for verification token, edit tokens don't expire)
     if (verification.expiresAt && new Date(verification.expiresAt) < new Date()) {
-      const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 
-        (process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://bannquet.com');
+      const baseUrl = getBaseUrl();
       return NextResponse.redirect(`${baseUrl}/trip-reports?error=token-expired`);
     }
 
@@ -54,13 +51,11 @@ export async function GET(request: NextRequest) {
     await sanityWriteClient.delete(verification._id);
 
     // Redirect to trip reports page with success
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 
-      (process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://bannquet.com');
+    const baseUrl = getBaseUrl();
     return NextResponse.redirect(`${baseUrl}/trip-reports?verified=true`);
   } catch (error) {
     console.error('Error verifying trip report:', error);
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 
-      (process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://bannquet.com');
+    const baseUrl = getBaseUrl();
     return NextResponse.redirect(`${baseUrl}/trip-reports?error=verification-failed`);
   }
 }
