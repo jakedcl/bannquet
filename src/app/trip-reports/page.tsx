@@ -89,7 +89,8 @@ export default function TripReportsPage() {
 
           <Link
             href="/trip-reports/submit"
-            className="px-6 py-3 bg-brand-green text-white rounded-full font-semibold hover:bg-brand-green-dark transition-colors whitespace-nowrap"
+            className="retro-button-pink px-6 py-3 font-bold uppercase tracking-wider whitespace-nowrap"
+            className="rounded-none"
           >
             Submit Trip Report
           </Link>
@@ -103,11 +104,12 @@ export default function TripReportsPage() {
                 setFilter('all');
                 setFilterValue('');
               }}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+              className={`px-4 py-2 text-sm font-bold uppercase transition-all ${
                 filter === 'all'
-                  ? 'bg-brand-green text-white'
-                  : 'bg-white text-gray-700 hover:bg-gray-100'
+                  ? 'retro-button-yellow'
+                  : 'retro-button text-gray-800'
               }`}
+              className="rounded-none"
             >
               All Trips
             </button>
