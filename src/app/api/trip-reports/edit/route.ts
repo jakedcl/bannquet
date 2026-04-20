@@ -30,7 +30,7 @@ export async function GET(request: NextRequest) {
     // Verify edit token
     const verification = await sanityClient.fetch(
       `*[_type == "tripReportVerification" && editToken == $token && tripReportId._ref == $id][0]`,
-      { token, id }
+      { token, id } as Record<string, string>
     );
 
     if (!verification) {
@@ -46,7 +46,7 @@ export async function GET(request: NextRequest) {
     // Fetch trip report
     const tripReport = await sanityClient.fetch(
       `*[_type == "tripReport" && _id == $id][0]`,
-      { id }
+      { id } as Record<string, string>
     );
 
     if (!tripReport) {
@@ -104,7 +104,7 @@ export async function PUT(request: NextRequest) {
     // Verify edit token
     const verification = await sanityWriteClient.fetch(
       `*[_type == "tripReportVerification" && editToken == $token && tripReportId._ref == $id][0]`,
-      { token, id }
+      { token, id } as Record<string, string>
     );
 
     if (!verification) {
