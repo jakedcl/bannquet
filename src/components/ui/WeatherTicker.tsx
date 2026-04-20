@@ -17,12 +17,25 @@ export default function WeatherTicker() {
     async function fetchStats() {
       try {
         const res = await fetch('/api/weather/extremes');
-        const data = await res.json();
+        let data: any = null;
+        const contentType = res.headers.get('content-type') || '';
+
+        if (contentType.includes('application/json')) {
+          data = await res.json();
+        } else {
+          const bodyText = await res.text();
+          setError(
+            bodyText?.slice(0, 80) ||
+            `Weather feed unavailable (${res.status})`
+          );
+          return;
+        }
+
         if (data.success && Array.isArray(data.stats)) {
           setStats(data.stats);
           setError(null);
         } else {
-          setError(data?.error || 'Weather feed unavailable');
+          setError(data?.error || `Weather feed unavailable (${res.status})`);
         }
       } catch (err) {
         console.error('Failed to fetch weather extremes:', err);
