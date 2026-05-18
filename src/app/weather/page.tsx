@@ -9,8 +9,7 @@ export default function WeatherPage() {
   const { region } = useRegion();
   const sections = REGION_WEATHER_SECTIONS[region] ?? REGION_WEATHER_SECTIONS[DEFAULT_REGION];
   const regionLabel = REGION_LABELS[region];
-  const showMwobs = region === 'nh';
-  
+
   return (
     <PageWrapper className="bg-gray-50">
       <div className="container mx-auto px-4 py-12 space-y-10">
@@ -20,13 +19,6 @@ export default function WeatherPage() {
             Mountain Conditions — {regionLabel}
       </h1>
         </header>
-
-        {showMwobs && (
-          <div className="rounded-2xl border border-brand-green/30 bg-white px-4 py-3 shadow-sm">
-            <p className="text-sm font-semibold text-brand-green">Mount Washington Observatory</p>
-            <p className="text-xs text-gray-500">Tap a section banner for live summit data</p>
-          </div>
-        )}
 
         <div className="space-y-12">
           {sections.map((section) => (
