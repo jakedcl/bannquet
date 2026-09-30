@@ -26,7 +26,9 @@ yarn-debug.log*
 yarn-error.log*
 
 # local env files
-.env*.local
+.env
+.env*
+!.env.example
 
 # vercel
 .vercel
@@ -41,3 +43,6 @@ next-env.d.ts
 /sanity-studio/dist/
 /sanity-studio/.env
 /sanity-studio/.env.local
+
+# build output
+/dist
