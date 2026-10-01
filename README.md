@@ -11,7 +11,7 @@ Live at [bannquet.com](https://www.bannquet.com).
 - Hourly and daily forecasts, wind, precipitation and alerts for each mountain, grouped by region (NY, VT, NH, ME).
 - A ticker at the top of the site showing the current extremes across regions.
 - Trip reports written in a rich-text editor, with compressed image uploads, tags (hiking, climbing, skiing and so on) and an optional map pin.
-- Reports go live only after the author verifies by email. The publish link expires after 24 hours, and the edit link does not expire.
+- Reports go live only after the author confirms by email with a single-use publish link. The edit link in that email only works until the publish link has been used; see [docs/how-it-works.md](docs/how-it-works.md).
 - An embedded Sanity Studio for managing content.
 
 More detail on the endpoints used is in `API_DOCUMENTATION.md`, and the Sanity setup steps are in `SANITY_SETUP.md`.
