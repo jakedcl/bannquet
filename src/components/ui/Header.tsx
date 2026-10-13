@@ -9,7 +9,13 @@ import { useRegion } from '@/contexts/RegionContext';
 import { REGION_OPTIONS } from '@/lib/regions';
 import WeatherTicker from './WeatherTicker';
 
-export default function Header() {
+export type HeaderAccount = {
+  handle: string | null;
+  displayName: string | null;
+  role: 'member' | 'admin';
+} | null;
+
+export default function Header({ account = null }: { account?: HeaderAccount }) {
   const pathname = usePathname();
   const [openPath, setOpenPath] = useState<string | null>(null);
   const mobileMenuOpen = openPath === pathname;
@@ -61,8 +67,14 @@ export default function Header() {
         )}
         
         {isHomepage && (
-          <div className="flex-1 flex items-center z-20 min-w-0 w-full">
+          <div className="flex-1 flex items-center z-20 min-w-0">
             <WeatherTicker />
+          </div>
+        )}
+
+        {isHomepage && (
+          <div className="hidden md:flex items-center gap-2 shrink-0 pr-3">
+            <AccountLinks account={account} pathname={pathname} />
           </div>
         )}
 
@@ -82,6 +94,7 @@ export default function Header() {
                   {item.label}
                 </Link>
               ))}
+            <AccountLinks account={account} pathname={pathname} />
             
             {/* Region selector - only show on weather pages */}
             {(pathname === '/weather' || pathname.startsWith('/weather/')) && (
@@ -170,6 +183,7 @@ export default function Header() {
                       </Link>
                     );
                   })}
+                  <AccountLinks account={account} pathname={pathname} stacked />
                 </div>
               </div>
             </motion.nav>
@@ -179,6 +193,47 @@ export default function Header() {
     </motion.header>
   );
 } 
+
+function AccountLinks({
+  account,
+  pathname,
+  stacked = false,
+}: {
+  account: HeaderAccount;
+  pathname: string;
+  stacked?: boolean;
+}) {
+  const className = stacked
+    ? 'block px-4 py-3 text-base font-semibold rounded-xl border text-center text-white border-white/30 hover:border-white hover:bg-white/10'
+    : 'rounded-none px-4 py-2 text-sm font-bold tracking-wide uppercase transition-all retro-button-blue text-white';
+
+  if (!account) {
+    return (
+      <Link href="/sign-in" className={className}>
+        sign in
+      </Link>
+    );
+  }
+
+  const profileHref = account.handle ? `/hikers/${account.handle}` : '/settings';
+  const label = account.displayName || account.handle || 'you';
+
+  return (
+    <>
+      <Link href={profileHref} className={pathname === profileHref ? className.replace('retro-button-blue', 'retro-button-yellow') : className}>
+        {label}
+      </Link>
+      <Link href="/settings" className={className}>
+        settings
+      </Link>
+      {account.role === 'admin' ? (
+        <Link href="/admin" className={className}>
+          admin
+        </Link>
+      ) : null}
+    </>
+  );
+}
 
 type RegionSelectorProps = {
   className?: string;

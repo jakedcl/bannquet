@@ -22,19 +22,28 @@ type ButtonProps = {
   className?: string;
   children: React.ReactNode;
   onClick?: () => void;
+  disabled?: boolean;
 };
 
-export function Button({ tone = 'default', href, type = 'button', className = '', children, onClick }: ButtonProps) {
-  const classes = `${BUTTON_TONE_CLASS[tone]} rounded-none px-4 py-2 text-sm font-bold uppercase tracking-wide ${className}`;
+export function Button({
+  tone = 'default',
+  href,
+  type = 'button',
+  className = '',
+  children,
+  onClick,
+  disabled = false,
+}: ButtonProps) {
+  const classes = `${BUTTON_TONE_CLASS[tone]} rounded-none px-4 py-2 text-sm font-bold uppercase tracking-wide disabled:opacity-60 ${className}`;
   if (href) {
     return (
-      <Link href={href} className={classes}>
+      <Link href={href} className={classes} aria-disabled={disabled}>
         {children}
       </Link>
     );
   }
   return (
-    <button type={type} onClick={onClick} className={classes}>
+    <button type={type} onClick={onClick} className={classes} disabled={disabled}>
       {children}
     </button>
   );

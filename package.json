@@ -8,12 +8,13 @@
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
-    "test": "tsx --test src/lib/portable-text.test.ts src/lib/activities.test.ts src/lib/regions.test.ts",
+    "test": "tsx --test src/lib/portable-text.test.ts src/lib/activities.test.ts src/lib/regions.test.ts src/lib/membership.test.ts src/lib/handles.test.ts",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:migrate-sanity": "tsx scripts/migrate-sanity-trip-reports.ts"
   },
   "dependencies": {
+    "@neondatabase/auth": "0.6.0-beta",
     "@vercel/blob": "^2.3.1",
     "@vercel/functions": "^3.4.3",
     "drizzle-orm": "^0.45.1",

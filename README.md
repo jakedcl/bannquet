@@ -29,7 +29,7 @@ npm run dev
 
 Then open http://localhost:3000. Copy `.env.example` to `.env.local`.
 
-Weather pages work with no keys. Trip reports stay empty until `DATABASE_URL` points at a Postgres database and the schema has been migrated.
+Weather pages work with no keys. Trip reports stay empty until `DATABASE_URL` points at a Postgres database and the schema has been migrated. Reading the site stays public. Sign-in is invite-only: Jake sends a link from `/admin`, and a friend uses an email code or link. `ADMIN_EMAIL` is the address that can sign in without an invite.
 
 ## Database
 

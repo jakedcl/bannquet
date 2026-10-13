@@ -64,11 +64,13 @@ export const peakListEnum = pgEnum('peak_list', ['adk46', 'nh48']);
 
 export const users = pgTable('users', {
   id: text('id').primaryKey(),
+  email: text('email').unique(),
   handle: text('handle').unique(),
   displayName: text('display_name'),
   avatarUrl: text('avatar_url'),
   homeRegion: text('home_region'),
   bio: text('bio'),
+  favoriteActivities: text('favorite_activities').array().notNull().default(sql`ARRAY[]::text[]`),
   role: userRoleEnum('role').notNull().default('member'),
   createdAt,
 });
