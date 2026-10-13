@@ -4,22 +4,29 @@ const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       {
-        protocol: 'https',
-        hostname: '**.weather.gov',
+        protocol: "https",
+        hostname: "**.weather.gov",
       },
       {
-        protocol: 'https',
-        hostname: 'cdn.sanity.io',
+        protocol: "https",
+        hostname: "cdn.sanity.io",
+      },
+      {
+        protocol: "https",
+        hostname: "*.public.blob.vercel-storage.com",
       },
     ],
   },
-  env: {
-    NEXT_PUBLIC_MAPBOX_TOKEN: process.env.NEXT_PUBLIC_MAPBOX_TOKEN,
-  },
   typescript: {
-    ignoreBuildErrors: false, // Fix TypeScript errors instead of ignoring them
+    ignoreBuildErrors: false,
   },
   reactStrictMode: true,
+  async redirects() {
+    return [
+      { source: "/studio", destination: "/trip-reports", permanent: false },
+      { source: "/studio/:path*", destination: "/trip-reports", permanent: false },
+    ];
+  },
 };
 
 export default nextConfig;

@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import { createContext, useCallback, useContext, useMemo, useSyncExternalStore } from 'react';
 import { DEFAULT_REGION, REGION_STORAGE_KEY, RegionCode, isRegionCode } from '@/lib/regions';
 
 type RegionContextValue = {
@@ -9,31 +9,35 @@ type RegionContextValue = {
 };
 
 const RegionContext = createContext<RegionContextValue | undefined>(undefined);
+const listeners = new Set<() => void>();
+
+function subscribe(listener: () => void) {
+  listeners.add(listener);
+  return () => listeners.delete(listener);
+}
+
+function readRegion(): RegionCode {
+  const stored = window.localStorage.getItem(REGION_STORAGE_KEY);
+  return isRegionCode(stored) ? stored : DEFAULT_REGION;
+}
+
+function emit() {
+  listeners.forEach((listener) => listener());
+}
 
 export function RegionProvider({ children }: { children: React.ReactNode }) {
-  const [region, setRegionState] = useState<RegionCode>(DEFAULT_REGION);
-
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-    const stored = window.localStorage.getItem(REGION_STORAGE_KEY);
-    if (isRegionCode(stored)) {
-      setRegionState(stored);
-    }
+  const region = useSyncExternalStore(subscribe, readRegion, () => DEFAULT_REGION);
+  const setRegion = useCallback((nextRegion: RegionCode) => {
+    window.localStorage.setItem(REGION_STORAGE_KEY, nextRegion);
+    emit();
   }, []);
-
-  const setRegion = (nextRegion: RegionCode) => {
-    setRegionState(nextRegion);
-    if (typeof window !== 'undefined') {
-      window.localStorage.setItem(REGION_STORAGE_KEY, nextRegion);
-    }
-  };
 
   const value = useMemo(
     () => ({
       region,
       setRegion,
     }),
-    [region]
+    [region, setRegion],
   );
 
   return <RegionContext.Provider value={value}>{children}</RegionContext.Provider>;
@@ -46,4 +50,3 @@ export function useRegion() {
   }
   return context;
 }
-

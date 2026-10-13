@@ -1,193 +1,173 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
-import Link from 'next/link';
+import { useEffect, useMemo, useState } from 'react';
 import PageWrapper from '@/components/ui/PageWrapper';
 import TripCard from '@/components/trip-reports/TripCard';
-import { TripReport } from '@/types/trip-reports';
+import { Button, Inset, StatusBar, Tooltip, Window } from '@/components/retro';
+import { TripReportListItem } from '@/types/trip-reports';
+
+const TAGS = [
+  'trail-running',
+  'hiking',
+  'mountaineering',
+  'climbing',
+  'ice-climb',
+  'scramble',
+  'bike',
+  'ski-split-tour',
+  'backpacking',
+  'camping',
+  'snowshoeing',
+  'rock-climbing',
+];
 
 export default function TripReportsPage() {
-  const [trips, setTrips] = useState<TripReport[]>([]);
+  const [trips, setTrips] = useState<TripReportListItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [filter, setFilter] = useState<'all' | 'author' | 'tag'>('all');
-  const [filterValue, setFilterValue] = useState<string>('');
+  const [configured, setConfigured] = useState(true);
+  const [author, setAuthor] = useState('');
+  const [tag, setTag] = useState('');
 
   useEffect(() => {
-    fetchTrips();
-  }, [filter, filterValue]);
+    let cancelled = false;
 
-  const fetchTrips = async () => {
-    setLoading(true);
-    setError(null);
-
-    try {
-      let url = '/api/trip-reports';
-      const params = new URLSearchParams();
-
-      if (filter === 'author' && filterValue) {
-        params.append('authorName', filterValue);
+    async function load() {
+      setLoading(true);
+      setError(null);
+      try {
+        const response = await fetch('/api/trip-reports');
+        const data = await response.json();
+        if (!data.success) {
+          throw new Error(data.error || 'Failed to fetch trip reports');
+        }
+        if (!cancelled) {
+          setTrips(data.data || []);
+          setConfigured(data.configured !== false);
+        }
+      } catch (err) {
+        if (!cancelled) {
+          setError(err instanceof Error ? err.message : 'An error occurred');
+        }
+      } finally {
+        if (!cancelled) setLoading(false);
       }
-
-      if (filter === 'tag' && filterValue) {
-        params.append('tag', filterValue);
-      }
-
-      if (params.toString()) {
-        url += `?${params.toString()}`;
-      }
-
-      const response = await fetch(url);
-      const data = await response.json();
-
-      if (!data.success) {
-        throw new Error(data.error || 'Failed to fetch trip reports');
-      }
-
-      setTrips(data.data || []);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
-    } finally {
-      setLoading(false);
     }
-  };
 
-  // Get unique authors and tags for filters
-  const authors = Array.from(new Set(trips.map(t => t.authorName))).sort();
-  const allTags = Array.from(new Set(trips.flatMap(t => t.tags || []))).sort();
-  
-  const availableTags = [
-    'trail-running',
-    'hiking',
-    'mountaineering',
-    'climbing',
-    'ice-climb',
-    'scramble',
-    'bike',
-    'ski-split-tour',
-    'backpacking',
-    'camping',
-    'snowshoeing',
-    'rock-climbing',
-  ];
+    load();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const authors = useMemo(
+    () => Array.from(new Set(trips.map((trip) => trip.authorName))).sort(),
+    [trips],
+  );
+
+  const visible = trips.filter((trip) => {
+    if (author && trip.authorName !== author) return false;
+    if (tag && !trip.tags.includes(tag)) return false;
+    return true;
+  });
 
   return (
     <PageWrapper className="bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 py-12">
-        {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 mb-12">
+      <div className="mx-auto max-w-7xl px-4 py-12">
+        <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div className="space-y-3">
             <p className="text-sm uppercase tracking-[0.3em] text-brand-green/70">trip reports</p>
-            <h1 className="text-4xl md:text-5xl font-bold text-gray-900">
-              Trip Reports
-            </h1>
-            <p className="text-gray-600 max-w-2xl">
-              Stories and photos from mountain adventures across the US
+            <h1 className="text-4xl font-bold text-gray-900 md:text-5xl">Trip Reports</h1>
+            <p className="max-w-2xl text-gray-600">
+              Stories and photos from mountain adventures across the Northeast.
             </p>
           </div>
-
-          <Link
-            href="/trip-reports/submit"
-            className="retro-button-pink px-6 py-3 font-bold uppercase tracking-wider whitespace-nowrap rounded-none"
-          >
-            Submit Trip Report
-          </Link>
+          <Tooltip label="New reports will be written on the site once friend accounts exist. This list shows reports that have already been published.">
+            <button type="button" className="text-sm font-bold uppercase tracking-wide text-brand-green underline decoration-dotted">
+              About posting
+            </button>
+          </Tooltip>
         </div>
 
-        {/* Filters */}
-        <div className="mb-8 space-y-4">
+        <Window title="Filter" className="mb-8">
           <div className="flex flex-wrap items-center gap-4">
-            <button
+            <Button
+              tone={!author && !tag ? 'yellow' : 'default'}
               onClick={() => {
-                setFilter('all');
-                setFilterValue('');
+                setAuthor('');
+                setTag('');
               }}
-              className={`rounded-none px-4 py-2 text-sm font-bold uppercase transition-all ${
-                filter === 'all'
-                  ? 'retro-button-yellow'
-                  : 'retro-button text-gray-800'
-              }`}
             >
-              All Trips
-            </button>
-
-            <select
-              value={filter === 'author' ? filterValue : ''}
-              onChange={(e) => {
-                setFilter('author');
-                setFilterValue(e.target.value);
-              }}
-              className="px-4 py-2 rounded-full border border-gray-300 text-sm font-medium bg-white focus:ring-2 focus:ring-brand-green focus:border-transparent"
-            >
-              <option value="">Filter by Author</option>
-              {authors.map(author => (
-                <option key={author} value={author}>
-                  {author}
-                </option>
-              ))}
-            </select>
-
-            <select
-              value={filter === 'tag' ? filterValue : ''}
-              onChange={(e) => {
-                setFilter('tag');
-                setFilterValue(e.target.value);
-              }}
-              className="px-4 py-2 rounded-full border border-gray-300 text-sm font-medium bg-white focus:ring-2 focus:ring-brand-green focus:border-transparent"
-            >
-              <option value="">Filter by Tag</option>
-              {availableTags.map(tag => (
-                <option key={tag} value={tag}>
-                  {tag.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())}
-                </option>
-              ))}
-            </select>
-
+              All trips
+            </Button>
+            <div className="flex flex-wrap gap-4">
+              <Inset>
+                <select
+                  value={author}
+                  onChange={(event) => setAuthor(event.target.value)}
+                  className="bg-transparent px-2 py-1 text-sm font-bold uppercase"
+                  aria-label="Filter by author"
+                >
+                  <option value="">All authors</option>
+                  {authors.map((name) => (
+                    <option key={name} value={name}>{name}</option>
+                  ))}
+                </select>
+              </Inset>
+              <Inset>
+                <select
+                  value={tag}
+                  onChange={(event) => setTag(event.target.value)}
+                  className="bg-transparent px-2 py-1 text-sm font-bold uppercase"
+                  aria-label="Filter by tag"
+                >
+                  <option value="">All tags</option>
+                  {TAGS.map((value) => (
+                    <option key={value} value={value}>
+                      {value.replace(/-/g, ' ')}
+                    </option>
+                  ))}
+                </select>
+              </Inset>
+            </div>
           </div>
-        </div>
+        </Window>
 
-        {/* Loading State */}
         {loading && (
-          <div className="text-center py-12">
-            <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-brand-green"></div>
-            <p className="mt-4 text-gray-600">Loading trip reports...</p>
-          </div>
+          <Window title="Loading">
+            <p className="font-mono text-sm uppercase tracking-wide text-gray-600">Loading trip reports...</p>
+          </Window>
         )}
 
-        {/* Error State */}
         {error && (
-          <div className="bg-red-50 border border-red-200 rounded-xl p-6 text-center">
-            <p className="text-red-800">{error}</p>
-            <button
-              onClick={fetchTrips}
-              className="mt-4 px-4 py-2 bg-red-600 text-white rounded-full text-sm font-medium hover:bg-red-700"
-            >
-              Try Again
-            </button>
-          </div>
+          <Window title="Error">
+            <p className="mb-4 text-red-800">{error}</p>
+            <Button tone="orange" onClick={() => window.location.reload()}>Try again</Button>
+          </Window>
         )}
 
-        {/* Trip Reports Grid */}
         {!loading && !error && (
           <>
-            {trips.length === 0 ? (
-              <div className="text-center py-12">
-                <p className="text-gray-600 text-lg mb-4">No trip reports found</p>
-                <Link
-                  href="/trip-reports/submit"
-                  className="text-brand-green hover:underline font-medium"
-                >
-                  Be the first to submit one!
-                </Link>
-              </div>
+            {visible.length === 0 ? (
+              <Window title="Empty">
+                <p className="text-gray-700">
+                  {configured
+                    ? 'No trip reports match this filter.'
+                    : 'Trip reports show up here after the database is connected. Weather still works without it.'}
+                </p>
+              </Window>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {trips.map((trip, index) => (
-                  <TripCard key={trip._id} trip={trip} index={index} />
+              <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+                {visible.map((trip, index) => (
+                  <TripCard key={trip.id} trip={trip} index={index} />
                 ))}
               </div>
             )}
+            <div className="mt-8">
+              <StatusBar>
+                {configured ? `${visible.length} shown` : 'database not connected'} · {trips.length} published
+              </StatusBar>
+            </div>
           </>
         )}
       </div>

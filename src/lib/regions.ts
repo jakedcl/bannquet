@@ -1,76 +1,12 @@
+import weatherRegions from '../../config/weather-regions.json';
+import { OPENFREEMAP_STYLE_URL } from '@/lib/map';
 import { Mountain } from '@/types/weather';
 
-export const REGIONS = ['ny', 'vt', 'nh', 'me'] as const;
+const SPOT_KINDS = ['summit', 'town', 'valley', 'notch', 'crag', 'park'] as const;
+const BUTTON_TONES = ['default', 'yellow', 'orange', 'pink', 'blue', 'green', 'purple'] as const;
 
-export type RegionCode = typeof REGIONS[number];
-
-export const REGION_LABELS: Record<RegionCode, string> = {
-  ny: 'NY',
-  vt: 'VT',
-  nh: 'NH',
-  me: 'ME',
-};
-
-export const DEFAULT_REGION: RegionCode = 'ny';
-
-export const REGION_STORAGE_KEY = 'bnqt-active-region';
-
-export const REGION_OPTIONS = REGIONS.map((code) => ({
-  code,
-  label: REGION_LABELS[code],
-}));
-
-export const isRegionCode = (value: string | null | undefined): value is RegionCode => {
-  return !!value && REGIONS.includes(value as RegionCode);
-};
-
-export type MapRegionConfig = {
-  center: [number, number];
-  bounds: [[number, number], [number, number]];
-  defaultStyle: string;
-  enable3D?: boolean;
-};
-
-export const REGION_MAP_CONFIG: Record<RegionCode, MapRegionConfig> = {
-  ny: {
-    center: [-73.96, 44.127],
-    bounds: [
-      [-74.6, 43.85],
-      [-73.5, 44.45],
-    ],
-    defaultStyle: 'mapbox://styles/mapbox/satellite-v9',
-    enable3D: true,
-  },
-  vt: {
-    center: [-72.7, 44.1],
-    bounds: [
-      [-73.5, 42.7],
-      [-71.2, 45.3],
-    ],
-    defaultStyle: 'mapbox://styles/mapbox/outdoors-v12',
-    enable3D: true,
-  },
-  nh: {
-    center: [-71.35, 44.1],
-    bounds: [
-      [-72.5, 43.0],
-      [-70.6, 45.4],
-    ],
-    defaultStyle: 'mapbox://styles/mapbox/outdoors-v12',
-    enable3D: true,
-  },
-  me: {
-    center: [-68.9, 45.4],
-    bounds: [
-      [-70.5, 44.0],
-      [-67.0, 46.7],
-    ],
-    defaultStyle: 'mapbox://styles/mapbox/outdoors-v12',
-    enable3D: true,
-  },
-};
-
-export type WeatherSpotKind = 'summit' | 'town' | 'valley' | 'notch' | 'crag' | 'park';
+export type WeatherSpotKind = (typeof SPOT_KINDS)[number];
+export type ButtonTone = (typeof BUTTON_TONES)[number];
 
 export interface WeatherSpot extends Mountain {
   id: string;
@@ -89,367 +25,181 @@ export interface WeatherSection {
   };
 }
 
-export const REGION_WEATHER_SECTIONS: Record<RegionCode, WeatherSection[]> = {
-  ny: [
-    {
-      id: 'ny-adirondacks',
-      title: 'Adirondack High Peaks',
-      description: 'Summit vs. valley to gauge true alpine swings.',
-      spots: [
-        {
-          id: 'mt-marcy',
-          name: 'Mount Marcy',
-          region: 'High Peaks summit',
-          lat: 44.1128,
-          lon: -73.9237,
-          elevation: 5344,
-          badge: 'Summit',
-          kind: 'summit',
-        },
-        {
-          id: 'keene-valley',
-          name: 'Keene Valley',
-          region: 'Valley floor',
-          lat: 44.1962,
-          lon: -73.7871,
-          elevation: 1030,
-          badge: 'Valley',
-          kind: 'valley',
-        },
-      ],
-    },
-    {
-      id: 'ny-catskills',
-      title: 'Catskill Mountains',
-      description: 'Hunter summit paired with the Tannersville base.',
-      spots: [
-        {
-          id: 'hunter-mountain',
-          name: 'Hunter Mountain',
-          region: 'Catskills summit',
-          lat: 42.202,
-          lon: -74.2132,
-          elevation: 4040,
-          badge: 'Summit',
-          kind: 'summit',
-        },
-        {
-          id: 'tannersville',
-          name: 'Tannersville',
-          region: 'Village weather',
-          lat: 42.1959,
-          lon: -74.1307,
-          elevation: 1900,
-          badge: 'Town',
-          kind: 'town',
-        },
-      ],
-    },
-    {
-      id: 'ny-gunks',
-      title: 'Shawangunks',
-      description: 'Crag conditions for the ridge.',
-      spots: [
-        {
-          id: 'shawangunk-ridge',
-          name: 'Gunks Ridge',
-          region: 'Shawangunk escarpment',
-          lat: 41.7361,
-          lon: -74.2361,
-          elevation: 2240,
-          badge: 'Crag',
-          kind: 'crag',
-        },
-      ],
-    },
-    {
-      id: 'ny-thacher',
-      title: 'Thacher Park',
-      description: 'Albany crag & trail weather.',
-      spots: [
-        {
-          id: 'thacher-park',
-          name: 'Thacher State Park',
-          region: 'Helderberg Escarpment',
-          lat: 42.652,
-          lon: -74.0083,
-          elevation: 1300,
-          badge: 'Park',
-          kind: 'park',
-        },
-      ],
-    },
-  ],
-  vt: [
-    {
-      id: 'vt-jay',
-      title: 'Jay Peak',
-      description: 'Summit winds vs. the Jay village weather.',
-      spots: [
-        {
-          id: 'jay-peak',
-          name: 'Jay Peak',
-          region: 'Northern spine',
-          lat: 44.9239,
-          lon: -72.5316,
-          elevation: 3858,
-          badge: 'Summit',
-          kind: 'summit',
-        },
-        {
-          id: 'jay-village',
-          name: 'Jay Village',
-          region: 'Valley base',
-          lat: 44.9376,
-          lon: -72.4512,
-          elevation: 1100,
-          badge: 'Town',
-          kind: 'town',
-        },
-      ],
-    },
-    {
-      id: 'vt-north-greens',
-      title: 'Northern Greens',
-      description: 'Mansfield summit with Stowe town conditions.',
-      spots: [
-        {
-          id: 'mt-mansfield',
-          name: 'Mount Mansfield',
-          region: 'Ridgeline summit',
-          lat: 44.5439,
-          lon: -72.8151,
-          elevation: 4393,
-          badge: 'Summit',
-          kind: 'summit',
-        },
-        {
-          id: 'stowe-town',
-          name: 'Stowe',
-          region: 'Village weather',
-          lat: 44.4654,
-          lon: -72.6874,
-          elevation: 1040,
-          badge: 'Town',
-          kind: 'town',
-        },
-      ],
-    },
-    {
-      id: 'vt-central-greens',
-      title: 'Central Greens',
-      description: 'Camel’s Hump paired with Bolton/Waterbury.',
-      spots: [
-        {
-          id: 'camels-hump',
-          name: "Camel's Hump",
-          region: 'Spine summit',
-          lat: 44.3194,
-          lon: -72.8853,
-          elevation: 4081,
-          badge: 'Summit',
-          kind: 'summit',
-        },
-        {
-          id: 'waterbury',
-          name: 'Bolton / Waterbury',
-          region: 'Climbing base',
-          lat: 44.337,
-          lon: -72.7562,
-          elevation: 600,
-          badge: 'Town',
-          kind: 'town',
-        },
-      ],
-    },
-    {
-      id: 'vt-south-greens',
-      title: 'Southern Greens',
-      description: 'Killington ridgeline plus Manchester weather.',
-      spots: [
-        {
-          id: 'killington-peak',
-          name: 'Killington Peak',
-          region: 'Killington summit',
-          lat: 43.6045,
-          lon: -72.8205,
-          elevation: 4241,
-          badge: 'Summit',
-          kind: 'summit',
-        },
-        {
-          id: 'manchester-vt',
-          name: 'Manchester',
-          region: 'Valley weather',
-          lat: 43.1638,
-          lon: -73.0729,
-          elevation: 900,
-          badge: 'Town',
-          kind: 'town',
-        },
-      ],
-    },
-  ],
-  nh: [
-    {
-      id: 'nh-presidential-range',
-      title: 'Presidential Range',
-      description: 'Mount Washington summit vs. Pinkham Notch base.',
-      banner: {
-        label: 'Higher Summits Forecast',
-        href: 'https://mountwashington.org/weather/higher-summits-forecast/',
+export type MapRegionConfig = {
+  center: [number, number];
+  bounds: [[number, number], [number, number]];
+  style: string;
+};
+
+export type RegionCode = string;
+
+type RegionConfig = {
+  code: string;
+  label: string;
+  buttonTone: ButtonTone;
+  map: MapRegionConfig;
+  sections: WeatherSection[];
+};
+
+function isSpotKind(value: unknown): value is WeatherSpotKind {
+  return typeof value === 'string' && (SPOT_KINDS as readonly string[]).includes(value);
+}
+
+function isButtonTone(value: unknown): value is ButtonTone {
+  return typeof value === 'string' && (BUTTON_TONES as readonly string[]).includes(value);
+}
+
+function readPair(value: unknown, label: string): [number, number] {
+  if (!Array.isArray(value) || value.length !== 2 || value.some((item) => typeof item !== 'number')) {
+    throw new Error(`Weather region config: ${label} must be a [lon, lat] pair`);
+  }
+  return [value[0], value[1]];
+}
+
+function loadRegions(raw: unknown): { defaultRegion: string; regions: RegionConfig[] } {
+  if (!raw || typeof raw !== 'object') {
+    throw new Error('Weather region config must be an object');
+  }
+  const config = raw as {
+    defaultRegion?: unknown;
+    mapStyle?: unknown;
+    regions?: unknown;
+  };
+  if (!Array.isArray(config.regions) || config.regions.length === 0) {
+    throw new Error('Weather region config needs at least one region');
+  }
+
+  const mapStyle = typeof config.mapStyle === 'string' && config.mapStyle.length > 0
+    ? config.mapStyle
+    : OPENFREEMAP_STYLE_URL;
+
+  const regions: RegionConfig[] = config.regions.map((entry, index) => {
+    if (!entry || typeof entry !== 'object') {
+      throw new Error(`Weather region ${index} is not an object`);
+    }
+    const region = entry as Record<string, unknown>;
+    if (typeof region.code !== 'string' || typeof region.label !== 'string') {
+      throw new Error(`Weather region ${index} needs a code and label`);
+    }
+    if (!isButtonTone(region.buttonTone)) {
+      throw new Error(`Weather region ${region.code} has an unknown buttonTone`);
+    }
+    const map = region.map as { center?: unknown; bounds?: unknown } | undefined;
+    if (!map || !Array.isArray(map.bounds) || map.bounds.length !== 2) {
+      throw new Error(`Weather region ${region.code} needs map.center and map.bounds`);
+    }
+    if (!Array.isArray(region.sections)) {
+      throw new Error(`Weather region ${region.code} needs sections`);
+    }
+
+    const sections: WeatherSection[] = region.sections.map((sectionEntry) => {
+      const section = sectionEntry as Record<string, unknown>;
+      if (typeof section.id !== 'string' || typeof section.title !== 'string' || !Array.isArray(section.spots)) {
+        throw new Error(`Weather region ${region.code} has a section missing id, title, or spots`);
+      }
+      const spots: WeatherSpot[] = section.spots.map((spotEntry) => {
+        const spot = spotEntry as Record<string, unknown>;
+        const id = spot.id;
+        const name = spot.name;
+        const lat = spot.lat;
+        const lon = spot.lon;
+        const elevation = spot.elevation;
+        const spotRegion = spot.region;
+        const badge = spot.badge;
+        const kind = spot.kind;
+        if (
+          typeof id !== 'string' ||
+          typeof name !== 'string' ||
+          typeof lat !== 'number' ||
+          typeof lon !== 'number' ||
+          typeof elevation !== 'number'
+        ) {
+          throw new Error(`Spot in ${region.code}/${section.id} needs id, name, lat, lon, and elevation`);
+        }
+        const label = region.label;
+        if (typeof label !== 'string') {
+          throw new Error(`Weather region ${region.code} needs a label`);
+        }
+        return {
+          id,
+          name,
+          region: typeof spotRegion === 'string' ? spotRegion : label,
+          lat,
+          lon,
+          elevation,
+          badge: typeof badge === 'string' ? badge : undefined,
+          kind: isSpotKind(kind) ? kind : undefined,
+        };
+      });
+
+      const banner = section.banner as { label?: unknown; href?: unknown } | undefined;
+      return {
+        id: section.id,
+        title: section.title,
+        description: typeof section.description === 'string' ? section.description : undefined,
+        spots,
+        banner:
+          banner && typeof banner.label === 'string' && typeof banner.href === 'string'
+            ? { label: banner.label, href: banner.href }
+            : undefined,
+      };
+    });
+
+    return {
+      code: region.code,
+      label: region.label,
+      buttonTone: region.buttonTone,
+      map: {
+        center: readPair(map.center, `${region.code} center`),
+        bounds: [readPair(map.bounds[0], `${region.code} bounds[0]`), readPair(map.bounds[1], `${region.code} bounds[1]`)],
+        style: mapStyle,
       },
-      spots: [
-        {
-          id: 'mt-washington',
-          name: 'Mount Washington',
-          region: 'Presidential summit',
-          lat: 44.2706,
-          lon: -71.3033,
-          elevation: 6288,
-          badge: 'Summit',
-          kind: 'summit',
-        },
-        {
-          id: 'pinkham-notch',
-          name: 'Pinkham Notch',
-          region: 'AMC base camp',
-          lat: 44.2556,
-          lon: -71.2512,
-          elevation: 2017,
-          badge: 'Notch',
-          kind: 'notch',
-        },
-      ],
-    },
-    {
-      id: 'nh-franconia',
-      title: 'Franconia & Pemi',
-      description: 'Lafayette ridge linked with Franconia Notch.',
-      spots: [
-        {
-          id: 'mt-lafayette',
-          name: 'Mount Lafayette',
-          region: 'Franconia ridge',
-          lat: 44.1606,
-          lon: -71.645,
-          elevation: 5249,
-          badge: 'Summit',
-          kind: 'summit',
-        },
-        {
-          id: 'franconia-notch',
-          name: 'Franconia Notch',
-          region: 'Notch weather',
-          lat: 44.1489,
-          lon: -71.6826,
-          elevation: 1940,
-          badge: 'Notch',
-          kind: 'notch',
-        },
-      ],
-    },
-    {
-      id: 'nh-rumney',
-      title: 'Rumney Climbing',
-      description: 'Crag conditions for Rumney / Plymouth.',
-      spots: [
-        {
-          id: 'rumney-crag',
-          name: 'Rumney Crags',
-          region: 'Baker River valley',
-          lat: 43.8098,
-          lon: -71.8126,
-          elevation: 1400,
-          badge: 'Crag',
-          kind: 'crag',
-        },
-      ],
-    },
-  ],
-  me: [
-    {
-      id: 'me-baxter',
-      title: 'Baxter State Park',
-      description: 'Katahdin summit with Millinocket conditions.',
-      spots: [
-        {
-          id: 'katahdin',
-          name: 'Mount Katahdin',
-          region: 'Baxter summit',
-          lat: 45.9044,
-          lon: -68.9217,
-          elevation: 5268,
-          badge: 'Summit',
-          kind: 'summit',
-        },
-        {
-          id: 'millinocket',
-          name: 'Millinocket',
-          region: 'Gateway town',
-          lat: 45.657,
-          lon: -68.7098,
-          elevation: 400,
-          badge: 'Town',
-          kind: 'town',
-        },
-      ],
-    },
-    {
-      id: 'me-mahoosuc',
-      title: 'Mahoosucs & Bigelow',
-      description: 'Bigelow ridge plus Rangeley town weather.',
-      spots: [
-        {
-          id: 'bigelow',
-          name: 'Bigelow Mountain',
-          region: 'High peaks',
-          lat: 45.1634,
-          lon: -70.3009,
-          elevation: 4150,
-          badge: 'Summit',
-          kind: 'summit',
-        },
-        {
-          id: 'rangeley',
-          name: 'Rangeley',
-          region: 'Lakes region',
-          lat: 44.9917,
-          lon: -70.6645,
-          elevation: 1518,
-          badge: 'Town',
-          kind: 'town',
-        },
-      ],
-    },
-    {
-      id: 'me-acadia',
-      title: 'Acadia',
-      description: 'Cadillac Mountain paired with Bar Harbor.',
-      spots: [
-        {
-          id: 'cadillac-mountain',
-          name: 'Cadillac Mountain',
-          region: 'Acadia summit',
-          lat: 44.3516,
-          lon: -68.2221,
-          elevation: 1530,
-          badge: 'Summit',
-          kind: 'summit',
-        },
-        {
-          id: 'bar-harbor',
-          name: 'Bar Harbor',
-          region: 'Coastal town',
-          lat: 44.3876,
-          lon: -68.2039,
-          elevation: 150,
-          badge: 'Town',
-          kind: 'town',
-        },
-      ],
-    },
-  ],
+      sections,
+    };
+  });
+
+  const codes = new Set<string>();
+  for (const region of regions) {
+    if (codes.has(region.code)) {
+      throw new Error(`Duplicate weather region code: ${region.code}`);
+    }
+    codes.add(region.code);
+  }
+
+  const defaultRegion = typeof config.defaultRegion === 'string' ? config.defaultRegion : regions[0].code;
+  if (!codes.has(defaultRegion)) {
+    throw new Error(`defaultRegion "${defaultRegion}" is not in the weather region list`);
+  }
+
+  return { defaultRegion, regions };
+}
+
+const loaded = loadRegions(weatherRegions);
+
+export const REGIONS: RegionCode[] = loaded.regions.map((region) => region.code);
+export const DEFAULT_REGION: RegionCode = loaded.defaultRegion;
+export const REGION_STORAGE_KEY = 'bnqt-active-region';
+
+export const REGION_LABELS: Record<string, string> = Object.fromEntries(
+  loaded.regions.map((region) => [region.code, region.label]),
+);
+
+export const REGION_OPTIONS = loaded.regions.map((region) => ({
+  code: region.code,
+  label: region.label,
+  buttonTone: region.buttonTone,
+}));
+
+export const REGION_MAP_CONFIG: Record<string, MapRegionConfig> = Object.fromEntries(
+  loaded.regions.map((region) => [region.code, region.map]),
+);
+
+export const REGION_WEATHER_SECTIONS: Record<string, WeatherSection[]> = Object.fromEntries(
+  loaded.regions.map((region) => [region.code, region.sections]),
+);
+
+export const isRegionCode = (value: string | null | undefined): value is RegionCode => {
+  return !!value && REGIONS.includes(value);
 };
 
 export const getRegionWeatherSections = (region: RegionCode): WeatherSection[] => {
@@ -459,4 +209,3 @@ export const getRegionWeatherSections = (region: RegionCode): WeatherSection[] =
 export const getRegionWeatherSpots = (region: RegionCode): WeatherSpot[] => {
   return getRegionWeatherSections(region).flatMap((section) => section.spots);
 };
-

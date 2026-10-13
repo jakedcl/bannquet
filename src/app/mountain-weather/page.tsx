@@ -69,14 +69,6 @@ function AnimatedHero() {
 }
 
 function RegionPicker({ onSelect }: { onSelect: (code: (typeof REGION_OPTIONS)[number]['code']) => void }) {
-  // Color mapping for each state button
-  const buttonColors: Record<string, string> = {
-    ny: 'retro-button-yellow',
-    vt: 'retro-button-green',
-    nh: 'retro-button-blue',
-    me: 'retro-button-purple',
-  };
-
   return (
     <motion.div
       initial={{ opacity: 0, y: 30 }}
@@ -93,7 +85,7 @@ function RegionPicker({ onSelect }: { onSelect: (code: (typeof REGION_OPTIONS)[n
           <motion.button
             key={opt.code}
             onClick={() => onSelect(opt.code)}
-            className={`${buttonColors[opt.code] || 'retro-button'} p-4 sm:p-5 text-center rounded-none font-bold uppercase tracking-wider`}
+            className={`${opt.buttonTone === 'default' ? 'retro-button' : `retro-button-${opt.buttonTone}`} p-4 sm:p-5 text-center rounded-none font-bold uppercase tracking-wider`}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             initial={{ opacity: 0, y: 20 }}
