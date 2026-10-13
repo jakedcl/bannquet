@@ -11,13 +11,9 @@ import WeatherTicker from './WeatherTicker';
 
 export default function Header() {
   const pathname = usePathname();
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [openPath, setOpenPath] = useState<string | null>(null);
+  const mobileMenuOpen = openPath === pathname;
   const [scrolled, setScrolled] = useState(false);
-
-  // Close mobile menu when route changes
-  useEffect(() => {
-    setMobileMenuOpen(false);
-  }, [pathname]);
 
   // Add shadow when scrolled
   useEffect(() => {
@@ -35,14 +31,7 @@ export default function Header() {
     { href: '/trip-reports', label: 'trip reports' },
   ];
 
-  // Hide header logo on homepage
   const isHomepage = pathname === '/';
-  // Hide header completely on studio route
-  const isStudio = pathname?.startsWith('/studio');
-
-  if (isStudio) {
-    return null;
-  }
 
   return (
     <motion.header 
@@ -113,7 +102,7 @@ export default function Header() {
           )}
           
           <button 
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            onClick={() => setOpenPath(mobileMenuOpen ? null : pathname)}
             className="z-20 p-2 focus:outline-none"
             aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
           >
@@ -146,7 +135,7 @@ export default function Header() {
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
               className="fixed inset-0 bg-black/20 backdrop-blur-sm z-10 md:hidden"
-              onClick={() => setMobileMenuOpen(false)}
+              onClick={() => setOpenPath(null)}
             />
           )}
         </AnimatePresence>

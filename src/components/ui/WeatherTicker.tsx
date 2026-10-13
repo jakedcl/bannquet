@@ -17,7 +17,7 @@ export default function WeatherTicker() {
     async function fetchStats() {
       try {
         const res = await fetch('/api/weather/extremes');
-        let data: any = null;
+        let data: { success?: boolean; stats?: WeatherStat[]; error?: string } | null = null;
         const contentType = res.headers.get('content-type') || '';
 
         if (contentType.includes('application/json')) {
@@ -31,7 +31,7 @@ export default function WeatherTicker() {
           return;
         }
 
-        if (data.success && Array.isArray(data.stats)) {
+        if (data?.success && Array.isArray(data.stats)) {
           setStats(data.stats);
           setError(null);
         } else {

@@ -1,12 +1,5 @@
 import { NextResponse } from 'next/server';
-import { REGION_WEATHER_SECTIONS, RegionCode } from '@/lib/regions';
-
-type ExtremeStat = {
-  mountain: string;
-  state: string;
-  value: number;
-  unit: string;
-};
+import { REGION_LABELS, REGION_WEATHER_SECTIONS } from '@/lib/regions';
 
 export async function GET() {
   try {
@@ -18,15 +11,7 @@ export async function GET() {
       priority: number;
     }> = [];
     
-    // Collect all mountains from all regions
-    const stateMap: Record<RegionCode, string> = {
-      ny: 'NY',
-      vt: 'VT',
-      nh: 'NH',
-      me: 'ME',
-    };
-
-    (Object.keys(REGION_WEATHER_SECTIONS) as RegionCode[]).forEach(region => {
+    Object.keys(REGION_WEATHER_SECTIONS).forEach(region => {
       const sections = REGION_WEATHER_SECTIONS[region];
       sections.forEach(section => {
         section.spots.forEach(spot => {
@@ -37,7 +22,7 @@ export async function GET() {
 
           allMountains.push({
             name: spot.name,
-            state: stateMap[region] || region.toUpperCase(),
+            state: REGION_LABELS[region] || region.toUpperCase(),
             lat: spot.lat,
             lon: spot.lon,
             priority,
