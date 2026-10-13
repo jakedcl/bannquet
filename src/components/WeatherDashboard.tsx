@@ -71,9 +71,6 @@ export default function WeatherDashboard({ spot }: WeatherDashboardProps) {
 
   const summitWind = weather.summitWind ? `${Math.round(weather.summitWind)} mph` : weather.windSpeed;
   const windGust = weather.windGust ? `${Math.round(weather.windGust)} mph` : null;
-  const snowfall = weather.snowAmount !== null && weather.snowAmount !== undefined
-    ? `${(Math.round(weather.snowAmount * 10) / 10).toFixed(1)} in`
-    : '—';
   const visibilityLabel = visibilityMiles ? `${visibilityMiles.toFixed(1)} mi` : '—';
   const hourlyForecast = weather.hourlyForecast ?? [];
   const dailyForecast = weather.dailyForecast ?? [];

@@ -1,127 +1,124 @@
-'use client';
-
-import { useEffect, useState } from 'react';
-import { useParams, useRouter } from 'next/navigation';
-import { motion } from 'framer-motion';
-import Link from 'next/link';
+import type { Metadata } from 'next';
+import Image from 'next/image';
+import { notFound, redirect } from 'next/navigation';
 import PageWrapper from '@/components/ui/PageWrapper';
-import { TripReport } from '@/types/trip-reports';
-import { format } from 'date-fns';
-import PortableTextRenderer from '@/components/trip-reports/PortableTextRenderer';
+import { Badge, Button, Table, Window } from '@/components/retro';
+import { isDatabaseConfigured } from '@/db';
+import { getTripReport } from '@/lib/trip-reports';
+import { formatTripDate } from '@/lib/utils';
 
-export default function TripReportDetailPage() {
-  const params = useParams();
-  const router = useRouter();
-  const [trip, setTrip] = useState<TripReport | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+export const dynamic = 'force-dynamic';
 
-  useEffect(() => {
-    if (params.id) {
-      fetchTrip(params.id as string);
-    }
-  }, [params.id]);
+type PageProps = {
+  params: Promise<{ id: string }>;
+};
 
-  const fetchTrip = async (id: string) => {
-    setLoading(true);
-    setError(null);
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { id } = await params;
+  if (!isDatabaseConfigured()) {
+    return { title: 'Trip Report | Bannquet' };
+  }
+  try {
+    const report = await getTripReport(id);
+    return { title: report ? `${report.title} | Bannquet` : 'Trip Report | Bannquet' };
+  } catch {
+    return { title: 'Trip Report | Bannquet' };
+  }
+}
 
-    try {
-      const response = await fetch(`/api/trip-reports/${id}`);
-      const data = await response.json();
+export default async function TripReportDetailPage({ params }: PageProps) {
+  const { id } = await params;
 
-      if (!data.success) {
-        throw new Error(data.error || 'Failed to fetch trip report');
-      }
-
-      setTrip(data.data);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  if (loading) {
+  if (!isDatabaseConfigured()) {
     return (
       <PageWrapper className="bg-gray-50">
-        <div className="max-w-4xl mx-auto px-4 py-12">
-          <div className="text-center">
-            <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-brand-green"></div>
-            <p className="mt-4 text-gray-600">Loading trip report...</p>
-          </div>
+        <div className="mx-auto max-w-4xl px-4 py-12">
+          <Window title="Trip reports">
+            <p className="mb-4 text-gray-700">Postgres is not connected, so this report cannot be loaded.</p>
+            <Button tone="blue" href="/trip-reports">Back to trip reports</Button>
+          </Window>
         </div>
       </PageWrapper>
     );
   }
 
-  if (error || !trip) {
+  let report: Awaited<ReturnType<typeof getTripReport>> = null;
+  let error: string | null = null;
+  try {
+    report = await getTripReport(id);
+  } catch (err) {
+    error = err instanceof Error ? err.message : 'Failed to load trip report';
+  }
+
+  if (error) {
     return (
       <PageWrapper className="bg-gray-50">
-        <div className="max-w-4xl mx-auto px-4 py-12">
-          <div className="bg-red-50 border border-red-200 rounded-xl p-6 text-center">
-            <p className="text-red-800 mb-4">{error || 'Trip report not found'}</p>
-            <Link
-              href="/trip-reports"
-              className="text-brand-green hover:underline font-medium"
-            >
-              ← Back to Trip Reports
-            </Link>
-          </div>
+        <div className="mx-auto max-w-4xl px-4 py-12">
+          <Window title="Error">
+            <p className="mb-4 text-red-800">{error}</p>
+            <Button tone="blue" href="/trip-reports">Back to trip reports</Button>
+          </Window>
         </div>
       </PageWrapper>
     );
   }
 
-  const formattedDate = format(new Date(trip.tripDate), 'MMMM d, yyyy');
+  if (!report) notFound();
+
+  if (report.legacySanityId && report.legacySanityId === id && report.id !== id) {
+    redirect(`/trip-reports/${report.id}`);
+  }
+
+  const place = report.lat != null && report.lng != null
+    ? `${report.lat.toFixed(4)}, ${report.lng.toFixed(4)}`
+    : '—';
 
   return (
     <PageWrapper className="bg-gray-50">
-      <div className="max-w-4xl mx-auto px-4 py-12">
-        {/* Back Button */}
-        <Link
-          href="/trip-reports"
-          className="inline-flex items-center gap-2 text-gray-600 hover:text-brand-green mb-6 transition-colors"
-        >
-          ← Back to Trip Reports
-        </Link>
-
-
-        {/* Content */}
-        <div className="bg-white rounded-2xl shadow-lg p-6 md:p-8">
-          {/* Header */}
-          <div className="mb-6">
-            <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              {trip.title}
-            </h1>
-            <div className="flex flex-wrap items-center gap-4 text-gray-600 mb-4">
-              <div className="flex items-center gap-2">
-                <span className="font-medium">{trip.authorName}</span>
-              </div>
-              <span>•</span>
-              <span>{formattedDate}</span>
-            </div>
-
-            {/* Tags */}
-            {trip.tags && trip.tags.length > 0 && (
-              <div className="flex flex-wrap gap-2 mb-4">
-                {trip.tags.map((tag) => (
-                  <span
-                    key={tag}
-                    className="px-3 py-1 bg-brand-green/10 text-brand-green text-sm rounded-full font-medium"
-                  >
-                    {tag.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())}
-                  </span>
-                ))}
-              </div>
-            )}
-          </div>
-
-          {/* Body Content */}
-          <div className="mt-6">
-            <PortableTextRenderer content={trip.body} />
-          </div>
+      <div className="mx-auto max-w-4xl px-4 py-12">
+        <div className="mb-6">
+          <Button tone="default" href="/trip-reports">Back to trip reports</Button>
         </div>
+        <Window title={report.title}>
+          <Table
+            headers={['Author', 'Date', 'Place']}
+            rows={[[report.authorName, formatTripDate(report.tripDate, 'long'), place]]}
+          />
+          {report.tags.length > 0 && (
+            <div className="mt-4 flex flex-wrap gap-2">
+              {report.tags.map((tag) => (
+                <Badge key={tag}>{tag.replace(/-/g, ' ')}</Badge>
+              ))}
+            </div>
+          )}
+          <div className="mt-6 space-y-4 text-gray-800">
+            {report.body
+              ? report.body.split(/\n{2,}/).map((paragraph, index) => (
+                <p key={index} className="whitespace-pre-wrap leading-relaxed">{paragraph}</p>
+              ))
+              : <p className="text-gray-600">This report has no written notes.</p>}
+          </div>
+          {report.photos.length > 0 && (
+            <div className="mt-8 space-y-6">
+              {report.photos.map((photo) => (
+                <figure key={photo.id}>
+                  <div className="relative aspect-video w-full bg-gray-100">
+                    <Image
+                      src={photo.url}
+                      alt={photo.alt || photo.caption || report.title}
+                      fill
+                      className="object-contain"
+                      sizes="(max-width: 768px) 100vw, 800px"
+                    />
+                  </div>
+                  {photo.caption ? (
+                    <figcaption className="mt-2 text-center text-sm italic text-gray-600">{photo.caption}</figcaption>
+                  ) : null}
+                </figure>
+              ))}
+            </div>
+          )}
+        </Window>
       </div>
     </PageWrapper>
   );

@@ -1,6 +1,6 @@
 # Bannquet
 
-Mountain weather and trip reports for the Northeast. Bannquet pulls National Weather Service forecasts for summits and valleys across the Adirondacks, Catskills, Shawangunks, Green Mountains, White Mountains and Maine's northern ranges, and lets people publish trip reports of their own.
+Mountain weather and trip reports for the Northeast. Bannquet pulls National Weather Service forecasts for summits and valleys across the Adirondacks, Catskills, Shawangunks, Green Mountains, White Mountains and Maine, and keeps published trip reports for the crew.
 
 Live at [bannquet.com](https://www.bannquet.com).
 
@@ -8,17 +8,15 @@ Live at [bannquet.com](https://www.bannquet.com).
 
 ## What it does
 
-- Hourly and daily forecasts, wind, precipitation and alerts for each mountain, grouped by region (NY, VT, NH, ME).
-- A ticker at the top of the site showing the current extremes across regions.
-- Trip reports written in a rich-text editor, with compressed image uploads, tags (hiking, climbing, skiing and so on) and an optional map pin.
-- Reports go live only after the author verifies by email. The publish link expires after 24 hours, and the edit link does not expire.
-- An embedded Sanity Studio for managing content.
+- Hourly and daily forecasts, wind, precipitation and alerts for each mountain. Regions live in `config/weather-regions.json`, so adding a spot is a data change.
+- A ticker at the top of the homepage showing the current extremes across those regions.
+- Published trip reports read from Postgres. The old Sanity editor and email-link flow are gone. New reports will be in-site forms in a later phase.
 
-More detail on the endpoints used is in `API_DOCUMENTATION.md`, and the Sanity setup steps are in `SANITY_SETUP.md`.
+More detail on the weather endpoints is in `API_DOCUMENTATION.md`.
 
 ## Stack
 
-Next.js 16 (App Router), React 19, TypeScript, Tailwind CSS 3, Framer Motion, Mapbox GL, TipTap, Sanity, Resend for email, and the NWS API for weather. Deployed on Vercel.
+Next.js 16.3, React 19.2, TypeScript, Tailwind CSS 4, Framer Motion, Drizzle ORM, and Neon Postgres. Weather comes from the NWS API. Deployed on Vercel.
 
 ## Running it locally
 
@@ -29,15 +27,33 @@ npm install
 npm run dev
 ```
 
-Then open http://localhost:3000. Create a `.env.local` with these variables:
+Then open http://localhost:3000. Copy `.env.example` to `.env.local`.
 
-- `NEXT_PUBLIC_SANITY_PROJECT_ID` and `NEXT_PUBLIC_SANITY_DATASET`
-- `SANITY_API_TOKEN`, an editor token used on the server for creating and uploading trip reports
-- `RESEND_API_KEY` and `EMAIL_FROM` for the verification emails
-- `NEXT_PUBLIC_MAPBOX_TOKEN` for the map pin picker
-- `NEXT_PUBLIC_APP_URL`, for example `http://localhost:3000`, used to build the links in emails
+Weather pages work with no keys. Trip reports stay empty until `DATABASE_URL` points at a Postgres database and the schema has been migrated.
 
-Weather pages work without any keys because the NWS API is open. Submitting a trip report needs the Sanity and Resend values.
+## Database
+
+`DATABASE_URL` is the pooled Neon connection (the host contains `-pooler`). `DATABASE_URL_UNPOOLED` is the direct connection Drizzle uses for migrations.
+
+```sh
+npm run db:generate   # write a new SQL migration from src/db/schema.ts
+npm run db:migrate    # apply drizzle/ to DATABASE_URL_UNPOOLED
+```
+
+Run migrations against a Neon branch before production. The first migration enables PostGIS.
+
+### Sanity import
+
+`scripts/migrate-sanity-trip-reports.ts` copies existing `tripReport` documents into `trip_reports`, `photos`, and `pins`. It is not part of the site build, and it will not write unless you opt in.
+
+```sh
+npm run db:migrate-sanity -- --dry-run
+CONFIRM_SANITY_MIGRATION=yes npm run db:migrate-sanity
+```
+
+The dry run only talks to Sanity. The real run needs `SANITY_PROJECT_ID`, `SANITY_API_TOKEN`, and `DATABASE_URL`. Set `BLOB_READ_WRITE_TOKEN` if images should be copied into Vercel Blob. Without it, photo rows keep the Sanity CDN URL.
+
+Old `/trip-reports/<sanity-id>` links redirect to the new id after a report is imported.
 
 ## Scripts
 
@@ -45,5 +61,7 @@ Weather pages work without any keys because the NWS API is open. Submitting a tr
 - `npm run build` builds for production
 - `npm run start` serves the production build
 - `npm run lint` runs ESLint
+- `npm run typecheck` runs TypeScript
+- `npm test` runs the small node tests
 
 The live-conditions socket server for the user map is a separate project, [bannquet-io](https://github.com/jakedcl/bannquet-io).

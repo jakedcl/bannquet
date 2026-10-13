@@ -1,26 +1,22 @@
 import type { Metadata } from 'next';
 import PageWrapper from '@/components/ui/PageWrapper';
-import TripSubmitForm from '@/components/trip-reports/TripSubmitForm';
+import { Button, Window } from '@/components/retro';
 
 export const metadata: Metadata = {
   title: 'Submit Trip Report | Bannquet',
-  description: 'Share your mountain adventure with the crew',
+  description: 'Trip report posting is paused while Bannquet moves off Sanity.',
 };
 
 export default function SubmitTripReportPage() {
   return (
     <PageWrapper className="bg-gray-50">
-      <div className="max-w-2xl mx-auto px-4 py-12">
-        <div className="space-y-6 mb-8">
-          <p className="text-sm uppercase tracking-[0.3em] text-brand-green/70">submit</p>
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900">
-            Trip Report
-          </h1>
-          </div>
-
-        <div className="bg-white rounded-3xl shadow-lg p-6 md:p-8">
-          <TripSubmitForm />
-        </div>
+      <div className="mx-auto max-w-2xl px-4 py-12">
+        <Window title="Posting is paused">
+          <p className="mb-4 leading-relaxed text-gray-800">
+            The old email-link editor is gone with Sanity. New reports will be a simple form on the site once friend accounts are in.
+          </p>
+          <Button tone="yellow" href="/trip-reports">Read trip reports</Button>
+        </Window>
       </div>
     </PageWrapper>
   );

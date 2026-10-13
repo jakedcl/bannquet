@@ -463,7 +463,11 @@ Complete breakdown of all API endpoints called, their responses, and which attri
 
 ---
 
-## 7. Sanity CMS API (Trip Reports)
+## 7. Sanity CMS API (removed)
+
+Trip reports no longer call Sanity at runtime. Published reports are read from Postgres (`/api/trip-reports`). The notes below describe the old CMS shape, which the one-off import script still understands.
+
+## 7b. Historical Sanity query shape
 
 **Base URL:** `https://{projectId}.api.sanity.io/v{apiVersion}/data/query/{dataset}`
 

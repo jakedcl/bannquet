@@ -21,3 +21,12 @@ export function getBaseUrl(): string {
   // Fallback to production domain
   return 'https://bannquet.com';
 }
+
+export function formatTripDate(value: string | null, pattern: 'short' | 'long' = 'short'): string {
+  if (!value) return 'Date unknown';
+  const date = new Date(`${value.slice(0, 10)}T00:00:00`);
+  if (Number.isNaN(date.getTime())) return value;
+  return new Intl.DateTimeFormat('en-US', pattern === 'long'
+    ? { month: 'long', day: 'numeric', year: 'numeric' }
+    : { month: 'short', day: 'numeric', year: 'numeric' }).format(date);
+}
