@@ -1,44 +1,27 @@
-// Portable Text types (simplified)
-export interface PortableTextBlock {
-  _type: 'block' | 'image';
-  _key: string;
-  [key: string]: any;
-}
+export type TripReportPhoto = {
+  id: string;
+  url: string;
+  caption: string | null;
+  alt: string | null;
+  width: number | null;
+  height: number | null;
+};
 
-export interface TripReport {
-  _id: string;
-  _type: 'tripReport';
-  _createdAt: string;
-  _updatedAt: string;
+export type TripReportListItem = {
+  id: string;
   title: string;
   authorName: string;
-  authorEmail: string;
-  tripDate: string; // ISO date string
-  locationPin: {
-    _type: 'geopoint';
-    lat: number;
-    lng: number;
-    alt?: number;
-  };
-  body: PortableTextBlock[];
-  tags?: string[];
-  published: boolean;
-  publishedAt: string;
-}
+  tripDate: string | null;
+  tags: string[];
+  excerpt: string;
+  coverUrl: string | null;
+  photoCount: number;
+  legacySanityId: string | null;
+};
 
-export interface TripReportFormData {
-  title: string;
-  authorName: string;
-  tripDate: string;
-  locationPin: {
-    lat: number;
-    lng: number;
-  };
-  body: Array<{
-    type: 'text' | 'image';
-    content?: string; // For text blocks
-    image?: File; // For image blocks
-    caption?: string; // For image captions
-    alt?: string; // For image alt text
-  }>;
-}
+export type TripReportDetail = TripReportListItem & {
+  body: string;
+  lat: number | null;
+  lng: number | null;
+  photos: TripReportPhoto[];
+};

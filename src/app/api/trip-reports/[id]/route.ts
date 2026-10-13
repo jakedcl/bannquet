@@ -1,71 +1,32 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { sanityClient, tripReportByIdQuery } from '@/lib/sanity';
+import { NextResponse } from 'next/server';
+import { isDatabaseConfigured } from '@/db';
+import { getTripReport } from '@/lib/trip-reports';
 
 type RouteParams = {
-  params: Promise<{
-    id: string;
-  }>;
+  params: Promise<{ id: string }>;
 };
 
-// GET single trip report by ID
-export async function GET(
-  request: NextRequest,
-  { params }: RouteParams
-) {
+export async function GET(_request: Request, { params }: RouteParams) {
+  const { id } = await params;
+  if (!id) {
+    return NextResponse.json({ success: false, error: 'Trip report ID is required' }, { status: 400 });
+  }
+
+  if (!isDatabaseConfigured()) {
+    return NextResponse.json(
+      { success: false, error: 'Postgres is not connected. Set DATABASE_URL.' },
+      { status: 503 },
+    );
+  }
+
   try {
-    if (!sanityClient) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: 'Sanity is not configured. Please set NEXT_PUBLIC_SANITY_PROJECT_ID in your environment variables.',
-        },
-        { status: 503 }
-      );
+    const report = await getTripReport(id);
+    if (!report) {
+      return NextResponse.json({ success: false, error: 'Trip report not found' }, { status: 404 });
     }
 
-    const resolvedParams = await params;
-    const { id } = resolvedParams;
-
-    if (!id) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: 'Trip report ID is required',
-        },
-        { status: 400 }
-      );
-    }
-
-    if (!sanityClient) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: 'Sanity is not configured. Please set NEXT_PUBLIC_SANITY_PROJECT_ID in your environment variables.',
-        },
-        { status: 503 }
-      );
-    }
-
-    const tripReport = await sanityClient.fetch(tripReportByIdQuery(id), { id });
-
-    if (!tripReport) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: 'Trip report not found',
-        },
-        { status: 404 }
-      );
-    }
-
-    const response = NextResponse.json({
-      success: true,
-      data: tripReport,
-    });
-
-    // Cache individual trip reports for 5 minutes (they rarely change after publishing)
+    const response = NextResponse.json({ success: true, data: report });
     response.headers.set('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=600');
-    
     return response;
   } catch (error) {
     console.error('Error fetching trip report:', error);
@@ -74,7 +35,7 @@ export async function GET(
         success: false,
         error: error instanceof Error ? error.message : 'Failed to fetch trip report',
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

@@ -2,7 +2,6 @@
 
 # dependencies
 /node_modules
-/sanity-studio/node_modules
 /.pnp
 .pnp.js
 
@@ -36,13 +35,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
-
-# sanity studio
-/sanity-studio/node_modules/
-/sanity-studio/.sanity/
-/sanity-studio/dist/
-/sanity-studio/.env
-/sanity-studio/.env.local
 
 # build output
 /dist
