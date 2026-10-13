@@ -13,7 +13,7 @@ import {
   findMemberByEmail,
   updateMemberProfile,
 } from '@/lib/auth/members';
-import { isEmail, normalizeEmail, plainAuthError } from '@/lib/membership';
+import { isEmail, magicLinkError, normalizeEmail, plainAuthError } from '@/lib/membership';
 import { isDatabaseConfigured } from '@/db';
 import { REGION_OPTIONS } from '@/lib/regions';
 
@@ -74,7 +74,7 @@ export async function requestMagicLink(email: string): Promise<{ error?: string;
     email: normalized,
     callbackURL: `${origin}/auth/continue`,
   });
-  if (error) return { error: plainAuthError(error) };
+  if (error) return { error: magicLinkError(error) };
   return { sent: true };
 }
 

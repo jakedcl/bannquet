@@ -47,7 +47,9 @@ export function signInAllowed(input: {
   return isAdminEmail(input.email, input.adminEmails);
 }
 
-export function plainAuthError(error: { message?: string; code?: string } | null | undefined): string {
+type AuthFailure = { message?: string; code?: string; status?: number } | null | undefined;
+
+export function plainAuthError(error: AuthFailure): string {
   const code = error?.code ?? '';
   const message = (error?.message ?? '').toLowerCase();
   if (code === 'TOO_MANY_ATTEMPTS' || message.includes('too many')) {
@@ -59,10 +61,21 @@ export function plainAuthError(error: { message?: string; code?: string } | null
   if (message.includes('expired')) {
     return 'That code expired. Ask for a new one.';
   }
-  if (message.includes('magic') || message.includes('not enabled') || message.includes('plugin')) {
+  return 'The sign-in email did not send. Try again in a minute, or ask Jake to text you the invite link.';
+}
+
+export function magicLinkError(error: AuthFailure): string {
+  const message = (error?.message ?? '').toLowerCase();
+  if (
+    error?.status === 404 ||
+    message.includes('not found') ||
+    message.includes('magic') ||
+    message.includes('not enabled') ||
+    message.includes('plugin')
+  ) {
     return 'Email links are not turned on yet. Use the code instead.';
   }
-  return 'The sign-in email did not send. Try again in a minute, or ask Jake to text you the invite link.';
+  return plainAuthError(error);
 }
 
 export function inviteCode(): string {

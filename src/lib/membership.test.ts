@@ -6,6 +6,7 @@ import {
   isAdminEmail,
   isEmail,
   normalizeEmail,
+  magicLinkError,
   plainAuthError,
   signInAllowed,
 } from './membership';
@@ -52,6 +53,8 @@ test('sign-in is limited to members, open invites, and admins', () => {
 
 test('auth failures stay in plain language', () => {
   assert.match(plainAuthError({ code: 'TOO_MANY_ATTEMPTS' }), /Wait a few minutes/);
-  assert.match(plainAuthError({ message: 'Magic link plugin is not enabled' }), /Use the code/);
   assert.match(plainAuthError({ message: 'something else' }), /did not send/);
+  assert.match(magicLinkError({ message: 'Magic link plugin is not enabled' }), /Use the code/);
+  assert.match(magicLinkError({ status: 404, message: 'Not Found' }), /Use the code/);
+  assert.match(magicLinkError({ message: 'something else' }), /did not send/);
 });
