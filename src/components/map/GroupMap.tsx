@@ -364,9 +364,9 @@ export default function GroupMap({
     : BASEMAP_ATTRIBUTION[basemap];
 
   return (
-    <div className={`relative h-full min-h-[420px] ${className}`}>
+    <div className={`relative h-full w-full ${className}`}>
       <div ref={containerRef} className={`h-full w-full ${picking ? 'cursor-crosshair' : ''}`} />
-      <div ref={controlsRef} className="absolute left-3 top-3 z-10 flex items-start gap-2">
+      <div ref={controlsRef} className="map-controls absolute left-3 top-3 z-10 flex items-start gap-2">
         <div className="relative">
           <button
             type="button"

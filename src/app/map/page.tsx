@@ -1,4 +1,3 @@
-import PageWrapper from '@/components/ui/PageWrapper';
 import { MapCanvas } from '@/components/map/MapCanvas';
 import { isDatabaseConfigured } from '@/db';
 import { MAP_CENTER } from '@/lib/map';
@@ -26,16 +25,12 @@ export default async function MapPage({
   const coordinates = focusFeature?.geometry.type === 'Point' ? focusFeature.geometry.coordinates : null;
 
   return (
-    <PageWrapper className="bg-gray-50">
-      <div className="mx-auto max-w-7xl px-4 py-6">
-        <div className="retro-box h-[calc(100dvh-8rem)] min-h-[480px] overflow-hidden bg-white">
-          <MapCanvas
-            points={data.points}
-            lines={data.lines}
-            focus={coordinates ? { lng: coordinates[0], lat: coordinates[1], zoom: 12 } : { ...MAP_CENTER, zoom: 8 }}
-          />
-        </div>
-      </div>
-    </PageWrapper>
+    <div className="map-bleed fixed inset-x-0 top-[72px] z-0 h-[calc(100dvh-72px)] overflow-hidden">
+      <MapCanvas
+        points={data.points}
+        lines={data.lines}
+        focus={coordinates ? { lng: coordinates[0], lat: coordinates[1], zoom: 12 } : { ...MAP_CENTER, zoom: 8 }}
+      />
+    </div>
   );
 }
