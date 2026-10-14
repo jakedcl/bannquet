@@ -107,13 +107,8 @@ export async function createAccount(
   const { error } = await getAuth().signUp.email({ email, password, name });
   if (error) return { error: passwordAuthError(error, 'Could not make that account. Try again in a minute.') };
 
-  const user = await currentAuthUser();
-  if (!user?.email) return { error: 'The account was made, but sign-in did not stick. Try the sign-in page.' };
-  const result = await ensureMember({ id: user.id, email: user.email, name: user.name, image: user.image });
-  if (!result) {
-    await getAuth().signOut();
-    return { error: 'That invite is not open. Ask Jake for a new link.' };
-  }
+  // The new session cookie is on this response. The next request reads it and
+  // finishes the member row. Reading the session in this same action misses it.
   redirect('/auth/continue');
 }
 
