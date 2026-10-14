@@ -99,7 +99,7 @@ export async function publishPost(
 export async function publishProfileTrack(
   _prev: { error?: string; saved?: true } | null,
   formData: FormData,
-): Promise<{ error?: string; saved?: true }> {
+): Promise<{ error?: string; saved?: true; peaks?: string }> {
   const viewer = await getViewer();
   if (!viewer) return { error: 'Sign in to add a route.' };
   if (!canContribute(viewer.role)) return { error: APPROVAL_WAIT };
@@ -108,11 +108,11 @@ export async function publishProfileTrack(
   const track = cleanTrack(String(formData.get('gpxText') ?? ''));
   if (track.error || !track.track) return { error: track.error ?? 'Choose a GPX file.' };
   try {
-    await addProfileTrack({ userId: viewer.id, activity, track: track.track });
+    const peaks = await addProfileTrack({ userId: viewer.id, activity, track: track.track });
+    return { saved: true, peaks: peaks.length > 0 ? peaks.join(', ') : undefined };
   } catch {
     return { error: 'Could not save that route. Try again in a minute.' };
   }
-  return { saved: true };
 }
 
 export async function publishProfilePhotos(

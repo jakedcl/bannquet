@@ -81,6 +81,18 @@ export default function Home() {
               >
                 Posts
               </Link>
+              <Link
+                href="/stats"
+                className="retro-button-orange px-10 py-4 font-bold text-lg uppercase tracking-wider rounded-none"
+              >
+                Stats
+              </Link>
+              <Link
+                href="/trips"
+                className="retro-button-orange px-10 py-4 font-bold text-lg uppercase tracking-wider rounded-none"
+              >
+                Trips
+              </Link>
             </motion.div>
           </div>
         </div>

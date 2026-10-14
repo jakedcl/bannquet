@@ -2,6 +2,7 @@ import { sql } from 'drizzle-orm';
 import { getDb } from '@/db';
 import { isActivity, mapColorForActivity, type Activity } from '@/lib/activities';
 import { lineWkt, trackStats, type TrackPoint } from '@/lib/gpx';
+import { creditTrackSummits, ensurePeaks } from '@/lib/summits';
 import { NEUTRAL_PIN_COLOR } from '@/lib/map';
 import { isLatLng, isPublicBlobUrl } from '@/lib/photos';
 
@@ -55,7 +56,7 @@ function whoSql(aliasUser: string, aliasReport: string) {
 
 export async function loadMapData(): Promise<{ points: MapFeatureCollection; lines: MapFeatureCollection }> {
   const db = getDb();
-  const [postResult, trackResult, photoResult] = await Promise.all([
+  const [postResult, trackResult, photoResult, tripResult] = await Promise.all([
     db.execute(sql`
       select tr.id::text as id, tr.title, tr.trip_date::text as trip_date, tr.activity::text as activity,
         ${whoSql('u', 'tr')} as who,
@@ -85,6 +86,14 @@ export async function loadMapData(): Promise<{ points: MapFeatureCollection; lin
       left join users u on u.id = p.user_id
       left join trip_reports tr on tr.id = p.trip_report_id
       where p.point is not null
+    `),
+    db.execute(sql`
+      select t.id::text as id, t.title, t.start_at::date::text as trip_date, t.activity::text as activity,
+        coalesce(nullif(u.display_name, ''), nullif(u.handle, ''), 'Friend') as who,
+        ST_Y(t.trailhead_point::geometry) as lat, ST_X(t.trailhead_point::geometry) as lng
+      from trips t
+      left join users u on u.id = t.created_by
+      where t.trailhead_point is not null
     `),
   ]);
 
@@ -175,6 +184,28 @@ export async function loadMapData(): Promise<{ points: MapFeatureCollection; lin
     });
   }
 
+  for (const row of asRows(tripResult)) {
+    const id = text(row.id);
+    const lat = num(row.lat);
+    const lng = num(row.lng);
+    if (!id || lat == null || lng == null) continue;
+    const activity = text(row.activity);
+    points.push({
+      type: 'Feature',
+      geometry: { type: 'Point', coordinates: [lng, lat] },
+      properties: {
+        kind: 'trip',
+        title: text(row.title) ?? 'Trip',
+        who: text(row.who) ?? 'Friend',
+        date: text(row.trip_date),
+        activity,
+        color: colorFor(activity),
+        trackId: '',
+        href: `/trips/${id}`,
+      },
+    });
+  }
+
   return {
     points: { type: 'FeatureCollection', features: points },
     lines: { type: 'FeatureCollection', features: lines },
@@ -207,8 +238,9 @@ export async function createPost(input: {
   const lat = start?.lat ?? photoPoint?.lat ?? null;
   const lng = start?.lng ?? photoPoint?.lng ?? null;
   const db = getDb();
+  await ensurePeaks();
 
-  return db.transaction(async (tx) => {
+  const id = await db.transaction(async (tx) => {
     const pointSql = lat == null || lng == null
       ? sql`null`
       : sql`ST_SetSRID(ST_MakePoint(${lng}, ${lat}), 4326)::geography`;
@@ -231,11 +263,12 @@ export async function createPost(input: {
     const id = text(asRows(inserted)[0]?.id);
     if (!id) throw new Error('Could not save that post.');
 
+    let trackId: string | null = null;
     if (input.track && input.track.points.length >= 2) {
       const wkt = lineWkt(input.track.points);
       const stats = trackStats(input.track.points);
       if (wkt) {
-        await tx.execute(sql`
+        const track = await tx.execute(sql`
           insert into tracks (user_id, trip_report_id, source, name, activity, line, distance_m, elev_gain_m, started_at)
           values (
             ${input.authorId},
@@ -248,7 +281,9 @@ export async function createPost(input: {
             ${stats.elevGainM},
             ${input.tripDate}::date
           )
+          returning id::text as id
         `);
+        trackId = text(asRows(track)[0]?.id);
       }
     }
 
@@ -275,19 +310,30 @@ export async function createPost(input: {
       `);
     }
 
-    return id;
+    return { id, trackId };
   });
+
+  if (input.track && id.trackId) {
+    await creditTrackSummits({
+      userId: input.authorId,
+      trackId: id.trackId,
+      points: input.track.points,
+      summitedAt: `${input.tripDate}T12:00:00Z`,
+    });
+  }
+  return id.id;
 }
 
 export async function addProfileTrack(input: {
   userId: string;
   activity: Activity;
   track: { name: string | null; points: TrackPoint[] };
-}): Promise<void> {
+}): Promise<string[]> {
   const wkt = lineWkt(input.track.points);
   if (!wkt) throw new Error('That GPX needs at least two points.');
   const stats = trackStats(input.track.points);
-  await getDb().execute(sql`
+  await ensurePeaks();
+  const inserted = await getDb().execute(sql`
     insert into tracks (user_id, source, name, activity, line, distance_m, elev_gain_m, started_at)
     values (
       ${input.userId},
@@ -299,7 +345,16 @@ export async function addProfileTrack(input: {
       ${stats.elevGainM},
       now()
     )
+    returning id::text as id
   `);
+  const trackId = text(asRows(inserted)[0]?.id);
+  if (!trackId) return [];
+  return creditTrackSummits({
+    userId: input.userId,
+    trackId,
+    points: input.track.points,
+    summitedAt: new Date().toISOString(),
+  });
 }
 
 export async function addProfilePhotos(input: { userId: string; photos: PreparedPhoto[] }): Promise<void> {

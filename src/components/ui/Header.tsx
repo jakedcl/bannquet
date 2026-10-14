@@ -37,6 +37,8 @@ export default function Header({ account = null }: { account?: HeaderAccount }) 
     { href: '/mountain-weather', label: 'mountain weather' },
     { href: '/map', label: 'map' },
     { href: '/posts', label: 'posts' },
+    { href: '/stats', label: 'stats' },
+    { href: '/trips', label: 'trips' },
   ];
 
   const isHomepage = pathname === '/';
@@ -88,7 +90,7 @@ export default function Header({ account = null }: { account?: HeaderAccount }) 
                   key={item.href}
                   href={item.href}
                   className={`rounded-none px-4 py-2 text-sm font-bold tracking-wide uppercase transition-all
-                    ${pathname === item.href 
+                    ${pathname === item.href || pathname.startsWith(`${item.href}/`)
                       ? 'retro-button-yellow' 
                     : 'retro-button-blue text-white'}
                   `}
@@ -170,7 +172,7 @@ export default function Header({ account = null }: { account?: HeaderAccount }) 
                 <p className="text-white/60 text-xs uppercase tracking-wider mb-3 px-2">Navigation</p>
                 <div className="bg-brand-green-light/40 rounded-2xl p-3 border border-white/10 space-y-2">
                   {navItems.map((item) => {
-                    const isActive = pathname === item.href;
+                    const isActive = pathname === item.href || pathname.startsWith(`${item.href}/`);
                     return (
                       <Link
                         key={item.href}
