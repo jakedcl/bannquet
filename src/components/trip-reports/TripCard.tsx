@@ -19,7 +19,7 @@ function tagLabel(tag: string) {
 
 export default function TripCard({ trip, index }: TripCardProps) {
   return (
-    <Link href={`/posts/${trip.id}`}>
+    <Link href={`/posts/${trip.id}`} className="block h-full">
       <motion.article
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -36,8 +36,8 @@ export default function TripCard({ trip, index }: TripCardProps) {
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 400px"
             />
           ) : (
-            <div className="flex h-full w-full items-center justify-center text-gray-400">
-              No Image
+            <div className="flex h-full w-full items-center justify-center text-sm text-gray-400">
+              No photo yet
             </div>
           )}
           <div className="absolute top-4 right-4">

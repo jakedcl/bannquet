@@ -119,7 +119,7 @@ export default function Header({ account = null }: { account?: HeaderAccount }) 
           
           <button 
             onClick={() => setOpenPath(mobileMenuOpen ? null : pathname)}
-            className="z-20 p-2 focus:outline-none"
+            className="z-20 p-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
             aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
           >
             <div className="w-6 flex flex-col items-end justify-center gap-1.5">
@@ -272,7 +272,11 @@ function AccountLinks({
             aria-expanded={open}
             aria-haspopup="menu"
             onClick={() => setOpenPath(open ? null : pathname)}
-            className={settingsOn && !stacked ? buttonClass.replace('retro-button-blue', 'retro-button-yellow') : buttonClass}
+            className={settingsOn
+              ? (stacked
+                ? 'block w-full border border-white bg-white px-4 py-3 text-center text-base font-semibold text-brand-green rounded-xl'
+                : buttonClass.replace('retro-button-blue', 'retro-button-yellow'))
+              : buttonClass}
           >
             Settings
           </button>
