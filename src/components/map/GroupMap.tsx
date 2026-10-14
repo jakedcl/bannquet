@@ -4,12 +4,17 @@ import { useEffect, useRef, useState } from 'react';
 import {
   Map as MlMap,
   NavigationControl,
+  setWorkerUrl,
   type FilterSpecification,
   type GeoJSONSource,
   type MapLayerMouseEvent,
   type StyleSpecification,
 } from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
+
+// Turbopack rewrites import.meta.url, so MapLibre looks for its worker next to
+// the page chunk and gets HTML back. Serve the real worker as a static file.
+setWorkerUrl('/maplibre-gl-worker.mjs');
 import {
   BASEMAPS,
   BASEMAP_ATTRIBUTION,
