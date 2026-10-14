@@ -12,6 +12,7 @@ export type TripReportListItem = {
   title: string;
   authorName: string;
   tripDate: string | null;
+  activity: string | null;
   tags: string[];
   excerpt: string;
   coverUrl: string | null;

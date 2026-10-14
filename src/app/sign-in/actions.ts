@@ -1,7 +1,7 @@
 'use server';
 
 import { put } from '@vercel/blob';
-import { headers } from 'next/headers';
+import { cookies, headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { isActivity, type Activity } from '@/lib/activities';
 import { getAuth, isAuthConfigured } from '@/lib/auth/server';
@@ -12,6 +12,7 @@ import {
   ensureMember,
   findMemberByAuthId,
   findMemberByEmail,
+  findMemberByHandle,
   updateMemberProfile,
 } from '@/lib/auth/members';
 import {
@@ -31,7 +32,19 @@ import {
   resetLinkState,
 } from '@/lib/passwords';
 import { isDatabaseConfigured } from '@/db';
+import {
+  decodeProfileClaim,
+  displayNameProblem,
+  encodeProfileClaim,
+  nextStopForMember,
+  normalizeUsername,
+  profileNeedsNames,
+  USERNAME_TAKEN,
+  usernameProblem,
+} from '@/lib/handles';
 import { REGION_OPTIONS } from '@/lib/regions';
+
+const PROFILE_CLAIM = 'bannquet_profile';
 
 async function appOrigin(): Promise<string> {
   const headerList = await headers();
@@ -93,7 +106,13 @@ export async function createAccount(
   const password = String(formData.get('password') ?? '');
   const confirm = String(formData.get('confirm') ?? '');
   const inviteCode = String(formData.get('inviteCode') ?? '').trim();
+  const displayName = String(formData.get('displayName') ?? '');
+  const username = String(formData.get('username') ?? '');
   if (!isEmail(email)) return { error: 'Enter a real email address.' };
+  const nameProblem = displayNameProblem(displayName);
+  if (nameProblem) return { error: nameProblem };
+  const userProblem = usernameProblem(username);
+  if (userProblem) return { error: userProblem };
   const problem = passwordProblem(password);
   if (problem) return { error: problem };
   if (password !== confirm) return { error: 'Type the same password in both boxes.' };
@@ -103,9 +122,24 @@ export async function createAccount(
   const allowed = await emailMayCreateAccount(email, inviteCode);
   if (!allowed) return { error: 'That invite is not open. Ask Jake for a new link.' };
 
-  const name = email.split('@')[0] || 'Friend';
-  const { error } = await getAuth().signUp.email({ email, password, name });
+  const taken = await findMemberByHandle(normalizeUsername(username));
+  if (taken) return { error: USERNAME_TAKEN };
+
+  const { error } = await getAuth().signUp.email({
+    email,
+    password,
+    name: displayName.trim(),
+  });
   if (error) return { error: passwordAuthError(error, 'Could not make that account. Try again in a minute.') };
+
+  const jar = await cookies();
+  jar.set(PROFILE_CLAIM, encodeProfileClaim(displayName, username), {
+    httpOnly: true,
+    sameSite: 'lax',
+    secure: process.env.NODE_ENV === 'production',
+    path: '/',
+    maxAge: 60 * 15,
+  });
 
   // The new session cookie is on this response. The next request reads it and
   // finishes the member row. Reading the session in this same action misses it.
@@ -164,6 +198,10 @@ export async function finishSignIn(): Promise<void> {
   const user = await currentAuthUser();
   if (!user?.email) redirect('/sign-in');
 
+  const jar = await cookies();
+  const claim = decodeProfileClaim(jar.get(PROFILE_CLAIM)?.value);
+  jar.delete(PROFILE_CLAIM);
+
   const result = await ensureMember({
     id: user.id,
     email: user.email,
@@ -174,10 +212,20 @@ export async function finishSignIn(): Promise<void> {
     await getAuth().signOut();
     redirect('/sign-in?error=invite');
   }
-  if (result.created || !result.member.handle) {
-    redirect('/settings?welcome=1');
+
+  let member = result.member;
+  if (claim && profileNeedsNames(member)) {
+    const saved = await updateMemberProfile(member.id, {
+      displayName: claim.displayName,
+      handle: claim.username,
+      bio: member.bio ?? '',
+      homeRegion: member.homeRegion ?? '',
+      favoriteActivities: member.favoriteActivities,
+    });
+    if (saved.member) member = saved.member;
   }
-  redirect(`/hikers/${result.member.handle}`);
+
+  redirect(nextStopForMember(member));
 }
 
 export async function signOutAction(): Promise<void> {
@@ -196,8 +244,8 @@ export async function saveProfile(
   const member = await findMemberByAuthId(user.id);
   if (!member) return { error: 'Sign in again to save your profile.' };
 
-  const displayName = String(formData.get('displayName') ?? '').trim();
-  const handle = String(formData.get('handle') ?? '').trim().toLowerCase();
+  const displayName = String(formData.get('displayName') ?? '');
+  const handle = String(formData.get('username') ?? formData.get('handle') ?? '');
   const bio = String(formData.get('bio') ?? '').trim().slice(0, 500);
   const homeRegion = String(formData.get('homeRegion') ?? '').trim();
   const favoriteActivities = formData
@@ -205,9 +253,8 @@ export async function saveProfile(
     .filter((value): value is string => typeof value === 'string')
     .filter(isActivity);
 
-  if (displayName.length < 1 || displayName.length > 80) {
-    return { error: 'Add a name people will recognize. Keep it under 80 characters.' };
-  }
+  const nameProblem = displayNameProblem(displayName);
+  if (nameProblem) return { error: nameProblem };
   if (homeRegion && !REGION_OPTIONS.some((option) => option.code === homeRegion)) {
     return { error: 'Pick a home region from the list.' };
   }
@@ -240,7 +287,7 @@ export async function saveProfile(
     avatarUrl,
   });
   if (saved.error || !saved.member) return { error: saved.error ?? 'Could not save that profile.' };
-  redirect(`/hikers/${saved.member.handle}`);
+  redirect(nextStopForMember(saved.member));
 }
 
 export async function inviteFriend(
@@ -265,7 +312,7 @@ export async function inviteFriend(
   const invite = await createInvite({ email, invitedBy: admin.member.id });
   return {
     url: `${origin}/invite/${invite.code}`,
-    emailNote: 'Text them this page. They will choose a password there.',
+      emailNote: 'Text them this page. They will pick a name, a username, and a password there.',
   };
 }
 

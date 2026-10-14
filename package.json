@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
-    "test": "tsx --test src/lib/portable-text.test.ts src/lib/activities.test.ts src/lib/regions.test.ts src/lib/membership.test.ts src/lib/handles.test.ts src/lib/passwords.test.ts",
+    "test": "tsx --test src/lib/portable-text.test.ts src/lib/activities.test.ts src/lib/regions.test.ts src/lib/membership.test.ts src/lib/handles.test.ts src/lib/passwords.test.ts src/lib/gpx.test.ts src/lib/photos.test.ts src/lib/map-style.test.ts",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:migrate-sanity": "tsx scripts/migrate-sanity-trip-reports.ts"
@@ -18,7 +18,9 @@
     "@vercel/blob": "^2.3.1",
     "@vercel/functions": "^3.4.3",
     "drizzle-orm": "^0.45.1",
+    "exifr": "^7.1.3",
     "framer-motion": "^12.4.10",
+    "maplibre-gl": "^6.14.0",
     "next": "16.3.8",
     "pg": "^8.16.3",
     "react": "19.2.8",

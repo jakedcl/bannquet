@@ -7,7 +7,7 @@ export const dynamic = 'force-dynamic';
 
 export const metadata = {
   title: 'Bannquet',
-  description: 'Mountain weather dashboard and trip reports for the northeastern United States',
+  description: 'Regional mountain weather, a group map, and posts',
 };
 
 export default async function RootLayout({

@@ -4,6 +4,9 @@ import { notFound, redirect } from 'next/navigation';
 import PageWrapper from '@/components/ui/PageWrapper';
 import { Badge, Button, Table, Window } from '@/components/retro';
 import { isDatabaseConfigured } from '@/db';
+import { ACTIVITY_META, isActivity } from '@/lib/activities';
+import { formatFeetGain, formatMiles } from '@/lib/gpx';
+import { loadReportTrail } from '@/lib/posts';
 import { getTripReport } from '@/lib/trip-reports';
 import { formatTripDate } from '@/lib/utils';
 
@@ -16,26 +19,26 @@ type PageProps = {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { id } = await params;
   if (!isDatabaseConfigured()) {
-    return { title: 'Trip Report | Bannquet' };
+    return { title: 'Post | Bannquet' };
   }
   try {
     const report = await getTripReport(id);
-    return { title: report ? `${report.title} | Bannquet` : 'Trip Report | Bannquet' };
+    return { title: report ? `${report.title} | Bannquet` : 'Post | Bannquet' };
   } catch {
-    return { title: 'Trip Report | Bannquet' };
+    return { title: 'Post | Bannquet' };
   }
 }
 
-export default async function TripReportDetailPage({ params }: PageProps) {
+export default async function PostDetailPage({ params }: PageProps) {
   const { id } = await params;
 
   if (!isDatabaseConfigured()) {
     return (
       <PageWrapper className="bg-gray-50">
         <div className="mx-auto max-w-4xl px-4 py-12">
-          <Window title="Trip reports">
-            <p className="mb-4 text-gray-700">Postgres is not connected, so this report cannot be loaded.</p>
-            <Button tone="blue" href="/trip-reports">Back to trip reports</Button>
+          <Window title="Posts">
+            <p className="mb-4 text-gray-700">Postgres is not connected, so this post cannot be loaded.</p>
+            <Button tone="blue" href="/posts">Back to posts</Button>
           </Window>
         </div>
       </PageWrapper>
@@ -47,7 +50,7 @@ export default async function TripReportDetailPage({ params }: PageProps) {
   try {
     report = await getTripReport(id);
   } catch (err) {
-    error = err instanceof Error ? err.message : 'Failed to load trip report';
+    error = err instanceof Error ? err.message : 'Failed to load post';
   }
 
   if (error) {
@@ -56,7 +59,7 @@ export default async function TripReportDetailPage({ params }: PageProps) {
         <div className="mx-auto max-w-4xl px-4 py-12">
           <Window title="Error">
             <p className="mb-4 text-red-800">{error}</p>
-            <Button tone="blue" href="/trip-reports">Back to trip reports</Button>
+            <Button tone="blue" href="/posts">Back to posts</Button>
           </Window>
         </div>
       </PageWrapper>
@@ -66,24 +69,38 @@ export default async function TripReportDetailPage({ params }: PageProps) {
   if (!report) notFound();
 
   if (report.legacySanityId && report.legacySanityId === id && report.id !== id) {
-    redirect(`/trip-reports/${report.id}`);
+    redirect(`/posts/${report.id}`);
   }
 
   const place = report.lat != null && report.lng != null
     ? `${report.lat.toFixed(4)}, ${report.lng.toFixed(4)}`
     : '—';
+  const trail = await loadReportTrail(report.id).catch(() => null);
+  const activity = report.activity && isActivity(report.activity) ? ACTIVITY_META[report.activity].label : null;
 
   return (
     <PageWrapper className="bg-gray-50">
       <div className="mx-auto max-w-4xl px-4 py-12">
-        <div className="mb-6">
-          <Button tone="default" href="/trip-reports">Back to trip reports</Button>
+        <div className="mb-6 flex gap-3">
+          <Button tone="default" href="/posts">Back to posts</Button>
+          <Button tone="blue" href={`/map?post=${report.id}`}>On the map</Button>
         </div>
         <Window title={report.title}>
           <Table
-            headers={['Author', 'Date', 'Place']}
-            rows={[[report.authorName, formatTripDate(report.tripDate, 'long'), place]]}
+            headers={['Author', 'Date', 'Activity', 'Place']}
+            rows={[[
+              report.authorName,
+              formatTripDate(report.tripDate, 'long'),
+              activity ?? '—',
+              place,
+            ]]}
           />
+          {trail && (trail.distanceM != null || trail.taggedNames.length > 0) ? (
+            <p className="mt-3 text-sm text-gray-700">
+              {trail.distanceM != null ? `${formatMiles(trail.distanceM)} · ${formatFeetGain(trail.elevGainM ?? 0)}` : null}
+              {trail.taggedNames.length > 0 ? ` · With ${trail.taggedNames.join(', ')}` : null}
+            </p>
+          ) : null}
           {report.tags.length > 0 && (
             <div className="mt-4 flex flex-wrap gap-2">
               {report.tags.map((tag) => (
@@ -96,7 +113,7 @@ export default async function TripReportDetailPage({ params }: PageProps) {
               ? report.body.split(/\n{2,}/).map((paragraph, index) => (
                 <p key={index} className="whitespace-pre-wrap leading-relaxed">{paragraph}</p>
               ))
-              : <p className="text-gray-600">This report has no written notes.</p>}
+              : <p className="text-gray-600">This post has no written notes.</p>}
           </div>
           {report.photos.length > 0 && (
             <div className="mt-8 space-y-6">
