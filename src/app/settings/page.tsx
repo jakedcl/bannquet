@@ -22,22 +22,28 @@ export default async function SettingsPage({
   return (
     <PageWrapper>
       <div className="mx-auto max-w-lg space-y-4 px-4 py-10">
-        <Window title="Your profile">
-          {!canContribute(viewer.role) ? (
-            <p className="text-sm font-bold">{APPROVAL_WAIT}</p>
-          ) : (
-            <>
-              {params.welcome || profileNeedsNames(viewer) ? (
-                <div className="mb-4">
-                  <StatusBar>
-                    Add a display name and a username. The username is the address of your page, like /user/jake.
-                  </StatusBar>
-                </div>
-              ) : null}
-              <ProfileForm member={viewer} />
-            </>
-          )}
-        </Window>
+        <div id="edit-profile">
+          <Window title="Edit profile">
+            {!canContribute(viewer.role) ? (
+              <p className="text-sm font-bold">{APPROVAL_WAIT}</p>
+            ) : (
+              <>
+                <p className="mb-4 text-sm text-gray-700">
+                  Change your display name, username, photo, and the rest of your page.
+                  Saving a new username moves your page to that /user/ address. The old address still opens the new one.
+                </p>
+                {params.welcome || profileNeedsNames(viewer) ? (
+                  <div className="mb-4">
+                    <StatusBar>
+                      Add a display name and a username. The username is the address of your page, like /user/jake.
+                    </StatusBar>
+                  </div>
+                ) : null}
+                <ProfileForm member={viewer} />
+              </>
+            )}
+          </Window>
+        </div>
         <form action={signOutAction}>
           <Button type="submit">Sign out</Button>
         </form>

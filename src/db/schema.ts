@@ -74,6 +74,13 @@ export const users = pgTable('users', {
   createdAt,
 });
 
+export const handleRedirects = pgTable('handle_redirects', {
+  handle: text('handle').primaryKey(),
+  userId: text('user_id')
+    .notNull()
+    .references(() => users.id, { onDelete: 'cascade' }),
+});
+
 export const passwordResetLinks = pgTable('password_reset_links', {
   id: uuid('id').primaryKey().defaultRandom(),
   tokenHash: text('token_hash').notNull().unique(),
