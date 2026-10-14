@@ -11,11 +11,11 @@ const EMPTY = { type: 'FeatureCollection' as const, features: [] };
 export default async function MapPage({
   searchParams,
 }: {
-  searchParams: Promise<{ track?: string; post?: string; trip?: string }>;
+  searchParams: Promise<{ track?: string; post?: string; trip?: string; pin?: string; photo?: string }>;
 }) {
   const params = await searchParams;
   const data = isDatabaseConfigured() ? await loadMapData() : { points: EMPTY, lines: EMPTY };
-  const focusId = params.track || params.post || params.trip;
+  const focusId = params.track || params.post || params.trip || params.pin || params.photo;
   const focusFeature = focusId
     ? data.points.features.find((feature) => {
       const href = String(feature.properties.href ?? '');

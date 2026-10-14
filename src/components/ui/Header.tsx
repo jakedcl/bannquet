@@ -252,64 +252,68 @@ function AccountLinks({
   }
 
   const profileHref = account.handle ? `/user/${account.handle}` : '/settings';
-  const name = account.displayName || account.handle || 'you';
+  const canUpload = account.role !== 'pending';
+  const uploadOn = pathname === '/upload' || pathname.startsWith('/upload/');
   const settingsOn = open || pathname === '/settings' || pathname === '/admin' || pathname === profileHref;
   const itemClass = stacked
-    ? 'block px-4 py-3 text-base font-semibold rounded-xl border text-center text-white border-white/30 hover:border-white hover:bg-white/10'
+    ? 'block w-full px-4 py-3 text-base font-semibold rounded-xl border text-center text-white border-white/30 hover:border-white hover:bg-white/10'
     : 'retro-button rounded-none px-3 py-1 text-left text-xs font-bold uppercase';
+  const uploadClass = uploadOn
+    ? (stacked
+      ? 'block w-full border border-white bg-white px-4 py-3 text-center text-base font-semibold text-brand-green rounded-xl'
+      : buttonClass.replace('retro-button-blue', 'retro-button-yellow'))
+    : buttonClass;
 
   return (
     <div ref={menuRef} className={stacked ? 'space-y-2' : 'flex items-center gap-2'}>
-      <p className={stacked
-        ? 'px-2 text-center text-xs text-white/80'
-        : 'max-w-36 truncate text-xs normal-case tracking-normal text-white/80'}>
-        Logged in as {name}
-      </p>
-      <div className={stacked ? 'space-y-2' : 'relative flex items-center gap-2'}>
-        <div className={stacked ? '' : 'relative'}>
-          <button
-            type="button"
-            aria-expanded={open}
-            aria-haspopup="menu"
-            onClick={() => setOpenPath(open ? null : pathname)}
-            className={settingsOn
-              ? (stacked
-                ? 'block w-full border border-white bg-white px-4 py-3 text-center text-base font-semibold text-brand-green rounded-xl'
-                : buttonClass.replace('retro-button-blue', 'retro-button-yellow'))
-              : buttonClass}
+      {canUpload ? (
+        <Link href="/upload" className={uploadClass}>
+          Upload
+        </Link>
+      ) : null}
+      <div className={stacked ? '' : 'relative'}>
+        <button
+          type="button"
+          aria-expanded={open}
+          aria-haspopup="menu"
+          onClick={() => setOpenPath(open ? null : pathname)}
+          className={settingsOn
+            ? (stacked
+              ? 'block w-full border border-white bg-white px-4 py-3 text-center text-base font-semibold text-brand-green rounded-xl'
+              : buttonClass.replace('retro-button-blue', 'retro-button-yellow'))
+            : buttonClass}
+        >
+          Settings
+        </button>
+        {open ? (
+          <div
+            role="menu"
+            aria-label="Settings"
+            className={stacked
+              ? 'space-y-2'
+              : 'absolute right-0 top-full z-30 mt-1 flex min-w-40 flex-col gap-1 bg-beige p-1 text-gray-900 retro-box'}
           >
-            Settings
-          </button>
-          {open ? (
-            <div
-              role="menu"
-              aria-label="Settings"
-              className={stacked
-                ? 'space-y-2'
-                : 'absolute right-0 top-full z-30 mt-1 flex min-w-40 flex-col gap-1 bg-beige p-1 text-gray-900 retro-box'}
-            >
-              <Link role="menuitem" href={profileHref} className={itemClass} onClick={() => setOpenPath(null)}>
-                Profile
+            <Link role="menuitem" href={profileHref} className={itemClass} onClick={() => setOpenPath(null)}>
+              Profile
+            </Link>
+            <Link role="menuitem" href="/settings" className={itemClass} onClick={() => setOpenPath(null)}>
+              Settings
+            </Link>
+            {account.role === 'admin' ? (
+              <Link role="menuitem" href="/admin" className={itemClass} onClick={() => setOpenPath(null)}>
+                Admin
+                {account.pendingCount ? (
+                  <span className="ml-2 inline-block min-w-5 bg-brand-green px-1 text-center text-xs font-bold text-white">
+                    {account.pendingCount}
+                  </span>
+                ) : null}
               </Link>
-              <Link role="menuitem" href="/settings" className={itemClass} onClick={() => setOpenPath(null)}>
-                Settings
-              </Link>
-              {account.role === 'admin' ? (
-                <Link role="menuitem" href="/admin" className={itemClass} onClick={() => setOpenPath(null)}>
-                  Admin
-                  {account.pendingCount ? (
-                    <span className="ml-2 inline-block min-w-5 bg-brand-green px-1 text-center text-xs font-bold text-white">
-                      {account.pendingCount}
-                    </span>
-                  ) : null}
-                </Link>
-              ) : null}
-            </div>
-          ) : null}
-        </div>
-        <form action={signOutAction}>
-          <button type="submit" className={buttonClass}>Log out</button>
-        </form>
+            ) : null}
+            <form action={signOutAction}>
+              <button type="submit" role="menuitem" className={itemClass}>Log out</button>
+            </form>
+          </div>
+        ) : null}
       </div>
     </div>
   );

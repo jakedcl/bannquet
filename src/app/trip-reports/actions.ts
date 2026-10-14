@@ -5,44 +5,13 @@ import { getViewer } from '@/app/sign-in/actions';
 import { isActivity } from '@/lib/activities';
 import { APPROVAL_WAIT, canContribute } from '@/lib/membership';
 import { parseGpx, type TrackPoint } from '@/lib/gpx';
-import { isLatLng, isPublicBlobUrl } from '@/lib/photos';
-import { addProfilePhotos, addProfileTrack, createPost, type PreparedPhoto } from '@/lib/posts';
+import { addProfilePhotos, addProfileTrack, createPost, parseUploadedPhotos, type PreparedPhoto } from '@/lib/posts';
 
 const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
 const ID_PATTERN = /^[A-Za-z0-9_-]{8,80}$/;
 
 function cleanPhotos(raw: string): { photos: PreparedPhoto[]; error: string | null } {
-  let parsed: unknown;
-  try {
-    parsed = raw ? JSON.parse(raw) : [];
-  } catch {
-    return { photos: [], error: 'Those photos did not come through. Try them again.' };
-  }
-  if (!Array.isArray(parsed)) return { photos: [], error: 'Those photos did not come through. Try them again.' };
-  if (parsed.length > 12) return { photos: [], error: 'Keep it to 12 photos.' };
-
-  const photos: PreparedPhoto[] = [];
-  for (const item of parsed) {
-    if (!item || typeof item !== 'object') continue;
-    const record = item as Record<string, unknown>;
-    const url = typeof record.url === 'string' ? record.url : '';
-    if (!isPublicBlobUrl(url)) return { photos: [], error: 'One photo was not stored. Try it again.' };
-    const lat = typeof record.lat === 'number' ? record.lat : null;
-    const lng = typeof record.lng === 'number' ? record.lng : null;
-    if (lat == null || lng == null || !isLatLng(lat, lng)) {
-      return { photos: [], error: 'A photo has no location. Drop a pin on the map, or remove it.' };
-    }
-    const source = record.source === 'exif' || record.source === 'manual' ? record.source : 'manual';
-    photos.push({
-      url,
-      width: typeof record.width === 'number' ? record.width : 0,
-      height: typeof record.height === 'number' ? record.height : 0,
-      lat,
-      lng,
-      source,
-    });
-  }
-  return { photos, error: null };
+  return parseUploadedPhotos(raw);
 }
 
 function cleanTrack(raw: string): { track: { name: string | null; points: TrackPoint[] } | null; error: string | null } {

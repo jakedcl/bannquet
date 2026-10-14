@@ -9,16 +9,7 @@ import { Button } from '@/components/retro/Button';
 import { ACTIVITIES, ACTIVITY_META } from '@/lib/activities';
 import { parseGpx } from '@/lib/gpx';
 
-export function ProfileAdds() {
-  return (
-    <div className="space-y-4">
-      <TrackAdd />
-      <PhotoAdd />
-    </div>
-  );
-}
-
-function TrackAdd() {
+export function RouteUpload() {
   const router = useRouter();
   const refreshed = useRef(false);
   const [state, action, pending] = useActionState(publishProfileTrack, null);
@@ -64,7 +55,7 @@ function TrackAdd() {
   );
 }
 
-function PhotoAdd() {
+export function PhotoUpload() {
   const router = useRouter();
   const refreshed = useRef(false);
   const [photos, setPhotos] = useState<UploadedPhoto[]>([]);

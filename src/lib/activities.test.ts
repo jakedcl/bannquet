@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { ACTIVITIES, MAP_GROUPS, mapColorForActivity } from './activities';
+import { ACTIVITIES, MAP_GROUPS, mapColorForActivity, pickMostDoneActivity } from './activities';
 
 test('every activity belongs to one map group', () => {
   const seen = new Map<string, string>();
@@ -28,4 +28,20 @@ test('map colors are red for on foot, blue for biking, and orange for snow', () 
   for (const color of Object.values(MAP_GROUPS).map((group) => group.color)) {
     assert.notEqual(color.toLowerCase(), '#2d5016');
   }
+});
+
+test('most-done activity follows upload counts, then the latest day', () => {
+  assert.equal(pickMostDoneActivity([]), null);
+  assert.equal(pickMostDoneActivity([
+    { activity: 'hike', count: 2, latest: '2026-01-01' },
+    { activity: 'bike', count: 3, latest: '2025-01-01' },
+  ])?.activity, 'bike');
+  assert.equal(pickMostDoneActivity([
+    { activity: 'ski', count: 2, latest: '2026-02-01' },
+    { activity: 'hike', count: 2, latest: '2026-03-01' },
+  ])?.activity, 'hike');
+  assert.equal(pickMostDoneActivity([
+    { activity: 'snowboard', count: 1, latest: '2026-01-01' },
+    { activity: 'bike', count: 1, latest: '2026-01-01' },
+  ])?.activity, 'bike');
 });

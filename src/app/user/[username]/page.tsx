@@ -2,7 +2,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
 import PageWrapper from '@/components/ui/PageWrapper';
-import { ProfileAdds } from '@/components/posts/ProfileAdds';
 import { ChallengeBadge } from '@/components/stats/ChallengeBadge';
 import { Badge } from '@/components/retro/Badge';
 import { Button } from '@/components/retro/Button';
@@ -10,6 +9,8 @@ import { Window } from '@/components/retro/Window';
 import { getViewer } from '@/app/sign-in/actions';
 import { findHandleRedirect, findMemberByHandle } from '@/lib/auth/members';
 import { ACTIVITY_META, isActivity } from '@/lib/activities';
+import { loadMostDoneActivity, loadProfilePins } from '@/lib/pins';
+import { PIN_KIND_LABELS, isPinKind } from '@/lib/pin-kinds';
 import { formatFeetGain, formatMiles } from '@/lib/gpx';
 import { loadProfileLibrary } from '@/lib/posts';
 import { REGION_LABELS, isRegionCode } from '@/lib/regions';
@@ -29,7 +30,11 @@ export default async function UserPage({ params }: { params: Promise<{ username:
     notFound();
   }
   const viewer = await getViewer();
-  const library = await loadProfileLibrary(member.id);
+  const [library, mostDone, pins] = await Promise.all([
+    loadProfileLibrary(member.id),
+    loadMostDoneActivity(member.id),
+    loadProfilePins(member.id),
+  ]);
   const challenges = loadChallenges();
   await ensurePeaks();
   const summitCounts = await summitCountsByUser();
@@ -66,15 +71,14 @@ export default async function UserPage({ params }: { params: Promise<{ username:
           </div>
           {member.bio ? <p className="mt-4 whitespace-pre-wrap text-sm">{member.bio}</p> : null}
           <div className="mt-4 space-y-2">
-            <p className="text-xs font-bold uppercase tracking-wide">Favorite activities</p>
-            {member.favoriteActivities.length > 0 ? (
-              <div className="flex flex-wrap gap-2">
-                {member.favoriteActivities.map((activity) => (
-                  <Badge key={activity}>{ACTIVITY_META[activity].label}</Badge>
-                ))}
-              </div>
+            <p className="text-xs font-bold uppercase tracking-wide">Most done</p>
+            {mostDone ? (
+              <>
+                <Badge>{ACTIVITY_META[mostDone].label}</Badge>
+                <p className="text-sm text-gray-600">From posts, routes, and pins.</p>
+              </>
             ) : (
-              <p className="text-sm text-gray-600">No favorite activities yet.</p>
+              <p className="text-sm text-gray-600">No uploads yet.</p>
             )}
           </div>
         </Window>
@@ -96,17 +100,12 @@ export default async function UserPage({ params }: { params: Promise<{ username:
             <Link href="/stats" className="underline">All the lists and the leaderboards</Link>
           </p>
         </Window>
-        {canAdd ? (
-          <Window title="Add to your map">
-            <p className="mb-3 text-sm text-gray-700">
-              A route or a photo added here is the same thing as one inside a post. Both show on the map.
-            </p>
-            <ProfileAdds />
-          </Window>
-        ) : null}
         <Window title="Posts">
           {library.posts.length === 0 ? (
-            <p className="text-sm text-gray-700">No posts yet.</p>
+            <p className="text-sm text-gray-700">
+              No posts yet.
+              {canAdd ? <> <Link href="/upload?kind=post" className="underline">Upload one.</Link></> : null}
+            </p>
           ) : (
             <ul className="space-y-2">
               {library.posts.map((post) => (
@@ -124,7 +123,10 @@ export default async function UserPage({ params }: { params: Promise<{ username:
         </Window>
         <Window title="Routes">
           {library.routes.length === 0 ? (
-            <p className="text-sm text-gray-700">No routes yet.</p>
+            <p className="text-sm text-gray-700">
+              No routes yet.
+              {canAdd ? <> <Link href="/upload?kind=route" className="underline">Upload one.</Link></> : null}
+            </p>
           ) : (
             <ul className="space-y-2">
               {library.routes.map((route) => (
@@ -142,13 +144,37 @@ export default async function UserPage({ params }: { params: Promise<{ username:
             </ul>
           )}
         </Window>
+        <Window title="Pins">
+          {pins.length === 0 ? (
+            <p className="text-sm text-gray-700">
+              No pins yet.
+              {canAdd ? <> <Link href="/upload?kind=pin" className="underline">Drop one.</Link></> : null}
+            </p>
+          ) : (
+            <ul className="space-y-2">
+              {pins.map((pin) => (
+                <li key={pin.id}>
+                  <Link href={`/pins/${pin.id}`} className="font-bold underline">{pin.title}</Link>
+                  <span className="ml-2 text-sm text-gray-700">
+                    {formatTripDate(pin.visitedOn)}
+                    {pin.activity && isActivity(pin.activity) ? ` · ${ACTIVITY_META[pin.activity].label}` : ''}
+                    {isPinKind(pin.kind) ? ` · ${PIN_KIND_LABELS[pin.kind]}` : ''}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          )}
+        </Window>
         <Window title="Photos">
           {library.photos.length === 0 ? (
-            <p className="text-sm text-gray-700">No photos yet.</p>
+            <p className="text-sm text-gray-700">
+              No photos yet.
+              {canAdd ? <> <Link href="/upload?kind=photo" className="underline">Upload one.</Link></> : null}
+            </p>
           ) : (
             <div className="grid grid-cols-3 gap-2">
               {library.photos.map((photo) => (
-                <Link key={photo.id} href={photo.postId ? `/posts/${photo.postId}` : `/map?photo=${photo.id}`}>
+                <Link key={photo.id} href={photo.pinId ? `/pins/${photo.pinId}` : photo.postId ? `/posts/${photo.postId}` : `/map?photo=${photo.id}`}>
                   <Image src={photo.url} alt={photo.caption || ''} width={240} height={240} className="h-28 w-full object-cover retro-box" />
                 </Link>
               ))}

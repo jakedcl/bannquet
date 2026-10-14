@@ -2,7 +2,6 @@
 
 import { cookies, headers } from 'next/headers';
 import { redirect } from 'next/navigation';
-import { isActivity, type Activity } from '@/lib/activities';
 import { getAuth, isAuthConfigured } from '@/lib/auth/server';
 import {
   approvePendingMember,
@@ -300,10 +299,6 @@ export async function saveProfile(
   const handle = String(formData.get('username') ?? formData.get('handle') ?? '');
   const bio = String(formData.get('bio') ?? '').trim().slice(0, 500);
   const homeRegion = String(formData.get('homeRegion') ?? '').trim();
-  const favoriteActivities = formData
-    .getAll('favoriteActivities')
-    .filter((value): value is string => typeof value === 'string')
-    .filter(isActivity);
 
   const nameProblem = displayNameProblem(displayName);
   if (nameProblem) return { error: nameProblem };
@@ -325,7 +320,7 @@ export async function saveProfile(
     handle,
     bio,
     homeRegion,
-    favoriteActivities: favoriteActivities as Activity[],
+    favoriteActivities: member.favoriteActivities,
     avatarUrl,
   });
   if (saved.error || !saved.member) return { error: saved.error ?? 'Could not save that profile.' };

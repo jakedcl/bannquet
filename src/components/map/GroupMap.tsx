@@ -34,6 +34,7 @@ type Leaf = {
   who: string;
   date: string | null;
   activity: string | null;
+  category: string;
   color: string;
   trackId: string;
   href: string;
@@ -66,6 +67,7 @@ function leafFromFeature(feature: { geometry: unknown; properties?: GeoJSON.GeoJ
     who: String(props.who ?? 'Friend'),
     date: props.date ? String(props.date) : null,
     activity: props.activity ? String(props.activity) : null,
+    category: props.category ? String(props.category) : '',
     color: String(props.color ?? '#444444'),
     trackId: String(props.trackId ?? ''),
     href: String(props.href ?? '/map'),
@@ -124,9 +126,10 @@ export default function GroupMap({
     map.on('click', (event) => {
       const pick = onPickRef.current;
       if (!pickingRef.current || !pick) return;
-      const layers = ['clusters', 'pins'].filter((id) => Boolean(map.getLayer(id)));
+      const layers = ['clusters', 'pins', 'pin-markers'].filter((id) => Boolean(map.getLayer(id)));
       const hits = layers.length > 0 ? map.queryRenderedFeatures(event.point, { layers }) : [];
-      if (hits.length > 0) return;
+      const blocked = hits.some((feature) => Number(feature.properties?.draft) !== 1);
+      if (blocked) return;
       pick(event.lngLat.lng, event.lngLat.lat);
     });
 
@@ -168,6 +171,7 @@ export default function GroupMap({
       if (map.getLayer('routes')) map.removeLayer('routes');
       if (map.getLayer('cluster-count')) map.removeLayer('cluster-count');
       if (map.getLayer('clusters')) map.removeLayer('clusters');
+      if (map.getLayer('pin-markers')) map.removeLayer('pin-markers');
       if (map.getLayer('pins')) map.removeLayer('pins');
       if (map.getSource('routes')) map.removeSource('routes');
       if (map.getSource('places')) map.removeSource('places');
@@ -234,12 +238,31 @@ export default function GroupMap({
         id: 'pins',
         type: 'circle',
         source: 'places',
-        filter: ['!', ['has', 'point_count']],
+        filter: ['all', ['!', ['has', 'point_count']], ['!=', ['get', 'kind'], 'pin']],
         paint: {
           'circle-color': ['get', 'color'],
           'circle-radius': 7,
           'circle-stroke-width': 2,
           'circle-stroke-color': '#ffffff',
+        },
+      });
+      map.addLayer({
+        id: 'pin-markers',
+        type: 'symbol',
+        source: 'places',
+        filter: ['all', ['!', ['has', 'point_count']], ['==', ['get', 'kind'], 'pin']],
+        layout: {
+          'text-field': '▼',
+          'text-font': ['Noto Sans Bold'],
+          'text-size': 22,
+          'text-anchor': 'bottom',
+          'text-allow-overlap': true,
+          'text-ignore-placement': true,
+        },
+        paint: {
+          'text-color': ['get', 'color'],
+          'text-halo-color': '#ffffff',
+          'text-halo-width': 1.5,
         },
       });
       syncRoutes(map);
@@ -272,6 +295,7 @@ export default function GroupMap({
       setSelectedTrack('');
     };
     const onPin = (event: MapLayerMouseEvent) => {
+      if (pickingRef.current) return;
       const feature = event.features?.[0];
       if (!feature) return;
       const leaf = leafFromFeature(feature);
@@ -283,16 +307,20 @@ export default function GroupMap({
     map.on('moveend', () => syncRoutes(map));
     map.on('click', 'clusters', onCluster);
     map.on('click', 'pins', onPin);
+    map.on('click', 'pin-markers', onPin);
     map.on('mouseenter', 'clusters', () => { map.getCanvas().style.cursor = 'pointer'; });
     map.on('mouseleave', 'clusters', () => { map.getCanvas().style.cursor = picking ? 'crosshair' : ''; });
     map.on('mouseenter', 'pins', () => { map.getCanvas().style.cursor = 'pointer'; });
     map.on('mouseleave', 'pins', () => { map.getCanvas().style.cursor = picking ? 'crosshair' : ''; });
+    map.on('mouseenter', 'pin-markers', () => { map.getCanvas().style.cursor = 'pointer'; });
+    map.on('mouseleave', 'pin-markers', () => { map.getCanvas().style.cursor = picking ? 'crosshair' : ''; });
     if (map.isStyleLoaded()) draw();
 
     return () => {
       map.off('style.load', draw);
       map.off('click', 'clusters', onCluster);
       map.off('click', 'pins', onPin);
+      map.off('click', 'pin-markers', onPin);
     };
   }, [terrain, basemap, picking]);
 
@@ -411,6 +439,7 @@ export default function GroupMap({
                 <span className="ml-2 text-sm font-bold">{leaf.title}</span>
                 <span className="mt-1 block text-xs text-gray-700">
                   {leaf.who} · {formatTripDate(leaf.date)} · {activityLabel(leaf.activity)}
+                  {leaf.category ? ` · ${leaf.category}` : ''}
                 </span>
               </a>
             ))}

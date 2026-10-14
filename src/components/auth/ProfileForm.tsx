@@ -3,7 +3,6 @@
 import { useActionState, useEffect, useRef, useState, type ChangeEvent, type FormEvent } from 'react';
 import { saveProfile } from '@/app/sign-in/actions';
 import { prepareAvatar } from '@/components/auth/prepare-avatar';
-import { ACTIVITY_META, ACTIVITIES } from '@/lib/activities';
 import { REGION_OPTIONS } from '@/lib/regions';
 import { Button } from '@/components/retro/Button';
 import type { Member } from '@/lib/auth/members';
@@ -62,22 +61,6 @@ export function ProfileForm({ member }: { member: Member }) {
           ))}
         </select>
       </label>
-      <fieldset className="space-y-2">
-        <legend className="text-sm font-bold">Favorite activities</legend>
-        <div className="grid grid-cols-2 gap-2">
-          {ACTIVITIES.map((activity) => (
-            <label key={activity} className="flex items-center gap-2 text-sm">
-              <input
-                type="checkbox"
-                name="favoriteActivities"
-                value={activity}
-                defaultChecked={member.favoriteActivities.includes(activity)}
-              />
-              {ACTIVITY_META[activity].label}
-            </label>
-          ))}
-        </div>
-      </fieldset>
       <label className="block space-y-1">
         <span className="text-sm font-bold">About you</span>
         <textarea

@@ -72,7 +72,7 @@ function FeedShell({ children, count }: { children: ReactNode; count?: number })
           </p>
         </div>
         <div className="flex gap-3">
-          <Button tone="green" href="/posts/new">Write a post</Button>
+          <Button tone="green" href="/upload?kind=post">Write a post</Button>
           <Button tone="blue" href="/map">Map</Button>
         </div>
       </div>

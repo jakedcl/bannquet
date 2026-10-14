@@ -11,18 +11,27 @@ const EMPTY = { type: 'FeatureCollection' as const, features: [] };
 export function PhotoFields({
   photos,
   onChange,
+  onBusy,
+  requireLocation = true,
 }: {
   photos: UploadedPhoto[];
   onChange: (photos: UploadedPhoto[]) => void;
+  onBusy?: (busy: boolean) => void;
+  requireLocation?: boolean;
 }) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [pinning, setPinning] = useState<number | null>(null);
-  const missing = photos.some((photo) => photo.lat == null || photo.lng == null);
+  const missing = requireLocation && photos.some((photo) => photo.lat == null || photo.lng == null);
+
+  function setWorking(next: boolean) {
+    setBusy(next);
+    onBusy?.(next);
+  }
 
   async function addFiles(list: FileList | null) {
     if (!list || list.length === 0) return;
-    setBusy(true);
+    setWorking(true);
     setError(null);
     const next = [...photos];
     try {
@@ -37,7 +46,7 @@ export function PhotoFields({
     } catch (err) {
       setError(err instanceof Error ? err.message : 'That photo did not upload.');
     } finally {
-      setBusy(false);
+      setWorking(false);
     }
   }
 
@@ -83,9 +92,13 @@ export function PhotoFields({
                   <p className="text-xs text-gray-700">
                     {photo.source === 'exif' ? 'Location came from the photo.' : 'Pin dropped on the map.'}
                   </p>
-                ) : (
+                ) : requireLocation ? (
                   <p className="text-xs font-bold text-red-700">
                     This photo has no location. Drop a pin on the map, or remove it.
+                  </p>
+                ) : (
+                  <p className="text-xs text-gray-700">
+                    No location on this photo. The pin uses the spot you chose.
                   </p>
                 )}
                 <div className="flex gap-2">
