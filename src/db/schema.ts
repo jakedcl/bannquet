@@ -220,6 +220,7 @@ export const pins = pgTable(
     point: geographyPoint('point').notNull(),
     title: text('title').notNull(),
     note: text('note'),
+    visitedOn: date('visited_on'),
     tripId: uuid('trip_id').references(() => trips.id, { onDelete: 'set null' }),
     tripReportId: uuid('trip_report_id').references(() => tripReports.id, { onDelete: 'cascade' }),
     createdBy: text('created_by').references(() => users.id, { onDelete: 'set null' }),
@@ -229,6 +230,7 @@ export const pins = pgTable(
     index('pins_point_idx').using('gist', table.point),
     index('pins_trip_idx').on(table.tripId),
     index('pins_trip_report_idx').on(table.tripReportId),
+    index('pins_created_by_idx').on(table.createdBy),
   ],
 );
 

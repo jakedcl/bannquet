@@ -3,6 +3,7 @@ import { getDb } from '@/db';
 import { isActivity, mapColorForActivity, type Activity } from '@/lib/activities';
 import { lineWkt, trackStats, type TrackPoint } from '@/lib/gpx';
 import { creditTrackSummits, ensurePeaks } from '@/lib/summits';
+import { PIN_KIND_LABELS, isPinKind } from '@/lib/pin-kinds';
 import { NEUTRAL_PIN_COLOR } from '@/lib/map';
 import { isLatLng, isPublicBlobUrl } from '@/lib/photos';
 
@@ -23,6 +24,45 @@ export type PreparedPhoto = {
   lng: number | null;
   source: 'exif' | 'manual' | null;
 };
+
+export function parseUploadedPhotos(
+  raw: string,
+  options: { requireLocation?: boolean } = {},
+): { photos: PreparedPhoto[]; error: string | null } {
+  const requireLocation = options.requireLocation !== false;
+  let parsed: unknown;
+  try {
+    parsed = raw ? JSON.parse(raw) : [];
+  } catch {
+    return { photos: [], error: 'Those photos did not come through. Try them again.' };
+  }
+  if (!Array.isArray(parsed)) return { photos: [], error: 'Those photos did not come through. Try them again.' };
+  if (parsed.length > 12) return { photos: [], error: 'Keep it to 12 photos.' };
+
+  const photos: PreparedPhoto[] = [];
+  for (const item of parsed) {
+    if (!item || typeof item !== 'object') continue;
+    const record = item as Record<string, unknown>;
+    const url = typeof record.url === 'string' ? record.url : '';
+    if (!isPublicBlobUrl(url)) return { photos: [], error: 'One photo was not stored. Try it again.' };
+    const lat = typeof record.lat === 'number' ? record.lat : null;
+    const lng = typeof record.lng === 'number' ? record.lng : null;
+    const located = lat != null && lng != null && isLatLng(lat, lng);
+    if (requireLocation && !located) {
+      return { photos: [], error: 'A photo has no location. Drop a pin on the map, or remove it.' };
+    }
+    const source = record.source === 'exif' || record.source === 'manual' ? record.source : 'manual';
+    photos.push({
+      url,
+      width: typeof record.width === 'number' ? record.width : 0,
+      height: typeof record.height === 'number' ? record.height : 0,
+      lat: located ? lat : null,
+      lng: located ? lng : null,
+      source: located ? source : null,
+    });
+  }
+  return { photos, error: null };
+}
 
 type QueryRows = { rows?: Record<string, unknown>[] };
 
@@ -56,7 +96,7 @@ function whoSql(aliasUser: string, aliasReport: string) {
 
 export async function loadMapData(): Promise<{ points: MapFeatureCollection; lines: MapFeatureCollection }> {
   const db = getDb();
-  const [postResult, trackResult, photoResult, tripResult] = await Promise.all([
+  const [postResult, trackResult, photoResult, tripResult, pinResult] = await Promise.all([
     db.execute(sql`
       select tr.id::text as id, tr.title, tr.trip_date::text as trip_date, tr.activity::text as activity,
         ${whoSql('u', 'tr')} as who,
@@ -85,7 +125,7 @@ export async function loadMapData(): Promise<{ points: MapFeatureCollection; lin
       from photos p
       left join users u on u.id = p.user_id
       left join trip_reports tr on tr.id = p.trip_report_id
-      where p.point is not null
+      where p.point is not null and p.pin_id is null
     `),
     db.execute(sql`
       select t.id::text as id, t.title, t.start_at::date::text as trip_date, t.activity::text as activity,
@@ -94,6 +134,14 @@ export async function loadMapData(): Promise<{ points: MapFeatureCollection; lin
       from trips t
       left join users u on u.id = t.created_by
       where t.trailhead_point is not null
+    `),
+    db.execute(sql`
+      select p.id::text as id, p.title, p.activity::text as activity, p.kind::text as kind,
+        p.visited_on::text as trip_date,
+        coalesce(nullif(u.display_name, ''), nullif(u.handle, ''), 'Friend') as who,
+        ST_Y(p.point::geometry) as lat, ST_X(p.point::geometry) as lng
+      from pins p
+      left join users u on u.id = p.created_by
     `),
   ]);
 
@@ -202,6 +250,30 @@ export async function loadMapData(): Promise<{ points: MapFeatureCollection; lin
         color: colorFor(activity),
         trackId: '',
         href: `/trips/${id}`,
+      },
+    });
+  }
+
+  for (const row of asRows(pinResult)) {
+    const id = text(row.id);
+    const lat = num(row.lat);
+    const lng = num(row.lng);
+    if (!id || lat == null || lng == null) continue;
+    const activity = text(row.activity);
+    const kind = text(row.kind);
+    points.push({
+      type: 'Feature',
+      geometry: { type: 'Point', coordinates: [lng, lat] },
+      properties: {
+        kind: 'pin',
+        title: text(row.title) ?? 'Pin',
+        who: text(row.who) ?? 'Friend',
+        date: text(row.trip_date),
+        activity,
+        category: kind && isPinKind(kind) ? PIN_KIND_LABELS[kind] : '',
+        color: colorFor(activity),
+        trackId: '',
+        href: `/pins/${id}`,
       },
     });
   }
@@ -382,7 +454,7 @@ export async function addProfilePhotos(input: { userId: string; photos: Prepared
 export type ProfileLibrary = {
   posts: Array<{ id: string; title: string; tripDate: string | null; activity: string | null; tagged: boolean }>;
   routes: Array<{ id: string; name: string; activity: string; distanceM: number | null; elevGainM: number | null; postId: string | null }>;
-  photos: Array<{ id: string; url: string; caption: string | null; postId: string | null }>;
+  photos: Array<{ id: string; url: string; caption: string | null; postId: string | null; pinId: string | null }>;
 };
 
 export async function loadProfileLibrary(userId: string): Promise<ProfileLibrary> {
@@ -402,7 +474,7 @@ export async function loadProfileLibrary(userId: string): Promise<ProfileLibrary
       order by started_at desc nulls last, created_at desc
     `),
     db.execute(sql`
-      select id::text as id, blob_url as url, caption, trip_report_id::text as post_id
+      select id::text as id, blob_url as url, caption, trip_report_id::text as post_id, pin_id::text as pin_id
       from photos
       where user_id = ${userId}
       order by created_at desc
@@ -434,7 +506,7 @@ export async function loadProfileLibrary(userId: string): Promise<ProfileLibrary
       const id = text(row.id);
       const url = text(row.url);
       if (!id || !url) return [];
-      return [{ id, url, caption: text(row.caption), postId: text(row.post_id) }];
+      return [{ id, url, caption: text(row.caption), postId: text(row.post_id), pinId: text(row.pin_id) }];
     }),
   };
 }
