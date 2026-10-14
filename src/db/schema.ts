@@ -33,7 +33,7 @@ export const geographyLine = customType<{ data: string; driverData: string }>({
 
 const createdAt = timestamp('created_at', { withTimezone: true }).defaultNow().notNull();
 
-export const userRoleEnum = pgEnum('user_role', ['member', 'admin']);
+export const userRoleEnum = pgEnum('user_role', ['member', 'admin', 'pending']);
 export const activityEnum = pgEnum('activity', ACTIVITIES);
 export const tripStatusEnum = pgEnum('trip_status', ['planned', 'done', 'cancelled']);
 export const rsvpEnum = pgEnum('rsvp', ['going', 'maybe', 'no']);

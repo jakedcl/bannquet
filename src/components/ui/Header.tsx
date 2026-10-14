@@ -12,7 +12,8 @@ import WeatherTicker from './WeatherTicker';
 export type HeaderAccount = {
   handle: string | null;
   displayName: string | null;
-  role: 'member' | 'admin';
+  role: 'member' | 'admin' | 'pending';
+  pendingCount?: number;
 } | null;
 
 export default function Header({ account = null }: { account?: HeaderAccount }) {
@@ -230,6 +231,11 @@ function AccountLinks({
       {account.role === 'admin' ? (
         <Link href="/admin" className={className}>
           admin
+          {account.pendingCount ? (
+            <span className="ml-2 inline-block min-w-5 bg-white px-1 text-center text-xs font-bold text-gray-900">
+              {account.pendingCount}
+            </span>
+          ) : null}
         </Link>
       ) : null}
     </>

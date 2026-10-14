@@ -59,7 +59,12 @@ test('sign-in sends people missing a name or username to settings', () => {
 
 test('the invite claim only keeps a valid name and username', () => {
   const raw = encodeProfileClaim(' Jake ', 'Jake_DCL');
-  assert.deepEqual(decodeProfileClaim(raw), { displayName: 'Jake', username: 'jake_dcl' });
+  assert.deepEqual(decodeProfileClaim(raw), { displayName: 'Jake', username: 'jake_dcl', pending: false });
+  assert.deepEqual(decodeProfileClaim(encodeProfileClaim('Ada', 'ada_trail', true)), {
+    displayName: 'Ada',
+    username: 'ada_trail',
+    pending: true,
+  });
   assert.equal(decodeProfileClaim('{"displayName":"Jake","username":"jake-dcl"}'), null);
   assert.equal(decodeProfileClaim('not-json'), null);
   assert.equal(decodeProfileClaim(null), null);

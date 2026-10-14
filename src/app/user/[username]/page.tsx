@@ -11,6 +11,7 @@ import { ACTIVITY_META, isActivity } from '@/lib/activities';
 import { formatFeetGain, formatMiles } from '@/lib/gpx';
 import { loadProfileLibrary } from '@/lib/posts';
 import { REGION_LABELS, isRegionCode } from '@/lib/regions';
+import { canContribute } from '@/lib/membership';
 import { formatTripDate } from '@/lib/utils';
 
 export const dynamic = 'force-dynamic';
@@ -21,7 +22,7 @@ export default async function UserPage({ params }: { params: Promise<{ username:
   if (!member) notFound();
   const viewer = await getViewer();
   const library = await loadProfileLibrary(member.id);
-  const canAdd = viewer?.id === member.id;
+  const canAdd = viewer?.id === member.id && canContribute(viewer.role);
 
   const name = member.displayName || member.handle || 'Friend';
   const region = member.homeRegion && isRegionCode(member.homeRegion) ? REGION_LABELS[member.homeRegion] : null;

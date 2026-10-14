@@ -1,10 +1,14 @@
 import { handleUpload, type HandleUploadBody } from '@vercel/blob/client';
 import { getViewer } from '@/app/sign-in/actions';
+import { APPROVAL_WAIT, canContribute } from '@/lib/membership';
 
 export async function POST(request: Request) {
   const viewer = await getViewer();
   if (!viewer) {
     return Response.json({ error: 'Sign in to add a photo.' }, { status: 401 });
+  }
+  if (!canContribute(viewer.role)) {
+    return Response.json({ error: APPROVAL_WAIT }, { status: 403 });
   }
 
   const body = (await request.json()) as HandleUploadBody;

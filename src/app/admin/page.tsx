@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import PageWrapper from '@/components/ui/PageWrapper';
 import { InviteForm } from '@/components/auth/InviteForm';
+import { PendingDecision } from '@/components/auth/PendingDecision';
 import { ResetMemberPassword } from '@/components/auth/ResetMemberPassword';
 import { Table } from '@/components/retro/Table';
 import { Window } from '@/components/retro/Window';
@@ -17,6 +18,8 @@ export default async function AdminPage() {
   if (viewer.role !== 'admin') redirect('/');
 
   const [members, invites] = await Promise.all([listMembers(), listInvites()]);
+  const pending = members.filter((member) => member.role === 'pending');
+  const approved = members.filter((member) => member.role !== 'pending');
 
   return (
     <PageWrapper>
@@ -53,13 +56,29 @@ export default async function AdminPage() {
           )}
         </Window>
 
+        <Window title={pending.length > 0 ? `Waiting (${pending.length})` : 'Waiting'}>
+          {pending.length === 0 ? (
+            <p className="text-sm">Nobody is waiting for approval.</p>
+          ) : (
+            <Table
+              headers={['Name', 'Email', 'Username', 'Decision']}
+              rows={pending.map((member) => [
+                member.displayName || 'Friend',
+                member.email ?? '—',
+                member.handle ? `@${member.handle}` : '—',
+                <PendingDecision key={member.id} userId={member.id} />,
+              ])}
+            />
+          )}
+        </Window>
+
         <Window title="Members">
-          {members.length === 0 ? (
+          {approved.length === 0 ? (
             <p className="text-sm">Nobody has signed in yet.</p>
           ) : (
             <Table
               headers={['Name', 'Email', 'Role', 'Password']}
-              rows={members.map((member) => [
+              rows={approved.map((member) => [
                 member.handle ? (
                   <Link key={member.id} href={`/user/${member.handle}`} className="underline">
                     {member.displayName || member.handle}

@@ -57,6 +57,35 @@ export function accountCreateAllowed(input: {
   return isAdminEmail(input.email, input.adminEmails);
 }
 
+export type MemberRole = 'pending' | 'member' | 'admin';
+
+export const APPROVAL_WAIT = 'Waiting for Jake to approve you';
+
+export function publicSignUpAllowed(input: { email: string; member: boolean }): boolean {
+  if (!isEmail(input.email)) return false;
+  return !input.member;
+}
+
+export function roleForNewAccount(input: {
+  email: string;
+  adminEmails: readonly string[];
+  openInvite: boolean;
+  publicSignUp: boolean;
+}): MemberRole | null {
+  if (isAdminEmail(input.email, input.adminEmails)) return 'admin';
+  if (input.openInvite) return 'member';
+  if (input.publicSignUp) return 'pending';
+  return null;
+}
+
+export function canContribute(role: MemberRole): boolean {
+  return role === 'member' || role === 'admin';
+}
+
+export function approvalAllowed(input: { actorRole: MemberRole; targetRole: MemberRole }): boolean {
+  return input.actorRole === 'admin' && input.targetRole === 'pending';
+}
+
 export function inviteCode(): string {
   const alphabet = 'abcdefghijkmnopqrstuvwxyz23456789';
   const bytes = new Uint8Array(10);

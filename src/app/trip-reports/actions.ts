@@ -3,6 +3,7 @@
 import { redirect } from 'next/navigation';
 import { getViewer } from '@/app/sign-in/actions';
 import { isActivity } from '@/lib/activities';
+import { APPROVAL_WAIT, canContribute } from '@/lib/membership';
 import { parseGpx, type TrackPoint } from '@/lib/gpx';
 import { isLatLng, isPublicBlobUrl } from '@/lib/photos';
 import { addProfilePhotos, addProfileTrack, createPost, type PreparedPhoto } from '@/lib/posts';
@@ -57,6 +58,7 @@ export async function publishPost(
 ): Promise<{ error?: string }> {
   const viewer = await getViewer();
   if (!viewer) return { error: 'Sign in to post.' };
+  if (!canContribute(viewer.role)) return { error: APPROVAL_WAIT };
 
   const title = String(formData.get('title') ?? '').trim();
   const body = String(formData.get('body') ?? '').trim().slice(0, 8000);
@@ -100,6 +102,7 @@ export async function publishProfileTrack(
 ): Promise<{ error?: string; saved?: true }> {
   const viewer = await getViewer();
   if (!viewer) return { error: 'Sign in to add a route.' };
+  if (!canContribute(viewer.role)) return { error: APPROVAL_WAIT };
   const activity = String(formData.get('activity') ?? '');
   if (!isActivity(activity)) return { error: 'Pick what you were doing.' };
   const track = cleanTrack(String(formData.get('gpxText') ?? ''));
@@ -118,6 +121,7 @@ export async function publishProfilePhotos(
 ): Promise<{ error?: string; saved?: true }> {
   const viewer = await getViewer();
   if (!viewer) return { error: 'Sign in to add a photo.' };
+  if (!canContribute(viewer.role)) return { error: APPROVAL_WAIT };
   const photos = cleanPhotos(String(formData.get('photos') ?? ''));
   if (photos.error) return { error: photos.error };
   if (photos.photos.length === 0) return { error: 'Choose a photo.' };

@@ -1,15 +1,19 @@
-import { and, desc, eq, gt, isNull } from 'drizzle-orm';
+import { and, desc, eq, gt, isNull, sql } from 'drizzle-orm';
 import { getDb, isDatabaseConfigured } from '@/db';
 import { invites, users } from '@/db/schema';
 import { isActivity, type Activity } from '@/lib/activities';
 import {
   accountCreateAllowed,
   adminEmailsFromEnv,
+  approvalAllowed,
   inviteCode,
   inviteState,
   isAdminEmail,
   normalizeEmail,
+  publicSignUpAllowed,
+  roleForNewAccount,
   signInAllowed,
+  type MemberRole,
 } from '@/lib/membership';
 import {
   displayNameProblem,
@@ -26,7 +30,7 @@ export type Member = {
   homeRegion: string | null;
   bio: string | null;
   favoriteActivities: Activity[];
-  role: 'member' | 'admin';
+  role: MemberRole;
 };
 
 export type InviteRow = {
@@ -114,6 +118,12 @@ export async function emailMaySignIn(email: string): Promise<boolean> {
   });
 }
 
+export async function emailMaySignUpPublicly(email: string): Promise<boolean> {
+  if (!isDatabaseConfigured()) return false;
+  const member = await findMemberByEmail(email);
+  return publicSignUpAllowed({ email, member: Boolean(member) });
+}
+
 export async function emailMayCreateAccount(email: string, code: string): Promise<boolean> {
   if (!isDatabaseConfigured()) return false;
   const normalized = normalizeEmail(email);
@@ -137,7 +147,10 @@ export async function emailMayCreateAccount(email: string, code: string): Promis
   });
 }
 
-export async function ensureMember(authUser: AuthUser): Promise<{ member: Member; created: boolean } | null> {
+export async function ensureMember(
+  authUser: AuthUser,
+  options: { publicSignUp?: boolean } = {},
+): Promise<{ member: Member; created: boolean } | null> {
   if (!isDatabaseConfigured()) return null;
   const db = getDb();
   const email = normalizeEmail(authUser.email);
@@ -163,8 +176,13 @@ export async function ensureMember(authUser: AuthUser): Promise<{ member: Member
   }
 
   const openInvite = await findOpenInvite(email);
-  const admin = isAdminEmail(email, adminList());
-  if (!openInvite && !admin) return null;
+  const role = roleForNewAccount({
+    email,
+    adminEmails: adminList(),
+    openInvite: Boolean(openInvite),
+    publicSignUp: Boolean(options.publicSignUp),
+  });
+  if (!role) return null;
 
   const displayName = authUser.name?.trim() || null;
   const [created] = await db
@@ -175,7 +193,7 @@ export async function ensureMember(authUser: AuthUser): Promise<{ member: Member
       handle: null,
       displayName,
       avatarUrl: authUser.image ?? null,
-      role: admin ? 'admin' : 'member',
+      role,
       favoriteActivities: [],
     })
     .returning();
@@ -188,6 +206,41 @@ export async function ensureMember(authUser: AuthUser): Promise<{ member: Member
   }
 
   return { member: toMember(created), created: true };
+}
+
+export async function countPendingMembers(): Promise<number> {
+  if (!isDatabaseConfigured()) return 0;
+  const [row] = await getDb()
+    .select({ n: sql<number>`count(*)::int` })
+    .from(users)
+    .where(eq(users.role, 'pending'));
+  return row?.n ?? 0;
+}
+
+export async function approvePendingMember(id: string, actorRole: MemberRole): Promise<{ error?: string }> {
+  const [target] = await getDb().select({ role: users.role }).from(users).where(eq(users.id, id)).limit(1);
+  if (!target || !approvalAllowed({ actorRole, targetRole: target.role })) {
+    return { error: 'That person is not waiting anymore.' };
+  }
+  await getDb().update(users).set({ role: 'member' }).where(and(eq(users.id, id), eq(users.role, 'pending')));
+  return {};
+}
+
+export async function denyPendingMember(id: string, actorRole: MemberRole): Promise<{ error?: string }> {
+  const db = getDb();
+  const [target] = await db.select({ role: users.role }).from(users).where(eq(users.id, id)).limit(1);
+  if (!target || !approvalAllowed({ actorRole, targetRole: target.role })) {
+    return { error: 'That person is not waiting anymore.' };
+  }
+  await db.transaction(async (tx) => {
+    const removed = await tx
+      .delete(users)
+      .where(and(eq(users.id, id), eq(users.role, 'pending')))
+      .returning({ id: users.id });
+    if (removed.length === 0) return;
+    await tx.execute(sql`delete from neon_auth."user" where id = ${id}`);
+  });
+  return {};
 }
 
 export async function listMembers(): Promise<Member[]> {

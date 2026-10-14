@@ -8,7 +8,7 @@ import { nextStopForMember } from '@/lib/handles';
 export const dynamic = 'force-dynamic';
 
 const ERRORS: Record<string, string> = {
-  invite: 'That sign-in is not on the invite list. Ask Jake for a link.',
+  invite: 'That sign-in is not on the list yet. Make an account, or ask Jake for a link.',
   setup: 'Sign-in is not connected yet.',
 };
 
@@ -31,7 +31,7 @@ export default async function SignInPage({
             <p className="mb-4 text-sm text-brand-green-dark">Password saved. Sign in with it.</p>
           ) : null}
           {banner ? <p className="mb-4 text-sm font-bold text-red-700">{banner}</p> : null}
-          <SignInForm intro="Use the email and password you chose from Jake's invite. You stay signed in on this browser." />
+          <SignInForm intro="Use your email and password. You stay signed in on this browser." />
         </Window>
       </div>
     </PageWrapper>
