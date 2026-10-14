@@ -23,8 +23,8 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
   async redirects() {
     return [
-      { source: "/studio", destination: "/trip-reports", permanent: false },
-      { source: "/studio/:path*", destination: "/trip-reports", permanent: false },
+      { source: "/studio", destination: "/admin", permanent: false },
+      { source: "/studio/:path*", destination: "/admin", permanent: false },
     ];
   },
 };
