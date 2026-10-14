@@ -13,13 +13,18 @@ export type Activity = (typeof ACTIVITIES)[number];
 export const MAP_GROUPS = {
   foot: {
     label: 'Foot',
-    color: '#2d5016',
+    color: '#c0392b',
     activities: ['hike', 'walk', 'run', 'trail_run'],
   },
-  wheels: {
-    label: 'Wheels / snow',
+  bike: {
+    label: 'Biking',
     color: '#1f4e9c',
-    activities: ['bike', 'ski', 'snowboard'],
+    activities: ['bike'],
+  },
+  snow: {
+    label: 'Ski / snowboard',
+    color: '#e67e22',
+    activities: ['ski', 'snowboard'],
   },
 } as const satisfies Record<string, { label: string; color: string; activities: readonly Activity[] }>;
 
@@ -30,9 +35,9 @@ export const ACTIVITY_META: Record<Activity, { label: string; icon: string; grou
   walk: { label: 'Walk', icon: 'shoe', group: 'foot' },
   run: { label: 'Run', icon: 'sneaker', group: 'foot' },
   trail_run: { label: 'Trail run', icon: 'sneaker', group: 'foot' },
-  bike: { label: 'Bike', icon: 'bike', group: 'wheels' },
-  ski: { label: 'Ski', icon: 'skis', group: 'wheels' },
-  snowboard: { label: 'Snowboard', icon: 'snowboard', group: 'wheels' },
+  bike: { label: 'Bike', icon: 'bike', group: 'bike' },
+  ski: { label: 'Ski', icon: 'skis', group: 'snow' },
+  snowboard: { label: 'Snowboard', icon: 'snowboard', group: 'snow' },
 };
 
 export function mapGroupForActivity(activity: Activity): MapGroup {

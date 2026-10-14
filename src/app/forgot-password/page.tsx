@@ -3,12 +3,13 @@ import PageWrapper from '@/components/ui/PageWrapper';
 import { ForgotPasswordForm } from '@/components/auth/ForgotPasswordForm';
 import { Window } from '@/components/retro/Window';
 import { getViewer } from '@/app/sign-in/actions';
+import { nextStopForMember } from '@/lib/handles';
 
 export const dynamic = 'force-dynamic';
 
 export default async function ForgotPasswordPage() {
   const viewer = await getViewer();
-  if (viewer?.handle) redirect(`/hikers/${viewer.handle}`);
+  if (viewer) redirect(nextStopForMember(viewer));
 
   return (
     <PageWrapper>

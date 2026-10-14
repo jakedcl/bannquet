@@ -11,6 +11,7 @@ type ReportRow = {
   title: string;
   authorName: string | null;
   tripDate: string | null;
+  activity: string | null;
   tags: string[] | null;
   body: string;
   legacySanityId: string | null;
@@ -30,6 +31,7 @@ function listItem(row: ReportRow, reportPhotos: TripReportPhoto[]): TripReportLi
     title: row.title,
     authorName: row.authorName || 'Unknown',
     tripDate: row.tripDate,
+    activity: row.activity,
     tags: row.tags ?? [],
     excerpt: excerptFrom(row.body),
     coverUrl: reportPhotos[0]?.url ?? null,
@@ -77,6 +79,7 @@ const reportColumns = {
   title: tripReports.title,
   authorName: tripReports.legacyAuthorName,
   tripDate: tripReports.tripDate,
+  activity: tripReports.activity,
   tags: tripReports.tags,
   body: tripReports.body,
   legacySanityId: tripReports.legacySanityId,

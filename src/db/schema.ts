@@ -182,6 +182,11 @@ export const tripReports = pgTable(
     title: text('title').notNull(),
     body: text('body').notNull().default(''),
     tripDate: date('trip_date'),
+    activity: activityEnum('activity'),
+    taggedUserIds: text('tagged_user_ids')
+      .array()
+      .notNull()
+      .default(sql`ARRAY[]::text[]`),
     point: geographyPoint('point'),
     tags: text('tags')
       .array()
@@ -227,6 +232,7 @@ export const tracks = pgTable(
     id: uuid('id').primaryKey().defaultRandom(),
     userId: text('user_id').references(() => users.id, { onDelete: 'set null' }),
     tripId: uuid('trip_id').references(() => trips.id, { onDelete: 'set null' }),
+    tripReportId: uuid('trip_report_id').references(() => tripReports.id, { onDelete: 'cascade' }),
     source: trackSourceEnum('source').notNull(),
     externalId: text('external_id'),
     name: text('name').notNull(),
@@ -241,6 +247,7 @@ export const tracks = pgTable(
   (table) => [
     index('tracks_line_idx').using('gist', table.line),
     index('tracks_trip_idx').on(table.tripId),
+    index('tracks_trip_report_idx').on(table.tripReportId),
     index('tracks_user_idx').on(table.userId),
     uniqueIndex('tracks_source_external_unique').on(table.source, table.externalId),
   ],

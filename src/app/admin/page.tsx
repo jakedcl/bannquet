@@ -61,7 +61,7 @@ export default async function AdminPage() {
               headers={['Name', 'Email', 'Role', 'Password']}
               rows={members.map((member) => [
                 member.handle ? (
-                  <Link key={member.id} href={`/hikers/${member.handle}`} className="underline">
+                  <Link key={member.id} href={`/user/${member.handle}`} className="underline">
                     {member.displayName || member.handle}
                   </Link>
                 ) : (

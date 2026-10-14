@@ -3,6 +3,7 @@ import PageWrapper from '@/components/ui/PageWrapper';
 import { SignInForm } from '@/components/auth/SignInForm';
 import { Window } from '@/components/retro/Window';
 import { getViewer } from '@/app/sign-in/actions';
+import { nextStopForMember } from '@/lib/handles';
 
 export const dynamic = 'force-dynamic';
 
@@ -17,7 +18,7 @@ export default async function SignInPage({
   searchParams: Promise<{ error?: string; reset?: string }>;
 }) {
   const viewer = await getViewer();
-  if (viewer?.handle) redirect(`/hikers/${viewer.handle}`);
+  if (viewer) redirect(nextStopForMember(viewer));
 
   const params = await searchParams;
   const banner = params.error ? ERRORS[params.error] : null;

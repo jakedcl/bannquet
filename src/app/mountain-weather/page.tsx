@@ -48,7 +48,7 @@ export default function MountainWeatherPage() {
 }
 
 function AnimatedHero() {
-  const words = ['northeast', 'mountain', 'weather'];
+  const words = ['regional', 'mountain', 'weather'];
   return (
     <div className="flex flex-col items-center text-center w-full px-2">
       <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3 mb-4 sm:mb-6 flex-wrap">

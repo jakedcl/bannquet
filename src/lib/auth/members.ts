@@ -11,7 +11,11 @@ import {
   normalizeEmail,
   signInAllowed,
 } from '@/lib/membership';
-import { handleFromName, isHandle, nextHandleCandidate } from '@/lib/handles';
+import {
+  displayNameProblem,
+  normalizeUsername,
+  usernameAvailability,
+} from '@/lib/handles';
 
 export type Member = {
   id: string;
@@ -71,7 +75,9 @@ export async function findMemberByAuthId(id: string): Promise<Member | null> {
 
 export async function findMemberByHandle(handle: string): Promise<Member | null> {
   if (!isDatabaseConfigured()) return null;
-  const [row] = await getDb().select().from(users).where(eq(users.handle, handle)).limit(1);
+  const username = handle.trim().toLowerCase();
+  if (!username) return null;
+  const [row] = await getDb().select().from(users).where(eq(users.handle, username)).limit(1);
   return row ? toMember(row) : null;
 }
 
@@ -131,16 +137,6 @@ export async function emailMayCreateAccount(email: string, code: string): Promis
   });
 }
 
-async function unusedHandle(base: string, exceptId?: string): Promise<string> {
-  const db = getDb();
-  for (let attempt = 0; attempt < 40; attempt += 1) {
-    const candidate = nextHandleCandidate(base, attempt);
-    const [found] = await db.select({ id: users.id }).from(users).where(eq(users.handle, candidate)).limit(1);
-    if (!found || found.id === exceptId) return candidate;
-  }
-  return nextHandleCandidate(base, 40);
-}
-
 export async function ensureMember(authUser: AuthUser): Promise<{ member: Member; created: boolean } | null> {
   if (!isDatabaseConfigured()) return null;
   const db = getDb();
@@ -170,14 +166,13 @@ export async function ensureMember(authUser: AuthUser): Promise<{ member: Member
   const admin = isAdminEmail(email, adminList());
   if (!openInvite && !admin) return null;
 
-  const displayName = authUser.name?.trim() || email.split('@')[0] || 'Friend';
-  const handle = await unusedHandle(handleFromName(displayName));
+  const displayName = authUser.name?.trim() || null;
   const [created] = await db
     .insert(users)
     .values({
       id: authUser.id,
       email,
-      handle,
+      handle: null,
       displayName,
       avatarUrl: authUser.image ?? null,
       role: admin ? 'admin' : 'member',
@@ -266,20 +261,19 @@ export async function updateMemberProfile(
     avatarUrl?: string | null;
   },
 ): Promise<{ member?: Member; error?: string }> {
-  if (!isHandle(input.handle)) {
-    return { error: 'Pick a handle with 3 to 24 letters, numbers, or hyphens.' };
-  }
+  const nameProblem = displayNameProblem(input.displayName);
+  if (nameProblem) return { error: nameProblem };
+  const username = normalizeUsername(input.handle);
   const db = getDb();
-  const [taken] = await db.select({ id: users.id }).from(users).where(eq(users.handle, input.handle)).limit(1);
-  if (taken && taken.id !== id) {
-    return { error: 'That handle is already taken.' };
-  }
+  const [taken] = await db.select({ id: users.id }).from(users).where(eq(users.handle, username)).limit(1);
+  const problem = usernameAvailability({ username, takenById: taken?.id ?? null, selfId: id });
+  if (problem) return { error: problem };
 
   const [updated] = await db
     .update(users)
     .set({
-      displayName: input.displayName,
-      handle: input.handle,
+      displayName: input.displayName.trim(),
+      handle: username,
       bio: input.bio || null,
       homeRegion: input.homeRegion || null,
       favoriteActivities: input.favoriteActivities,
