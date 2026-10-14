@@ -58,13 +58,16 @@ export type ActivityTally = {
   latest: string;
 };
 
-/** Highest count wins. A tie goes to the latest upload, then the activity name. */
-export function pickMostDoneActivity(rows: ActivityTally[]): ActivityTally | null {
-  const valid = rows.filter((row) => row.count > 0 && isActivity(row.activity));
-  if (valid.length === 0) return null;
-  return valid.slice().sort((a, b) => {
+/** Every logged activity, highest count first. A tie goes to the latest upload, then the name. */
+export function sortLoggedActivities(rows: ActivityTally[]): ActivityTally[] {
+  return rows.filter((row) => row.count > 0 && isActivity(row.activity)).slice().sort((a, b) => {
     if (b.count !== a.count) return b.count - a.count;
     if (a.latest !== b.latest) return a.latest < b.latest ? 1 : -1;
     return a.activity < b.activity ? -1 : a.activity > b.activity ? 1 : 0;
-  })[0] ?? null;
+  });
+}
+
+/** Highest count wins. A tie goes to the latest upload, then the activity name. */
+export function pickMostDoneActivity(rows: ActivityTally[]): ActivityTally | null {
+  return sortLoggedActivities(rows)[0] ?? null;
 }

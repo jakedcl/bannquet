@@ -44,7 +44,7 @@ import {
   usernameProblem,
 } from '@/lib/handles';
 import { isPublicBlobUrl } from '@/lib/photos';
-import { REGION_OPTIONS } from '@/lib/regions';
+import { homeStateCode } from '@/lib/us-states';
 
 const PROFILE_CLAIM = 'bannquet_profile';
 
@@ -298,12 +298,13 @@ export async function saveProfile(
   const displayName = String(formData.get('displayName') ?? '');
   const handle = String(formData.get('username') ?? formData.get('handle') ?? '');
   const bio = String(formData.get('bio') ?? '').trim().slice(0, 500);
-  const homeRegion = String(formData.get('homeRegion') ?? '').trim();
+  const homeRegionRaw = String(formData.get('homeRegion') ?? '').trim();
+  const homeRegion = homeStateCode(homeRegionRaw) ?? '';
 
   const nameProblem = displayNameProblem(displayName);
   if (nameProblem) return { error: nameProblem };
-  if (homeRegion && !REGION_OPTIONS.some((option) => option.code === homeRegion)) {
-    return { error: 'Pick a home region from the list.' };
+  if (homeRegionRaw && !homeRegion) {
+    return { error: 'Pick a state from the list.' };
   }
 
   let avatarUrl: string | undefined;

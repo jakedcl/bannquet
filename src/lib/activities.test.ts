@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { ACTIVITIES, MAP_GROUPS, mapColorForActivity, pickMostDoneActivity } from './activities';
+import { ACTIVITIES, MAP_GROUPS, mapColorForActivity, pickMostDoneActivity, sortLoggedActivities } from './activities';
 
 test('every activity belongs to one map group', () => {
   const seen = new Map<string, string>();
@@ -44,4 +44,13 @@ test('most-done activity follows upload counts, then the latest day', () => {
     { activity: 'snowboard', count: 1, latest: '2026-01-01' },
     { activity: 'bike', count: 1, latest: '2026-01-01' },
   ])?.activity, 'bike');
+});
+
+test('logged activities stay in count order', () => {
+  assert.deepEqual(sortLoggedActivities([
+    { activity: 'hike', count: 1, latest: '2026-01-01' },
+    { activity: 'ski', count: 4, latest: '2026-01-02' },
+    { activity: 'bike', count: 2, latest: '2026-01-03' },
+    { activity: 'walk', count: 0, latest: '2026-01-04' },
+  ]).map((row) => row.activity), ['ski', 'bike', 'hike']);
 });
