@@ -1,6 +1,6 @@
 import { sql } from 'drizzle-orm';
 import { getDb } from '@/db';
-import { pickMostDoneActivity, type Activity } from '@/lib/activities';
+import { sortLoggedActivities, type Activity } from '@/lib/activities';
 import { isLatLng } from '@/lib/photos';
 import { isPinKind, type PinKind } from '@/lib/pin-kinds';
 import type { PreparedPhoto } from '@/lib/posts';
@@ -55,7 +55,8 @@ function num(value: unknown): number | null {
   return Number.isFinite(parsed) ? parsed : null;
 }
 
-export async function loadMostDoneActivity(userId: string): Promise<Activity | null> {
+/** Activity types this member has logged on a post, route, or pin, busiest first. */
+export async function loadLoggedActivities(userId: string): Promise<Activity[]> {
   const result = await getDb().execute(sql`
     select activity, count(*)::int as n, max(happened)::text as latest
     from (
@@ -73,13 +74,12 @@ export async function loadMostDoneActivity(userId: string): Promise<Activity | n
     ) uploads
     group by activity
   `);
-  const winner = pickMostDoneActivity(asRows(result).flatMap((row) => {
+  return sortLoggedActivities(asRows(result).flatMap((row) => {
     const activity = text(row.activity);
     const count = num(row.n);
     if (!activity || count == null) return [];
     return [{ activity: activity as Activity, count, latest: text(row.latest) ?? '' }];
-  }));
-  return winner?.activity ?? null;
+  })).map((row) => row.activity);
 }
 
 export async function loadProfilePins(userId: string): Promise<PinSummary[]> {

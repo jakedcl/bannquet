@@ -236,6 +236,14 @@ button, .retro-button {
   box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.2);
 }
 
+.avatar-frame {
+  padding: 0;
+  overflow: hidden;
+  border: 3px outset #cccccc;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+  background: #e8e8e8;
+}
+
 .retro-banner {
   background: linear-gradient(to bottom, var(--brand-green-light) 0%, var(--brand-green) 50%, var(--brand-green-dark) 100%);
   border-bottom: 4px solid var(--brand-green-dark);

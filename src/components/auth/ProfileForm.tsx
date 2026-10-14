@@ -3,7 +3,7 @@
 import { useActionState, useEffect, useRef, useState, type ChangeEvent, type FormEvent } from 'react';
 import { saveProfile } from '@/app/sign-in/actions';
 import { prepareAvatar } from '@/components/auth/prepare-avatar';
-import { REGION_OPTIONS } from '@/lib/regions';
+import { homeStateCode, US_STATES } from '@/lib/us-states';
 import { Button } from '@/components/retro/Button';
 import type { Member } from '@/lib/auth/members';
 
@@ -59,13 +59,13 @@ export function ProfileForm({ member }: { member: Member }) {
         <span className="text-sm font-bold">Home region</span>
         <select
           name="homeRegion"
-          defaultValue={member.homeRegion ?? ''}
+          defaultValue={homeStateCode(member.homeRegion) ?? ''}
           className="w-full retro-box-inset bg-white px-3 py-2 text-base"
         >
           <option value="">Not set</option>
-          {REGION_OPTIONS.map((option) => (
-            <option key={option.code} value={option.code}>
-              {option.label}
+          {US_STATES.map((state) => (
+            <option key={state.code} value={state.code}>
+              {state.name}
             </option>
           ))}
         </select>
@@ -147,7 +147,7 @@ function PhotoField({
     <div className="space-y-2">
       <span className="block text-sm font-bold">Photo</span>
       <div className="flex items-center gap-4">
-        <div className="retro-box flex h-20 w-20 items-center justify-center overflow-hidden bg-gray-100">
+        <div className="avatar-frame flex h-20 w-20 items-center justify-center">
           {preview ? (
             // Native img: the preview is a blob: URL, which next/image does not accept.
             // eslint-disable-next-line @next/next/no-img-element

@@ -9,11 +9,11 @@ import { Window } from '@/components/retro/Window';
 import { getViewer } from '@/app/sign-in/actions';
 import { findHandleRedirect, findMemberByHandle } from '@/lib/auth/members';
 import { ACTIVITY_META, isActivity } from '@/lib/activities';
-import { loadMostDoneActivity, loadProfilePins } from '@/lib/pins';
+import { loadLoggedActivities, loadProfilePins } from '@/lib/pins';
 import { PIN_KIND_LABELS, isPinKind } from '@/lib/pin-kinds';
 import { formatFeetGain, formatMiles } from '@/lib/gpx';
 import { loadProfileLibrary } from '@/lib/posts';
-import { REGION_LABELS, isRegionCode } from '@/lib/regions';
+import { homeStateLabel } from '@/lib/us-states';
 import { challengeProgress, loadChallenges } from '@/lib/challenges';
 import { canContribute } from '@/lib/membership';
 import { ensurePeaks, summitCountsByUser } from '@/lib/summits';
@@ -30,9 +30,9 @@ export default async function UserPage({ params }: { params: Promise<{ username:
     notFound();
   }
   const viewer = await getViewer();
-  const [library, mostDone, pins] = await Promise.all([
+  const [library, activities, pins] = await Promise.all([
     loadProfileLibrary(member.id),
-    loadMostDoneActivity(member.id),
+    loadLoggedActivities(member.id),
     loadProfilePins(member.id),
   ]);
   const challenges = loadChallenges();
@@ -41,7 +41,7 @@ export default async function UserPage({ params }: { params: Promise<{ username:
   const canAdd = viewer?.id === member.id && canContribute(viewer.role);
 
   const name = member.displayName || member.handle || 'Friend';
-  const region = member.homeRegion && isRegionCode(member.homeRegion) ? REGION_LABELS[member.homeRegion] : null;
+  const region = homeStateLabel(member.homeRegion);
 
   return (
     <PageWrapper>
@@ -54,15 +54,22 @@ export default async function UserPage({ params }: { params: Promise<{ username:
                 alt=""
                 width={88}
                 height={88}
-                className="retro-box h-[88px] w-[88px] object-cover"
+                className="avatar-frame h-[88px] w-[88px] object-cover"
               />
             ) : (
-              <div className="retro-box flex h-[88px] w-[88px] items-center justify-center bg-beige text-2xl font-bold">
+              <div className="avatar-frame flex h-[88px] w-[88px] items-center justify-center bg-beige text-2xl font-bold">
                 {name.slice(0, 1).toUpperCase()}
               </div>
             )}
             <div className="space-y-2">
               <p className="text-sm text-gray-600">@{member.handle}</p>
+              {activities.length > 0 ? (
+                <div className="flex flex-wrap gap-1">
+                  {activities.map((activity) => (
+                    <Badge key={activity}>{ACTIVITY_META[activity].label}</Badge>
+                  ))}
+                </div>
+              ) : null}
               {region ? <p className="text-sm">Home: {region}</p> : null}
               {viewer?.id === member.id ? (
                 <Button href="/settings#edit-profile" tone="yellow">Edit profile</Button>
@@ -70,17 +77,6 @@ export default async function UserPage({ params }: { params: Promise<{ username:
             </div>
           </div>
           {member.bio ? <p className="mt-4 whitespace-pre-wrap text-sm">{member.bio}</p> : null}
-          <div className="mt-4 space-y-2">
-            <p className="text-xs font-bold uppercase tracking-wide">Most done</p>
-            {mostDone ? (
-              <>
-                <Badge>{ACTIVITY_META[mostDone].label}</Badge>
-                <p className="text-sm text-gray-600">From posts, routes, and pins.</p>
-              </>
-            ) : (
-              <p className="text-sm text-gray-600">No uploads yet.</p>
-            )}
-          </div>
         </Window>
         <Window title="Challenges">
           <div className="flex flex-wrap gap-4">

@@ -28,10 +28,6 @@ export default async function SettingsPage({
               <p className="text-sm font-bold">{APPROVAL_WAIT}</p>
             ) : (
               <>
-                <p className="mb-4 text-sm text-gray-700">
-                  Change your display name, photo, and the rest of your page.
-                  Your username stays the one you picked when you signed up.
-                </p>
                 {params.welcome || profileNeedsNames(viewer) ? (
                   <div className="mb-4">
                     <StatusBar>
