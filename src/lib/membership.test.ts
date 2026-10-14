@@ -6,8 +6,7 @@ import {
   isAdminEmail,
   isEmail,
   normalizeEmail,
-  magicLinkError,
-  plainAuthError,
+  accountCreateAllowed,
   signInAllowed,
 } from './membership';
 
@@ -42,19 +41,30 @@ test('an invite is open until it is used or expires', () => {
   );
 });
 
-test('sign-in is limited to members, open invites, and admins', () => {
+test('password sign-in is limited to members and admins', () => {
   const admins = ['jake@example.com'];
-  assert.equal(signInAllowed({ email: 'jake@example.com', adminEmails: admins, member: false, openInvite: false }), true);
-  assert.equal(signInAllowed({ email: 'friend@example.com', adminEmails: admins, member: false, openInvite: true }), true);
-  assert.equal(signInAllowed({ email: 'friend@example.com', adminEmails: admins, member: true, openInvite: false }), true);
-  assert.equal(signInAllowed({ email: 'stranger@example.com', adminEmails: admins, member: false, openInvite: false }), false);
-  assert.equal(signInAllowed({ email: 'nope', adminEmails: admins, member: true, openInvite: true }), false);
+  assert.equal(signInAllowed({ email: 'jake@example.com', adminEmails: admins, member: false }), true);
+  assert.equal(signInAllowed({ email: 'friend@example.com', adminEmails: admins, member: true }), true);
+  assert.equal(signInAllowed({ email: 'stranger@example.com', adminEmails: admins, member: false }), false);
+  assert.equal(signInAllowed({ email: 'nope', adminEmails: admins, member: true }), false);
 });
 
-test('auth failures stay in plain language', () => {
-  assert.match(plainAuthError({ code: 'TOO_MANY_ATTEMPTS' }), /Wait a few minutes/);
-  assert.match(plainAuthError({ message: 'something else' }), /did not send/);
-  assert.match(magicLinkError({ message: 'Magic link plugin is not enabled' }), /Use the code/);
-  assert.match(magicLinkError({ status: 404, message: 'Not Found' }), /Use the code/);
-  assert.match(magicLinkError({ message: 'something else' }), /did not send/);
+test('only an open invite can create an account', () => {
+  const admins = ['jake@example.com'];
+  assert.equal(
+    accountCreateAllowed({ email: 'friend@example.com', adminEmails: admins, member: false, openInvite: true }),
+    true,
+  );
+  assert.equal(
+    accountCreateAllowed({ email: 'friend@example.com', adminEmails: admins, member: true, openInvite: true }),
+    false,
+  );
+  assert.equal(
+    accountCreateAllowed({ email: 'stranger@example.com', adminEmails: admins, member: false, openInvite: false }),
+    false,
+  );
+  assert.equal(
+    accountCreateAllowed({ email: 'jake@example.com', adminEmails: admins, member: false, openInvite: false }),
+    true,
+  );
 });

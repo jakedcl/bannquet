@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
-    "test": "tsx --test src/lib/portable-text.test.ts src/lib/activities.test.ts src/lib/regions.test.ts src/lib/membership.test.ts src/lib/handles.test.ts",
+    "test": "tsx --test src/lib/portable-text.test.ts src/lib/activities.test.ts src/lib/regions.test.ts src/lib/membership.test.ts src/lib/handles.test.ts src/lib/passwords.test.ts",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:migrate-sanity": "tsx scripts/migrate-sanity-trip-reports.ts"

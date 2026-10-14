@@ -2,7 +2,15 @@ import { and, desc, eq, gt, isNull } from 'drizzle-orm';
 import { getDb, isDatabaseConfigured } from '@/db';
 import { invites, users } from '@/db/schema';
 import { isActivity, type Activity } from '@/lib/activities';
-import { adminEmailsFromEnv, inviteCode, isAdminEmail, normalizeEmail, signInAllowed } from '@/lib/membership';
+import {
+  accountCreateAllowed,
+  adminEmailsFromEnv,
+  inviteCode,
+  inviteState,
+  isAdminEmail,
+  normalizeEmail,
+  signInAllowed,
+} from '@/lib/membership';
 import { handleFromName, isHandle, nextHandleCandidate } from '@/lib/handles';
 
 export type Member = {
@@ -93,12 +101,33 @@ export async function emailMaySignIn(email: string): Promise<boolean> {
   if (!isDatabaseConfigured()) return false;
   const normalized = normalizeEmail(email);
   const member = await findMemberByEmail(normalized);
-  const invite = member ? null : await findOpenInvite(normalized);
   return signInAllowed({
     email: normalized,
     adminEmails: adminList(),
     member: Boolean(member),
-    openInvite: Boolean(invite),
+  });
+}
+
+export async function emailMayCreateAccount(email: string, code: string): Promise<boolean> {
+  if (!isDatabaseConfigured()) return false;
+  const normalized = normalizeEmail(email);
+  const member = await findMemberByEmail(normalized);
+  const invite = code ? await getInviteByCode(code) : null;
+  const openInvite = Boolean(
+    invite &&
+      invite.email &&
+      normalizeEmail(invite.email) === normalized &&
+      inviteState({
+        email: invite.email,
+        expiresAt: invite.expiresAt,
+        usedAt: invite.usedAt,
+      }) === 'open',
+  );
+  return accountCreateAllowed({
+    email: normalized,
+    adminEmails: adminList(),
+    member: Boolean(member),
+    openInvite,
   });
 }
 

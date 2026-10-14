@@ -39,43 +39,22 @@ export function signInAllowed(input: {
   email: string;
   adminEmails: readonly string[];
   member: boolean;
-  openInvite: boolean;
 }): boolean {
   if (!isEmail(input.email)) return false;
   if (input.member) return true;
-  if (input.openInvite) return true;
   return isAdminEmail(input.email, input.adminEmails);
 }
 
-type AuthFailure = { message?: string; code?: string; status?: number } | null | undefined;
-
-export function plainAuthError(error: AuthFailure): string {
-  const code = error?.code ?? '';
-  const message = (error?.message ?? '').toLowerCase();
-  if (code === 'TOO_MANY_ATTEMPTS' || message.includes('too many')) {
-    return 'Too many tries. Wait a few minutes, then ask for a new code.';
-  }
-  if (message.includes('otp') && message.includes('invalid')) {
-    return 'That code did not match. Check the email and try again.';
-  }
-  if (message.includes('expired')) {
-    return 'That code expired. Ask for a new one.';
-  }
-  return 'The sign-in email did not send. Try again in a minute, or ask Jake to text you the invite link.';
-}
-
-export function magicLinkError(error: AuthFailure): string {
-  const message = (error?.message ?? '').toLowerCase();
-  if (
-    error?.status === 404 ||
-    message.includes('not found') ||
-    message.includes('magic') ||
-    message.includes('not enabled') ||
-    message.includes('plugin')
-  ) {
-    return 'Email links are not turned on yet. Use the code instead.';
-  }
-  return plainAuthError(error);
+export function accountCreateAllowed(input: {
+  email: string;
+  adminEmails: readonly string[];
+  member: boolean;
+  openInvite: boolean;
+}): boolean {
+  if (!isEmail(input.email)) return false;
+  if (input.member) return false;
+  if (input.openInvite) return true;
+  return isAdminEmail(input.email, input.adminEmails);
 }
 
 export function inviteCode(): string {

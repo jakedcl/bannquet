@@ -20,7 +20,14 @@ export function GET(request: Request, context: RouteContext) {
   return delegate('GET', request, context);
 }
 
-export function POST(request: Request, context: RouteContext) {
+export async function POST(request: Request, context: RouteContext) {
+  const { path } = await context.params;
+  if (path.join('/') === 'sign-up/email') {
+    return Response.json(
+      { message: 'Ask Jake for an invite link to make an account.', code: 'SIGN_UP_DISABLED' },
+      { status: 403 },
+    );
+  }
   return delegate('POST', request, context);
 }
 

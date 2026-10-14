@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import PageWrapper from '@/components/ui/PageWrapper';
-import { SignInPanel } from '@/components/auth/SignInPanel';
+import { CreateAccountForm } from '@/components/auth/CreateAccountForm';
 import { Window } from '@/components/retro/Window';
 import { getInviteByCode } from '@/lib/auth/members';
 import { inviteState } from '@/lib/membership';
@@ -36,10 +36,7 @@ export default async function InvitePage({ params }: { params: Promise<{ code: s
       <div className="mx-auto max-w-lg px-4 py-10">
         <Window title="You're invited">
           {state === 'open' && invite.email ? (
-            <SignInPanel
-              lockedEmail={invite.email}
-              intro="This invite is for the email below. Ask for a code, type it here, and you're in. No password."
-            />
+            <CreateAccountForm email={invite.email} inviteCode={invite.code} />
           ) : null}
           {state === 'used' ? (
             <p className="text-sm">
