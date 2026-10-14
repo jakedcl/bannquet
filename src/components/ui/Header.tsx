@@ -33,11 +33,9 @@ export default function Header({ account = null }: { account?: HeaderAccount }) 
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Navigation items
   const navItems = [
     { href: '/mountain-weather', label: 'mountain weather' },
     { href: '/map', label: 'map' },
-    { href: '/community', label: 'community' },
   ];
 
   const isHomepage = pathname === '/';
@@ -97,6 +95,7 @@ export default function Header({ account = null }: { account?: HeaderAccount }) 
                   {item.label}
                 </Link>
               ))}
+            <CommunityMenu pathname={pathname} />
             <AccountLinks account={account} pathname={pathname} />
             
             {/* Region selector - only show on weather pages */}
@@ -186,6 +185,7 @@ export default function Header({ account = null }: { account?: HeaderAccount }) 
                       </Link>
                     );
                   })}
+                  <CommunityMenu pathname={pathname} stacked />
                   <AccountLinks account={account} pathname={pathname} stacked />
                 </div>
               </div>
@@ -197,18 +197,89 @@ export default function Header({ account = null }: { account?: HeaderAccount }) 
   );
 } 
 
+const COMMUNITY_LINKS = [
+  { href: '/posts', label: 'Posts' },
+  { href: '/stats', label: 'Stats' },
+  { href: '/trips', label: 'Trips' },
+  { href: '/map', label: 'Map' },
+] as const;
+
 function navItemActive(pathname: string, href: string): boolean {
-  if (href === '/community') {
-    return pathname === '/community'
-      || pathname.startsWith('/community/')
-      || pathname === '/posts'
-      || pathname.startsWith('/posts/')
-      || pathname === '/stats'
-      || pathname.startsWith('/stats/')
-      || pathname === '/trips'
-      || pathname.startsWith('/trips/');
-  }
   return pathname === href || pathname.startsWith(`${href}/`);
+}
+
+function communitySection(pathname: string): boolean {
+  return pathname === '/posts' || pathname.startsWith('/posts/')
+    || pathname === '/stats' || pathname.startsWith('/stats/')
+    || pathname === '/trips' || pathname.startsWith('/trips/');
+}
+
+function CommunityMenu({ pathname, stacked = false }: { pathname: string; stacked?: boolean }) {
+  const [openPath, setOpenPath] = useState<string | null>(null);
+  const open = openPath === pathname;
+  const menuRef = useRef<HTMLDivElement | null>(null);
+  const buttonClass = stacked
+    ? 'block w-full px-4 py-3 text-base font-semibold rounded-xl border text-center text-white border-white/30 hover:border-white hover:bg-white/10'
+    : 'rounded-none px-4 py-2 text-sm font-bold tracking-wide uppercase transition-all retro-button-blue text-white';
+  const itemClass = stacked
+    ? 'block w-full px-4 py-3 text-base font-semibold rounded-xl border text-center text-white border-white/30 hover:border-white hover:bg-white/10'
+    : 'retro-button rounded-none px-3 py-1 text-left text-xs font-bold uppercase';
+  const highlighted = open || communitySection(pathname);
+
+  useEffect(() => {
+    if (!open) return;
+    const close = (event: PointerEvent) => {
+      if (!menuRef.current?.contains(event.target as Node)) setOpenPath(null);
+    };
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setOpenPath(null);
+    };
+    document.addEventListener('pointerdown', close);
+    document.addEventListener('keydown', onKey);
+    return () => {
+      document.removeEventListener('pointerdown', close);
+      document.removeEventListener('keydown', onKey);
+    };
+  }, [open]);
+
+  return (
+    <div ref={menuRef} className={stacked ? '' : 'relative'}>
+      <button
+        type="button"
+        aria-expanded={open}
+        aria-haspopup="menu"
+        onClick={() => setOpenPath(open ? null : pathname)}
+        className={highlighted
+          ? (stacked
+            ? 'block w-full border border-white bg-white px-4 py-3 text-center text-base font-semibold text-brand-green rounded-xl'
+            : buttonClass.replace('retro-button-blue', 'retro-button-yellow'))
+          : buttonClass}
+      >
+        Community
+      </button>
+      {open ? (
+        <div
+          role="menu"
+          aria-label="Community"
+          className={stacked
+            ? 'mt-2 space-y-2'
+            : 'absolute left-0 top-full z-30 mt-1 flex min-w-40 flex-col gap-1 bg-beige p-1 text-gray-900 retro-box'}
+        >
+          {COMMUNITY_LINKS.map((item) => (
+            <Link
+              key={item.href}
+              role="menuitem"
+              href={item.href}
+              className={itemClass}
+              onClick={() => setOpenPath(null)}
+            >
+              {item.label}
+            </Link>
+          ))}
+        </div>
+      ) : null}
+    </div>
+  );
 }
 
 function AccountLinks({
