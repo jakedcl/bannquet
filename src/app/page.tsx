@@ -70,6 +70,12 @@ export default function Home() {
                 Mountain Weather
               </Link>
               <Link
+                href="/map"
+                className="retro-button-orange px-10 py-4 font-bold text-lg uppercase tracking-wider rounded-none"
+              >
+                Group Map
+              </Link>
+              <Link
                 href="/trip-reports"
                 className="retro-button-orange px-10 py-4 font-bold text-lg uppercase tracking-wider rounded-none"
               >

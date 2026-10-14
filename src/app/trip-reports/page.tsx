@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import PageWrapper from '@/components/ui/PageWrapper';
 import TripCard from '@/components/trip-reports/TripCard';
-import { Button, Inset, StatusBar, Tooltip, Window } from '@/components/retro';
+import { Button, Inset, StatusBar, Window } from '@/components/retro';
 import { TripReportListItem } from '@/types/trip-reports';
 
 const TAGS = [
@@ -82,11 +82,10 @@ export default function TripReportsPage() {
               Stories and photos from mountain adventures across the Northeast.
             </p>
           </div>
-          <Tooltip label="New reports will be written on the site once friend accounts exist. This list shows reports that have already been published.">
-            <button type="button" className="text-sm font-bold uppercase tracking-wide text-brand-green underline decoration-dotted">
-              About posting
-            </button>
-          </Tooltip>
+          <div className="flex gap-3">
+            <Button tone="green" href="/trip-reports/new">Write a post</Button>
+            <Button tone="blue" href="/map">Map</Button>
+          </div>
         </div>
 
         <Window title="Filter" className="mb-8">

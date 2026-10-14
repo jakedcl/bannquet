@@ -34,6 +34,7 @@ export default function Header({ account = null }: { account?: HeaderAccount }) 
   // Navigation items
   const navItems = [
     { href: '/mountain-weather', label: 'mountain weather' },
+    { href: '/map', label: 'map' },
     { href: '/trip-reports', label: 'trip reports' },
   ];
 
