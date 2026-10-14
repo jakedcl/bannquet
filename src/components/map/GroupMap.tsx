@@ -117,6 +117,7 @@ export default function GroupMap({
     });
     map.addControl(new NavigationControl({ visualizePitch: true }), 'top-right');
     mapRef.current = map;
+    requestAnimationFrame(() => map.resize());
 
     map.on('click', (event) => {
       const pick = onPickRef.current;
@@ -318,7 +319,7 @@ export default function GroupMap({
 
   return (
     <div className={`relative h-full min-h-[420px] ${className}`}>
-      <div ref={containerRef} className={`absolute inset-0 ${picking ? 'cursor-crosshair' : ''}`} />
+      <div ref={containerRef} className={`h-full w-full ${picking ? 'cursor-crosshair' : ''}`} />
       <div className="absolute left-3 top-3 z-10 flex max-w-[calc(100%-4.5rem)] flex-wrap gap-2">
         {BASEMAPS.map((id) => (
           <button
