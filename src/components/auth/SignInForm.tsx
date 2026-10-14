@@ -32,6 +32,11 @@ export function SignInForm({ intro }: { intro: string }) {
           Forgot your password?
         </Link>
       </p>
+      <p className="text-sm">
+        <Link href="/sign-up" className="underline">
+          New here? Make an account
+        </Link>
+      </p>
     </form>
   );
 }

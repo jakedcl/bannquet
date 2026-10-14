@@ -2,11 +2,15 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import {
   adminEmailsFromEnv,
+  approvalAllowed,
+  canContribute,
   inviteState,
   isAdminEmail,
   isEmail,
   normalizeEmail,
   accountCreateAllowed,
+  publicSignUpAllowed,
+  roleForNewAccount,
   signInAllowed,
 } from './membership';
 
@@ -67,4 +71,36 @@ test('only an open invite can create an account', () => {
     accountCreateAllowed({ email: 'jake@example.com', adminEmails: admins, member: false, openInvite: false }),
     true,
   );
+});
+
+test('anyone new can ask for an account, and an invite skips the wait', () => {
+  const admins = ['jake@example.com'];
+  assert.equal(publicSignUpAllowed({ email: 'friend@example.com', member: false }), true);
+  assert.equal(publicSignUpAllowed({ email: 'friend@example.com', member: true }), false);
+  assert.equal(publicSignUpAllowed({ email: 'not an email', member: false }), false);
+  assert.equal(
+    roleForNewAccount({ email: 'friend@example.com', adminEmails: admins, openInvite: false, publicSignUp: true }),
+    'pending',
+  );
+  assert.equal(
+    roleForNewAccount({ email: 'friend@example.com', adminEmails: admins, openInvite: true, publicSignUp: true }),
+    'member',
+  );
+  assert.equal(
+    roleForNewAccount({ email: 'jake@example.com', adminEmails: admins, openInvite: false, publicSignUp: true }),
+    'admin',
+  );
+  assert.equal(
+    roleForNewAccount({ email: 'stranger@example.com', adminEmails: admins, openInvite: false, publicSignUp: false }),
+    null,
+  );
+});
+
+test('pending people can read, and only Jake can approve them', () => {
+  assert.equal(canContribute('pending'), false);
+  assert.equal(canContribute('member'), true);
+  assert.equal(canContribute('admin'), true);
+  assert.equal(approvalAllowed({ actorRole: 'admin', targetRole: 'pending' }), true);
+  assert.equal(approvalAllowed({ actorRole: 'member', targetRole: 'pending' }), false);
+  assert.equal(approvalAllowed({ actorRole: 'admin', targetRole: 'member' }), false);
 });

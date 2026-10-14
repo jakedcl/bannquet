@@ -6,9 +6,12 @@ import { redirect } from 'next/navigation';
 import { isActivity, type Activity } from '@/lib/activities';
 import { getAuth, isAuthConfigured } from '@/lib/auth/server';
 import {
+  approvePendingMember,
   createInvite,
+  denyPendingMember,
   emailMayCreateAccount,
   emailMaySignIn,
+  emailMaySignUpPublicly,
   ensureMember,
   findMemberByAuthId,
   findMemberByEmail,
@@ -21,7 +24,7 @@ import {
   markPasswordResetLinkUsed,
   savePasswordResetLink,
 } from '@/lib/auth/resets';
-import { isEmail, normalizeEmail } from '@/lib/membership';
+import { APPROVAL_WAIT, canContribute, isEmail, normalizeEmail } from '@/lib/membership';
 import {
   hashResetToken,
   newResetToken,
@@ -91,7 +94,7 @@ export async function signInWithPassword(
   if (!isDatabaseConfigured()) return { error: 'The member list is not connected yet.' };
 
   const allowed = await emailMaySignIn(email);
-  if (!allowed) return { error: 'That email is not on the invite list. Ask Jake for a link.' };
+  if (!allowed) return { error: 'No account for that email yet. Make one, or ask Jake for an invite.' };
 
   const { error } = await getAuth().signIn.email({ email, password, rememberMe: true });
   if (error) return { error: passwordAuthError(error, SIGN_IN_MISMATCH) };
@@ -143,6 +146,51 @@ export async function createAccount(
 
   // The new session cookie is on this response. The next request reads it and
   // finishes the member row. Reading the session in this same action misses it.
+  redirect('/auth/continue');
+}
+
+export async function createPublicAccount(
+  _prev: { error?: string } | null,
+  formData: FormData,
+): Promise<{ error?: string }> {
+  const email = normalizeEmail(String(formData.get('email') ?? ''));
+  const password = String(formData.get('password') ?? '');
+  const confirm = String(formData.get('confirm') ?? '');
+  const displayName = String(formData.get('displayName') ?? '');
+  const username = String(formData.get('username') ?? '');
+  if (!isEmail(email)) return { error: 'Enter a real email address.' };
+  const nameProblem = displayNameProblem(displayName);
+  if (nameProblem) return { error: nameProblem };
+  const userProblem = usernameProblem(username);
+  if (userProblem) return { error: userProblem };
+  const problem = passwordProblem(password);
+  if (problem) return { error: problem };
+  if (password !== confirm) return { error: 'Type the same password in both boxes.' };
+  if (!isAuthConfigured()) return { error: 'Sign-in is not set up yet.' };
+  if (!isDatabaseConfigured()) return { error: 'The member list is not connected yet.' };
+
+  const allowed = await emailMaySignUpPublicly(email);
+  if (!allowed) return { error: 'That email already has an account. Sign in, or use forgot password.' };
+
+  const taken = await findMemberByHandle(normalizeUsername(username));
+  if (taken) return { error: USERNAME_TAKEN };
+
+  const { error } = await getAuth().signUp.email({
+    email,
+    password,
+    name: displayName.trim(),
+  });
+  if (error) return { error: passwordAuthError(error, 'Could not make that account. Try again in a minute.') };
+
+  const jar = await cookies();
+  jar.set(PROFILE_CLAIM, encodeProfileClaim(displayName, username, true), {
+    httpOnly: true,
+    sameSite: 'lax',
+    secure: process.env.NODE_ENV === 'production',
+    path: '/',
+    maxAge: 60 * 15,
+  });
+
   redirect('/auth/continue');
 }
 
@@ -202,12 +250,15 @@ export async function finishSignIn(): Promise<void> {
   const claim = decodeProfileClaim(jar.get(PROFILE_CLAIM)?.value);
   jar.delete(PROFILE_CLAIM);
 
-  const result = await ensureMember({
-    id: user.id,
-    email: user.email,
-    name: user.name,
-    image: user.image,
-  });
+  const result = await ensureMember(
+    {
+      id: user.id,
+      email: user.email,
+      name: user.name,
+      image: user.image,
+    },
+    { publicSignUp: claim?.pending === true },
+  );
   if (!result) {
     await getAuth().signOut();
     redirect('/sign-in?error=invite');
@@ -243,6 +294,7 @@ export async function saveProfile(
   if (!user) return { error: 'Sign in again to save your profile.' };
   const member = await findMemberByAuthId(user.id);
   if (!member) return { error: 'Sign in again to save your profile.' };
+  if (!canContribute(member.role)) return { error: APPROVAL_WAIT };
 
   const displayName = String(formData.get('displayName') ?? '');
   const handle = String(formData.get('username') ?? formData.get('handle') ?? '');
@@ -288,6 +340,28 @@ export async function saveProfile(
   });
   if (saved.error || !saved.member) return { error: saved.error ?? 'Could not save that profile.' };
   redirect(nextStopForMember(saved.member));
+}
+
+export async function approveMember(
+  _prev: { error?: string } | null,
+  formData: FormData,
+): Promise<{ error?: string }> {
+  const admin = await requireAdmin();
+  if (!admin.member) return { error: admin.error ?? 'Only Jake can approve someone.' };
+  const userId = String(formData.get('userId') ?? '').trim();
+  if (!userId || userId === admin.member.id) return { error: 'That person is not waiting anymore.' };
+  return approvePendingMember(userId, admin.member.role);
+}
+
+export async function denyMember(
+  _prev: { error?: string } | null,
+  formData: FormData,
+): Promise<{ error?: string }> {
+  const admin = await requireAdmin();
+  if (!admin.member) return { error: admin.error ?? 'Only Jake can turn someone away.' };
+  const userId = String(formData.get('userId') ?? '').trim();
+  if (!userId || userId === admin.member.id) return { error: 'That person is not waiting anymore.' };
+  return denyPendingMember(userId, admin.member.role);
 }
 
 export async function inviteFriend(

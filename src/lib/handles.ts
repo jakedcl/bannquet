@@ -55,24 +55,26 @@ export function nextStopForMember(member: {
   return `/user/${member.handle}`;
 }
 
-export type ProfileClaim = { displayName: string; username: string };
+export type ProfileClaim = { displayName: string; username: string; pending: boolean };
 
-export function encodeProfileClaim(displayName: string, username: string): string {
+export function encodeProfileClaim(displayName: string, username: string, pending = false): string {
   return JSON.stringify({
     displayName: displayName.trim(),
     username: normalizeUsername(username),
+    pending,
   });
 }
 
 export function decodeProfileClaim(raw: string | undefined | null): ProfileClaim | null {
   if (!raw) return null;
   try {
-    const parsed = JSON.parse(raw) as { displayName?: unknown; username?: unknown };
+    const parsed = JSON.parse(raw) as { displayName?: unknown; username?: unknown; pending?: unknown };
     if (typeof parsed.displayName !== 'string' || typeof parsed.username !== 'string') return null;
     if (displayNameProblem(parsed.displayName) || usernameProblem(parsed.username)) return null;
     return {
       displayName: parsed.displayName.trim(),
       username: normalizeUsername(parsed.username),
+      pending: parsed.pending === true,
     };
   } catch {
     return null;
