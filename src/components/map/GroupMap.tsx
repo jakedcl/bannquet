@@ -90,6 +90,8 @@ export default function GroupMap({
   const pickingRef = useRef(picking);
   const onPickRef = useRef(onPick);
   const [basemap, setBasemap] = useState<BasemapId>('standard');
+  const [layersOpen, setLayersOpen] = useState(false);
+  const controlsRef = useRef<HTMLDivElement | null>(null);
   const [terrain, setTerrain] = useState(false);
   const [leaves, setLeaves] = useState<Leaf[] | null>(null);
   const [selectedTrack, setSelectedTrack] = useState('');
@@ -313,6 +315,22 @@ export default function GroupMap({
     map.setFilter('routes', ['in', ['get', 'trackId'], ['literal', [...ids]]]);
   }, [selectedTrack]);
 
+  useEffect(() => {
+    if (!layersOpen) return;
+    const close = (event: PointerEvent) => {
+      if (!controlsRef.current?.contains(event.target as Node)) setLayersOpen(false);
+    };
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setLayersOpen(false);
+    };
+    document.addEventListener('pointerdown', close);
+    document.addEventListener('keydown', onKey);
+    return () => {
+      document.removeEventListener('pointerdown', close);
+      document.removeEventListener('keydown', onKey);
+    };
+  }, [layersOpen]);
+
   const attribution = terrain
     ? `${BASEMAP_ATTRIBUTION[basemap]}. ${TERRAIN_ATTRIBUTION}`
     : BASEMAP_ATTRIBUTION[basemap];
@@ -320,23 +338,47 @@ export default function GroupMap({
   return (
     <div className={`relative h-full min-h-[420px] ${className}`}>
       <div ref={containerRef} className={`h-full w-full ${picking ? 'cursor-crosshair' : ''}`} />
-      <div className="absolute left-3 top-3 z-10 flex max-w-[calc(100%-4.5rem)] flex-wrap gap-2">
-        {BASEMAPS.map((id) => (
+      <div ref={controlsRef} className="absolute left-3 top-3 z-10 flex items-start gap-2">
+        <div className="relative">
           <button
-            key={id}
             type="button"
-            onClick={() => setBasemap(id)}
-            className={`retro-button rounded-none px-3 py-1 text-xs font-bold uppercase ${basemap === id ? 'retro-button-yellow' : ''}`}
+            aria-expanded={layersOpen}
+            aria-haspopup="menu"
+            onClick={() => setLayersOpen((open) => !open)}
+            className={`retro-button rounded-none px-3 py-1 text-xs font-bold uppercase ${layersOpen ? 'retro-button-yellow' : ''}`}
           >
-            {BASEMAP_LABELS[id]}
+            Layers
           </button>
-        ))}
+          {layersOpen ? (
+            <div role="menu" aria-label="Map layers" className="absolute left-0 top-full z-20 mt-1 flex min-w-36 flex-col gap-1 bg-beige p-1 retro-box">
+              {BASEMAPS.map((id) => (
+                <button
+                  key={id}
+                  type="button"
+                  role="menuitemradio"
+                  aria-checked={basemap === id}
+                  onClick={() => {
+                    setBasemap(id);
+                    setLayersOpen(false);
+                  }}
+                  className={`retro-button rounded-none px-3 py-1 text-left text-xs font-bold uppercase ${basemap === id ? 'retro-button-yellow' : ''}`}
+                >
+                  {BASEMAP_LABELS[id]}
+                </button>
+              ))}
+            </div>
+          ) : null}
+        </div>
         <button
           type="button"
-          onClick={() => setTerrain((value) => !value)}
+          aria-pressed={terrain}
+          onClick={() => {
+            setLayersOpen(false);
+            setTerrain((value) => !value);
+          }}
           className={`retro-button rounded-none px-3 py-1 text-xs font-bold uppercase ${terrain ? 'retro-button-orange' : ''}`}
         >
-          {terrain ? '3D on' : '3D terrain'}
+          3D
         </button>
       </div>
       <p className="absolute bottom-2 left-3 right-3 z-10 bg-white/90 px-2 py-1 text-[11px] leading-snug text-gray-800 retro-box-inset">

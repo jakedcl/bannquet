@@ -13,7 +13,11 @@ test('every activity belongs to one map group', () => {
   assert.deepEqual([...seen.keys()].sort(), [...ACTIVITIES].sort());
 });
 
-test('map colors are red for foot, blue for biking, and orange for snow', () => {
+test('the on-foot group keeps its internal id and a readable label', () => {
+  assert.equal(MAP_GROUPS.foot.label, 'On foot');
+});
+
+test('map colors are red for on foot, blue for biking, and orange for snow', () => {
   assert.equal(mapColorForActivity('hike'), '#c0392b');
   assert.equal(mapColorForActivity('walk'), mapColorForActivity('hike'));
   assert.equal(mapColorForActivity('run'), mapColorForActivity('hike'));
