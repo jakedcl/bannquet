@@ -12,7 +12,7 @@ export type Activity = (typeof ACTIVITIES)[number];
 
 export const MAP_GROUPS = {
   foot: {
-    label: 'Foot',
+    label: 'On foot',
     color: '#c0392b',
     activities: ['hike', 'walk', 'run', 'trail_run'],
   },
