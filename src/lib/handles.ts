@@ -5,6 +5,8 @@ export const USERNAME_RULE =
 
 export const USERNAME_TAKEN = 'That username is already taken. Pick another.';
 
+export const USERNAME_LOCKED = 'Usernames stay the same after you pick one.';
+
 export const DISPLAY_NAME_RULE = 'Add the name your friends know you by.';
 
 export function normalizeUsername(value: string): string {
@@ -27,6 +29,15 @@ export function displayNameProblem(value: string): string | null {
   if (!name) return DISPLAY_NAME_RULE;
   if (name.length > 80) return 'That name is too long. Keep it under 80 characters.';
   return null;
+}
+
+/** A set username cannot move. An empty one can be chosen once. Omitting it is not a change. */
+export function usernameChangeProblem(current: string | null, requested: string): string | null {
+  const existing = current ? normalizeUsername(current) : '';
+  if (!existing) return usernameProblem(requested);
+  const next = normalizeUsername(requested);
+  if (!next || next === existing) return null;
+  return USERNAME_LOCKED;
 }
 
 export function usernameAvailability(input: {

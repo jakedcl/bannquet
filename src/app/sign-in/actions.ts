@@ -267,7 +267,7 @@ export async function finishSignIn(): Promise<void> {
   if (claim && profileNeedsNames(member)) {
     const saved = await updateMemberProfile(member.id, {
       displayName: claim.displayName,
-      handle: claim.username,
+      handle: member.handle || claim.username,
       bio: member.bio ?? '',
       homeRegion: member.homeRegion ?? '',
       favoriteActivities: member.favoriteActivities,

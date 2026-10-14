@@ -29,23 +29,32 @@ export function ProfileForm({ member }: { member: Member }) {
         />
         <span className="block text-xs text-gray-600">The name your friends know you by.</span>
       </label>
-      <label className="block space-y-1">
-        <span className="text-sm font-bold">Username</span>
-        <input
-          name="username"
-          required
-          minLength={3}
-          maxLength={24}
-          autoCapitalize="none"
-          autoCorrect="off"
-          spellCheck={false}
-          defaultValue={member.handle ?? ''}
-          className="w-full retro-box-inset bg-white px-3 py-2 text-base"
-        />
-        <span className="block text-xs text-gray-600">
-          Your page is /user/this. Lowercase letters, numbers, and underscores.
-        </span>
-      </label>
+      {member.handle ? (
+        <div className="space-y-1">
+          <p className="text-sm font-bold">Username</p>
+          <p className="text-base">{member.handle}</p>
+          <p className="text-xs text-gray-600">
+            Your page is /user/{member.handle}. Usernames stay the same after you pick one.
+          </p>
+        </div>
+      ) : (
+        <label className="block space-y-1">
+          <span className="text-sm font-bold">Username</span>
+          <input
+            name="username"
+            required
+            minLength={3}
+            maxLength={24}
+            autoCapitalize="none"
+            autoCorrect="off"
+            spellCheck={false}
+            className="w-full retro-box-inset bg-white px-3 py-2 text-base"
+          />
+          <span className="block text-xs text-gray-600">
+            Pick this once. It becomes the address of your page, like /user/this.
+          </span>
+        </label>
+      )}
       <label className="block space-y-1">
         <span className="text-sm font-bold">Home region</span>
         <select
