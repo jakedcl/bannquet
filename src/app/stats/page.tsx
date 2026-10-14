@@ -78,13 +78,13 @@ export default async function StatsPage() {
 
   return (
     <PageWrapper>
-      <div className="page-shell page-pad space-y-6">
+      <div className="mx-auto max-w-3xl space-y-6 px-4 py-10">
         <Window title="Challenges">
           <p className="mb-4 text-sm text-gray-700">
             A route counts when it passes within about 500 feet of the summit. You can also mark one by hand.
           </p>
           {crew.length === 0 ? (
-            <p className="empty-note text-sm">Nobody is on the list yet.</p>
+            <p className="text-sm">Nobody is on the list yet.</p>
           ) : (
             <Table
               headers={['Name', ...challenges.map((challenge) => challenge.short)]}
@@ -144,7 +144,7 @@ export default async function StatsPage() {
         {LEADER_GROUPS.map((group) => (
           <Window key={group.id} title={group.label}>
             {boards[group.id].length === 0 ? (
-              <p className="empty-note text-sm">No {group.label.toLowerCase()} miles yet.</p>
+              <p className="text-sm">No {group.label.toLowerCase()} miles yet.</p>
             ) : (
               <Table
                 headers={['Name', 'Miles', 'Elevation', 'Summits']}

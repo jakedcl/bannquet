@@ -1,22 +1,9 @@
-import { Fraunces, Source_Sans_3 } from 'next/font/google';
 import Header from '@/components/ui/Header';
 import { getViewer } from '@/app/sign-in/actions';
 import { countPendingMembers } from '@/lib/auth/members';
 import { APPROVAL_WAIT } from '@/lib/membership';
 import './globals.css';
 import Providers from './providers';
-
-const sourceSans = Source_Sans_3({
-  subsets: ['latin'],
-  variable: '--font-source',
-  display: 'swap',
-});
-
-const fraunces = Fraunces({
-  subsets: ['latin'],
-  variable: '--font-display',
-  display: 'swap',
-});
 
 export const dynamic = 'force-dynamic';
 
@@ -41,16 +28,18 @@ export default async function RootLayout({
       }
     : null;
 
-  const pending = viewer?.role === 'pending';
-
   return (
-    <html lang="en" className={`${sourceSans.variable} ${fraunces.variable}`}>
-      <body className={pending ? 'has-pending' : undefined}>
+    <html lang="en">
+      <body>
         <Providers>
           <div className="min-h-screen flex flex-col">
             <Header account={account} />
-            {pending ? <p className="pending-banner">{APPROVAL_WAIT}</p> : null}
-            <main className="flex-1 bg-background">
+            {viewer?.role === 'pending' ? (
+              <p className="retro-box mx-4 mt-4 bg-beige px-4 py-2 text-center text-sm font-bold text-gray-900">
+                {APPROVAL_WAIT}
+              </p>
+            ) : null}
+            <main className="flex-1 bg-gray-50">
               {children}
             </main>
           </div>

@@ -43,11 +43,11 @@ export default function WeatherDashboard({ spot }: WeatherDashboardProps) {
 
   if (loading) {
     return (
-      <div className="retro-box animate-pulse p-6">
-        <div className="mb-4 h-6 w-1/2 bg-gray-200"></div>
+      <div className="bg-white rounded-lg shadow-sm p-6 animate-pulse">
+        <div className="h-6 bg-gray-200 rounded w-1/2 mb-4"></div>
         <div className="space-y-3">
-          <div className="h-4 w-3/4 bg-gray-200"></div>
-          <div className="h-4 w-1/2 bg-gray-200"></div>
+          <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+          <div className="h-4 bg-gray-200 rounded w-1/2"></div>
         </div>
       </div>
     );
@@ -55,7 +55,7 @@ export default function WeatherDashboard({ spot }: WeatherDashboardProps) {
 
   if (error) {
     return (
-      <div className="retro-box p-6">
+      <div className="bg-white rounded-lg shadow-sm p-6">
         <h2 className="font-medium text-red-600">{spot.name}</h2>
         <p className="text-sm text-red-500 mt-2">{error}</p>
       </div>
@@ -76,8 +76,8 @@ export default function WeatherDashboard({ spot }: WeatherDashboardProps) {
   const dailyForecast = weather.dailyForecast ?? [];
 
   return (
-    <div className="retro-box retro-window overflow-hidden">
-      <div className="flex items-center justify-between border-b-2 border-ink bg-beige px-4 py-3">
+    <div className="bg-white rounded-3xl shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300">
+      <div className="border-b border-gray-100 bg-brand-green/5 px-4 py-3 flex items-center justify-between">
         <div>
           <h2 className="font-semibold text-gray-900 text-base">{spot.name}</h2>
           <p className="text-xs text-gray-600 uppercase tracking-wide">Elevation {spot.elevation}ft</p>
@@ -97,7 +97,7 @@ export default function WeatherDashboard({ spot }: WeatherDashboardProps) {
       
       <div className="p-4">
         <div className="space-y-4">
-          <div className="retro-box-inset p-4">
+          <div className="border border-gray-100 rounded-2xl p-4">
             <div className="flex items-start justify-between gap-4">
               <div>
                 <p className="text-xs uppercase tracking-wide text-gray-500">Current</p>
@@ -135,14 +135,14 @@ export default function WeatherDashboard({ spot }: WeatherDashboardProps) {
           )}
 
           {weather.hazards.length > 0 && (
-            <div className="retro-box-inset bg-beige p-4">
+            <div className="border border-brand-green/10 rounded-2xl p-4 bg-brand-green/5">
               <p className="text-sm font-semibold text-brand-green mb-2">Hazards & alerts</p>
               <ul className="space-y-2">
                 {weather.hazards.map((hazard) => (
                   <li key={hazard.id} className="text-sm text-gray-800">
                     <span className="font-semibold">{hazard.event}</span>
                     {hazard.severity ? (
-                      <span className="ml-2 bg-brand-green px-2 py-0.5 text-xs uppercase tracking-wide text-white">
+                      <span className="uppercase text-xs tracking-wide text-white bg-brand-green px-2 py-0.5 rounded-full ml-2">
                         {hazard.severity}
                       </span>
                     ) : null}
@@ -178,7 +178,7 @@ type MetricCardProps = {
 
 function MetricCard({ label, value, hint }: MetricCardProps) {
   return (
-    <div className="retro-box-inset bg-paper p-3">
+    <div className="rounded-xl border border-gray-100 p-3 bg-white/60">
       <p className="text-[11px] uppercase tracking-wide text-gray-500">{label}</p>
       <p className="text-lg font-semibold text-gray-900 mt-1">{value}</p>
       {hint && <p className="text-xs text-gray-500 mt-0.5">{hint}</p>}
@@ -208,11 +208,11 @@ function ForecastStrip({ label, items, variant = 'hourly', columns = 4 }: Foreca
   return (
     <div>
       <p className="text-xs uppercase tracking-wide text-gray-500 mb-2">{label}</p>
-      <div className="overflow-x-auto border-2 border-ink bg-paper-raised">
-        <div className="grid min-w-[32rem] divide-x divide-ink/20" style={{ gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))` }}>
+      <div className="rounded-2xl border border-gray-100 bg-white/80 overflow-hidden">
+        <div className="grid divide-x divide-gray-100" style={{ gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))` }}>
           {items.map((period) => (
-            <div key={`${period.startTime}-${label}`} className="flex flex-col items-start px-2 py-2 text-left">
-              <div className="mb-1 aspect-square w-full overflow-hidden">
+            <div key={`${period.startTime}-${label}`} className="flex flex-col items-start text-left py-2 px-2">
+              <div className="w-full aspect-square mb-1 overflow-hidden rounded">
                 {period.icon ? (
                   <Image
                     src={period.icon}
@@ -222,7 +222,7 @@ function ForecastStrip({ label, items, variant = 'hourly', columns = 4 }: Foreca
                     className="w-full h-full object-cover"
                   />
                 ) : (
-                  <div className="h-full w-full bg-gray-100" />
+                  <div className="w-full h-full rounded bg-gray-100" />
                 )}
               </div>
               <p className="text-sm font-semibold text-gray-900">

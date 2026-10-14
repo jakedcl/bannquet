@@ -22,7 +22,7 @@ export default function MountainWeatherPage() {
 
   return (
     <PageWrapper>
-      <section className="relative flex min-h-[calc(100vh-var(--header-offset))] items-center justify-center overflow-hidden bg-brand-green py-8 text-white">
+      <section className="relative min-h-[calc(100vh-72px)] bg-brand-green text-white flex items-center justify-center overflow-hidden py-8">
         {/* Background Image - same as homepage */}
         <div 
           className="absolute inset-0 z-0"
@@ -74,9 +74,10 @@ function RegionPicker({ onSelect }: { onSelect: (code: (typeof REGION_OPTIONS)[n
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.8, duration: 0.6 }}
-      className="retro-box mx-auto w-full max-w-3xl bg-paper-raised p-6 sm:p-8"
+      className="retro-box bg-white/10 border-2 border-white/30 p-6 sm:p-8 w-full max-w-3xl mx-auto rounded-none"
+      style={{ backdropFilter: 'blur(4px)' }}
     >
-      <h3 className="mb-6 text-center text-xl font-bold uppercase tracking-wider text-ink sm:text-2xl">
+      <h3 className="text-xl sm:text-2xl font-bold text-brand-green mb-6 text-center retro-text-shadow uppercase tracking-wider">
         Choose your state
       </h3>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
@@ -84,7 +85,9 @@ function RegionPicker({ onSelect }: { onSelect: (code: (typeof REGION_OPTIONS)[n
           <motion.button
             key={opt.code}
             onClick={() => onSelect(opt.code)}
-            className={`${opt.buttonTone === 'default' ? 'retro-button' : `retro-button-${opt.buttonTone}`} w-full p-4 text-center sm:p-5`}
+            className={`${opt.buttonTone === 'default' ? 'retro-button' : `retro-button-${opt.buttonTone}`} p-4 sm:p-5 text-center rounded-none font-bold uppercase tracking-wider`}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 + idx * 0.05 }}

@@ -13,7 +13,7 @@ export default async function NewTripPage() {
 
   return (
     <PageWrapper>
-      <div className="page-shell page-pad mx-auto max-w-2xl">
+      <div className="mx-auto max-w-2xl px-4 py-10">
         <Window title="New trip">
           {canContribute(viewer.role) ? <NewTripForm /> : <p className="text-sm font-bold">{APPROVAL_WAIT}</p>}
         </Window>
