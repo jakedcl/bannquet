@@ -18,14 +18,14 @@ export default async function TripsPage() {
 
   return (
     <PageWrapper>
-      <div className="mx-auto max-w-3xl space-y-4 px-4 py-10">
+      <div className="page-shell page-pad space-y-4">
         <Window title="Trips">
           <p className="mb-4 text-sm text-gray-700">
             A date, a trailhead, who is in, and a packing list. The forecast is the same mountain weather as the rest of the site.
           </p>
           {canPlan ? <Button href="/trips/new" tone="yellow">Plan a trip</Button> : null}
           {trips.length === 0 ? (
-            <p className="mt-4 text-sm">No trips yet.</p>
+            <p className="empty-note mt-4 text-sm">No trips yet.</p>
           ) : (
             <ul className="mt-4 space-y-2">
               {trips.map((trip) => (

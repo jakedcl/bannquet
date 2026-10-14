@@ -35,7 +35,7 @@ export default async function UserPage({ params }: { params: Promise<{ username:
 
   return (
     <PageWrapper>
-      <div className="mx-auto max-w-3xl space-y-4 px-4 py-10">
+      <div className="page-shell page-pad space-y-4">
         <Window title={name}>
           <div className="flex items-start gap-4">
             {member.avatarUrl ? (
@@ -66,7 +66,7 @@ export default async function UserPage({ params }: { params: Promise<{ username:
                 ))}
               </div>
             ) : (
-              <p className="text-sm text-gray-600">No favorite activities yet.</p>
+              <p className="empty-note text-sm">No favorite activities yet.</p>
             )}
           </div>
         </Window>
@@ -98,7 +98,7 @@ export default async function UserPage({ params }: { params: Promise<{ username:
         ) : null}
         <Window title="Posts">
           {library.posts.length === 0 ? (
-            <p className="text-sm text-gray-700">No posts yet.</p>
+            <p className="empty-note text-sm">No posts yet.</p>
           ) : (
             <ul className="space-y-2">
               {library.posts.map((post) => (
@@ -116,7 +116,7 @@ export default async function UserPage({ params }: { params: Promise<{ username:
         </Window>
         <Window title="Routes">
           {library.routes.length === 0 ? (
-            <p className="text-sm text-gray-700">No routes yet.</p>
+            <p className="empty-note text-sm">No routes yet.</p>
           ) : (
             <ul className="space-y-2">
               {library.routes.map((route) => (
@@ -136,7 +136,7 @@ export default async function UserPage({ params }: { params: Promise<{ username:
         </Window>
         <Window title="Photos">
           {library.photos.length === 0 ? (
-            <p className="text-sm text-gray-700">No photos yet.</p>
+            <p className="empty-note text-sm">No photos yet.</p>
           ) : (
             <div className="grid grid-cols-3 gap-2">
               {library.photos.map((photo) => (

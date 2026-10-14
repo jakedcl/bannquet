@@ -35,7 +35,7 @@ export default async function PostDetailPage({ params }: PageProps) {
   if (!isDatabaseConfigured()) {
     return (
       <PageWrapper className="bg-gray-50">
-        <div className="mx-auto max-w-4xl px-4 py-12">
+        <div className="page-shell page-pad">
           <Window title="Posts">
             <p className="mb-4 text-gray-700">Postgres is not connected, so this post cannot be loaded.</p>
             <Button tone="blue" href="/posts">Back to posts</Button>
@@ -56,7 +56,7 @@ export default async function PostDetailPage({ params }: PageProps) {
   if (error) {
     return (
       <PageWrapper className="bg-gray-50">
-        <div className="mx-auto max-w-4xl px-4 py-12">
+        <div className="page-shell page-pad">
           <Window title="Error">
             <p className="mb-4 text-red-800">{error}</p>
             <Button tone="blue" href="/posts">Back to posts</Button>
@@ -80,7 +80,7 @@ export default async function PostDetailPage({ params }: PageProps) {
 
   return (
     <PageWrapper className="bg-gray-50">
-      <div className="mx-auto max-w-4xl px-4 py-12">
+      <div className="page-shell page-pad">
         <div className="mb-6 flex gap-3">
           <Button tone="default" href="/posts">Back to posts</Button>
           <Button tone="blue" href={`/map?post=${report.id}`}>On the map</Button>

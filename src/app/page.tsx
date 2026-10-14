@@ -8,7 +8,7 @@ import PageWrapper from '@/components/ui/PageWrapper';
 export default function Home() {
   return (
     <PageWrapper>
-      <section className="relative min-h-[calc(100vh-72px)] text-white flex items-center justify-center overflow-hidden border-b-4 border-brand-green-dark" style={{ boxShadow: '0 4px 12px rgba(0, 0, 0, 0.4)' }}>
+      <section className="relative flex min-h-[calc(100vh-var(--header-offset))] items-center justify-center overflow-hidden border-b-[3px] border-ink text-white">
         {/* Background Image */}
         <div 
           className="absolute inset-0 z-0"
@@ -51,7 +51,7 @@ export default function Home() {
                   </motion.div>
                 </div>
               </div>
-              <p className="text-xl md:text-2xl text-white retro-text-shadow max-w-2xl mx-auto font-bold">
+              <p className="mx-auto max-w-2xl font-heading text-2xl text-white retro-text-shadow md:text-3xl">
                 Northeast Mountain Resource
               </p>
             </motion.div>
@@ -61,7 +61,7 @@ export default function Home() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2, duration: 0.6 }}
-              className="flex flex-col sm:flex-row items-center justify-center gap-6"
+              className="home-actions flex flex-col items-center justify-center gap-5 sm:flex-row"
             >
               <Link
                 href="/mountain-weather"

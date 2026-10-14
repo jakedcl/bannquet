@@ -27,7 +27,7 @@ export default async function TripPage({ params }: { params: Promise<{ id: strin
 
   return (
     <PageWrapper>
-      <div className="mx-auto max-w-3xl space-y-4 px-4 py-10">
+      <div className="page-shell page-pad space-y-4">
         <Window title={trip.title}>
           <p className="text-sm">
             {formatTripDate(trip.tripDate, 'long')}
@@ -42,7 +42,7 @@ export default async function TripPage({ params }: { params: Promise<{ id: strin
           <div className="mt-4">
             <p className="text-xs font-bold uppercase tracking-wide">Who is going</p>
             {trip.people.length === 0 ? (
-              <p className="text-sm text-gray-700">Nobody yet.</p>
+              <p className="empty-note text-sm">Nobody yet.</p>
             ) : (
               <ul className="mt-1 text-sm">
                 {trip.people.map((person) => (
@@ -112,7 +112,7 @@ export default async function TripPage({ params }: { params: Promise<{ id: strin
         </Window>
 
         <Window title="Posts">
-          {trip.posts.length === 0 ? <p className="text-sm">No posts from this trip yet.</p> : (
+          {trip.posts.length === 0 ? <p className="empty-note text-sm">No posts from this trip yet.</p> : (
             <ul className="space-y-1 text-sm">
               {trip.posts.map((post) => (
                 <li key={post.id}>
@@ -148,8 +148,8 @@ async function TrailheadForecast({ lat, lng }: { lat: number; lng: number }) {
   } catch {
     failed = true;
   }
-  if (failed) return <p className="text-sm">The trailhead forecast did not load.</p>;
-  if (!days || days.length === 0) return <p className="text-sm">No daily forecast came back for that pin.</p>;
+  if (failed) return <p className="empty-note text-sm">The trailhead forecast did not load.</p>;
+  if (!days || days.length === 0) return <p className="empty-note text-sm">No daily forecast came back for that pin.</p>;
   return (
     <ul className="space-y-2 text-sm">
       {days.map((day) => (

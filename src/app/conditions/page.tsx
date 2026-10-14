@@ -12,14 +12,14 @@ export default async function ConditionsPage() {
 
   return (
     <PageWrapper>
-      <div className="mx-auto max-w-4xl space-y-6 px-4 py-10">
+      <div className="page-shell page-pad space-y-6">
         <Window title="Live conditions">
           <p className="mb-4 text-sm text-gray-700">
             The same National Weather Service readings as the banner on the home page.
             Low and high cover the next day, along with the temperature right now.
           </p>
           {!report.success || report.stats.length === 0 ? (
-            <p className="text-sm font-bold">The live conditions did not load.</p>
+            <p className="empty-note text-sm font-bold">The live conditions did not load.</p>
           ) : (
             <ul className="space-y-2 text-sm">
               {report.stats.map((stat) => (
@@ -38,7 +38,7 @@ export default async function ConditionsPage() {
 
         <Window title="Spots">
           {spots.length === 0 ? (
-            <p className="text-sm">No spots came back.</p>
+            <p className="empty-note text-sm">No spots came back.</p>
           ) : (
             <Table
               headers={['Spot', 'Now', 'Low', 'High', 'Wind', 'Wind chill', 'Snow']}
