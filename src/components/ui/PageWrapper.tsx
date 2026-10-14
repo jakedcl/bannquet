@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { ReactNode } from 'react';
+import { CommunitySubnav } from '@/components/ui/CommunitySubnav';
 
 interface PageWrapperProps {
   children: ReactNode;
@@ -15,6 +16,7 @@ export default function PageWrapper({ children, className = '' }: PageWrapperPro
       animate={{ opacity: 1 }}
       className={`mt-[72px] min-h-[calc(100vh-72px)] ${className}`}
     >
+      <CommunitySubnav />
       {children}
     </motion.div>
   );

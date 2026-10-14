@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 
 type WeatherStat = {
   label: string;
@@ -53,29 +54,29 @@ export default function WeatherTicker() {
 
   if (loading) {
     return (
-      <div className="flex items-center h-full px-4 text-white/80 text-xs font-bold uppercase tracking-wider">
+      <Link href="/conditions" aria-label="Live conditions" className="flex items-center h-full px-4 text-white/80 text-xs font-bold uppercase tracking-wider">
         <span className="animate-pulse">LOADING CONDITIONS...</span>
-      </div>
+      </Link>
     );
   }
 
   if (error) {
     return (
-      <div className="flex items-center h-full px-4 text-white/80 text-xs font-bold uppercase tracking-wider">
+      <Link href="/conditions" aria-label="Live conditions" className="flex items-center h-full px-4 text-white/80 text-xs font-bold uppercase tracking-wider">
         <span className="text-yellow-400 mr-2">●</span>
         <span className="text-white/90">WEATHER FEED:</span>
         <span className="ml-2 text-white/70">{error}</span>
-      </div>
+      </Link>
     );
   }
 
   if (stats.length === 0) {
     return (
-      <div className="flex items-center h-full px-4 text-white/80 text-xs font-bold uppercase tracking-wider">
+      <Link href="/conditions" aria-label="Live conditions" className="flex items-center h-full px-4 text-white/80 text-xs font-bold uppercase tracking-wider">
         <span className="text-yellow-400 mr-2">●</span>
         <span className="text-white/90">WEATHER FEED:</span>
         <span className="ml-2 text-white/70">No stats yet</span>
-      </div>
+      </Link>
     );
   }
 
@@ -83,7 +84,7 @@ export default function WeatherTicker() {
   const displayStats = [...stats, ...stats];
 
   return (
-    <div className="flex w-full min-w-0 items-center h-full overflow-hidden bg-brand-green-dark/50 border-r-2 border-white/20">
+    <Link href="/conditions" aria-label="Live conditions" className="flex w-full min-w-0 items-center h-full overflow-hidden bg-brand-green-dark/50 border-r-2 border-white/20">
       <div className="flex items-center text-yellow-400 font-bold text-xs uppercase tracking-wider px-2 sm:px-3 whitespace-nowrap">
         <span className="animate-pulse mr-2">●</span>
         LIVE:
@@ -105,6 +106,6 @@ export default function WeatherTicker() {
           ))}
         </div>
       </div>
-    </div>
+    </Link>
   );
 }
