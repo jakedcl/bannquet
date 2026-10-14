@@ -1,6 +1,6 @@
 import { and, desc, eq, gt, isNull, sql } from 'drizzle-orm';
 import { getDb, isDatabaseConfigured } from '@/db';
-import { invites, users } from '@/db/schema';
+import { handleRedirects, invites, users } from '@/db/schema';
 import { isActivity, type Activity } from '@/lib/activities';
 import {
   accountCreateAllowed,
@@ -83,6 +83,20 @@ export async function findMemberByHandle(handle: string): Promise<Member | null>
   if (!username) return null;
   const [row] = await getDb().select().from(users).where(eq(users.handle, username)).limit(1);
   return row ? toMember(row) : null;
+}
+
+export async function findHandleRedirect(handle: string): Promise<string | null> {
+  if (!isDatabaseConfigured()) return null;
+  const username = normalizeUsername(handle);
+  if (!username) return null;
+  const [row] = await getDb()
+    .select({ current: users.handle })
+    .from(handleRedirects)
+    .innerJoin(users, eq(users.id, handleRedirects.userId))
+    .where(eq(handleRedirects.handle, username))
+    .limit(1);
+  if (!row?.current || row.current === username) return null;
+  return row.current;
 }
 
 export async function findMemberByEmail(email: string): Promise<Member | null> {
@@ -318,22 +332,52 @@ export async function updateMemberProfile(
   if (nameProblem) return { error: nameProblem };
   const username = normalizeUsername(input.handle);
   const db = getDb();
-  const [taken] = await db.select({ id: users.id }).from(users).where(eq(users.handle, username)).limit(1);
-  const problem = usernameAvailability({ username, takenById: taken?.id ?? null, selfId: id });
-  if (problem) return { error: problem };
 
-  const [updated] = await db
-    .update(users)
-    .set({
-      displayName: input.displayName.trim(),
-      handle: username,
-      bio: input.bio || null,
-      homeRegion: input.homeRegion || null,
-      favoriteActivities: input.favoriteActivities,
-      ...(input.avatarUrl !== undefined ? { avatarUrl: input.avatarUrl } : {}),
-    })
-    .where(eq(users.id, id))
-    .returning();
+  return db.transaction(async (tx) => {
+    const [current] = await tx.select({ handle: users.handle }).from(users).where(eq(users.id, id)).limit(1);
+    const [taken] = await tx.select({ id: users.id }).from(users).where(eq(users.handle, username)).limit(1);
+    const [reserved] = await tx
+      .select({ userId: handleRedirects.userId })
+      .from(handleRedirects)
+      .where(eq(handleRedirects.handle, username))
+      .limit(1);
+    const reservedBySomeoneElse = reserved && reserved.userId !== id ? reserved.userId : null;
+    const problem = usernameAvailability({
+      username,
+      takenById: taken?.id ?? reservedBySomeoneElse,
+      selfId: id,
+    });
+    if (problem) return { error: problem };
 
-  return { member: toMember(updated) };
+    if (reserved?.userId === id) {
+      await tx.delete(handleRedirects).where(eq(handleRedirects.handle, username));
+    }
+
+    const [updated] = await tx
+      .update(users)
+      .set({
+        displayName: input.displayName.trim(),
+        handle: username,
+        bio: input.bio || null,
+        homeRegion: input.homeRegion || null,
+        favoriteActivities: input.favoriteActivities,
+        ...(input.avatarUrl !== undefined ? { avatarUrl: input.avatarUrl } : {}),
+      })
+      .where(eq(users.id, id))
+      .returning();
+    if (!updated) return { error: 'Could not save that profile.' };
+
+    const previous = current?.handle;
+    if (previous && previous !== username) {
+      await tx
+        .insert(handleRedirects)
+        .values({ handle: previous, userId: id })
+        .onConflictDoUpdate({
+          target: handleRedirects.handle,
+          set: { userId: id },
+        });
+    }
+
+    return { member: toMember(updated) };
+  });
 }

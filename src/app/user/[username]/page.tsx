@@ -1,13 +1,14 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import PageWrapper from '@/components/ui/PageWrapper';
 import { ProfileAdds } from '@/components/posts/ProfileAdds';
 import { ChallengeBadge } from '@/components/stats/ChallengeBadge';
 import { Badge } from '@/components/retro/Badge';
+import { Button } from '@/components/retro/Button';
 import { Window } from '@/components/retro/Window';
 import { getViewer } from '@/app/sign-in/actions';
-import { findMemberByHandle } from '@/lib/auth/members';
+import { findHandleRedirect, findMemberByHandle } from '@/lib/auth/members';
 import { ACTIVITY_META, isActivity } from '@/lib/activities';
 import { formatFeetGain, formatMiles } from '@/lib/gpx';
 import { loadProfileLibrary } from '@/lib/posts';
@@ -22,7 +23,11 @@ export const dynamic = 'force-dynamic';
 export default async function UserPage({ params }: { params: Promise<{ username: string }> }) {
   const { username } = await params;
   const member = await findMemberByHandle(username);
-  if (!member) notFound();
+  if (!member) {
+    const nextHandle = await findHandleRedirect(username);
+    if (nextHandle) redirect(`/user/${nextHandle}`);
+    notFound();
+  }
   const viewer = await getViewer();
   const library = await loadProfileLibrary(member.id);
   const challenges = loadChallenges();
@@ -51,9 +56,12 @@ export default async function UserPage({ params }: { params: Promise<{ username:
                 {name.slice(0, 1).toUpperCase()}
               </div>
             )}
-            <div className="space-y-1">
+            <div className="space-y-2">
               <p className="text-sm text-gray-600">@{member.handle}</p>
               {region ? <p className="text-sm">Home: {region}</p> : null}
+              {viewer?.id === member.id ? (
+                <Button href="/settings#edit-profile" tone="yellow">Edit profile</Button>
+              ) : null}
             </div>
           </div>
           {member.bio ? <p className="mt-4 whitespace-pre-wrap text-sm">{member.bio}</p> : null}
