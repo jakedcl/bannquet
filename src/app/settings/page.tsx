@@ -21,7 +21,7 @@ export default async function SettingsPage({
 
   return (
     <PageWrapper>
-      <div className="page-shell page-pad mx-auto max-w-lg space-y-4">
+      <div className="mx-auto max-w-lg space-y-4 px-4 py-10">
         <Window title="Your profile">
           {!canContribute(viewer.role) ? (
             <p className="text-sm font-bold">{APPROVAL_WAIT}</p>

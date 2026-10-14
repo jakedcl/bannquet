@@ -26,9 +26,9 @@ export default async function MapPage({
   const coordinates = focusFeature?.geometry.type === 'Point' ? focusFeature.geometry.coordinates : null;
 
   return (
-    <PageWrapper>
-      <div className="mx-auto max-w-container px-4 py-4 md:py-6">
-        <div className="retro-box retro-window h-[calc(100dvh-var(--header-offset)-4.5rem)] min-h-[420px] overflow-hidden bg-paper-raised">
+    <PageWrapper className="bg-gray-50">
+      <div className="mx-auto max-w-7xl px-4 py-6">
+        <div className="retro-box h-[calc(100vh-8rem)] min-h-[480px] overflow-hidden bg-white">
           <MapCanvas
             points={data.points}
             lines={data.lines}

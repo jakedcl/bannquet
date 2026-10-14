@@ -14,7 +14,7 @@ export default async function InvitePage({ params }: { params: Promise<{ code: s
   if (!isDatabaseConfigured()) {
     return (
       <PageWrapper>
-        <div className="page-shell page-pad mx-auto max-w-lg">
+        <div className="mx-auto max-w-lg px-4 py-10">
           <Window title="Invite">
             <p>Invites are not connected yet.</p>
           </Window>
@@ -33,7 +33,7 @@ export default async function InvitePage({ params }: { params: Promise<{ code: s
 
   return (
     <PageWrapper>
-      <div className="page-shell page-pad mx-auto max-w-lg">
+      <div className="mx-auto max-w-lg px-4 py-10">
         <Window title="You're invited">
           {state === 'open' && invite.email ? (
             <CreateAccountForm email={invite.email} inviteCode={invite.code} />

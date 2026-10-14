@@ -15,7 +15,7 @@ export default async function ResetPasswordPage({
 
   return (
     <PageWrapper>
-      <div className="page-shell page-pad mx-auto max-w-lg">
+      <div className="mx-auto max-w-lg px-4 py-10">
         <Window title="New password">
           {invalid ? (
             <p className="mb-4 text-sm font-bold text-red-700">

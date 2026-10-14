@@ -350,7 +350,7 @@ export default function GroupMap({
             Layers
           </button>
           {layersOpen ? (
-            <div role="menu" aria-label="Map layers" className="absolute left-0 top-full z-20 mt-2 flex min-w-36 flex-col gap-1 retro-pop">
+            <div role="menu" aria-label="Map layers" className="absolute left-0 top-full z-20 mt-1 flex min-w-36 flex-col gap-1 bg-beige p-1 retro-box">
               {BASEMAPS.map((id) => (
                 <button
                   key={id}
@@ -361,7 +361,7 @@ export default function GroupMap({
                     setBasemap(id);
                     setLayersOpen(false);
                   }}
-                  className={`retro-button w-full justify-start px-3 py-1 text-xs ${basemap === id ? 'retro-button-yellow' : ''}`}
+                  className={`retro-button rounded-none px-3 py-1 text-left text-xs font-bold uppercase ${basemap === id ? 'retro-button-yellow' : ''}`}
                 >
                   {BASEMAP_LABELS[id]}
                 </button>

@@ -25,7 +25,7 @@ export default async function SignInPage({
 
   return (
     <PageWrapper>
-      <div className="page-shell page-pad mx-auto max-w-lg">
+      <div className="mx-auto max-w-lg px-4 py-10">
         <Window title="Sign in">
           {params.reset === '1' ? (
             <p className="mb-4 text-sm text-brand-green-dark">Password saved. Sign in with it.</p>

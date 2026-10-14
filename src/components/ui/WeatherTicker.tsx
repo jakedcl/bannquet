@@ -63,7 +63,7 @@ export default function WeatherTicker() {
   if (error) {
     return (
       <Link href="/conditions" aria-label="Live conditions" className="flex items-center h-full px-4 text-white/80 text-xs font-bold uppercase tracking-wider">
-        <span className="text-mustard mr-2">●</span>
+        <span className="text-yellow-400 mr-2">●</span>
         <span className="text-white/90">WEATHER FEED:</span>
         <span className="ml-2 text-white/70">{error}</span>
       </Link>
@@ -73,7 +73,7 @@ export default function WeatherTicker() {
   if (stats.length === 0) {
     return (
       <Link href="/conditions" aria-label="Live conditions" className="flex items-center h-full px-4 text-white/80 text-xs font-bold uppercase tracking-wider">
-        <span className="text-mustard mr-2">●</span>
+        <span className="text-yellow-400 mr-2">●</span>
         <span className="text-white/90">WEATHER FEED:</span>
         <span className="ml-2 text-white/70">No stats yet</span>
       </Link>
@@ -85,7 +85,7 @@ export default function WeatherTicker() {
 
   return (
     <Link href="/conditions" aria-label="Live conditions" className="flex w-full min-w-0 items-center h-full overflow-hidden bg-brand-green-dark/50 border-r-2 border-white/20">
-      <div className="flex items-center text-mustard font-bold text-xs uppercase tracking-wider px-2 sm:px-3 whitespace-nowrap">
+      <div className="flex items-center text-yellow-400 font-bold text-xs uppercase tracking-wider px-2 sm:px-3 whitespace-nowrap">
         <span className="animate-pulse mr-2">●</span>
         LIVE:
       </div>
@@ -99,7 +99,7 @@ export default function WeatherTicker() {
           {displayStats.map((stat, idx) => (
             <div key={idx} className="flex items-center px-6">
               <span className="text-white/90">{stat.label}:</span>
-              <span className="text-mustard mx-2 font-bold">{stat.value}</span>
+              <span className="text-yellow-400 mx-2 font-bold">{stat.value}</span>
               <span className="text-white/70">@ {stat.location}</span>
               <span className="mx-4 text-white/40">•</span>
             </div>

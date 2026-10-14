@@ -46,7 +46,7 @@ export default async function PostsPage() {
       <FeedShell count={posts.length}>
         {posts.length === 0 ? (
           <Window title="Empty">
-            <p className="empty-note text-ink-soft">No posts yet. When someone writes one, it lands here and on the map.</p>
+            <p className="text-gray-700">No posts yet. When someone writes one, it lands here and on the map.</p>
           </Window>
         ) : (
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -62,12 +62,12 @@ export default async function PostsPage() {
 
 function FeedShell({ children, count }: { children: ReactNode; count?: number }) {
   return (
-    <div className="page-shell page-pad">
+    <div className="mx-auto max-w-7xl px-4 py-12">
       <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
         <div className="space-y-3">
-          <p className="page-kicker">Field notes</p>
-          <h1 className="page-title">Posts</h1>
-          <p className="page-lede">
+          <p className="text-sm uppercase tracking-[0.3em] text-brand-green/70">posts</p>
+          <h1 className="text-4xl font-bold text-gray-900 md:text-5xl">Posts</h1>
+          <p className="max-w-2xl text-gray-600">
             Stories, photos, and routes from the group. Each one also shows on the map.
           </p>
         </div>

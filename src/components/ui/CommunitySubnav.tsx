@@ -15,8 +15,8 @@ export function CommunitySubnav() {
   if (!here) return null;
 
   return (
-    <nav aria-label="Community sections" className="border-b-2 border-ink bg-beige">
-      <div className="page-shell flex flex-wrap items-center gap-2 py-3">
+    <nav aria-label="Community sections" className="border-b-2 border-brand-green-dark bg-beige">
+      <div className="mx-auto flex max-w-3xl flex-wrap gap-2 px-4 py-2">
         {SECTIONS.map((item) => {
           const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
           return (
