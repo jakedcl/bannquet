@@ -1,6 +1,5 @@
 'use server';
 
-import { put } from '@vercel/blob';
 import { cookies, headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { isActivity, type Activity } from '@/lib/activities';
@@ -45,6 +44,7 @@ import {
   USERNAME_TAKEN,
   usernameProblem,
 } from '@/lib/handles';
+import { isPublicBlobUrl } from '@/lib/photos';
 import { REGION_OPTIONS } from '@/lib/regions';
 
 const PROFILE_CLAIM = 'bannquet_profile';
@@ -312,22 +312,12 @@ export async function saveProfile(
   }
 
   let avatarUrl: string | undefined;
-  const avatar = formData.get('avatar');
-  if (avatar instanceof File && avatar.size > 0) {
-    if (!avatar.type.startsWith('image/')) {
-      return { error: 'Use a photo file, like a JPG or PNG.' };
+  const avatarUrlRaw = String(formData.get('avatarUrl') ?? '').trim();
+  if (avatarUrlRaw) {
+    if (!isPublicBlobUrl(avatarUrlRaw)) {
+      return { error: 'That photo did not upload. Try again.' };
     }
-    if (avatar.size > 2 * 1024 * 1024) {
-      return { error: 'That photo is over 2 MB. Pick a smaller one.' };
-    }
-    if (!process.env.BLOB_READ_WRITE_TOKEN) {
-      return { error: 'Photo upload is not set up yet. You can still save the rest of your profile.' };
-    }
-    const blob = await put(`avatars/${member.id}-${Date.now()}-${avatar.name}`, avatar, {
-      access: 'public',
-      token: process.env.BLOB_READ_WRITE_TOKEN,
-    });
-    avatarUrl = blob.url;
+    avatarUrl = avatarUrlRaw;
   }
 
   const saved = await updateMemberProfile(member.id, {

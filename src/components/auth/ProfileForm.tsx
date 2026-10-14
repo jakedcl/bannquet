@@ -1,7 +1,8 @@
 'use client';
 
-import { useActionState, useEffect, useRef, useState, type ChangeEvent } from 'react';
+import { useActionState, useEffect, useRef, useState, type ChangeEvent, type FormEvent } from 'react';
 import { saveProfile } from '@/app/sign-in/actions';
+import { prepareAvatar } from '@/components/auth/prepare-avatar';
 import { ACTIVITY_META, ACTIVITIES } from '@/lib/activities';
 import { REGION_OPTIONS } from '@/lib/regions';
 import { Button } from '@/components/retro/Button';
@@ -9,9 +10,15 @@ import type { Member } from '@/lib/auth/members';
 
 export function ProfileForm({ member }: { member: Member }) {
   const [state, action, pending] = useActionState(saveProfile, null);
+  const [photoBusy, setPhotoBusy] = useState(false);
+  const [photoError, setPhotoError] = useState<string | null>(null);
+
+  function onSubmit(event: FormEvent<HTMLFormElement>) {
+    if (photoBusy) event.preventDefault();
+  }
 
   return (
-    <form action={action} className="space-y-4">
+    <form action={action} className="space-y-4" onSubmit={onSubmit}>
       <label className="block space-y-1">
         <span className="text-sm font-bold">Display name</span>
         <input
@@ -81,19 +88,37 @@ export function ProfileForm({ member }: { member: Member }) {
           className="w-full retro-box-inset bg-white px-3 py-2 text-base"
         />
       </label>
-      <PhotoField currentUrl={member.avatarUrl} />
-      {state?.error ? <p className="text-sm font-bold text-red-700">{state.error}</p> : null}
-      <Button tone="green" type="submit" disabled={pending}>
-        {pending ? 'Saving…' : 'Save profile'}
+      <PhotoField
+        currentUrl={member.avatarUrl}
+        busy={photoBusy}
+        onBusy={setPhotoBusy}
+        onError={setPhotoError}
+      />
+      {state?.error || photoError ? (
+        <p className="text-sm font-bold text-red-700">{photoError || state?.error}</p>
+      ) : null}
+      <Button tone="green" type="submit" disabled={pending || photoBusy}>
+        {photoBusy ? 'Preparing photo…' : pending ? 'Saving…' : 'Save profile'}
       </Button>
     </form>
   );
 }
 
-function PhotoField({ currentUrl }: { currentUrl: string | null }) {
+function PhotoField({
+  currentUrl,
+  busy,
+  onBusy,
+  onError,
+}: {
+  currentUrl: string | null;
+  busy: boolean;
+  onBusy: (busy: boolean) => void;
+  onError: (message: string | null) => void;
+}) {
   const inputRef = useRef<HTMLInputElement>(null);
   const objectUrl = useRef<string | null>(null);
   const [preview, setPreview] = useState<string | null>(currentUrl);
+  const [avatarUrl, setAvatarUrl] = useState('');
 
   useEffect(() => {
     return () => {
@@ -101,19 +126,29 @@ function PhotoField({ currentUrl }: { currentUrl: string | null }) {
     };
   }, []);
 
-  function onChange(event: ChangeEvent<HTMLInputElement>) {
+  async function onChange(event: ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
+    event.target.value = '';
     if (objectUrl.current) {
       URL.revokeObjectURL(objectUrl.current);
       objectUrl.current = null;
     }
-    if (!file) {
+    if (!file) return;
+    onBusy(true);
+    onError(null);
+    setAvatarUrl('');
+    try {
+      const prepared = await prepareAvatar(file);
+      objectUrl.current = prepared.previewUrl;
+      setPreview(prepared.previewUrl);
+      setAvatarUrl(prepared.url);
+    } catch (err) {
       setPreview(currentUrl);
-      return;
+      setAvatarUrl('');
+      onError(err instanceof Error ? err.message : 'That photo did not upload. Try again.');
+    } finally {
+      onBusy(false);
     }
-    const url = URL.createObjectURL(file);
-    objectUrl.current = url;
-    setPreview(url);
   }
 
   return (
@@ -133,19 +168,22 @@ function PhotoField({ currentUrl }: { currentUrl: string | null }) {
           <button
             type="button"
             className="retro-button retro-button-blue"
+            disabled={busy}
             onClick={() => inputRef.current?.click()}
           >
             Choose photo
           </button>
           <input
             ref={inputRef}
-            name="avatar"
             type="file"
             accept="image/jpeg,image/png,image/webp"
             className="sr-only"
-            onChange={onChange}
+            onChange={(event) => { void onChange(event); }}
           />
-          <span className="mt-1 block text-xs text-gray-600">Optional. JPG or PNG, under 2 MB.</span>
+          <input type="hidden" name="avatarUrl" value={avatarUrl} />
+          <span className="mt-1 block text-xs text-gray-600">
+            {busy ? 'Preparing photo…' : 'Optional. JPG or PNG.'}
+          </span>
         </div>
       </div>
     </div>
