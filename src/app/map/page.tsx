@@ -28,7 +28,7 @@ export default async function MapPage({
   return (
     <PageWrapper className="bg-gray-50">
       <div className="mx-auto max-w-7xl px-4 py-6">
-        <div className="retro-box h-[calc(100vh-8rem)] min-h-[480px] overflow-hidden bg-white">
+        <div className="retro-box h-[calc(100dvh-8rem)] min-h-[480px] overflow-hidden bg-white">
           <MapCanvas
             points={data.points}
             lines={data.lines}

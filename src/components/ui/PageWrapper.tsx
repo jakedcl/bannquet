@@ -14,7 +14,7 @@ export default function PageWrapper({ children, className = '' }: PageWrapperPro
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className={`mt-[72px] min-h-[calc(100vh-72px)] ${className}`}
+      className={`page-frame mt-[72px] min-h-[calc(100vh-72px)] ${className}`}
     >
       <CommunitySubnav />
       {children}

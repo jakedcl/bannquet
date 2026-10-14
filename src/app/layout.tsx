@@ -28,14 +28,16 @@ export default async function RootLayout({
       }
     : null;
 
+  const pending = viewer?.role === 'pending';
+
   return (
     <html lang="en">
-      <body>
+      <body className={pending ? 'has-pending' : undefined}>
         <Providers>
           <div className="min-h-screen flex flex-col">
             <Header account={account} />
-            {viewer?.role === 'pending' ? (
-              <p className="retro-box mx-4 mt-4 bg-beige px-4 py-2 text-center text-sm font-bold text-gray-900">
+            {pending ? (
+              <p className="pending-banner retro-box bg-beige px-4 py-2 text-center text-sm font-bold text-gray-900">
                 {APPROVAL_WAIT}
               </p>
             ) : null}

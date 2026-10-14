@@ -208,8 +208,8 @@ function ForecastStrip({ label, items, variant = 'hourly', columns = 4 }: Foreca
   return (
     <div>
       <p className="text-xs uppercase tracking-wide text-gray-500 mb-2">{label}</p>
-      <div className="rounded-2xl border border-gray-100 bg-white/80 overflow-hidden">
-        <div className="grid divide-x divide-gray-100" style={{ gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))` }}>
+      <div className="overflow-x-auto rounded-2xl border border-gray-100 bg-white/80">
+        <div className="grid min-w-[32rem] divide-x divide-gray-100" style={{ gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))` }}>
           {items.map((period) => (
             <div key={`${period.startTime}-${label}`} className="flex flex-col items-start text-left py-2 px-2">
               <div className="w-full aspect-square mb-1 overflow-hidden rounded">

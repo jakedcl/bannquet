@@ -254,3 +254,18 @@ button, .retro-button {
     -1px 1px 0 #000,
     1px 1px 0 #000;
 }
+
+/* The header is fixed, so a banner in normal flow sits underneath it. */
+.pending-banner {
+  position: fixed;
+  top: 72px;
+  left: 1rem;
+  right: 1rem;
+  z-index: 40;
+  margin: 0;
+}
+
+.has-pending .page-frame {
+  margin-top: 10rem;
+  min-height: calc(100vh - 10rem);
+}
