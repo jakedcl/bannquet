@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
+import { signOutAction } from '@/app/sign-in/actions';
 import { useRegion } from '@/contexts/RegionContext';
 import { REGION_OPTIONS } from '@/lib/regions';
 import WeatherTicker from './WeatherTicker';
@@ -36,9 +37,7 @@ export default function Header({ account = null }: { account?: HeaderAccount }) 
   const navItems = [
     { href: '/mountain-weather', label: 'mountain weather' },
     { href: '/map', label: 'map' },
-    { href: '/posts', label: 'posts' },
-    { href: '/stats', label: 'stats' },
-    { href: '/trips', label: 'trips' },
+    { href: '/community', label: 'community' },
   ];
 
   const isHomepage = pathname === '/';
@@ -90,7 +89,7 @@ export default function Header({ account = null }: { account?: HeaderAccount }) 
                   key={item.href}
                   href={item.href}
                   className={`rounded-none px-4 py-2 text-sm font-bold tracking-wide uppercase transition-all
-                    ${pathname === item.href || pathname.startsWith(`${item.href}/`)
+                    ${navItemActive(pathname, item.href)
                       ? 'retro-button-yellow' 
                     : 'retro-button-blue text-white'}
                   `}
@@ -172,7 +171,7 @@ export default function Header({ account = null }: { account?: HeaderAccount }) 
                 <p className="text-white/60 text-xs uppercase tracking-wider mb-3 px-2">Navigation</p>
                 <div className="bg-brand-green-light/40 rounded-2xl p-3 border border-white/10 space-y-2">
                   {navItems.map((item) => {
-                    const isActive = pathname === item.href || pathname.startsWith(`${item.href}/`);
+                    const isActive = navItemActive(pathname, item.href);
                     return (
                       <Link
                         key={item.href}
@@ -198,6 +197,20 @@ export default function Header({ account = null }: { account?: HeaderAccount }) 
   );
 } 
 
+function navItemActive(pathname: string, href: string): boolean {
+  if (href === '/community') {
+    return pathname === '/community'
+      || pathname.startsWith('/community/')
+      || pathname === '/posts'
+      || pathname.startsWith('/posts/')
+      || pathname === '/stats'
+      || pathname.startsWith('/stats/')
+      || pathname === '/trips'
+      || pathname.startsWith('/trips/');
+  }
+  return pathname === href || pathname.startsWith(`${href}/`);
+}
+
 function AccountLinks({
   account,
   pathname,
@@ -207,40 +220,94 @@ function AccountLinks({
   pathname: string;
   stacked?: boolean;
 }) {
-  const className = stacked
-    ? 'block px-4 py-3 text-base font-semibold rounded-xl border text-center text-white border-white/30 hover:border-white hover:bg-white/10'
+  const [openPath, setOpenPath] = useState<string | null>(null);
+  const open = openPath === pathname;
+  const menuRef = useRef<HTMLDivElement | null>(null);
+  const buttonClass = stacked
+    ? 'block w-full px-4 py-3 text-base font-semibold rounded-xl border text-center text-white border-white/30 hover:border-white hover:bg-white/10'
     : 'rounded-none px-4 py-2 text-sm font-bold tracking-wide uppercase transition-all retro-button-blue text-white';
+
+  useEffect(() => {
+    if (!open) return;
+    const close = (event: PointerEvent) => {
+      if (!menuRef.current?.contains(event.target as Node)) setOpenPath(null);
+    };
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setOpenPath(null);
+    };
+    document.addEventListener('pointerdown', close);
+    document.addEventListener('keydown', onKey);
+    return () => {
+      document.removeEventListener('pointerdown', close);
+      document.removeEventListener('keydown', onKey);
+    };
+  }, [open]);
 
   if (!account) {
     return (
-      <Link href="/sign-in" className={className}>
-        sign in
+      <Link href="/sign-in" className={buttonClass}>
+        Log in
       </Link>
     );
   }
 
   const profileHref = account.handle ? `/user/${account.handle}` : '/settings';
-  const label = account.displayName || account.handle || 'you';
+  const name = account.displayName || account.handle || 'you';
+  const settingsOn = open || pathname === '/settings' || pathname === '/admin' || pathname === profileHref;
+  const itemClass = stacked
+    ? 'block px-4 py-3 text-base font-semibold rounded-xl border text-center text-white border-white/30 hover:border-white hover:bg-white/10'
+    : 'retro-button rounded-none px-3 py-1 text-left text-xs font-bold uppercase';
 
   return (
-    <>
-      <Link href={profileHref} className={pathname === profileHref ? className.replace('retro-button-blue', 'retro-button-yellow') : className}>
-        {label}
-      </Link>
-      <Link href="/settings" className={className}>
-        settings
-      </Link>
-      {account.role === 'admin' ? (
-        <Link href="/admin" className={className}>
-          admin
-          {account.pendingCount ? (
-            <span className="ml-2 inline-block min-w-5 bg-white px-1 text-center text-xs font-bold text-gray-900">
-              {account.pendingCount}
-            </span>
+    <div ref={menuRef} className={stacked ? 'space-y-2' : 'flex items-center gap-2'}>
+      <p className={stacked
+        ? 'px-2 text-center text-xs text-white/80'
+        : 'max-w-36 truncate text-xs normal-case tracking-normal text-white/80'}>
+        Logged in as {name}
+      </p>
+      <div className={stacked ? 'space-y-2' : 'relative flex items-center gap-2'}>
+        <div className={stacked ? '' : 'relative'}>
+          <button
+            type="button"
+            aria-expanded={open}
+            aria-haspopup="menu"
+            onClick={() => setOpenPath(open ? null : pathname)}
+            className={settingsOn && !stacked ? buttonClass.replace('retro-button-blue', 'retro-button-yellow') : buttonClass}
+          >
+            Settings
+          </button>
+          {open ? (
+            <div
+              role="menu"
+              aria-label="Settings"
+              className={stacked
+                ? 'space-y-2'
+                : 'absolute right-0 top-full z-30 mt-1 flex min-w-40 flex-col gap-1 bg-beige p-1 text-gray-900 retro-box'}
+            >
+              <Link role="menuitem" href={profileHref} className={itemClass} onClick={() => setOpenPath(null)}>
+                Profile
+              </Link>
+              <Link role="menuitem" href="/settings" className={itemClass} onClick={() => setOpenPath(null)}>
+                Settings
+              </Link>
+              {account.role === 'admin' ? (
+                <Link role="menuitem" href="/admin" className={itemClass} onClick={() => setOpenPath(null)}>
+                  Admin
+                  {account.pendingCount ? (
+                    <span className="ml-2 inline-block min-w-5 bg-brand-green px-1 text-center text-xs font-bold text-white">
+                      {account.pendingCount}
+                    </span>
+                  ) : null}
+                </Link>
+              ) : null}
+            </div>
           ) : null}
-        </Link>
-      ) : null}
-    </>
+        </div>
+        <form action={signOutAction}>
+          <button type="submit" className={buttonClass}>Log out</button>
+        </form>
+      </div>
+    </div>
   );
 }
 

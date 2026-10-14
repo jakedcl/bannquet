@@ -73,25 +73,13 @@ export default function Home() {
                 href="/map"
                 className="retro-button-orange px-10 py-4 font-bold text-lg uppercase tracking-wider rounded-none"
               >
-                Group Map
+                Map
               </Link>
               <Link
-                href="/posts"
+                href="/community"
                 className="retro-button-orange px-10 py-4 font-bold text-lg uppercase tracking-wider rounded-none"
               >
-                Posts
-              </Link>
-              <Link
-                href="/stats"
-                className="retro-button-orange px-10 py-4 font-bold text-lg uppercase tracking-wider rounded-none"
-              >
-                Stats
-              </Link>
-              <Link
-                href="/trips"
-                className="retro-button-orange px-10 py-4 font-bold text-lg uppercase tracking-wider rounded-none"
-              >
-                Trips
+                Community
               </Link>
             </motion.div>
           </div>
