@@ -10,6 +10,8 @@ Live at [bannquet.com](https://www.bannquet.com).
 
 - Hourly and daily forecasts, wind, precipitation and alerts for each mountain. Regions live in `config/weather-regions.json`, so adding a spot is a data change.
 - A ticker at the top of the homepage showing the current extremes across those regions.
+- `/stats` keeps the Adirondack 46 and the New Hampshire 48, plus miles, elevation, and summit leaderboards for foot, bike, and ski. The lists live in `config/challenges`. A route that passes within about 500 feet of a summit counts, and a friend can also mark a peak by hand. A finished list shows a small 88×31 badge on the stats page and on that person's profile.
+- `/trips` is a light planner: a title, a date, a trailhead pin, an I'm-in toggle, the same NWS forecast used everywhere else, and a shared packing list. Templates for day hike, overnight, winter, bike, and ski live in `config/packing-templates.json`. A trip can point at posts afterward, and the trailhead shows on the group map.
 - Published trip reports read from Postgres. Signed-in friends write a post (title, date, activity, tagged friends, story, photos, optional GPX) and it shows in the feed and on the group map.
 - The group map uses MapLibre. Standard tiles are OpenFreeMap. Topo and satellite are USGS National Map. Hybrid keeps OpenFreeMap labels on the imagery. 3D terrain uses AWS Terrarium elevation tiles. None of these are paid map APIs.
 

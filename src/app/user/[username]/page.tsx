@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import PageWrapper from '@/components/ui/PageWrapper';
 import { ProfileAdds } from '@/components/posts/ProfileAdds';
+import { ChallengeBadge } from '@/components/stats/ChallengeBadge';
 import { Badge } from '@/components/retro/Badge';
 import { Window } from '@/components/retro/Window';
 import { getViewer } from '@/app/sign-in/actions';
@@ -11,7 +12,9 @@ import { ACTIVITY_META, isActivity } from '@/lib/activities';
 import { formatFeetGain, formatMiles } from '@/lib/gpx';
 import { loadProfileLibrary } from '@/lib/posts';
 import { REGION_LABELS, isRegionCode } from '@/lib/regions';
+import { challengeProgress, loadChallenges } from '@/lib/challenges';
 import { canContribute } from '@/lib/membership';
+import { ensurePeaks, summitCountsByUser } from '@/lib/summits';
 import { formatTripDate } from '@/lib/utils';
 
 export const dynamic = 'force-dynamic';
@@ -22,6 +25,9 @@ export default async function UserPage({ params }: { params: Promise<{ username:
   if (!member) notFound();
   const viewer = await getViewer();
   const library = await loadProfileLibrary(member.id);
+  const challenges = loadChallenges();
+  await ensurePeaks();
+  const summitCounts = await summitCountsByUser();
   const canAdd = viewer?.id === member.id && canContribute(viewer.role);
 
   const name = member.displayName || member.handle || 'Friend';
@@ -63,6 +69,24 @@ export default async function UserPage({ params }: { params: Promise<{ username:
               <p className="text-sm text-gray-600">No favorite activities yet.</p>
             )}
           </div>
+        </Window>
+        <Window title="Challenges">
+          <div className="flex flex-wrap gap-4">
+            {challenges.map((challenge) => {
+              const climbed = summitCounts.find((row) => row.userId === member.id && row.listId === challenge.id)?.count ?? 0;
+              const progress = challengeProgress(challenge.peaks.length, climbed);
+              return (
+                <div key={challenge.id} className="space-y-1">
+                  <p className="text-sm font-bold">{challenge.short}</p>
+                  <p className="text-sm">{progress.climbed} / {progress.total}</p>
+                  {progress.complete ? <ChallengeBadge short={challenge.short} /> : null}
+                </div>
+              );
+            })}
+          </div>
+          <p className="mt-3 text-sm">
+            <Link href="/stats" className="underline">All the lists and the leaderboards</Link>
+          </p>
         </Window>
         {canAdd ? (
           <Window title="Add to your map">

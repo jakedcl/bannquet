@@ -1,0 +1,75 @@
+[
+  {
+    "id": "day-hike",
+    "name": "Day hike",
+    "items": [
+      { "label": "Water", "ounces": 48 },
+      { "label": "Snacks" },
+      { "label": "Rain jacket" },
+      { "label": "Warm layer" },
+      { "label": "Map" },
+      { "label": "Headlamp" },
+      { "label": "First aid kit" },
+      { "label": "Sun protection" }
+    ]
+  },
+  {
+    "id": "overnight",
+    "name": "Overnight",
+    "items": [
+      { "label": "Water", "ounces": 48 },
+      { "label": "Dinner" },
+      { "label": "Breakfast" },
+      { "label": "Stove and fuel" },
+      { "label": "Shelter" },
+      { "label": "Sleeping bag" },
+      { "label": "Sleeping pad" },
+      { "label": "Rain jacket" },
+      { "label": "Extra clothes" },
+      { "label": "Headlamp" },
+      { "label": "First aid kit" }
+    ]
+  },
+  {
+    "id": "winter",
+    "name": "Winter",
+    "items": [
+      { "label": "Thermos", "ounces": 24 },
+      { "label": "Extra food" },
+      { "label": "Insulated jacket" },
+      { "label": "Extra gloves" },
+      { "label": "Snowshoes or spikes" },
+      { "label": "Goggles" },
+      { "label": "Headlamp" },
+      { "label": "First aid kit" }
+    ]
+  },
+  {
+    "id": "bike",
+    "name": "Bike",
+    "items": [
+      { "label": "Water", "ounces": 32 },
+      { "label": "Snacks" },
+      { "label": "Spare tube" },
+      { "label": "Pump" },
+      { "label": "Multi-tool" },
+      { "label": "Lights" },
+      { "label": "Rain jacket" },
+      { "label": "Lock" }
+    ]
+  },
+  {
+    "id": "ski",
+    "name": "Ski",
+    "items": [
+      { "label": "Water", "ounces": 32 },
+      { "label": "Snacks" },
+      { "label": "Skins" },
+      { "label": "Transceiver" },
+      { "label": "Probe" },
+      { "label": "Shovel" },
+      { "label": "Extra layer" },
+      { "label": "Goggles" }
+    ]
+  }
+]

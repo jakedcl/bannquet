@@ -1,0 +1,329 @@
+{
+  "id": "adk46",
+  "name": "Adirondack 46",
+  "short": "ADK 46",
+  "peaks": [
+    {
+      "slug": "adk46_algonquin_peak",
+      "name": "Algonquin Peak",
+      "elevationFt": 5115,
+      "lat": 44.143624,
+      "lng": -73.986721
+    },
+    {
+      "slug": "adk46_allen",
+      "name": "Allen Mountain",
+      "elevationFt": 4347,
+      "lat": 44.071037,
+      "lng": -73.939912
+    },
+    {
+      "slug": "adk46_armstrong",
+      "name": "Armstrong Mountain",
+      "elevationFt": 4429,
+      "lat": 44.134718,
+      "lng": -73.849824
+    },
+    {
+      "slug": "adk46_basin",
+      "name": "Basin Mountain",
+      "elevationFt": 4826,
+      "lat": 44.121392,
+      "lng": -73.88656
+    },
+    {
+      "slug": "adk46_big_slide",
+      "name": "Big Slide Mountain",
+      "elevationFt": 4199,
+      "lat": 44.182303,
+      "lng": -73.870842
+    },
+    {
+      "slug": "adk46_blake_peak",
+      "name": "Blake Peak",
+      "elevationFt": 3970,
+      "lat": 44.081398,
+      "lng": -73.844691
+    },
+    {
+      "slug": "adk46_carson_peak",
+      "name": "Carson Peak",
+      "elevationFt": 4068,
+      "lat": 44.060073,
+      "lng": -73.774443
+    },
+    {
+      "slug": "adk46_cascade",
+      "name": "Cascade Mountain",
+      "elevationFt": 4098,
+      "lat": 44.21855,
+      "lng": -73.860169
+    },
+    {
+      "slug": "adk46_cliff",
+      "name": "Cliff Mountain",
+      "elevationFt": 3944,
+      "lat": 44.103354,
+      "lng": -73.975278
+    },
+    {
+      "slug": "adk46_couchsachraga_peak",
+      "name": "Couchsachraga Peak",
+      "elevationFt": 3793,
+      "lat": 44.095561,
+      "lng": -74.160136
+    },
+    {
+      "slug": "adk46_dial",
+      "name": "Dial Mountain",
+      "elevationFt": 4003,
+      "lat": 44.105941,
+      "lng": -73.796421
+    },
+    {
+      "slug": "adk46_dix",
+      "name": "Dix Mountain",
+      "elevationFt": 4823,
+      "lat": 44.082417,
+      "lng": -73.786588
+    },
+    {
+      "slug": "adk46_donaldson",
+      "name": "Donaldson Mountain",
+      "elevationFt": 4108,
+      "lat": 44.154118,
+      "lng": -74.211587
+    },
+    {
+      "slug": "adk46_esther",
+      "name": "Esther Mountain",
+      "elevationFt": 4239,
+      "lat": 44.387191,
+      "lng": -73.889839
+    },
+    {
+      "slug": "adk46_giant",
+      "name": "Giant Mountain",
+      "elevationFt": 4626,
+      "lat": 44.161243,
+      "lng": -73.720261
+    },
+    {
+      "slug": "adk46_gothics",
+      "name": "Gothics",
+      "elevationFt": 4734,
+      "lat": 44.127528,
+      "lng": -73.858031
+    },
+    {
+      "slug": "adk46_grace_peak",
+      "name": "Grace Peak",
+      "elevationFt": 4026,
+      "lat": 44.06534,
+      "lng": -73.757444
+    },
+    {
+      "slug": "adk46_gray_peak",
+      "name": "Gray Peak",
+      "elevationFt": 4826,
+      "lat": 44.111683,
+      "lng": -73.93537
+    },
+    {
+      "slug": "adk46_hough_peak",
+      "name": "Hough Peak",
+      "elevationFt": 4409,
+      "lat": 44.069622,
+      "lng": -73.777727
+    },
+    {
+      "slug": "adk46_iroquois_peak",
+      "name": "Iroquois Peak",
+      "elevationFt": 4843,
+      "lat": 44.136881,
+      "lng": -73.998263
+    },
+    {
+      "slug": "adk46_lower_wolfjaw",
+      "name": "Lower Wolfjaw Mountain",
+      "elevationFt": 4173,
+      "lat": 44.148407,
+      "lng": -73.832884
+    },
+    {
+      "slug": "adk46_macomb",
+      "name": "Macomb Mountain",
+      "elevationFt": 4370,
+      "lat": 44.05176,
+      "lng": -73.780276
+    },
+    {
+      "slug": "adk46_colden",
+      "name": "Mount Colden",
+      "elevationFt": 4715,
+      "lat": 44.126996,
+      "lng": -73.960092
+    },
+    {
+      "slug": "adk46_colvin",
+      "name": "Mount Colvin",
+      "elevationFt": 4035,
+      "lat": 44.094202,
+      "lng": -73.834472
+    },
+    {
+      "slug": "adk46_emmons",
+      "name": "Mount Emmons",
+      "elevationFt": 4039,
+      "lat": 44.143807,
+      "lng": -74.214392
+    },
+    {
+      "slug": "adk46_haystack",
+      "name": "Mount Haystack",
+      "elevationFt": 4961,
+      "lat": 44.105796,
+      "lng": -73.900787
+    },
+    {
+      "slug": "adk46_marcy",
+      "name": "Mount Marcy",
+      "elevationFt": 5344,
+      "lat": 44.112857,
+      "lng": -73.923784
+    },
+    {
+      "slug": "adk46_marshall",
+      "name": "Mount Marshall",
+      "elevationFt": 4364,
+      "lat": 44.127744,
+      "lng": -74.01232
+    },
+    {
+      "slug": "adk46_redfield",
+      "name": "Mount Redfield",
+      "elevationFt": 4606,
+      "lat": 44.094817,
+      "lng": -73.950006
+    },
+    {
+      "slug": "adk46_skylight",
+      "name": "Mount Skylight",
+      "elevationFt": 4925,
+      "lat": 44.099543,
+      "lng": -73.9312
+    },
+    {
+      "slug": "adk46_nippletop",
+      "name": "Nippletop",
+      "elevationFt": 4593,
+      "lat": 44.089104,
+      "lng": -73.816293
+    },
+    {
+      "slug": "adk46_nye",
+      "name": "Nye Mountain",
+      "elevationFt": 3839,
+      "lat": 44.187291,
+      "lng": -74.024109
+    },
+    {
+      "slug": "adk46_panther_peak",
+      "name": "Panther Peak",
+      "elevationFt": 4442,
+      "lat": 44.098438,
+      "lng": -74.132291
+    },
+    {
+      "slug": "adk46_phelps",
+      "name": "Phelps Mountain",
+      "elevationFt": 4160,
+      "lat": 44.157024,
+      "lng": -73.921508
+    },
+    {
+      "slug": "adk46_porter",
+      "name": "Porter Mountain",
+      "elevationFt": 4068,
+      "lat": 44.212416,
+      "lng": -73.853665
+    },
+    {
+      "slug": "adk46_rocky_peak_ridge",
+      "name": "Rocky Peak Ridge",
+      "elevationFt": 4390,
+      "lat": 44.154363,
+      "lng": -73.705445
+    },
+    {
+      "slug": "adk46_saddleback",
+      "name": "Saddleback Mountain",
+      "elevationFt": 4528,
+      "lat": 44.126584,
+      "lng": -73.875073
+    },
+    {
+      "slug": "adk46_santanoni_peak",
+      "name": "Santanoni Peak",
+      "elevationFt": 4606,
+      "lat": 44.082445,
+      "lng": -74.131163
+    },
+    {
+      "slug": "adk46_sawteeth",
+      "name": "Sawteeth",
+      "elevationFt": 4134,
+      "lat": 44.1134,
+      "lng": -73.850664
+    },
+    {
+      "slug": "adk46_seward",
+      "name": "Seward Mountain",
+      "elevationFt": 4331,
+      "lat": 44.159861,
+      "lng": -74.19967
+    },
+    {
+      "slug": "adk46_seymour",
+      "name": "Seymour Mountain",
+      "elevationFt": 4091,
+      "lat": 44.158107,
+      "lng": -74.172565
+    },
+    {
+      "slug": "adk46_street",
+      "name": "Street Mountain",
+      "elevationFt": 4134,
+      "lat": 44.179393,
+      "lng": -74.027066
+    },
+    {
+      "slug": "adk46_table_top",
+      "name": "Table Top Mountain",
+      "elevationFt": 4413,
+      "lat": 44.140661,
+      "lng": -73.916373
+    },
+    {
+      "slug": "adk46_upper_wolfjaw",
+      "name": "Upper Wolfjaw Mountain",
+      "elevationFt": 4203,
+      "lat": 44.140504,
+      "lng": -73.845274
+    },
+    {
+      "slug": "adk46_whiteface",
+      "name": "Whiteface Mountain",
+      "elevationFt": 4865,
+      "lat": 44.365795,
+      "lng": -73.903219
+    },
+    {
+      "slug": "adk46_wright_peak",
+      "name": "Wright Peak",
+      "elevationFt": 4587,
+      "lat": 44.151768,
+      "lng": -73.979762
+    }
+  ]
+}

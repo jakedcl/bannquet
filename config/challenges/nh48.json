@@ -1,0 +1,343 @@
+{
+  "id": "nh48",
+  "name": "New Hampshire 48",
+  "short": "NH 48",
+  "peaks": [
+    {
+      "slug": "nh48_bondcliff",
+      "name": "Bondcliff",
+      "elevationFt": 4265,
+      "lat": 44.140577,
+      "lng": -71.54092
+    },
+    {
+      "slug": "nh48_cannon",
+      "name": "Cannon Mountain",
+      "elevationFt": 4100,
+      "lat": 44.156454,
+      "lng": -71.698417
+    },
+    {
+      "slug": "nh48_carter_dome",
+      "name": "Carter Dome",
+      "elevationFt": 4832,
+      "lat": 44.267339,
+      "lng": -71.179261
+    },
+    {
+      "slug": "nh48_east_osceola",
+      "name": "East Osceola",
+      "elevationFt": 4156,
+      "lat": 44.006235,
+      "lng": -71.520622
+    },
+    {
+      "slug": "nh48_galehead",
+      "name": "Galehead",
+      "elevationFt": 4024,
+      "lat": 44.184811,
+      "lng": -71.573392
+    },
+    {
+      "slug": "nh48_middle_carter",
+      "name": "Middle Carter",
+      "elevationFt": 4610,
+      "lat": 44.30312,
+      "lng": -71.167296
+    },
+    {
+      "slug": "nh48_middle_tripyramid",
+      "name": "Middle Tripyramid",
+      "elevationFt": 4140,
+      "lat": 43.96457,
+      "lng": -71.440074
+    },
+    {
+      "slug": "nh48_adams",
+      "name": "Mount Adams",
+      "elevationFt": 5774,
+      "lat": 44.320556,
+      "lng": -71.291389
+    },
+    {
+      "slug": "nh48_bond",
+      "name": "Mount Bond",
+      "elevationFt": 4698,
+      "lat": 44.153045,
+      "lng": -71.531225
+    },
+    {
+      "slug": "nh48_cabot",
+      "name": "Mount Cabot",
+      "elevationFt": 4170,
+      "lat": 44.505984,
+      "lng": -71.414423
+    },
+    {
+      "slug": "nh48_carrigain",
+      "name": "Mount Carrigain",
+      "elevationFt": 4700,
+      "lat": 44.093606,
+      "lng": -71.446803
+    },
+    {
+      "slug": "nh48_eisenhower",
+      "name": "Mount Eisenhower",
+      "elevationFt": 4780,
+      "lat": 44.240733,
+      "lng": -71.350181
+    },
+    {
+      "slug": "nh48_field",
+      "name": "Mount Field",
+      "elevationFt": 4340,
+      "lat": 44.196177,
+      "lng": -71.434522
+    },
+    {
+      "slug": "nh48_flume",
+      "name": "Mount Flume",
+      "elevationFt": 4328,
+      "lat": 44.108955,
+      "lng": -71.627859
+    },
+    {
+      "slug": "nh48_garfield",
+      "name": "Mount Garfield",
+      "elevationFt": 4500,
+      "lat": 44.187009,
+      "lng": -71.610915
+    },
+    {
+      "slug": "nh48_hale",
+      "name": "Mount Hale",
+      "elevationFt": 4054,
+      "lat": 44.221731,
+      "lng": -71.512024
+    },
+    {
+      "slug": "nh48_hancock",
+      "name": "Mount Hancock",
+      "elevationFt": 4420,
+      "lat": 44.083678,
+      "lng": -71.493689
+    },
+    {
+      "slug": "nh48_isolation",
+      "name": "Mount Isolation",
+      "elevationFt": 4004,
+      "lat": 44.214789,
+      "lng": -71.309241
+    },
+    {
+      "slug": "nh48_jackson",
+      "name": "Mount Jackson",
+      "elevationFt": 4052,
+      "lat": 44.194511,
+      "lng": -71.388688
+    },
+    {
+      "slug": "nh48_jefferson",
+      "name": "Mount Jefferson",
+      "elevationFt": 5712,
+      "lat": 44.3042,
+      "lng": -71.31685
+    },
+    {
+      "slug": "nh48_lafayette",
+      "name": "Mount Lafayette",
+      "elevationFt": 5249,
+      "lat": 44.160705,
+      "lng": -71.644361
+    },
+    {
+      "slug": "nh48_liberty",
+      "name": "Mount Liberty",
+      "elevationFt": 4459,
+      "lat": 44.115781,
+      "lng": -71.642142
+    },
+    {
+      "slug": "nh48_lincoln",
+      "name": "Mount Lincoln",
+      "elevationFt": 5089,
+      "lat": 44.148945,
+      "lng": -71.644526
+    },
+    {
+      "slug": "nh48_madison",
+      "name": "Mount Madison",
+      "elevationFt": 5367,
+      "lat": 44.328817,
+      "lng": -71.27678
+    },
+    {
+      "slug": "nh48_monroe",
+      "name": "Mount Monroe",
+      "elevationFt": 5384,
+      "lat": 44.25556,
+      "lng": -71.3225
+    },
+    {
+      "slug": "nh48_moosilauke",
+      "name": "Mount Moosilauke",
+      "elevationFt": 4802,
+      "lat": 44.024511,
+      "lng": -71.830917
+    },
+    {
+      "slug": "nh48_moriah",
+      "name": "Mount Moriah",
+      "elevationFt": 4049,
+      "lat": 44.340341,
+      "lng": -71.131463
+    },
+    {
+      "slug": "nh48_osceola",
+      "name": "Mount Osceola",
+      "elevationFt": 4340,
+      "lat": 44.001614,
+      "lng": -71.535614
+    },
+    {
+      "slug": "nh48_passaconaway",
+      "name": "Mount Passaconaway",
+      "elevationFt": 4043,
+      "lat": 43.954722,
+      "lng": -71.381389
+    },
+    {
+      "slug": "nh48_pierce",
+      "name": "Mount Pierce",
+      "elevationFt": 4310,
+      "lat": 44.226523,
+      "lng": -71.365973
+    },
+    {
+      "slug": "nh48_tecumseh",
+      "name": "Mount Tecumseh",
+      "elevationFt": 4003,
+      "lat": 43.967291,
+      "lng": -71.558133
+    },
+    {
+      "slug": "nh48_tom",
+      "name": "Mount Tom",
+      "elevationFt": 4051,
+      "lat": 44.210343,
+      "lng": -71.445911
+    },
+    {
+      "slug": "nh48_washington",
+      "name": "Mount Washington",
+      "elevationFt": 6288,
+      "lat": 44.2705,
+      "lng": -71.30325
+    },
+    {
+      "slug": "nh48_waumbek",
+      "name": "Mount Waumbek",
+      "elevationFt": 4006,
+      "lat": 44.432837,
+      "lng": -71.417024
+    },
+    {
+      "slug": "nh48_whiteface",
+      "name": "Mount Whiteface",
+      "elevationFt": 4020,
+      "lat": 43.93396,
+      "lng": -71.405907
+    },
+    {
+      "slug": "nh48_willey",
+      "name": "Mount Willey",
+      "elevationFt": 4285,
+      "lat": 44.183333,
+      "lng": -71.416667
+    },
+    {
+      "slug": "nh48_zealand",
+      "name": "Mount Zealand",
+      "elevationFt": 4260,
+      "lat": 44.179667,
+      "lng": -71.521333
+    },
+    {
+      "slug": "nh48_north_kinsman",
+      "name": "North Kinsman",
+      "elevationFt": 4293,
+      "lat": 44.133355,
+      "lng": -71.736815
+    },
+    {
+      "slug": "nh48_north_tripyramid",
+      "name": "North Tripyramid",
+      "elevationFt": 4180,
+      "lat": 43.973161,
+      "lng": -71.442779
+    },
+    {
+      "slug": "nh48_north_twin",
+      "name": "North Twin",
+      "elevationFt": 4761,
+      "lat": 44.202333,
+      "lng": -71.558333
+    },
+    {
+      "slug": "nh48_owls_head",
+      "name": "Owl's Head",
+      "elevationFt": 4025,
+      "lat": 44.14444,
+      "lng": -71.605
+    },
+    {
+      "slug": "nh48_south_carter",
+      "name": "South Carter",
+      "elevationFt": 4430,
+      "lat": 44.289722,
+      "lng": -71.176111
+    },
+    {
+      "slug": "nh48_south_hancock",
+      "name": "South Hancock",
+      "elevationFt": 4319,
+      "lat": 44.073271,
+      "lng": -71.486945
+    },
+    {
+      "slug": "nh48_south_kinsman",
+      "name": "South Kinsman",
+      "elevationFt": 4358,
+      "lat": 44.122962,
+      "lng": -71.736632
+    },
+    {
+      "slug": "nh48_south_twin",
+      "name": "South Twin",
+      "elevationFt": 4902,
+      "lat": 44.1875,
+      "lng": -71.555333
+    },
+    {
+      "slug": "nh48_west_bond",
+      "name": "West Bond",
+      "elevationFt": 4540,
+      "lat": 44.154763,
+      "lng": -71.54363
+    },
+    {
+      "slug": "nh48_wildcat",
+      "name": "Wildcat",
+      "elevationFt": 4422,
+      "lat": 44.258889,
+      "lng": -71.201389
+    },
+    {
+      "slug": "nh48_wildcat_d",
+      "name": "Wildcat D",
+      "elevationFt": 4070,
+      "lat": 44.249412,
+      "lng": -71.22359
+    }
+  ]
+}

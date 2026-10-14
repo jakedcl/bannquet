@@ -51,7 +51,12 @@ function TrackAdd() {
       />
       <input type="hidden" name="gpxText" value={gpxText} />
       {state?.error ? <p className="text-sm font-bold text-red-700">{state.error}</p> : null}
-      {state?.saved ? <p className="text-sm">Route saved. It is on the map.</p> : null}
+      {state?.saved ? (
+        <p className="text-sm">
+          Route saved. It is on the map.
+          {state.peaks ? ` It passes ${state.peaks}.` : ''}
+        </p>
+      ) : null}
       <Button type="submit" disabled={pending || !gpxText || parseGpx(gpxText).points.length < 2}>
         {pending ? 'Saving…' : 'Save route'}
       </Button>

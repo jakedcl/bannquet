@@ -60,7 +60,6 @@ export const conditionCategoryEnum = pgEnum('condition_category', [
   'closure',
   'other',
 ]);
-export const peakListEnum = pgEnum('peak_list', ['adk46', 'nh48']);
 
 export const users = pgTable('users', {
   id: text('id').primaryKey(),
@@ -384,7 +383,7 @@ export const peaks = pgTable(
   {
     slug: text('slug').primaryKey(),
     name: text('name').notNull(),
-    list: peakListEnum('list').notNull(),
+    list: text('list').notNull(),
     elevationFt: integer('elevation_ft').notNull(),
     point: geographyPoint('point').notNull(),
     info: text('info'),
@@ -417,7 +416,7 @@ export const summits = pgTable(
     createdAt,
   },
   (table) => [
-    index('summits_user_peak_idx').on(table.userId, table.peakSlug),
+    uniqueIndex('summits_user_peak_unique').on(table.userId, table.peakSlug),
   ],
 );
 
