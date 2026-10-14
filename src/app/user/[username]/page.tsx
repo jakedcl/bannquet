@@ -15,9 +15,9 @@ import { formatTripDate } from '@/lib/utils';
 
 export const dynamic = 'force-dynamic';
 
-export default async function HikerPage({ params }: { params: Promise<{ handle: string }> }) {
-  const { handle } = await params;
-  const member = await findMemberByHandle(handle);
+export default async function UserPage({ params }: { params: Promise<{ username: string }> }) {
+  const { username } = await params;
+  const member = await findMemberByHandle(username);
   if (!member) notFound();
   const viewer = await getViewer();
   const library = await loadProfileLibrary(member.id);
@@ -78,7 +78,7 @@ export default async function HikerPage({ params }: { params: Promise<{ handle: 
             <ul className="space-y-2">
               {library.posts.map((post) => (
                 <li key={post.id}>
-                  <Link href={`/trip-reports/${post.id}`} className="font-bold underline">{post.title}</Link>
+                  <Link href={`/posts/${post.id}`} className="font-bold underline">{post.title}</Link>
                   <span className="ml-2 text-sm text-gray-700">
                     {formatTripDate(post.tripDate)}
                     {post.activity && isActivity(post.activity) ? ` · ${ACTIVITY_META[post.activity].label}` : ''}
@@ -96,7 +96,7 @@ export default async function HikerPage({ params }: { params: Promise<{ handle: 
             <ul className="space-y-2">
               {library.routes.map((route) => (
                 <li key={route.id}>
-                  <Link href={route.postId ? `/trip-reports/${route.postId}` : `/map?track=${route.id}`} className="font-bold underline">
+                  <Link href={route.postId ? `/posts/${route.postId}` : `/map?track=${route.id}`} className="font-bold underline">
                     {route.name}
                   </Link>
                   <span className="ml-2 text-sm text-gray-700">
@@ -115,7 +115,7 @@ export default async function HikerPage({ params }: { params: Promise<{ handle: 
           ) : (
             <div className="grid grid-cols-3 gap-2">
               {library.photos.map((photo) => (
-                <Link key={photo.id} href={photo.postId ? `/trip-reports/${photo.postId}` : `/map?photo=${photo.id}`}>
+                <Link key={photo.id} href={photo.postId ? `/posts/${photo.postId}` : `/map?photo=${photo.id}`}>
                   <Image src={photo.url} alt={photo.caption || ''} width={240} height={240} className="h-28 w-full object-cover retro-box" />
                 </Link>
               ))}

@@ -5,6 +5,7 @@ import { Button } from '@/components/retro/Button';
 import { StatusBar } from '@/components/retro/StatusBar';
 import { Window } from '@/components/retro/Window';
 import { getViewer, signOutAction } from '@/app/sign-in/actions';
+import { profileNeedsNames } from '@/lib/handles';
 
 export const dynamic = 'force-dynamic';
 
@@ -21,9 +22,11 @@ export default async function SettingsPage({
     <PageWrapper>
       <div className="mx-auto max-w-lg space-y-4 px-4 py-10">
         <Window title="Your profile">
-          {params.welcome ? (
+          {params.welcome || profileNeedsNames(viewer) ? (
             <div className="mb-4">
-              <StatusBar>You&apos;re in. Add your name and the sports you actually do.</StatusBar>
+              <StatusBar>
+                Add a display name and a username. The username is the address of your page, like /user/jake.
+              </StatusBar>
             </div>
           ) : null}
           <ProfileForm member={viewer} />

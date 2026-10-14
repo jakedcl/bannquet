@@ -54,7 +54,7 @@ CONFIRM_SANITY_MIGRATION=yes npm run db:migrate-sanity
 
 The dry run only talks to Sanity. The real run needs `SANITY_PROJECT_ID`, `SANITY_API_TOKEN`, and `DATABASE_URL`. Set `BLOB_READ_WRITE_TOKEN` if images should be copied into Vercel Blob. Without it, photo rows keep the Sanity CDN URL.
 
-Old `/trip-reports/<sanity-id>` links redirect to the new id after a report is imported.
+Old `/trip-reports/<sanity-id>` links redirect to `/posts/<id>` after a report is imported. The public feed is `/posts`. Profile pages live at `/user/<username>`; `/hikers/<username>` redirects there.
 
 ## Scripts
 

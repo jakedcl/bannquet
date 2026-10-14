@@ -35,7 +35,7 @@ export default function Header({ account = null }: { account?: HeaderAccount }) 
   const navItems = [
     { href: '/mountain-weather', label: 'mountain weather' },
     { href: '/map', label: 'map' },
-    { href: '/trip-reports', label: 'trip reports' },
+    { href: '/posts', label: 'posts' },
   ];
 
   const isHomepage = pathname === '/';
@@ -216,7 +216,7 @@ function AccountLinks({
     );
   }
 
-  const profileHref = account.handle ? `/hikers/${account.handle}` : '/settings';
+  const profileHref = account.handle ? `/user/${account.handle}` : '/settings';
   const label = account.displayName || account.handle || 'you';
 
   return (

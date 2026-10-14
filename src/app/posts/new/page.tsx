@@ -24,7 +24,7 @@ export default async function NewPostPage() {
         <Window title="New post">
           <p className="mb-4 text-sm text-gray-700">
             Title, the day, what you were doing, who came, and the story. Photos and a GPX file are optional.
-            Anything you add here shows on the map and in the trip reports.
+            Anything you add here shows on the map and in the posts.
           </p>
           <PostForm friends={friends} />
         </Window>

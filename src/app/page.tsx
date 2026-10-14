@@ -76,10 +76,10 @@ export default function Home() {
                 Group Map
               </Link>
               <Link
-                href="/trip-reports"
+                href="/posts"
                 className="retro-button-orange px-10 py-4 font-bold text-lg uppercase tracking-wider rounded-none"
               >
-                Trip Reports
+                Posts
               </Link>
             </motion.div>
           </div>

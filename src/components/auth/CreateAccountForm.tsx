@@ -11,7 +11,8 @@ export function CreateAccountForm({ email, inviteCode }: { email: string; invite
   return (
     <form action={action} className="space-y-4">
       <p className="text-sm text-gray-700">
-        This invite is for the email below. Choose a password you can remember. At least 8 characters.
+        This invite is for the email below. Add your name, pick a username, and choose a password you can
+        remember.
       </p>
       <label className="block space-y-1">
         <span className="text-sm font-bold">Email</span>
@@ -25,6 +26,33 @@ export function CreateAccountForm({ email, inviteCode }: { email: string; invite
         />
       </label>
       <input type="hidden" name="inviteCode" value={inviteCode} />
+      <label className="block space-y-1">
+        <span className="text-sm font-bold">Display name</span>
+        <input
+          name="displayName"
+          required
+          maxLength={80}
+          autoComplete="name"
+          className="w-full retro-box-inset bg-white px-3 py-2 text-base"
+        />
+        <span className="block text-xs text-gray-600">The name your friends know you by.</span>
+      </label>
+      <label className="block space-y-1">
+        <span className="text-sm font-bold">Username</span>
+        <input
+          name="username"
+          required
+          minLength={3}
+          maxLength={24}
+          autoCapitalize="none"
+          autoCorrect="off"
+          spellCheck={false}
+          className="w-full retro-box-inset bg-white px-3 py-2 text-base"
+        />
+        <span className="block text-xs text-gray-600">
+          Lowercase letters, numbers, and underscores. This becomes your page address.
+        </span>
+      </label>
       <PasswordField
         name="password"
         label="Password"

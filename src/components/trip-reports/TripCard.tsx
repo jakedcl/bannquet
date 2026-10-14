@@ -19,7 +19,7 @@ function tagLabel(tag: string) {
 
 export default function TripCard({ trip, index }: TripCardProps) {
   return (
-    <Link href={`/trip-reports/${trip.id}`}>
+    <Link href={`/posts/${trip.id}`}>
       <motion.article
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}

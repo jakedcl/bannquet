@@ -91,7 +91,7 @@ export async function publishPost(
   } catch {
     return { error: 'Could not save that post. Try again in a minute.' };
   }
-  redirect(`/trip-reports/${id}`);
+  redirect(`/posts/${id}`);
 }
 
 export async function publishProfileTrack(

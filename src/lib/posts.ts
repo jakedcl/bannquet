@@ -110,7 +110,7 @@ export async function loadMapData(): Promise<{ points: MapFeatureCollection; lin
         activity,
         color: colorFor(activity),
         trackId: '',
-        href: `/trip-reports/${id}`,
+        href: `/posts/${id}`,
       },
     });
   }
@@ -122,7 +122,7 @@ export async function loadMapData(): Promise<{ points: MapFeatureCollection; lin
     const activity = text(row.activity);
     const postId = text(row.post_id);
     if (!id || lat == null || lng == null) continue;
-    const href = postId ? `/trip-reports/${postId}` : `/map?track=${id}`;
+    const href = postId ? `/posts/${postId}` : `/map?track=${id}`;
     points.push({
       type: 'Feature',
       geometry: { type: 'Point', coordinates: [lng, lat] },
@@ -170,7 +170,7 @@ export async function loadMapData(): Promise<{ points: MapFeatureCollection; lin
         activity,
         color: colorFor(activity),
         trackId: '',
-        href: postId ? `/trip-reports/${postId}` : `/map?photo=${id}`,
+        href: postId ? `/posts/${postId}` : `/map?photo=${id}`,
       },
     });
   }
