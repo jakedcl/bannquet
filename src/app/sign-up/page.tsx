@@ -13,7 +13,7 @@ export default async function SignUpPage() {
 
   return (
     <PageWrapper>
-      <div className="mx-auto max-w-lg px-4 py-10">
+      <div className="page-shell page-pad mx-auto max-w-lg">
         <Window title="Make an account">
           <SignUpForm />
         </Window>

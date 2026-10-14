@@ -14,7 +14,7 @@ export default async function NewPostPage() {
   if (!canContribute(viewer.role)) {
     return (
       <PageWrapper className="bg-gray-50">
-        <div className="mx-auto max-w-2xl px-4 py-10">
+        <div className="page-shell page-pad mx-auto max-w-2xl">
           <Window title="New post">
             <p className="text-sm text-gray-700">{APPROVAL_WAIT}</p>
           </Window>
@@ -32,7 +32,7 @@ export default async function NewPostPage() {
 
   return (
     <PageWrapper className="bg-gray-50">
-      <div className="mx-auto max-w-2xl px-4 py-10">
+      <div className="page-shell page-pad mx-auto max-w-2xl">
         <Window title="New post">
           <p className="mb-4 text-sm text-gray-700">
             Title, the day, what you were doing, who came, and the story. Photos and a GPX file are optional.

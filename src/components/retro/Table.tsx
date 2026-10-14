@@ -11,7 +11,7 @@ export function Table({ caption, headers, rows }: TableProps) {
         {caption ? (
           <caption className="px-3 py-2 text-left text-xs font-bold uppercase tracking-wide">{caption}</caption>
         ) : null}
-        <thead className="bg-beige font-mono text-xs uppercase">
+        <thead className="bg-beige text-xs uppercase">
           <tr>
             {headers.map((header) => (
               <th key={header} className="border border-border-gray px-3 py-2 font-bold">

@@ -23,7 +23,7 @@ export default async function AdminPage() {
 
   return (
     <PageWrapper>
-      <div className="mx-auto max-w-3xl space-y-6 px-4 py-10">
+      <div className="page-shell page-pad space-y-6">
         <Window title="Invites">
           <p className="mb-4 text-sm">
             Type a friend&apos;s email. You get a page link to text them. They choose a password there.
@@ -34,7 +34,7 @@ export default async function AdminPage() {
 
         <Window title="Invite list">
           {invites.length === 0 ? (
-            <p className="text-sm">No invites yet.</p>
+            <p className="empty-note text-sm">No invites yet.</p>
           ) : (
             <Table
               headers={['Email', 'Status', 'Link']}
@@ -58,7 +58,7 @@ export default async function AdminPage() {
 
         <Window title={pending.length > 0 ? `Waiting (${pending.length})` : 'Waiting'}>
           {pending.length === 0 ? (
-            <p className="text-sm">Nobody is waiting for approval.</p>
+            <p className="empty-note text-sm">Nobody is waiting for approval.</p>
           ) : (
             <Table
               headers={['Name', 'Email', 'Username', 'Decision']}
@@ -74,7 +74,7 @@ export default async function AdminPage() {
 
         <Window title="Members">
           {approved.length === 0 ? (
-            <p className="text-sm">Nobody has signed in yet.</p>
+            <p className="empty-note text-sm">Nobody has signed in yet.</p>
           ) : (
             <Table
               headers={['Name', 'Email', 'Role', 'Password']}

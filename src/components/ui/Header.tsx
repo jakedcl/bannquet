@@ -101,7 +101,7 @@ export default function Header({ account = null }: { account?: HeaderAccount }) 
             
             {/* Region selector - only show on weather pages */}
             {(pathname === '/weather' || pathname.startsWith('/weather/')) && (
-              <div className="relative flex items-center gap-2 bg-brand-green-light/40 rounded-full px-2 py-1 border border-white/30 hover:border-white transition-all">
+              <div className="relative flex items-center border-2 border-white/40">
                 <RegionSelector alignment="left" size="desktop" embedded />
               </div>
             )}
@@ -119,7 +119,7 @@ export default function Header({ account = null }: { account?: HeaderAccount }) 
           
           <button 
             onClick={() => setOpenPath(mobileMenuOpen ? null : pathname)}
-            className="z-20 p-2 focus:outline-none"
+            className="z-20 p-2"
             aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
           >
             <div className="w-6 flex flex-col items-end justify-center gap-1.5">
@@ -150,7 +150,7 @@ export default function Header({ account = null }: { account?: HeaderAccount }) 
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
-              className="fixed inset-0 bg-black/20 backdrop-blur-sm z-10 md:hidden"
+              className="fixed inset-0 z-10 bg-ink/40 md:hidden"
               onClick={() => setOpenPath(null)}
             />
           )}
@@ -164,23 +164,19 @@ export default function Header({ account = null }: { account?: HeaderAccount }) 
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "spring", damping: 25, stiffness: 300 }}
-              className="fixed top-0 right-0 bottom-0 w-4/5 max-w-xs bg-brand-green z-10 md:hidden flex flex-col p-6 pt-24"
+              className="fixed top-0 right-0 bottom-0 z-20 flex w-[min(88vw,20rem)] flex-col border-l-[3px] border-ink bg-brand-green-dark p-4 pt-24 shadow-[-4px_0_0_var(--ink)] md:hidden"
             >
               {/* Navigation Items for Mobile */}
               <div className="mb-6">
-                <p className="text-white/60 text-xs uppercase tracking-wider mb-3 px-2">Navigation</p>
-                <div className="bg-brand-green-light/40 rounded-2xl p-3 border border-white/10 space-y-2">
+                <p className="mb-3 px-1 text-xs font-bold uppercase tracking-wider text-white/70">Navigation</p>
+                <div className="space-y-3">
                   {navItems.map((item) => {
                     const isActive = navItemActive(pathname, item.href);
                     return (
                       <Link
                         key={item.href}
                         href={item.href}
-                        className={`block px-4 py-3 text-base font-semibold rounded-xl border text-center transition-colors ${
-                          isActive
-                            ? 'bg-white text-brand-green border-white'
-                            : 'text-white border-white/30 hover:border-white hover:bg-white/10'
-                        }`}
+                        className={`w-full ${isActive ? 'retro-button-yellow' : 'retro-button'}`}
                       >
                         {item.label}
                       </Link>
@@ -224,8 +220,8 @@ function AccountLinks({
   const open = openPath === pathname;
   const menuRef = useRef<HTMLDivElement | null>(null);
   const buttonClass = stacked
-    ? 'block w-full px-4 py-3 text-base font-semibold rounded-xl border text-center text-white border-white/30 hover:border-white hover:bg-white/10'
-    : 'rounded-none px-4 py-2 text-sm font-bold tracking-wide uppercase transition-all retro-button-blue text-white';
+    ? 'retro-button w-full'
+    : 'retro-button-blue';
 
   useEffect(() => {
     if (!open) return;
@@ -255,8 +251,8 @@ function AccountLinks({
   const name = account.displayName || account.handle || 'you';
   const settingsOn = open || pathname === '/settings' || pathname === '/admin' || pathname === profileHref;
   const itemClass = stacked
-    ? 'block px-4 py-3 text-base font-semibold rounded-xl border text-center text-white border-white/30 hover:border-white hover:bg-white/10'
-    : 'retro-button rounded-none px-3 py-1 text-left text-xs font-bold uppercase';
+    ? 'retro-button w-full'
+    : 'retro-button w-full justify-start text-xs';
 
   return (
     <div ref={menuRef} className={stacked ? 'space-y-2' : 'flex items-center gap-2'}>
@@ -272,7 +268,9 @@ function AccountLinks({
             aria-expanded={open}
             aria-haspopup="menu"
             onClick={() => setOpenPath(open ? null : pathname)}
-            className={settingsOn && !stacked ? buttonClass.replace('retro-button-blue', 'retro-button-yellow') : buttonClass}
+            className={settingsOn
+              ? (stacked ? 'retro-button-yellow w-full' : buttonClass.replace('retro-button-blue', 'retro-button-yellow'))
+              : buttonClass}
           >
             Settings
           </button>
@@ -282,7 +280,7 @@ function AccountLinks({
               aria-label="Settings"
               className={stacked
                 ? 'space-y-2'
-                : 'absolute right-0 top-full z-30 mt-1 flex min-w-40 flex-col gap-1 bg-beige p-1 text-gray-900 retro-box'}
+                : 'absolute right-0 top-full z-30 mt-2 flex min-w-40 flex-col gap-1 retro-pop'}
             >
               <Link role="menuitem" href={profileHref} className={itemClass} onClick={() => setOpenPath(null)}>
                 Profile
@@ -340,14 +338,14 @@ function RegionSelector({ className = '', alignment = 'right', size = 'desktop',
   if (embedded) {
     // Embedded in group: compact for mobile header
     if (size === 'mobile') {
-      buttonClasses = 'px-2.5 py-1.5 text-sm font-bold tracking-wide rounded-full';
+      buttonClasses = 'border-2 border-white/50 px-2.5 py-1.5 text-sm font-bold tracking-wide';
     } else {
-    buttonClasses = 'px-3 py-1.5 text-lg font-bold tracking-wide rounded-full';
+      buttonClasses = 'border-2 border-white/50 px-3 py-1.5 text-sm font-bold tracking-wide';
     }
   } else if (size === 'desktop') {
-    buttonClasses = 'px-4 py-1.5 text-sm font-bold tracking-wide rounded-full border';
+    buttonClasses = 'border-2 border-white/50 px-3 py-1.5 text-sm font-bold tracking-wide';
   } else {
-    buttonClasses = `px-4 py-3 text-base font-semibold rounded-xl border ${fullWidth ? 'w-full' : ''}`;
+    buttonClasses = `border-2 border-white/50 px-4 py-3 text-base font-bold tracking-wide ${fullWidth ? 'w-full' : ''}`;
   }
 
   return (
@@ -382,7 +380,7 @@ function RegionSelector({ className = '', alignment = 'right', size = 'desktop',
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -6 }}
             transition={{ duration: 0.15 }}
-            className={`absolute ${alignment === 'left' ? 'left-0' : 'right-0'} top-full mt-2 ${fullWidth ? 'w-full' : 'w-40'} rounded-2xl border border-white/20 bg-brand-green/95 backdrop-blur-xl shadow-2xl overflow-hidden z-30`}
+            className={`absolute ${alignment === 'left' ? 'left-0' : 'right-0'} top-full z-30 mt-2 ${fullWidth ? 'w-full' : 'w-44'} retro-pop`}
             role="listbox"
           >
             {REGION_OPTIONS.map((option) => {
@@ -394,10 +392,10 @@ function RegionSelector({ className = '', alignment = 'right', size = 'desktop',
                     setRegion(option.code);
                     setOpen(false);
                   }}
-                  className={`w-full text-left px-4 py-2 text-sm font-semibold transition-colors ${
+                  className={`w-full px-3 py-2 text-left text-sm font-bold ${
                     isActive
-                      ? 'bg-white text-brand-green'
-                      : 'text-white/80 hover:bg-white/10'
+                      ? 'bg-mustard text-ink'
+                      : 'text-ink hover:bg-beige'
                   }`}
                   role="option"
                   aria-selected={isActive}

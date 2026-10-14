@@ -11,13 +11,13 @@ export default function WeatherPage() {
   const regionLabel = REGION_LABELS[region];
 
   return (
-    <PageWrapper className="bg-gray-50">
-      <div className="container mx-auto px-4 py-12 space-y-10">
+    <PageWrapper>
+      <div className="page-shell page-pad space-y-10">
         <header className="space-y-3">
-          <p className="text-sm uppercase tracking-[0.3em] text-brand-green/70">weather</p>
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900">
+          <p className="page-kicker">National Weather Service</p>
+          <h1 className="page-title">
             Mountain Conditions — {regionLabel}
-      </h1>
+          </h1>
         </header>
 
         <div className="space-y-12">
@@ -40,7 +40,7 @@ function RegionSection({ section }: { section: WeatherSection }) {
             href={section.banner.href}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 text-sm font-semibold text-brand-green border border-brand-green/40 rounded-full px-4 py-2 hover:bg-brand-green/5 transition-colors"
+            className="retro-button-green text-sm"
           >
             {section.banner.label}
             <span aria-hidden="true">↗</span>

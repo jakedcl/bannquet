@@ -19,12 +19,12 @@ function tagLabel(tag: string) {
 
 export default function TripCard({ trip, index }: TripCardProps) {
   return (
-    <Link href={`/posts/${trip.id}`}>
+    <Link href={`/posts/${trip.id}`} className="block h-full">
       <motion.article
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: index * 0.1 }}
-        className="group retro-box overflow-hidden rounded-none transition-all hover:scale-[1.02]"
+        className="guide-card retro-box retro-window overflow-hidden"
       >
         <div className="relative h-64 overflow-hidden bg-gray-200">
           {trip.coverUrl ? (
@@ -36,8 +36,8 @@ export default function TripCard({ trip, index }: TripCardProps) {
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 400px"
             />
           ) : (
-            <div className="flex h-full w-full items-center justify-center text-gray-400">
-              No Image
+            <div className="flex h-full w-full items-center justify-center text-sm text-ink-soft">
+              No photo yet
             </div>
           )}
           <div className="absolute top-4 right-4">
