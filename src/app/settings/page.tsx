@@ -29,13 +29,15 @@ export default async function SettingsPage({
             ) : (
               <>
                 <p className="mb-4 text-sm text-gray-700">
-                  Change your display name, username, photo, and the rest of your page.
-                  Saving a new username moves your page to that /user/ address. The old address still opens the new one.
+                  Change your display name, photo, and the rest of your page.
+                  Your username stays the one you picked when you signed up.
                 </p>
                 {params.welcome || profileNeedsNames(viewer) ? (
                   <div className="mb-4">
                     <StatusBar>
-                      Add a display name and a username. The username is the address of your page, like /user/jake.
+                      {viewer.handle
+                        ? 'Add a display name. Your username stays the one you picked.'
+                        : 'Add a display name and a username. The username is the address of your page.'}
                     </StatusBar>
                   </div>
                 ) : null}

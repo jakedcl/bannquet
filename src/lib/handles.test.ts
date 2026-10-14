@@ -12,7 +12,9 @@ import {
   nextStopForMember,
   normalizeUsername,
   profileNeedsNames,
+  USERNAME_LOCKED,
   usernameAvailability,
+  usernameChangeProblem,
   usernameProblem,
 } from './handles';
 
@@ -38,6 +40,14 @@ test('a taken username gets a friendly message', () => {
   assert.equal(usernameAvailability({ username: 'jake', takenById: 'self', selfId: 'self' }), null);
   assert.equal(usernameAvailability({ username: 'jake', takenById: null, selfId: 'self' }), null);
   assert.equal(usernameAvailability({ username: 'no', takenById: null }), USERNAME_RULE);
+});
+
+test('a username can be chosen once and then stays put', () => {
+  assert.equal(usernameChangeProblem(null, 'ada_trail'), null);
+  assert.equal(usernameChangeProblem(null, 'no'), USERNAME_RULE);
+  assert.equal(usernameChangeProblem('ada_trail', ''), null);
+  assert.equal(usernameChangeProblem('ada_trail', 'Ada_Trail'), null);
+  assert.equal(usernameChangeProblem('ada_trail', 'ada_other'), USERNAME_LOCKED);
 });
 
 test('display name is required and stays short', () => {

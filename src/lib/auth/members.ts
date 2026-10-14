@@ -19,6 +19,7 @@ import {
   displayNameProblem,
   normalizeUsername,
   usernameAvailability,
+  usernameChangeProblem,
 } from '@/lib/handles';
 
 export type Member = {
@@ -330,11 +331,13 @@ export async function updateMemberProfile(
 ): Promise<{ member?: Member; error?: string }> {
   const nameProblem = displayNameProblem(input.displayName);
   if (nameProblem) return { error: nameProblem };
-  const username = normalizeUsername(input.handle);
   const db = getDb();
 
   return db.transaction(async (tx) => {
     const [current] = await tx.select({ handle: users.handle }).from(users).where(eq(users.id, id)).limit(1);
+    const change = usernameChangeProblem(current?.handle ?? null, input.handle);
+    if (change) return { error: change };
+    const username = current?.handle ? normalizeUsername(current.handle) : normalizeUsername(input.handle);
     const [taken] = await tx.select({ id: users.id }).from(users).where(eq(users.handle, username)).limit(1);
     const [reserved] = await tx
       .select({ userId: handleRedirects.userId })
