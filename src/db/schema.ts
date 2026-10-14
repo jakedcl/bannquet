@@ -64,12 +64,27 @@ export const peakListEnum = pgEnum('peak_list', ['adk46', 'nh48']);
 
 export const users = pgTable('users', {
   id: text('id').primaryKey(),
+  email: text('email').unique(),
   handle: text('handle').unique(),
   displayName: text('display_name'),
   avatarUrl: text('avatar_url'),
   homeRegion: text('home_region'),
   bio: text('bio'),
+  favoriteActivities: text('favorite_activities').array().notNull().default(sql`ARRAY[]::text[]`),
   role: userRoleEnum('role').notNull().default('member'),
+  createdAt,
+});
+
+export const passwordResetLinks = pgTable('password_reset_links', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  tokenHash: text('token_hash').notNull().unique(),
+  userId: text('user_id')
+    .notNull()
+    .references(() => users.id, { onDelete: 'cascade' }),
+  createdBy: text('created_by').references(() => users.id, { onDelete: 'set null' }),
+  expiresAt: timestamp('expires_at', { withTimezone: true }).notNull(),
+  usedAt: timestamp('used_at', { withTimezone: true }),
+  emailed: boolean('emailed').notNull().default(false),
   createdAt,
 });
 

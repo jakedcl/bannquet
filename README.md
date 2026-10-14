@@ -29,7 +29,7 @@ npm run dev
 
 Then open http://localhost:3000. Copy `.env.example` to `.env.local`.
 
-Weather pages work with no keys. Trip reports stay empty until `DATABASE_URL` points at a Postgres database and the schema has been migrated.
+Weather pages work with no keys. Trip reports stay empty until `DATABASE_URL` points at a Postgres database and the schema has been migrated. Reading the site stays public. Sign-in is invite-only: Jake texts a link from `/admin`, and that email chooses a password. After that they sign in with email and password. `ADMIN_EMAIL` is the address that can sign in without an invite. Sessions last a week and refresh when someone comes back, which is as long as Neon Auth keeps them.
 
 ## Database
 
