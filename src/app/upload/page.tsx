@@ -50,33 +50,23 @@ export default async function UploadPage({
   return (
     <PageWrapper>
       <div className="mx-auto max-w-2xl space-y-4 px-4 py-10">
-        <Window title="Upload">
-          <p className="mb-4 text-sm text-gray-700">
-            Add a route, a pin, or a photo. They show on the map and on your page. A trip is its own page.
-          </p>
-          {kind ? null : <SectionList links={UPLOAD_LINKS} label="Upload" />}
-        </Window>
+        {kind ? null : (
+          <Window title="Upload">
+            <SectionList links={UPLOAD_LINKS} label="Upload" />
+          </Window>
+        )}
         {kind === 'route' ? (
           <Window title="Route (GPX)">
-            <p className="mb-4 text-sm text-gray-700">
-              A route added here shows on the map and on your page.
-            </p>
             <RouteUpload />
           </Window>
         ) : null}
         {kind === 'pin' ? (
           <Window title="Pin">
-            <p className="mb-4 text-sm text-gray-700">
-              Drop a spot on the map. Give it a title, what you were doing, and a note. Photos are optional.
-            </p>
             <PinForm />
           </Window>
         ) : null}
         {kind === 'photo' ? (
           <Window title="Photo">
-            <p className="mb-4 text-sm text-gray-700">
-              Photos land on the map at the spot they were taken, or where you drop them.
-            </p>
             <PhotoUpload />
           </Window>
         ) : null}

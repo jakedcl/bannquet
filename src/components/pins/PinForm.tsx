@@ -149,9 +149,6 @@ export function PinForm({ initial }: { initial?: InitialPin }) {
       </label>
       <div className="space-y-2">
         <p className="text-sm font-bold">Where</p>
-        <p className="text-xs text-gray-600">
-          Click the map, use your location, or add a photo that already has one.
-        </p>
         <div className="flex flex-wrap gap-2">
           <button
             type="button"

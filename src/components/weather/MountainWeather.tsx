@@ -28,7 +28,6 @@ export function MountainWeather() {
   return (
     <div className="container mx-auto space-y-8 px-4 py-10">
       <header className="space-y-4">
-        <h1 className="text-3xl font-bold text-gray-900 md:text-5xl">Regional mountain weather</h1>
         <WeatherTicker placement="page" />
         <label className="block max-w-md">
           <span className="sr-only">State</span>

@@ -23,10 +23,6 @@ export function SignUpForm({ stamp }: { stamp: string }) {
   return (
     <form action={action} className="space-y-4">
       <SignupTraps stamp={stamp} />
-      <p className="text-sm text-gray-700">
-        Pick the name your friends know, a username, and a password. You can look around right away.
-        Jake approves you before you can post.
-      </p>
       <label className="block space-y-1">
         <span className="text-sm font-bold">Display name</span>
         <input

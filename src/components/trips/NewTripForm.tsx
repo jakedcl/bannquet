@@ -9,9 +9,6 @@ export function NewTripForm() {
 
   return (
     <form action={action} className="space-y-4">
-      <p className="text-sm text-gray-700">
-        A title, a date, and notes. A future date is upcoming. A past date is the recap. Pins, routes, and photos can be attached after.
-      </p>
       <label className="block space-y-1">
         <span className="text-sm font-bold">Title</span>
         <input name="title" required maxLength={80} className="w-full retro-box-inset bg-white px-3 py-2" />

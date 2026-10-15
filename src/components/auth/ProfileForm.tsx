@@ -27,15 +27,11 @@ export function ProfileForm({ member }: { member: Member }) {
           defaultValue={member.displayName ?? ''}
           className="w-full retro-box-inset bg-white px-3 py-2 text-base"
         />
-        <span className="block text-xs text-gray-600">The name your friends know you by.</span>
       </label>
       {member.handle ? (
         <div className="space-y-1">
           <p className="text-sm font-bold">Username</p>
           <p className="text-base">{member.handle}</p>
-          <p className="text-xs text-gray-600">
-            Your page is /user/{member.handle}. Usernames stay the same after you pick one.
-          </p>
         </div>
       ) : (
         <label className="block space-y-1">
@@ -51,7 +47,7 @@ export function ProfileForm({ member }: { member: Member }) {
             className="w-full retro-box-inset bg-white px-3 py-2 text-base"
           />
           <span className="block text-xs text-gray-600">
-            Pick this once. It becomes the address of your page, like /user/this.
+            Lowercase letters, numbers, and underscores. This becomes your page address.
           </span>
         </label>
       )}

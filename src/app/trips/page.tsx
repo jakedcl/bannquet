@@ -37,9 +37,6 @@ export default async function TripsPage() {
     <PageWrapper>
       <div className="mx-auto max-w-3xl space-y-4 px-4 py-10">
         <Window title="Trips" action={canAdd ? <Button href="/trips/new" tone="yellow">+ New trip</Button> : null}>
-          <p className="mb-4 text-sm text-gray-700">
-            One place for a plan and the recap. A future date stays upcoming. A past date is the trip itself.
-          </p>
           {error ? <p className="text-sm font-bold">{error}</p> : trips.length === 0 ? <p className="text-sm">No trips yet.</p> : (
             <div className="space-y-4">
               <TripGroup label="Upcoming" trips={upcoming} empty="Nothing coming up." />

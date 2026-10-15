@@ -181,9 +181,7 @@ export function PostForm({
           <div className="h-64 overflow-hidden bg-white retro-box">
             <GroupMap points={EMPTY} lines={EMPTY} picking onPick={(lng, lat) => setPoint({ lng, lat })} />
           </div>
-          <p className="text-sm text-gray-700">
-            {point ? `Pin at ${point.lat.toFixed(4)}, ${point.lng.toFixed(4)}.` : 'Click the map if this trip needs a new pin.'}
-          </p>
+          {point ? <p className="text-sm text-gray-700">Pin at {point.lat.toFixed(4)}, {point.lng.toFixed(4)}.</p> : null}
         </fieldset>
       ) : null}
 
