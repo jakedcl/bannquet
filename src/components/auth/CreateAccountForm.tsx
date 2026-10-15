@@ -23,10 +23,6 @@ export function CreateAccountForm({
   return (
     <form action={action} className="space-y-4">
       <SignupTraps stamp={stamp} />
-      <p className="text-sm text-gray-700">
-        This invite is for the email below. Add your name, pick a username, and choose a password you can
-        remember.
-      </p>
       <label className="block space-y-1">
         <span className="text-sm font-bold">Email</span>
         <input
@@ -48,7 +44,6 @@ export function CreateAccountForm({
           autoComplete="name"
           className="w-full retro-box-inset bg-white px-3 py-2 text-base"
         />
-        <span className="block text-xs text-gray-600">The name your friends know you by.</span>
       </label>
       <label className="block space-y-1">
         <span className="text-sm font-bold">Username</span>

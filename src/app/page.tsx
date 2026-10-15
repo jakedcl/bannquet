@@ -29,9 +29,8 @@ export default function Home() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
-              className="space-y-6"
             >
-              <div className="mb-4 w-full flex justify-center -mt-8 sm:-mt-12">
+              <div className="w-full flex justify-center -mt-8 sm:-mt-12">
                 <div className="w-full max-w-[280px] sm:max-w-[350px] md:max-w-[420px] lg:max-w-[500px]">
                   <motion.div
                     layoutId="header-logo"
@@ -51,9 +50,6 @@ export default function Home() {
                   </motion.div>
                 </div>
               </div>
-              <p className="text-xl md:text-2xl text-white retro-text-shadow max-w-2xl mx-auto font-bold">
-                Northeast Mountain Resource
-              </p>
             </motion.div>
 
             {/* CTA Buttons */}

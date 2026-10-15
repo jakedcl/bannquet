@@ -33,9 +33,6 @@ export default async function ChatPage() {
     <PageWrapper>
       <div className="mx-auto max-w-3xl px-4 py-10">
         <Window title="Chat">
-          <p className="mb-3 text-sm text-gray-700">
-            One thread for the group. Text only. Trips stay on their own pages.
-          </p>
           <ChatRoom
             initial={messages}
             canSend={canSend}

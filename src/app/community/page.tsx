@@ -8,9 +8,6 @@ export default function CommunityPage() {
     <PageWrapper>
       <div className="mx-auto max-w-3xl px-4 py-10">
         <Window title="Community">
-          <p className="mb-4 text-sm text-gray-700">
-            Chat, the peak list, trips, and shared gear. Trips stay with the person who made them.
-          </p>
           <SectionList links={COMMUNITY_LINKS} label="Community" />
         </Window>
       </div>

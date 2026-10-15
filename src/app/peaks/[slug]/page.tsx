@@ -60,7 +60,6 @@ export default async function PeakPage({ params }: { params: Promise<{ slug: str
             {' · '}
             {LISTS[peak.listId] ?? peak.listId}
           </p>
-          {peak.winter ? <p className="mt-2 text-sm">The club wants this one again in winter. Log that as another climb.</p> : null}
           {peak.note ? <p className="mt-2 text-sm">{peak.note}</p> : null}
           <p className="mt-3 text-sm">
             <Link href="/peaks" className="underline">All peaks</Link>

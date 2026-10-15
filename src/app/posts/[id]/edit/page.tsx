@@ -61,9 +61,6 @@ export default async function EditPostPage({ params }: PageProps) {
     <PageWrapper className="bg-gray-50">
       <div className="mx-auto max-w-2xl px-4 py-10">
         <Window title="Edit post">
-          <p className="mb-4 text-sm text-gray-700">
-            Change the type, title, or note. Switching to General hides the route fields and keeps the old day and activity.
-          </p>
           <PostForm friends={[]} initial={post} />
         </Window>
       </div>

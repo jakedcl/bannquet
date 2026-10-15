@@ -67,7 +67,6 @@ export function PhotoFields({
           }}
         />
       </label>
-      <p className="text-xs text-gray-600">Photos are resized before they upload, so they stay sharp without a huge file.</p>
       {busy ? <p className="text-sm">Working on the photos…</p> : null}
       {error ? <p className="text-sm font-bold text-red-700">{error}</p> : null}
       <input
@@ -90,17 +89,9 @@ export function PhotoFields({
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={photo.previewUrl} alt="" className="h-16 w-16 object-cover" />
               <div className="min-w-0 flex-1 space-y-1">
-                {located ? (
-                  <p className="text-xs text-gray-700">
-                    {photo.source === 'exif' ? 'Location came from the photo.' : 'Pin dropped on the map.'}
-                  </p>
-                ) : showLocation && requireLocation ? (
+                {showLocation && requireLocation && !located ? (
                   <p className="text-xs font-bold text-red-700">
                     This photo has no location. Drop a pin on the map, or remove it.
-                  </p>
-                ) : showLocation ? (
-                  <p className="text-xs text-gray-700">
-                    No location on this photo. The pin uses the spot you chose.
                   </p>
                 ) : null}
                 <div className="flex gap-2">

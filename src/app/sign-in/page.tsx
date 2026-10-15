@@ -32,11 +32,8 @@ export default async function SignInPage({
     <PageWrapper>
       <div className="mx-auto max-w-lg px-4 py-10">
         <Window title="Sign in">
-          {params.reset === '1' ? (
-            <p className="mb-4 text-sm text-brand-green-dark">Password saved. Sign in with it.</p>
-          ) : null}
           {banner ? <p className="mb-4 text-sm font-bold text-red-700">{banner}</p> : null}
-          <SignInForm intro="Use your email and password. You stay signed in on this browser." next={next ?? ''} />
+          <SignInForm next={next ?? ''} />
         </Window>
       </div>
     </PageWrapper>

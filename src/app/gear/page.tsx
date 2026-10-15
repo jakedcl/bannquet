@@ -27,9 +27,6 @@ export default async function GearPage() {
     <PageWrapper>
       <div className="mx-auto max-w-3xl space-y-4 px-4 py-10">
         <Window title="Gear" action={canEdit ? <GearAddButton /> : null}>
-          <p className="mb-4 text-sm text-gray-700">
-            Shared stuff for the group. Add an item, then mark how many you have so someone knows who to borrow from.
-          </p>
           {error ? <p className="mb-3 text-sm font-bold">{error}</p> : null}
           {viewer && !canContribute(viewer.role) ? <p className="mb-3 text-sm font-bold">{APPROVAL_WAIT}</p> : null}
           {error ? null : (

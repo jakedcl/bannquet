@@ -15,10 +15,6 @@ export function ConditionsReport({
   return (
     <div className="space-y-6">
       <Window title="Live conditions">
-        <p className="mb-4 text-sm text-gray-700">
-          The same National Weather Service readings as the banner on the home page.
-          Low and high cover the next day, along with the temperature right now.
-        </p>
         {!report.success || report.stats.length === 0 ? (
           <p className="text-sm font-bold">The live conditions did not load.</p>
         ) : (

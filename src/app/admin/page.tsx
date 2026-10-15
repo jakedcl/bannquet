@@ -26,10 +26,6 @@ export default async function AdminPage() {
     <PageWrapper>
       <div className="mx-auto max-w-3xl space-y-6 px-4 py-10">
         <Window title="Invites">
-          <p className="mb-4 text-sm">
-            Type a friend&apos;s email. You get a page link to text them. They choose a password there.
-            Only that email can make an account.
-          </p>
           <InviteForm />
         </Window>
 

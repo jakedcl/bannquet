@@ -23,7 +23,6 @@ export function ResetPasswordForm({ token }: { token: string }) {
 
   return (
     <form action={action} className="space-y-4">
-      <p className="text-sm text-gray-700">Choose a new password. At least 8 characters.</p>
       <input type="hidden" name="token" value={token} />
       <PasswordField
         name="password"
