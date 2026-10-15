@@ -11,7 +11,7 @@ import { formatFeetGain, formatMiles, packTrack } from '@/lib/gpx';
 import { PIN_KINDS, PIN_KIND_LABELS } from '@/lib/pin-kinds';
 import type { AttachChoice } from '@/lib/library';
 import type { MapFeatureCollection } from '@/lib/posts';
-import { POST_KINDS, POST_KIND_LABELS, type PostKind } from '@/lib/post-kinds';
+import type { PostKind } from '@/lib/post-kinds';
 
 const GroupMap = dynamic(() => import('@/components/map/GroupMap'), {
   ssr: false,
@@ -41,7 +41,7 @@ export function PostForm({
   };
 }) {
   const [state, action, pending] = useActionState(initial ? savePostEdits : publishPost, null);
-  const [postKind, setPostKind] = useState<PostKind>(initial?.postKind ?? 'trip_report');
+  const postKind: PostKind = initial?.postKind ?? 'trip_report';
   const [photos, setPhotos] = useState<UploadedPhoto[]>([]);
   const [trackJson, setTrackJson] = useState('');
   const [gpxNote, setGpxNote] = useState<string | null>(null);
@@ -52,27 +52,7 @@ export function PostForm({
   return (
     <form action={action} className="space-y-4">
       {initial ? <input type="hidden" name="postId" value={initial.id} /> : null}
-      <label className="block space-y-1">
-        <span className="text-sm font-bold">Type</span>
-        <select
-          name="postKind"
-          value={postKind}
-          onChange={(event) => {
-            const next = event.target.value;
-            if (next === 'trip_report' || next === 'general') setPostKind(next);
-          }}
-          className="w-full retro-box-inset bg-white px-3 py-2 text-base"
-        >
-          {POST_KINDS.map((kind) => (
-            <option key={kind} value={kind}>{POST_KIND_LABELS[kind]}</option>
-          ))}
-        </select>
-        <span className="block text-xs text-gray-600">
-          {tripReport
-            ? 'A trip report can include the day, photos, and a route.'
-            : 'A general post is a note and an optional photo.'}
-        </span>
-      </label>
+      <input type="hidden" name="postKind" value={postKind} />
       <label className="block space-y-1">
         <span className="text-sm font-bold">Title</span>
         <input

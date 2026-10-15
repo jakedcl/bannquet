@@ -103,7 +103,7 @@ export async function loadMapData(): Promise<{ points: MapFeatureCollection; lin
         ST_Y(tr.point::geometry) as lat, ST_X(tr.point::geometry) as lng
       from trip_reports tr
       left join users u on u.id = tr.author_id
-      where tr.published = true and tr.point is not null
+      where tr.published = true and tr.post_kind = 'trip_report' and tr.point is not null
     `),
     db.execute(sql`
       select t.id::text as id, t.name, t.activity::text as activity, t.trip_report_id::text as post_id,
@@ -594,7 +594,7 @@ export async function loadProfileLibrary(userId: string): Promise<ProfileLibrary
       select id::text as id, title, trip_date::text as trip_date, activity::text as activity,
         (${userId} = any(tagged_user_ids) and author_id is distinct from ${userId}) as tagged
       from trip_reports
-      where published = true and (author_id = ${userId} or ${userId} = any(tagged_user_ids))
+      where published = true and post_kind = 'trip_report' and (author_id = ${userId} or ${userId} = any(tagged_user_ids))
       order by trip_date desc nulls last, created_at desc
     `),
     db.execute(sql`

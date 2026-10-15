@@ -38,8 +38,7 @@ export default async function NewPostPage() {
       <div className="mx-auto max-w-2xl px-4 py-10">
         <Window title="New post">
           <p className="mb-4 text-sm text-gray-700">
-            Pick Trip report or General. A trip report can include the day, photos, and a route.
-            A general post is a note and an optional photo.
+            A trip report can include the day, photos, and a route.
             You can attach a route, pin, or photo you already saved, or add a new one here.
           </p>
           <PostForm friends={friends} routes={saved.routes} pins={saved.pins} photos={saved.photos} />

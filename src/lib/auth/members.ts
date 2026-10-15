@@ -32,6 +32,7 @@ export type Member = {
   bio: string | null;
   favoriteActivities: Activity[];
   role: MemberRole;
+  homeScreenTipSeenAt: Date | null;
 };
 
 export type InviteRow = {
@@ -69,6 +70,7 @@ function toMember(row: typeof users.$inferSelect): Member {
     bio: row.bio,
     favoriteActivities: asActivities(row.favoriteActivities),
     role: row.role,
+    homeScreenTipSeenAt: row.homeScreenTipSeenAt,
   };
 }
 

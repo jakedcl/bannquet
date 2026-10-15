@@ -1,7 +1,7 @@
 import { sql } from 'drizzle-orm';
 import { getDb } from '@/db';
 import type { Activity } from '@/lib/activities';
-import { gramsToOunces, ouncesToGrams, type PackingTemplate } from '@/lib/packing';
+import { gramsToOunces, ouncesToGrams } from '@/lib/packing';
 
 type QueryRows = { rows?: Record<string, unknown>[] };
 
@@ -162,7 +162,6 @@ export async function createTrip(input: {
   trailheadName: string;
   lat: number;
   lng: number;
-  template: PackingTemplate;
 }): Promise<string> {
   const db = getDb();
   return db.transaction(async (tx) => {
@@ -186,20 +185,6 @@ export async function createTrip(input: {
       insert into trip_members (trip_id, user_id, rsvp, role)
       values (${id}::uuid, ${input.userId}, 'going', 'organizer')
     `);
-    const list = await tx.execute(sql`
-      insert into packing_lists (trip_id, name)
-      values (${id}::uuid, ${input.template.name})
-      returning id::text as id
-    `);
-    const listId = text(asRows(list)[0]?.id);
-    if (!listId) throw new Error('Could not save the packing list.');
-    for (const item of input.template.items) {
-      const grams = item.ounces ? ouncesToGrams(item.ounces) : null;
-      await tx.execute(sql`
-        insert into packing_list_items (list_id, label, weight_g, shared, added_by)
-        values (${listId}::uuid, ${item.label}, ${grams}, true, ${input.userId})
-      `);
-    }
     return id;
   });
 }
@@ -300,7 +285,7 @@ export async function listAuthorPosts(authorId: string): Promise<Array<{ id: str
   const result = await getDb().execute(sql`
     select id::text as id, title, trip_id::text as trip_id
     from trip_reports
-    where author_id = ${authorId} and published = true
+    where author_id = ${authorId} and published = true and post_kind = 'trip_report'
     order by trip_date desc nulls last, created_at desc
   `);
   return asRows(result).flatMap((row) => {

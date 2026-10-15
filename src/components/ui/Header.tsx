@@ -8,7 +8,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { signOutAction } from '@/app/sign-in/actions';
 import { useRegion } from '@/contexts/RegionContext';
 import { REGION_OPTIONS } from '@/lib/regions';
-import { NavButton } from './NavButton';
+import { menuItemClass, NavButton } from './NavButton';
 import WeatherTicker from './WeatherTicker';
 
 export type HeaderAccount = {
@@ -19,15 +19,13 @@ export type HeaderAccount = {
 } | null;
 
 const COMMUNITY_LINKS = [
-  { href: '/posts', label: 'Posts' },
+  { href: '/chat', label: 'Chat' },
   { href: '/peaks', label: 'Peaks' },
-  { href: '/stats', label: 'Stats' },
   { href: '/trips', label: 'Trips' },
-  { href: '/map', label: 'Map' },
 ] as const;
 
 const UPLOAD_LINKS = [
-  { href: '/upload?kind=post', label: 'Post' },
+  { href: '/upload?kind=post', label: 'Trip report' },
   { href: '/upload?kind=route', label: 'Route' },
   { href: '/upload?kind=pin', label: 'Pin' },
   { href: '/upload?kind=photo', label: 'Photo' },
@@ -40,14 +38,7 @@ function pathOn(pathname: string, href: string): boolean {
 }
 
 function communitySection(pathname: string): boolean {
-  return ['/community', '/posts', '/peaks', '/stats', '/trips'].some((href) => pathOn(pathname, href));
-}
-
-function subClass(active: boolean, stacked: boolean): string {
-  const tone = active ? 'retro-button-yellow' : 'retro-button';
-  return stacked
-    ? `${tone} block w-full rounded-none px-3 py-2 text-center text-sm font-bold uppercase`
-    : `${tone} rounded-none px-3 py-1 text-left text-xs font-bold uppercase`;
+  return ['/community', '/chat', '/peaks', '/trips', '/gear'].some((href) => pathOn(pathname, href));
 }
 
 export default function Header({ account = null }: { account?: HeaderAccount }) {
@@ -178,7 +169,7 @@ function SiteNav({ account, pathname, home }: { account: HeaderAccount; pathname
           </NavButton>
           <DesktopMenu href="/community" label="Community" active={communitySection(pathname)}>
             {COMMUNITY_LINKS.map((item) => (
-              <Link key={item.href} href={item.href} className={subClass(pathOn(pathname, item.href), false)}>
+              <Link key={item.href} href={item.href} className={menuItemClass(false)}>
                 {item.label}
               </Link>
             ))}
@@ -188,7 +179,7 @@ function SiteNav({ account, pathname, home }: { account: HeaderAccount; pathname
       {canUpload ? (
         <DesktopMenu href="/upload" label="Upload" active={pathOn(pathname, '/upload')}>
           {UPLOAD_LINKS.map((item) => (
-            <Link key={item.href} href={item.href} className={subClass(false, false)}>
+            <Link key={item.href} href={item.href} className={menuItemClass(false)}>
               {item.label}
             </Link>
           ))}
@@ -196,10 +187,10 @@ function SiteNav({ account, pathname, home }: { account: HeaderAccount; pathname
       ) : null}
       {account ? (
         <DesktopMenu href="/settings" label="Settings" active={settingsOn} align="right">
-          <Link href={profileHref} className={subClass(pathname === profileHref, false)}>Profile</Link>
-          <Link href="/settings" className={subClass(pathOn(pathname, '/settings'), false)}>Settings</Link>
+          <Link href={profileHref} className={menuItemClass(false)}>Profile</Link>
+          <Link href="/settings" className={menuItemClass(false)}>Settings</Link>
           {account.role === 'admin' ? (
-            <Link href="/admin" className={subClass(pathOn(pathname, '/admin'), false)}>
+            <Link href="/admin" className={menuItemClass(false)}>
               Admin
               {account.pendingCount ? (
                 <span className="ml-2 inline-block min-w-5 bg-brand-green px-1 text-center text-xs font-bold text-white">
@@ -209,7 +200,7 @@ function SiteNav({ account, pathname, home }: { account: HeaderAccount; pathname
             </Link>
           ) : null}
           <form action={signOutAction}>
-            <button type="submit" className={subClass(false, false)}>Log out</button>
+            <button type="submit" className={menuItemClass(false)}>Log out</button>
           </form>
         </DesktopMenu>
       ) : (
@@ -235,11 +226,40 @@ function DesktopMenu({
   return (
     <div className="group relative inline-flex">
       <NavButton href={href} active={active}>{label}</NavButton>
-      <div className={`absolute top-full z-30 hidden pt-1 group-hover:block group-focus-within:block ${align === 'right' ? 'right-0' : 'left-0'}`}>
-        <div className="flex min-w-40 flex-col gap-1 bg-beige p-1 text-gray-900 retro-box">
-          {children}
-        </div>
+      <div className={`absolute top-full z-30 hidden min-w-40 flex-col gap-1 bg-[#5c3a1e] p-1 group-hover:flex group-focus-within:flex ${align === 'right' ? 'right-0' : 'left-0'}`}>
+        {children}
       </div>
+    </div>
+  );
+}
+
+function MobileFold({
+  label,
+  href,
+  active,
+  children,
+}: {
+  label: string;
+  href: string;
+  active: boolean;
+  children: ReactNode;
+}) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div>
+      <div className="flex">
+        <NavButton href={href} active={active} className="min-w-0 flex-1">{label}</NavButton>
+        <button
+          type="button"
+          aria-expanded={open}
+          aria-label={open ? `Hide ${label}` : `Show ${label}`}
+          onClick={() => setOpen((value) => !value)}
+          className="nav-button retro-button-blue w-10 rounded-none px-0 text-lg font-bold"
+        >
+          {open ? '−' : '+'}
+        </button>
+      </div>
+      {open ? <div className="flex flex-col gap-1 bg-[#5c3a1e] p-1">{children}</div> : null}
     </div>
   );
 }
@@ -247,70 +267,58 @@ function DesktopMenu({
 function MobileNav({ account, pathname, home }: { account: HeaderAccount; pathname: string; home: boolean }) {
   const canUpload = account != null && account.role !== 'pending';
   const profileHref = account?.handle ? `/user/${account.handle}` : '/settings';
+  const settingsOn = Boolean(account) && (
+    pathOn(pathname, '/settings') || pathOn(pathname, '/admin') || pathname === profileHref
+  );
 
   return (
     <>
       {home ? null : (
         <>
-          <Link href="/mountain-weather" className={subClass(pathOn(pathname, '/mountain-weather'), true)}>
+          <NavButton href="/mountain-weather" active={pathOn(pathname, '/mountain-weather')} className="w-full">
             Mountain weather
-          </Link>
-          <Link href="/map" className={subClass(pathOn(pathname, '/map'), true)}>
+          </NavButton>
+          <NavButton href="/map" active={pathOn(pathname, '/map')} className="w-full">
             Map
-          </Link>
-          <div className="space-y-2">
-            <Link href="/community" className="retro-button-yellow block w-full rounded-none px-3 py-2 text-center text-sm font-bold uppercase">
-              Community
-            </Link>
-            <div className="space-y-2">
-              {COMMUNITY_LINKS.map((item) => (
-                <Link key={item.href} href={item.href} className={subClass(pathOn(pathname, item.href), true)}>
-                  {item.label}
-                </Link>
-              ))}
-            </div>
-          </div>
-        </>
-      )}
-      {canUpload ? (
-        <div className="space-y-2">
-          <Link href="/upload" className="retro-button-yellow block w-full rounded-none px-3 py-2 text-center text-sm font-bold uppercase">
-            Upload
-          </Link>
-          <div className="space-y-2">
-            {UPLOAD_LINKS.map((item) => (
-              <Link key={item.href} href={item.href} className={subClass(false, true)}>
+          </NavButton>
+          <MobileFold href="/community" label="Community" active={communitySection(pathname)}>
+            {COMMUNITY_LINKS.map((item) => (
+              <Link key={item.href} href={item.href} className={menuItemClass(true)}>
                 {item.label}
               </Link>
             ))}
-          </div>
-        </div>
+          </MobileFold>
+        </>
+      )}
+      {canUpload ? (
+        <MobileFold href="/upload" label="Upload" active={pathOn(pathname, '/upload')}>
+          {UPLOAD_LINKS.map((item) => (
+            <Link key={item.href} href={item.href} className={menuItemClass(true)}>
+              {item.label}
+            </Link>
+          ))}
+        </MobileFold>
       ) : null}
       {account ? (
-        <div className="space-y-2">
-          <Link href="/settings" className="retro-button-yellow block w-full rounded-none px-3 py-2 text-center text-sm font-bold uppercase">
-            Settings
-          </Link>
-          <div className="space-y-2">
-            <Link href={profileHref} className={subClass(pathname === profileHref, true)}>Profile</Link>
-            <Link href="/settings" className={subClass(pathOn(pathname, '/settings'), true)}>Settings</Link>
-            {account.role === 'admin' ? (
-              <Link href="/admin" className={subClass(pathOn(pathname, '/admin'), true)}>
-                Admin
-                {account.pendingCount ? (
-                  <span className="ml-2 inline-block min-w-5 bg-brand-green px-1 text-center text-xs font-bold text-white">
-                    {account.pendingCount}
-                  </span>
-                ) : null}
-              </Link>
-            ) : null}
-            <form action={signOutAction}>
-              <button type="submit" className={`${subClass(false, true)} w-full`}>Log out</button>
-            </form>
-          </div>
-        </div>
+        <MobileFold href="/settings" label="Settings" active={settingsOn}>
+          <Link href={profileHref} className={menuItemClass(true)}>Profile</Link>
+          <Link href="/settings" className={menuItemClass(true)}>Settings</Link>
+          {account.role === 'admin' ? (
+            <Link href="/admin" className={menuItemClass(true)}>
+              Admin
+              {account.pendingCount ? (
+                <span className="ml-2 inline-block min-w-5 bg-brand-green px-1 text-center text-xs font-bold text-white">
+                  {account.pendingCount}
+                </span>
+              ) : null}
+            </Link>
+          ) : null}
+          <form action={signOutAction}>
+            <button type="submit" className={menuItemClass(true)}>Log out</button>
+          </form>
+        </MobileFold>
       ) : (
-        <Link href="/sign-in" className={subClass(false, true)}>Log in</Link>
+        <NavButton href="/sign-in" className="w-full">Log in</NavButton>
       )}
     </>
   );

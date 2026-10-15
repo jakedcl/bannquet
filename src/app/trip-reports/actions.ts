@@ -97,6 +97,7 @@ export async function publishPost(
   const parsed = readPostFields(formData);
   if (parsed.error || !parsed.fields) return { error: parsed.error ?? 'Could not save that post.' };
   const fields = parsed.fields;
+  if (fields.postKind === 'general') return { error: 'Notes go in the chat.' };
   const taggedUserIds = formData
     .getAll('friend')
     .filter((value): value is string => typeof value === 'string' && ID_PATTERN.test(value) && value !== viewer.id);

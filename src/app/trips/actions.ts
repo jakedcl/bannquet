@@ -5,7 +5,6 @@ import { redirect } from 'next/navigation';
 import { getViewer } from '@/app/sign-in/actions';
 import { isActivity } from '@/lib/activities';
 import { APPROVAL_WAIT, canContribute } from '@/lib/membership';
-import { packingTemplateById } from '@/lib/packing';
 import {
   addPackingItem,
   claimPackingItem,
@@ -36,14 +35,12 @@ export async function createTripAction(
   const trailheadName = String(formData.get('trailheadName') ?? '').trim().slice(0, 80);
   const lat = Number(formData.get('lat'));
   const lng = Number(formData.get('lng'));
-  const template = packingTemplateById(String(formData.get('template') ?? 'day-hike'));
   if (!title || title.length > 80) return { error: 'Give the trip a short name.' };
   if (!/^\d{4}-\d{2}-\d{2}$/.test(tripDate)) return { error: 'Pick a date.' };
   if (!isActivity(activity)) return { error: 'Pick what you are going to do.' };
   if (!Number.isFinite(lat) || !Number.isFinite(lng) || Math.abs(lat) > 90 || Math.abs(lng) > 180) {
     return { error: 'Drop a pin for the trailhead.' };
   }
-  if (!template) return { error: 'Pick a packing list.' };
   let id = '';
   try {
     id = await createTrip({
@@ -54,7 +51,6 @@ export async function createTripAction(
       trailheadName,
       lat,
       lng,
-      template,
     });
   } catch {
     return { error: 'Could not save that trip. Try again in a minute.' };

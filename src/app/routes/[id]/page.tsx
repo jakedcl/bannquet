@@ -3,7 +3,8 @@ import { notFound } from 'next/navigation';
 import PageWrapper from '@/components/ui/PageWrapper';
 import { MapCanvas } from '@/components/map/MapCanvas';
 import { ConfirmDelete } from '@/components/delete/ConfirmDelete';
-import { AttachReport, SeeMore } from '@/components/library/AttachReport';
+import { SeeMore } from '@/components/library/AttachReport';
+import { AddToTrip } from '@/components/library/AddToTrip';
 import { Window } from '@/components/retro/Window';
 import { deleteRouteAction } from '@/app/library/actions';
 import { getViewer } from '@/app/sign-in/actions';
@@ -11,7 +12,7 @@ import { isDatabaseConfigured } from '@/db';
 import { ACTIVITY_META, isActivity } from '@/lib/activities';
 import { formatFeetGain, formatMiles } from '@/lib/gpx';
 import { loadRoute } from '@/lib/library';
-import { canDeleteOwned } from '@/lib/membership';
+import { canContribute, canDeleteOwned } from '@/lib/membership';
 import { loadMapData } from '@/lib/posts';
 import { listAuthorPosts } from '@/lib/trips';
 
@@ -86,14 +87,7 @@ export default async function RoutePage({ params }: { params: Promise<{ id: stri
         ) : null}
         {manage && viewer ? (
           <Window title="This route">
-            <AttachReport
-              kind="route"
-              entityId={route.id}
-              reports={reports.map((item) => ({ id: item.id, title: item.title }))}
-              attached={Boolean(route.post)}
-              returnTo={`/routes/${route.id}`}
-            />
-            <div className="mt-4">
+            <div>
               <ConfirmDelete
                 action={deleteRouteAction}
                 label="Delete"
@@ -102,6 +96,14 @@ export default async function RoutePage({ params }: { params: Promise<{ id: stri
               />
             </div>
           </Window>
+        ) : null}
+        {viewer && canContribute(viewer.role) && viewer.id === route.userId ? (
+          <AddToTrip
+            kind="route"
+            entityId={route.id}
+            reports={reports.map((item) => ({ id: item.id, title: item.title }))}
+            attached={route.post}
+          />
         ) : null}
       </div>
     </PageWrapper>

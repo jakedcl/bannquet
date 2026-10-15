@@ -4,7 +4,7 @@ import PageWrapper from '@/components/ui/PageWrapper';
 import { Button } from '@/components/retro/Button';
 import { Window } from '@/components/retro/Window';
 import { ConfirmDelete } from '@/components/delete/ConfirmDelete';
-import { addItem, deleteItem, deleteTripAction, linkPost, saveWeight, toggleClaim, toggleGoing } from '@/app/trips/actions';
+import { deleteTripAction, linkPost, toggleGoing } from '@/app/trips/actions';
 import { getViewer } from '@/app/sign-in/actions';
 import { ACTIVITY_META, isActivity } from '@/lib/activities';
 import { canContribute, canDeleteOwned } from '@/lib/membership';
@@ -83,57 +83,6 @@ export default async function TripPage({ params }: { params: Promise<{ id: strin
             <TrailheadForecast lat={trip.lat} lng={trip.lng} />
           </Window>
         ) : null}
-
-        <Window title="Packing list">
-          {trip.items.length === 0 ? <p className="text-sm">Nothing on the list yet.</p> : null}
-          <ul className="space-y-3">
-            {trip.items.map((item) => (
-              <li key={item.id} className="flex flex-wrap items-center justify-between gap-2 text-sm">
-                <span>
-                  {item.label}
-                  {item.assignedName ? <span className="ml-2 text-gray-600">{item.assignedName}</span> : null}
-                  {item.ounces != null ? <span className="ml-2 text-gray-600">{item.ounces} oz</span> : null}
-                </span>
-                {canEdit ? (
-                  <span className="flex flex-wrap items-center gap-2">
-                    <form action={toggleClaim}>
-                      <input type="hidden" name="tripId" value={trip.id} />
-                      <input type="hidden" name="itemId" value={item.id} />
-                      <Button type="submit">{item.assignedTo === viewer?.id ? 'Leave it' : "I'll carry it"}</Button>
-                    </form>
-                    {viewer && (viewer.role === 'admin' || trip.createdBy === viewer.id || item.addedBy === viewer.id) ? (
-                      <ConfirmDelete
-                        action={deleteItem}
-                        label="Delete"
-                        confirm="Delete this packing item?"
-                        fields={{ tripId: trip.id, itemId: item.id }}
-                      />
-                    ) : null}
-                    <form action={saveWeight} className="flex items-center gap-1">
-                      <input type="hidden" name="tripId" value={trip.id} />
-                      <input type="hidden" name="itemId" value={item.id} />
-                      <input
-                        name="ounces"
-                        inputMode="decimal"
-                        defaultValue={item.ounces ?? ''}
-                        placeholder="oz"
-                        className="w-16 retro-box-inset bg-white px-2 py-1"
-                      />
-                      <Button type="submit">Weight</Button>
-                    </form>
-                  </span>
-                ) : null}
-              </li>
-            ))}
-          </ul>
-          {canEdit ? (
-            <form action={addItem} className="mt-4 flex gap-2">
-              <input type="hidden" name="tripId" value={trip.id} />
-              <input name="label" maxLength={80} placeholder="Add an item" className="flex-1 retro-box-inset bg-white px-3 py-2" />
-              <Button type="submit">Add</Button>
-            </form>
-          ) : null}
-        </Window>
 
         <Window title="Posts">
           {trip.posts.length === 0 ? <p className="text-sm">No posts from this trip yet.</p> : (
