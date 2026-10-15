@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Table } from '@/components/retro/Table';
+import { SpotsTable } from '@/components/weather/SpotsTable';
 import { Window } from '@/components/retro/Window';
 import type { ExtremeReport } from '@/lib/weather-extremes';
 
@@ -36,22 +36,7 @@ export function ConditionsReport({
       </Window>
 
       <Window title="Spots">
-        {spots.length === 0 ? (
-          <p className="text-sm">No spots came back.</p>
-        ) : (
-          <Table
-            headers={['Spot', 'Now', 'Low', 'High', 'Wind', 'Wind chill', 'Snow']}
-            rows={spots.map((spot) => [
-              `${spot.mountain}, ${spot.state}`,
-              `${spot.temperature}°F`,
-              `${spot.minTemperature}°F`,
-              `${spot.maxTemperature}°F`,
-              `${spot.windSpeed} mph`,
-              `${spot.windChill}°F`,
-              spot.isSnowing ? 'Yes' : 'No',
-            ])}
-          />
-        )}
+        <SpotsTable spots={spots} />
       </Window>
     </div>
   );

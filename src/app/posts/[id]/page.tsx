@@ -3,7 +3,7 @@ import Image from 'next/image';
 import { notFound, redirect } from 'next/navigation';
 import { getViewer } from '@/app/sign-in/actions';
 import PageWrapper from '@/components/ui/PageWrapper';
-import { Badge, Button, Table, Window } from '@/components/retro';
+import { Badge, Button, Window } from '@/components/retro';
 import { DeleteReport } from '@/components/posts/DeleteReport';
 import { isDatabaseConfigured } from '@/db';
 import { ACTIVITY_META, isActivity } from '@/lib/activities';
@@ -121,19 +121,12 @@ export default async function PostDetailPage({ params }: PageProps) {
           <div className="mb-4">
             <Badge>{POST_KIND_LABELS[report.postKind]}</Badge>
           </div>
-          {tripReport ? (
-            <Table
-              headers={['Author', 'Date', 'Activity', 'Place']}
-              rows={[[
-                report.authorName,
-                formatTripDate(report.tripDate, 'long'),
-                activity ?? '—',
-                place,
-              ]]}
-            />
-          ) : (
-            <p className="text-sm font-bold text-gray-800">{report.authorName}</p>
-          )}
+          <p className="text-sm">
+            <span className="font-bold">{report.authorName}</span>
+            {tripReport ? ` · ${formatTripDate(report.tripDate, 'long')}` : ''}
+            {activity ? ` · ${activity}` : ''}
+            {tripReport && place !== '—' ? ` · ${place}` : ''}
+          </p>
           {trail && (trail.distanceM != null || trail.taggedNames.length > 0) ? (
             <p className="mt-3 text-sm text-gray-700">
               {trail.distanceM != null ? `${formatMiles(trail.distanceM)} · ${formatFeetGain(trail.elevGainM ?? 0)}` : null}

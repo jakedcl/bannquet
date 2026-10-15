@@ -1,10 +1,8 @@
-import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import PageWrapper from '@/components/ui/PageWrapper';
+import { AdminMemberTable, InviteTable } from '@/components/admin/AdminTables';
 import { InviteForm } from '@/components/auth/InviteForm';
 import { PendingQueue } from '@/components/auth/PendingDecision';
-import { ResetMemberPassword } from '@/components/auth/ResetMemberPassword';
-import { Table } from '@/components/retro/Table';
 import { Window } from '@/components/retro/Window';
 import { getViewer } from '@/app/sign-in/actions';
 import { listInvites, listMembers } from '@/lib/auth/members';
@@ -33,22 +31,16 @@ export default async function AdminPage() {
           {invites.length === 0 ? (
             <p className="text-sm">No invites yet.</p>
           ) : (
-            <Table
-              headers={['Email', 'Status', 'Link']}
-              rows={invites.map((invite) => {
-                const state = inviteState({
+            <InviteTable
+              rows={invites.map((invite) => ({
+                code: invite.code,
+                email: invite.email ?? '—',
+                status: inviteState({
                   email: invite.email,
                   expiresAt: invite.expiresAt,
                   usedAt: invite.usedAt,
-                });
-                return [
-                  invite.email ?? '—',
-                  state,
-                  <Link key={invite.code} href={`/invite/${invite.code}`} className="underline">
-                    /invite/{invite.code}
-                  </Link>,
-                ];
-              })}
+                }),
+              }))}
             />
           )}
         </Window>
@@ -66,20 +58,15 @@ export default async function AdminPage() {
           {approved.length === 0 ? (
             <p className="text-sm">Nobody has signed in yet.</p>
           ) : (
-            <Table
-              headers={['Name', 'Email', 'Role', 'Password']}
-              rows={approved.map((member) => [
-                member.handle ? (
-                  <Link key={member.id} href={`/user/${member.handle}`} className="underline">
-                    {member.displayName || member.handle}
-                  </Link>
-                ) : (
-                  member.displayName || 'Friend'
-                ),
-                member.email ?? '—',
-                member.role,
-                member.email ? <ResetMemberPassword key={member.id} userId={member.id} /> : '—',
-              ])}
+            <AdminMemberTable
+              rows={approved.map((member) => ({
+                id: member.id,
+                name: member.displayName || member.handle || 'Friend',
+                href: member.handle ? `/user/${member.handle}` : null,
+                email: member.email ?? '—',
+                role: member.role,
+                canReset: Boolean(member.email),
+              }))}
             />
           )}
         </Window>

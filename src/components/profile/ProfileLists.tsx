@@ -1,7 +1,11 @@
+'use client';
+
 import Image from 'next/image';
 import Link from 'next/link';
 import { ConfirmDelete } from '@/components/delete/ConfirmDelete';
 import { DeleteReport } from '@/components/posts/DeleteReport';
+import { BrowseTable } from '@/components/ui/BrowseTable';
+import type { DataColumn } from '@/components/ui/DataTable';
 import { deletePhotoAction, deleteRouteAction } from '@/app/library/actions';
 import { deleteClimbAction } from '@/app/peaks/actions';
 import { deletePinAction } from '@/app/pins/actions';
@@ -37,16 +41,13 @@ export function Pager({ page, pages, path }: { page: number; pages: number; path
   );
 }
 
-function Line({ href, title, detail, action }: { href: string; title: string; detail?: string; action?: React.ReactNode }) {
-  return (
-    <li className="flex items-center gap-2">
-      <p className="min-w-0 flex-1 truncate text-sm">
-        <Link href={href} className="font-bold underline">{title}</Link>
-        {detail ? <span className="text-gray-700">{` · ${detail}`}</span> : null}
-      </p>
-      {action}
-    </li>
-  );
+function activityLabel(activity: string | null | undefined): string | null {
+  if (!activity) return null;
+  return isActivity(activity) ? ACTIVITY_META[activity].label : activity;
+}
+
+function Trash({ children }: { children: React.ReactNode }) {
+  return <div className="flex justify-end">{children}</div>;
 }
 
 export function PostRows({
@@ -58,22 +59,48 @@ export function PostRows({
   manage: boolean;
   profilePath: string;
 }) {
+  const columns: DataColumn<(typeof posts)[number]>[] = [
+    {
+      id: 'title',
+      header: 'Title',
+      sticky: true,
+      sortValue: (row) => row.title,
+      cell: (row) => <Link href={`/posts/${row.id}`} className="font-bold underline">{row.title}</Link>,
+    },
+    {
+      id: 'date',
+      header: 'Date',
+      sortValue: (row) => row.tripDate,
+      cell: (row) => formatTripDate(row.tripDate),
+    },
+    {
+      id: 'activity',
+      header: 'Activity',
+      sortValue: (row) => activityLabel(row.activity),
+      cell: (row) => activityLabel(row.activity) ?? '—',
+    },
+  ];
+  if (manage) {
+    columns.push({
+      id: 'delete',
+      header: '',
+      sortValue: () => null,
+      cell: (row) => (row.tagged ? null : (
+        <Trash><DeleteReport id={row.id} returnTo={profilePath} /></Trash>
+      )),
+    });
+  }
   return (
-    <ul className="space-y-2">
-      {posts.map((post) => (
-        <Line
-          key={post.id}
-          href={`/posts/${post.id}`}
-          title={post.title}
-          detail={[
-            formatTripDate(post.tripDate),
-            post.activity && isActivity(post.activity) ? ACTIVITY_META[post.activity].label : '',
-            post.tagged ? 'tagged' : '',
-          ].filter(Boolean).join(' · ')}
-          action={manage && !post.tagged ? <DeleteReport id={post.id} returnTo={profilePath} /> : null}
-        />
-      ))}
-    </ul>
+    <BrowseTable
+      rows={posts}
+      columns={columns}
+      rowKey={(row) => row.id}
+      empty="No posts yet."
+      defaultSort={{ id: 'date', dir: 'desc' }}
+      placeholder="Post title"
+      searchText={(row) => `${row.title} ${activityLabel(row.activity) ?? ''}`}
+      facets={[{ id: 'activity', label: 'Activity', value: (row) => activityLabel(row.activity) }]}
+    />
   );
 }
 
@@ -86,28 +113,58 @@ export function RouteRows({
   manage: boolean;
   profilePath: string;
 }) {
+  const columns: DataColumn<(typeof routes)[number]>[] = [
+    {
+      id: 'name',
+      header: 'Route',
+      sticky: true,
+      sortValue: (row) => row.name,
+      cell: (row) => <Link href={`/routes/${row.id}`} className="font-bold underline">{row.name}</Link>,
+    },
+    {
+      id: 'activity',
+      header: 'Activity',
+      sortValue: (row) => activityLabel(row.activity),
+      cell: (row) => activityLabel(row.activity) ?? row.activity,
+    },
+    {
+      id: 'distance',
+      header: 'Distance',
+      align: 'right',
+      sortValue: (row) => row.distanceM,
+      cell: (row) => (row.distanceM != null ? formatMiles(row.distanceM) : '—'),
+    },
+    {
+      id: 'gain',
+      header: 'Gain',
+      align: 'right',
+      sortValue: (row) => row.elevGainM,
+      cell: (row) => (row.elevGainM != null ? formatFeetGain(row.elevGainM) : '—'),
+    },
+  ];
+  if (manage) {
+    columns.push({
+      id: 'delete',
+      header: '',
+      sortValue: () => null,
+      cell: (row) => (
+        <Trash>
+          <ConfirmDelete action={deleteRouteAction} confirm="Delete this route?" fields={{ id: row.id, returnTo: profilePath }} />
+        </Trash>
+      ),
+    });
+  }
   return (
-    <ul className="space-y-2">
-      {routes.map((route) => (
-        <Line
-          key={route.id}
-          href={`/routes/${route.id}`}
-          title={route.name}
-          detail={[
-            isActivity(route.activity) ? ACTIVITY_META[route.activity].label : route.activity,
-            route.distanceM != null ? formatMiles(route.distanceM) : '',
-            route.elevGainM != null ? formatFeetGain(route.elevGainM) : '',
-          ].filter(Boolean).join(' · ')}
-          action={manage ? (
-            <ConfirmDelete
-              action={deleteRouteAction}
-              confirm="Delete this route?"
-              fields={{ id: route.id, returnTo: profilePath }}
-            />
-          ) : null}
-        />
-      ))}
-    </ul>
+    <BrowseTable
+      rows={routes}
+      columns={columns}
+      rowKey={(row) => row.id}
+      empty="No routes yet."
+      defaultSort={{ id: 'name', dir: 'asc' }}
+      placeholder="Route name"
+      searchText={(row) => `${row.name} ${activityLabel(row.activity) ?? ''}`}
+      facets={[{ id: 'activity', label: 'Activity', value: (row) => activityLabel(row.activity) }]}
+    />
   );
 }
 
@@ -118,24 +175,53 @@ export function PinRows({
   pins: Array<{ id: string; title: string; visitedOn: string | null; activity: string | null; kind: string }>;
   manage: boolean;
 }) {
+  const columns: DataColumn<(typeof pins)[number]>[] = [
+    {
+      id: 'title',
+      header: 'Pin',
+      sticky: true,
+      sortValue: (row) => row.title,
+      cell: (row) => <Link href={`/pins/${row.id}`} className="font-bold underline">{row.title}</Link>,
+    },
+    {
+      id: 'date',
+      header: 'Date',
+      sortValue: (row) => row.visitedOn,
+      cell: (row) => formatTripDate(row.visitedOn),
+    },
+    {
+      id: 'kind',
+      header: 'Kind',
+      sortValue: (row) => (isPinKind(row.kind) ? PIN_KIND_LABELS[row.kind] : row.kind),
+      cell: (row) => (isPinKind(row.kind) ? PIN_KIND_LABELS[row.kind] : row.kind),
+    },
+  ];
+  if (manage) {
+    columns.push({
+      id: 'delete',
+      header: '',
+      sortValue: () => null,
+      cell: (row) => (
+        <Trash>
+          <ConfirmDelete action={deletePinAction} confirm="Delete this pin?" fields={{ id: row.id }} />
+        </Trash>
+      ),
+    });
+  }
   return (
-    <ul className="space-y-2">
-      {pins.map((pin) => (
-        <Line
-          key={pin.id}
-          href={`/pins/${pin.id}`}
-          title={pin.title}
-          detail={[
-            formatTripDate(pin.visitedOn),
-            pin.activity && isActivity(pin.activity) ? ACTIVITY_META[pin.activity].label : '',
-            isPinKind(pin.kind) ? PIN_KIND_LABELS[pin.kind] : '',
-          ].filter(Boolean).join(' · ')}
-          action={manage ? (
-            <ConfirmDelete action={deletePinAction} confirm="Delete this pin?" fields={{ id: pin.id }} />
-          ) : null}
-        />
-      ))}
-    </ul>
+    <BrowseTable
+      rows={pins}
+      columns={columns}
+      rowKey={(row) => row.id}
+      empty="No pins yet."
+      defaultSort={{ id: 'title', dir: 'asc' }}
+      placeholder="Pin name"
+      searchText={(row) => `${row.title} ${activityLabel(row.activity) ?? ''} ${isPinKind(row.kind) ? PIN_KIND_LABELS[row.kind] : ''}`}
+      facets={[
+        { id: 'activity', label: 'Activity', value: (row) => activityLabel(row.activity) },
+        { id: 'kind', label: 'Kind', value: (row) => (isPinKind(row.kind) ? PIN_KIND_LABELS[row.kind] : null) },
+      ]}
+    />
   );
 }
 
@@ -174,23 +260,53 @@ export function TripRows({
   trips,
   manage,
 }: {
-  trips: Array<{ id: string; title: string; tripDate: string | null }>;
+  trips: Array<{ id: string; title: string; tripDate: string | null; activity?: string | null }>;
   manage: boolean;
 }) {
+  const columns: DataColumn<(typeof trips)[number]>[] = [
+    {
+      id: 'title',
+      header: 'Trip',
+      sticky: true,
+      sortValue: (row) => row.title,
+      cell: (row) => <Link href={`/trips/${row.id}`} className="font-bold underline">{row.title}</Link>,
+    },
+    {
+      id: 'date',
+      header: 'Date',
+      sortValue: (row) => row.tripDate,
+      cell: (row) => formatTripDate(row.tripDate),
+    },
+    {
+      id: 'activity',
+      header: 'Activity',
+      sortValue: (row) => activityLabel(row.activity),
+      cell: (row) => activityLabel(row.activity) ?? '—',
+    },
+  ];
+  if (manage) {
+    columns.push({
+      id: 'delete',
+      header: '',
+      sortValue: () => null,
+      cell: (row) => (
+        <Trash>
+          <ConfirmDelete action={deleteTripAction} confirm="Delete this trip?" fields={{ id: row.id }} />
+        </Trash>
+      ),
+    });
+  }
   return (
-    <ul className="space-y-2">
-      {trips.map((trip) => (
-        <Line
-          key={trip.id}
-          href={`/trips/${trip.id}`}
-          title={trip.title}
-          detail={formatTripDate(trip.tripDate)}
-          action={manage ? (
-            <ConfirmDelete action={deleteTripAction} confirm="Delete this trip?" fields={{ id: trip.id }} />
-          ) : null}
-        />
-      ))}
-    </ul>
+    <BrowseTable
+      rows={trips}
+      columns={columns}
+      rowKey={(row) => row.id}
+      empty="No trips yet."
+      defaultSort={{ id: 'date', dir: 'desc' }}
+      placeholder="Trip name"
+      searchText={(row) => `${row.title} ${activityLabel(row.activity) ?? ''}`}
+      facets={[{ id: 'activity', label: 'Activity', value: (row) => activityLabel(row.activity) }]}
+    />
   );
 }
 
@@ -200,25 +316,79 @@ export function ClimbRows({
   manage,
 }: {
   climbs: Array<{ id: string; peakSlug: string }>;
-  names: Map<string, string>;
+  names: Record<string, string>;
   manage: boolean;
 }) {
+  const columns: DataColumn<(typeof climbs)[number]>[] = [
+    {
+      id: 'peak',
+      header: 'Peak',
+      sticky: true,
+      sortValue: (row) => names[row.peakSlug] ?? 'Peak',
+      cell: (row) => (
+        <Link href={`/peaks/${row.peakSlug}`} className="font-bold underline">{names[row.peakSlug] ?? 'Peak'}</Link>
+      ),
+    },
+  ];
+  if (manage) {
+    columns.push({
+      id: 'delete',
+      header: '',
+      sortValue: () => null,
+      cell: (row) => (
+        <Trash>
+          <ConfirmDelete
+            action={deleteClimbAction}
+            confirm="Delete this climb?"
+            fields={{ id: row.id, peakSlug: row.peakSlug }}
+          />
+        </Trash>
+      ),
+    });
+  }
   return (
-    <ul className="space-y-2">
-      {climbs.map((climb) => (
-        <Line
-          key={climb.id}
-          href={`/peaks/${climb.peakSlug}`}
-          title={names.get(climb.peakSlug) ?? 'Peak'}
-          action={manage ? (
-            <ConfirmDelete
-              action={deleteClimbAction}
-              confirm="Delete this climb?"
-              fields={{ id: climb.id, peakSlug: climb.peakSlug }}
-            />
-          ) : null}
-        />
-      ))}
-    </ul>
+    <BrowseTable
+      rows={climbs}
+      columns={columns}
+      rowKey={(row) => row.id}
+      empty="No climbs yet."
+      defaultSort={{ id: 'peak', dir: 'asc' }}
+      placeholder="Peak name"
+      searchText={(row) => names[row.peakSlug] ?? ''}
+    />
+  );
+}
+
+export function GearRows({
+  items,
+}: {
+  items: Array<{ id: string; name: string; qty: number }>;
+}) {
+  const columns: DataColumn<(typeof items)[number]>[] = [
+    {
+      id: 'name',
+      header: 'Item',
+      sticky: true,
+      sortValue: (row) => row.name,
+      cell: (row) => <Link href={`/gear/${row.id}`} className="font-bold underline">{row.name}</Link>,
+    },
+    {
+      id: 'qty',
+      header: 'Qty',
+      align: 'right',
+      sortValue: (row) => row.qty,
+      cell: (row) => String(row.qty),
+    },
+  ];
+  return (
+    <BrowseTable
+      rows={items}
+      columns={columns}
+      rowKey={(row) => row.id}
+      empty="No gear yet."
+      defaultSort={{ id: 'name', dir: 'asc' }}
+      placeholder="Gear name"
+      searchText={(row) => row.name}
+    />
   );
 }

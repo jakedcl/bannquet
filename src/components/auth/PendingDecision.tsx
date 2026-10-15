@@ -4,7 +4,8 @@ import { useEffect, useRef, useState } from 'react';
 import { useActionState } from 'react';
 import { approveMember, denyMember } from '@/app/sign-in/actions';
 import { Button } from '@/components/retro/Button';
-import { Table } from '@/components/retro/Table';
+import { BrowseTable } from '@/components/ui/BrowseTable';
+import type { DataColumn } from '@/components/ui/DataTable';
 import { Window } from '@/components/retro/Window';
 
 export type PendingMember = {
@@ -23,21 +24,53 @@ export function PendingQueue({ members }: { members: PendingMember[] }) {
       {waiting.length === 0 ? (
         <p className="text-sm">Nobody is waiting for approval.</p>
       ) : (
-        <Table
-          headers={['Name', 'Email', 'Username', 'Decision']}
-          rows={waiting.map((member) => [
-            member.displayName || 'Friend',
-            member.email ?? '—',
-            member.handle ? `@${member.handle}` : '—',
-            <PendingDecision
-              key={member.id}
-              userId={member.id}
-              onDone={() => setRemoved((ids) => (ids.includes(member.id) ? ids : [...ids, member.id]))}
-            />,
-          ])}
+        <PendingTable
+          members={waiting}
+          onDone={(id) => setRemoved((ids) => (ids.includes(id) ? ids : [...ids, id]))}
         />
       )}
     </Window>
+  );
+}
+
+function PendingTable({ members, onDone }: { members: PendingMember[]; onDone: (id: string) => void }) {
+  const columns: DataColumn<PendingMember>[] = [
+    {
+      id: 'name',
+      header: 'Name',
+      sticky: true,
+      sortValue: (row) => row.displayName || 'Friend',
+      cell: (row) => row.displayName || 'Friend',
+    },
+    {
+      id: 'email',
+      header: 'Email',
+      sortValue: (row) => row.email,
+      cell: (row) => row.email ?? '—',
+    },
+    {
+      id: 'username',
+      header: 'Username',
+      sortValue: (row) => row.handle,
+      cell: (row) => (row.handle ? `@${row.handle}` : '—'),
+    },
+    {
+      id: 'decision',
+      header: 'Decision',
+      sortValue: () => null,
+      cell: (row) => <PendingDecision userId={row.id} onDone={() => onDone(row.id)} />,
+    },
+  ];
+  return (
+    <BrowseTable
+      rows={members}
+      columns={columns}
+      rowKey={(row) => row.id}
+      empty="Nobody is waiting for approval."
+      defaultSort={{ id: 'name', dir: 'asc' }}
+      placeholder="Name, email, or username"
+      searchText={(row) => `${row.displayName ?? ''} ${row.email ?? ''} ${row.handle ?? ''}`}
+    />
   );
 }
 

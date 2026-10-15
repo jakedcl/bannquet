@@ -1,8 +1,7 @@
 import Image from 'next/image';
-import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
 import PageWrapper from '@/components/ui/PageWrapper';
-import { ClimbRows, PhotoGrid, PinRows, PostRows, RouteRows, SeeAll, TripRows } from '@/components/profile/ProfileLists';
+import { ClimbRows, GearRows, PhotoGrid, PinRows, PostRows, RouteRows, SeeAll, TripRows } from '@/components/profile/ProfileLists';
 import { ChallengeBadge } from '@/components/stats/ChallengeBadge';
 import { Badge } from '@/components/retro/Badge';
 import { Button } from '@/components/retro/Button';
@@ -160,20 +159,13 @@ export default async function UserPage({ params }: { params: Promise<{ username:
         ) : null}
         {ownClimbs.length > 0 ? (
           <Window title="Climbs">
-            <ClimbRows climbs={ownClimbs.slice(0, PROFILE_PREVIEW)} names={peakNames} manage={manage} />
+            <ClimbRows climbs={ownClimbs.slice(0, PROFILE_PREVIEW)} names={Object.fromEntries(peakNames)} manage={manage} />
             <SeeAll href={`${profilePath}/climbs`} total={ownClimbs.length} />
           </Window>
         ) : null}
         {heldGear.length > 0 ? (
           <Window title="Gear">
-            <ul className="space-y-1 text-sm">
-              {heldGear.map((item) => (
-                <li key={item.id} className="truncate">
-                  <Link href="/gear" className="underline">{item.name}</Link>
-                  {` ×${item.qty}`}
-                </li>
-              ))}
-            </ul>
+            <GearRows items={heldGear} />
           </Window>
         ) : null}
       </div>
