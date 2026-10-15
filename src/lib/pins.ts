@@ -62,9 +62,9 @@ export async function loadLoggedActivities(userId: string): Promise<Activity[]> 
   const result = await getDb().execute(sql`
     select activity, count(*)::int as n, max(happened)::text as latest
     from (
-      select activity::text as activity, coalesce(trip_date, created_at::date) as happened
-      from trip_reports
-      where published = true and author_id = ${userId} and activity is not null
+      select activity::text as activity, coalesce(trip_date, start_at::date, created_at::date) as happened
+      from trips
+      where created_by = ${userId} and activity is not null
       union all
       select activity::text, coalesce(started_at::date, created_at::date)
       from tracks
@@ -112,11 +112,9 @@ export async function loadPin(id: string): Promise<PinDetail | null> {
         p.visited_on::text as visited_on, p.created_by,
         ST_Y(p.point::geometry) as lat, ST_X(p.point::geometry) as lng,
         coalesce(nullif(u.display_name, ''), nullif(u.handle, ''), 'Friend') as who,
-        u.handle,
-        tr.id::text as post_id, tr.title as post_title
+        u.handle
       from pins p
       left join users u on u.id = p.created_by
-      left join trip_reports tr on tr.id = p.trip_report_id
       where p.id = ${id}::uuid
     `),
     db.execute(sql`
@@ -144,7 +142,7 @@ export async function loadPin(id: string): Promise<PinDetail | null> {
     createdBy: text(row.created_by),
     who: text(row.who) ?? 'Friend',
     handle: text(row.handle),
-    post: text(row.post_id) ? { id: text(row.post_id) as string, title: text(row.post_title) ?? 'Trip' } : null,
+    post: null,
     photos: asRows(photoResult).flatMap((photo) => {
       const photoId = text(photo.id);
       const url = text(photo.url);

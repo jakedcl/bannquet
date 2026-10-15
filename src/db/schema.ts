@@ -35,7 +35,6 @@ const createdAt = timestamp('created_at', { withTimezone: true }).defaultNow().n
 
 export const userRoleEnum = pgEnum('user_role', ['member', 'admin', 'pending']);
 export const activityEnum = pgEnum('activity', ACTIVITIES);
-export const postKindEnum = pgEnum('post_kind', ['trip_report', 'general']);
 export const tripStatusEnum = pgEnum('trip_status', ['planned', 'done', 'cancelled']);
 export const rsvpEnum = pgEnum('rsvp', ['going', 'maybe', 'no']);
 export const tripMemberRoleEnum = pgEnum('trip_member_role', ['organizer', 'member']);
@@ -183,41 +182,6 @@ export const carpoolRiders = pgTable(
   ],
 );
 
-export const tripReports = pgTable(
-  'trip_reports',
-  {
-    id: uuid('id').primaryKey().defaultRandom(),
-    tripId: uuid('trip_id').references(() => trips.id, { onDelete: 'set null' }),
-    authorId: text('author_id').references(() => users.id, { onDelete: 'set null' }),
-    legacyAuthorName: text('legacy_author_name'),
-    legacyAuthorEmail: text('legacy_author_email'),
-    title: text('title').notNull(),
-    body: text('body').notNull().default(''),
-    postKind: postKindEnum('post_kind').notNull().default('trip_report'),
-    tripDate: date('trip_date'),
-    activity: activityEnum('activity'),
-    taggedUserIds: text('tagged_user_ids')
-      .array()
-      .notNull()
-      .default(sql`ARRAY[]::text[]`),
-    point: geographyPoint('point'),
-    tags: text('tags')
-      .array()
-      .notNull()
-      .default(sql`ARRAY[]::text[]`),
-    legacySanityId: text('legacy_sanity_id'),
-    published: boolean('published').notNull().default(false),
-    createdAt,
-    updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),
-  },
-  (table) => [
-    uniqueIndex('trip_reports_legacy_sanity_id_unique').on(table.legacySanityId),
-    index('trip_reports_point_idx').using('gist', table.point),
-    index('trip_reports_trip_idx').on(table.tripId),
-    index('trip_reports_published_idx').on(table.published),
-  ],
-);
-
 export const pins = pgTable(
   'pins',
   {
@@ -228,15 +192,11 @@ export const pins = pgTable(
     title: text('title').notNull(),
     note: text('note'),
     visitedOn: date('visited_on'),
-    tripId: uuid('trip_id').references(() => trips.id, { onDelete: 'set null' }),
-    tripReportId: uuid('trip_report_id').references(() => tripReports.id, { onDelete: 'set null' }),
     createdBy: text('created_by').references(() => users.id, { onDelete: 'set null' }),
     createdAt,
   },
   (table) => [
     index('pins_point_idx').using('gist', table.point),
-    index('pins_trip_idx').on(table.tripId),
-    index('pins_trip_report_idx').on(table.tripReportId),
     index('pins_created_by_idx').on(table.createdBy),
   ],
 );
@@ -246,8 +206,6 @@ export const tracks = pgTable(
   {
     id: uuid('id').primaryKey().defaultRandom(),
     userId: text('user_id').references(() => users.id, { onDelete: 'set null' }),
-    tripId: uuid('trip_id').references(() => trips.id, { onDelete: 'set null' }),
-    tripReportId: uuid('trip_report_id').references(() => tripReports.id, { onDelete: 'set null' }),
     source: trackSourceEnum('source').notNull(),
     externalId: text('external_id'),
     name: text('name').notNull(),
@@ -261,8 +219,6 @@ export const tracks = pgTable(
   },
   (table) => [
     index('tracks_line_idx').using('gist', table.line),
-    index('tracks_trip_idx').on(table.tripId),
-    index('tracks_trip_report_idx').on(table.tripReportId),
     index('tracks_user_idx').on(table.userId),
     uniqueIndex('tracks_source_external_unique').on(table.source, table.externalId),
   ],
@@ -285,7 +241,6 @@ export const photos = pgTable(
   {
     id: uuid('id').primaryKey().defaultRandom(),
     albumId: uuid('album_id').references(() => albums.id, { onDelete: 'set null' }),
-    tripReportId: uuid('trip_report_id').references(() => tripReports.id, { onDelete: 'set null' }),
     userId: text('user_id').references(() => users.id, { onDelete: 'set null' }),
     blobUrl: text('blob_url').notNull(),
     width: integer('width'),
@@ -303,19 +258,8 @@ export const photos = pgTable(
   (table) => [
     index('photos_point_idx').using('gist', table.point),
     index('photos_album_idx').on(table.albumId),
-    index('photos_trip_report_idx').on(table.tripReportId),
-    uniqueIndex('photos_report_asset_unique').on(table.tripReportId, table.legacySanityAssetId),
   ],
 );
-
-export const tripReportMap = pgTable('trip_report_map', {
-  reportId: uuid('report_id')
-    .primaryKey()
-    .references(() => tripReports.id, { onDelete: 'cascade' }),
-  tripId: uuid('trip_id')
-    .notNull()
-    .references(() => trips.id, { onDelete: 'cascade' }),
-});
 
 export const tripPins = pgTable(
   'trip_pins',

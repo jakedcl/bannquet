@@ -9,7 +9,7 @@ import { redirectToSignIn } from '@/lib/sign-in-redirect';
 import { isPinKind } from '@/lib/pin-kinds';
 import { isLatLng } from '@/lib/photos';
 import { isPostKind, type PostKind } from '@/lib/post-kinds';
-import { addProfilePhotos, addProfileTrack, createPost, parseUploadedPhotos, updatePost, type PreparedPhoto } from '@/lib/posts';
+import { addProfilePhotos, addProfileTrack, parseUploadedPhotos, type PreparedPhoto } from '@/lib/posts';
 
 const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
 const ID_PATTERN = /^[A-Za-z0-9_-]{8,80}$/;
@@ -95,59 +95,7 @@ export async function publishPost(
   if (!viewer) return redirectToSignIn();
   if (!canContribute(viewer.role)) return { error: APPROVAL_WAIT };
 
-  const parsed = readPostFields(formData);
-  if (parsed.error || !parsed.fields) return { error: parsed.error ?? 'Could not save that post.' };
-  const fields = parsed.fields;
-  if (fields.postKind === 'general') return { error: 'Notes go in the chat.' };
-  const taggedUserIds = formData
-    .getAll('friend')
-    .filter((value): value is string => typeof value === 'string' && ID_PATTERN.test(value) && value !== viewer.id);
-
-  const pinTitle = String(formData.get('pinTitle') ?? '').trim();
-  const latRaw = String(formData.get('pinLat') ?? '').trim();
-  const lngRaw = String(formData.get('pinLng') ?? '').trim();
-  const pinLat = Number(latRaw);
-  const pinLng = Number(lngRaw);
-  const pinKind = String(formData.get('pinKind') ?? 'other');
-  let pin: { title: string; note: string; kind: string; lat: number; lng: number } | null = null;
-  if (pinTitle) {
-    if (pinTitle.length > 80) return { error: 'Keep the pin title short.' };
-    if (!isPinKind(pinKind)) return { error: 'Pick a pin kind.' };
-    if (!latRaw || !lngRaw || !isLatLng(pinLat, pinLng)) return { error: 'Drop the new pin on the map, or clear the pin title.' };
-    pin = {
-      title: pinTitle,
-      note: String(formData.get('pinNote') ?? '').trim().slice(0, 500),
-      kind: pinKind,
-      lat: pinLat,
-      lng: pinLng,
-    };
-  }
-
-  let id = '';
-  try {
-    const tripReport = fields.postKind === 'trip_report';
-    id = await createPost({
-      authorId: viewer.id,
-      authorName: viewer.displayName || viewer.handle || 'Friend',
-      title: fields.title,
-      body: fields.body,
-      postKind: fields.postKind,
-      tripDate: fields.tripDate,
-      activity: fields.activity,
-      taggedUserIds: tripReport ? taggedUserIds : [],
-      track: fields.track,
-      photos: fields.photos,
-      pin: tripReport ? pin : null,
-      attachRouteIds: tripReport ? uuidList(formData, 'route') : [],
-      attachPinIds: tripReport ? uuidList(formData, 'pin') : [],
-      attachPhotoIds: tripReport ? uuidList(formData, 'photo') : [],
-    });
-  } catch (error) {
-    const message = error instanceof Error ? error.message : '';
-    if (message.includes('already on a trip')) return { error: message };
-    return { error: 'Could not save that post. Try again in a minute.' };
-  }
-  redirect(`/posts/${id}`);
+  return { error: 'Write that on a trip instead.' };
 }
 
 export async function savePostEdits(
@@ -157,30 +105,7 @@ export async function savePostEdits(
   const viewer = await getViewer();
   if (!viewer) return redirectToSignIn();
   if (!canContribute(viewer.role)) return { error: APPROVAL_WAIT };
-  const postId = String(formData.get('postId') ?? '').trim();
-  if (!/^[0-9a-f-]{36}$/i.test(postId)) return { error: 'That post is not yours.' };
-
-  const parsed = readPostFields(formData);
-  if (parsed.error || !parsed.fields) return { error: parsed.error ?? 'Could not save that post.' };
-  const fields = parsed.fields;
-  let id: string | null = null;
-  try {
-    id = await updatePost({
-      id: postId,
-      authorId: viewer.id,
-      title: fields.title,
-      body: fields.body,
-      postKind: fields.postKind,
-      tripDate: fields.tripDate,
-      activity: fields.activity,
-      track: fields.track,
-      photos: fields.photos,
-    });
-  } catch {
-    return { error: 'Could not save that post. Try again in a minute.' };
-  }
-  if (!id) return { error: 'That post is not yours.' };
-  redirect(`/posts/${id}`);
+  return { error: 'Write that on a trip instead.' };
 }
 
 export async function publishProfileTrack(
