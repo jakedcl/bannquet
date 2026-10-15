@@ -30,13 +30,13 @@ export function MountainWeather() {
       <header className="space-y-4">
         <h1 className="text-3xl font-bold text-gray-900 md:text-5xl">Regional mountain weather</h1>
         <WeatherTicker placement="page" />
-        <label className="block max-w-xs space-y-1">
-          <span className="text-sm font-bold">State</span>
+        <label className="block max-w-md">
+          <span className="sr-only">State</span>
           <select
             value={region}
             onChange={(event) => chooseState(event.target.value)}
             aria-label="Choose a state"
-            className="w-full retro-box-inset bg-white px-3 py-2 text-base font-bold"
+            className="w-full retro-box-inset bg-white px-3 py-2 text-2xl font-bold text-gray-900"
           >
             {REGION_OPTIONS.map((option) => (
               <option key={option.code} value={option.code}>
@@ -48,7 +48,6 @@ export function MountainWeather() {
       </header>
 
       <section className="space-y-8" aria-label={`${regionLabel} forecast`}>
-        <h2 className="text-2xl font-bold text-gray-900">{regionLabel} forecast</h2>
         {sections.length === 0 ? (
           <p className="text-sm">No forecast spots for this state.</p>
         ) : sections.map((section) => (
