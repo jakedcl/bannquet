@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { formatFeetGain, formatMiles, lineWkt, packTrack, parseGpx, simplifyTrack, trackStats, unpackTrack } from './gpx';
+import { formatFeetGain, formatMiles, lineWkt, packTrack, parseGpx, simplifyForStorage, simplifyTrack, trackStats, unpackTrack, type TrackPoint } from './gpx';
 
 const SAMPLE = `<?xml version="1.0"?>
 <gpx>
@@ -65,14 +65,29 @@ test('a bulky GPX packs under the server action limit and keeps the full totals'
   assert.ok(packed);
   const json = JSON.stringify(packed);
   assert.ok(json.length < 200_000, `packed length ${json.length}`);
-  assert.equal(packed.points.length, 800);
+  assert.ok(packed.points.length >= 2 && packed.points.length <= 4000);
   assert.equal(packed.name, 'Big hike');
   assert.equal(packed.distanceM, trackStats(parseGpx(xml).points).distanceM);
   assert.equal(packed.elevGainM, trackStats(parseGpx(xml).points).elevGainM);
   const roundTrip = unpackTrack(json);
   assert.equal(roundTrip.error, null);
   assert.equal(roundTrip.track?.distanceM, packed.distanceM);
-  assert.equal(roundTrip.track?.points.length, 800);
+  assert.equal(roundTrip.track?.points.length, packed.points.length);
+});
+
+test('a spike that even spacing skips is kept for the map line', () => {
+  const points: TrackPoint[] = [];
+  for (let index = 0; index < 3000; index += 1) {
+    points.push({ lat: 44, lng: -74 + index * 0.0001, ele: 100 });
+  }
+  const spike = points[1500];
+  if (!spike) throw new Error('missing spike');
+  points[1500] = { lat: 44.002, lng: spike.lng, ele: 100 };
+  const even = simplifyTrack(points, 800);
+  const shaped = simplifyForStorage(points);
+  assert.equal(even.some((point) => point.lat > 44.001), false);
+  assert.equal(shaped.some((point) => point.lat > 44.001), true);
+  assert.ok(shaped.length < 4000);
 });
 
 test('a packed route with bad numbers is refused', () => {
