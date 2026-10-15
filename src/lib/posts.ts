@@ -6,6 +6,7 @@ import { creditTrackSummits, ensurePeaks } from '@/lib/summits';
 import { PIN_KIND_LABELS, isPinKind } from '@/lib/pin-kinds';
 import { NEUTRAL_PIN_COLOR } from '@/lib/map';
 import { isLatLng, isPublicBlobUrl } from '@/lib/photos';
+import type { PostKind } from '@/lib/post-kinds';
 
 export type MapFeatureCollection = {
   type: 'FeatureCollection';
@@ -294,19 +295,27 @@ function firstPoint(points: TrackPoint[]): { lat: number; lng: number } | null {
   return { lat: point.lat, lng: point.lng };
 }
 
+function photosForKind(kind: PostKind, photos: PreparedPhoto[]): PreparedPhoto[] {
+  if (kind === 'trip_report') return photos;
+  return photos.map((photo) => ({ ...photo, lat: null, lng: null, source: null }));
+}
+
 export async function createPost(input: {
   authorId: string;
   authorName: string;
   title: string;
   body: string;
-  tripDate: string;
-  activity: Activity;
+  postKind: PostKind;
+  tripDate: string | null;
+  activity: Activity | null;
   taggedUserIds: string[];
   track: { name: string | null; points: TrackPoint[] } | null;
   photos: PreparedPhoto[];
 }): Promise<string> {
-  const start = input.track ? firstPoint(input.track.points) : null;
-  const photoPoint = input.photos.find((photo) => photo.lat != null && photo.lng != null && isLatLng(photo.lat, photo.lng));
+  const track = input.postKind === 'trip_report' ? input.track : null;
+  const photos = photosForKind(input.postKind, input.photos);
+  const start = track ? firstPoint(track.points) : null;
+  const photoPoint = photos.find((photo) => photo.lat != null && photo.lng != null && isLatLng(photo.lat, photo.lng));
   const lat = start?.lat ?? photoPoint?.lat ?? null;
   const lng = start?.lng ?? photoPoint?.lng ?? null;
   const db = getDb();
@@ -318,10 +327,11 @@ export async function createPost(input: {
       : sql`ST_SetSRID(ST_MakePoint(${lng}, ${lat}), 4326)::geography`;
     const inserted = await tx.execute(sql`
       insert into trip_reports (
-        title, body, trip_date, activity, author_id, legacy_author_name, tagged_user_ids, published, point
+        title, body, post_kind, trip_date, activity, author_id, legacy_author_name, tagged_user_ids, published, point
       ) values (
         ${input.title},
         ${input.body},
+        ${input.postKind}::post_kind,
         ${input.tripDate}::date,
         ${input.activity}::activity,
         ${input.authorId},
@@ -336,17 +346,17 @@ export async function createPost(input: {
     if (!id) throw new Error('Could not save that post.');
 
     let trackId: string | null = null;
-    if (input.track && input.track.points.length >= 2) {
-      const wkt = lineWkt(input.track.points);
-      const stats = trackStats(input.track.points);
+    if (track && track.points.length >= 2 && input.activity) {
+      const wkt = lineWkt(track.points);
+      const stats = trackStats(track.points);
       if (wkt) {
-        const track = await tx.execute(sql`
+        const savedTrack = await tx.execute(sql`
           insert into tracks (user_id, trip_report_id, source, name, activity, line, distance_m, elev_gain_m, started_at)
           values (
             ${input.authorId},
             ${id}::uuid,
             'gpx',
-            ${input.track.name || input.title},
+            ${track.name || input.title},
             ${input.activity}::activity,
             ST_GeogFromText(${wkt}),
             ${stats.distanceM},
@@ -355,11 +365,11 @@ export async function createPost(input: {
           )
           returning id::text as id
         `);
-        trackId = text(asRows(track)[0]?.id);
+        trackId = text(asRows(savedTrack)[0]?.id);
       }
     }
 
-    for (const [index, photo] of input.photos.entries()) {
+    for (const [index, photo] of photos.entries()) {
       if (!isPublicBlobUrl(photo.url)) continue;
       const hasPoint = photo.lat != null && photo.lng != null && isLatLng(photo.lat, photo.lng);
       const photoPointSql = hasPoint
@@ -385,15 +395,115 @@ export async function createPost(input: {
     return { id, trackId };
   });
 
-  if (input.track && id.trackId) {
+  if (track && id.trackId && input.tripDate) {
     await creditTrackSummits({
       userId: input.authorId,
       trackId: id.trackId,
-      points: input.track.points,
+      points: track.points,
       summitedAt: `${input.tripDate}T12:00:00Z`,
     });
   }
   return id.id;
+}
+
+export async function updatePost(input: {
+  id: string;
+  authorId: string;
+  title: string;
+  body: string;
+  postKind: PostKind;
+  tripDate: string | null;
+  activity: Activity | null;
+  track: { name: string | null; points: TrackPoint[] } | null;
+  photos: PreparedPhoto[];
+}): Promise<string | null> {
+  const track = input.postKind === 'trip_report' ? input.track : null;
+  const photos = photosForKind(input.postKind, input.photos);
+  const db = getDb();
+  const saved = await db.transaction(async (tx) => {
+    const updated = await tx.execute(sql`
+      update trip_reports
+      set title = ${input.title},
+        body = ${input.body},
+        post_kind = ${input.postKind}::post_kind,
+        trip_date = case when ${input.postKind} = 'trip_report' then ${input.tripDate}::date else trip_date end,
+        activity = case when ${input.postKind} = 'trip_report' then ${input.activity}::activity else activity end,
+        updated_at = now()
+      where id = ${input.id}::uuid and author_id = ${input.authorId} and published = true
+      returning id::text as id
+    `);
+    const id = text(asRows(updated)[0]?.id);
+    if (!id) return null;
+
+    let trackId: string | null = null;
+    if (track && track.points.length >= 2 && input.activity && input.tripDate) {
+      const wkt = lineWkt(track.points);
+      const stats = trackStats(track.points);
+      if (wkt) {
+        const savedTrack = await tx.execute(sql`
+          insert into tracks (user_id, trip_report_id, source, name, activity, line, distance_m, elev_gain_m, started_at)
+          values (
+            ${input.authorId},
+            ${id}::uuid,
+            'gpx',
+            ${track.name || input.title},
+            ${input.activity}::activity,
+            ST_GeogFromText(${wkt}),
+            ${stats.distanceM},
+            ${stats.elevGainM},
+            ${input.tripDate}::date
+          )
+          returning id::text as id
+        `);
+        trackId = text(asRows(savedTrack)[0]?.id);
+      }
+    }
+
+    if (photos.length > 0) {
+      const existing = await tx.execute(sql`
+        select coalesce(max(sort_order), -1)::int as sort_order
+        from photos
+        where trip_report_id = ${id}::uuid
+      `);
+      let sort = num(asRows(existing)[0]?.sort_order) ?? -1;
+      for (const photo of photos) {
+        if (!isPublicBlobUrl(photo.url)) continue;
+        sort += 1;
+        const hasPoint = photo.lat != null && photo.lng != null && isLatLng(photo.lat, photo.lng);
+        const photoPointSql = hasPoint
+          ? sql`ST_SetSRID(ST_MakePoint(${photo.lng}, ${photo.lat}), 4326)::geography`
+          : sql`null`;
+        await tx.execute(sql`
+          insert into photos (
+            trip_report_id, user_id, blob_url, width, height, point, point_source, sort_order, alt
+          ) values (
+            ${id}::uuid,
+            ${input.authorId},
+            ${photo.url},
+            ${photo.width || null},
+            ${photo.height || null},
+            ${photoPointSql},
+            ${hasPoint ? photo.source : null},
+            ${sort},
+            ${input.title}
+          )
+        `);
+      }
+    }
+    return { id, trackId };
+  });
+
+  if (!saved) return null;
+  if (track && saved.trackId && input.tripDate) {
+    await ensurePeaks();
+    await creditTrackSummits({
+      userId: input.authorId,
+      trackId: saved.trackId,
+      points: track.points,
+      summitedAt: `${input.tripDate}T12:00:00Z`,
+    });
+  }
+  return saved.id;
 }
 
 export async function addProfileTrack(input: {
