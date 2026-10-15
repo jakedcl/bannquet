@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 
 type WeatherStat = {
@@ -19,6 +19,8 @@ export default function WeatherTicker({ placement = 'header' }: { placement?: 'h
   const [stats, setStats] = useState<WeatherStat[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [duration, setDuration] = useState(16);
+  const trackRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     async function fetchStats() {
@@ -58,6 +60,22 @@ export default function WeatherTicker({ placement = 'header' }: { placement?: 'h
     return () => clearInterval(interval);
   }, []);
 
+  useEffect(() => {
+    const node = trackRef.current;
+    if (!node) return;
+    const measure = () => {
+      const width = node.scrollWidth;
+      const viewport = node.parentElement?.clientWidth ?? width;
+      const pxPerSec = viewport < 768 ? 180 : 100;
+      setDuration(Math.max(8, (width / 2) / pxPerSec));
+    };
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(node);
+    if (node.parentElement) observer.observe(node.parentElement);
+    return () => observer.disconnect();
+  }, [stats]);
+
   if (loading) {
     return (
       <Link href="/conditions" aria-label="Live conditions" className={quiet}>
@@ -96,11 +114,10 @@ export default function WeatherTicker({ placement = 'header' }: { placement?: 'h
         LIVE:
       </div>
       <div className="flex-1 overflow-hidden">
-        <div 
-          className="flex items-center text-white text-xs font-bold uppercase tracking-wider whitespace-nowrap weather-ticker-scroll"
-          style={{
-            animationDuration: `${stats.length * 8}s`,
-          }}
+        <div
+          ref={trackRef}
+          className="flex w-max items-center whitespace-nowrap text-xs font-bold uppercase tracking-wider text-white weather-ticker-scroll"
+          style={{ animationDuration: `${duration}s` }}
         >
           {displayStats.map((stat, idx) => (
             <div key={idx} className="flex items-center px-6">
