@@ -52,10 +52,11 @@ export default function Header({ account = null }: { account?: HeaderAccount }) 
     >
       <div className="flex h-full w-full items-center justify-between">
         {!isHomepage && (
-          <Link href="/" className="z-20 mr-auto flex items-center">
+          <Link href="/" className="header-logo-link z-20">
             <motion.div
               layoutId="header-logo"
               transition={{ type: 'spring', stiffness: 200, damping: 25, duration: 0.8 }}
+              className="shrink-0"
             >
               <Image
                 src="/logo.png"
@@ -63,7 +64,7 @@ export default function Header({ account = null }: { account?: HeaderAccount }) 
                 width={160}
                 height={40}
                 priority
-                className="h-auto max-h-[32px] w-auto object-contain hover:opacity-90 md:max-h-[40px]"
+                className="header-logo hover:opacity-90"
               />
             </motion.div>
           </Link>
