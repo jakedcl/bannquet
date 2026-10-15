@@ -46,6 +46,8 @@ import {
 } from '@/lib/handles';
 import { isPublicBlobUrl } from '@/lib/photos';
 import { safeNextPath } from '@/lib/sign-in-next';
+import { signupCrowdBlock } from '@/lib/signup-gate';
+import { quietSignupBlock } from '@/lib/signup-guard';
 import { homeStateCode } from '@/lib/us-states';
 
 const PROFILE_CLAIM = 'bannquet_profile';
@@ -104,9 +106,11 @@ export async function signInWithPassword(
 }
 
 export async function createAccount(
-  _prev: { error?: string } | null,
+  _prev: { error?: string; done?: true } | null,
   formData: FormData,
-): Promise<{ error?: string }> {
+): Promise<{ error?: string; done?: true }> {
+  const quiet = quietSignupBlock(formData);
+  if (quiet) return quiet;
   const email = normalizeEmail(String(formData.get('email') ?? ''));
   const password = String(formData.get('password') ?? '');
   const confirm = String(formData.get('confirm') ?? '');
@@ -129,6 +133,8 @@ export async function createAccount(
 
   const taken = await findMemberByHandle(normalizeUsername(username));
   if (taken) return { error: USERNAME_TAKEN };
+  const crowd = await signupCrowdBlock(email, displayName);
+  if (crowd) return crowd;
 
   const { error } = await getAuth().signUp.email({
     email,
@@ -152,9 +158,11 @@ export async function createAccount(
 }
 
 export async function createPublicAccount(
-  _prev: { error?: string } | null,
+  _prev: { error?: string; done?: true } | null,
   formData: FormData,
-): Promise<{ error?: string }> {
+): Promise<{ error?: string; done?: true }> {
+  const quiet = quietSignupBlock(formData);
+  if (quiet) return quiet;
   const email = normalizeEmail(String(formData.get('email') ?? ''));
   const password = String(formData.get('password') ?? '');
   const confirm = String(formData.get('confirm') ?? '');
@@ -176,6 +184,8 @@ export async function createPublicAccount(
 
   const taken = await findMemberByHandle(normalizeUsername(username));
   if (taken) return { error: USERNAME_TAKEN };
+  const crowd = await signupCrowdBlock(email, displayName);
+  if (crowd) return crowd;
 
   const { error } = await getAuth().signUp.email({
     email,

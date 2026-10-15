@@ -5,12 +5,24 @@ import Link from 'next/link';
 import { createPublicAccount } from '@/app/sign-in/actions';
 import { Button } from '@/components/retro/Button';
 import { PasswordField } from '@/components/auth/PasswordField';
+import { SignupTraps } from '@/components/auth/SignupTraps';
 
-export function SignUpForm() {
+export function SignUpForm({ stamp }: { stamp: string }) {
   const [state, action, pending] = useActionState(createPublicAccount, null);
+  if (state?.done) {
+    return (
+      <p className="text-sm">
+        Account made.{' '}
+        <Link href="/sign-in" className="underline">
+          Sign in
+        </Link>
+      </p>
+    );
+  }
 
   return (
     <form action={action} className="space-y-4">
+      <SignupTraps stamp={stamp} />
       <p className="text-sm text-gray-700">
         Pick the name your friends know, a username, and a password. You can look around right away.
         Jake approves you before you can post.

@@ -6,6 +6,7 @@ import { Window } from '@/components/retro/Window';
 import { getInviteByCode } from '@/lib/auth/members';
 import { inviteState } from '@/lib/membership';
 import { isDatabaseConfigured } from '@/db';
+import { issueSignupStamp } from '@/lib/signup-guard';
 
 export const dynamic = 'force-dynamic';
 
@@ -36,7 +37,7 @@ export default async function InvitePage({ params }: { params: Promise<{ code: s
       <div className="mx-auto max-w-lg px-4 py-10">
         <Window title="You're invited">
           {state === 'open' && invite.email ? (
-            <CreateAccountForm email={invite.email} inviteCode={invite.code} />
+            <CreateAccountForm email={invite.email} inviteCode={invite.code} stamp={issueSignupStamp()} />
           ) : null}
           {state === 'used' ? (
             <p className="text-sm">
