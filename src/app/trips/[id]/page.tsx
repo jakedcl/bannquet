@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import PageWrapper from '@/components/ui/PageWrapper';
 import { Button } from '@/components/retro/Button';
 import { Window } from '@/components/retro/Window';
+import { CrumbLeaf } from '@/components/ui/BackBar';
 import { ConfirmDelete } from '@/components/delete/ConfirmDelete';
 import { deleteTripAction, toggleGoing } from '@/app/trips/actions';
 import { getViewer } from '@/app/sign-in/actions';
@@ -32,6 +33,7 @@ export default async function TripPage({ params }: { params: Promise<{ id: strin
 
   return (
     <PageWrapper>
+      <CrumbLeaf label={trip.title} />
       <div className="mx-auto max-w-3xl space-y-4 px-4 py-10">
         <Window title={trip.title}>
           <p className="text-sm">

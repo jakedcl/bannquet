@@ -4,6 +4,7 @@ import PageWrapper from '@/components/ui/PageWrapper';
 import { MapCanvas } from '@/components/map/MapCanvas';
 import { ConfirmDelete } from '@/components/delete/ConfirmDelete';
 import { RouteTitleForm } from '@/components/routes/RouteTitleForm';
+import { CrumbLeaf } from '@/components/ui/BackBar';
 import { SeeMore } from '@/components/library/AttachReport';
 import { AddToTrip } from '@/components/library/AddToTrip';
 import { Window } from '@/components/retro/Window';
@@ -80,6 +81,7 @@ export default async function RoutePage({
 
   return (
     <PageWrapper>
+      <CrumbLeaf label={route.name} />
       <div className="mx-auto max-w-3xl space-y-4 px-4 py-10">
         <Window
           title={route.name}

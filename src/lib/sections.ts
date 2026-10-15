@@ -46,9 +46,13 @@ const PROFILE_LISTS: Record<string, string> = {
 };
 
 export type Crumb = {
+  href: string;
+  label: string;
+};
+
+export type PageTrail = {
   parentHref: string;
-  parent: string;
-  current: string;
+  crumbs: Crumb[] | null;
 };
 
 export type SectionMatch = {
@@ -57,7 +61,6 @@ export type SectionMatch = {
   label: string;
   links: NavLink[];
   landing: boolean;
-  crumb: Crumb | null;
 };
 
 export function pathOn(pathname: string, href: string): boolean {
@@ -97,25 +100,165 @@ export function settingsSection(pathname: string, account: NavAccount): boolean 
   return profile != null && pathname === profile;
 }
 
-export function profileListCrumb(pathname: string): Crumb | null {
-  const parts = pathname.split('/').filter(Boolean);
-  if (parts.length !== 3 || parts[0] !== 'user') return null;
-  const current = PROFILE_LISTS[parts[2]];
-  if (!current) return null;
-  return { parentHref: `/user/${parts[1]}`, parent: 'Profile', current };
+function named(href: string, label: string, leaf: string | null | undefined): Crumb {
+  return { href, label: leaf?.trim() || label };
+}
+
+export function pageTrail(pathname: string, search: string, account: NavAccount, leaf?: string | null): PageTrail {
+  const peak = pathname.match(/^\/peaks\/([^/]+)$/);
+  if (peak) {
+    return {
+      parentHref: '/peaks',
+      crumbs: [
+        { href: '/peaks', label: 'Peaks' },
+        named(pathname, 'Peak', leaf),
+      ],
+    };
+  }
+
+  const member = pathname.match(/^\/user\/([^/]+)(?:\/([^/]+))?$/);
+  if (member) {
+    const handle = decodeURIComponent(member[1]);
+    const profileHref = `/user/${handle}`;
+    const crumbs: Crumb[] = [
+      { href: '/community', label: 'Community' },
+      { href: '/members', label: 'Members' },
+      { href: profileHref, label: handle },
+    ];
+    const section = member[2] ? PROFILE_LISTS[member[2]] : null;
+    if (!section) return { parentHref: '/members', crumbs };
+    crumbs.push({ href: pathname, label: section });
+    return { parentHref: profileHref, crumbs };
+  }
+
+  if (pathname === '/trips/new') {
+    return {
+      parentHref: '/trips',
+      crumbs: [
+        { href: '/trips', label: 'Trips' },
+        { href: pathname, label: 'New trip' },
+      ],
+    };
+  }
+
+  if (/^\/trips\/[^/]+$/.test(pathname)) {
+    return {
+      parentHref: '/trips',
+      crumbs: [
+        { href: '/trips', label: 'Trips' },
+        named(pathname, 'Trip', leaf),
+      ],
+    };
+  }
+
+  if (/^\/gear\/[^/]+$/.test(pathname)) {
+    return {
+      parentHref: '/gear',
+      crumbs: [
+        { href: '/gear', label: 'Gear' },
+        named(pathname, 'Gear', leaf),
+      ],
+    };
+  }
+
+  if (/^\/pins\/[^/]+$/.test(pathname)) {
+    return {
+      parentHref: '/map',
+      crumbs: [
+        { href: '/map', label: 'Map' },
+        named(pathname, 'Pin', leaf),
+      ],
+    };
+  }
+
+  if (/^\/routes\/[^/]+$/.test(pathname)) {
+    return {
+      parentHref: '/map',
+      crumbs: [
+        { href: '/map', label: 'Map' },
+        named(pathname, 'Route', leaf),
+      ],
+    };
+  }
+
+  if (/^\/photos\/[^/]+$/.test(pathname)) {
+    return {
+      parentHref: '/map',
+      crumbs: [
+        { href: '/map', label: 'Map' },
+        named(pathname, 'Photo', leaf),
+      ],
+    };
+  }
+
+  if (pathname === '/upload') {
+    const kind = new URLSearchParams(search).get('kind');
+    const current = UPLOAD_LINKS.find((link) => link.href === `/upload?kind=${kind}`);
+    if (!current) return { parentHref: '/', crumbs: null };
+    return {
+      parentHref: '/upload',
+      crumbs: [
+        { href: '/upload', label: 'Upload' },
+        { href: current.href, label: current.label },
+      ],
+    };
+  }
+
+  if (pathOn(pathname, '/account')) {
+    const profile = account?.handle ? `/user/${account.handle}` : null;
+    if (!profile) return { parentHref: '/', crumbs: null };
+    return {
+      parentHref: profile,
+      crumbs: [
+        { href: profile, label: 'Profile' },
+        { href: '/account', label: 'Account' },
+      ],
+    };
+  }
+
+  if (pathOn(pathname, '/admin')) {
+    const profile = account?.handle ? `/user/${account.handle}` : null;
+    if (!profile) return { parentHref: '/', crumbs: null };
+    return {
+      parentHref: profile,
+      crumbs: [
+        { href: profile, label: 'Profile' },
+        { href: '/admin', label: 'Admin' },
+      ],
+    };
+  }
+
+  if (pathname === '/conditions') {
+    return {
+      parentHref: '/mountain-weather',
+      crumbs: [
+        { href: '/mountain-weather', label: 'Mountain Weather' },
+        { href: '/conditions', label: 'Conditions' },
+      ],
+    };
+  }
+
+  if (pathOn(pathname, '/weather')) {
+    return {
+      parentHref: '/mountain-weather',
+      crumbs: [
+        { href: '/mountain-weather', label: 'Mountain Weather' },
+        { href: pathname, label: 'Weather' },
+      ],
+    };
+  }
+
+  return { parentHref: '/', crumbs: null };
 }
 
 export function matchSection(pathname: string, search: string, account: NavAccount): SectionMatch | null {
   if (communitySection(pathname)) {
-    const landing = pathname === '/community';
-    const current = COMMUNITY_LINKS.find((link) => pathOn(pathname, link.href))?.label ?? null;
     return {
       id: 'community',
       href: '/community',
       label: 'Community',
       links: COMMUNITY_LINKS,
-      landing,
-      crumb: !landing && current ? { parentHref: '/community', parent: 'Community', current } : null,
+      landing: pathname === '/community',
     };
   }
 
@@ -127,7 +270,6 @@ export function matchSection(pathname: string, search: string, account: NavAccou
       label: 'Mountain Weather',
       links: WEATHER_LINKS,
       landing: !current,
-      crumb: current ? { parentHref: '/mountain-weather', parent: 'Mountain Weather', current } : null,
     };
   }
 
@@ -139,22 +281,15 @@ export function matchSection(pathname: string, search: string, account: NavAccou
       label: 'Upload',
       links: UPLOAD_LINKS,
       landing: !current,
-      crumb: current ? { parentHref: '/upload', parent: 'Upload', current } : null,
     };
   }
 
   if (!settingsSection(pathname, account)) return null;
-  const onAdmin = pathOn(pathname, '/admin');
-  const onAccount = pathOn(pathname, '/account');
-  const profile = account?.handle ? `/user/${account.handle}` : null;
-  const onProfile = profile != null && pathname === profile;
-  const current = onAdmin ? 'Admin' : onProfile ? 'Profile' : onAccount ? 'Account' : null;
   return {
     id: 'settings',
     href: '/settings',
     label: 'Settings',
     links: visibleLinks(settingsLinks(account)),
     landing: pathname === '/settings',
-    crumb: current ? { parentHref: '/settings', parent: 'Settings', current } : null,
   };
 }
