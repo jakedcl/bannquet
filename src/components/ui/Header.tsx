@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef, type ReactNode } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -9,8 +9,9 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { signOutAction } from '@/app/sign-in/actions';
 import { useRegion } from '@/contexts/RegionContext';
 import { REGION_OPTIONS } from '@/lib/regions';
-import { COMMUNITY_LINKS, UPLOAD_LINKS, communitySection, pathOn, settingsLinks, settingsSection, visibleLinks } from '@/lib/sections';
-import { menuItemClass, navButtonClass, NavButton } from './NavButton';
+import { COMMUNITY_LINKS, UPLOAD_LINKS, WEATHER_LINKS, communitySection, pathOn, settingsLinks, settingsSection, visibleLinks } from '@/lib/sections';
+import { menuItemClass, NavButton } from './NavButton';
+import { NavMenu } from './NavMenu';
 import WeatherTicker from './WeatherTicker';
 
 export type HeaderAccount = {
@@ -143,32 +144,36 @@ function SiteNav({ account, pathname, home }: { account: HeaderAccount; pathname
     <>
       {home ? null : (
         <>
-          <NavButton href="/mountain-weather" active={pathOn(pathname, '/mountain-weather')}>
-            Mountain weather
-          </NavButton>
+          <NavMenu href="/mountain-weather" label="Mountain weather" active={pathOn(pathname, '/mountain-weather')}>
+            {WEATHER_LINKS.map((item) => (
+              <Link key={item.href} href={item.href} className={menuItemClass(false)}>
+                {item.label}
+              </Link>
+            ))}
+          </NavMenu>
           <NavButton href="/map" active={pathOn(pathname, '/map')}>
             Map
           </NavButton>
-          <DesktopMenu href="/community" label="Community" active={communitySection(pathname)}>
+          <NavMenu href="/community" label="Community" active={communitySection(pathname)}>
             {COMMUNITY_LINKS.map((item) => (
               <Link key={item.href} href={item.href} className={menuItemClass(false)}>
                 {item.label}
               </Link>
             ))}
-          </DesktopMenu>
+          </NavMenu>
         </>
       )}
       {canUpload ? (
-        <DesktopMenu href="/upload" label="Upload" active={pathOn(pathname, '/upload')}>
+        <NavMenu href="/upload" label="Upload" active={pathOn(pathname, '/upload')}>
           {UPLOAD_LINKS.map((item) => (
             <Link key={item.href} href={item.href} className={menuItemClass(false)}>
               {item.label}
             </Link>
           ))}
-        </DesktopMenu>
+        </NavMenu>
       ) : null}
       {account ? (
-        <DesktopMenu href="/settings" label="Settings" active={settingsOn} align="right">
+        <NavMenu href="/settings" label="Settings" active={settingsOn} align="right">
           {visibleLinks(settingsLinks(account)).map((item) => (
             <Link key={item.href} href={item.href} className={menuItemClass(false)}>
               {item.label}
@@ -182,7 +187,7 @@ function SiteNav({ account, pathname, home }: { account: HeaderAccount; pathname
           <form action={signOutAction}>
             <button type="submit" className={menuItemClass(false)}>Log out</button>
           </form>
-        </DesktopMenu>
+        </NavMenu>
       ) : (
         <NavButton href="/sign-in">Log in</NavButton>
       )}
@@ -190,90 +195,69 @@ function SiteNav({ account, pathname, home }: { account: HeaderAccount; pathname
   );
 }
 
-function DesktopMenu({
-  href,
-  label,
-  active,
-  align = 'left',
-  children,
-}: {
-  href: string;
-  label: string;
-  active: boolean;
-  align?: 'left' | 'right';
-  children: ReactNode;
-}) {
-  return (
-    <div className="group relative inline-flex">
-      <NavButton href={href} active={active}>{label}</NavButton>
-      <div className={`absolute top-full z-30 hidden min-w-40 flex-col gap-1 bg-[#5c3a1e] p-1 group-hover:flex group-focus-within:flex ${align === 'right' ? 'right-0' : 'left-0'}`}>
-        {children}
-      </div>
-    </div>
-  );
-}
-
-function MobileFold({
-  label,
-  href,
-  active,
-  children,
-}: {
-  label: string;
-  href: string;
-  active: boolean;
-  children: ReactNode;
-}) {
-  const [open, setOpen] = useState(false);
-  return (
-    <div>
-      {open ? (
-        <NavButton href={href} active={active} className="w-full">{label}</NavButton>
-      ) : (
-        <button
-          type="button"
-          aria-expanded={false}
-          onClick={() => setOpen(true)}
-          className={navButtonClass(active, 'w-full')}
-        >
-          {label}
-        </button>
-      )}
-      {open ? <div className="flex flex-col gap-1 bg-[#5c3a1e] p-1">{children}</div> : null}
-    </div>
-  );
-}
-
 function MobileNav({ account, pathname }: { account: HeaderAccount; pathname: string }) {
   const canUpload = account == null || account.role !== 'pending';
   const settingsOn = settingsSection(pathname, account);
+  const [openMenu, setOpenMenu] = useState<string | null>(null);
 
   return (
     <>
-      <NavButton href="/mountain-weather" active={pathOn(pathname, '/mountain-weather')} className="w-full">
-        Mountain weather
-      </NavButton>
+      <NavMenu
+        layout="inline"
+        href="/mountain-weather"
+        label="Mountain weather"
+        active={pathOn(pathname, '/mountain-weather')}
+        open={openMenu === 'weather'}
+        onOpen={() => setOpenMenu('weather')}
+      >
+        {WEATHER_LINKS.map((item) => (
+          <Link key={item.href} href={item.href} className={menuItemClass(true)}>
+            {item.label}
+          </Link>
+        ))}
+      </NavMenu>
       <NavButton href="/map" active={pathOn(pathname, '/map')} className="w-full">
         Map
       </NavButton>
-      <MobileFold href="/community" label="Community" active={communitySection(pathname)}>
+      <NavMenu
+        layout="inline"
+        href="/community"
+        label="Community"
+        active={communitySection(pathname)}
+        open={openMenu === 'community'}
+        onOpen={() => setOpenMenu('community')}
+      >
         {COMMUNITY_LINKS.map((item) => (
           <Link key={item.href} href={item.href} className={menuItemClass(true)}>
             {item.label}
           </Link>
         ))}
-      </MobileFold>
+      </NavMenu>
       {canUpload ? (
-        <MobileFold href="/upload" label="Upload" active={pathOn(pathname, '/upload')}>
+        <NavMenu
+          layout="inline"
+          href="/upload"
+          label="Upload"
+          active={pathOn(pathname, '/upload')}
+          open={openMenu === 'upload'}
+          onOpen={() => setOpenMenu('upload')}
+        >
           {UPLOAD_LINKS.map((item) => (
             <Link key={item.href} href={item.href} className={menuItemClass(true)}>
               {item.label}
             </Link>
           ))}
-        </MobileFold>
+        </NavMenu>
       ) : null}
       {account ? (
-        <MobileFold href="/settings" label="Settings" active={settingsOn}>
+        <NavMenu
+          layout="inline"
+          href="/settings"
+          label="Settings"
+          active={settingsOn}
+          open={openMenu === 'settings'}
+          onOpen={() => setOpenMenu('settings')}
+        >
           {visibleLinks(settingsLinks(account)).map((item) => (
             <Link key={item.href} href={item.href} className={menuItemClass(true)}>
               {item.label}
@@ -287,7 +271,7 @@ function MobileNav({ account, pathname }: { account: HeaderAccount; pathname: st
           <form action={signOutAction}>
             <button type="submit" className={menuItemClass(true)}>Log out</button>
           </form>
-        </MobileFold>
+        </NavMenu>
       ) : (
         <NavButton href="/sign-in" className="w-full">Log in</NavButton>
       )}

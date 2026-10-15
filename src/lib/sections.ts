@@ -1,3 +1,5 @@
+import { REGION_OPTIONS } from '@/lib/regions';
+
 export type NavLink = {
   href: string;
   label: string;
@@ -20,6 +22,11 @@ export const COMMUNITY_LINKS: NavLink[] = [
   { href: '/gear', label: 'Gear' },
   { href: '/members', label: 'Members' },
 ];
+
+export const WEATHER_LINKS: NavLink[] = REGION_OPTIONS.map((option) => ({
+  href: `/mountain-weather?state=${option.code}`,
+  label: option.label,
+}));
 
 export const UPLOAD_LINKS: NavLink[] = [
   { href: '/upload?kind=trip', label: 'Trip' },
@@ -45,7 +52,7 @@ export type Crumb = {
 };
 
 export type SectionMatch = {
-  id: 'community' | 'upload' | 'settings';
+  id: 'community' | 'upload' | 'weather' | 'settings';
   href: string;
   label: string;
   links: NavLink[];
@@ -109,6 +116,18 @@ export function matchSection(pathname: string, search: string, account: NavAccou
       links: COMMUNITY_LINKS,
       landing,
       crumb: !landing && current ? { parentHref: '/community', parent: 'Community', current } : null,
+    };
+  }
+
+  if (pathOn(pathname, '/mountain-weather')) {
+    const current = WEATHER_LINKS.find((link) => linkOn(pathname, search, link.href))?.label ?? null;
+    return {
+      id: 'weather',
+      href: '/mountain-weather',
+      label: 'Mountain Weather',
+      links: WEATHER_LINKS,
+      landing: !current,
+      crumb: current ? { parentHref: '/mountain-weather', parent: 'Mountain Weather', current } : null,
     };
   }
 
