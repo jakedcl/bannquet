@@ -1,4 +1,4 @@
-import { REGION_OPTIONS } from '@/lib/regions';
+import { DEFAULT_REGION, REGION_OPTIONS } from '@/lib/regions';
 
 export type NavLink = {
   href: string;
@@ -76,6 +76,9 @@ export function linkOn(pathname: string, search: string, href: string): boolean 
   if (pathname !== path) return false;
   const want = new URLSearchParams(query);
   const have = new URLSearchParams(search.startsWith('?') ? search.slice(1) : search);
+  if (path === '/mountain-weather' && want.has('state')) {
+    return (have.get('state') || DEFAULT_REGION) === want.get('state');
+  }
   for (const [key, value] of want) {
     if (have.get(key) !== value) return false;
   }
