@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
 import PageWrapper from '@/components/ui/PageWrapper';
 import { ClimbRows, PhotoGrid, PinRows, PostRows, RouteRows, SeeAll, TripRows } from '@/components/profile/ProfileLists';
@@ -16,6 +17,7 @@ import { allPeaks, challengeProgress, loadChallenges } from '@/lib/challenges';
 import { canDeleteOwned } from '@/lib/membership';
 import { PROFILE_PREVIEW } from '@/lib/list-page';
 import { ensurePeaks, listClimbs, summitCountsByUser } from '@/lib/summits';
+import { listGear } from '@/lib/gear';
 import { listTripsByOwner } from '@/lib/trips';
 
 export const dynamic = 'force-dynamic';
@@ -36,16 +38,18 @@ export default async function UserPage({ params }: { params: Promise<{ username:
   let summitCounts: Awaited<ReturnType<typeof summitCountsByUser>> = [];
   let climbs: Awaited<ReturnType<typeof listClimbs>> = [];
   let trips: Awaited<ReturnType<typeof listTripsByOwner>> = [];
+  let gear: Awaited<ReturnType<typeof listGear>> = [];
   let error: string | null = null;
   try {
     await ensurePeaks();
-    [library, activities, pins, summitCounts, climbs, trips] = await Promise.all([
+    [library, activities, pins, summitCounts, climbs, trips, gear] = await Promise.all([
       loadProfileLibrary(member.id),
       loadLoggedActivities(member.id),
       loadProfilePins(member.id),
       summitCountsByUser(),
       listClimbs(),
       listTripsByOwner(member.id),
+      listGear().catch(() => []),
     ]);
   } catch (err) {
     error = err instanceof Error ? err.message : 'This page did not load.';
@@ -62,6 +66,11 @@ export default async function UserPage({ params }: { params: Promise<{ username:
     return [{ challenge, progress: challengeProgress(challenge.peaks.length, climbed) }];
   });
   const ownClimbs = climbs.filter((climb) => climb.userId === member.id).reverse();
+  const heldGear = gear.flatMap((item) => {
+    const hold = item.holds.find((row) => row.userId === member.id);
+    if (!hold) return [];
+    return [{ id: item.id, name: item.name, qty: hold.qty }];
+  });
   const profilePath = `/user/${member.handle ?? username}`;
 
   const name = member.displayName || member.handle || 'Friend';
@@ -153,6 +162,18 @@ export default async function UserPage({ params }: { params: Promise<{ username:
           <Window title="Climbs">
             <ClimbRows climbs={ownClimbs.slice(0, PROFILE_PREVIEW)} names={peakNames} manage={manage} />
             <SeeAll href={`${profilePath}/climbs`} total={ownClimbs.length} />
+          </Window>
+        ) : null}
+        {heldGear.length > 0 ? (
+          <Window title="Gear">
+            <ul className="space-y-1 text-sm">
+              {heldGear.map((item) => (
+                <li key={item.id} className="truncate">
+                  <Link href="/gear" className="underline">{item.name}</Link>
+                  {` ×${item.qty}`}
+                </li>
+              ))}
+            </ul>
           </Window>
         ) : null}
       </div>

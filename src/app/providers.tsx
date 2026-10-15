@@ -1,11 +1,20 @@
 'use client';
 
+import { AccountProvider, type AccountNav } from '@/contexts/AccountContext';
 import { RegionProvider } from '@/contexts/RegionContext';
 
-export default function Providers({ children }: { children: React.ReactNode }) {
+export default function Providers({
+  account,
+  children,
+}: {
+  account: AccountNav;
+  children: React.ReactNode;
+}) {
   return (
-    <RegionProvider>
+    <AccountProvider account={account}>
+      <RegionProvider>
         {children}
-    </RegionProvider>
+      </RegionProvider>
+    </AccountProvider>
   );
 } 

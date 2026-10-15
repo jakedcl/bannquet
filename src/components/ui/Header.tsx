@@ -9,6 +9,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { signOutAction } from '@/app/sign-in/actions';
 import { useRegion } from '@/contexts/RegionContext';
 import { REGION_OPTIONS } from '@/lib/regions';
+import { COMMUNITY_LINKS, UPLOAD_LINKS, communitySection, pathOn, settingsLinks, settingsSection } from '@/lib/sections';
 import { menuItemClass, navButtonClass, NavButton } from './NavButton';
 import WeatherTicker from './WeatherTicker';
 
@@ -18,29 +19,6 @@ export type HeaderAccount = {
   role: 'member' | 'admin' | 'pending';
   pendingCount?: number;
 } | null;
-
-const COMMUNITY_LINKS = [
-  { href: '/chat', label: 'Chat' },
-  { href: '/peaks', label: 'Peaks' },
-  { href: '/trips', label: 'Trips' },
-] as const;
-
-const UPLOAD_LINKS = [
-  { href: '/upload?kind=post', label: 'Trip report' },
-  { href: '/upload?kind=route', label: 'Route' },
-  { href: '/upload?kind=pin', label: 'Pin' },
-  { href: '/upload?kind=photo', label: 'Photo' },
-] as const;
-
-function pathOn(pathname: string, href: string): boolean {
-  const path = href.split('?')[0];
-  if (href.includes('?')) return false;
-  return pathname === path || pathname.startsWith(`${path}/`);
-}
-
-function communitySection(pathname: string): boolean {
-  return ['/community', '/chat', '/peaks', '/trips', '/gear'].some((href) => pathOn(pathname, href));
-}
 
 export default function Header({ account = null }: { account?: HeaderAccount }) {
   const pathname = usePathname();
@@ -159,10 +137,7 @@ export default function Header({ account = null }: { account?: HeaderAccount }) 
 
 function SiteNav({ account, pathname, home }: { account: HeaderAccount; pathname: string; home: boolean }) {
   const canUpload = account == null || account.role !== 'pending';
-  const profileHref = account?.handle ? `/user/${account.handle}` : '/settings';
-  const settingsOn = Boolean(account) && (
-    pathOn(pathname, '/settings') || pathOn(pathname, '/admin') || pathname === profileHref
-  );
+  const settingsOn = settingsSection(pathname, account);
 
   return (
     <>
@@ -194,18 +169,16 @@ function SiteNav({ account, pathname, home }: { account: HeaderAccount; pathname
       ) : null}
       {account ? (
         <DesktopMenu href="/settings" label="Settings" active={settingsOn} align="right">
-          <Link href={profileHref} className={menuItemClass(false)}>Profile</Link>
-          <Link href="/settings" className={menuItemClass(false)}>Settings</Link>
-          {account.role === 'admin' ? (
-            <Link href="/admin" className={menuItemClass(false)}>
-              Admin
-              {account.pendingCount ? (
+          {settingsLinks(account).map((item) => (
+            <Link key={item.href} href={item.href} className={menuItemClass(false)}>
+              {item.label}
+              {item.href === '/admin' && account.pendingCount ? (
                 <span className="ml-2 inline-block min-w-5 bg-brand-green px-1 text-center text-xs font-bold text-white">
                   {account.pendingCount}
                 </span>
               ) : null}
             </Link>
-          ) : null}
+          ))}
           <form action={signOutAction}>
             <button type="submit" className={menuItemClass(false)}>Log out</button>
           </form>
@@ -273,10 +246,7 @@ function MobileFold({
 
 function MobileNav({ account, pathname }: { account: HeaderAccount; pathname: string }) {
   const canUpload = account == null || account.role !== 'pending';
-  const profileHref = account?.handle ? `/user/${account.handle}` : '/settings';
-  const settingsOn = Boolean(account) && (
-    pathOn(pathname, '/settings') || pathOn(pathname, '/admin') || pathname === profileHref
-  );
+  const settingsOn = settingsSection(pathname, account);
 
   return (
     <>
@@ -304,18 +274,16 @@ function MobileNav({ account, pathname }: { account: HeaderAccount; pathname: st
       ) : null}
       {account ? (
         <MobileFold href="/settings" label="Settings" active={settingsOn}>
-          <Link href={profileHref} className={menuItemClass(true)}>Profile</Link>
-          <Link href="/settings" className={menuItemClass(true)}>Settings</Link>
-          {account.role === 'admin' ? (
-            <Link href="/admin" className={menuItemClass(true)}>
-              Admin
-              {account.pendingCount ? (
+          {settingsLinks(account).map((item) => (
+            <Link key={item.href} href={item.href} className={menuItemClass(true)}>
+              {item.label}
+              {item.href === '/admin' && account.pendingCount ? (
                 <span className="ml-2 inline-block min-w-5 bg-brand-green px-1 text-center text-xs font-bold text-white">
                   {account.pendingCount}
                 </span>
               ) : null}
             </Link>
-          ) : null}
+          ))}
           <form action={signOutAction}>
             <button type="submit" className={menuItemClass(true)}>Log out</button>
           </form>
