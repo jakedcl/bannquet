@@ -5,6 +5,7 @@ import { ClimbRows, GearRows, PhotoGrid, PinRows, PostRows, RouteRows, SeeAll, T
 import { ChallengeBadge } from '@/components/stats/ChallengeBadge';
 import { Badge } from '@/components/retro/Badge';
 import { Button } from '@/components/retro/Button';
+import { SubmitButton } from '@/components/ui/SubmitButton';
 import { Window } from '@/components/retro/Window';
 import { getViewer, signOutAction } from '@/app/sign-in/actions';
 import { findHandleRedirect, findMemberByHandle } from '@/lib/auth/members';
@@ -130,19 +131,17 @@ export default async function UserPage({ params }: { params: Promise<{ username:
         ) : null}
         {library.posts.length > 0 ? (
           <Window title="Posts">
-            <PostRows posts={library.posts} manage={manage} profilePath={profilePath} />
+            <PostRows posts={library.posts} manage={manage} profilePath={profilePath} collapsed />
           </Window>
         ) : null}
         {library.routes.length > 0 ? (
           <Window title="Routes">
-            <RouteRows routes={library.routes.slice(0, PROFILE_PREVIEW)} manage={manage} profilePath={profilePath} />
-            <SeeAll href={`${profilePath}/routes`} total={library.routes.length} />
+            <RouteRows routes={library.routes} manage={manage} profilePath={profilePath} collapsed />
           </Window>
         ) : null}
         {pins.length > 0 ? (
           <Window title="Pins">
-            <PinRows pins={pins.slice(0, PROFILE_PREVIEW)} manage={manage} />
-            <SeeAll href={`${profilePath}/pins`} total={pins.length} />
+            <PinRows pins={pins} manage={manage} collapsed />
           </Window>
         ) : null}
         {library.photos.length > 0 ? (
@@ -153,24 +152,22 @@ export default async function UserPage({ params }: { params: Promise<{ username:
         ) : null}
         {trips.length > 0 ? (
           <Window title="Trips">
-            <TripRows trips={trips.slice(0, PROFILE_PREVIEW)} manage={manage} />
-            <SeeAll href={`${profilePath}/trips`} total={trips.length} />
+            <TripRows trips={trips} manage={manage} collapsed />
           </Window>
         ) : null}
         {ownClimbs.length > 0 ? (
           <Window title="Climbs">
-            <ClimbRows climbs={ownClimbs.slice(0, PROFILE_PREVIEW)} names={Object.fromEntries(peakNames)} manage={manage} />
-            <SeeAll href={`${profilePath}/climbs`} total={ownClimbs.length} />
+            <ClimbRows climbs={ownClimbs} names={Object.fromEntries(peakNames)} manage={manage} collapsed />
           </Window>
         ) : null}
         {heldGear.length > 0 ? (
           <Window title="Gear">
-            <GearRows items={heldGear} />
+            <GearRows items={heldGear} collapsed />
           </Window>
         ) : null}
         {viewer?.id === member.id ? (
           <form action={signOutAction}>
-            <Button type="submit">Log out</Button>
+            <SubmitButton pendingLabel="Signing out…">Log out</SubmitButton>
           </form>
         ) : null}
       </div>

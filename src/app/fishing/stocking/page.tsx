@@ -103,6 +103,7 @@ function PlannedTable({ load }: { load: PlannedStockingLoad }) {
         empty="NY DEC returned no planned stockings for the Catskill and Adirondack counties."
         placeholder="Water or town"
         headers={['Water', 'County', 'Town', 'Year', 'Planned window', 'Species', 'Number', 'Size']}
+        collapsed
       />
     </div>
   );
@@ -152,6 +153,7 @@ function MaineTable({ report }: { report: MaineStockingReport }) {
         placeholder="Water or town"
         headers={['Date', 'County', 'Water', 'Town', 'Species', 'Quantity', 'Size']}
         defaultSort={{ id: 'Date', dir: 'desc' }}
+        collapsed
       />
     </div>
   );
