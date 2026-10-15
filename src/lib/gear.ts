@@ -24,13 +24,14 @@ export type GearHold = {
 export type GearItem = {
   id: string;
   name: string;
+  addedBy: string | null;
   holds: GearHold[];
 };
 
 export async function listGear(): Promise<GearItem[]> {
   const [items, holds] = await Promise.all([
     getDb().execute(sql`
-      select id::text as id, name
+      select id::text as id, name, added_by
       from community_gear
       order by lower(name)
     `),
@@ -63,7 +64,7 @@ export async function listGear(): Promise<GearItem[]> {
     const id = text(row.id);
     const name = text(row.name);
     if (!id || !name) return [];
-    return [{ id, name, holds: byItem.get(id) ?? [] }];
+    return [{ id, name, addedBy: text(row.added_by), holds: byItem.get(id) ?? [] }];
   });
 }
 
@@ -81,6 +82,25 @@ export async function addGearItem(name: string, userId: string): Promise<'ok' | 
     throw err;
   }
   return 'ok';
+}
+
+export async function deleteGearItem(id: string, actor: { id: string; admin: boolean }): Promise<boolean> {
+  const result = await getDb().execute(sql`
+    delete from community_gear
+    where id = ${id}::uuid and (${actor.admin} or added_by = ${actor.id})
+    returning id::text as id
+  `);
+  return asRows(result).length > 0;
+}
+
+export async function deleteGearHold(gearId: string, ownerId: string, actor: { id: string; admin: boolean }): Promise<boolean> {
+  if (!actor.admin && actor.id !== ownerId) return false;
+  const result = await getDb().execute(sql`
+    delete from community_gear_holds
+    where gear_id = ${gearId}::uuid and user_id = ${ownerId}
+    returning gear_id::text as id
+  `);
+  return asRows(result).length > 0;
 }
 
 export async function setGearHold(gearId: string, userId: string, qty: number): Promise<void> {

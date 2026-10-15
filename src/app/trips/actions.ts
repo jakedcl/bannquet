@@ -5,6 +5,7 @@ import { redirect } from 'next/navigation';
 import { getViewer } from '@/app/sign-in/actions';
 import { isActivity } from '@/lib/activities';
 import { APPROVAL_WAIT, canContribute } from '@/lib/membership';
+import { redirectToSignIn } from '@/lib/sign-in-redirect';
 import {
   addPackingItem,
   claimPackingItem,
@@ -18,7 +19,7 @@ import {
 
 async function contributor() {
   const viewer = await getViewer();
-  if (!viewer) return { error: 'Sign in to do that.', viewer: null };
+  if (!viewer) return redirectToSignIn();
   if (!canContribute(viewer.role)) return { error: APPROVAL_WAIT, viewer: null };
   return { error: null, viewer };
 }

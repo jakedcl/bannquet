@@ -7,6 +7,7 @@ import { Window } from '@/components/retro/Window';
 import { getViewer, signOutAction } from '@/app/sign-in/actions';
 import { profileNeedsNames } from '@/lib/handles';
 import { APPROVAL_WAIT, canContribute } from '@/lib/membership';
+import { signInPath } from '@/lib/sign-in-next';
 
 export const dynamic = 'force-dynamic';
 
@@ -15,9 +16,9 @@ export default async function SettingsPage({
 }: {
   searchParams: Promise<{ welcome?: string }>;
 }) {
-  const viewer = await getViewer();
-  if (!viewer) redirect('/sign-in');
   const params = await searchParams;
+  const viewer = await getViewer();
+  if (!viewer) redirect(signInPath(params.welcome ? '/settings?welcome=1' : '/settings'));
 
   return (
     <PageWrapper>

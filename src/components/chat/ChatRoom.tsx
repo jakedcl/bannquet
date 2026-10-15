@@ -3,7 +3,7 @@
 import { useActionState, useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { sendChatAction } from '@/app/chat/actions';
+import { deleteChatAction, sendChatAction } from '@/app/chat/actions';
 import { formatChatTime, type ChatMessage, type ChatRefKind } from '@/lib/chat-view';
 
 type SavedItem = { id: string; label: string; url?: string };
@@ -19,11 +19,15 @@ export function ChatRoom({
   canSend,
   notice,
   items,
+  viewerId,
+  moderator,
 }: {
   initial: ChatMessage[];
   canSend: boolean;
   notice: string | null;
   items: { pins: SavedItem[]; routes: SavedItem[]; photos: SavedItem[] };
+  viewerId: string | null;
+  moderator: boolean;
 }) {
   const [messages, setMessages] = useState(initial);
   const [refreshNote, setRefreshNote] = useState<string | null>(null);
@@ -84,18 +88,12 @@ export function ChatRoom({
         {messages.length === 0 ? (
           <p className="text-sm text-gray-700">No messages yet. Say what you are up to.</p>
         ) : messages.map((message) => (
-          <article key={message.id} className="text-sm">
-            <p>
-              {message.handle ? (
-                <Link href={`/user/${message.handle}`} className="font-bold underline">{message.name}</Link>
-              ) : (
-                <span className="font-bold">{message.name}</span>
-              )}
-              <span className="ml-2 text-xs text-gray-500">{formatChatTime(message.createdAt)}</span>
-            </p>
-            {message.body ? <p className="mt-1 whitespace-pre-wrap">{message.body}</p> : null}
-            {message.ref ? <Chip refItem={message.ref} /> : null}
-          </article>
+          <ChatLine
+            key={message.id}
+            message={message}
+            canManage={moderator || (viewerId != null && message.userId === viewerId)}
+            onRemove={() => setMessages((current) => current.filter((item) => item.id !== message.id))}
+          />
         ))}
       </div>
       {refreshNote ? <p className="text-xs font-bold">{refreshNote}</p> : null}
@@ -187,6 +185,112 @@ export function ChatRoom({
         {state?.error ? <p className="text-sm font-bold text-red-700">{state.error}</p> : null}
       </form>
     </div>
+  );
+}
+
+function ChatLine({
+  message,
+  canManage,
+  onRemove,
+}: {
+  message: ChatMessage;
+  canManage: boolean;
+  onRemove: () => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [pending, setPending] = useState(false);
+  const hold = useRef<number | null>(null);
+  const origin = useRef<{ x: number; y: number } | null>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    function close(event: PointerEvent) {
+      const target = event.target;
+      if (target instanceof Element && target.closest('[data-chat-menu]')) return;
+      setOpen(false);
+    }
+    window.addEventListener('pointerdown', close);
+    return () => window.removeEventListener('pointerdown', close);
+  }, [open]);
+
+  function clearHold() {
+    if (hold.current != null) window.clearTimeout(hold.current);
+    hold.current = null;
+    origin.current = null;
+  }
+
+  return (
+    <article
+      className={`group relative text-sm ${canManage ? 'pr-8' : ''}`}
+      onContextMenu={(event) => {
+        if (!canManage) return;
+        event.preventDefault();
+        setOpen(true);
+      }}
+      onPointerDown={(event) => {
+        if (!canManage || event.pointerType === 'mouse') return;
+        origin.current = { x: event.clientX, y: event.clientY };
+        hold.current = window.setTimeout(() => setOpen(true), 500);
+      }}
+      onPointerMove={(event) => {
+        if (!origin.current) return;
+        const dx = event.clientX - origin.current.x;
+        const dy = event.clientY - origin.current.y;
+        if (dx * dx + dy * dy > 64) clearHold();
+      }}
+      onPointerUp={clearHold}
+      onPointerCancel={clearHold}
+    >
+      <p className="truncate">
+        {message.handle ? (
+          <Link href={`/user/${message.handle}`} className="font-bold underline">{message.name}</Link>
+        ) : (
+          <span className="font-bold">{message.name}</span>
+        )}
+        <span className="ml-2 text-xs text-gray-500">{formatChatTime(message.createdAt)}</span>
+      </p>
+      {message.body ? <p className="mt-1 whitespace-pre-wrap">{message.body}</p> : null}
+      {message.ref ? <Chip refItem={message.ref} /> : null}
+      {error ? <p className="text-xs font-bold text-red-700">{error}</p> : null}
+      {canManage ? (
+        <div data-chat-menu className="absolute right-0 top-0">
+          <button
+            type="button"
+            aria-label="Message actions"
+            aria-expanded={open}
+            onClick={() => setOpen((value) => !value)}
+            className="flex h-7 w-7 items-center justify-center text-lg font-bold leading-none text-[#5c3a1e] opacity-0 group-hover:opacity-100 focus:opacity-100"
+          >
+            ⋯
+          </button>
+          {open ? (
+            <form
+              className="absolute right-0 top-7 z-20 bg-[#5c3a1e] p-1"
+              onSubmit={async (event) => {
+                event.preventDefault();
+                if (!window.confirm('Delete this message?')) return;
+                setPending(true);
+                const data = new FormData();
+                data.set('id', message.id);
+                const result = await deleteChatAction(null, data);
+                setPending(false);
+                if (result?.error) {
+                  setError(result.error);
+                  return;
+                }
+                setOpen(false);
+                onRemove();
+              }}
+            >
+              <button type="submit" disabled={pending} className="retro-button-yellow rounded-none px-3 py-1 text-xs font-bold uppercase">
+                {pending ? 'Deleting…' : 'Delete'}
+              </button>
+            </form>
+          ) : null}
+        </div>
+      ) : null}
+    </article>
   );
 }
 

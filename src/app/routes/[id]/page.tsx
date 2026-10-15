@@ -90,7 +90,6 @@ export default async function RoutePage({ params }: { params: Promise<{ id: stri
             <div>
               <ConfirmDelete
                 action={deleteRouteAction}
-                label="Delete"
                 confirm="Delete this route?"
                 fields={{ id: route.id, returnTo: viewer.handle ? `/user/${viewer.handle}` : '/' }}
               />

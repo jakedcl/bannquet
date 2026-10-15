@@ -12,6 +12,7 @@ export type ChatRef = {
 
 export type ChatMessage = {
   id: string;
+  userId: string | null;
   body: string;
   createdAt: string;
   name: string;

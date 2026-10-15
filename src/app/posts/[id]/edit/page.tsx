@@ -5,6 +5,7 @@ import PageWrapper from '@/components/ui/PageWrapper';
 import { Window } from '@/components/retro/Window';
 import { isDatabaseConfigured } from '@/db';
 import { APPROVAL_WAIT, canContribute } from '@/lib/membership';
+import { signInPath } from '@/lib/sign-in-next';
 import { getEditablePost } from '@/lib/trip-reports';
 
 export const dynamic = 'force-dynamic';
@@ -16,7 +17,7 @@ type PageProps = {
 export default async function EditPostPage({ params }: PageProps) {
   const { id } = await params;
   const viewer = await getViewer();
-  if (!viewer) redirect('/sign-in');
+  if (!viewer) redirect(signInPath(`/posts/${id}/edit`));
 
   if (!isDatabaseConfigured()) {
     return (

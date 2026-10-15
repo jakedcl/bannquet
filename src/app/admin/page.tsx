@@ -9,12 +9,13 @@ import { Window } from '@/components/retro/Window';
 import { getViewer } from '@/app/sign-in/actions';
 import { listInvites, listMembers } from '@/lib/auth/members';
 import { inviteState } from '@/lib/membership';
+import { signInPath } from '@/lib/sign-in-next';
 
 export const dynamic = 'force-dynamic';
 
 export default async function AdminPage() {
   const viewer = await getViewer();
-  if (!viewer) redirect('/sign-in');
+  if (!viewer) redirect(signInPath('/admin'));
   if (viewer.role !== 'admin') redirect('/');
 
   const [members, invites] = await Promise.all([listMembers(), listInvites()]);

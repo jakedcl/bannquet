@@ -7,12 +7,13 @@ import { listMembers } from '@/lib/auth/members';
 import { isDatabaseConfigured } from '@/db';
 import { listAttachables, type AttachChoice } from '@/lib/library';
 import { APPROVAL_WAIT, canContribute } from '@/lib/membership';
+import { signInPath } from '@/lib/sign-in-next';
 
 export const dynamic = 'force-dynamic';
 
 export default async function NewPostPage() {
   const viewer = await getViewer();
-  if (!viewer) redirect('/sign-in');
+  if (!viewer) redirect(signInPath('/posts/new'));
   if (!canContribute(viewer.role)) {
     return (
       <PageWrapper className="bg-gray-50">

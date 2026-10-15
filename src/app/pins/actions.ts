@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation';
 import { getViewer } from '@/app/sign-in/actions';
 import { isActivity, type Activity } from '@/lib/activities';
 import { APPROVAL_WAIT, canContribute } from '@/lib/membership';
+import { redirectToSignIn } from '@/lib/sign-in-redirect';
 import { isLatLng } from '@/lib/photos';
 import { createPin, deletePin, updatePin } from '@/lib/pins';
 import { isPinKind, type PinKind } from '@/lib/pin-kinds';
@@ -57,7 +58,7 @@ function pinFields(formData: FormData): { error: string } | { fields: PinFields 
 
 async function contributor() {
   const viewer = await getViewer();
-  if (!viewer) return { error: 'Sign in to drop a pin.' as const, viewer: null };
+  if (!viewer) return redirectToSignIn();
   if (!canContribute(viewer.role)) return { error: APPROVAL_WAIT, viewer: null };
   return { error: null, viewer };
 }

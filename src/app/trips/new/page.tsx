@@ -4,12 +4,13 @@ import { NewTripForm } from '@/components/trips/NewTripForm';
 import { Window } from '@/components/retro/Window';
 import { getViewer } from '@/app/sign-in/actions';
 import { APPROVAL_WAIT, canContribute } from '@/lib/membership';
+import { signInPath } from '@/lib/sign-in-next';
 
 export const dynamic = 'force-dynamic';
 
 export default async function NewTripPage() {
   const viewer = await getViewer();
-  if (!viewer) redirect('/sign-in');
+  if (!viewer) redirect(signInPath('/trips/new'));
 
   return (
     <PageWrapper>
