@@ -1,0 +1,42 @@
+{
+  "id": "vt4000",
+  "name": "Vermont 4000-footers",
+  "short": "VT 5",
+  "peaks": [
+    {
+      "slug": "vt4000_abraham",
+      "name": "Mount Abraham",
+      "elevationFt": 4006,
+      "lat": 44.1206,
+      "lng": -72.9361
+    },
+    {
+      "slug": "vt4000_camels_hump",
+      "name": "Camel's Hump",
+      "elevationFt": 4083,
+      "lat": 44.3194,
+      "lng": -72.8864
+    },
+    {
+      "slug": "vt4000_ellen",
+      "name": "Mount Ellen",
+      "elevationFt": 4083,
+      "lat": 44.1597,
+      "lng": -72.9297
+    },
+    {
+      "slug": "vt4000_killington",
+      "name": "Killington Peak",
+      "elevationFt": 4235,
+      "lat": 43.6044,
+      "lng": -72.8203
+    },
+    {
+      "slug": "vt4000_mansfield",
+      "name": "Mount Mansfield",
+      "elevationFt": 4393,
+      "lat": 44.5439,
+      "lng": -72.8144
+    }
+  ]
+}

@@ -82,6 +82,12 @@ export function canContribute(role: MemberRole): boolean {
   return role === 'member' || role === 'admin';
 }
 
+export function canDeleteOwned(input: { actorRole: MemberRole; actorId: string; ownerId: string | null }): boolean {
+  if (!canContribute(input.actorRole)) return false;
+  if (input.actorRole === 'admin') return true;
+  return input.ownerId != null && input.ownerId === input.actorId;
+}
+
 export function approvalAllowed(input: { actorRole: MemberRole; targetRole: MemberRole }): boolean {
   return input.actorRole === 'admin' && input.targetRole === 'pending';
 }

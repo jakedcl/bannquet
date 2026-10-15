@@ -1,15 +1,27 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { challengeProgress, loadChallenges, peaksNearTrack, SUMMIT_MATCH_METERS } from './challenges';
+import { challengeProgress, climbButtonLabel, groupPeaks, loadChallenges, loadGroups, peaksNearTrack, SUMMIT_MATCH_METERS } from './challenges';
 
 test('the starter challenges are the Adirondack 46 and the New Hampshire 48', () => {
   const challenges = loadChallenges();
   const adk = challenges.find((challenge) => challenge.id === 'adk46');
   const nh = challenges.find((challenge) => challenge.id === 'nh48');
+  const cats = challenges.find((challenge) => challenge.id === 'cat3500');
+  const vt = challenges.find((challenge) => challenge.id === 'vt4000');
+  const me = challenges.find((challenge) => challenge.id === 'me4000');
   assert.equal(adk?.peaks.length, 46);
   assert.equal(nh?.peaks.length, 48);
+  assert.equal(cats?.peaks.length, 35);
+  assert.equal(cats?.peaks.filter((peak) => peak.winter).length, 4);
+  assert.equal(vt?.peaks.length, 5);
+  assert.equal(me?.peaks.length, 14);
   assert.equal(adk?.short, 'ADK 46');
   assert.equal(nh?.short, 'NH 48');
+  const ne = loadGroups().find((group) => group.id === 'ne67');
+  if (!ne) throw new Error('missing ne67');
+  assert.equal(groupPeaks(ne).length, 67);
+  assert.equal(climbButtonLabel(0), 'I climbed this');
+  assert.equal(climbButtonLabel(2), 'I climbed this again');
   const slugs = challenges.flatMap((challenge) => challenge.peaks.map((peak) => peak.slug));
   assert.equal(new Set(slugs).size, slugs.length);
   for (const peak of adk?.peaks ?? []) {

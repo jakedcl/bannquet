@@ -1,0 +1,105 @@
+{
+  "id": "me4000",
+  "name": "Maine 4000-footers",
+  "short": "ME 14",
+  "peaks": [
+    {
+      "slug": "me4000_abraham",
+      "name": "Mount Abraham",
+      "elevationFt": 4050,
+      "lat": 44.9769,
+      "lng": -70.3267
+    },
+    {
+      "slug": "me4000_bigelow_avery",
+      "name": "Bigelow Mountain, Avery Peak",
+      "elevationFt": 4090,
+      "lat": 45.1603,
+      "lng": -70.2772
+    },
+    {
+      "slug": "me4000_bigelow_west",
+      "name": "Bigelow Mountain, West Peak",
+      "elevationFt": 4145,
+      "lat": 45.1481,
+      "lng": -70.2911
+    },
+    {
+      "slug": "me4000_crocker",
+      "name": "Crocker Mountain",
+      "elevationFt": 4228,
+      "lat": 45.0472,
+      "lng": -70.3825
+    },
+    {
+      "slug": "me4000_katahdin_baxter",
+      "name": "Katahdin, Baxter Peak",
+      "elevationFt": 5268,
+      "lat": 45.9044,
+      "lng": -68.9214
+    },
+    {
+      "slug": "me4000_katahdin_hamlin",
+      "name": "Katahdin, Hamlin Peak",
+      "elevationFt": 4756,
+      "lat": 45.9211,
+      "lng": -68.9233
+    },
+    {
+      "slug": "me4000_north_brother",
+      "name": "North Brother",
+      "elevationFt": 4151,
+      "lat": 45.9403,
+      "lng": -68.9914
+    },
+    {
+      "slug": "me4000_old_speck",
+      "name": "Old Speck Mountain",
+      "elevationFt": 4170,
+      "lat": 44.5708,
+      "lng": -70.9544
+    },
+    {
+      "slug": "me4000_redington",
+      "name": "Mount Redington",
+      "elevationFt": 4010,
+      "lat": 45.0256,
+      "lng": -70.3886
+    },
+    {
+      "slug": "me4000_saddleback",
+      "name": "Saddleback Mountain",
+      "elevationFt": 4120,
+      "lat": 44.9367,
+      "lng": -70.5042
+    },
+    {
+      "slug": "me4000_saddleback_horn",
+      "name": "Saddleback Horn",
+      "elevationFt": 4023,
+      "lat": 44.9494,
+      "lng": -70.4861
+    },
+    {
+      "slug": "me4000_south_crocker",
+      "name": "South Crocker Mountain",
+      "elevationFt": 4050,
+      "lat": 45.0364,
+      "lng": -70.3792
+    },
+    {
+      "slug": "me4000_spaulding",
+      "name": "Spaulding Mountain",
+      "elevationFt": 4010,
+      "lat": 45.0028,
+      "lng": -70.3419
+    },
+    {
+      "slug": "me4000_sugarloaf",
+      "name": "Sugarloaf Mountain",
+      "elevationFt": 4250,
+      "lat": 45.0314,
+      "lng": -70.3133
+    }
+  ]
+}

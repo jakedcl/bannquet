@@ -2,7 +2,6 @@ import { sql } from 'drizzle-orm';
 import { getDb } from '@/db';
 import { isActivity, mapColorForActivity, type Activity } from '@/lib/activities';
 import { lineWkt, trackStats, type TrackPoint } from '@/lib/gpx';
-import { creditTrackSummits, ensurePeaks } from '@/lib/summits';
 import { PIN_KIND_LABELS, isPinKind } from '@/lib/pin-kinds';
 import { NEUTRAL_PIN_COLOR } from '@/lib/map';
 import { isLatLng, isPublicBlobUrl } from '@/lib/photos';
@@ -178,9 +177,7 @@ export async function loadMapData(): Promise<{ points: MapFeatureCollection; lin
     const lat = num(row.lat);
     const lng = num(row.lng);
     const activity = text(row.activity);
-    const postId = text(row.post_id);
     if (!id || lat == null || lng == null) continue;
-    const href = postId ? `/posts/${postId}` : `/map?track=${id}`;
     points.push({
       type: 'Feature',
       geometry: { type: 'Point', coordinates: [lng, lat] },
@@ -192,7 +189,7 @@ export async function loadMapData(): Promise<{ points: MapFeatureCollection; lin
         activity,
         color: colorFor(activity),
         trackId: id,
-        href,
+        href: `/routes/${id}`,
       },
     });
     const geojson = text(row.geojson);
@@ -203,7 +200,16 @@ export async function loadMapData(): Promise<{ points: MapFeatureCollection; lin
       lines.push({
         type: 'Feature',
         geometry,
-        properties: { trackId: id, color: colorFor(activity), title: text(row.title) ?? 'Route' },
+        properties: {
+          trackId: id,
+          color: colorFor(activity),
+          title: text(row.title) ?? 'Route',
+          who: text(row.who) ?? 'Friend',
+          date: text(row.trip_date),
+          activity,
+          category: '',
+          href: `/routes/${id}`,
+        },
       });
     } catch {
       continue;
@@ -215,7 +221,6 @@ export async function loadMapData(): Promise<{ points: MapFeatureCollection; lin
     const lat = num(row.lat);
     const lng = num(row.lng);
     if (!id || lat == null || lng == null) continue;
-    const postId = text(row.post_id);
     const activity = text(row.activity);
     points.push({
       type: 'Feature',
@@ -228,7 +233,7 @@ export async function loadMapData(): Promise<{ points: MapFeatureCollection; lin
         activity,
         color: colorFor(activity),
         trackId: '',
-        href: postId ? `/posts/${postId}` : `/map?photo=${id}`,
+        href: `/photos/${id}`,
       },
     });
   }
@@ -311,15 +316,20 @@ export async function createPost(input: {
   taggedUserIds: string[];
   track: { name: string | null; points: TrackPoint[] } | null;
   photos: PreparedPhoto[];
+  pin: { title: string; note: string; kind: string; lat: number; lng: number } | null;
+  attachRouteIds: string[];
+  attachPinIds: string[];
+  attachPhotoIds: string[];
 }): Promise<string> {
-  const track = input.postKind === 'trip_report' ? input.track : null;
+  const tripReport = input.postKind === 'trip_report';
+  const track = tripReport ? input.track : null;
   const photos = photosForKind(input.postKind, input.photos);
+  const pin = tripReport ? input.pin : null;
   const start = track ? firstPoint(track.points) : null;
   const photoPoint = photos.find((photo) => photo.lat != null && photo.lng != null && isLatLng(photo.lat, photo.lng));
-  const lat = start?.lat ?? photoPoint?.lat ?? null;
-  const lng = start?.lng ?? photoPoint?.lng ?? null;
+  const lat = start?.lat ?? photoPoint?.lat ?? pin?.lat ?? null;
+  const lng = start?.lng ?? photoPoint?.lng ?? pin?.lng ?? null;
   const db = getDb();
-  await ensurePeaks();
 
   const id = await db.transaction(async (tx) => {
     const pointSql = lat == null || lng == null
@@ -345,12 +355,11 @@ export async function createPost(input: {
     const id = text(asRows(inserted)[0]?.id);
     if (!id) throw new Error('Could not save that post.');
 
-    let trackId: string | null = null;
     if (track && track.points.length >= 2 && input.activity) {
       const wkt = lineWkt(track.points);
       const stats = trackStats(track.points);
       if (wkt) {
-        const savedTrack = await tx.execute(sql`
+        await tx.execute(sql`
           insert into tracks (user_id, trip_report_id, source, name, activity, line, distance_m, elev_gain_m, started_at)
           values (
             ${input.authorId},
@@ -363,9 +372,7 @@ export async function createPost(input: {
             ${stats.elevGainM},
             ${input.tripDate}::date
           )
-          returning id::text as id
         `);
-        trackId = text(asRows(savedTrack)[0]?.id);
       }
     }
 
@@ -392,18 +399,57 @@ export async function createPost(input: {
       `);
     }
 
-    return { id, trackId };
+    if (pin) {
+      await tx.execute(sql`
+        insert into pins (kind, activity, point, title, note, created_by, visited_on, trip_report_id)
+        values (
+          ${pin.kind}::pin_kind,
+          ${input.activity}::activity,
+          ST_SetSRID(ST_MakePoint(${pin.lng}, ${pin.lat}), 4326)::geography,
+          ${pin.title},
+          ${pin.note || null},
+          ${input.authorId},
+          ${input.tripDate}::date,
+          ${id}::uuid
+        )
+      `);
+    }
+
+    const routeIds = tripReport ? input.attachRouteIds : [];
+    const pinIds = tripReport ? input.attachPinIds : [];
+    const photoIds = tripReport ? input.attachPhotoIds : [];
+    for (const routeId of routeIds) {
+      const linked = await tx.execute(sql`
+        update tracks
+        set trip_report_id = ${id}::uuid
+        where id = ${routeId}::uuid and user_id = ${input.authorId} and trip_report_id is null
+        returning id::text as id
+      `);
+      if (!text(asRows(linked)[0]?.id)) throw new Error('One of those routes is already on a trip report.');
+    }
+    for (const pinId of pinIds) {
+      const linked = await tx.execute(sql`
+        update pins
+        set trip_report_id = ${id}::uuid
+        where id = ${pinId}::uuid and created_by = ${input.authorId} and trip_report_id is null
+        returning id::text as id
+      `);
+      if (!text(asRows(linked)[0]?.id)) throw new Error('One of those pins is already on a trip report.');
+    }
+    for (const photoId of photoIds) {
+      const linked = await tx.execute(sql`
+        update photos
+        set trip_report_id = ${id}::uuid
+        where id = ${photoId}::uuid and user_id = ${input.authorId} and trip_report_id is null
+        returning id::text as id
+      `);
+      if (!text(asRows(linked)[0]?.id)) throw new Error('One of those photos is already on a trip report.');
+    }
+
+    return id;
   });
 
-  if (track && id.trackId && input.tripDate) {
-    await creditTrackSummits({
-      userId: input.authorId,
-      trackId: id.trackId,
-      points: track.points,
-      summitedAt: `${input.tripDate}T12:00:00Z`,
-    });
-  }
-  return id.id;
+  return id;
 }
 
 export async function updatePost(input: {
@@ -435,12 +481,11 @@ export async function updatePost(input: {
     const id = text(asRows(updated)[0]?.id);
     if (!id) return null;
 
-    let trackId: string | null = null;
     if (track && track.points.length >= 2 && input.activity && input.tripDate) {
       const wkt = lineWkt(track.points);
       const stats = trackStats(track.points);
       if (wkt) {
-        const savedTrack = await tx.execute(sql`
+        await tx.execute(sql`
           insert into tracks (user_id, trip_report_id, source, name, activity, line, distance_m, elev_gain_m, started_at)
           values (
             ${input.authorId},
@@ -453,9 +498,7 @@ export async function updatePost(input: {
             ${stats.elevGainM},
             ${input.tripDate}::date
           )
-          returning id::text as id
         `);
-        trackId = text(asRows(savedTrack)[0]?.id);
       }
     }
 
@@ -490,32 +533,21 @@ export async function updatePost(input: {
         `);
       }
     }
-    return { id, trackId };
+    return id;
   });
 
-  if (!saved) return null;
-  if (track && saved.trackId && input.tripDate) {
-    await ensurePeaks();
-    await creditTrackSummits({
-      userId: input.authorId,
-      trackId: saved.trackId,
-      points: track.points,
-      summitedAt: `${input.tripDate}T12:00:00Z`,
-    });
-  }
-  return saved.id;
+  return saved;
 }
 
 export async function addProfileTrack(input: {
   userId: string;
   activity: Activity;
   track: { name: string | null; points: TrackPoint[] };
-}): Promise<string[]> {
+}): Promise<void> {
   const wkt = lineWkt(input.track.points);
   if (!wkt) throw new Error('That GPX needs at least two points.');
   const stats = trackStats(input.track.points);
-  await ensurePeaks();
-  const inserted = await getDb().execute(sql`
+  await getDb().execute(sql`
     insert into tracks (user_id, source, name, activity, line, distance_m, elev_gain_m, started_at)
     values (
       ${input.userId},
@@ -527,16 +559,7 @@ export async function addProfileTrack(input: {
       ${stats.elevGainM},
       now()
     )
-    returning id::text as id
   `);
-  const trackId = text(asRows(inserted)[0]?.id);
-  if (!trackId) return [];
-  return creditTrackSummits({
-    userId: input.userId,
-    trackId,
-    points: input.track.points,
-    summitedAt: new Date().toISOString(),
-  });
 }
 
 export async function addProfilePhotos(input: { userId: string; photos: PreparedPhoto[] }): Promise<void> {

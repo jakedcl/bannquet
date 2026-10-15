@@ -1,7 +1,6 @@
 import { sql } from 'drizzle-orm';
 import { getDb } from '@/db';
-import { allPeaks, peaksNearTrack, type ChallengePeak } from '@/lib/challenges';
-import type { TrackPoint } from '@/lib/gpx';
+import { allPeaks } from '@/lib/challenges';
 
 type QueryRows = { rows?: Record<string, unknown>[] };
 
@@ -19,82 +18,83 @@ export async function ensurePeaks(): Promise<void> {
       ${peak.name},
       ${peak.listId},
       ${peak.elevationFt},
-      ST_SetSRID(ST_MakePoint(${peak.lng}, ${peak.lat}), 4326)::geography
+      ST_SetSRID(ST_MakePoint(${peak.lng}, ${peak.lat}), 4326)::geography,
+      ${peak.note ?? null}
     )`,
   );
   await getDb().execute(sql`
-    insert into peaks (slug, name, list, elevation_ft, point)
+    insert into peaks (slug, name, list, elevation_ft, point, info)
     values ${sql.join(values, sql`, `)}
     on conflict (slug) do update set
       name = excluded.name,
       list = excluded.list,
       elevation_ft = excluded.elevation_ft,
-      point = excluded.point
+      point = excluded.point,
+      info = excluded.info
   `);
 }
 
-export async function creditTrackSummits(input: {
-  userId: string;
-  trackId: string;
-  points: TrackPoint[];
-  summitedAt: string;
-}): Promise<string[]> {
-  const peaks: ChallengePeak[] = allPeaks();
-  const slugs = peaksNearTrack(input.points, peaks);
-  if (slugs.length === 0) return [];
-  const names = new Map(peaks.map((peak) => [peak.slug, peak.name]));
-  const values = slugs.map(
-    (slug) => sql`(
-      ${input.userId},
-      ${slug},
-      ${input.summitedAt}::timestamptz,
-      ${input.trackId}::uuid,
-      true
-    )`,
-  );
-  await getDb().execute(sql`
-    insert into summits (user_id, peak_slug, summited_at, track_id, verified)
-    values ${sql.join(values, sql`, `)}
-    on conflict (user_id, peak_slug) do update set
-      track_id = coalesce(summits.track_id, excluded.track_id),
-      verified = summits.verified or excluded.verified
-  `);
-  return slugs.map((slug) => names.get(slug) ?? slug);
-}
-
-export async function toggleManualSummit(userId: string, peakSlug: string): Promise<'added' | 'removed' | 'missing'> {
+export async function logClimb(userId: string, peakSlug: string, climbedOn: string | null): Promise<'added' | 'missing'> {
   const known = allPeaks().some((peak) => peak.slug === peakSlug);
   if (!known) return 'missing';
-  const db = getDb();
-  const existing = await db.execute(sql`
-    select id::text as id from summits where user_id = ${userId} and peak_slug = ${peakSlug} limit 1
-  `);
-  if (asRows(existing).length > 0) {
-    await db.execute(sql`delete from summits where user_id = ${userId} and peak_slug = ${peakSlug}`);
-    return 'removed';
+  if (climbedOn) {
+    await getDb().execute(sql`
+      insert into summits (user_id, peak_slug, summited_at, verified)
+      values (${userId}, ${peakSlug}, ${climbedOn}::date, false)
+    `);
+  } else {
+    await getDb().execute(sql`
+      insert into summits (user_id, peak_slug, summited_at, verified)
+      values (${userId}, ${peakSlug}, null, false)
+    `);
   }
-  await db.execute(sql`
-    insert into summits (user_id, peak_slug, summited_at, verified)
-    values (${userId}, ${peakSlug}, now(), false)
-  `);
   return 'added';
 }
 
-export type SummitCredit = {
+export async function deleteClimb(id: string, actor: { id: string; admin: boolean }): Promise<boolean> {
+  const result = await getDb().execute(sql`
+    delete from summits
+    where id = ${id}::uuid
+      and (${actor.admin} or user_id = ${actor.id})
+    returning id::text as id
+  `);
+  return asRows(result).length > 0;
+}
+
+export type ClimbRow = {
+  id: string;
+  userId: string;
   peakSlug: string;
-  fromRoute: boolean;
+  climbedOn: string | null;
+  name: string;
+  handle: string | null;
 };
 
-export async function listSummitCredits(userId: string): Promise<SummitCredit[]> {
+export async function listClimbs(): Promise<ClimbRow[]> {
   const result = await getDb().execute(sql`
-    select peak_slug, track_id::text as track_id
-    from summits
-    where user_id = ${userId}
+    select s.id::text as id, s.user_id, s.peak_slug,
+      case when s.summited_at is null then null else s.summited_at::date::text end as climbed_on,
+      coalesce(nullif(u.display_name, ''), nullif(u.handle, ''), 'Friend') as name,
+      u.handle
+    from summits s
+    join users u on u.id = s.user_id
+    where u.role <> 'pending'
+    order by s.created_at asc
   `);
   return asRows(result).flatMap((row) => {
+    const id = row.id == null ? '' : String(row.id);
+    const userId = row.user_id == null ? '' : String(row.user_id);
     const peakSlug = row.peak_slug == null ? '' : String(row.peak_slug);
-    if (!peakSlug) return [];
-    return [{ peakSlug, fromRoute: row.track_id != null && String(row.track_id).length > 0 }];
+    if (!id || !userId || !peakSlug) return [];
+    const climbedOn = row.climbed_on == null || String(row.climbed_on).length === 0 ? null : String(row.climbed_on).slice(0, 10);
+    return [{
+      id,
+      userId,
+      peakSlug,
+      climbedOn,
+      name: row.name == null ? 'Friend' : String(row.name),
+      handle: row.handle == null || String(row.handle).length === 0 ? null : String(row.handle),
+    }];
   });
 }
 
