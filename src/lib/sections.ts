@@ -70,8 +70,14 @@ export type PageTrail = {
   crumbs: Crumb[] | null;
 };
 
+export const FISHING_LINKS: NavLink[] = [
+  { href: '/fishing', label: 'Mountain fishing' },
+  { href: '/fishing/stocking', label: 'Stocking' },
+  { href: '/fishing/guides', label: 'Guides' },
+];
+
 export type SectionMatch = {
-  id: 'community' | 'upload' | 'weather' | 'settings';
+  id: 'community' | 'upload' | 'weather' | 'settings' | 'fishing';
   href: string;
   label: string;
   links: NavLink[];
@@ -87,6 +93,7 @@ export function linkOn(pathname: string, search: string, href: string): boolean 
   const [path, query] = href.split('?');
   if (path.startsWith('/user/')) return pathname === path;
   if (path === '/members' && pathname.startsWith('/user/')) return true;
+  if (path === '/fishing') return pathname === '/fishing';
   if (!query) return pathOn(pathname, path);
   if (pathname !== path) return false;
   const want = new URLSearchParams(query);
@@ -110,6 +117,15 @@ export function communitySection(pathname: string, account: NavAccount = null): 
   if (COMMUNITY_ROOTS.some((href) => pathOn(pathname, href))) return true;
   if (!pathname.startsWith('/user/')) return false;
   return !ownProfile(pathname, account);
+}
+
+export function fishingSection(pathname: string): boolean {
+  return pathOn(pathname, '/fishing');
+}
+
+function fishingCurrent(pathname: string): string | null {
+  const links = [...FISHING_LINKS].sort((a, b) => b.href.length - a.href.length);
+  return links.find((link) => pathOn(pathname, link.href))?.label ?? null;
 }
 
 export function settingsLinks(account: NavAccount): NavLink[] {
@@ -300,6 +316,22 @@ export function pageTrail(pathname: string, search: string, account: NavAccount,
     };
   }
 
+  if (pathname === '/fishing') {
+    return { parentHref: '/', crumbs: [{ href: '/fishing', label: 'Fishing' }] };
+  }
+
+  if (pathOn(pathname, '/fishing')) {
+    const current = fishingCurrent(pathname);
+    if (!current) return { parentHref: '/fishing', crumbs: [{ href: '/fishing', label: 'Fishing' }] };
+    return {
+      parentHref: '/fishing',
+      crumbs: [
+        { href: '/fishing', label: 'Fishing' },
+        { href: pathname, label: current },
+      ],
+    };
+  }
+
   if (pathname === '/map') {
     return { parentHref: '/', crumbs: [{ href: '/map', label: 'Map' }] };
   }
@@ -311,6 +343,16 @@ export function pageTrail(pathname: string, search: string, account: NavAccount,
 }
 
 export function matchSection(pathname: string, search: string, account: NavAccount): SectionMatch | null {
+  if (fishingSection(pathname)) {
+    return {
+      id: 'fishing',
+      href: '/fishing',
+      label: 'Fishing',
+      links: FISHING_LINKS,
+      landing: false,
+    };
+  }
+
   if (communitySection(pathname, account)) {
     return {
       id: 'community',

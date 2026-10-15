@@ -80,6 +80,7 @@ export default function Home() {
                 ))}
               </NavMenu>
               <NavButton href="/map" size="lg" className="w-full sm:w-auto">Map</NavButton>
+              <NavButton href="/fishing" size="lg" className="w-full sm:w-auto">Fishing</NavButton>
               <NavMenu
                 layout="responsive"
                 size="lg"

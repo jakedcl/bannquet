@@ -34,7 +34,7 @@ npm run dev
 
 Then open http://localhost:3000. Copy `.env.example` to `.env.local`.
 
-Weather pages work with no keys. Trip reports stay empty until `DATABASE_URL` points at a Postgres database and the schema has been migrated. Reading the site stays public. Anyone can make an account at `/sign-up`. Until Jake approves them on `/admin`, they can sign in and read, but they cannot post or edit. An invite link from `/admin` still skips that wait. After that they sign in with email and password. `ADMIN_EMAIL` is the address that can sign in without an invite and is stored as admin. Sessions last a week and refresh when someone comes back, which is as long as Neon Auth keeps them. Photo uploads need `BLOB_READ_WRITE_TOKEN` from the Vercel Blob store.
+Weather pages work with no keys. Mountain fishing reads USGS water data without a key, on a low rate limit. Set `USGS_WATER_DATA_API_KEY` (or `WATER_DATA_API_KEY`) on Vercel for the higher limit. Trip reports stay empty until `DATABASE_URL` points at a Postgres database and the schema has been migrated. Reading the site stays public. Anyone can make an account at `/sign-up`. Until Jake approves them on `/admin`, they can sign in and read, but they cannot post or edit. An invite link from `/admin` still skips that wait. After that they sign in with email and password. `ADMIN_EMAIL` is the address that can sign in without an invite and is stored as admin. Sessions last a week and refresh when someone comes back, which is as long as Neon Auth keeps them. Photo uploads need `BLOB_READ_WRITE_TOKEN` from the Vercel Blob store.
 
 ## Database
 
