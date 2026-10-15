@@ -28,7 +28,7 @@ export function MountainWeather({ state }: { state?: string }) {
     <div className="container mx-auto space-y-8 px-4 py-10">
       <header className="space-y-4">
         <WeatherTicker placement="page" />
-        <h1 className="inline-block max-w-full retro-box-inset bg-white px-3 py-2 text-2xl font-bold leading-tight text-gray-900">
+        <h1 className="text-4xl font-bold text-gray-900 md:text-5xl">
           {stateName} Mountain Weather
         </h1>
       </header>

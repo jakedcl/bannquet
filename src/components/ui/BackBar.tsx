@@ -59,10 +59,10 @@ export function BackBar() {
   const crumbs = trail.crumbs;
 
   return (
-    <nav aria-label="Page" className="back-bar flex items-center gap-3 px-3 py-1.5">
+    <nav aria-label="Page" className="back-bar">
       <button
         type="button"
-        className="retro-button inline-flex shrink-0 items-center gap-1 rounded-none text-xs leading-none text-[#1a1a1a] [padding:4px_8px]"
+        className="retro-button back-bar-button"
         onClick={() => {
           if (canGoBackInApp()) {
             router.back();
@@ -78,12 +78,12 @@ export function BackBar() {
         Back
       </button>
       {crumbs && crumbs.length > 0 ? (
-        <p className="ml-auto min-w-0 flex-1 truncate text-right text-xs font-bold uppercase tracking-wide text-[#1a1a1a]">
-          <span className="hidden sm:inline">
+        <p className="crumb-trail">
+          <span className="crumb-wide">
             {crumbs.length > 2 ? '… / ' : null}
             <CrumbList crumbs={crumbs.length > 2 ? crumbs.slice(-2) : crumbs} />
           </span>
-          <span className="sm:hidden">
+          <span className="crumb-narrow">
             {crumbs.length > 1 ? '… / ' : null}
             <CrumbList crumbs={crumbs.slice(-2)} />
           </span>
