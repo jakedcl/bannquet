@@ -1,15 +1,16 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
 import { notFound, redirect } from 'next/navigation';
+import { getViewer } from '@/app/sign-in/actions';
 import PageWrapper from '@/components/ui/PageWrapper';
 import { Badge, Button, Table, Window } from '@/components/retro';
 import { DeleteReport } from '@/components/posts/DeleteReport';
-import { getViewer } from '@/app/sign-in/actions';
 import { isDatabaseConfigured } from '@/db';
 import { ACTIVITY_META, isActivity } from '@/lib/activities';
 import { formatFeetGain, formatMiles } from '@/lib/gpx';
 import { listReportAttachments } from '@/lib/library';
 import { canDeleteOwned } from '@/lib/membership';
+import { POST_KIND_LABELS } from '@/lib/post-kinds';
 import { loadReportTrail } from '@/lib/posts';
 import { getTripReport } from '@/lib/trip-reports';
 import { formatTripDate } from '@/lib/utils';
@@ -79,10 +80,15 @@ export default async function PostDetailPage({ params }: PageProps) {
   const place = report.lat != null && report.lng != null
     ? `${report.lat.toFixed(4)}, ${report.lng.toFixed(4)}`
     : '—';
-  const trail = await loadReportTrail(report.id).catch(() => null);
-  const attached = await listReportAttachments(report.id).catch(() => ({ routes: [], pins: [], photos: [] }));
+  const tripReport = report.postKind === 'trip_report';
+  const trail = tripReport ? await loadReportTrail(report.id).catch(() => null) : null;
+  const attached = tripReport
+    ? await listReportAttachments(report.id).catch(() => ({ routes: [], pins: [], photos: [] }))
+    : { routes: [], pins: [], photos: [] };
   const activity = report.activity && isActivity(report.activity) ? ACTIVITY_META[report.activity].label : null;
   const viewer = await getViewer();
+  const canEdit = viewer?.id === report.authorId;
+  const showOnMap = tripReport || report.lat != null;
   const manage = Boolean(viewer && canDeleteOwned({
     actorRole: viewer.role,
     actorId: viewer.id,
@@ -97,20 +103,28 @@ export default async function PostDetailPage({ params }: PageProps) {
   return (
     <PageWrapper className="bg-gray-50">
       <div className="mx-auto max-w-4xl px-4 py-12">
-        <div className="mb-6 flex gap-3">
+        <div className="mb-6 flex flex-wrap gap-3">
           <Button tone="default" href="/posts">Back to posts</Button>
-          <Button tone="blue" href={`/map?post=${report.id}`}>On the map</Button>
+          {showOnMap ? <Button tone="blue" href={`/map?post=${report.id}`}>On the map</Button> : null}
+          {canEdit ? <Button tone="yellow" href={`/posts/${report.id}/edit`}>Edit</Button> : null}
         </div>
         <Window title={report.title}>
-          <Table
-            headers={['Author', 'Date', 'Activity', 'Place']}
-            rows={[[
-              report.authorName,
-              formatTripDate(report.tripDate, 'long'),
-              activity ?? '—',
-              place,
-            ]]}
-          />
+          <div className="mb-4">
+            <Badge>{POST_KIND_LABELS[report.postKind]}</Badge>
+          </div>
+          {tripReport ? (
+            <Table
+              headers={['Author', 'Date', 'Activity', 'Place']}
+              rows={[[
+                report.authorName,
+                formatTripDate(report.tripDate, 'long'),
+                activity ?? '—',
+                place,
+              ]]}
+            />
+          ) : (
+            <p className="text-sm font-bold text-gray-800">{report.authorName}</p>
+          )}
           {trail && (trail.distanceM != null || trail.taggedNames.length > 0) ? (
             <p className="mt-3 text-sm text-gray-700">
               {trail.distanceM != null ? `${formatMiles(trail.distanceM)} · ${formatFeetGain(trail.elevGainM ?? 0)}` : null}

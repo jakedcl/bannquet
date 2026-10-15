@@ -76,7 +76,8 @@ export default async function UploadPage({
         {kind === 'post' ? (
           <Window title="Post">
             <p className="mb-4 text-sm text-gray-700">
-              Title, the day, what you were doing, who came, and the story.
+              Pick Trip report or General. A trip report can include the day, photos, and a route.
+              A general post is a note and an optional photo.
               You can attach a route, pin, or photo you already saved, or add a new one here.
             </p>
             <PostForm friends={friends} routes={saved.routes} pins={saved.pins} photos={saved.photos} />

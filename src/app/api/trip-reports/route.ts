@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { isDatabaseConfigured } from '@/db';
+import { isPostKind } from '@/lib/post-kinds';
 import { listTripReports } from '@/lib/trip-reports';
 
 export async function GET(request: NextRequest) {
@@ -16,9 +17,11 @@ export async function GET(request: NextRequest) {
     const searchParams = request.nextUrl.searchParams;
     const limitRaw = searchParams.get('limit');
     const limit = limitRaw ? Number.parseInt(limitRaw, 10) : null;
+    const type = searchParams.get('type');
     const data = await listTripReports({
       authorName: searchParams.get('authorName'),
       tag: searchParams.get('tag'),
+      postKind: type && isPostKind(type) ? type : null,
       limit: Number.isFinite(limit) ? limit : null,
     });
 
