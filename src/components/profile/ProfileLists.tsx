@@ -54,10 +54,12 @@ export function PostRows({
   posts,
   manage,
   profilePath,
+  collapsed = false,
 }: {
   posts: Array<{ id: string; title: string; tripDate: string | null; activity: string | null; tagged: boolean }>;
   manage: boolean;
   profilePath: string;
+  collapsed?: boolean;
 }) {
   const columns: DataColumn<(typeof posts)[number]>[] = [
     {
@@ -100,6 +102,7 @@ export function PostRows({
       placeholder="Post title"
       searchText={(row) => `${row.title} ${activityLabel(row.activity) ?? ''}`}
       facets={[{ id: 'activity', label: 'Activity', value: (row) => activityLabel(row.activity) }]}
+      collapsed={collapsed}
     />
   );
 }
@@ -108,10 +111,12 @@ export function RouteRows({
   routes,
   manage,
   profilePath,
+  collapsed = false,
 }: {
   routes: Array<{ id: string; name: string; activity: string; distanceM: number | null; elevGainM: number | null }>;
   manage: boolean;
   profilePath: string;
+  collapsed?: boolean;
 }) {
   const columns: DataColumn<(typeof routes)[number]>[] = [
     {
@@ -164,6 +169,7 @@ export function RouteRows({
       placeholder="Route name"
       searchText={(row) => `${row.name} ${activityLabel(row.activity) ?? ''}`}
       facets={[{ id: 'activity', label: 'Activity', value: (row) => activityLabel(row.activity) }]}
+      collapsed={collapsed}
     />
   );
 }
@@ -171,9 +177,11 @@ export function RouteRows({
 export function PinRows({
   pins,
   manage,
+  collapsed = false,
 }: {
   pins: Array<{ id: string; title: string; visitedOn: string | null; activity: string | null; kind: string }>;
   manage: boolean;
+  collapsed?: boolean;
 }) {
   const columns: DataColumn<(typeof pins)[number]>[] = [
     {
@@ -221,6 +229,7 @@ export function PinRows({
         { id: 'activity', label: 'Activity', value: (row) => activityLabel(row.activity) },
         { id: 'kind', label: 'Kind', value: (row) => (isPinKind(row.kind) ? PIN_KIND_LABELS[row.kind] : null) },
       ]}
+      collapsed={collapsed}
     />
   );
 }
@@ -259,9 +268,11 @@ export function PhotoGrid({
 export function TripRows({
   trips,
   manage,
+  collapsed = false,
 }: {
   trips: Array<{ id: string; title: string; tripDate: string | null; activity?: string | null }>;
   manage: boolean;
+  collapsed?: boolean;
 }) {
   const columns: DataColumn<(typeof trips)[number]>[] = [
     {
@@ -306,6 +317,7 @@ export function TripRows({
       placeholder="Trip name"
       searchText={(row) => `${row.title} ${activityLabel(row.activity) ?? ''}`}
       facets={[{ id: 'activity', label: 'Activity', value: (row) => activityLabel(row.activity) }]}
+      collapsed={collapsed}
     />
   );
 }
@@ -314,10 +326,12 @@ export function ClimbRows({
   climbs,
   names,
   manage,
+  collapsed = false,
 }: {
   climbs: Array<{ id: string; peakSlug: string }>;
   names: Record<string, string>;
   manage: boolean;
+  collapsed?: boolean;
 }) {
   const columns: DataColumn<(typeof climbs)[number]>[] = [
     {
@@ -355,14 +369,17 @@ export function ClimbRows({
       defaultSort={{ id: 'peak', dir: 'asc' }}
       placeholder="Peak name"
       searchText={(row) => names[row.peakSlug] ?? ''}
+      collapsed={collapsed}
     />
   );
 }
 
 export function GearRows({
   items,
+  collapsed = false,
 }: {
   items: Array<{ id: string; name: string; qty: number }>;
+  collapsed?: boolean;
 }) {
   const columns: DataColumn<(typeof items)[number]>[] = [
     {
@@ -389,6 +406,7 @@ export function GearRows({
       defaultSort={{ id: 'name', dir: 'asc' }}
       placeholder="Gear name"
       searchText={(row) => row.name}
+      collapsed={collapsed}
     />
   );
 }

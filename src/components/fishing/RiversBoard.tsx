@@ -234,6 +234,7 @@ export function RiversBoard({
         empty={gaugesUnavailable ? 'Data unavailable' : gaugeFiltered ? 'No gauges match.' : 'No gauges came back.'}
         onRowClick={(gauge) => select(gauge.site)}
         defaultSort={{ id: 'name', dir: 'asc' }}
+        collapsed
       />
 
       <div className="space-y-3">
@@ -260,6 +261,7 @@ export function RiversBoard({
               rowKey={(area) => area.id}
               empty={parkingFiltered ? 'No parking areas match.' : 'No parking areas came back for those counties.'}
               defaultSort={{ id: 'water', dir: 'asc' }}
+              collapsed
             />
           </>
         )}

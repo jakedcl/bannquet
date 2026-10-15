@@ -2,6 +2,9 @@
 
 import { useMemo, useState, type ReactNode } from 'react';
 
+/** Rows shown before "See all" on an embedded table. */
+export const TABLE_PREVIEW = 8;
+
 export type SortValue = string | number | null;
 
 export type DataColumn<T> = {
@@ -23,6 +26,7 @@ export function DataTable<T>({
   defaultSort,
   onRowClick,
   expanded,
+  collapsed = false,
 }: {
   rows: T[];
   columns: DataColumn<T>[];
@@ -31,8 +35,11 @@ export function DataTable<T>({
   defaultSort?: { id: string; dir: 'asc' | 'desc' };
   onRowClick?: (row: T) => void;
   expanded?: (row: T) => ReactNode | null;
+  /** Show the first rows, then "See all (N)" / "Show less". Sort still uses every row. */
+  collapsed?: boolean;
 }) {
   const [sort, setSort] = useState(defaultSort ?? null);
+  const [open, setOpen] = useState(false);
   const ordered = useMemo(() => {
     if (!sort) return rows;
     const column = columns.find((item) => item.id === sort.id);
@@ -43,7 +50,11 @@ export function DataTable<T>({
 
   if (ordered.length === 0) return <p className="text-sm">{empty}</p>;
 
+  const canFold = collapsed && ordered.length > TABLE_PREVIEW;
+  const visible = canFold && !open ? ordered.slice(0, TABLE_PREVIEW) : ordered;
+
   return (
+    <div>
     <div className="overflow-x-auto bg-white max-md:border max-md:border-solid max-md:border-[#ccc] md:retro-box-inset">
       <table className="w-full border-collapse text-left text-sm max-md:[&_a]:font-normal max-md:[&_a]:text-[#6b4423] max-md:[&_a]:no-underline md:min-w-[36rem]">
         <thead className="bg-beige font-mono text-[11px] uppercase leading-none md:text-xs md:leading-normal">
@@ -85,7 +96,7 @@ export function DataTable<T>({
           </tr>
         </thead>
         <tbody>
-          {ordered.map((row) => {
+          {visible.map((row) => {
             const key = rowKey(row);
             const extra = expanded?.(row) ?? null;
             return (
@@ -101,6 +112,19 @@ export function DataTable<T>({
           })}
         </tbody>
       </table>
+    </div>
+    {canFold ? (
+      <p className="mt-3 text-sm">
+        <button
+          type="button"
+          className="font-bold underline"
+          aria-expanded={open}
+          onClick={() => setOpen((current) => !current)}
+        >
+          {open ? 'Show less' : `See all (${ordered.length})`}
+        </button>
+      </p>
+    ) : null}
     </div>
   );
 }

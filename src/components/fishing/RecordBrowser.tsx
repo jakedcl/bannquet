@@ -17,12 +17,14 @@ export function RecordBrowser({
   empty,
   placeholder,
   defaultSort,
+  collapsed = false,
 }: {
   rows: BrowserRow[];
   headers: string[];
   empty: string;
   placeholder: string;
   defaultSort?: { id: string; dir: 'asc' | 'desc' };
+  collapsed?: boolean;
 }) {
   const columns: DataColumn<BrowserRow>[] = headers.map((header, index) => ({
     id: header,
@@ -42,6 +44,7 @@ export function RecordBrowser({
       searchText={(row) => row.search}
       defaultSort={defaultSort}
       facets={[{ id: 'county', label: 'County', value: (row) => row.county || null }]}
+      collapsed={collapsed}
     />
   );
 }

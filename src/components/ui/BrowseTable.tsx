@@ -21,6 +21,7 @@ export function BrowseTable<T>({
   placeholder,
   searchText,
   facets = [],
+  collapsed = false,
 }: {
   rows: T[];
   columns: DataColumn<T>[];
@@ -30,6 +31,8 @@ export function BrowseTable<T>({
   placeholder: string;
   searchText: (row: T) => string;
   facets?: BrowseFacet<T>[];
+  /** Fold after the preview once search and filters have run on the full list. */
+  collapsed?: boolean;
 }) {
   const [query, setQuery] = useState('');
   const [picked, setPicked] = useState<Record<string, string>>({});
@@ -73,6 +76,7 @@ export function BrowseTable<T>({
         rowKey={rowKey}
         empty={query.trim() || Object.values(picked).some((value) => value !== 'all') ? 'Nothing matches.' : empty}
         defaultSort={defaultSort}
+        collapsed={collapsed}
       />
     </div>
   );

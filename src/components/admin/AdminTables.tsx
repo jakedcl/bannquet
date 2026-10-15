@@ -43,6 +43,7 @@ export function InviteTable({ rows }: { rows: InviteRow[] }) {
       placeholder="Email or status"
       searchText={(row) => `${row.email} ${row.status} ${row.code}`}
       facets={[{ id: 'status', label: 'Status', value: (row) => row.status }]}
+      collapsed
     />
   );
 }
@@ -94,6 +95,7 @@ export function AdminMemberTable({ rows }: { rows: AdminMemberRow[] }) {
       placeholder="Name, email, or role"
       searchText={(row) => `${row.name} ${row.email} ${row.role}`}
       facets={[{ id: 'role', label: 'Role', value: (row) => row.role }]}
+      collapsed
     />
   );
 }

@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useActionState } from 'react';
 import { approveMember, denyMember } from '@/app/sign-in/actions';
-import { Button } from '@/components/retro/Button';
+import { SubmitButton } from '@/components/ui/SubmitButton';
 import { BrowseTable } from '@/components/ui/BrowseTable';
 import type { DataColumn } from '@/components/ui/DataTable';
 import { Window } from '@/components/retro/Window';
@@ -70,6 +70,7 @@ function PendingTable({ members, onDone }: { members: PendingMember[]; onDone: (
       defaultSort={{ id: 'name', dir: 'asc' }}
       placeholder="Name, email, or username"
       searchText={(row) => `${row.displayName ?? ''} ${row.email ?? ''} ${row.handle ?? ''}`}
+      collapsed
     />
   );
 }
@@ -91,15 +92,15 @@ function PendingDecision({ userId, onDone }: { userId: string; onDone: () => voi
       <div className="flex flex-wrap gap-2">
         <form action={approve}>
           <input type="hidden" name="userId" value={userId} />
-          <Button tone="green" type="submit" disabled={approvePending || denyPending || finished}>
-            {approvePending ? 'Approving…' : 'Approve'}
-          </Button>
+          <SubmitButton tone="green" pendingLabel="Approving…" disabled={denyPending || finished}>
+            Approve
+          </SubmitButton>
         </form>
         <form action={deny}>
           <input type="hidden" name="userId" value={userId} />
-          <Button type="submit" disabled={approvePending || denyPending || finished}>
-            {denyPending ? 'Removing…' : 'Deny'}
-          </Button>
+          <SubmitButton pendingLabel="Removing…" disabled={approvePending || finished}>
+            Deny
+          </SubmitButton>
         </form>
       </div>
       {error ? <p className="text-xs font-bold text-red-700">{error}</p> : null}

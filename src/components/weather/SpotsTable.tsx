@@ -69,6 +69,7 @@ export function SpotsTable({ spots }: { spots: ExtremeSpot[] }) {
         { id: 'state', label: 'State', value: (row) => row.state },
         { id: 'snow', label: 'Snow', value: (row) => (row.isSnowing ? 'Snowing' : 'Clear') },
       ]}
+      collapsed
     />
   );
 }
