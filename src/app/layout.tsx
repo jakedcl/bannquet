@@ -10,6 +10,9 @@ export const dynamic = 'force-dynamic';
 export const metadata = {
   title: 'Bannquet',
   description: 'Regional mountain weather, a map, and posts',
+  appleWebApp: {
+    title: 'BANNQUET',
+  },
 };
 
 export default async function RootLayout({
