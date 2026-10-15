@@ -32,8 +32,8 @@ export default async function ChatPage() {
     }
   }
 
-  const canSend = Boolean(viewer && canContribute(viewer.role) && !error);
-  const notice = error ?? (viewer && !canContribute(viewer.role) ? APPROVAL_WAIT : !viewer ? 'Sign in to talk.' : null);
+  const canSend = Boolean(!error && (!viewer || canContribute(viewer.role)));
+  const notice = error ?? (viewer && !canContribute(viewer.role) ? APPROVAL_WAIT : null);
 
   return (
     <PageWrapper>
@@ -42,7 +42,14 @@ export default async function ChatPage() {
           <p className="mb-3 text-sm text-gray-700">
             One thread for the group. Text only. Trip reports stay on their own pages.
           </p>
-          <ChatRoom initial={messages} canSend={canSend} notice={notice} items={items} />
+          <ChatRoom
+            initial={messages}
+            canSend={canSend}
+            notice={notice}
+            items={items}
+            viewerId={viewer?.id ?? null}
+            moderator={viewer?.role === 'admin'}
+          />
         </Window>
       </div>
     </PageWrapper>

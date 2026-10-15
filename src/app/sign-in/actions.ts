@@ -45,6 +45,7 @@ import {
   usernameProblem,
 } from '@/lib/handles';
 import { isPublicBlobUrl } from '@/lib/photos';
+import { safeNextPath } from '@/lib/sign-in-next';
 import { homeStateCode } from '@/lib/us-states';
 
 const PROFILE_CLAIM = 'bannquet_profile';
@@ -98,7 +99,8 @@ export async function signInWithPassword(
 
   const { error } = await getAuth().signIn.email({ email, password, rememberMe: true });
   if (error) return { error: passwordAuthError(error, SIGN_IN_MISMATCH) };
-  redirect('/auth/continue');
+  const next = safeNextPath(String(formData.get('next') ?? ''));
+  redirect(next ? `/auth/continue?next=${encodeURIComponent(next)}` : '/auth/continue');
 }
 
 export async function createAccount(
@@ -239,7 +241,7 @@ export async function completePasswordReset(
   redirect('/sign-in?reset=1');
 }
 
-export async function finishSignIn(): Promise<void> {
+export async function finishSignIn(nextRaw?: string | null): Promise<void> {
   if (!isAuthConfigured() || !isDatabaseConfigured()) {
     redirect('/sign-in?error=setup');
   }
@@ -276,7 +278,8 @@ export async function finishSignIn(): Promise<void> {
     if (saved.member) member = saved.member;
   }
 
-  redirect(nextStopForMember(member));
+  if (profileNeedsNames(member)) redirect('/settings?welcome=1');
+  redirect(safeNextPath(nextRaw) ?? nextStopForMember(member));
 }
 
 export async function signOutAction(): Promise<void> {

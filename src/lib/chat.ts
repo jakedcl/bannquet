@@ -54,6 +54,7 @@ function mapMessage(row: Record<string, unknown>): ChatMessage | null {
   if (!id || !createdAt) return null;
   return {
     id,
+    userId: text(row.user_id),
     body: text(row.body) ?? '',
     createdAt,
     name: text(row.name) ?? 'Friend',
@@ -70,7 +71,7 @@ function messageQuery(cursor?: { after: string; afterId: string } | null) {
     ? sql`order by m.created_at asc, m.id asc limit 50`
     : sql`order by m.created_at desc, m.id desc limit 80`;
   return sql`
-    select m.id::text as id, m.body, m.created_at, m.ref_kind, m.ref_id::text as ref_id,
+    select m.id::text as id, m.user_id, m.body, m.created_at, m.ref_kind, m.ref_id::text as ref_id,
       coalesce(nullif(u.display_name, ''), nullif(u.handle, ''), 'Friend') as name,
       u.handle,
       p.title as pin_title,
@@ -120,6 +121,15 @@ export async function sendChatMessage(input: {
     `);
   }
   return 'ok';
+}
+
+export async function deleteChatMessage(id: string, actor: { id: string; admin: boolean }): Promise<boolean> {
+  const result = await getDb().execute(sql`
+    delete from chat_messages
+    where id = ${id}::uuid and (${actor.admin} or user_id = ${actor.id})
+    returning id::text as id
+  `);
+  return asRows(result).length > 0;
 }
 
 async function ownsRef(userId: string, kind: ChatRefKind, id: string): Promise<boolean> {

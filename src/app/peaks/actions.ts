@@ -3,34 +3,39 @@
 import { revalidatePath } from 'next/cache';
 import { getViewer } from '@/app/sign-in/actions';
 import { APPROVAL_WAIT, canContribute } from '@/lib/membership';
-import { deleteClimb, ensurePeaks, logClimb } from '@/lib/summits';
+import { redirectToSignIn } from '@/lib/sign-in-redirect';
+import { deleteClimb, deleteLatestClimb, ensurePeaks, logClimb } from '@/lib/summits';
 
-const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-
-function isRealDate(value: string): boolean {
-  if (!DATE_PATTERN.test(value)) return false;
-  const [year, month, day] = value.split('-').map(Number);
-  const date = new Date(Date.UTC(year, month - 1, day));
-  return date.getUTCFullYear() === year && date.getUTCMonth() === month - 1 && date.getUTCDate() === day;
-}
 
 function refresh(handle: string | null, peakSlug: string) {
   revalidatePath('/peaks');
   if (peakSlug) revalidatePath(`/peaks/${peakSlug}`);
-  if (handle) revalidatePath(`/user/${handle}`);
+  if (handle) {
+    revalidatePath(`/user/${handle}`);
+    revalidatePath(`/user/${handle}/climbs`);
+  }
 }
 
 export async function logClimbAction(formData: FormData): Promise<void> {
   const viewer = await getViewer();
-  if (!viewer || !canContribute(viewer.role)) return;
+  if (!viewer) return redirectToSignIn();
+  if (!canContribute(viewer.role)) return;
   const peakSlug = String(formData.get('peakSlug') ?? '').trim();
   if (!peakSlug) return;
-  const raw = String(formData.get('climbedOn') ?? '').trim();
-  if (raw && !isRealDate(raw)) return;
   await ensurePeaks();
-  const result = await logClimb(viewer.id, peakSlug, raw || null);
+  const result = await logClimb(viewer.id, peakSlug, null);
   if (result === 'missing') return;
+  refresh(viewer.handle, peakSlug);
+}
+
+export async function removeLatestClimbAction(formData: FormData): Promise<void> {
+  const viewer = await getViewer();
+  if (!viewer) return redirectToSignIn();
+  if (!canContribute(viewer.role)) return;
+  const peakSlug = String(formData.get('peakSlug') ?? '').trim();
+  if (!peakSlug) return;
+  await deleteLatestClimb(viewer.id, peakSlug);
   refresh(viewer.handle, peakSlug);
 }
 
@@ -39,7 +44,7 @@ export async function deleteClimbAction(
   formData: FormData,
 ): Promise<{ error?: string }> {
   const viewer = await getViewer();
-  if (!viewer) return { error: 'Sign in to delete a climb.' };
+  if (!viewer) return redirectToSignIn();
   if (!canContribute(viewer.role)) return { error: APPROVAL_WAIT };
   const id = String(formData.get('id') ?? '');
   const peakSlug = String(formData.get('peakSlug') ?? '').trim();

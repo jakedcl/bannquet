@@ -151,7 +151,7 @@ export default function Header({ account = null }: { account?: HeaderAccount }) 
 }
 
 function SiteNav({ account, pathname, home }: { account: HeaderAccount; pathname: string; home: boolean }) {
-  const canUpload = account != null && account.role !== 'pending';
+  const canUpload = account == null || account.role !== 'pending';
   const profileHref = account?.handle ? `/user/${account.handle}` : '/settings';
   const settingsOn = Boolean(account) && (
     pathOn(pathname, '/settings') || pathOn(pathname, '/admin') || pathname === profileHref
@@ -265,7 +265,7 @@ function MobileFold({
 }
 
 function MobileNav({ account, pathname, home }: { account: HeaderAccount; pathname: string; home: boolean }) {
-  const canUpload = account != null && account.role !== 'pending';
+  const canUpload = account == null || account.role !== 'pending';
   const profileHref = account?.handle ? `/user/${account.handle}` : '/settings';
   const settingsOn = Boolean(account) && (
     pathOn(pathname, '/settings') || pathOn(pathname, '/admin') || pathname === profileHref

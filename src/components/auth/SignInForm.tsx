@@ -6,12 +6,13 @@ import { signInWithPassword } from '@/app/sign-in/actions';
 import { Button } from '@/components/retro/Button';
 import { PasswordField } from '@/components/auth/PasswordField';
 
-export function SignInForm({ intro }: { intro: string }) {
+export function SignInForm({ intro, next = '' }: { intro: string; next?: string }) {
   const [state, action, pending] = useActionState(signInWithPassword, null);
 
   return (
     <form action={action} className="space-y-4">
       <p className="text-sm text-gray-700">{intro}</p>
+      {next ? <input type="hidden" name="next" value={next} /> : null}
       <label className="block space-y-1">
         <span className="text-sm font-bold">Email</span>
         <input

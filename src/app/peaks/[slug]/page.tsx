@@ -3,12 +3,11 @@ import { notFound } from 'next/navigation';
 import PageWrapper from '@/components/ui/PageWrapper';
 import { ConfirmDelete } from '@/components/delete/ConfirmDelete';
 import { Window } from '@/components/retro/Window';
-import { deleteClimbAction, logClimbAction } from '@/app/peaks/actions';
+import { deleteClimbAction, logClimbAction, removeLatestClimbAction } from '@/app/peaks/actions';
 import { getViewer } from '@/app/sign-in/actions';
-import { allPeaks, climbButtonLabel } from '@/lib/challenges';
+import { allPeaks } from '@/lib/challenges';
 import { canContribute } from '@/lib/membership';
 import { listClimbs, type ClimbRow } from '@/lib/summits';
-import { formatOptionalDate } from '@/lib/utils';
 import { isDatabaseConfigured } from '@/db';
 
 export const dynamic = 'force-dynamic';
@@ -46,7 +45,7 @@ export default async function PeakPage({ params }: { params: Promise<{ slug: str
     }
   }
 
-  const canMark = Boolean(viewer && canContribute(viewer.role) && !error);
+  const canMark = Boolean(!error && (!viewer || canContribute(viewer.role)));
   const own = viewer ? climbs.filter((climb) => climb.userId === viewer.id) : [];
   const people = climberSummary(climbs);
 
@@ -78,43 +77,47 @@ export default async function PeakPage({ params }: { params: Promise<{ slug: str
                 <li key={person.userId}>
                   {person.handle ? <Link href={`/user/${person.handle}`} className="underline">{person.name}</Link> : person.name}
                   {person.times > 1 ? ` ×${person.times}` : ''}
-                  {person.dates.length > 0 ? (
-                    <span className="ml-2 text-xs text-gray-500">{person.dates.join(' · ')}</span>
-                  ) : null}
                 </li>
               ))}
             </ul>
           )}
-          {canMark ? (
-            <form action={logClimbAction} className="mt-4 flex flex-wrap items-center gap-2">
+          {canMark && own.length === 0 ? (
+            <form action={logClimbAction} className="mt-4">
               <input type="hidden" name="peakSlug" value={peak.slug} />
-              <input
-                type="date"
-                name="climbedOn"
-                aria-label="Date, optional"
-                className="bg-white px-2 py-1 text-sm retro-box-inset"
-              />
               <button type="submit" className="retro-button-yellow rounded-none px-3 py-2 text-xs font-bold uppercase">
-                {climbButtonLabel(own.length)}
+                I climbed this
               </button>
             </form>
           ) : null}
+          {canMark && own.length > 0 ? (
+            <div className="mt-4 flex items-center gap-2">
+              <form action={removeLatestClimbAction}>
+                <input type="hidden" name="peakSlug" value={peak.slug} />
+                <button type="submit" aria-label="Remove a climb" className="retro-button-yellow inline-flex h-8 w-8 items-center justify-center rounded-none p-0 text-lg font-bold">
+                  −
+                </button>
+              </form>
+              <p className="min-w-0 flex-1 truncate text-sm font-bold">You&apos;ve climbed this {own.length}×</p>
+              <form action={logClimbAction}>
+                <input type="hidden" name="peakSlug" value={peak.slug} />
+                <button type="submit" aria-label="Log another climb" className="retro-button-yellow inline-flex h-8 w-8 items-center justify-center rounded-none p-0 text-lg font-bold">
+                  +
+                </button>
+              </form>
+            </div>
+          ) : null}
           {own.length > 0 ? (
             <ul className="mt-4 space-y-2">
-              {own.map((climb) => {
-                const when = formatOptionalDate(climb.climbedOn);
-                return (
-                  <li key={climb.id} className="flex flex-wrap items-center gap-2 text-sm">
-                    {when ? <span className="text-xs text-gray-500">{when}</span> : <span className="text-xs text-gray-500">No date</span>}
-                    <ConfirmDelete
-                      action={deleteClimbAction}
-                      label="Delete"
-                      confirm="Delete this climb?"
-                      fields={{ id: climb.id, peakSlug: peak.slug }}
-                    />
-                  </li>
-                );
-              })}
+              {[...own].reverse().map((climb, index) => (
+                <li key={climb.id} className="flex items-center gap-2 text-sm">
+                  <p className="min-w-0 flex-1 truncate">Climb {own.length - index}</p>
+                  <ConfirmDelete
+                    action={deleteClimbAction}
+                    confirm="Delete this climb?"
+                    fields={{ id: climb.id, peakSlug: peak.slug }}
+                  />
+                </li>
+              ))}
             </ul>
           ) : null}
         </Window>
@@ -124,18 +127,15 @@ export default async function PeakPage({ params }: { params: Promise<{ slug: str
 }
 
 function climberSummary(climbs: ClimbRow[]) {
-  const map = new Map<string, { userId: string; name: string; handle: string | null; times: number; dates: string[] }>();
+  const map = new Map<string, { userId: string; name: string; handle: string | null; times: number }>();
   for (const climb of climbs) {
     const current = map.get(climb.userId) ?? {
       userId: climb.userId,
       name: climb.name,
       handle: climb.handle,
       times: 0,
-      dates: [],
     };
     current.times += 1;
-    const when = formatOptionalDate(climb.climbedOn);
-    if (when) current.dates.push(when);
     map.set(climb.userId, current);
   }
   return [...map.values()].sort((a, b) => b.times - a.times || a.name.localeCompare(b.name));

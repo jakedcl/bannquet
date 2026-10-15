@@ -22,6 +22,7 @@ export default async function TripPage({ params }: { params: Promise<{ id: strin
   if (!trip) notFound();
   const viewer = await getViewer();
   const canEdit = Boolean(viewer && canContribute(viewer.role));
+  const canRsvp = !viewer || canContribute(viewer.role);
   const canDeleteTrip = Boolean(viewer && canDeleteOwned({
     actorRole: viewer.role,
     actorId: viewer.id,
@@ -58,7 +59,7 @@ export default async function TripPage({ params }: { params: Promise<{ id: strin
                 ))}
               </ul>
             )}
-            {canEdit && viewer ? (
+            {canRsvp ? (
               <form action={toggleGoing} className="mt-3">
                 <input type="hidden" name="tripId" value={trip.id} />
                 <input type="hidden" name="going" value={going ? '0' : '1'} />
@@ -70,7 +71,6 @@ export default async function TripPage({ params }: { params: Promise<{ id: strin
             <div className="mt-4">
               <ConfirmDelete
                 action={deleteTripAction}
-                label="Delete trip"
                 confirm="Delete this trip?"
                 fields={{ id: trip.id }}
               />

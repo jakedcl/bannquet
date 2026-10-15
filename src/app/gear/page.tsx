@@ -1,10 +1,11 @@
 import Link from 'next/link';
+import { ConfirmDelete } from '@/components/delete/ConfirmDelete';
 import PageWrapper from '@/components/ui/PageWrapper';
 import { Window } from '@/components/retro/Window';
-import { addGearAction, setHoldAction } from '@/app/gear/actions';
+import { addGearAction, deleteGearHoldAction, deleteGearItemAction, setHoldAction } from '@/app/gear/actions';
 import { getViewer } from '@/app/sign-in/actions';
 import { listGear } from '@/lib/gear';
-import { APPROVAL_WAIT, canContribute } from '@/lib/membership';
+import { APPROVAL_WAIT, canContribute, canDeleteOwned } from '@/lib/membership';
 import { isDatabaseConfigured } from '@/db';
 import { GearAddForm } from '@/components/gear/GearAddForm';
 
@@ -22,7 +23,7 @@ export default async function GearPage() {
       error = err instanceof Error ? err.message : 'The gear list did not load.';
     }
   }
-  const canEdit = Boolean(viewer && canContribute(viewer.role) && !error);
+  const canEdit = Boolean(!error && (!viewer || canContribute(viewer.role)));
 
   return (
     <PageWrapper>
@@ -32,7 +33,6 @@ export default async function GearPage() {
             Shared stuff for the group. Add an item, then mark how many you have so someone knows who to borrow from.
           </p>
           {error ? <p className="mb-3 text-sm font-bold">{error}</p> : null}
-          {!viewer ? <p className="mb-3 text-sm font-bold">Sign in to add gear or mark what you have.</p> : null}
           {viewer && !canContribute(viewer.role) ? <p className="mb-3 text-sm font-bold">{APPROVAL_WAIT}</p> : null}
           {canEdit ? <GearAddForm action={addGearAction} /> : null}
           {items.length === 0 ? (
@@ -43,15 +43,33 @@ export default async function GearPage() {
                 const mine = viewer ? item.holds.find((hold) => hold.userId === viewer.id) : null;
                 return (
                   <li key={item.id} className="border-t border-gray-300 pt-3">
-                    <p className="font-bold">{item.name}</p>
+                    <div className="flex items-center gap-2">
+                      <p className="min-w-0 flex-1 truncate font-bold">{item.name}</p>
+                      {viewer && canDeleteOwned({ actorRole: viewer.role, actorId: viewer.id, ownerId: item.addedBy }) ? (
+                        <ConfirmDelete
+                          action={deleteGearItemAction}
+                          confirm="Remove this item from the list?"
+                          fields={{ id: item.id }}
+                        />
+                      ) : null}
+                    </div>
                     {item.holds.length === 0 ? (
                       <p className="mt-1 text-sm text-gray-700">Nobody has marked this yet.</p>
                     ) : (
-                      <ul className="mt-1 text-sm">
+                      <ul className="mt-1 space-y-1 text-sm">
                         {item.holds.map((hold) => (
-                          <li key={hold.userId}>
-                            {hold.handle ? <Link href={`/user/${hold.handle}`} className="underline">{hold.name}</Link> : hold.name}
-                            {` ×${hold.qty}`}
+                          <li key={hold.userId} className="flex items-center gap-2">
+                            <p className="min-w-0 flex-1 truncate">
+                              {hold.handle ? <Link href={`/user/${hold.handle}`} className="underline">{hold.name}</Link> : hold.name}
+                              {` ×${hold.qty}`}
+                            </p>
+                            {viewer && canDeleteOwned({ actorRole: viewer.role, actorId: viewer.id, ownerId: hold.userId }) ? (
+                              <ConfirmDelete
+                                action={deleteGearHoldAction}
+                                confirm="Remove this mark?"
+                                fields={{ gearId: item.id, userId: hold.userId }}
+                              />
+                            ) : null}
                           </li>
                         ))}
                       </ul>

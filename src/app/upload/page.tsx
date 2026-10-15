@@ -10,6 +10,7 @@ import { listMembers } from '@/lib/auth/members';
 import { isDatabaseConfigured } from '@/db';
 import { listAttachables, type AttachChoice } from '@/lib/library';
 import { APPROVAL_WAIT, canContribute } from '@/lib/membership';
+import { signInPath } from '@/lib/sign-in-next';
 
 export const dynamic = 'force-dynamic';
 
@@ -31,10 +32,10 @@ export default async function UploadPage({
 }: {
   searchParams: Promise<{ kind?: string }>;
 }) {
-  const viewer = await getViewer();
-  if (!viewer) redirect('/sign-in');
   const params = await searchParams;
   const kind = isKind(params.kind) ? params.kind : null;
+  const viewer = await getViewer();
+  if (!viewer) redirect(signInPath(kind ? `/upload?kind=${kind}` : '/upload'));
 
   if (!canContribute(viewer.role)) {
     return (

@@ -3,7 +3,8 @@ import PageWrapper from '@/components/ui/PageWrapper';
 import { SignInForm } from '@/components/auth/SignInForm';
 import { Window } from '@/components/retro/Window';
 import { getViewer } from '@/app/sign-in/actions';
-import { nextStopForMember } from '@/lib/handles';
+import { nextStopForMember, profileNeedsNames } from '@/lib/handles';
+import { safeNextPath } from '@/lib/sign-in-next';
 
 export const dynamic = 'force-dynamic';
 
@@ -15,12 +16,16 @@ const ERRORS: Record<string, string> = {
 export default async function SignInPage({
   searchParams,
 }: {
-  searchParams: Promise<{ error?: string; reset?: string }>;
+  searchParams: Promise<{ error?: string; reset?: string; next?: string }>;
 }) {
-  const viewer = await getViewer();
-  if (viewer) redirect(nextStopForMember(viewer));
-
   const params = await searchParams;
+  const next = safeNextPath(params.next);
+  const viewer = await getViewer();
+  if (viewer) {
+    if (profileNeedsNames(viewer)) redirect('/settings?welcome=1');
+    redirect(next ?? nextStopForMember(viewer));
+  }
+
   const banner = params.error ? ERRORS[params.error] : null;
 
   return (
@@ -31,7 +36,7 @@ export default async function SignInPage({
             <p className="mb-4 text-sm text-brand-green-dark">Password saved. Sign in with it.</p>
           ) : null}
           {banner ? <p className="mb-4 text-sm font-bold text-red-700">{banner}</p> : null}
-          <SignInForm intro="Use your email and password. You stay signed in on this browser." />
+          <SignInForm intro="Use your email and password. You stay signed in on this browser." next={next ?? ''} />
         </Window>
       </div>
     </PageWrapper>

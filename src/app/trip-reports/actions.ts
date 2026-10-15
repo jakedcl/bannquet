@@ -5,6 +5,7 @@ import { getViewer } from '@/app/sign-in/actions';
 import { isActivity, type Activity } from '@/lib/activities';
 import { packTrack, unpackTrack, type PackedTrack } from '@/lib/gpx';
 import { APPROVAL_WAIT, canContribute } from '@/lib/membership';
+import { redirectToSignIn } from '@/lib/sign-in-redirect';
 import { isPinKind } from '@/lib/pin-kinds';
 import { isLatLng } from '@/lib/photos';
 import { isPostKind, type PostKind } from '@/lib/post-kinds';
@@ -91,7 +92,7 @@ export async function publishPost(
   formData: FormData,
 ): Promise<{ error?: string }> {
   const viewer = await getViewer();
-  if (!viewer) return { error: 'Sign in to post.' };
+  if (!viewer) return redirectToSignIn();
   if (!canContribute(viewer.role)) return { error: APPROVAL_WAIT };
 
   const parsed = readPostFields(formData);
@@ -154,7 +155,7 @@ export async function savePostEdits(
   formData: FormData,
 ): Promise<{ error?: string }> {
   const viewer = await getViewer();
-  if (!viewer) return { error: 'Sign in to edit a post.' };
+  if (!viewer) return redirectToSignIn();
   if (!canContribute(viewer.role)) return { error: APPROVAL_WAIT };
   const postId = String(formData.get('postId') ?? '').trim();
   if (!/^[0-9a-f-]{36}$/i.test(postId)) return { error: 'That post is not yours.' };
@@ -187,7 +188,7 @@ export async function publishProfileTrack(
   formData: FormData,
 ): Promise<{ error?: string; saved?: true; peaks?: string }> {
   const viewer = await getViewer();
-  if (!viewer) return { error: 'Sign in to add a route.' };
+  if (!viewer) return redirectToSignIn();
   if (!canContribute(viewer.role)) return { error: APPROVAL_WAIT };
   const activity = String(formData.get('activity') ?? '');
   if (!isActivity(activity)) return { error: 'Pick what you were doing.' };
@@ -206,7 +207,7 @@ export async function publishProfilePhotos(
   formData: FormData,
 ): Promise<{ error?: string; saved?: true }> {
   const viewer = await getViewer();
-  if (!viewer) return { error: 'Sign in to add a photo.' };
+  if (!viewer) return redirectToSignIn();
   if (!canContribute(viewer.role)) return { error: APPROVAL_WAIT };
   const photos = cleanPhotos(String(formData.get('photos') ?? ''));
   if (photos.error) return { error: photos.error };

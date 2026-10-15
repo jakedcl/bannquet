@@ -4,6 +4,7 @@ import { useActionState, useRef, useState } from 'react';
 import { createPinAction, deletePinAction, updatePinAction } from '@/app/pins/actions';
 import { PhotoFields } from '@/components/posts/PhotoFields';
 import type { UploadedPhoto } from '@/components/posts/prepare-photo';
+import { TrashButton } from '@/components/delete/ConfirmDelete';
 import { Button } from '@/components/retro/Button';
 import { ACTIVITIES, ACTIVITY_META, isActivity, mapColorForActivity } from '@/lib/activities';
 import { PIN_KINDS, PIN_KIND_LABELS, type PinKind } from '@/lib/pin-kinds';
@@ -224,14 +225,16 @@ export function DeletePinButton({ id }: { id: string }) {
   return (
     <form
       action={action}
-      className="space-y-2"
+      className="relative shrink-0"
       onSubmit={(event) => {
         if (!window.confirm('Delete this pin?')) event.preventDefault();
       }}
     >
       <input type="hidden" name="id" value={id} />
-      {state?.error ? <p className="text-sm font-bold text-red-700">{state.error}</p> : null}
-      <Button type="submit" disabled={pending}>{pending ? 'Deleting…' : 'Delete pin'}</Button>
+      {state?.error ? (
+        <p className="absolute right-0 top-full z-10 mt-1 w-44 text-right text-xs font-bold text-red-700">{state.error}</p>
+      ) : null}
+      <TrashButton pending={pending} />
     </form>
   );
 }

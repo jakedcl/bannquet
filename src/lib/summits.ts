@@ -51,6 +51,20 @@ export async function logClimb(userId: string, peakSlug: string, climbedOn: stri
   return 'added';
 }
 
+export async function deleteLatestClimb(userId: string, peakSlug: string): Promise<boolean> {
+  const result = await getDb().execute(sql`
+    delete from summits
+    where id = (
+      select id from summits
+      where user_id = ${userId} and peak_slug = ${peakSlug}
+      order by created_at desc
+      limit 1
+    )
+    returning id::text as id
+  `);
+  return asRows(result).length > 0;
+}
+
 export async function deleteClimb(id: string, actor: { id: string; admin: boolean }): Promise<boolean> {
   const result = await getDb().execute(sql`
     delete from summits

@@ -96,7 +96,6 @@ export default async function PhotoPage({ params }: { params: Promise<{ id: stri
             <div>
               <ConfirmDelete
                 action={deletePhotoAction}
-                label="Delete"
                 confirm="Delete this photo?"
                 fields={{ id: photo.id, returnTo: viewer.handle ? `/user/${viewer.handle}` : '/' }}
               />
