@@ -1,35 +1,48 @@
 'use client';
 
+import { useState } from 'react';
 import WeatherDashboard from '@/components/WeatherDashboard';
 import { useRegion } from '@/contexts/RegionContext';
-import { DEFAULT_REGION, REGION_LABELS, REGION_OPTIONS, REGION_WEATHER_SECTIONS, type WeatherSection } from '@/lib/regions';
+import { DEFAULT_REGION, REGION_LABELS, REGION_OPTIONS, REGION_WEATHER_SECTIONS, isRegionCode, type WeatherSection } from '@/lib/regions';
+
+const STATE_NAMES: Record<string, string> = {
+  ny: 'New York',
+  vt: 'Vermont',
+  nh: 'New Hampshire',
+  me: 'Maine',
+};
 
 export function MountainWeather({ children }: { children: React.ReactNode }) {
-  const { region, setRegion } = useRegion();
+  const { setRegion } = useRegion();
+  const [region, setLocalRegion] = useState(DEFAULT_REGION);
   const sections = REGION_WEATHER_SECTIONS[region] ?? REGION_WEATHER_SECTIONS[DEFAULT_REGION];
   const regionLabel = REGION_LABELS[region] ?? region.toUpperCase();
+
+  function chooseState(next: string) {
+    if (!isRegionCode(next)) return;
+    setLocalRegion(next);
+    setRegion(next);
+  }
 
   return (
     <div className="container mx-auto space-y-8 px-4 py-10">
       <header className="space-y-4">
         <h1 className="text-3xl font-bold text-gray-900 md:text-5xl">Regional mountain weather</h1>
-        <div className="flex flex-wrap gap-2" role="group" aria-label="Choose a state">
-          {REGION_OPTIONS.map((option) => {
-            const selected = option.code === region;
-            const tone = option.buttonTone === 'default' ? 'retro-button' : `retro-button-${option.buttonTone}`;
-            return (
-              <button
-                key={option.code}
-                type="button"
-                aria-pressed={selected}
-                onClick={() => setRegion(option.code)}
-                className={`region-pick rounded-none px-4 py-2 text-sm font-bold uppercase tracking-wide ${selected ? 'retro-button-yellow' : tone}`}
-              >
-                {option.label}
-              </button>
-            );
-          })}
-        </div>
+        <label className="block max-w-xs space-y-1">
+          <span className="text-sm font-bold">State</span>
+          <select
+            value={region}
+            onChange={(event) => chooseState(event.target.value)}
+            aria-label="Choose a state"
+            className="w-full retro-box-inset bg-white px-3 py-2 text-base font-bold"
+          >
+            {REGION_OPTIONS.map((option) => (
+              <option key={option.code} value={option.code}>
+                {STATE_NAMES[option.code] ?? option.label}
+              </option>
+            ))}
+          </select>
+        </label>
       </header>
 
       {children}
