@@ -96,7 +96,7 @@ export function DataTable<T>({
           </tr>
         </thead>
         <tbody>
-          {visible.map((row) => {
+          {visible.map((row, index) => {
             const key = rowKey(row);
             const extra = expanded?.(row) ?? null;
             return (
@@ -107,6 +107,7 @@ export function DataTable<T>({
                 clickable={Boolean(onRowClick)}
                 onClick={onRowClick ? () => onRowClick(row) : undefined}
                 extra={extra}
+                reveal={Boolean(canFold && open && index >= TABLE_PREVIEW)}
               />
             );
           })}
@@ -135,17 +136,19 @@ function Row<T>({
   clickable,
   onClick,
   extra,
+  reveal = false,
 }: {
   row: T;
   columns: DataColumn<T>[];
   clickable: boolean;
   onClick?: () => void;
   extra: ReactNode | null;
+  reveal?: boolean;
 }) {
   return (
     <>
       <tr
-        className={`group ${clickable ? 'cursor-pointer' : ''}`}
+        className={`group ${reveal ? 'row-in' : ''} ${clickable ? 'cursor-pointer' : ''}`}
         onClick={onClick ? (event) => {
           const target = event.target as HTMLElement;
           if (target.closest('a, button, input, form, select, textarea, label')) return;

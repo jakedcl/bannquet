@@ -1,7 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
+import { MOTION_TWEEN } from '@/lib/motion';
 import Image from 'next/image';
 import Link from 'next/link';
 import { menuItemClass, NavButton } from '@/components/ui/NavButton';
@@ -11,6 +12,8 @@ import { COMMUNITY_LINKS, WEATHER_LINKS } from '@/lib/sections';
 
 export default function Home() {
   const [openMenu, setOpenMenu] = useState<string | null>(null);
+  const reduce = useReducedMotion();
+  const tween = reduce ? { duration: 0 } : MOTION_TWEEN;
 
   return (
     <PageWrapper>
@@ -32,15 +35,15 @@ export default function Home() {
           <div className="space-y-12 text-center">
             {/* Hero Section */}
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
+              transition={tween}
             >
               <div className="w-full flex justify-center -mt-8 sm:-mt-12">
                 <div className="w-full max-w-[280px] sm:max-w-[350px] md:max-w-[420px] lg:max-w-[500px]">
                   <motion.div
                     layoutId="header-logo"
-                    transition={{ type: "spring", stiffness: 200, damping: 25, duration: 0.8 }}
+                    transition={tween}
                   >
                     <Image
                       src="/logo.png"
@@ -60,9 +63,9 @@ export default function Home() {
 
             {/* CTA Buttons */}
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2, duration: 0.6 }}
+              transition={tween}
               className="relative z-20 mx-auto flex w-full max-w-sm flex-col items-stretch gap-4 overflow-visible sm:max-w-none sm:flex-row sm:flex-wrap sm:items-center sm:justify-center sm:gap-6"
             >
               <NavMenu
