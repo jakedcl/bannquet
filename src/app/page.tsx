@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion';
 import Image from 'next/image';
-import Link from 'next/link';
+import { NavButton } from '@/components/ui/NavButton';
 import PageWrapper from '@/components/ui/PageWrapper';
 
 export default function Home() {
@@ -63,24 +63,9 @@ export default function Home() {
               transition={{ delay: 0.2, duration: 0.6 }}
               className="flex flex-col sm:flex-row items-center justify-center gap-6"
             >
-              <Link
-                href="/mountain-weather"
-                className="retro-button-yellow px-10 py-4 font-bold text-lg uppercase tracking-wider rounded-none"
-              >
-                Mountain Weather
-              </Link>
-              <Link
-                href="/map"
-                className="retro-button-orange px-10 py-4 font-bold text-lg uppercase tracking-wider rounded-none"
-              >
-                Map
-              </Link>
-              <Link
-                href="/community"
-                className="retro-button-orange px-10 py-4 font-bold text-lg uppercase tracking-wider rounded-none"
-              >
-                Community
-              </Link>
+              <NavButton href="/mountain-weather">Mountain Weather</NavButton>
+              <NavButton href="/map">Map</NavButton>
+              <NavButton href="/community">Community</NavButton>
             </motion.div>
           </div>
         </div>
