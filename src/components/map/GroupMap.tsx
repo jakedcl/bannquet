@@ -6,7 +6,6 @@ import {
   NavigationControl,
   Popup,
   setWorkerUrl,
-  type FilterSpecification,
   type GeoJSONSource,
   type LngLatLike,
   type MapLayerMouseEvent,
@@ -24,6 +23,7 @@ import {
   MAP_CENTER,
   OPENFREEMAP_STYLE_URL,
   TERRAIN_ATTRIBUTION,
+  clusterHeading,
   type BasemapId,
 } from '@/lib/map';
 import { styleForBasemap } from '@/lib/map-style';
@@ -37,6 +37,7 @@ type Leaf = {
   date: string | null;
   activity: string | null;
   category: string;
+  kind: string;
   color: string;
   trackId: string;
   href: string;
@@ -69,6 +70,7 @@ function leafFromProps(
     date: props.date ? String(props.date) : null,
     activity: props.activity ? String(props.activity) : null,
     category: props.category ? String(props.category) : '',
+    kind: props.kind ? String(props.kind) : props.trackId ? 'route' : '',
     color: String(props.color ?? '#444444'),
     trackId: String(props.trackId ?? ''),
     href: String(props.href ?? '/map'),
@@ -82,7 +84,7 @@ function popupNode(leaves: Leaf[]): HTMLElement {
   root.className = 'space-y-2 text-[15px] leading-snug';
   const heading = document.createElement('p');
   heading.className = 'pr-6 text-xs font-bold uppercase';
-  heading.textContent = leaves.length === 1 ? '1 stop' : `${leaves.length} stops here`;
+  heading.textContent = clusterHeading(leaves.map((leaf) => leaf.kind));
   root.append(heading);
   for (const leaf of leaves) {
     const link = document.createElement('a');
@@ -147,23 +149,20 @@ export default function GroupMap({
   const mapRef = useRef<MlMap | null>(null);
   const pointsRef = useRef(points);
   const linesRef = useRef(lines);
-  const selectedRef = useRef('');
   const pickingRef = useRef(picking);
   const onPickRef = useRef(onPick);
   const [basemap, setBasemap] = useState<BasemapId>('standard');
   const [layersOpen, setLayersOpen] = useState(false);
   const controlsRef = useRef<HTMLDivElement | null>(null);
   const [terrain, setTerrain] = useState(false);
-  const [selectedTrack, setSelectedTrack] = useState('');
   const popupRef = useRef<Popup | null>(null);
 
   useEffect(() => {
     pointsRef.current = points;
     linesRef.current = lines;
-    selectedRef.current = selectedTrack;
     pickingRef.current = picking;
     onPickRef.current = onPick;
-  }, [lines, onPick, picking, points, selectedTrack]);
+  }, [lines, onPick, picking, points]);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -257,6 +256,9 @@ export default function GroupMap({
       }
 
       map.addSource('routes', { type: 'geojson', data: linesRef.current });
+      // Lines are not filtered by pin visibility. Clustering and the viewport
+      // query only describe point markers, and a line has to draw when any
+      // part of it is on screen. There are few tracks, so they all stay loaded.
       map.addLayer({
         id: 'routes',
         type: 'line',
@@ -326,24 +328,6 @@ export default function GroupMap({
           'text-halo-width': 1.5,
         },
       });
-      syncRoutes(map);
-    };
-
-    const syncRoutes = (target: MlMap) => {
-      if (!target.getLayer('routes') || !target.getSource('places')) return;
-      const rendered = target.querySourceFeatures('places');
-      const ids = new Set<string>();
-      for (const feature of rendered) {
-        const props = feature.properties ?? {};
-        if (props.point_count || props.cluster) continue;
-        if (props.trackId) ids.add(String(props.trackId));
-      }
-      if (selectedRef.current) ids.add(selectedRef.current);
-      const list = [...ids];
-      const filter: FilterSpecification = list.length
-        ? ['in', ['get', 'trackId'], ['literal', list]]
-        : ['==', ['get', 'trackId'], ''];
-      target.setFilter('routes', filter);
     };
 
     const onCluster = async (event: MapLayerMouseEvent) => {
@@ -358,7 +342,6 @@ export default function GroupMap({
       const coords = geometry.type === 'Point' && Array.isArray(geometry.coordinates)
         ? geometry.coordinates as [number, number]
         : [event.lngLat.lng, event.lngLat.lat] as [number, number];
-      setSelectedTrack('');
       showPopup(map, popupRef, coords, leaves);
     };
     const onPin = (event: MapLayerMouseEvent) => {
@@ -367,7 +350,6 @@ export default function GroupMap({
       if (!feature) return;
       const leaf = leafFromFeature(feature);
       if (!leaf) return;
-      setSelectedTrack(leaf.trackId);
       showPopup(map, popupRef, [leaf.lng, leaf.lat], [leaf]);
     };
     const onRoute = (event: MapLayerMouseEvent) => {
@@ -376,12 +358,10 @@ export default function GroupMap({
       if (!feature) return;
       const props = (feature.properties ?? {}) as Record<string, unknown>;
       const leaf = leafFromProps(props, event.lngLat.lng, event.lngLat.lat);
-      setSelectedTrack(leaf.trackId);
       showPopup(map, popupRef, event.lngLat, [leaf]);
     };
 
     map.on('style.load', draw);
-    map.on('moveend', () => syncRoutes(map));
     map.on('click', 'clusters', onCluster);
     map.on('click', 'pins', onPin);
     map.on('click', 'pin-markers', onPin);
@@ -412,18 +392,6 @@ export default function GroupMap({
     (map.getSource('places') as GeoJSONSource).setData(points);
     (map.getSource('routes') as GeoJSONSource).setData(lines);
   }, [points, lines]);
-
-  useEffect(() => {
-    const map = mapRef.current;
-    if (!map || !selectedTrack || !map.getLayer('routes')) return;
-    const rendered = map.querySourceFeatures('places');
-    const ids = new Set(rendered.flatMap((feature) => {
-      const trackId = feature.properties?.trackId;
-      return feature.properties?.point_count || !trackId ? [] : [String(trackId)];
-    }));
-    ids.add(selectedTrack);
-    map.setFilter('routes', ['in', ['get', 'trackId'], ['literal', [...ids]]]);
-  }, [selectedTrack]);
 
   useEffect(() => {
     if (!layersOpen) return;

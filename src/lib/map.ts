@@ -36,3 +36,39 @@ export const NEUTRAL_PIN_COLOR = '#444444';
 export function isBasemap(value: string): value is BasemapId {
   return (BASEMAPS as readonly string[]).includes(value);
 }
+
+const CLUSTER_KIND_ORDER = ['route', 'pin', 'photo', 'trip'] as const;
+
+const CLUSTER_KIND_LABEL: Record<(typeof CLUSTER_KIND_ORDER)[number], readonly [string, string]> = {
+  route: ['route', 'routes'],
+  pin: ['pin', 'pins'],
+  photo: ['photo', 'photos'],
+  trip: ['trip', 'trips'],
+};
+
+function isClusterKind(kind: string): kind is (typeof CLUSTER_KIND_ORDER)[number] {
+  return (CLUSTER_KIND_ORDER as readonly string[]).includes(kind);
+}
+
+/** Cluster popup title. Known marker types are counted separately. */
+export function clusterHeading(kinds: readonly string[]): string {
+  const counts = new Map<string, number>();
+  for (const kind of kinds) {
+    const key = isClusterKind(kind) ? kind : 'item';
+    counts.set(key, (counts.get(key) ?? 0) + 1);
+  }
+  const parts: string[] = [];
+  for (const kind of CLUSTER_KIND_ORDER) {
+    const count = counts.get(kind) ?? 0;
+    if (count === 0) continue;
+    const [one, many] = CLUSTER_KIND_LABEL[kind];
+    parts.push(`${count} ${count === 1 ? one : many}`);
+  }
+  const items = counts.get('item') ?? 0;
+  if (items > 0) parts.push(items === 1 ? '1 item' : `${items} items`);
+  if (parts.length === 0) return '0 items here';
+  if (parts.length === 1 && items === kinds.length) {
+    return items === 1 ? '1 item here' : `${items} items here`;
+  }
+  return parts.join(', ');
+}
