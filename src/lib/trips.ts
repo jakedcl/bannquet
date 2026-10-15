@@ -156,11 +156,18 @@ function tripSlug(title: string): string {
   return `${base}-${Math.random().toString(36).slice(2, 6)}`;
 }
 
+const ATTACH_TABLE = {
+  pin: { table: 'trip_pins', column: 'pin_id', source: 'pins' },
+  route: { table: 'trip_routes', column: 'track_id', source: 'tracks' },
+  photo: { table: 'trip_photos', column: 'photo_id', source: 'photos' },
+} as const;
+
 export async function createTrip(input: {
   userId: string;
   title: string;
   tripDate: string;
   notes: string;
+  attachments?: Array<{ kind: 'pin' | 'route' | 'photo'; id: string }>;
 }): Promise<string> {
   const db = getDb();
   return db.transaction(async (tx) => {
@@ -184,6 +191,16 @@ export async function createTrip(input: {
       insert into trip_members (trip_id, user_id, rsvp, role)
       values (${id}::uuid, ${input.userId}, 'going', 'organizer')
     `);
+    for (const item of input.attachments ?? []) {
+      const spec = ATTACH_TABLE[item.kind];
+      const found = await tx.execute(sql`select id::text as id from ${sql.raw(spec.source)} where id = ${item.id}::uuid`);
+      if (asRows(found).length === 0) continue;
+      await tx.execute(sql`
+        insert into ${sql.raw(spec.table)} (trip_id, ${sql.raw(spec.column)})
+        values (${id}::uuid, ${item.id}::uuid)
+        on conflict do nothing
+      `);
+    }
     return id;
   });
 }

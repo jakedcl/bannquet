@@ -4,15 +4,19 @@ import { PinForm } from '@/components/pins/PinForm';
 import { PhotoUpload, RouteUpload } from '@/components/posts/ProfileAdds';
 import { Window } from '@/components/retro/Window';
 import { SectionList } from '@/components/ui/SectionList';
-import { UPLOAD_LINKS } from '@/lib/sections';
+import { NewTripForm } from '@/components/trips/NewTripForm';
 import { getViewer } from '@/app/sign-in/actions';
+import { isDatabaseConfigured } from '@/db';
+import { listChatCatalog } from '@/lib/chat';
 import { APPROVAL_WAIT, canContribute } from '@/lib/membership';
+import { UPLOAD_LINKS } from '@/lib/sections';
 import { signInPath } from '@/lib/sign-in-next';
+import { presetFromCatalog } from '@/lib/trip-draft';
 
 export const dynamic = 'force-dynamic';
 
 const KINDS = [
-  { id: 'post', label: 'Trip' },
+  { id: 'trip', label: 'Trip' },
   { id: 'route', label: 'Route (GPX)' },
   { id: 'pin', label: 'Pin' },
   { id: 'photo', label: 'Photo' },
@@ -27,13 +31,15 @@ function isKind(value: string | undefined): value is UploadKind {
 export default async function UploadPage({
   searchParams,
 }: {
-  searchParams: Promise<{ kind?: string }>;
+  searchParams: Promise<{ kind?: string; pin?: string | string[]; route?: string | string[]; photo?: string | string[] }>;
 }) {
   const params = await searchParams;
+  if (params.kind === 'post') redirect('/upload?kind=trip');
   const kind = isKind(params.kind) ? params.kind : null;
-  if (kind === 'post') redirect('/trips/new');
   const viewer = await getViewer();
   if (!viewer) redirect(signInPath(kind ? `/upload?kind=${kind}` : '/upload'));
+  const catalog = kind === 'trip' && isDatabaseConfigured() ? await listChatCatalog().catch(() => []) : [];
+  const preset = presetFromCatalog(catalog, params);
 
   if (!canContribute(viewer.role)) {
     return (
@@ -55,6 +61,11 @@ export default async function UploadPage({
             <SectionList links={UPLOAD_LINKS} label="Upload" />
           </Window>
         )}
+        {kind === 'trip' ? (
+          <Window title="New trip">
+            <NewTripForm viewerId={viewer.id} catalog={catalog} preset={preset} />
+          </Window>
+        ) : null}
         {kind === 'route' ? (
           <Window title="Route (GPX)">
             <RouteUpload />

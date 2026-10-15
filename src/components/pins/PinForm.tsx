@@ -1,6 +1,8 @@
 'use client';
 
 import { useActionState, useRef, useState } from 'react';
+import { useReportCreated } from '@/components/trips/use-created';
+import type { DraftItem } from '@/lib/trip-draft';
 import { createPinAction, deletePinAction, updatePinAction } from '@/app/pins/actions';
 import { PhotoFields } from '@/components/posts/PhotoFields';
 import type { UploadedPhoto } from '@/components/posts/prepare-photo';
@@ -25,9 +27,18 @@ type InitialPin = {
   photos: Array<{ id: string; url: string }>;
 };
 
-export function PinForm({ initial }: { initial?: InitialPin }) {
+export function PinForm({
+  initial,
+  inline = false,
+  onCreated,
+}: {
+  initial?: InitialPin;
+  inline?: boolean;
+  onCreated?: (items: DraftItem[]) => void;
+}) {
   const action = initial ? updatePinAction : createPinAction;
   const [state, formAction, pending] = useActionState(action, null);
+  useReportCreated(inline, state?.created, onCreated);
   const [photos, setPhotos] = useState<UploadedPhoto[]>([]);
   const [photoBusy, setPhotoBusy] = useState(false);
   const [point, setPoint] = useState<{ lat: number; lng: number } | null>(
@@ -82,6 +93,7 @@ export function PinForm({ initial }: { initial?: InitialPin }) {
   return (
     <form action={formAction} className="space-y-4">
       {initial ? <input type="hidden" name="id" value={initial.id} /> : null}
+      {inline ? <input type="hidden" name="inline" value="1" /> : null}
       <label className="block space-y-1">
         <span className="text-sm font-bold">Title</span>
         <input

@@ -22,6 +22,7 @@ export const COMMUNITY_LINKS: NavLink[] = [
 ];
 
 export const UPLOAD_LINKS: NavLink[] = [
+  { href: '/upload?kind=trip', label: 'Trip' },
   { href: '/upload?kind=route', label: 'Route' },
   { href: '/upload?kind=pin', label: 'Pin' },
   { href: '/upload?kind=photo', label: 'Photo' },

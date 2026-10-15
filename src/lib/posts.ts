@@ -262,10 +262,10 @@ export async function addProfileTrack(input: {
   activity: Activity;
   track: PackedTrack;
   title?: string | null;
-}): Promise<void> {
+}): Promise<string> {
   const wkt = lineWkt(input.track.points);
   if (!wkt) throw new Error('That GPX needs at least two points.');
-  await getDb().execute(sql`
+  const inserted = await getDb().execute(sql`
     insert into tracks (user_id, source, name, title, activity, line, distance_m, elev_gain_m, started_at)
     values (
       ${input.userId},
@@ -278,16 +278,21 @@ export async function addProfileTrack(input: {
       ${input.track.elevGainM},
       now()
     )
+    returning id::text as id
   `);
+  const id = text(asRows(inserted)[0]?.id);
+  if (!id) throw new Error('Could not save that route.');
+  return id;
 }
 
-export async function addProfilePhotos(input: { userId: string; photos: PreparedPhoto[] }): Promise<void> {
+export async function addProfilePhotos(input: { userId: string; photos: PreparedPhoto[] }): Promise<Array<{ id: string; url: string }>> {
   const db = getDb();
+  const saved: Array<{ id: string; url: string }> = [];
   for (const [index, photo] of input.photos.entries()) {
     if (!isPublicBlobUrl(photo.url) || photo.lat == null || photo.lng == null || !isLatLng(photo.lat, photo.lng)) {
       continue;
     }
-    await db.execute(sql`
+    const inserted = await db.execute(sql`
       insert into photos (user_id, blob_url, width, height, point, point_source, sort_order, alt)
       values (
         ${input.userId},
@@ -299,8 +304,12 @@ export async function addProfilePhotos(input: { userId: string; photos: Prepared
         ${index},
         'Photo'
       )
+      returning id::text as id
     `);
+    const id = text(asRows(inserted)[0]?.id);
+    if (id) saved.push({ id, url: photo.url });
   }
+  return saved;
 }
 
 export type ProfileLibrary = {

@@ -8,6 +8,7 @@ import { isLatLng } from '@/lib/photos';
 import { createPin, deletePin, updatePin } from '@/lib/pins';
 import { isPinKind, type PinKind } from '@/lib/pin-kinds';
 import { parseUploadedPhotos, type PreparedPhoto } from '@/lib/posts';
+import type { DraftItem } from '@/lib/trip-draft';
 
 const PIN_ID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
@@ -49,9 +50,9 @@ async function contributor() {
 }
 
 export async function createPinAction(
-  _prev: { error?: string } | null,
+  _prev: { error?: string; created?: DraftItem[] } | null,
   formData: FormData,
-): Promise<{ error?: string }> {
+): Promise<{ error?: string; created?: DraftItem[] }> {
   const who = await contributor();
   if (!who.viewer) return { error: who.error ?? 'Sign in to drop a pin.' };
   const parsed = pinFields(formData);
@@ -70,13 +71,18 @@ export async function createPinAction(
   } catch {
     return { error: 'Could not save that pin. Try again in a minute.' };
   }
+  const created: DraftItem[] = [{ kind: 'pin', id, label: parsed.fields.title, thumb: null }];
+  if (formData.get('inline') === '1') return { created };
+  const next = String(formData.get('next') ?? '');
+  if (next === 'existing') redirect(`/pins/${id}?addTrip=1`);
+  if (next === 'new') redirect(`/upload?kind=trip&pin=${id}`);
   redirect(`/pins/${id}`);
 }
 
 export async function updatePinAction(
-  _prev: { error?: string } | null,
+  _prev: { error?: string; created?: DraftItem[] } | null,
   formData: FormData,
-): Promise<{ error?: string }> {
+): Promise<{ error?: string; created?: DraftItem[] }> {
   const who = await contributor();
   if (!who.viewer) return { error: who.error ?? 'Sign in to edit a pin.' };
   const id = String(formData.get('id') ?? '').trim();
