@@ -1,4 +1,4 @@
-import { DEFAULT_REGION, REGION_OPTIONS } from '@/lib/regions';
+import { DEFAULT_REGION, REGION_OPTIONS, isRegionCode } from '@/lib/regions';
 
 export type NavLink = {
   href: string;
@@ -36,6 +36,21 @@ export const UPLOAD_LINKS: NavLink[] = [
 ];
 
 const COMMUNITY_ROOTS = ['/community', '/chat', '/peaks', '/trips', '/gear', '/members'];
+
+const COMMUNITY_PAGES: Record<string, string> = {
+  '/chat': 'Chat',
+  '/peaks': 'Peaks',
+  '/trips': 'Trips',
+  '/gear': 'Gear',
+  '/members': 'Members',
+};
+
+const STATE_NAMES: Record<string, string> = {
+  ny: 'New York',
+  vt: 'Vermont',
+  nh: 'New Hampshire',
+  me: 'Maine',
+};
 
 const PROFILE_LISTS: Record<string, string> = {
   trips: 'Trips',
@@ -120,15 +135,21 @@ function named(href: string, label: string, leaf: string | null | undefined): Cr
   return { href, label: leaf?.trim() || label };
 }
 
+function communityTrail(href: string, label: string, leaf?: Crumb | null): Crumb[] {
+  const crumbs: Crumb[] = [
+    { href: '/community', label: 'Community' },
+    { href, label },
+  ];
+  if (leaf) crumbs.push(leaf);
+  return crumbs;
+}
+
 export function pageTrail(pathname: string, search: string, account: NavAccount, leaf?: string | null): PageTrail {
   const peak = pathname.match(/^\/peaks\/([^/]+)$/);
   if (peak) {
     return {
       parentHref: '/peaks',
-      crumbs: [
-        { href: '/peaks', label: 'Peaks' },
-        named(pathname, 'Peak', leaf),
-      ],
+      crumbs: communityTrail('/peaks', 'Peaks', named(pathname, 'Peak', leaf)),
     };
   }
 
@@ -150,30 +171,21 @@ export function pageTrail(pathname: string, search: string, account: NavAccount,
   if (pathname === '/trips/new') {
     return {
       parentHref: '/trips',
-      crumbs: [
-        { href: '/trips', label: 'Trips' },
-        { href: pathname, label: 'New trip' },
-      ],
+      crumbs: communityTrail('/trips', 'Trips', { href: pathname, label: 'New trip' }),
     };
   }
 
   if (/^\/trips\/[^/]+$/.test(pathname)) {
     return {
       parentHref: '/trips',
-      crumbs: [
-        { href: '/trips', label: 'Trips' },
-        named(pathname, 'Trip', leaf),
-      ],
+      crumbs: communityTrail('/trips', 'Trips', named(pathname, 'Trip', leaf)),
     };
   }
 
   if (/^\/gear\/[^/]+$/.test(pathname)) {
     return {
       parentHref: '/gear',
-      crumbs: [
-        { href: '/gear', label: 'Gear' },
-        named(pathname, 'Gear', leaf),
-      ],
+      crumbs: communityTrail('/gear', 'Gear', named(pathname, 'Gear', leaf)),
     };
   }
 
@@ -210,7 +222,7 @@ export function pageTrail(pathname: string, search: string, account: NavAccount,
   if (pathname === '/upload') {
     const kind = new URLSearchParams(search).get('kind');
     const current = UPLOAD_LINKS.find((link) => link.href === `/upload?kind=${kind}`);
-    if (!current) return { parentHref: '/', crumbs: null };
+    if (!current) return { parentHref: '/', crumbs: [{ href: '/upload', label: 'Upload' }] };
     return {
       parentHref: '/upload',
       crumbs: [
@@ -264,7 +276,38 @@ export function pageTrail(pathname: string, search: string, account: NavAccount,
     };
   }
 
-  return { parentHref: '/', crumbs: null };
+  if (pathname === '/community') {
+    return { parentHref: '/', crumbs: [{ href: '/community', label: 'Community' }] };
+  }
+
+  if (COMMUNITY_PAGES[pathname]) {
+    return {
+      parentHref: '/community',
+      crumbs: communityTrail(pathname, COMMUNITY_PAGES[pathname]),
+    };
+  }
+
+  if (pathname === '/mountain-weather') {
+    const requested = new URLSearchParams(search).get('state');
+    const region = isRegionCode(requested) ? requested : DEFAULT_REGION;
+    const name = STATE_NAMES[region] ?? region.toUpperCase();
+    return {
+      parentHref: '/',
+      crumbs: [
+        { href: '/mountain-weather', label: 'Mountain Weather' },
+        { href: `/mountain-weather?state=${region}`, label: name },
+      ],
+    };
+  }
+
+  if (pathname === '/map') {
+    return { parentHref: '/', crumbs: [{ href: '/map', label: 'Map' }] };
+  }
+
+  const segment = decodeURIComponent(pathname.split('/').filter(Boolean).at(-1) ?? '');
+  if (!segment) return { parentHref: '/', crumbs: null };
+  const label = segment.replace(/[-_]/g, ' ');
+  return { parentHref: '/', crumbs: [{ href: pathname, label }] };
 }
 
 export function matchSection(pathname: string, search: string, account: NavAccount): SectionMatch | null {

@@ -4,10 +4,10 @@ import { communitySection, linkOn, matchSection, pageTrail, settingsHref, visibl
 
 const nobody = null;
 
-test('a peak crumb is Peaks / name and backs up to the list', () => {
+test('a peak crumb is Community / Peaks / name and backs up to the list', () => {
   const trail = pageTrail('/peaks/adk46_algonquin_peak', '', nobody, 'Algonquin Peak');
   assert.equal(trail.parentHref, '/peaks');
-  assert.deepEqual(trail.crumbs?.map((crumb) => crumb.label), ['Peaks', 'Algonquin Peak']);
+  assert.deepEqual(trail.crumbs?.map((crumb) => crumb.label), ['Community', 'Peaks', 'Algonquin Peak']);
 });
 
 test('a member crumb is Community / Members / handle', () => {
@@ -22,12 +22,20 @@ test('a profile list adds the section and backs up to the profile', () => {
   assert.deepEqual(trail.crumbs?.map((crumb) => crumb.label), ['Community', 'Members', 'jkiddf', 'Pins']);
 });
 
-test('section pages back up to home and show no breadcrumb', () => {
-  for (const path of ['/community', '/peaks', '/members', '/chat', '/trips', '/gear', '/map', '/mountain-weather', '/upload']) {
-    const trail = pageTrail(path, '', nobody);
-    assert.equal(trail.parentHref, '/', path);
-    assert.equal(trail.crumbs, null, path);
-  }
+test('every section page has a breadcrumb, including the parent', () => {
+  assert.deepEqual(pageTrail('/community', '', nobody).crumbs?.map((crumb) => crumb.label), ['Community']);
+  assert.equal(pageTrail('/community', '', nobody).parentHref, '/');
+  assert.deepEqual(pageTrail('/trips', '', nobody).crumbs?.map((crumb) => crumb.label), ['Community', 'Trips']);
+  assert.equal(pageTrail('/trips', '', nobody).parentHref, '/community');
+  assert.deepEqual(pageTrail('/peaks', '', nobody).crumbs?.map((crumb) => crumb.label), ['Community', 'Peaks']);
+  assert.deepEqual(pageTrail('/chat', '', nobody).crumbs?.map((crumb) => crumb.label), ['Community', 'Chat']);
+  assert.deepEqual(pageTrail('/gear', '', nobody).crumbs?.map((crumb) => crumb.label), ['Community', 'Gear']);
+  assert.deepEqual(pageTrail('/members', '', nobody).crumbs?.map((crumb) => crumb.label), ['Community', 'Members']);
+  assert.deepEqual(pageTrail('/map', '', nobody).crumbs?.map((crumb) => crumb.label), ['Map']);
+  assert.deepEqual(pageTrail('/upload', '', nobody).crumbs?.map((crumb) => crumb.label), ['Upload']);
+  assert.deepEqual(pageTrail('/mountain-weather', '', nobody).crumbs?.map((crumb) => crumb.label), ['Mountain Weather', 'New York']);
+  assert.deepEqual(pageTrail('/mountain-weather', 'state=vt', nobody).crumbs?.map((crumb) => crumb.label), ['Mountain Weather', 'Vermont']);
+  assert.equal(pageTrail('/', '', nobody).crumbs, null);
 });
 
 test('member pages stay in Community, except your own profile', () => {
