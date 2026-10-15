@@ -27,7 +27,7 @@ export default async function MapPage({
   const coordinates = focusFeature?.geometry.type === 'Point' ? focusFeature.geometry.coordinates : null;
 
   return (
-    <div className="map-bleed fixed inset-x-0 top-[72px] z-0 flex h-[calc(100dvh-72px)] flex-col overflow-hidden">
+    <div className="page-enter map-bleed fixed inset-x-0 top-[72px] z-0 flex h-[calc(100dvh-72px)] flex-col overflow-hidden">
       <Suspense fallback={null}>
         <BackBar />
       </Suspense>

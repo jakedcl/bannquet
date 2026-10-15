@@ -5,7 +5,8 @@ import { createPortal } from 'react-dom';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
+import { MOTION_TWEEN } from '@/lib/motion';
 import { signOutAction } from '@/app/sign-in/actions';
 import { useRegion } from '@/contexts/RegionContext';
 import { REGION_OPTIONS } from '@/lib/regions';
@@ -43,10 +44,14 @@ export default function Header({ account = null }: { account?: HeaderAccount }) 
     setMenuReady(true);
   }, []);
 
+  const reduce = useReducedMotion();
+  const tween = reduce ? { duration: 0 } : MOTION_TWEEN;
+
   return (
     <motion.header
-      initial={{ y: -20, opacity: 0 }}
+      initial={{ y: -8, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
+      transition={tween}
       className={`fixed z-50 h-header w-full rounded-none text-white retro-banner ${
         scrolled ? 'shadow-lg' : ''
       } ${isHomepage ? '!pl-0 !pr-0' : ''}`}
@@ -56,7 +61,7 @@ export default function Header({ account = null }: { account?: HeaderAccount }) 
           <Link href="/" className="header-logo-link z-20">
             <motion.div
               layoutId="header-logo"
-              transition={{ type: 'spring', stiffness: 200, damping: 25, duration: 0.8 }}
+              transition={tween}
               className="shrink-0"
             >
               <Image
@@ -98,9 +103,9 @@ export default function Header({ account = null }: { account?: HeaderAccount }) 
             aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
           >
             <div className="flex w-6 flex-col items-end justify-center gap-1.5">
-              <span className={`block h-0.5 bg-white transition-all duration-300 ease-out ${mobileMenuOpen ? 'w-6 -rotate-45 translate-y-2' : 'w-6'}`} />
-              <span className={`block h-0.5 bg-white transition-all duration-300 ease-out ${mobileMenuOpen ? 'w-6 opacity-0' : 'w-5 opacity-100'}`} />
-              <span className={`block h-0.5 bg-white transition-all duration-300 ease-out ${mobileMenuOpen ? 'w-6 rotate-45 -translate-y-2' : 'w-4'}`} />
+              <span className={`motion-swap block h-0.5 bg-white ${mobileMenuOpen ? 'w-6 -rotate-45 translate-y-2' : 'w-6'}`} />
+              <span className={`motion-swap block h-0.5 bg-white ${mobileMenuOpen ? 'w-6 opacity-0' : 'w-5 opacity-100'}`} />
+              <span className={`motion-swap block h-0.5 bg-white ${mobileMenuOpen ? 'w-6 rotate-45 -translate-y-2' : 'w-4'}`} />
             </div>
           </button>
         </div>
@@ -112,7 +117,7 @@ export default function Header({ account = null }: { account?: HeaderAccount }) 
                 initial={{ x: '100%' }}
                 animate={{ x: 0 }}
                 exit={{ x: '100%' }}
-                transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+                transition={tween}
                 aria-label="Menu"
                 className="fixed inset-0 z-[100] flex flex-col gap-4 overflow-y-auto border-l-4 border-brand-green-dark bg-beige p-4 pt-16 text-gray-900 md:hidden"
               >
@@ -298,6 +303,8 @@ type RegionSelectorProps = {
 function RegionSelector({ className = '', alignment = 'right', size = 'desktop', fullWidth = false, embedded = false }: RegionSelectorProps) {
   const { region, setRegion } = useRegion();
   const [open, setOpen] = useState(false);
+  const reduce = useReducedMotion();
+  const tween = reduce ? { duration: 0 } : MOTION_TWEEN;
   const containerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -336,7 +343,7 @@ function RegionSelector({ className = '', alignment = 'right', size = 'desktop',
         aria-expanded={open}
       >
         {region.toUpperCase()}
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className={`h-4 w-4 transition-transform duration-200 ${open ? 'rotate-180' : ''}`}>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className={`motion-swap h-4 w-4 ${open ? 'rotate-180' : ''}`}>
           <path fillRule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.24a.75.75 0 01-1.06 0L5.21 8.29a.75.75 0 01.02-1.08z" clipRule="evenodd" />
         </svg>
       </button>
@@ -346,7 +353,7 @@ function RegionSelector({ className = '', alignment = 'right', size = 'desktop',
             initial={{ opacity: 0, y: -6 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -6 }}
-            transition={{ duration: 0.15 }}
+            transition={tween}
             className={`absolute ${alignment === 'left' ? 'left-0' : 'right-0'} top-full z-30 mt-2 ${fullWidth ? 'w-full' : 'w-40'} overflow-hidden rounded-2xl border border-white/20 bg-brand-green/95 shadow-2xl backdrop-blur-xl`}
             role="listbox"
           >

@@ -58,7 +58,7 @@ export function NavMenu({
             </button>
           )}
           <div
-            className="grid transition-[grid-template-rows] duration-200 ease-out motion-reduce:transition-none"
+            className="grid transition-[grid-template-rows] duration-[160ms] ease-[cubic-bezier(0.2,0,0,1)] motion-reduce:transition-none"
             style={{ gridTemplateRows: expanded ? '1fr' : '0fr' }}
           >
             <div className="min-h-0 overflow-hidden" inert={!expanded}>
