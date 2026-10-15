@@ -7,6 +7,8 @@ export type SortValue = string | number | null;
 export type DataColumn<T> = {
   id: string;
   header: string;
+  /** Phone-only header. Sorting still uses `id` and `sortValue`. */
+  shortHeader?: string;
   align?: 'left' | 'right';
   sticky?: boolean;
   sortValue: (row: T) => SortValue;
@@ -42,9 +44,9 @@ export function DataTable<T>({
   if (ordered.length === 0) return <p className="text-sm">{empty}</p>;
 
   return (
-    <div className="retro-box-inset overflow-x-auto bg-white">
-      <table className="w-full min-w-[36rem] border-collapse text-left text-sm">
-        <thead className="bg-beige font-mono text-xs uppercase">
+    <div className="overflow-x-auto bg-white max-md:border max-md:border-solid max-md:border-[#ccc] md:retro-box-inset">
+      <table className="w-full border-collapse text-left text-sm max-md:[&_a]:font-normal max-md:[&_a]:text-[#6b4423] max-md:[&_a]:no-underline md:min-w-[36rem]">
+        <thead className="bg-beige font-mono text-[11px] uppercase leading-none md:text-xs md:leading-normal">
           <tr>
             {columns.map((column) => {
               const active = sort?.id === column.id;
@@ -52,7 +54,9 @@ export function DataTable<T>({
                 <th
                   key={column.id}
                   aria-sort={active ? (sort.dir === 'asc' ? 'ascending' : 'descending') : 'none'}
-                  className={`border border-border-gray px-0 py-0 font-bold ${column.sticky ? 'sticky left-0 z-20 bg-beige' : ''}`}
+                  className={`border border-border-gray px-0 py-0 font-bold max-md:border-[#e6e6e6] ${
+                    column.sticky ? 'sticky left-0 z-20 bg-beige max-md:shadow-[1px_0_0_#e6e6e6]' : ''
+                  }`}
                 >
                   <button
                     type="button"
@@ -61,9 +65,16 @@ export function DataTable<T>({
                         ? { id: column.id, dir: 'desc' }
                         : { id: column.id, dir: 'asc' }
                     ))}
-                    className={`flex w-full items-center gap-1 px-3 py-2 font-bold uppercase ${column.align === 'right' ? 'justify-end' : 'justify-start'}`}
+                    className={`flex w-full items-center gap-1 whitespace-nowrap px-1.5 py-1 font-bold uppercase md:px-3 md:py-2 ${column.align === 'right' ? 'justify-end' : 'justify-start'}`}
                   >
-                    <span>{column.header}</span>
+                    {column.shortHeader ? (
+                      <>
+                        <span className="md:hidden">{column.shortHeader}</span>
+                        <span className="hidden md:inline">{column.header}</span>
+                      </>
+                    ) : (
+                      <span>{column.header}</span>
+                    )}
                     {active ? <span aria-hidden="true">{sort.dir === 'asc' ? '↑' : '↓'}</span> : null}
                   </button>
                 </th>
@@ -118,8 +129,10 @@ function Row<T>({
         {columns.map((column) => (
           <td
             key={column.id}
-            className={`border border-border-gray px-3 py-2 align-middle ${column.align === 'right' ? 'text-right' : ''} ${
-              column.sticky ? 'sticky left-0 z-10 bg-white group-hover:bg-beige' : 'group-hover:bg-beige/70'
+            className={`border border-border-gray px-3 py-2 align-middle max-md:border-[#e6e6e6] max-md:px-1.5 max-md:leading-5 ${column.align === 'right' ? 'text-right' : ''} ${
+              column.sticky
+                ? 'sticky left-0 z-10 bg-white group-hover:bg-beige max-md:w-[1%] max-md:max-w-[9.5rem] max-md:truncate max-md:shadow-[1px_0_0_#e6e6e6] max-md:[&_a]:block max-md:[&_a]:max-w-full max-md:[&_a]:truncate'
+                : 'group-hover:bg-beige/70 max-md:whitespace-nowrap'
             }`}
           >
             {column.cell(row)}
@@ -128,7 +141,7 @@ function Row<T>({
       </tr>
       {extra ? (
         <tr>
-          <td colSpan={columns.length} className="border border-border-gray bg-beige/40 px-3 py-3">
+          <td colSpan={columns.length} className="border border-border-gray bg-beige/40 px-3 py-3 max-md:border-[#e6e6e6] max-md:px-2 max-md:py-2">
             {extra}
           </td>
         </tr>

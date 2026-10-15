@@ -62,9 +62,15 @@ export function PeaksTable({
     {
       id: 'elevation',
       header: 'Elevation',
+      shortHeader: 'Elev',
       align: 'right',
       sortValue: (row) => row.elevationFt,
-      cell: (row) => `${row.elevationFt.toLocaleString('en-US')} ft`,
+      cell: (row) => (
+        <>
+          <span className="md:hidden">{`${(row.elevationFt / 1000).toFixed(1)}k`}</span>
+          <span className="hidden md:inline">{`${row.elevationFt.toLocaleString('en-US')} ft`}</span>
+        </>
+      ),
     },
     {
       id: 'climbs',
