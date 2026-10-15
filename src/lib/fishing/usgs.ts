@@ -16,43 +16,81 @@ type Feature = {
   geometry?: { type?: string; coordinates?: unknown }
 }
 
-export function waterDataKey(): string | null {
-  const key = process.env.USGS_WATER_DATA_API_KEY || process.env.WATER_DATA_API_KEY
-  if (!key) return null
-  const trimmed = key.trim()
-  return trimmed.length > 0 ? trimmed : null
+export function normalizeWaterDataKey(value: string | undefined): string | null {
+  if (!value) return null
+  let key = value.trim()
+  if ((key.startsWith('"') && key.endsWith('"')) || (key.startsWith("'") && key.endsWith("'"))) {
+    key = key.slice(1, -1).trim()
+  }
+  const prefixed = key.match(/^(?:api_key=|x-api-key:)\s*(.+)$/i)
+  if (prefixed?.[1]) key = prefixed[1].trim()
+  return key.length > 0 ? key : null
 }
+
+export function waterDataKey(): string | null {
+  return normalizeWaterDataKey(process.env.USGS_WATER_DATA_API_KEY) ?? normalizeWaterDataKey(process.env.WATER_DATA_API_KEY)
+}
+
+// A rejected key is remembered for this server process so later requests do not repeat it.
+let omitRejectedKey = false
 
 function stringValue(value: unknown): string | null {
   return typeof value === 'string' && value.trim() ? value.trim() : null
+}
+
+function itemsUrl(collection: string, params: Record<string, string>, offset: number, limit: number, apiKey: string | null): URL {
+  const url = new URL(`${BASE}/${collection}/items`)
+  for (const [key, value] of Object.entries(params)) url.searchParams.set(key, value)
+  url.searchParams.set('f', 'json')
+  url.searchParams.set('limit', String(limit))
+  url.searchParams.set('offset', String(offset))
+  // USGS accepts the key as api_key or the X-Api-Key header. Send both.
+  // https://api.waterdata.usgs.gov/docs/ogcapi/keys
+  if (apiKey) url.searchParams.set('api_key', apiKey)
+  return url
+}
+
+async function usgsFetch(url: URL, apiKey: string | null): Promise<Response> {
+  const headers: Record<string, string> = { Accept: 'application/json', 'User-Agent': USER_AGENT }
+  if (apiKey) headers['X-Api-Key'] = apiKey
+  return fetch(url, { headers, cache: 'no-store' })
+}
+
+async function rejectedKey(response: Response): Promise<boolean> {
+  if (response.status !== 403) return false
+  try {
+    const body = await response.clone().json() as { error?: { code?: unknown } }
+    return body.error?.code === 'API_KEY_INVALID'
+  } catch {
+    return false
+  }
 }
 
 async function usgsItems(collection: string, params: Record<string, string>): Promise<Feature[]> {
   const features: Feature[] = []
   const limit = 1000
   for (let page = 0; page < 6; page += 1) {
-    const url = new URL(`${BASE}/${collection}/items`)
-    for (const [key, value] of Object.entries(params)) url.searchParams.set(key, value)
-    url.searchParams.set('f', 'json')
-    url.searchParams.set('limit', String(limit))
-    url.searchParams.set('offset', String(page * limit))
-    const apiKey = waterDataKey()
-    if (apiKey) url.searchParams.set('api_key', apiKey)
-    const headers: Record<string, string> = { Accept: 'application/json', 'User-Agent': USER_AGENT }
-    if (apiKey) headers['X-Api-Key'] = apiKey
-    const response = await fetch(url, { headers, cache: 'no-store' })
-    if (!response.ok) {
-      throw new Error(`USGS ${collection} returned ${response.status}`)
+    const apiKey = omitRejectedKey ? null : waterDataKey()
+    const url = itemsUrl(collection, params, page * limit, limit, apiKey)
+    let response = await usgsFetch(url, apiKey)
+    if (response.status === 403 && apiKey) {
+      if (await rejectedKey(response)) omitRejectedKey = true
+      response = await usgsFetch(itemsUrl(collection, params, page * limit, limit, null), null)
     }
-    const body = (await response.json()) as { features?: unknown; description?: unknown }
+    if (!response.ok) {
+      console.error('USGS request failed', collection, response.status)
+      throw new Error('Data unavailable')
+    }
+    const body = (await response.json()) as { features?: unknown }
     if (!Array.isArray(body.features)) {
-      const detail = typeof body.description === 'string' ? body.description : 'no feature list'
-      throw new Error(`USGS ${collection} did not return readings (${detail})`)
+      console.error('USGS response had no feature list', collection)
+      throw new Error('Data unavailable')
     }
     features.push(...(body.features as Feature[]))
     if (body.features.length < limit) return features
   }
-  throw new Error(`USGS ${collection} returned more pages than this page will read`)
+  console.error('USGS response was longer than this page reads', collection)
+  throw new Error('Data unavailable')
 }
 
 function locationFromFeature(feature: Feature): LocationRecord | null {
@@ -170,7 +208,7 @@ async function fetchGaugeSource(now: number): Promise<GaugeView[]> {
 
 const cachedGaugeSource = unstable_cache(
   async () => fetchGaugeSource(Date.now()),
-  ['fishing-mountain-gauges-v1'],
+  ['fishing-mountain-gauges-v2'],
   { revalidate: 900 },
 )
 

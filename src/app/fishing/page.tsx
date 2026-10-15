@@ -9,9 +9,7 @@ import type { WeatherData } from '@/types/weather';
 
 export const dynamic = 'force-dynamic';
 
-function message(error: unknown, fallback: string): string {
-  return error instanceof Error ? error.message : fallback;
-}
+const UNAVAILABLE = 'Data unavailable';
 
 export default async function FishingPage({
   searchParams,
@@ -20,19 +18,21 @@ export default async function FishingPage({
 }) {
   const site = (await searchParams).site ?? null;
   let gauges: GaugeView[] = [];
-  let gaugesError: string | null = null;
+  let gaugesUnavailable = false;
   try {
     gauges = await loadMountainGauges();
-  } catch (error) {
-    gaugesError = message(error, 'The USGS gauges did not load.');
+  } catch {
+    console.error('Mountain gauges did not load');
+    gaugesUnavailable = true;
   }
 
   let parking: Awaited<ReturnType<typeof loadParkingAreas>> = { areas: [], truncated: false };
-  let parkingError: string | null = null;
+  let parkingUnavailable = false;
   try {
     parking = await loadParkingAreas();
-  } catch (error) {
-    parkingError = message(error, 'NY public fishing rights parking did not load.');
+  } catch {
+    console.error('Fishing parking did not load');
+    parkingUnavailable = true;
   }
 
   const selected = gauges.find((gauge) => gauge.site === site) ?? null;
@@ -46,24 +46,18 @@ export default async function FishingPage({
       <div className="mx-auto max-w-6xl space-y-4 px-4 py-10">
         <Window title="Mountain fishing">
           <p className="mb-4 text-sm text-gray-700">
-            A curated set of USGS gauges in the Catskills, Adirondacks, Green Mountains, White Mountains, and Maine.
-            Flow and gauge height are shown when that gauge reports them. Water temperature is shown only when the gauge measures it.
-            The 24-hour figure is the change in flow on the same series, compared with a reading about a day earlier.
-            Readings older than 48 hours are left blank. Live USGS values are usually provisional.
+            Mountain rivers in the Catskills, Adirondacks, Greens, Whites, and Maine.
           </p>
-          {gaugesError ? (
-            <p className="text-sm font-bold">{gaugesError}</p>
-          ) : (
-            <RiversBoard
-              gauges={gauges}
-              parking={parking.areas}
-              parkingError={parkingError}
-              parkingTruncated={parking.truncated}
-              selected={selected?.site ?? null}
-              now={now}
-              forecast={forecast}
-            />
-          )}
+          <RiversBoard
+            gauges={gauges}
+            gaugesUnavailable={gaugesUnavailable}
+            parking={parking.areas}
+            parkingError={parkingUnavailable ? UNAVAILABLE : null}
+            parkingTruncated={parking.truncated}
+            selected={selected?.site ?? null}
+            now={now}
+            forecast={forecast}
+          />
         </Window>
       </div>
     </PageWrapper>
@@ -86,11 +80,12 @@ async function forecastPanel(site: string | null, gauge: GaugeView | null) {
   let weather: WeatherData;
   try {
     weather = await getWeather(gauge.lat, gauge.lon);
-  } catch (error) {
+  } catch {
+    console.error('Forecast did not load');
     return (
       <div key="forecast" className="space-y-2">
         <h2 className="text-sm font-bold uppercase">{gauge.name}</h2>
-        <p className="text-sm font-bold">{message(error, 'The National Weather Service forecast did not load.')}</p>
+        <p className="text-sm font-bold">{UNAVAILABLE}</p>
       </div>
     );
   }

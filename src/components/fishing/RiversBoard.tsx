@@ -44,6 +44,7 @@ function leadingNumber(value: string | null): number | null {
 
 export function RiversBoard({
   gauges,
+  gaugesUnavailable = false,
   parking,
   parkingError,
   parkingTruncated,
@@ -52,6 +53,7 @@ export function RiversBoard({
   forecast,
 }: {
   gauges: GaugeView[];
+  gaugesUnavailable?: boolean;
   parking: ParkingArea[];
   parkingError: string | null;
   parkingTruncated: boolean;
@@ -229,7 +231,7 @@ export function RiversBoard({
         rows={shown}
         columns={columns}
         rowKey={(gauge) => gauge.site}
-        empty={gaugeFiltered ? 'No gauges match.' : 'No gauges came back.'}
+        empty={gaugesUnavailable ? 'Data unavailable' : gaugeFiltered ? 'No gauges match.' : 'No gauges came back.'}
         onRowClick={(gauge) => select(gauge.site)}
         defaultSort={{ id: 'name', dir: 'asc' }}
       />
