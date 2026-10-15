@@ -2,18 +2,21 @@ import type { MetadataRoute } from 'next';
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: 'BANNQUET',
-    short_name: 'BANNQUET',
+    name: 'Bannquet',
+    short_name: 'Bannquet',
     start_url: '/',
+    display: 'standalone',
+    background_color: '#1e4d2b',
+    theme_color: '#1e4d2b',
     icons: [
       {
-        src: '/icon.png',
-        sizes: '32x32',
+        src: '/icon-192.png',
+        sizes: '192x192',
         type: 'image/png',
       },
       {
-        src: '/apple-icon.png',
-        sizes: '180x180',
+        src: '/icon-512.png',
+        sizes: '512x512',
         type: 'image/png',
       },
     ],
