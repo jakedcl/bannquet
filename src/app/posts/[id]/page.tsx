@@ -3,9 +3,13 @@ import Image from 'next/image';
 import { notFound, redirect } from 'next/navigation';
 import PageWrapper from '@/components/ui/PageWrapper';
 import { Badge, Button, Table, Window } from '@/components/retro';
+import { DeleteReport } from '@/components/posts/DeleteReport';
+import { getViewer } from '@/app/sign-in/actions';
 import { isDatabaseConfigured } from '@/db';
 import { ACTIVITY_META, isActivity } from '@/lib/activities';
 import { formatFeetGain, formatMiles } from '@/lib/gpx';
+import { listReportAttachments } from '@/lib/library';
+import { canDeleteOwned } from '@/lib/membership';
 import { loadReportTrail } from '@/lib/posts';
 import { getTripReport } from '@/lib/trip-reports';
 import { formatTripDate } from '@/lib/utils';
@@ -76,7 +80,19 @@ export default async function PostDetailPage({ params }: PageProps) {
     ? `${report.lat.toFixed(4)}, ${report.lng.toFixed(4)}`
     : '—';
   const trail = await loadReportTrail(report.id).catch(() => null);
+  const attached = await listReportAttachments(report.id).catch(() => ({ routes: [], pins: [], photos: [] }));
   const activity = report.activity && isActivity(report.activity) ? ACTIVITY_META[report.activity].label : null;
+  const viewer = await getViewer();
+  const manage = Boolean(viewer && canDeleteOwned({
+    actorRole: viewer.role,
+    actorId: viewer.id,
+    ownerId: report.authorId,
+  }));
+  const attachmentRows = [
+    ...attached.routes,
+    ...attached.pins,
+    ...attached.photos,
+  ];
 
   return (
     <PageWrapper className="bg-gray-50">
@@ -115,6 +131,20 @@ export default async function PostDetailPage({ params }: PageProps) {
               ))
               : <p className="text-gray-600">This post has no written notes.</p>}
           </div>
+          <div className="mt-6">
+            <p className="text-sm font-bold">Routes, pins, and photos</p>
+            {attachmentRows.length === 0 ? (
+              <p className="mt-1 text-sm text-gray-700">No routes, pins, or photos on this report.</p>
+            ) : (
+              <ul className="mt-2 space-y-1 text-sm">
+                {attachmentRows.map((item) => (
+                  <li key={item.href}>
+                    <a href={item.href} className="underline">{item.title}</a>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
           {report.photos.length > 0 && (
             <div className="mt-8 space-y-6">
               {report.photos.map((photo) => (
@@ -135,6 +165,11 @@ export default async function PostDetailPage({ params }: PageProps) {
               ))}
             </div>
           )}
+          {manage ? (
+            <div className="mt-8">
+              <DeleteReport id={report.id} returnTo="/posts" />
+            </div>
+          ) : null}
         </Window>
       </div>
     </PageWrapper>

@@ -10,8 +10,8 @@ Live at [bannquet.com](https://www.bannquet.com).
 
 - Hourly and daily forecasts, wind, precipitation and alerts for each mountain. Regions live in `config/weather-regions.json`, so adding a spot is a data change.
 - A ticker at the top of the homepage showing the current extremes across those regions.
-- `/stats` keeps the Adirondack 46 and the New Hampshire 48, plus miles, elevation, and summit leaderboards for on foot, bike, and ski. The lists live in `config/challenges`. A route that passes within about 500 feet of a summit counts, and a friend can also mark a peak by hand. A finished list shows a small 88×31 badge on the stats page and on that person's profile.
-- `/community` links to posts, stats, trips, and the map. Posts, stats, and trips share a small sub-nav.
+- `/peaks` lists the Catskill 35, Adirondack 46, New Hampshire 48, Vermont 4000-footers, Maine 4000-footers, and the New England 67 as those three New England lists together. A summit counts only when someone logs “I climbed this.” The lists live in `config/challenges`. A finished list shows a small 88×31 badge on the stats page and on that person's profile. `/stats` keeps the miles, elevation, and summit leaderboards for on foot, bike, and ski.
+- `/community` links to posts, peaks, stats, trips, and the map. Posts, peaks, stats, and trips share a small sub-nav.
 - `/trips` is a light planner: a title, a date, a trailhead pin, an I'm-in toggle, the same NWS forecast used everywhere else, and a shared packing list. Templates for day hike, overnight, winter, bike, and ski live in `config/packing-templates.json`. A trip can point at posts afterward, and the trailhead shows on the map.
 - Published trip reports read from Postgres. Signed-in friends write a post (title, date, activity, tagged friends, story, photos, optional GPX) and it shows in the feed and on the map.
 - The home page banner links to `/conditions`, which lists the same National Weather Service extremes and the spots behind them.

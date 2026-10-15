@@ -1,5 +1,6 @@
 import { sql } from 'drizzle-orm';
 import { getDb } from '@/db';
+import { removeBlobs } from '@/lib/blobs';
 import { sortLoggedActivities, type Activity } from '@/lib/activities';
 import { isLatLng } from '@/lib/photos';
 import { isPinKind, type PinKind } from '@/lib/pin-kinds';
@@ -33,6 +34,7 @@ export type PinDetail = {
   createdBy: string | null;
   who: string;
   handle: string | null;
+  post: { id: string; title: string } | null;
   photos: PinPhoto[];
 };
 
@@ -110,9 +112,11 @@ export async function loadPin(id: string): Promise<PinDetail | null> {
         p.visited_on::text as visited_on, p.created_by,
         ST_Y(p.point::geometry) as lat, ST_X(p.point::geometry) as lng,
         coalesce(nullif(u.display_name, ''), nullif(u.handle, ''), 'Friend') as who,
-        u.handle
+        u.handle,
+        tr.id::text as post_id, tr.title as post_title
       from pins p
       left join users u on u.id = p.created_by
+      left join trip_reports tr on tr.id = p.trip_report_id
       where p.id = ${id}::uuid
     `),
     db.execute(sql`
@@ -140,6 +144,7 @@ export async function loadPin(id: string): Promise<PinDetail | null> {
     createdBy: text(row.created_by),
     who: text(row.who) ?? 'Friend',
     handle: text(row.handle),
+    post: text(row.post_id) ? { id: text(row.post_id) as string, title: text(row.post_title) ?? 'Trip report' } : null,
     photos: asRows(photoResult).flatMap((photo) => {
       const photoId = text(photo.id);
       const url = text(photo.url);
@@ -235,12 +240,17 @@ export async function updatePin(input: {
       returning id::text as id
     `);
     if (!text(asRows(updated)[0]?.id)) return false;
+    const removedUrls: string[] = [];
     for (const photoId of input.removePhotoIds) {
-      await tx.execute(sql`
+      const found = await tx.execute(sql`
         delete from photos
         where id = ${photoId}::uuid and pin_id = ${input.id}::uuid and user_id = ${input.userId}
+        returning blob_url
       `);
+      const url = text(asRows(found)[0]?.blob_url);
+      if (url) removedUrls.push(url);
     }
+    if (removedUrls.length > 0) await removeBlobs(removedUrls);
     const count = await tx.execute(sql`
       select count(*)::int as n from photos where pin_id = ${input.id}::uuid
     `);
@@ -256,14 +266,25 @@ export async function updatePin(input: {
   });
 }
 
-export async function deletePin(id: string, userId: string): Promise<boolean> {
-  return getDb().transaction(async (tx) => {
+export async function deletePin(id: string, actor: { id: string; admin: boolean }): Promise<boolean> {
+  const db = getDb();
+  const photos = await db.execute(sql`
+    select ph.blob_url
+    from photos ph
+    join pins p on p.id = ph.pin_id
+    where p.id = ${id}::uuid and (${actor.admin} or p.created_by = ${actor.id})
+  `);
+  const urls = asRows(photos).map((row) => text(row.blob_url)).filter((url): url is string => Boolean(url));
+  const removed = await db.transaction(async (tx) => {
     const owned = await tx.execute(sql`
-      select id::text as id from pins where id = ${id}::uuid and created_by = ${userId}
+      select id::text as id from pins
+      where id = ${id}::uuid and (${actor.admin} or created_by = ${actor.id})
     `);
     if (!text(asRows(owned)[0]?.id)) return false;
-    await tx.execute(sql`delete from photos where pin_id = ${id}::uuid and user_id = ${userId}`);
-    await tx.execute(sql`delete from pins where id = ${id}::uuid and created_by = ${userId}`);
+    await tx.execute(sql`delete from photos where pin_id = ${id}::uuid`);
+    await tx.execute(sql`delete from pins where id = ${id}::uuid`);
     return true;
   });
+  if (removed) await removeBlobs(urls);
+  return removed;
 }

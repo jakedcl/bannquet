@@ -22,6 +22,7 @@ export type TripReportListItem = {
 
 export type TripReportDetail = TripReportListItem & {
   body: string;
+  authorId: string | null;
   lat: number | null;
   lng: number | null;
   photos: TripReportPhoto[];

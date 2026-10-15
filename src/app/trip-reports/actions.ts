@@ -5,10 +5,17 @@ import { getViewer } from '@/app/sign-in/actions';
 import { isActivity } from '@/lib/activities';
 import { APPROVAL_WAIT, canContribute } from '@/lib/membership';
 import { parseGpx, type TrackPoint } from '@/lib/gpx';
+import { isPinKind } from '@/lib/pin-kinds';
+import { isLatLng } from '@/lib/photos';
 import { addProfilePhotos, addProfileTrack, createPost, parseUploadedPhotos, type PreparedPhoto } from '@/lib/posts';
 
 const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
 const ID_PATTERN = /^[A-Za-z0-9_-]{8,80}$/;
+const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+function uuidList(formData: FormData, name: string): string[] {
+  return [...new Set(formData.getAll(name).filter((value): value is string => typeof value === 'string' && UUID_PATTERN.test(value)))];
+}
 
 function cleanPhotos(raw: string): { photos: PreparedPhoto[]; error: string | null } {
   return parseUploadedPhotos(raw);
@@ -46,6 +53,26 @@ export async function publishPost(
     .getAll('friend')
     .filter((value): value is string => typeof value === 'string' && ID_PATTERN.test(value) && value !== viewer.id);
 
+  const pinTitle = String(formData.get('pinTitle') ?? '').trim();
+  const latRaw = String(formData.get('pinLat') ?? '').trim();
+  const lngRaw = String(formData.get('pinLng') ?? '').trim();
+  const pinLat = Number(latRaw);
+  const pinLng = Number(lngRaw);
+  const pinKind = String(formData.get('pinKind') ?? 'other');
+  let pin: { title: string; note: string; kind: string; lat: number; lng: number } | null = null;
+  if (pinTitle) {
+    if (pinTitle.length > 80) return { error: 'Keep the pin title short.' };
+    if (!isPinKind(pinKind)) return { error: 'Pick a pin kind.' };
+    if (!latRaw || !lngRaw || !isLatLng(pinLat, pinLng)) return { error: 'Drop the new pin on the map, or clear the pin title.' };
+    pin = {
+      title: pinTitle,
+      note: String(formData.get('pinNote') ?? '').trim().slice(0, 500),
+      kind: pinKind,
+      lat: pinLat,
+      lng: pinLng,
+    };
+  }
+
   let id = '';
   try {
     id = await createPost({
@@ -58,8 +85,14 @@ export async function publishPost(
       taggedUserIds,
       track: track.track,
       photos: photos.photos,
+      pin,
+      attachRouteIds: uuidList(formData, 'route'),
+      attachPinIds: uuidList(formData, 'pin'),
+      attachPhotoIds: uuidList(formData, 'photo'),
     });
-  } catch {
+  } catch (error) {
+    const message = error instanceof Error ? error.message : '';
+    if (message.includes('already on a trip report')) return { error: message };
     return { error: 'Could not save that post. Try again in a minute.' };
   }
   redirect(`/posts/${id}`);
@@ -77,8 +110,8 @@ export async function publishProfileTrack(
   const track = cleanTrack(String(formData.get('gpxText') ?? ''));
   if (track.error || !track.track) return { error: track.error ?? 'Choose a GPX file.' };
   try {
-    const peaks = await addProfileTrack({ userId: viewer.id, activity, track: track.track });
-    return { saved: true, peaks: peaks.length > 0 ? peaks.join(', ') : undefined };
+    await addProfileTrack({ userId: viewer.id, activity, track: track.track });
+    return { saved: true };
   } catch {
     return { error: 'Could not save that route. Try again in a minute.' };
   }

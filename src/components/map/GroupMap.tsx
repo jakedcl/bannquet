@@ -4,9 +4,11 @@ import { useEffect, useRef, useState } from 'react';
 import {
   Map as MlMap,
   NavigationControl,
+  Popup,
   setWorkerUrl,
   type FilterSpecification,
   type GeoJSONSource,
+  type LngLatLike,
   type MapLayerMouseEvent,
   type StyleSpecification,
 } from 'maplibre-gl';
@@ -56,12 +58,11 @@ function activityLabel(activity: string | null): string {
   return 'Photo';
 }
 
-function leafFromFeature(feature: { geometry: unknown; properties?: GeoJSON.GeoJsonProperties }): Leaf | null {
-  const geometry = feature.geometry as { type?: string; coordinates?: unknown };
-  const props = (feature.properties ?? {}) as Record<string, unknown>;
-  if (geometry.type !== 'Point' || !Array.isArray(geometry.coordinates)) return null;
-  const [lng, lat] = geometry.coordinates as number[];
-  if (typeof lng !== 'number' || typeof lat !== 'number') return null;
+function leafFromProps(
+  props: Record<string, unknown>,
+  lng: number,
+  lat: number,
+): Leaf {
   return {
     title: String(props.title ?? 'Pin'),
     who: String(props.who ?? 'Friend'),
@@ -74,6 +75,64 @@ function leafFromFeature(feature: { geometry: unknown; properties?: GeoJSON.GeoJ
     lng,
     lat,
   };
+}
+
+function popupNode(leaves: Leaf[]): HTMLElement {
+  const root = document.createElement('div');
+  root.className = 'space-y-2 text-[15px] leading-snug';
+  const heading = document.createElement('p');
+  heading.className = 'pr-6 text-xs font-bold uppercase';
+  heading.textContent = leaves.length === 1 ? '1 stop' : `${leaves.length} stops here`;
+  root.append(heading);
+  for (const leaf of leaves) {
+    const link = document.createElement('a');
+    link.href = leaf.href;
+    link.className = 'block bg-white p-2 retro-box-inset';
+    const title = document.createElement('span');
+    title.className = 'block text-sm font-bold';
+    const swatch = document.createElement('span');
+    swatch.className = 'mr-2 inline-block h-2 w-2';
+    swatch.style.background = leaf.color;
+    title.append(swatch, document.createTextNode(leaf.title));
+    const meta = document.createElement('span');
+    meta.className = 'mt-1 block text-xs text-gray-700';
+    const bits = [leaf.who];
+    if (leaf.date) bits.push(formatTripDate(leaf.date));
+    bits.push(activityLabel(leaf.activity));
+    if (leaf.category) bits.push(leaf.category);
+    meta.textContent = bits.join(' · ');
+    link.append(title, meta);
+    root.append(link);
+  }
+  return root;
+}
+
+function showPopup(map: MlMap, popupRef: { current: Popup | null }, lngLat: LngLatLike, leaves: Leaf[]) {
+  popupRef.current?.remove();
+  if (leaves.length === 0) return;
+  const popup = new Popup({
+    closeButton: true,
+    closeOnClick: true,
+    maxWidth: '22rem',
+    className: 'bnqt-popup',
+    offset: 12,
+  })
+    .setLngLat(lngLat)
+    .setDOMContent(popupNode(leaves))
+    .addTo(map);
+  popupRef.current = popup;
+  popup.on('close', () => {
+    if (popupRef.current === popup) popupRef.current = null;
+  });
+}
+
+function leafFromFeature(feature: { geometry: unknown; properties?: GeoJSON.GeoJsonProperties }): Leaf | null {
+  const geometry = feature.geometry as { type?: string; coordinates?: unknown };
+  const props = (feature.properties ?? {}) as Record<string, unknown>;
+  if (geometry.type !== 'Point' || !Array.isArray(geometry.coordinates)) return null;
+  const [lng, lat] = geometry.coordinates as number[];
+  if (typeof lng !== 'number' || typeof lat !== 'number') return null;
+  return leafFromProps(props, lng, lat);
 }
 
 export default function GroupMap({
@@ -95,8 +154,8 @@ export default function GroupMap({
   const [layersOpen, setLayersOpen] = useState(false);
   const controlsRef = useRef<HTMLDivElement | null>(null);
   const [terrain, setTerrain] = useState(false);
-  const [leaves, setLeaves] = useState<Leaf[] | null>(null);
   const [selectedTrack, setSelectedTrack] = useState('');
+  const popupRef = useRef<Popup | null>(null);
 
   useEffect(() => {
     pointsRef.current = points;
@@ -126,7 +185,7 @@ export default function GroupMap({
     map.on('click', (event) => {
       const pick = onPickRef.current;
       if (!pickingRef.current || !pick) return;
-      const layers = ['clusters', 'pins', 'pin-markers'].filter((id) => Boolean(map.getLayer(id)));
+      const layers = ['clusters', 'pins', 'pin-markers', 'routes'].filter((id) => Boolean(map.getLayer(id)));
       const hits = layers.length > 0 ? map.queryRenderedFeatures(event.point, { layers }) : [];
       const blocked = hits.some((feature) => Number(feature.properties?.draft) !== 1);
       if (blocked) return;
@@ -134,6 +193,8 @@ export default function GroupMap({
     });
 
     return () => {
+      popupRef.current?.remove();
+      popupRef.current = null;
       map.remove();
       mapRef.current = null;
     };
@@ -286,21 +347,37 @@ export default function GroupMap({
     };
 
     const onCluster = async (event: MapLayerMouseEvent) => {
+      if (pickingRef.current) return;
       const feature = event.features?.[0];
       const clusterId = feature?.properties?.cluster_id;
       const source = map.getSource('places') as GeoJSONSource | undefined;
-      if (!source || clusterId == null) return;
+      if (!source || clusterId == null || !feature) return;
       const children = await source.getClusterLeaves(Number(clusterId), 40, 0);
-      setLeaves(children.map(leafFromFeature).filter((leaf): leaf is Leaf => Boolean(leaf)));
+      const leaves = children.map(leafFromFeature).filter((leaf): leaf is Leaf => Boolean(leaf));
+      const geometry = feature.geometry as { type?: string; coordinates?: unknown };
+      const coords = geometry.type === 'Point' && Array.isArray(geometry.coordinates)
+        ? geometry.coordinates as [number, number]
+        : [event.lngLat.lng, event.lngLat.lat] as [number, number];
       setSelectedTrack('');
+      showPopup(map, popupRef, coords, leaves);
     };
     const onPin = (event: MapLayerMouseEvent) => {
       if (pickingRef.current) return;
       const feature = event.features?.[0];
       if (!feature) return;
       const leaf = leafFromFeature(feature);
-      setLeaves(leaf ? [leaf] : null);
-      setSelectedTrack(leaf?.trackId ?? '');
+      if (!leaf) return;
+      setSelectedTrack(leaf.trackId);
+      showPopup(map, popupRef, [leaf.lng, leaf.lat], [leaf]);
+    };
+    const onRoute = (event: MapLayerMouseEvent) => {
+      if (pickingRef.current) return;
+      const feature = event.features?.[0];
+      if (!feature) return;
+      const props = (feature.properties ?? {}) as Record<string, unknown>;
+      const leaf = leafFromProps(props, event.lngLat.lng, event.lngLat.lat);
+      setSelectedTrack(leaf.trackId);
+      showPopup(map, popupRef, event.lngLat, [leaf]);
     };
 
     map.on('style.load', draw);
@@ -308,19 +385,24 @@ export default function GroupMap({
     map.on('click', 'clusters', onCluster);
     map.on('click', 'pins', onPin);
     map.on('click', 'pin-markers', onPin);
+    map.on('click', 'routes', onRoute);
     map.on('mouseenter', 'clusters', () => { map.getCanvas().style.cursor = 'pointer'; });
     map.on('mouseleave', 'clusters', () => { map.getCanvas().style.cursor = picking ? 'crosshair' : ''; });
     map.on('mouseenter', 'pins', () => { map.getCanvas().style.cursor = 'pointer'; });
     map.on('mouseleave', 'pins', () => { map.getCanvas().style.cursor = picking ? 'crosshair' : ''; });
     map.on('mouseenter', 'pin-markers', () => { map.getCanvas().style.cursor = 'pointer'; });
     map.on('mouseleave', 'pin-markers', () => { map.getCanvas().style.cursor = picking ? 'crosshair' : ''; });
+    map.on('mouseenter', 'routes', () => { map.getCanvas().style.cursor = 'pointer'; });
+    map.on('mouseleave', 'routes', () => { map.getCanvas().style.cursor = picking ? 'crosshair' : ''; });
     if (map.isStyleLoaded()) draw();
 
     return () => {
+      popupRef.current?.remove();
       map.off('style.load', draw);
       map.off('click', 'clusters', onCluster);
       map.off('click', 'pins', onPin);
       map.off('click', 'pin-markers', onPin);
+      map.off('click', 'routes', onRoute);
     };
   }, [terrain, basemap, picking]);
 
@@ -413,39 +495,6 @@ export default function GroupMap({
         {attribution}
         {picking ? ' Click the map to drop a pin.' : ' Drag to move. Right-drag turns the map when 3D is on.'}
       </p>
-      {leaves && leaves.length > 0 ? (
-        <div className="absolute bottom-12 left-3 z-10 max-h-[45%] w-[min(100%-1.5rem,22rem)] overflow-auto bg-beige p-3 retro-box">
-          <div className="mb-2 flex items-center justify-between gap-2">
-            <p className="text-xs font-bold uppercase">
-              {leaves.length === 1 ? '1 stop' : `${leaves.length} stops here`}
-            </p>
-            <button type="button" className="text-xs font-bold uppercase underline" onClick={() => setLeaves(null)}>
-              Close
-            </button>
-          </div>
-          <div className="space-y-2">
-            {leaves.map((leaf) => (
-              <a
-                key={`${leaf.href}-${leaf.title}-${leaf.lng}`}
-                href={leaf.href}
-                onClick={() => {
-                  if (!leaf.trackId) return;
-                  setSelectedTrack(leaf.trackId);
-                  mapRef.current?.flyTo({ center: [leaf.lng, leaf.lat], zoom: 13, essential: true });
-                }}
-                className="block bg-white p-2 retro-box-inset"
-              >
-                <span className="mb-1 inline-block h-2 w-2" style={{ background: leaf.color }} />
-                <span className="ml-2 text-sm font-bold">{leaf.title}</span>
-                <span className="mt-1 block text-xs text-gray-700">
-                  {leaf.who} · {formatTripDate(leaf.date)} · {activityLabel(leaf.activity)}
-                  {leaf.category ? ` · ${leaf.category}` : ''}
-                </span>
-              </a>
-            ))}
-          </div>
-        </div>
-      ) : null}
     </div>
   );
 }

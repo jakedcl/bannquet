@@ -3,10 +3,11 @@ import { notFound } from 'next/navigation';
 import PageWrapper from '@/components/ui/PageWrapper';
 import { Button } from '@/components/retro/Button';
 import { Window } from '@/components/retro/Window';
-import { addItem, linkPost, saveWeight, toggleClaim, toggleGoing } from '@/app/trips/actions';
+import { ConfirmDelete } from '@/components/delete/ConfirmDelete';
+import { addItem, deleteItem, deleteTripAction, linkPost, saveWeight, toggleClaim, toggleGoing } from '@/app/trips/actions';
 import { getViewer } from '@/app/sign-in/actions';
 import { ACTIVITY_META, isActivity } from '@/lib/activities';
-import { canContribute } from '@/lib/membership';
+import { canContribute, canDeleteOwned } from '@/lib/membership';
 import { getTrip, listAuthorPosts } from '@/lib/trips';
 import { formatTripDate } from '@/lib/utils';
 import { getWeather } from '@/lib/weather';
@@ -21,6 +22,11 @@ export default async function TripPage({ params }: { params: Promise<{ id: strin
   if (!trip) notFound();
   const viewer = await getViewer();
   const canEdit = Boolean(viewer && canContribute(viewer.role));
+  const canDeleteTrip = Boolean(viewer && canDeleteOwned({
+    actorRole: viewer.role,
+    actorId: viewer.id,
+    ownerId: trip.createdBy,
+  }));
   const going = Boolean(viewer && trip.people.some((person) => person.id === viewer.id));
   const posts = viewer && canEdit ? await listAuthorPosts(viewer.id) : [];
   const unlinked = posts.filter((post) => post.tripId !== trip.id);
@@ -60,6 +66,16 @@ export default async function TripPage({ params }: { params: Promise<{ id: strin
               </form>
             ) : null}
           </div>
+          {canDeleteTrip ? (
+            <div className="mt-4">
+              <ConfirmDelete
+                action={deleteTripAction}
+                label="Delete trip"
+                confirm="Delete this trip?"
+                fields={{ id: trip.id }}
+              />
+            </div>
+          ) : null}
         </Window>
 
         {trip.lat != null && trip.lng != null ? (
@@ -85,6 +101,14 @@ export default async function TripPage({ params }: { params: Promise<{ id: strin
                       <input type="hidden" name="itemId" value={item.id} />
                       <Button type="submit">{item.assignedTo === viewer?.id ? 'Leave it' : "I'll carry it"}</Button>
                     </form>
+                    {viewer && (viewer.role === 'admin' || trip.createdBy === viewer.id || item.addedBy === viewer.id) ? (
+                      <ConfirmDelete
+                        action={deleteItem}
+                        label="Delete"
+                        confirm="Delete this packing item?"
+                        fields={{ tripId: trip.id, itemId: item.id }}
+                      />
+                    ) : null}
                     <form action={saveWeight} className="flex items-center gap-1">
                       <input type="hidden" name="tripId" value={trip.id} />
                       <input type="hidden" name="itemId" value={item.id} />

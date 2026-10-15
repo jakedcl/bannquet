@@ -4,6 +4,8 @@ import { PostForm } from '@/components/posts/PostForm';
 import { Window } from '@/components/retro/Window';
 import { getViewer } from '@/app/sign-in/actions';
 import { listMembers } from '@/lib/auth/members';
+import { isDatabaseConfigured } from '@/db';
+import { listAttachables, type AttachChoice } from '@/lib/library';
 import { APPROVAL_WAIT, canContribute } from '@/lib/membership';
 
 export const dynamic = 'force-dynamic';
@@ -29,18 +31,29 @@ export default async function NewPostPage() {
       id: member.id,
       label: member.displayName || member.handle || member.email || 'Friend',
     }));
+  const saved = await loadSaved(viewer.id);
 
   return (
     <PageWrapper className="bg-gray-50">
       <div className="mx-auto max-w-2xl px-4 py-10">
         <Window title="New post">
           <p className="mb-4 text-sm text-gray-700">
-            Title, the day, what you were doing, who came, and the story. Photos and a GPX file are optional.
-            Anything you add here shows on the map and in the posts.
+            Title, the day, what you were doing, who came, and the story.
+            You can attach a route, pin, or photo you already saved, or add a new one here.
           </p>
-          <PostForm friends={friends} />
+          <PostForm friends={friends} routes={saved.routes} pins={saved.pins} photos={saved.photos} />
         </Window>
       </div>
     </PageWrapper>
   );
+}
+
+async function loadSaved(userId: string): Promise<{ routes: AttachChoice[]; pins: AttachChoice[]; photos: AttachChoice[] }> {
+  const empty = { routes: [], pins: [], photos: [] };
+  if (!isDatabaseConfigured()) return empty;
+  try {
+    return await listAttachables(userId);
+  } catch {
+    return empty;
+  }
 }

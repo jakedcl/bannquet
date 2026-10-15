@@ -4,6 +4,7 @@ import {
   adminEmailsFromEnv,
   approvalAllowed,
   canContribute,
+  canDeleteOwned,
   inviteState,
   isAdminEmail,
   isEmail,
@@ -103,4 +104,8 @@ test('pending people can read, and only Jake can approve them', () => {
   assert.equal(approvalAllowed({ actorRole: 'admin', targetRole: 'pending' }), true);
   assert.equal(approvalAllowed({ actorRole: 'member', targetRole: 'pending' }), false);
   assert.equal(approvalAllowed({ actorRole: 'admin', targetRole: 'member' }), false);
+  assert.equal(canDeleteOwned({ actorRole: 'pending', actorId: 'a', ownerId: 'a' }), false);
+  assert.equal(canDeleteOwned({ actorRole: 'member', actorId: 'a', ownerId: 'a' }), true);
+  assert.equal(canDeleteOwned({ actorRole: 'member', actorId: 'a', ownerId: 'b' }), false);
+  assert.equal(canDeleteOwned({ actorRole: 'admin', actorId: 'jake', ownerId: 'b' }), true);
 });
