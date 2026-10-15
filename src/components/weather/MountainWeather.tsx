@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import WeatherDashboard from '@/components/WeatherDashboard';
+import WeatherTicker from '@/components/ui/WeatherTicker';
 import { useRegion } from '@/contexts/RegionContext';
 import { DEFAULT_REGION, REGION_LABELS, REGION_OPTIONS, REGION_WEATHER_SECTIONS, isRegionCode, type WeatherSection } from '@/lib/regions';
 
@@ -12,7 +13,7 @@ const STATE_NAMES: Record<string, string> = {
   me: 'Maine',
 };
 
-export function MountainWeather({ children }: { children: React.ReactNode }) {
+export function MountainWeather() {
   const { setRegion } = useRegion();
   const [region, setLocalRegion] = useState(DEFAULT_REGION);
   const sections = REGION_WEATHER_SECTIONS[region] ?? REGION_WEATHER_SECTIONS[DEFAULT_REGION];
@@ -28,6 +29,7 @@ export function MountainWeather({ children }: { children: React.ReactNode }) {
     <div className="container mx-auto space-y-8 px-4 py-10">
       <header className="space-y-4">
         <h1 className="text-3xl font-bold text-gray-900 md:text-5xl">Regional mountain weather</h1>
+        <WeatherTicker placement="page" />
         <label className="block max-w-xs space-y-1">
           <span className="text-sm font-bold">State</span>
           <select
@@ -44,8 +46,6 @@ export function MountainWeather({ children }: { children: React.ReactNode }) {
           </select>
         </label>
       </header>
-
-      {children}
 
       <section className="space-y-8" aria-label={`${regionLabel} forecast`}>
         <h2 className="text-2xl font-bold text-gray-900">{regionLabel} forecast</h2>

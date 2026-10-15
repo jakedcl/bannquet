@@ -6,7 +6,7 @@ export default function MountainWeatherLoading() {
     <PageWrapper className="bg-gray-50">
       <div className="mx-auto max-w-4xl px-4 py-10">
         <Window title="Regional mountain weather">
-          <p className="text-sm">Loading the conditions and the forecast.</p>
+          <p className="text-sm">Loading the forecast.</p>
         </Window>
       </div>
     </PageWrapper>
