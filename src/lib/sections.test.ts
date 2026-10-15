@@ -35,6 +35,8 @@ test('every section page has a breadcrumb, including the parent', () => {
   assert.deepEqual(pageTrail('/upload', '', nobody).crumbs?.map((crumb) => crumb.label), ['Upload']);
   assert.deepEqual(pageTrail('/mountain-weather', '', nobody).crumbs?.map((crumb) => crumb.label), ['Mountain Weather', 'New York']);
   assert.deepEqual(pageTrail('/mountain-weather', 'state=vt', nobody).crumbs?.map((crumb) => crumb.label), ['Mountain Weather', 'Vermont']);
+  assert.deepEqual(pageTrail('/fishing', '', nobody).crumbs?.map((crumb) => crumb.label), ['Fishing']);
+  assert.equal(pageTrail('/fishing', '', nobody).parentHref, '/');
   assert.equal(pageTrail('/', '', nobody).crumbs, null);
 });
 
@@ -76,4 +78,25 @@ test('a trip, pin, route, photo, and gear item name the record', () => {
   assert.equal(pageTrail('/photos/abc', '', nobody).crumbs?.at(-1)?.label, 'Photo');
   assert.equal(pageTrail('/gear/abc', '', nobody, 'Stove').parentHref, '/gear');
   assert.equal(pageTrail('/trips/new', '', nobody).crumbs?.at(-1)?.label, 'New trip');
+});
+
+test('fishing is its own section, outside community', () => {
+  assert.equal(communitySection('/fishing'), false);
+  assert.equal(communitySection('/fishing/stocking'), false);
+
+  const main = matchSection('/fishing', '', nobody);
+  assert.equal(main?.id, 'fishing');
+  assert.equal(main?.label, 'Fishing');
+  assert.equal(main?.landing, false);
+  assert.equal(main?.links.some((link) => link.href === '/fishing/guides'), true);
+  assert.equal(linkOn('/fishing', '', '/fishing'), true);
+  assert.equal(linkOn('/fishing/stocking', '', '/fishing'), false);
+  assert.equal(linkOn('/fishing/stocking', '', '/fishing/stocking'), true);
+
+  const stocking = pageTrail('/fishing/stocking', '', nobody);
+  assert.equal(stocking.parentHref, '/fishing');
+  assert.deepEqual(stocking.crumbs?.map((crumb) => crumb.label), ['Fishing', 'Stocking']);
+
+  const guides = pageTrail('/fishing/guides', '', nobody);
+  assert.deepEqual(guides.crumbs?.map((crumb) => crumb.label), ['Fishing', 'Guides']);
 });
