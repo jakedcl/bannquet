@@ -22,7 +22,7 @@ export default async function SignInPage({
   const next = safeNextPath(params.next);
   const viewer = await getViewer();
   if (viewer) {
-    if (profileNeedsNames(viewer)) redirect('/settings?welcome=1');
+    if (profileNeedsNames(viewer)) redirect('/account?welcome=1');
     redirect(next ?? nextStopForMember(viewer));
   }
 

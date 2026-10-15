@@ -1,7 +1,12 @@
 export type NavLink = {
   href: string;
   label: string;
+  hidden?: boolean;
 };
+
+export function visibleLinks(links: readonly NavLink[]): NavLink[] {
+  return links.filter((link) => !link.hidden);
+}
 
 export type NavAccount = {
   handle: string | null;
@@ -70,17 +75,16 @@ export function communitySection(pathname: string): boolean {
 }
 
 export function settingsLinks(account: NavAccount): NavLink[] {
-  const links: NavLink[] = [
-    { href: account?.handle ? `/user/${account.handle}` : '/settings', label: 'Profile' },
-    { href: '/settings', label: 'Settings' },
-  ];
+  const links: NavLink[] = [];
+  if (account?.handle) links.push({ href: `/user/${account.handle}`, label: 'Profile' });
+  links.push({ href: '/account', label: 'Account', hidden: true });
   if (account?.role === 'admin') links.push({ href: '/admin', label: 'Admin' });
   return links;
 }
 
 export function settingsSection(pathname: string, account: NavAccount): boolean {
   if (!account) return false;
-  if (pathOn(pathname, '/settings') || pathOn(pathname, '/admin')) return true;
+  if (pathOn(pathname, '/settings') || pathOn(pathname, '/account') || pathOn(pathname, '/admin')) return true;
   const profile = account.handle ? `/user/${account.handle}` : null;
   return profile != null && pathname === profile;
 }
@@ -121,14 +125,15 @@ export function matchSection(pathname: string, search: string, account: NavAccou
 
   if (!settingsSection(pathname, account)) return null;
   const onAdmin = pathOn(pathname, '/admin');
+  const onAccount = pathOn(pathname, '/account');
   const profile = account?.handle ? `/user/${account.handle}` : null;
   const onProfile = profile != null && pathname === profile;
-  const current = onAdmin ? 'Admin' : onProfile ? 'Profile' : null;
+  const current = onAdmin ? 'Admin' : onProfile ? 'Profile' : onAccount ? 'Account' : null;
   return {
     id: 'settings',
     href: '/settings',
     label: 'Settings',
-    links: settingsLinks(account),
+    links: visibleLinks(settingsLinks(account)),
     landing: pathname === '/settings',
     crumb: current ? { parentHref: '/settings', parent: 'Settings', current } : null,
   };

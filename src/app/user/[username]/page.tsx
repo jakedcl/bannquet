@@ -105,7 +105,7 @@ export default async function UserPage({ params }: { params: Promise<{ username:
               ) : null}
               {region ? <p className="text-sm">Home: {region}</p> : null}
               {viewer?.id === member.id ? (
-                <Button href="/settings#edit-profile" tone="yellow">Edit profile</Button>
+                <Button href="/account#edit-profile" tone="yellow">Edit profile</Button>
               ) : null}
             </div>
           </div>
