@@ -262,16 +262,18 @@ export async function addProfileTrack(input: {
   activity: Activity;
   track: PackedTrack;
   title?: string | null;
+  notes?: string | null;
 }): Promise<string> {
   const wkt = lineWkt(input.track.points);
   if (!wkt) throw new Error('That GPX needs at least two points.');
   const inserted = await getDb().execute(sql`
-    insert into tracks (user_id, source, name, title, activity, line, distance_m, elev_gain_m, started_at)
+    insert into tracks (user_id, source, name, title, notes, activity, line, distance_m, elev_gain_m, started_at)
     values (
       ${input.userId},
       'gpx',
       ${input.track.name || 'Route'},
       ${input.title ?? null},
+      ${input.notes ?? null},
       ${input.activity}::activity,
       ST_GeogFromText(${wkt}),
       ${input.track.distanceM},

@@ -169,6 +169,7 @@ export const tracks = pgTable(
     externalId: text('external_id'),
     name: text('name').notNull(),
     title: text('title'),
+    notes: text('notes'),
     activity: activityEnum('activity').notNull(),
     line: geographyLine('line').notNull(),
     distanceM: integer('distance_m'),

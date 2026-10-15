@@ -13,3 +13,9 @@ export function cleanRouteTitle(value: string | null | undefined): string | null
   if (!title || PLACEHOLDER.test(title)) return null;
   return title;
 }
+
+/** Empty notes are stored as null. The words are kept as written. */
+export function cleanRouteNotes(value: string | null | undefined): string | null {
+  const notes = value?.trim().slice(0, 4000) ?? '';
+  return notes || null;
+}

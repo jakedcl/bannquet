@@ -52,6 +52,15 @@ export function RouteUpload({
         />
       </label>
       <label className="block space-y-1">
+        <span className="text-sm">Notes</span>
+        <textarea
+          name="notes"
+          rows={4}
+          maxLength={4000}
+          className="w-full retro-box-inset bg-white px-3 py-2"
+        />
+      </label>
+      <label className="block space-y-1">
         <span className="text-sm">What were you doing?</span>
         <select name="activity" className="w-full retro-box-inset bg-white px-3 py-2" defaultValue="hike">
           {ACTIVITIES.map((activity) => (

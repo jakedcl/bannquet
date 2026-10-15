@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { updateRouteTitleAction } from '@/app/library/actions';
 import { Button } from '@/components/retro/Button';
 
-export function RouteTitleForm({ id, title }: { id: string; title: string }) {
+export function RouteTitleForm({ id, title, notes }: { id: string; title: string; notes: string }) {
   const router = useRouter();
   const [state, action, pending] = useActionState(updateRouteTitleAction, null);
 
@@ -26,9 +26,19 @@ export function RouteTitleForm({ id, title }: { id: string; title: string }) {
           className="w-full retro-box-inset bg-white px-3 py-2 text-base"
         />
       </label>
+      <label className="block space-y-1">
+        <span className="text-sm font-bold">Notes</span>
+        <textarea
+          name="notes"
+          rows={5}
+          maxLength={4000}
+          defaultValue={notes}
+          className="w-full retro-box-inset bg-white px-3 py-2 text-base"
+        />
+      </label>
       {state?.error ? <p className="text-sm font-bold text-red-700">{state.error}</p> : null}
-      {state?.saved ? <p className="text-sm">Title saved.</p> : null}
-      <Button type="submit" disabled={pending}>{pending ? 'Saving…' : 'Save title'}</Button>
+      {state?.saved ? <p className="text-sm">Saved.</p> : null}
+      <Button type="submit" disabled={pending}>{pending ? 'Saving…' : 'Save'}</Button>
     </form>
   );
 }
