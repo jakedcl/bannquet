@@ -59,23 +59,17 @@ export default async function ProfileSectionPage({
 
   try {
     if (section === 'trips') {
-      const sliced = slicePage(await listTripsByOwner(member.id), page);
-      total = sliced.total;
-      pages = sliced.pages;
-      current = sliced.page;
-      body = total === 0 ? <p className="text-sm">No trips yet.</p> : <TripRows trips={sliced.rows} manage={manage} />;
+      const trips = await listTripsByOwner(member.id);
+      total = trips.length;
+      body = total === 0 ? <p className="text-sm">No trips yet.</p> : <TripRows trips={trips} manage={manage} />;
     } else if (section === 'routes') {
-      const sliced = slicePage((await loadProfileLibrary(member.id)).routes, page);
-      total = sliced.total;
-      pages = sliced.pages;
-      current = sliced.page;
-      body = total === 0 ? <p className="text-sm">No routes yet.</p> : <RouteRows routes={sliced.rows} manage={manage} profilePath={`/user/${handle}`} />;
+      const routes = (await loadProfileLibrary(member.id)).routes;
+      total = routes.length;
+      body = total === 0 ? <p className="text-sm">No routes yet.</p> : <RouteRows routes={routes} manage={manage} profilePath={`/user/${handle}`} />;
     } else if (section === 'pins') {
-      const sliced = slicePage(await loadProfilePins(member.id), page);
-      total = sliced.total;
-      pages = sliced.pages;
-      current = sliced.page;
-      body = total === 0 ? <p className="text-sm">No pins yet.</p> : <PinRows pins={sliced.rows} manage={manage} />;
+      const pins = await loadProfilePins(member.id);
+      total = pins.length;
+      body = total === 0 ? <p className="text-sm">No pins yet.</p> : <PinRows pins={pins} manage={manage} />;
     } else if (section === 'photos') {
       const sliced = slicePage((await loadProfileLibrary(member.id)).photos, page);
       total = sliced.total;
@@ -83,13 +77,10 @@ export default async function ProfileSectionPage({
       current = sliced.page;
       body = total === 0 ? <p className="text-sm">No photos yet.</p> : <PhotoGrid photos={sliced.rows} manage={manage} profilePath={`/user/${handle}`} />;
     } else {
-      const names = new Map(allPeaks().map((peak) => [peak.slug, peak.name]));
+      const names = Object.fromEntries(allPeaks().map((peak) => [peak.slug, peak.name]));
       const climbs = (await listClimbs()).filter((climb) => climb.userId === member.id).reverse();
-      const sliced = slicePage(climbs, page);
-      total = sliced.total;
-      pages = sliced.pages;
-      current = sliced.page;
-      body = total === 0 ? <p className="text-sm">No climbs yet.</p> : <ClimbRows climbs={sliced.rows} names={names} manage={manage} />;
+      total = climbs.length;
+      body = total === 0 ? <p className="text-sm">No climbs yet.</p> : <ClimbRows climbs={climbs} names={names} manage={manage} />;
     }
   } catch (err) {
     error = err instanceof Error ? err.message : 'This list did not load.';
@@ -103,7 +94,7 @@ export default async function ProfileSectionPage({
             <Link href={`/user/${handle}`} className="underline">{name}</Link>
           </p>
           {error ? <p className="text-sm font-bold">{error}</p> : body}
-          {error ? null : <Pager page={current} pages={pages} path={path} />}
+          {error || section !== 'photos' ? null : <Pager page={current} pages={pages} path={path} />}
         </Window>
       </div>
     </PageWrapper>
