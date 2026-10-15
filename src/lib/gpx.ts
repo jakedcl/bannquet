@@ -85,15 +85,98 @@ export function simplifyTrack<T>(points: T[], maxPoints: number): T[] {
   return kept;
 }
 
-export function lineWkt(points: TrackPoint[], maxPoints = 800): string | null {
-  const simplified = simplifyTrack(points, maxPoints);
+/**
+ * Most points a saved route may carry. At about 40 bytes each this is near 160 KB,
+ * well under the 1 MB server-action cap.
+ */
+export const TRACK_POINT_BUDGET = 4000;
+
+function metersFrom(origin: TrackPoint, point: TrackPoint): { x: number; y: number } {
+  return {
+    x: (point.lng - origin.lng) * 111320 * Math.cos((origin.lat * Math.PI) / 180),
+    y: (point.lat - origin.lat) * 111320,
+  };
+}
+
+function douglasPeucker(points: TrackPoint[], epsilon: number): TrackPoint[] {
+  if (points.length < 3) return points;
+  const origin = points[0];
+  const xy = points.map((point) => metersFrom(origin, point));
+  const keep = new Uint8Array(points.length);
+  keep[0] = 1;
+  keep[points.length - 1] = 1;
+  const stack: Array<[number, number]> = [[0, points.length - 1]];
+  while (stack.length > 0) {
+    const next = stack.pop();
+    if (!next) break;
+    const [start, end] = next;
+    const ax = xy[start]?.x ?? 0;
+    const ay = xy[start]?.y ?? 0;
+    const bx = xy[end]?.x ?? 0;
+    const by = xy[end]?.y ?? 0;
+    const dx = bx - ax;
+    const dy = by - ay;
+    const length2 = dx * dx + dy * dy;
+    let farthest = -1;
+    let far = 0;
+    for (let index = start + 1; index < end; index += 1) {
+      const point = xy[index];
+      if (!point) continue;
+      let distance: number;
+      if (length2 === 0) {
+        distance = Math.hypot(point.x - ax, point.y - ay);
+      } else {
+        const t = Math.max(0, Math.min(1, ((point.x - ax) * dx + (point.y - ay) * dy) / length2));
+        distance = Math.hypot(point.x - (ax + t * dx), point.y - (ay + t * dy));
+      }
+      if (distance > far) {
+        far = distance;
+        farthest = index;
+      }
+    }
+    if (farthest >= 0 && far > epsilon) {
+      keep[farthest] = 1;
+      stack.push([start, farthest], [farthest, end]);
+    }
+  }
+  const kept: TrackPoint[] = [];
+  for (let index = 0; index < points.length; index += 1) {
+    if (keep[index]) {
+      const point = points[index];
+      if (point) kept.push(point);
+    }
+  }
+  return kept;
+}
+
+/** Keep bends. Even spacing at a fixed 800 points cuts switchbacks on a long hike. */
+export function simplifyForStorage(points: TrackPoint[], maxPoints = TRACK_POINT_BUDGET): TrackPoint[] {
+  if (maxPoints < 2 || points.length <= maxPoints) return points;
+  let low = 0.5;
+  let high = 80;
+  let best = simplifyTrack(points, maxPoints);
+  for (let attempt = 0; attempt < 14; attempt += 1) {
+    const epsilon = (low + high) / 2;
+    const trial = douglasPeucker(points, epsilon);
+    if (trial.length > maxPoints) {
+      low = epsilon;
+    } else {
+      best = trial;
+      high = epsilon;
+    }
+  }
+  return best.length > maxPoints ? simplifyTrack(points, maxPoints) : best;
+}
+
+export function lineWkt(points: TrackPoint[], maxPoints = TRACK_POINT_BUDGET): string | null {
+  const simplified = simplifyForStorage(points, maxPoints);
   if (simplified.length < 2) return null;
   const body = simplified.map((point) => `${point.lng} ${point.lat}`).join(',');
   return `SRID=4326;LINESTRING(${body})`;
 }
 
 /** Points kept for the map line. The full file is only used to measure distance and climb. */
-export const PACKED_TRACK_POINTS = 800;
+export const PACKED_TRACK_POINTS = TRACK_POINT_BUDGET;
 
 export type PackedTrack = {
   name: string | null;
@@ -113,7 +196,7 @@ export function packTrack(xml: string): PackedTrack | null {
   const name = parsed.name?.slice(0, 160) || null;
   return {
     name,
-    points: simplifyTrack(parsed.points, PACKED_TRACK_POINTS),
+    points: simplifyForStorage(parsed.points),
     distanceM: stats.distanceM,
     elevGainM: stats.elevGainM,
   };
