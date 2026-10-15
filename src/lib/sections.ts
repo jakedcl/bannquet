@@ -71,6 +71,7 @@ export function pathOn(pathname: string, href: string): boolean {
 export function linkOn(pathname: string, search: string, href: string): boolean {
   const [path, query] = href.split('?');
   if (path.startsWith('/user/')) return pathname === path;
+  if (path === '/members' && pathname.startsWith('/user/')) return true;
   if (!query) return pathOn(pathname, path);
   if (pathname !== path) return false;
   const want = new URLSearchParams(query);
@@ -81,8 +82,16 @@ export function linkOn(pathname: string, search: string, href: string): boolean 
   return true;
 }
 
-export function communitySection(pathname: string): boolean {
-  return COMMUNITY_ROOTS.some((href) => pathOn(pathname, href));
+export function ownProfile(pathname: string, account: NavAccount): boolean {
+  if (!account?.handle) return false;
+  const base = `/user/${account.handle}`;
+  return pathname === base || pathname.startsWith(`${base}/`);
+}
+
+export function communitySection(pathname: string, account: NavAccount = null): boolean {
+  if (COMMUNITY_ROOTS.some((href) => pathOn(pathname, href))) return true;
+  if (!pathname.startsWith('/user/')) return false;
+  return !ownProfile(pathname, account);
 }
 
 export function settingsLinks(account: NavAccount): NavLink[] {
@@ -262,14 +271,13 @@ export function matchSection(pathname: string, search: string, account: NavAccou
     };
   }
 
-  if (pathOn(pathname, '/mountain-weather')) {
-    const current = WEATHER_LINKS.find((link) => linkOn(pathname, search, link.href))?.label ?? null;
+  if (pathOn(pathname, '/mountain-weather') || pathname === '/conditions' || pathOn(pathname, '/weather')) {
     return {
       id: 'weather',
       href: '/mountain-weather',
       label: 'Mountain Weather',
       links: WEATHER_LINKS,
-      landing: !current,
+      landing: false,
     };
   }
 
