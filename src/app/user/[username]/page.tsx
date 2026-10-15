@@ -65,6 +65,11 @@ export default async function UserPage({ params }: { params: Promise<{ username:
     ownerId: member.id,
   }));
   const peakNames = new Map(allPeaks().map((peak) => [peak.slug, peak.name]));
+  const startedChallenges = challenges.flatMap((challenge) => {
+    const climbed = summitCounts.find((row) => row.userId === member.id && row.listId === challenge.id)?.count ?? 0;
+    if (climbed < 1) return [];
+    return [{ challenge, progress: challengeProgress(challenge.peaks.length, climbed) }];
+  });
   const ownClimbs = climbs.filter((climb) => climb.userId === member.id);
   const profilePath = `/user/${member.handle ?? username}`;
 
@@ -111,26 +116,19 @@ export default async function UserPage({ params }: { params: Promise<{ username:
             <p className="text-sm font-bold">{error}</p>
           </Window>
         ) : null}
-        <Window title="Challenges">
-          <div className="flex flex-wrap gap-4">
-            {challenges.map((challenge) => {
-              const climbed = summitCounts.find((row) => row.userId === member.id && row.listId === challenge.id)?.count ?? 0;
-              const progress = challengeProgress(challenge.peaks.length, climbed);
-              return (
+        {startedChallenges.length > 0 ? (
+          <Window title="Challenges">
+            <div className="flex flex-wrap gap-4">
+              {startedChallenges.map(({ challenge, progress }) => (
                 <div key={challenge.id} className="space-y-1">
                   <p className="text-sm font-bold">{challenge.short}</p>
                   <p className="text-sm">{progress.climbed} / {progress.total}</p>
                   {progress.complete ? <ChallengeBadge short={challenge.short} /> : null}
                 </div>
-              );
-            })}
-          </div>
-          <p className="mt-3 text-sm">
-            <Link href="/peaks" className="underline">Peaks</Link>
-            {' · '}
-            <Link href="/stats" className="underline">Stats</Link>
-          </p>
-        </Window>
+              ))}
+            </div>
+          </Window>
+        ) : null}
         <Window title="Posts">
           {library.posts.length === 0 ? (
             <p className="text-sm text-gray-700">
@@ -278,7 +276,7 @@ export default async function UserPage({ params }: { params: Promise<{ username:
                 const when = formatOptionalDate(climb.climbedOn);
                 return (
                   <li key={climb.id} className="flex flex-wrap items-center gap-2 text-sm">
-                    <Link href={`/peaks#${climb.peakSlug.split('_')[0]}`} className="font-bold underline">
+                    <Link href={`/peaks/${climb.peakSlug}`} className="font-bold underline">
                       {peakNames.get(climb.peakSlug) ?? 'Peak'}
                     </Link>
                     {when ? <span className="text-xs text-gray-500">{when}</span> : null}
@@ -287,7 +285,7 @@ export default async function UserPage({ params }: { params: Promise<{ username:
                         action={deleteClimbAction}
                         label="Delete"
                         confirm="Delete this climb?"
-                        fields={{ id: climb.id }}
+                        fields={{ id: climb.id, peakSlug: climb.peakSlug }}
                       />
                     ) : null}
                   </li>

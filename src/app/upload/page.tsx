@@ -14,7 +14,7 @@ import { APPROVAL_WAIT, canContribute } from '@/lib/membership';
 export const dynamic = 'force-dynamic';
 
 const KINDS = [
-  { id: 'post', label: 'Post' },
+  { id: 'post', label: 'Trip report' },
   { id: 'route', label: 'Route (GPX)' },
   { id: 'pin', label: 'Pin' },
   { id: 'photo', label: 'Photo' },
@@ -63,7 +63,7 @@ export default async function UploadPage({
       <div className="mx-auto max-w-2xl space-y-4 px-4 py-10">
         <Window title="Upload">
           <p className="mb-4 text-sm text-gray-700">
-            Add a post, a route, a pin, or a photo. They show on the map and on your page.
+            Add a trip report, a route, a pin, or a photo. They show on the map and on your page. Chat is text only.
           </p>
           <div className="flex flex-wrap gap-2">
             {KINDS.map((item) => (
@@ -76,8 +76,7 @@ export default async function UploadPage({
         {kind === 'post' ? (
           <Window title="Post">
             <p className="mb-4 text-sm text-gray-700">
-              Pick Trip report or General. A trip report can include the day, photos, and a route.
-              A general post is a note and an optional photo.
+              A trip report can include the day, photos, and a route.
               You can attach a route, pin, or photo you already saved, or add a new one here.
             </p>
             <PostForm friends={friends} routes={saved.routes} pins={saved.pins} photos={saved.photos} />

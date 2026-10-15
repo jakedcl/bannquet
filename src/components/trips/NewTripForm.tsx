@@ -5,9 +5,6 @@ import { TrailheadPicker } from '@/components/trips/TrailheadPicker';
 import { Button } from '@/components/retro/Button';
 import { createTripAction } from '@/app/trips/actions';
 import { ACTIVITIES, ACTIVITY_META } from '@/lib/activities';
-import { loadPackingTemplates } from '@/lib/packing';
-
-const TEMPLATES = loadPackingTemplates();
 
 export function NewTripForm() {
   const [state, action, pending] = useActionState(createTripAction, null);
@@ -15,7 +12,7 @@ export function NewTripForm() {
   return (
     <form action={action} className="space-y-4">
       <p className="text-sm text-gray-700">
-        Name the day, drop a pin where you will start, and pick a packing list. Friends can say they are in.
+        Name the day and drop a pin where you will start. Friends can say they are in. Shared gear lives on the gear list.
       </p>
       <label className="block space-y-1">
         <span className="text-sm font-bold">Title</span>
@@ -38,14 +35,6 @@ export function NewTripForm() {
         <input name="trailheadName" maxLength={80} className="w-full retro-box-inset bg-white px-3 py-2" placeholder="The Garden" />
       </label>
       <TrailheadPicker />
-      <label className="block space-y-1">
-        <span className="text-sm font-bold">Packing list</span>
-        <select name="template" defaultValue="day-hike" className="w-full retro-box-inset bg-white px-3 py-2">
-          {TEMPLATES.map((template) => (
-            <option key={template.id} value={template.id}>{template.name}</option>
-          ))}
-        </select>
-      </label>
       {state?.error ? <p className="text-sm font-bold text-red-700">{state.error}</p> : null}
       <Button type="submit" tone="yellow" disabled={pending}>{pending ? 'Saving…' : 'Save trip'}</Button>
     </form>

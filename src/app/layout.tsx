@@ -1,4 +1,5 @@
 import Header from '@/components/ui/Header';
+import { HomeScreenTip } from '@/components/ui/HomeScreenTip';
 import { getViewer } from '@/app/sign-in/actions';
 import { countPendingMembers } from '@/lib/auth/members';
 import { APPROVAL_WAIT } from '@/lib/membership';
@@ -14,6 +15,9 @@ export const metadata = {
     capable: true,
     title: 'BANNQUET',
     statusBarStyle: 'black',
+  },
+  icons: {
+    apple: [{ url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' }],
   },
 };
 
@@ -45,6 +49,7 @@ export default async function RootLayout({
         <Providers>
           <div className="min-h-screen flex flex-col">
             <Header account={account} />
+            <HomeScreenTip show={Boolean(viewer && !viewer.homeScreenTipSeenAt)} />
             {pending ? (
               <p className="pending-banner retro-box bg-beige px-4 py-2 text-center text-sm font-bold text-gray-900">
                 {APPROVAL_WAIT}

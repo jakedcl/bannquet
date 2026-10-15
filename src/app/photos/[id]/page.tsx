@@ -4,13 +4,14 @@ import { notFound } from 'next/navigation';
 import PageWrapper from '@/components/ui/PageWrapper';
 import { MapCanvas } from '@/components/map/MapCanvas';
 import { ConfirmDelete } from '@/components/delete/ConfirmDelete';
-import { AttachReport, SeeMore } from '@/components/library/AttachReport';
+import { SeeMore } from '@/components/library/AttachReport';
+import { AddToTrip } from '@/components/library/AddToTrip';
 import { Window } from '@/components/retro/Window';
 import { deletePhotoAction } from '@/app/library/actions';
 import { getViewer } from '@/app/sign-in/actions';
 import { isDatabaseConfigured } from '@/db';
 import { loadPhoto } from '@/lib/library';
-import { canDeleteOwned } from '@/lib/membership';
+import { canContribute, canDeleteOwned } from '@/lib/membership';
 import { loadMapData } from '@/lib/posts';
 import { listAuthorPosts } from '@/lib/trips';
 
@@ -92,14 +93,7 @@ export default async function PhotoPage({ params }: { params: Promise<{ id: stri
         ) : null}
         {manage && viewer ? (
           <Window title="This photo">
-            <AttachReport
-              kind="photo"
-              entityId={photo.id}
-              reports={reports.map((item) => ({ id: item.id, title: item.title }))}
-              attached={Boolean(photo.post)}
-              returnTo={`/photos/${photo.id}`}
-            />
-            <div className="mt-4">
+            <div>
               <ConfirmDelete
                 action={deletePhotoAction}
                 label="Delete"
@@ -108,6 +102,14 @@ export default async function PhotoPage({ params }: { params: Promise<{ id: stri
               />
             </div>
           </Window>
+        ) : null}
+        {viewer && canContribute(viewer.role) && viewer.id === photo.userId ? (
+          <AddToTrip
+            kind="photo"
+            entityId={photo.id}
+            reports={reports.map((item) => ({ id: item.id, title: item.title }))}
+            attached={photo.post}
+          />
         ) : null}
       </div>
     </PageWrapper>

@@ -21,7 +21,8 @@ export default async function TripsPage() {
       <div className="mx-auto max-w-3xl space-y-4 px-4 py-10">
         <Window title="Trips">
           <p className="mb-4 text-sm text-gray-700">
-            A date, a trailhead, who is in, and a packing list. The forecast is the same mountain weather as the rest of the site.
+            A date, a trailhead, and who is in. The forecast is the same mountain weather as the rest of the site.
+            Shared stuff is on the <Link href="/gear" className="underline">gear list</Link>.
           </p>
           {canPlan ? <Button href="/trips/new" tone="yellow">Plan a trip</Button> : null}
           {trips.length === 0 ? (

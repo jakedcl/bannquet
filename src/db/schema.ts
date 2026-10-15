@@ -72,6 +72,7 @@ export const users = pgTable('users', {
   bio: text('bio'),
   favoriteActivities: text('favorite_activities').array().notNull().default(sql`ARRAY[]::text[]`),
   role: userRoleEnum('role').notNull().default('member'),
+  homeScreenTipSeenAt: timestamp('home_screen_tip_seen_at', { withTimezone: true }),
   createdAt,
 });
 
@@ -321,6 +322,43 @@ export const conditionReports = pgTable(
     index('condition_reports_point_idx').using('gist', table.point),
     index('condition_reports_expires_idx').on(table.expiresAt),
   ],
+);
+
+export const chatMessages = pgTable(
+  'chat_messages',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    userId: text('user_id').references(() => users.id, { onDelete: 'set null' }),
+    body: text('body').notNull().default(''),
+    refKind: text('ref_kind'),
+    refId: uuid('ref_id'),
+    createdAt,
+  },
+  (table) => [index('chat_messages_created_idx').on(table.createdAt, table.id)],
+);
+
+export const communityGear = pgTable(
+  'community_gear',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    name: text('name').notNull(),
+    addedBy: text('added_by').references(() => users.id, { onDelete: 'set null' }),
+    createdAt,
+  },
+);
+
+export const communityGearHolds = pgTable(
+  'community_gear_holds',
+  {
+    gearId: uuid('gear_id')
+      .notNull()
+      .references(() => communityGear.id, { onDelete: 'cascade' }),
+    userId: text('user_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+    qty: integer('qty').notNull(),
+  },
+  (table) => [primaryKey({ columns: [table.gearId, table.userId] })],
 );
 
 export const gearItems = pgTable('gear_items', {

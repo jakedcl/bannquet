@@ -2,21 +2,23 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { navButtonClass } from '@/components/ui/NavButton';
 
 const SECTIONS = [
-  { href: '/posts', label: 'Posts' },
+  { href: '/chat', label: 'Chat' },
   { href: '/peaks', label: 'Peaks' },
-  { href: '/stats', label: 'Stats' },
   { href: '/trips', label: 'Trips' },
 ] as const;
 
 export function CommunitySubnav() {
   const pathname = usePathname();
-  const here = SECTIONS.some((item) => pathname === item.href || pathname.startsWith(`${item.href}/`));
+  const here = ['/chat', '/peaks', '/trips', '/community', '/gear'].some(
+    (href) => pathname === href || pathname.startsWith(`${href}/`),
+  );
   if (!here) return null;
 
   return (
-    <nav aria-label="Community sections" className="border-b-2 border-brand-green-dark bg-beige">
+    <nav aria-label="Community sections" className="border-b-2 border-[#3d2412] bg-[#5c3a1e]">
       <div className="mx-auto flex max-w-3xl flex-wrap gap-2 px-4 py-2">
         {SECTIONS.map((item) => {
           const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
@@ -25,7 +27,7 @@ export function CommunitySubnav() {
               key={item.href}
               href={item.href}
               aria-current={active ? 'page' : undefined}
-              className={`rounded-none px-3 py-1 text-xs font-bold uppercase ${active ? 'retro-button-yellow' : 'retro-button'}`}
+              className={navButtonClass(active, 'h-8 px-3 text-xs')}
             >
               {item.label}
             </Link>

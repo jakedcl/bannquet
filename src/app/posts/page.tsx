@@ -3,30 +3,17 @@ import PageWrapper from '@/components/ui/PageWrapper';
 import TripCard from '@/components/trip-reports/TripCard';
 import { Button, StatusBar, Window } from '@/components/retro';
 import { isDatabaseConfigured } from '@/db';
-import { isPostKind, type PostKind } from '@/lib/post-kinds';
 import { listTripReports } from '@/lib/trip-reports';
 
 export const dynamic = 'force-dynamic';
 
-const FILTERS: Array<{ href: string; id: 'all' | PostKind; label: string }> = [
-  { href: '/posts', id: 'all', label: 'All' },
-  { href: '/posts?type=trip_report', id: 'trip_report', label: 'Trip reports' },
-  { href: '/posts?type=general', id: 'general', label: 'General' },
-];
-
-type PageProps = {
-  searchParams: Promise<{ type?: string }>;
-};
-
-export default async function PostsPage({ searchParams }: PageProps) {
-  const params = await searchParams;
-  const postKind = params.type && isPostKind(params.type) ? params.type : null;
+export default async function PostsPage() {
   if (!isDatabaseConfigured()) {
     return (
-      <PageWrapper className="bg-gray-50">
+      <PageWrapper>
         <FeedShell>
-          <Window title="Posts">
-            <p className="text-gray-700">Posts show up here after the database is connected. Weather still works without it.</p>
+          <Window title="Trip reports">
+            <p className="text-sm text-gray-700">Trip reports show up here after the database is connected. Weather still works without it.</p>
           </Window>
         </FeedShell>
       </PageWrapper>
@@ -36,17 +23,17 @@ export default async function PostsPage({ searchParams }: PageProps) {
   let posts: Awaited<ReturnType<typeof listTripReports>> | null = null;
   let failed = false;
   try {
-    posts = await listTripReports({ postKind });
+    posts = await listTripReports({ postKind: 'trip_report' });
   } catch {
     failed = true;
   }
 
   if (failed || !posts) {
     return (
-      <PageWrapper className="bg-gray-50">
+      <PageWrapper>
         <FeedShell>
-          <Window title="Error">
-            <p className="mb-4 text-red-800">Posts did not load.</p>
+          <Window title="Trip reports">
+            <p className="mb-4 text-sm font-bold">Trip reports did not load.</p>
             <Button tone="orange" href="/posts">Try again</Button>
           </Window>
         </FeedShell>
@@ -55,17 +42,11 @@ export default async function PostsPage({ searchParams }: PageProps) {
   }
 
   return (
-    <PageWrapper className="bg-gray-50">
-      <FeedShell count={posts.length} active={postKind ?? 'all'}>
+    <PageWrapper>
+      <FeedShell count={posts.length}>
         {posts.length === 0 ? (
           <Window title="Empty">
-            <p className="text-gray-700">
-              {postKind === 'trip_report'
-                ? 'No trip reports yet.'
-                : postKind === 'general'
-                  ? 'No general posts yet.'
-                  : 'No posts yet. When someone writes one, it lands here and on the map.'}
-            </p>
+            <p className="text-sm text-gray-700">No trip reports yet. Chat is the place for a quick note.</p>
           </Window>
         ) : (
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -79,41 +60,22 @@ export default async function PostsPage({ searchParams }: PageProps) {
   );
 }
 
-function FeedShell({
-  children,
-  count,
-  active = 'all',
-}: {
-  children: ReactNode;
-  count?: number;
-  active?: 'all' | PostKind;
-}) {
+function FeedShell({ children, count }: { children: ReactNode; count?: number }) {
   return (
     <div className="mx-auto max-w-7xl px-4 py-12">
       <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
         <div className="space-y-3">
-          <p className="text-sm uppercase tracking-[0.3em] text-brand-green/70">posts</p>
-          <h1 className="text-4xl font-bold text-gray-900 md:text-5xl">Posts</h1>
+          <h1 className="text-4xl font-bold text-gray-900 md:text-5xl">Trip reports</h1>
           <p className="max-w-2xl text-gray-600">
-            Stories, photos, and routes from the group. Trip reports also show on the map.
+            Stories, photos, and routes from a day out. Quick notes go in chat.
           </p>
         </div>
-        <div className="flex gap-3">
-          <Button tone="green" href="/upload?kind=post">Write a post</Button>
-          <Button tone="blue" href="/map">Map</Button>
-        </div>
-      </div>
-      <div className="mb-6 flex flex-wrap gap-2">
-        {FILTERS.map((filter) => (
-          <Button key={filter.id} href={filter.href} tone={active === filter.id ? 'yellow' : 'default'}>
-            {filter.label}
-          </Button>
-        ))}
+        <Button tone="green" href="/upload?kind=post">Write a trip report</Button>
       </div>
       {children}
       {typeof count === 'number' ? (
         <div className="mt-8">
-          <StatusBar>{count} {count === 1 ? 'post' : 'posts'}</StatusBar>
+          <StatusBar>{count} {count === 1 ? 'trip report' : 'trip reports'}</StatusBar>
         </div>
       ) : null}
     </div>
