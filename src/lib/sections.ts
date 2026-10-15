@@ -13,6 +13,7 @@ export const COMMUNITY_LINKS: NavLink[] = [
   { href: '/peaks', label: 'Peaks' },
   { href: '/trips', label: 'Trips' },
   { href: '/gear', label: 'Gear' },
+  { href: '/members', label: 'Members' },
 ];
 
 export const UPLOAD_LINKS: NavLink[] = [
@@ -21,7 +22,7 @@ export const UPLOAD_LINKS: NavLink[] = [
   { href: '/upload?kind=photo', label: 'Photo' },
 ];
 
-const COMMUNITY_ROOTS = ['/community', '/chat', '/peaks', '/trips', '/gear'];
+const COMMUNITY_ROOTS = ['/community', '/chat', '/peaks', '/trips', '/gear', '/members'];
 
 const PROFILE_LISTS: Record<string, string> = {
   trips: 'Trips',
