@@ -27,8 +27,18 @@ export function normalizeWaterDataKey(value: string | undefined): string | null 
   return key.length > 0 ? key : null
 }
 
+let warnedKeyShape = false
+
 export function waterDataKey(): string | null {
-  return normalizeWaterDataKey(process.env.USGS_WATER_DATA_API_KEY) ?? normalizeWaterDataKey(process.env.WATER_DATA_API_KEY)
+  const key = normalizeWaterDataKey(process.env.USGS_WATER_DATA_API_KEY) ?? normalizeWaterDataKey(process.env.WATER_DATA_API_KEY)
+  if (!key) return null
+  // api.data.gov keys are 40 alphanumeric characters. Anything else is rejected with API_KEY_INVALID.
+  if (/^[A-Za-z0-9]{40}$/.test(key)) return key
+  if (!warnedKeyShape) {
+    warnedKeyShape = true
+    console.error('USGS key ignored because it is not a 40-character api.data.gov key', { length: key.length })
+  }
+  return null
 }
 
 // A rejected key is remembered for this server process so later requests do not repeat it.
