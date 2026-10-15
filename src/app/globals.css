@@ -237,6 +237,16 @@ button, .retro-button {
   background: linear-gradient(to bottom, #8a2be2 0%, #6a1bb2 100%);
 }
 
+.region-pick {
+  cursor: pointer;
+  transition: transform 140ms ease-out;
+  transition-delay: 0s;
+}
+
+.region-pick:hover {
+  transform: scale(1.05);
+}
+
 .weather-ticker-scroll {
   animation: scroll-ticker linear infinite;
 }

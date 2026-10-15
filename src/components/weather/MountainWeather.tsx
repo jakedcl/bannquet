@@ -23,7 +23,7 @@ export function MountainWeather({ children }: { children: React.ReactNode }) {
                 type="button"
                 aria-pressed={selected}
                 onClick={() => setRegion(option.code)}
-                className={`rounded-none px-4 py-2 text-sm font-bold uppercase tracking-wide ${selected ? 'retro-button-yellow' : tone}`}
+                className={`region-pick rounded-none px-4 py-2 text-sm font-bold uppercase tracking-wide ${selected ? 'retro-button-yellow' : tone}`}
               >
                 {option.label}
               </button>
