@@ -66,7 +66,7 @@ export default function WeatherTicker({ placement = 'header' }: { placement?: 'h
     const measure = () => {
       const width = node.scrollWidth;
       const viewport = node.parentElement?.clientWidth ?? width;
-      const pxPerSec = viewport < 768 ? 180 : 100;
+      const pxPerSec = viewport < 768 ? 110 : 100;
       setDuration(Math.max(8, (width / 2) / pxPerSec));
     };
     measure();
