@@ -99,6 +99,13 @@
       "when": 1792052000000,
       "tag": "0013_drop_trip_reports",
       "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "7",
+      "when": 1792056000000,
+      "tag": "0014_drop_unused_tables",
+      "breakpoints": true
     }
   ]
 }

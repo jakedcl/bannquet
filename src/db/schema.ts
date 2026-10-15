@@ -51,15 +51,6 @@ export const pinKindEnum = pgEnum('pin_kind', [
 ]);
 export const trackSourceEnum = pgEnum('track_source', ['strava', 'gpx']);
 export const pointSourceEnum = pgEnum('point_source', ['exif', 'manual']);
-export const conditionCategoryEnum = pgEnum('condition_category', [
-  'ice',
-  'mud',
-  'snow',
-  'blowdown',
-  'water',
-  'closure',
-  'other',
-]);
 
 export const users = pgTable('users', {
   id: text('id').primaryKey(),
@@ -150,38 +141,6 @@ export const tripMembers = pgTable(
   ],
 );
 
-export const carpools = pgTable(
-  'carpools',
-  {
-    id: uuid('id').primaryKey().defaultRandom(),
-    tripId: uuid('trip_id')
-      .notNull()
-      .references(() => trips.id, { onDelete: 'cascade' }),
-    driverId: text('driver_id').references(() => users.id, { onDelete: 'set null' }),
-    seats: integer('seats').notNull().default(3),
-    departFrom: text('depart_from'),
-    departAt: timestamp('depart_at', { withTimezone: true }),
-    notes: text('notes'),
-  },
-  (table) => [index('carpools_trip_idx').on(table.tripId)],
-);
-
-export const carpoolRiders = pgTable(
-  'carpool_riders',
-  {
-    carpoolId: uuid('carpool_id')
-      .notNull()
-      .references(() => carpools.id, { onDelete: 'cascade' }),
-    userId: text('user_id')
-      .notNull()
-      .references(() => users.id, { onDelete: 'cascade' }),
-  },
-  (table) => [
-    primaryKey({ columns: [table.carpoolId, table.userId] }),
-    index('carpool_riders_carpool_idx').on(table.carpoolId),
-  ],
-);
-
 export const pins = pgTable(
   'pins',
   {
@@ -224,23 +183,10 @@ export const tracks = pgTable(
   ],
 );
 
-export const albums = pgTable(
-  'albums',
-  {
-    id: uuid('id').primaryKey().defaultRandom(),
-    tripId: uuid('trip_id').references(() => trips.id, { onDelete: 'set null' }),
-    title: text('title').notNull(),
-    createdBy: text('created_by').references(() => users.id, { onDelete: 'set null' }),
-    createdAt,
-  },
-  (table) => [index('albums_trip_idx').on(table.tripId)],
-);
-
 export const photos = pgTable(
   'photos',
   {
     id: uuid('id').primaryKey().defaultRandom(),
-    albumId: uuid('album_id').references(() => albums.id, { onDelete: 'set null' }),
     userId: text('user_id').references(() => users.id, { onDelete: 'set null' }),
     blobUrl: text('blob_url').notNull(),
     width: integer('width'),
@@ -257,7 +203,6 @@ export const photos = pgTable(
   },
   (table) => [
     index('photos_point_idx').using('gist', table.point),
-    index('photos_album_idx').on(table.albumId),
   ],
 );
 
@@ -300,26 +245,6 @@ export const tripPhotos = pgTable(
   (table) => [primaryKey({ columns: [table.tripId, table.photoId] })],
 );
 
-export const conditionReports = pgTable(
-  'condition_reports',
-  {
-    id: uuid('id').primaryKey().defaultRandom(),
-    userId: text('user_id').references(() => users.id, { onDelete: 'set null' }),
-    point: geographyPoint('point').notNull(),
-    peakSlug: text('peak_slug'),
-    category: conditionCategoryEnum('category').notNull(),
-    body: text('body').notNull(),
-    observedAt: timestamp('observed_at', { withTimezone: true }).notNull(),
-    expiresAt: timestamp('expires_at', { withTimezone: true }).notNull(),
-    photoId: uuid('photo_id').references(() => photos.id, { onDelete: 'set null' }),
-    createdAt,
-  },
-  (table) => [
-    index('condition_reports_point_idx').using('gist', table.point),
-    index('condition_reports_expires_idx').on(table.expiresAt),
-  ],
-);
-
 export const chatMessages = pgTable(
   'chat_messages',
   {
@@ -358,73 +283,6 @@ export const communityGearHolds = pgTable(
   (table) => [primaryKey({ columns: [table.gearId, table.userId] })],
 );
 
-export const gearItems = pgTable('gear_items', {
-  id: uuid('id').primaryKey().defaultRandom(),
-  userId: text('user_id').references(() => users.id, { onDelete: 'cascade' }),
-  name: text('name').notNull(),
-  category: text('category'),
-  weightG: integer('weight_g'),
-  isConsumable: boolean('is_consumable').notNull().default(false),
-  isWorn: boolean('is_worn').notNull().default(false),
-  createdAt,
-});
-
-export const packingTemplates = pgTable('packing_templates', {
-  id: uuid('id').primaryKey().defaultRandom(),
-  ownerId: text('owner_id').references(() => users.id, { onDelete: 'cascade' }),
-  name: text('name').notNull(),
-  activity: activityEnum('activity'),
-  season: text('season'),
-  createdAt,
-});
-
-export const packingTemplateItems = pgTable(
-  'packing_template_items',
-  {
-    id: uuid('id').primaryKey().defaultRandom(),
-    templateId: uuid('template_id')
-      .notNull()
-      .references(() => packingTemplates.id, { onDelete: 'cascade' }),
-    gearItemId: uuid('gear_item_id').references(() => gearItems.id, { onDelete: 'set null' }),
-    label: text('label').notNull(),
-    qty: integer('qty').notNull().default(1),
-    sortOrder: integer('sort_order').notNull().default(0),
-  },
-  (table) => [index('packing_template_items_template_idx').on(table.templateId)],
-);
-
-export const packingLists = pgTable(
-  'packing_lists',
-  {
-    id: uuid('id').primaryKey().defaultRandom(),
-    tripId: uuid('trip_id')
-      .notNull()
-      .references(() => trips.id, { onDelete: 'cascade' }),
-    name: text('name').notNull(),
-    createdAt,
-  },
-  (table) => [index('packing_lists_trip_idx').on(table.tripId)],
-);
-
-export const packingListItems = pgTable(
-  'packing_list_items',
-  {
-    id: uuid('id').primaryKey().defaultRandom(),
-    listId: uuid('list_id')
-      .notNull()
-      .references(() => packingLists.id, { onDelete: 'cascade' }),
-    gearItemId: uuid('gear_item_id').references(() => gearItems.id, { onDelete: 'set null' }),
-    label: text('label').notNull(),
-    qty: integer('qty').notNull().default(1),
-    weightG: integer('weight_g'),
-    assignedTo: text('assigned_to').references(() => users.id, { onDelete: 'set null' }),
-    addedBy: text('added_by').references(() => users.id, { onDelete: 'set null' }),
-    packed: boolean('packed').notNull().default(false),
-    shared: boolean('shared').notNull().default(false),
-  },
-  (table) => [index('packing_list_items_list_idx').on(table.listId)],
-);
-
 export const peaks = pgTable(
   'peaks',
   {
@@ -437,14 +295,6 @@ export const peaks = pgTable(
   },
   (table) => [index('peaks_point_idx').using('gist', table.point)],
 );
-
-export const guides = pgTable('guides', {
-  slug: text('slug').primaryKey(),
-  title: text('title').notNull(),
-  body: text('body').notNull().default(''),
-  updatedBy: text('updated_by').references(() => users.id, { onDelete: 'set null' }),
-  updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),
-});
 
 export const summits = pgTable(
   'summits',
@@ -467,38 +317,3 @@ export const summits = pgTable(
   ],
 );
 
-export const badges = pgTable('badges', {
-  id: uuid('id').primaryKey().defaultRandom(),
-  slug: text('slug').notNull().unique(),
-  name: text('name').notNull(),
-  description: text('description'),
-  activity: activityEnum('activity'),
-});
-
-export const userBadges = pgTable(
-  'user_badges',
-  {
-    userId: text('user_id')
-      .notNull()
-      .references(() => users.id, { onDelete: 'cascade' }),
-    badgeId: uuid('badge_id')
-      .notNull()
-      .references(() => badges.id, { onDelete: 'cascade' }),
-    earnedAt: timestamp('earned_at', { withTimezone: true }).defaultNow().notNull(),
-  },
-  (table) => [primaryKey({ columns: [table.userId, table.badgeId] })],
-);
-
-/**
- * Tokens are plain text in this scaffold. Encrypt them before anyone connects Strava.
- */
-export const stravaAccounts = pgTable('strava_accounts', {
-  userId: text('user_id')
-    .primaryKey()
-    .references(() => users.id, { onDelete: 'cascade' }),
-  athleteId: text('athlete_id').notNull(),
-  accessToken: text('access_token').notNull(),
-  refreshToken: text('refresh_token').notNull(),
-  expiresAt: timestamp('expires_at', { withTimezone: true }).notNull(),
-  lastSyncedAt: timestamp('last_synced_at', { withTimezone: true }),
-});
