@@ -137,7 +137,6 @@ button, .retro-button {
   font-weight: bold;
   text-transform: uppercase;
   cursor: pointer;
-  transition: all 0.1s;
 }
 
 .retro-button:hover {
@@ -527,4 +526,209 @@ td.cell-primary :is(img, .avatar-frame, svg) {
 .has-pending .map-bleed {
   top: 10rem;
   height: calc(100dvh - 10rem);
+}
+
+/* Shared motion. 160ms, transform and opacity. Retro colors and bevels stay. */
+:root {
+  --motion: 160ms;
+  --motion-ease: cubic-bezier(0.2, 0, 0, 1);
+}
+
+:is(
+  .retro-button,
+  .retro-button-blue,
+  .retro-button-yellow,
+  .retro-button-green,
+  .retro-button-orange,
+  .retro-button-pink,
+  .retro-button-purple,
+  .retro-button-primary,
+  .nav-button,
+  button
+) {
+  transition: transform var(--motion) var(--motion-ease), opacity var(--motion) var(--motion-ease);
+}
+
+:is(
+  .retro-button,
+  .retro-button-blue,
+  .retro-button-yellow,
+  .retro-button-green,
+  .retro-button-orange,
+  .retro-button-pink,
+  .retro-button-purple,
+  .retro-button-primary,
+  .nav-button,
+  button
+):active:not(:disabled) {
+  transform: translate(1px, 1px);
+}
+
+.motion-swap {
+  transition-property: transform, opacity;
+  transition-duration: var(--motion);
+  transition-timing-function: var(--motion-ease);
+}
+
+.page-enter {
+  animation: page-enter var(--motion) var(--motion-ease) both;
+}
+
+.page-frame img {
+  animation: img-in 180ms var(--motion-ease) both;
+}
+
+tbody tr td {
+  transition: background-color var(--motion) var(--motion-ease);
+}
+
+tr.row-in td {
+  animation: row-in var(--motion) var(--motion-ease) both;
+}
+
+dialog {
+  opacity: 0;
+  transform: translateY(6px) scale(0.98);
+  transition:
+    opacity var(--motion) var(--motion-ease),
+    transform var(--motion) var(--motion-ease),
+    overlay var(--motion) var(--motion-ease) allow-discrete,
+    display var(--motion) var(--motion-ease) allow-discrete;
+}
+
+dialog[open] {
+  opacity: 1;
+  transform: none;
+}
+
+@starting-style {
+  dialog[open] {
+    opacity: 0;
+    transform: translateY(6px) scale(0.98);
+  }
+}
+
+dialog::backdrop {
+  opacity: 0;
+  transition:
+    opacity var(--motion) var(--motion-ease),
+    overlay var(--motion) var(--motion-ease) allow-discrete,
+    display var(--motion) var(--motion-ease) allow-discrete;
+}
+
+dialog[open]::backdrop {
+  opacity: 1;
+}
+
+@starting-style {
+  dialog[open]::backdrop {
+    opacity: 0;
+  }
+}
+
+.motion-sheet {
+  animation: img-in var(--motion) var(--motion-ease) both;
+}
+
+.motion-panel {
+  animation: pop-in var(--motion) var(--motion-ease) both;
+}
+
+.maplibregl-popup {
+  animation: img-in var(--motion) var(--motion-ease) both;
+}
+
+.skeleton-bar {
+  position: relative;
+  height: 0.75rem;
+  overflow: hidden;
+  background: #e4dccb;
+}
+
+.skeleton-bar::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.75), transparent);
+  transform: translateX(-100%);
+  animation: shimmer 1.2s ease-in-out infinite;
+}
+
+@keyframes page-enter {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes img-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes row-in {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes pop-in {
+  from { opacity: 0; transform: translateY(6px) scale(0.98); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes shimmer {
+  to { transform: translateX(100%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-enter,
+  .motion-swap,
+  .page-frame img,
+  .motion-sheet,
+  .motion-panel,
+  .maplibregl-popup,
+  tbody tr td,
+  tr.row-in td,
+  dialog,
+  dialog::backdrop,
+  .skeleton-bar::after {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  dialog,
+  dialog[open],
+  dialog::backdrop,
+  dialog[open]::backdrop {
+    opacity: 1;
+    transform: none;
+  }
+
+  :is(
+    .retro-button,
+    .retro-button-blue,
+    .retro-button-yellow,
+    .retro-button-green,
+    .retro-button-orange,
+    .retro-button-pink,
+    .retro-button-purple,
+    .retro-button-primary,
+    .nav-button,
+    button
+  ) {
+    transition: none;
+  }
+
+  :is(
+    .retro-button,
+    .retro-button-blue,
+    .retro-button-yellow,
+    .retro-button-green,
+    .retro-button-orange,
+    .retro-button-pink,
+    .retro-button-purple,
+    .retro-button-primary,
+    .nav-button,
+    button
+  ):active:not(:disabled) {
+    transform: none;
+  }
 }
