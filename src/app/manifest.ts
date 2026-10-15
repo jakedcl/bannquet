@@ -2,8 +2,8 @@ import type { MetadataRoute } from 'next';
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: 'Bannquet',
-    short_name: 'Bannquet',
+    name: 'BANNQUET',
+    short_name: 'BANNQUET',
     start_url: '/',
     display: 'standalone',
     background_color: '#1e4d2b',
