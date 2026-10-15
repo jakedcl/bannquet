@@ -183,24 +183,20 @@ export async function createPin(input: {
   userId: string;
   title: string;
   note: string;
-  activity: Activity;
   kind: PinKind;
-  visitedOn: string;
   lat: number;
   lng: number;
   photos: PreparedPhoto[];
 }): Promise<string> {
   const id = await getDb().transaction(async (tx) => {
     const inserted = await tx.execute(sql`
-      insert into pins (kind, activity, point, title, note, created_by, visited_on)
+      insert into pins (kind, point, title, note, created_by)
       values (
         ${input.kind}::pin_kind,
-        ${input.activity}::activity,
         ST_SetSRID(ST_MakePoint(${input.lng}, ${input.lat}), 4326)::geography,
         ${input.title},
         ${input.note || null},
-        ${input.userId},
-        ${input.visitedOn}::date
+        ${input.userId}
       )
       returning id::text as id
     `);
@@ -217,9 +213,7 @@ export async function updatePin(input: {
   userId: string;
   title: string;
   note: string;
-  activity: Activity;
   kind: PinKind;
-  visitedOn: string;
   lat: number;
   lng: number;
   photos: PreparedPhoto[];
@@ -230,9 +224,7 @@ export async function updatePin(input: {
       update pins
       set title = ${input.title},
           note = ${input.note || null},
-          activity = ${input.activity}::activity,
           kind = ${input.kind}::pin_kind,
-          visited_on = ${input.visitedOn}::date,
           point = ST_SetSRID(ST_MakePoint(${input.lng}, ${input.lat}), 4326)::geography
       where id = ${input.id}::uuid and created_by = ${input.userId}
       returning id::text as id
