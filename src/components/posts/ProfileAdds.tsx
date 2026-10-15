@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { publishProfilePhotos, publishProfileTrack } from '@/app/trip-reports/actions';
 import { PhotoFields } from '@/components/posts/PhotoFields';
 import type { UploadedPhoto } from '@/components/posts/prepare-photo';
+import { FileInput } from '@/components/ui/FileInput';
 import { SubmitButton } from '@/components/ui/SubmitButton';
 import { ACTIVITIES, ACTIVITY_META } from '@/lib/activities';
 import { formatFeetGain, formatMiles, packTrack } from '@/lib/gpx';
@@ -68,12 +69,10 @@ export function RouteUpload({
           ))}
         </select>
       </label>
-      <input
-        type="file"
+      <FileInput
         accept=".gpx,application/gpx+xml,text/xml"
-        className="block w-full text-sm"
-        onChange={async (event) => {
-          const file = event.target.files?.[0];
+        onChange={async (files) => {
+          const file = files[0];
           if (!file) {
             setTrackJson('');
             setNote(null);
