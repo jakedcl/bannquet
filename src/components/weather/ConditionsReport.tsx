@@ -6,9 +6,11 @@ import type { ExtremeReport } from '@/lib/weather-extremes';
 export function ConditionsReport({
   report,
   showForecastLink = true,
+  showSpots = true,
 }: {
   report: ExtremeReport;
   showForecastLink?: boolean;
+  showSpots?: boolean;
 }) {
   const spots = [...report.spots].sort((a, b) => a.mountain.localeCompare(b.mountain));
 
@@ -39,7 +41,7 @@ export function ConditionsReport({
         ) : null}
       </Window>
 
-      <Window title="Spots">
+      {showSpots ? <Window title="Spots">
         {spots.length === 0 ? (
           <p className="text-sm">No spots came back.</p>
         ) : (
@@ -56,7 +58,7 @@ export function ConditionsReport({
             ])}
           />
         )}
-      </Window>
+      </Window> : null}
     </div>
   );
 }

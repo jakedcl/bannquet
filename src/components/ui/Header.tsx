@@ -8,6 +8,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { signOutAction } from '@/app/sign-in/actions';
 import { useRegion } from '@/contexts/RegionContext';
 import { REGION_OPTIONS } from '@/lib/regions';
+import { NavButton } from './NavButton';
 import WeatherTicker from './WeatherTicker';
 
 export type HeaderAccount = {
@@ -42,10 +43,6 @@ function communitySection(pathname: string): boolean {
   return ['/community', '/posts', '/peaks', '/stats', '/trips'].some((href) => pathOn(pathname, href));
 }
 
-function topClass(active: boolean): string {
-  return `rounded-none px-3 py-2 text-sm font-bold uppercase tracking-wide lg:px-4 ${active ? 'retro-button-yellow' : 'retro-button-blue'}`;
-}
-
 function subClass(active: boolean, stacked: boolean): string {
   const tone = active ? 'retro-button-yellow' : 'retro-button';
   return stacked
@@ -59,7 +56,7 @@ export default function Header({ account = null }: { account?: HeaderAccount }) 
   const mobileMenuOpen = openPath === pathname;
   const [scrolled, setScrolled] = useState(false);
   const isHomepage = pathname === '/';
-  const onWeather = pathname === '/weather' || pathname.startsWith('/weather/') || pathname === '/mountain-weather';
+  const onWeather = pathname === '/weather' || pathname.startsWith('/weather/');
 
   useEffect(() => {
     const handleScroll = () => {
@@ -103,7 +100,7 @@ export default function Header({ account = null }: { account?: HeaderAccount }) 
         )}
 
         <nav className={`ml-auto hidden items-center gap-2 md:flex ${isHomepage ? 'pr-3' : ''}`}>
-          <SiteNav account={account} pathname={pathname} />
+          <SiteNav account={account} pathname={pathname} home={isHomepage} />
           {onWeather ? (
             <div className="relative flex items-center gap-2 rounded-full border border-white/30 bg-brand-green-light/40 px-2 py-1">
               <RegionSelector alignment="left" size="desktop" embedded />
@@ -153,7 +150,7 @@ export default function Header({ account = null }: { account?: HeaderAccount }) 
               aria-label="Menu"
               className="fixed bottom-0 right-0 top-0 z-10 flex w-4/5 max-w-xs flex-col gap-4 overflow-y-auto border-l-4 border-brand-green-dark bg-beige p-4 pt-24 text-gray-900 md:hidden"
             >
-              <MobileNav account={account} pathname={pathname} />
+              <MobileNav account={account} pathname={pathname} home={isHomepage} />
             </motion.nav>
           )}
         </AnimatePresence>
@@ -162,7 +159,7 @@ export default function Header({ account = null }: { account?: HeaderAccount }) 
   );
 }
 
-function SiteNav({ account, pathname }: { account: HeaderAccount; pathname: string }) {
+function SiteNav({ account, pathname, home }: { account: HeaderAccount; pathname: string; home: boolean }) {
   const canUpload = account != null && account.role !== 'pending';
   const profileHref = account?.handle ? `/user/${account.handle}` : '/settings';
   const settingsOn = Boolean(account) && (
@@ -171,19 +168,23 @@ function SiteNav({ account, pathname }: { account: HeaderAccount; pathname: stri
 
   return (
     <>
-      <Link href="/mountain-weather" className={topClass(pathOn(pathname, '/mountain-weather'))}>
-        Mountain weather
-      </Link>
-      <Link href="/map" className={topClass(pathOn(pathname, '/map'))}>
-        Map
-      </Link>
-      <DesktopMenu href="/community" label="Community" active={communitySection(pathname)}>
-        {COMMUNITY_LINKS.map((item) => (
-          <Link key={item.href} href={item.href} className={subClass(pathOn(pathname, item.href), false)}>
-            {item.label}
-          </Link>
-        ))}
-      </DesktopMenu>
+      {home ? null : (
+        <>
+          <NavButton href="/mountain-weather" active={pathOn(pathname, '/mountain-weather')}>
+            Mountain weather
+          </NavButton>
+          <NavButton href="/map" active={pathOn(pathname, '/map')}>
+            Map
+          </NavButton>
+          <DesktopMenu href="/community" label="Community" active={communitySection(pathname)}>
+            {COMMUNITY_LINKS.map((item) => (
+              <Link key={item.href} href={item.href} className={subClass(pathOn(pathname, item.href), false)}>
+                {item.label}
+              </Link>
+            ))}
+          </DesktopMenu>
+        </>
+      )}
       {canUpload ? (
         <DesktopMenu href="/upload" label="Upload" active={pathOn(pathname, '/upload')}>
           {UPLOAD_LINKS.map((item) => (
@@ -212,7 +213,7 @@ function SiteNav({ account, pathname }: { account: HeaderAccount; pathname: stri
           </form>
         </DesktopMenu>
       ) : (
-        <Link href="/sign-in" className={topClass(false)}>Log in</Link>
+        <NavButton href="/sign-in">Log in</NavButton>
       )}
     </>
   );
@@ -232,8 +233,8 @@ function DesktopMenu({
   children: ReactNode;
 }) {
   return (
-    <div className="group relative">
-      <Link href={href} className={topClass(active)}>{label}</Link>
+    <div className="group relative inline-flex">
+      <NavButton href={href} active={active}>{label}</NavButton>
       <div className={`absolute top-full z-30 hidden pt-1 group-hover:block group-focus-within:block ${align === 'right' ? 'right-0' : 'left-0'}`}>
         <div className="flex min-w-40 flex-col gap-1 bg-beige p-1 text-gray-900 retro-box">
           {children}
@@ -243,30 +244,34 @@ function DesktopMenu({
   );
 }
 
-function MobileNav({ account, pathname }: { account: HeaderAccount; pathname: string }) {
+function MobileNav({ account, pathname, home }: { account: HeaderAccount; pathname: string; home: boolean }) {
   const canUpload = account != null && account.role !== 'pending';
   const profileHref = account?.handle ? `/user/${account.handle}` : '/settings';
 
   return (
     <>
-      <Link href="/mountain-weather" className={subClass(pathOn(pathname, '/mountain-weather'), true)}>
-        Mountain weather
-      </Link>
-      <Link href="/map" className={subClass(pathOn(pathname, '/map'), true)}>
-        Map
-      </Link>
-      <div className="space-y-2">
-        <Link href="/community" className="retro-button-yellow block w-full rounded-none px-3 py-2 text-center text-sm font-bold uppercase">
-          Community
-        </Link>
-        <div className="space-y-2">
-          {COMMUNITY_LINKS.map((item) => (
-            <Link key={item.href} href={item.href} className={subClass(pathOn(pathname, item.href), true)}>
-              {item.label}
+      {home ? null : (
+        <>
+          <Link href="/mountain-weather" className={subClass(pathOn(pathname, '/mountain-weather'), true)}>
+            Mountain weather
+          </Link>
+          <Link href="/map" className={subClass(pathOn(pathname, '/map'), true)}>
+            Map
+          </Link>
+          <div className="space-y-2">
+            <Link href="/community" className="retro-button-yellow block w-full rounded-none px-3 py-2 text-center text-sm font-bold uppercase">
+              Community
             </Link>
-          ))}
-        </div>
-      </div>
+            <div className="space-y-2">
+              {COMMUNITY_LINKS.map((item) => (
+                <Link key={item.href} href={item.href} className={subClass(pathOn(pathname, item.href), true)}>
+                  {item.label}
+                </Link>
+              ))}
+            </div>
+          </div>
+        </>
+      )}
       {canUpload ? (
         <div className="space-y-2">
           <Link href="/upload" className="retro-button-yellow block w-full rounded-none px-3 py-2 text-center text-sm font-bold uppercase">

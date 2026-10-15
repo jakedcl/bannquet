@@ -20,7 +20,7 @@ export default async function MountainWeatherPage() {
         {error || !report ? (
           <p className="retro-box bg-beige p-4 text-sm font-bold">{error ?? 'The live conditions did not load.'}</p>
         ) : (
-          <ConditionsReport report={report} showForecastLink={false} />
+          <ConditionsReport report={report} showForecastLink={false} showSpots={false} />
         )}
       </MountainWeather>
     </PageWrapper>
