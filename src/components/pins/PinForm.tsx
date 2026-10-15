@@ -6,7 +6,7 @@ import { PhotoFields } from '@/components/posts/PhotoFields';
 import type { UploadedPhoto } from '@/components/posts/prepare-photo';
 import { TrashButton } from '@/components/delete/ConfirmDelete';
 import { Button } from '@/components/retro/Button';
-import { ACTIVITIES, ACTIVITY_META, isActivity, mapColorForActivity } from '@/lib/activities';
+import { NEUTRAL_PIN_COLOR } from '@/lib/map';
 import { PIN_KINDS, PIN_KIND_LABELS, type PinKind } from '@/lib/pin-kinds';
 import type { MapFeatureCollection } from '@/lib/posts';
 import dynamic from 'next/dynamic';
@@ -19,9 +19,7 @@ type InitialPin = {
   id: string;
   title: string;
   note: string;
-  activity: string;
   kind: PinKind;
-  visitedOn: string;
   lat: number;
   lng: number;
   photos: Array<{ id: string; url: string }>;
@@ -32,7 +30,6 @@ export function PinForm({ initial }: { initial?: InitialPin }) {
   const [state, formAction, pending] = useActionState(action, null);
   const [photos, setPhotos] = useState<UploadedPhoto[]>([]);
   const [photoBusy, setPhotoBusy] = useState(false);
-  const [activity, setActivity] = useState(initial?.activity && isActivity(initial.activity) ? initial.activity : 'hike');
   const [point, setPoint] = useState<{ lat: number; lng: number } | null>(
     initial ? { lat: initial.lat, lng: initial.lng } : null,
   );
@@ -70,9 +67,9 @@ export function PinForm({ initial }: { initial?: InitialPin }) {
             title: 'Pin',
             who: '',
             date: null,
-            activity,
+            activity: '',
             category: '',
-            color: mapColorForActivity(activity),
+            color: NEUTRAL_PIN_COLOR,
             trackId: '',
             href: '',
           },
@@ -80,7 +77,6 @@ export function PinForm({ initial }: { initial?: InitialPin }) {
       }
     : EMPTY;
 
-  const today = new Date().toISOString().slice(0, 10);
   const photoPoint = photos.find((photo) => photo.lat != null && photo.lng != null);
 
   return (
@@ -96,34 +92,6 @@ export function PinForm({ initial }: { initial?: InitialPin }) {
           className="w-full retro-box-inset bg-white px-3 py-2 text-base"
         />
       </label>
-      <div className="grid gap-4 sm:grid-cols-2">
-        <label className="block space-y-1">
-          <span className="text-sm font-bold">Date</span>
-          <input
-            type="date"
-            name="visitedOn"
-            required
-            defaultValue={initial?.visitedOn ?? today}
-            className="w-full retro-box-inset bg-white px-3 py-2 text-base"
-          />
-        </label>
-        <label className="block space-y-1">
-          <span className="text-sm font-bold">What were you doing?</span>
-          <select
-            name="activity"
-            required
-            value={activity}
-            onChange={(event) => {
-              if (isActivity(event.target.value)) setActivity(event.target.value);
-            }}
-            className="w-full retro-box-inset bg-white px-3 py-2 text-base"
-          >
-            {ACTIVITIES.map((item) => (
-              <option key={item} value={item}>{ACTIVITY_META[item].label}</option>
-            ))}
-          </select>
-        </label>
-      </div>
       <label className="block space-y-1">
         <span className="text-sm font-bold">Category</span>
         <select
