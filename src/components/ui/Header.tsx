@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef, type ReactNode } from 'react';
+import { createPortal } from 'react-dom';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -8,7 +9,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { signOutAction } from '@/app/sign-in/actions';
 import { useRegion } from '@/contexts/RegionContext';
 import { REGION_OPTIONS } from '@/lib/regions';
-import { menuItemClass, NavButton } from './NavButton';
+import { menuItemClass, navButtonClass, NavButton } from './NavButton';
 import WeatherTicker from './WeatherTicker';
 
 export type HeaderAccount = {
@@ -46,6 +47,7 @@ export default function Header({ account = null }: { account?: HeaderAccount }) 
   const [openPath, setOpenPath] = useState<string | null>(null);
   const mobileMenuOpen = openPath === pathname;
   const [scrolled, setScrolled] = useState(false);
+  const [menuReady, setMenuReady] = useState(false);
   const isHomepage = pathname === '/';
   const onWeather = pathname === '/weather' || pathname.startsWith('/weather/');
 
@@ -55,6 +57,10 @@ export default function Header({ account = null }: { account?: HeaderAccount }) 
     };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  useEffect(() => {
+    setMenuReady(true);
   }, []);
 
   return (
@@ -107,7 +113,7 @@ export default function Header({ account = null }: { account?: HeaderAccount }) 
           ) : null}
           <button
             onClick={() => setOpenPath(mobileMenuOpen ? null : pathname)}
-            className="z-20 p-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+            className="relative z-[110] p-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
             aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
           >
             <div className="flex w-6 flex-col items-end justify-center gap-1.5">
@@ -118,33 +124,34 @@ export default function Header({ account = null }: { account?: HeaderAccount }) 
           </button>
         </div>
 
-        <AnimatePresence>
-          {mobileMenuOpen && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
-              className="fixed inset-0 z-10 bg-black/20 md:hidden"
-              onClick={() => setOpenPath(null)}
-            />
-          )}
-        </AnimatePresence>
-
-        <AnimatePresence>
-          {mobileMenuOpen && (
-            <motion.nav
-              initial={{ x: '100%' }}
-              animate={{ x: 0 }}
-              exit={{ x: '100%' }}
-              transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-              aria-label="Menu"
-              className="fixed bottom-0 right-0 top-0 z-10 flex w-4/5 max-w-xs flex-col gap-4 overflow-y-auto border-l-4 border-brand-green-dark bg-beige p-4 pt-24 text-gray-900 md:hidden"
-            >
-              <MobileNav account={account} pathname={pathname} home={isHomepage} />
-            </motion.nav>
-          )}
-        </AnimatePresence>
+        {menuReady ? createPortal(
+          <AnimatePresence>
+            {mobileMenuOpen ? (
+              <motion.nav
+                initial={{ x: '100%' }}
+                animate={{ x: 0 }}
+                exit={{ x: '100%' }}
+                transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+                aria-label="Menu"
+                className="fixed inset-0 z-[100] flex flex-col gap-4 overflow-y-auto border-l-4 border-brand-green-dark bg-beige p-4 pt-16 text-gray-900 md:hidden"
+              >
+                <button
+                  type="button"
+                  onClick={() => setOpenPath(null)}
+                  className="absolute right-3 top-3 p-2"
+                  aria-label="Close menu"
+                >
+                  <span className="relative block h-4 w-6">
+                    <span className="absolute left-0 top-1.5 block h-0.5 w-6 -rotate-45 bg-brand-green-dark" />
+                    <span className="absolute left-0 top-1.5 block h-0.5 w-6 rotate-45 bg-brand-green-dark" />
+                  </span>
+                </button>
+                <MobileNav account={account} pathname={pathname} />
+              </motion.nav>
+            ) : null}
+          </AnimatePresence>,
+          document.body,
+        ) : null}
       </div>
     </motion.header>
   );
@@ -247,24 +254,24 @@ function MobileFold({
   const [open, setOpen] = useState(false);
   return (
     <div>
-      <div className="flex">
-        <NavButton href={href} active={active} className="min-w-0 flex-1">{label}</NavButton>
+      {open ? (
+        <NavButton href={href} active={active} className="w-full">{label}</NavButton>
+      ) : (
         <button
           type="button"
-          aria-expanded={open}
-          aria-label={open ? `Hide ${label}` : `Show ${label}`}
-          onClick={() => setOpen((value) => !value)}
-          className="nav-button retro-button-blue w-10 rounded-none px-0 text-lg font-bold"
+          aria-expanded={false}
+          onClick={() => setOpen(true)}
+          className={navButtonClass(active, 'w-full')}
         >
-          {open ? '−' : '+'}
+          {label}
         </button>
-      </div>
+      )}
       {open ? <div className="flex flex-col gap-1 bg-[#5c3a1e] p-1">{children}</div> : null}
     </div>
   );
 }
 
-function MobileNav({ account, pathname, home }: { account: HeaderAccount; pathname: string; home: boolean }) {
+function MobileNav({ account, pathname }: { account: HeaderAccount; pathname: string }) {
   const canUpload = account == null || account.role !== 'pending';
   const profileHref = account?.handle ? `/user/${account.handle}` : '/settings';
   const settingsOn = Boolean(account) && (
@@ -273,23 +280,19 @@ function MobileNav({ account, pathname, home }: { account: HeaderAccount; pathna
 
   return (
     <>
-      {home ? null : (
-        <>
-          <NavButton href="/mountain-weather" active={pathOn(pathname, '/mountain-weather')} className="w-full">
-            Mountain weather
-          </NavButton>
-          <NavButton href="/map" active={pathOn(pathname, '/map')} className="w-full">
-            Map
-          </NavButton>
-          <MobileFold href="/community" label="Community" active={communitySection(pathname)}>
-            {COMMUNITY_LINKS.map((item) => (
-              <Link key={item.href} href={item.href} className={menuItemClass(true)}>
-                {item.label}
-              </Link>
-            ))}
-          </MobileFold>
-        </>
-      )}
+      <NavButton href="/mountain-weather" active={pathOn(pathname, '/mountain-weather')} className="w-full">
+        Mountain weather
+      </NavButton>
+      <NavButton href="/map" active={pathOn(pathname, '/map')} className="w-full">
+        Map
+      </NavButton>
+      <MobileFold href="/community" label="Community" active={communitySection(pathname)}>
+        {COMMUNITY_LINKS.map((item) => (
+          <Link key={item.href} href={item.href} className={menuItemClass(true)}>
+            {item.label}
+          </Link>
+        ))}
+      </MobileFold>
       {canUpload ? (
         <MobileFold href="/upload" label="Upload" active={pathOn(pathname, '/upload')}>
           {UPLOAD_LINKS.map((item) => (
