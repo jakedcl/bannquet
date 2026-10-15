@@ -1,10 +1,19 @@
 'use client';
 
-import { useActionState } from 'react';
+import { useActionState, useEffect, useState } from 'react';
 import { addGearAction } from '@/app/gear/actions';
 
-export function GearAddForm({ action }: { action: typeof addGearAction }) {
+export function GearAddForm({
+  action,
+  onAdded,
+}: {
+  action: typeof addGearAction;
+  onAdded?: () => void;
+}) {
   const [state, formAction, pending] = useActionState(action, null);
+  useEffect(() => {
+    if (state && !state.error) onAdded?.();
+  }, [state, onAdded]);
   return (
     <form action={formAction} className="flex flex-wrap items-center gap-2">
       <label className="min-w-0 flex-1">
@@ -16,5 +25,47 @@ export function GearAddForm({ action }: { action: typeof addGearAction }) {
       </button>
       {state?.error ? <p className="w-full text-sm font-bold text-red-700">{state.error}</p> : null}
     </form>
+  );
+}
+
+export function GearAddButton() {
+  const [open, setOpen] = useState(false);
+  const [formKey, setFormKey] = useState(0);
+
+  return (
+    <>
+      <button
+        type="button"
+        aria-label="Add gear"
+        onClick={() => {
+          setFormKey((key) => key + 1);
+          setOpen(true);
+        }}
+        className="retro-button-yellow inline-flex h-6 w-6 items-center justify-center rounded-none p-0 text-base font-bold leading-none"
+      >
+        +
+      </button>
+      {open ? (
+        <div
+          className="fixed inset-0 z-40 flex items-center justify-center bg-black/40 p-4"
+          onClick={() => setOpen(false)}
+        >
+          <div
+            role="dialog"
+            aria-label="Add gear"
+            className="retro-box w-full max-w-sm bg-beige p-4 text-gray-900"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className="mb-3 flex items-center justify-between gap-2">
+              <p className="text-sm font-bold uppercase">Add gear</p>
+              <button type="button" aria-label="Close" onClick={() => setOpen(false)} className="text-sm font-bold">
+                ×
+              </button>
+            </div>
+            <GearAddForm key={formKey} action={addGearAction} onAdded={() => setOpen(false)} />
+          </div>
+        </div>
+      ) : null}
+    </>
   );
 }

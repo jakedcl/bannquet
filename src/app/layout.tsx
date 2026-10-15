@@ -46,7 +46,7 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className={pending ? 'has-pending' : undefined}>
-        <Providers>
+        <Providers account={account}>
           <div className="min-h-screen flex flex-col">
             <Header account={account} />
             <HomeScreenTip show={Boolean(viewer && !viewer.homeScreenTipSeenAt)} />
