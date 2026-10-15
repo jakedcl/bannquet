@@ -3,7 +3,6 @@
 import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { useAccount } from '@/contexts/AccountContext';
-import { navButtonClass } from '@/components/ui/NavButton';
 import { linkOn, matchSection } from '@/lib/sections';
 
 export function SectionChrome() {
@@ -16,8 +15,8 @@ export function SectionChrome() {
   if (!showNav || !section) return null;
 
   return (
-    <nav aria-label={`${section.label} sections`} className="w-full border-b-2 border-[#3d2412] bg-[#5c3a1e]">
-      <div className="flex w-full flex-wrap items-center justify-start gap-2 py-2 pl-2 pr-2">
+    <nav aria-label={`${section.label} sections`} className="section-nav w-full border-b-2 border-[#3d2412] bg-[#5c3a1e]">
+      <div className="flex w-full flex-nowrap items-center justify-start gap-1 overflow-x-auto py-1.5 pl-1.5 pr-1.5 sm:gap-2 sm:py-2 sm:pl-2 sm:pr-2">
         {section.links.map((item) => {
           const active = linkOn(pathname, query, item.href);
           return (
@@ -25,7 +24,7 @@ export function SectionChrome() {
               key={item.href}
               href={item.href}
               aria-current={active ? 'page' : undefined}
-              className={navButtonClass(active, 'h-8 px-3 text-xs')}
+              className={`section-nav-link ${active ? 'retro-button-yellow' : 'retro-button-blue'}`}
             >
               {item.label}
             </Link>
