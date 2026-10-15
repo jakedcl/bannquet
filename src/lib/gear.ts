@@ -24,6 +24,7 @@ export type GearHold = {
 export type GearItem = {
   id: string;
   name: string;
+  category: string | null;
   addedBy: string | null;
   holds: GearHold[];
 };
@@ -31,7 +32,7 @@ export type GearItem = {
 export async function listGear(): Promise<GearItem[]> {
   const [items, holds] = await Promise.all([
     getDb().execute(sql`
-      select id::text as id, name, added_by
+      select id::text as id, name, category, added_by
       from community_gear
       order by lower(name)
     `),
@@ -64,17 +65,19 @@ export async function listGear(): Promise<GearItem[]> {
     const id = text(row.id);
     const name = text(row.name);
     if (!id || !name) return [];
-    return [{ id, name, addedBy: text(row.added_by), holds: byItem.get(id) ?? [] }];
+    return [{ id, name, category: text(row.category), addedBy: text(row.added_by), holds: byItem.get(id) ?? [] }];
   });
 }
 
-export async function addGearItem(name: string, userId: string): Promise<'ok' | 'taken' | 'empty'> {
+export async function addGearItem(name: string, userId: string, category = ''): Promise<'ok' | 'taken' | 'empty'> {
   const clean = name.trim().replace(/\s+/g, ' ').slice(0, 80);
   if (clean.length < 2) return 'empty';
+  const cleanCategory = category.trim().replace(/\s+/g, ' ').slice(0, 40);
+  const stored = cleanCategory.length > 0 ? cleanCategory : null;
   try {
     await getDb().execute(sql`
-      insert into community_gear (name, added_by)
-      values (${clean}, ${userId})
+      insert into community_gear (name, added_by, category)
+      values (${clean}, ${userId}, ${stored})
     `);
   } catch (err) {
     const message = err instanceof Error ? err.message : '';
@@ -101,6 +104,27 @@ export async function deleteGearHold(gearId: string, ownerId: string, actor: { i
     returning gear_id::text as id
   `);
   return asRows(result).length > 0;
+}
+
+export async function adjustGearHold(gearId: string, userId: string, delta: 1 | -1): Promise<void> {
+  if (delta === 1) {
+    await getDb().execute(sql`
+      insert into community_gear_holds (gear_id, user_id, qty)
+      values (${gearId}::uuid, ${userId}, 1)
+      on conflict (gear_id, user_id) do update
+      set qty = least(99, community_gear_holds.qty + 1)
+    `);
+    return;
+  }
+  await getDb().execute(sql`
+    delete from community_gear_holds
+    where gear_id = ${gearId}::uuid and user_id = ${userId} and qty <= 1
+  `);
+  await getDb().execute(sql`
+    update community_gear_holds
+    set qty = qty - 1
+    where gear_id = ${gearId}::uuid and user_id = ${userId} and qty > 1
+  `);
 }
 
 export async function setGearHold(gearId: string, userId: string, qty: number): Promise<void> {

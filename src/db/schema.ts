@@ -342,6 +342,7 @@ export const communityGear = pgTable(
   {
     id: uuid('id').primaryKey().defaultRandom(),
     name: text('name').notNull(),
+    category: text('category'),
     addedBy: text('added_by').references(() => users.id, { onDelete: 'set null' }),
     createdAt,
   },

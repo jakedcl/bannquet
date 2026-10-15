@@ -1,48 +1,49 @@
 import PageWrapper from '@/components/ui/PageWrapper';
 import { PeaksTable, type PeakTableRow } from '@/components/peaks/PeaksTable';
 import { Window } from '@/components/retro/Window';
-import { allPeaks, loadChallenges } from '@/lib/challenges';
+import { getViewer } from '@/app/sign-in/actions';
+import { allPeaks } from '@/lib/challenges';
+import { canContribute } from '@/lib/membership';
 import { listClimbs } from '@/lib/summits';
 import { isDatabaseConfigured } from '@/db';
 
 export const dynamic = 'force-dynamic';
 
-const AREAS: Record<string, string> = {
-  cat3500: 'Catskills, NY',
-  adk46: 'Adirondacks, NY',
-  nh48: 'New Hampshire',
-  vt4000: 'Vermont',
-  me4000: 'Maine',
+const STATES: Record<string, string> = {
+  cat3500: 'NY',
+  adk46: 'NY',
+  nh48: 'NH',
+  vt4000: 'VT',
+  me4000: 'ME',
 };
 
 export default async function PeaksPage() {
-  const challenges = loadChallenges();
+  const viewer = await getViewer();
   const ready = isDatabaseConfigured();
   let error: string | null = ready ? null : 'Postgres is not connected, so climb counts stay at zero.';
   const counts = new Map<string, number>();
+  const mine = new Map<string, number>();
 
   if (ready) {
     try {
       const climbs = await listClimbs();
-      for (const climb of climbs) counts.set(climb.peakSlug, (counts.get(climb.peakSlug) ?? 0) + 1);
+      for (const climb of climbs) {
+        counts.set(climb.peakSlug, (counts.get(climb.peakSlug) ?? 0) + 1);
+        if (viewer && climb.userId === viewer.id) mine.set(climb.peakSlug, (mine.get(climb.peakSlug) ?? 0) + 1);
+      }
     } catch (err) {
       error = err instanceof Error ? err.message : 'The climb counts did not load.';
     }
   }
 
-  const rows: PeakTableRow[] = allPeaks()
-    .map((peak) => ({
-      slug: peak.slug,
-      name: peak.name,
-      elevationFt: peak.elevationFt,
-      listId: peak.listId,
-      listName: challenges.find((item) => item.id === peak.listId)?.name ?? peak.listId,
-      area: AREAS[peak.listId] ?? 'Northeast',
-      climbs: counts.get(peak.slug) ?? 0,
-    }))
-    .sort((a, b) => b.climbs - a.climbs || a.name.localeCompare(b.name));
-
-  const areas = [...new Set(rows.map((row) => row.area))];
+  const rows: PeakTableRow[] = allPeaks().map((peak) => ({
+    slug: peak.slug,
+    name: peak.name,
+    elevationFt: peak.elevationFt,
+    state: STATES[peak.listId] ?? '—',
+    climbs: counts.get(peak.slug) ?? 0,
+    mine: mine.get(peak.slug) ?? 0,
+  }));
 
   return (
     <PageWrapper>
@@ -52,11 +53,7 @@ export default async function PeaksPage() {
             Northeast peaks worth a day. Climbs counts every log, including a repeat.
           </p>
           {error ? <p className="mb-4 text-sm font-bold">{error}</p> : null}
-          <PeaksTable
-            rows={rows}
-            areas={areas}
-            lists={challenges.map((item) => ({ id: item.id, name: item.name }))}
-          />
+          <PeaksTable rows={rows} canMark={Boolean(!error && (!viewer || canContribute(viewer.role)))} />
         </Window>
       </div>
     </PageWrapper>

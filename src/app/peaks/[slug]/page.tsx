@@ -1,9 +1,9 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import PageWrapper from '@/components/ui/PageWrapper';
-import { ConfirmDelete } from '@/components/delete/ConfirmDelete';
 import { Window } from '@/components/retro/Window';
-import { deleteClimbAction, logClimbAction, removeLatestClimbAction } from '@/app/peaks/actions';
+import { CountControl } from '@/components/ui/CountControl';
+import { logClimbAction, removeLatestClimbAction } from '@/app/peaks/actions';
 import { getViewer } from '@/app/sign-in/actions';
 import { allPeaks } from '@/lib/challenges';
 import { canContribute } from '@/lib/membership';
@@ -81,44 +81,22 @@ export default async function PeakPage({ params }: { params: Promise<{ slug: str
               ))}
             </ul>
           )}
-          {canMark && own.length === 0 ? (
-            <form action={logClimbAction} className="mt-4">
-              <input type="hidden" name="peakSlug" value={peak.slug} />
-              <button type="submit" className="retro-button-yellow rounded-none px-3 py-2 text-xs font-bold uppercase">
-                I climbed this
-              </button>
-            </form>
-          ) : null}
-          {canMark && own.length > 0 ? (
-            <div className="mt-4 flex items-center gap-2">
-              <form action={removeLatestClimbAction}>
-                <input type="hidden" name="peakSlug" value={peak.slug} />
-                <button type="submit" aria-label="Remove a climb" className="retro-button-yellow inline-flex h-8 w-8 items-center justify-center rounded-none p-0 text-lg font-bold">
-                  −
-                </button>
-              </form>
-              <p className="min-w-0 flex-1 truncate text-sm font-bold">You&apos;ve climbed this {own.length}×</p>
-              <form action={logClimbAction}>
-                <input type="hidden" name="peakSlug" value={peak.slug} />
-                <button type="submit" aria-label="Log another climb" className="retro-button-yellow inline-flex h-8 w-8 items-center justify-center rounded-none p-0 text-lg font-bold">
-                  +
-                </button>
-              </form>
+          {canMark ? (
+            <div className="mt-4">
+              <CountControl
+                count={own.length}
+                zeroLabel="I climbed this"
+                addLabel="Log another climb"
+                removeLabel="Remove a climb"
+                spread
+                add={{ action: logClimbAction, fields: { peakSlug: peak.slug } }}
+                remove={{ action: removeLatestClimbAction, fields: { peakSlug: peak.slug } }}
+              >
+                You&apos;ve climbed this {own.length}×
+              </CountControl>
             </div>
-          ) : null}
-          {own.length > 0 ? (
-            <ul className="mt-4 space-y-2">
-              {[...own].reverse().map((climb, index) => (
-                <li key={climb.id} className="flex items-center gap-2 text-sm">
-                  <p className="min-w-0 flex-1 truncate">Climb {own.length - index}</p>
-                  <ConfirmDelete
-                    action={deleteClimbAction}
-                    confirm="Delete this climb?"
-                    fields={{ id: climb.id, peakSlug: peak.slug }}
-                  />
-                </li>
-              ))}
-            </ul>
+          ) : own.length > 0 ? (
+            <p className="mt-4 text-sm font-bold">You&apos;ve climbed this {own.length}×</p>
           ) : null}
         </Window>
       </div>
