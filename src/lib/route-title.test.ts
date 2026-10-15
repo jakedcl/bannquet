@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { cleanRouteTitle, routeTitle } from './route-title';
+import { cleanRouteNotes, cleanRouteTitle, routeTitle } from './route-title';
 
 test('a route with no title is just called Route', () => {
   assert.equal(routeTitle(null), 'Route');
@@ -17,4 +17,11 @@ test('a blank title is stored as null', () => {
   assert.equal(cleanRouteTitle('no title'), null);
   assert.equal(cleanRouteTitle('  Avalanche Pass  '), 'Avalanche Pass');
   assert.equal(cleanRouteTitle('x'.repeat(200))?.length, 120);
+});
+
+test('blank route notes are stored as null', () => {
+  assert.equal(cleanRouteNotes('  '), null);
+  assert.equal(cleanRouteNotes('Untitled'), 'Untitled');
+  assert.equal(cleanRouteNotes('  muddy after the lake  '), 'muddy after the lake');
+  assert.equal(cleanRouteNotes('n'.repeat(5000))?.length, 4000);
 });

@@ -10,7 +10,7 @@ import { isPinKind } from '@/lib/pin-kinds';
 import { isLatLng } from '@/lib/photos';
 import { isPostKind, type PostKind } from '@/lib/post-kinds';
 import { addProfilePhotos, addProfileTrack, parseUploadedPhotos, type PreparedPhoto } from '@/lib/posts';
-import { cleanRouteTitle, routeTitle } from '@/lib/route-title';
+import { cleanRouteNotes, cleanRouteTitle, routeTitle } from '@/lib/route-title';
 import type { DraftItem } from '@/lib/trip-draft';
 
 const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
@@ -122,9 +122,10 @@ export async function publishProfileTrack(
   const track = readTrack(formData);
   if (track.error || !track.track) return { error: track.error ?? 'Choose a GPX file.' };
   const title = cleanRouteTitle(String(formData.get('title') ?? ''));
+  const notes = cleanRouteNotes(String(formData.get('notes') ?? ''));
   let id = '';
   try {
-    id = await addProfileTrack({ userId: viewer.id, activity, track: track.track, title });
+    id = await addProfileTrack({ userId: viewer.id, activity, track: track.track, title, notes });
   } catch {
     return { error: 'Could not save that route. Try again in a minute.' };
   }

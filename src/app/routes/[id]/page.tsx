@@ -11,6 +11,7 @@ import { deleteRouteAction } from '@/app/library/actions';
 import { getViewer } from '@/app/sign-in/actions';
 import { isDatabaseConfigured } from '@/db';
 import { ACTIVITY_META, isActivity } from '@/lib/activities';
+import { LinkedText } from '@/components/ui/LinkedText';
 import { formatFeetGain, formatMiles } from '@/lib/gpx';
 import { loadRoute } from '@/lib/library';
 import { canContribute, canDeleteOwned } from '@/lib/membership';
@@ -98,11 +99,17 @@ export default async function RoutePage({
           <p className="mt-2 text-sm">
             {route.handle ? <Link href={`/user/${route.handle}`} className="underline">{route.who}</Link> : route.who}
           </p>
+          {route.notes ? <div className="mt-3"><LinkedText text={route.notes} /></div> : null}
           <div className="mt-3">
             <SeeMore post={route.post} />
           </div>
           {viewer && canContribute(viewer.role) && viewer.id === route.userId ? (
-            <RouteTitleForm key={route.title ?? ''} id={route.id} title={route.title ?? ''} />
+            <RouteTitleForm
+              key={`${route.title ?? ''}\n${route.notes ?? ''}`}
+              id={route.id}
+              title={route.title ?? ''}
+              notes={route.notes ?? ''}
+            />
           ) : null}
         </Window>
         {map && route.lat != null && route.lng != null ? (
