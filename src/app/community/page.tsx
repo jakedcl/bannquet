@@ -1,6 +1,6 @@
 import PageWrapper from '@/components/ui/PageWrapper';
-import { Button } from '@/components/retro/Button';
 import { Window } from '@/components/retro/Window';
+import { SectionList } from '@/components/ui/SectionList';
 import { COMMUNITY_LINKS } from '@/lib/sections';
 
 export default function CommunityPage() {
@@ -11,11 +11,7 @@ export default function CommunityPage() {
           <p className="mb-4 text-sm text-gray-700">
             Chat, the peak list, trips, and shared gear. Trip reports stay with the person who wrote them.
           </p>
-          <div className="flex flex-wrap gap-2">
-            {COMMUNITY_LINKS.map((item) => (
-              <Button key={item.href} href={item.href} tone="blue">{item.label}</Button>
-            ))}
-          </div>
+          <SectionList links={COMMUNITY_LINKS} label="Community" />
         </Window>
       </div>
     </PageWrapper>

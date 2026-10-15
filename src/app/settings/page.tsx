@@ -4,6 +4,8 @@ import { ProfileForm } from '@/components/auth/ProfileForm';
 import { Button } from '@/components/retro/Button';
 import { StatusBar } from '@/components/retro/StatusBar';
 import { Window } from '@/components/retro/Window';
+import { SectionList } from '@/components/ui/SectionList';
+import { settingsLinks } from '@/lib/sections';
 import { getViewer, signOutAction } from '@/app/sign-in/actions';
 import { profileNeedsNames } from '@/lib/handles';
 import { APPROVAL_WAIT, canContribute } from '@/lib/membership';
@@ -23,6 +25,11 @@ export default async function SettingsPage({
   return (
     <PageWrapper>
       <div className="mx-auto max-w-lg space-y-4 px-4 py-10">
+        <SectionList
+          links={settingsLinks({ handle: viewer.handle, role: viewer.role })}
+          activeHref="/settings"
+          label="Settings"
+        />
         <div id="edit-profile">
           <Window title="Edit profile">
             {!canContribute(viewer.role) ? (
