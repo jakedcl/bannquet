@@ -8,6 +8,7 @@ import type { UploadedPhoto } from '@/components/posts/prepare-photo';
 import { Button } from '@/components/retro/Button';
 import { ACTIVITIES, ACTIVITY_META } from '@/lib/activities';
 import { formatFeetGain, formatMiles, packTrack } from '@/lib/gpx';
+import { cleanRouteTitle, routeTitle } from '@/lib/route-title';
 
 export function RouteUpload() {
   const router = useRouter();
@@ -15,6 +16,8 @@ export function RouteUpload() {
   const [state, action, pending] = useActionState(publishProfileTrack, null);
   const [trackJson, setTrackJson] = useState('');
   const [note, setNote] = useState<string | null>(null);
+  const [title, setTitle] = useState('');
+  const [titleTouched, setTitleTouched] = useState(false);
   useEffect(() => {
     if (!state?.saved || refreshed.current) return;
     refreshed.current = true;
@@ -24,6 +27,19 @@ export function RouteUpload() {
   return (
     <form action={action} className="space-y-3">
       <p className="text-sm font-bold">Add a route</p>
+      <label className="block space-y-1">
+        <span className="text-sm">Title</span>
+        <input
+          name="title"
+          maxLength={120}
+          value={title}
+          onChange={(event) => {
+            setTitleTouched(true);
+            setTitle(event.target.value);
+          }}
+          className="w-full retro-box-inset bg-white px-3 py-2"
+        />
+      </label>
       <label className="block space-y-1">
         <span className="text-sm">What were you doing?</span>
         <select name="activity" className="w-full retro-box-inset bg-white px-3 py-2" defaultValue="hike">
@@ -51,6 +67,10 @@ export function RouteUpload() {
               return;
             }
             setTrackJson(JSON.stringify(packed));
+            if (!titleTouched) {
+              const suggested = cleanRouteTitle(packed.name);
+              setTitle(suggested && routeTitle(suggested) !== 'Route' ? suggested : '');
+            }
             setNote(`${packed.name || file.name}: ${formatMiles(packed.distanceM)}, ${formatFeetGain(packed.elevGainM)}`);
           } catch {
             setTrackJson('');

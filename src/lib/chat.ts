@@ -1,6 +1,7 @@
 import { sql } from 'drizzle-orm';
 import { getDb } from '@/db';
 import { isChatRefKind, type ChatCatalogItem, type ChatMessage, type ChatRef, type ChatRefKind } from '@/lib/chat-view';
+import { routeTitle } from '@/lib/route-title';
 
 export type { ChatCatalogItem, ChatMessage, ChatRef, ChatRefKind } from '@/lib/chat-view';
 export { formatChatTime, isChatRefKind } from '@/lib/chat-view';
@@ -33,8 +34,8 @@ function refFrom(row: Record<string, unknown>): ChatRef | null {
     return { kind, id, label: label ?? 'Pin', href: `/pins/${id}`, thumb: null, missing: !label };
   }
   if (kind === 'route') {
-    const label = text(row.route_name);
-    return { kind, id, label: label ?? 'Route', href: `/routes/${id}`, thumb: null, missing: !label };
+    const exists = Boolean(text(row.route_id));
+    return { kind, id, label: routeTitle(text(row.route_name)), href: `/routes/${id}`, thumb: null, missing: !exists };
   }
   const label = text(row.photo_label);
   const thumb = text(row.photo_url);
@@ -75,7 +76,8 @@ function messageQuery(cursor?: { after: string; afterId: string } | null) {
       coalesce(nullif(u.display_name, ''), nullif(u.handle, ''), 'Friend') as name,
       u.handle,
       p.title as pin_title,
-      t.name as route_name,
+      t.id::text as route_id,
+      t.title as route_name,
       coalesce(ph.caption, ph.alt, 'Photo') as photo_label,
       ph.blob_url as photo_url
     from chat_messages m
@@ -152,7 +154,7 @@ export async function listChatCatalog(): Promise<ChatCatalogItem[]> {
       order by p.created_at desc
     `),
     db.execute(sql`
-      select t.id::text as id, t.name as label, t.user_id as owner_id,
+      select t.id::text as id, t.title as label, t.user_id as owner_id,
         coalesce(nullif(u.display_name, ''), nullif(u.handle, ''), 'Friend') as owner_name
       from tracks t
       left join users u on u.id = t.user_id
@@ -180,7 +182,7 @@ function catalogRow(row: Record<string, unknown>, kind: ChatRefKind): ChatCatalo
   return [{
     kind,
     id,
-    label: text(row.label) ?? (kind === 'pin' ? 'Pin' : kind === 'route' ? 'Route' : 'Photo'),
+    label: kind === 'route' ? routeTitle(text(row.label)) : (text(row.label) ?? (kind === 'pin' ? 'Pin' : 'Photo')),
     href,
     thumb: text(row.thumb),
     ownerId: text(row.owner_id),

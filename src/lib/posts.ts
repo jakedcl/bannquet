@@ -2,6 +2,7 @@ import { sql } from 'drizzle-orm';
 import { getDb } from '@/db';
 import { isActivity, mapColorForActivity, type Activity } from '@/lib/activities';
 import { lineWkt, type PackedTrack } from '@/lib/gpx';
+import { routeTitle } from '@/lib/route-title';
 import { PIN_KIND_LABELS, isPinKind } from '@/lib/pin-kinds';
 import { NEUTRAL_PIN_COLOR } from '@/lib/map';
 import { isLatLng, isPublicBlobUrl } from '@/lib/photos';
@@ -97,8 +98,8 @@ export async function loadMapData(): Promise<{ points: MapFeatureCollection; lin
   const db = getDb();
   const [trackResult, photoResult, tripResult, pinResult] = await Promise.all([
     db.execute(sql`
-      select t.id::text as id, t.name, t.activity::text as activity,
-        t.name as title, t.started_at::date::text as trip_date,
+      select t.id::text as id, t.title, t.activity::text as activity,
+        t.started_at::date::text as trip_date,
         ${whoSql('u')} as who,
         ST_AsGeoJSON(t.line::geometry) as geojson,
         ST_Y(ST_StartPoint(t.line::geometry)) as lat,
@@ -149,7 +150,7 @@ export async function loadMapData(): Promise<{ points: MapFeatureCollection; lin
       geometry: { type: 'Point', coordinates: [lng, lat] },
       properties: {
         kind: 'route',
-        title: text(row.title) ?? 'Route',
+        title: routeTitle(text(row.title)),
         who: text(row.who) ?? 'Friend',
         date: text(row.trip_date),
         activity,
@@ -169,7 +170,7 @@ export async function loadMapData(): Promise<{ points: MapFeatureCollection; lin
         properties: {
           trackId: id,
           color: colorFor(activity),
-          title: text(row.title) ?? 'Route',
+          title: routeTitle(text(row.title)),
           who: text(row.who) ?? 'Friend',
           date: text(row.trip_date),
           activity,
@@ -260,15 +261,17 @@ export async function addProfileTrack(input: {
   userId: string;
   activity: Activity;
   track: PackedTrack;
+  title?: string | null;
 }): Promise<void> {
   const wkt = lineWkt(input.track.points);
   if (!wkt) throw new Error('That GPX needs at least two points.');
   await getDb().execute(sql`
-    insert into tracks (user_id, source, name, activity, line, distance_m, elev_gain_m, started_at)
+    insert into tracks (user_id, source, name, title, activity, line, distance_m, elev_gain_m, started_at)
     values (
       ${input.userId},
       'gpx',
       ${input.track.name || 'Route'},
+      ${input.title ?? null},
       ${input.activity}::activity,
       ST_GeogFromText(${wkt}),
       ${input.track.distanceM},
@@ -310,7 +313,7 @@ export async function loadProfileLibrary(userId: string): Promise<ProfileLibrary
   const db = getDb();
   const [routes, photos] = await Promise.all([
     db.execute(sql`
-      select id::text as id, name, activity::text as activity, distance_m, elev_gain_m
+      select id::text as id, title, activity::text as activity, distance_m, elev_gain_m
       from tracks
       where user_id = ${userId}
       order by started_at desc nulls last, created_at desc
@@ -331,7 +334,7 @@ export async function loadProfileLibrary(userId: string): Promise<ProfileLibrary
       if (!id || !activity) return [];
       return [{
         id,
-        name: text(row.name) ?? 'Route',
+        name: routeTitle(text(row.title)),
         activity,
         distanceM: num(row.distance_m),
         elevGainM: num(row.elev_gain_m),
