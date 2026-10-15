@@ -1,6 +1,7 @@
 'use client';
 
 import { useActionState, useRef, useState } from 'react';
+import { SaveThenTrip } from '@/components/trips/SaveThenTrip';
 import { useReportCreated } from '@/components/trips/use-created';
 import type { DraftItem } from '@/lib/trip-draft';
 import { createPinAction, deletePinAction, updatePinAction } from '@/app/pins/actions';
@@ -193,6 +194,7 @@ export function PinForm({
       <Button tone="green" type="submit" disabled={pending || photoBusy}>
         {photoBusy ? 'Preparing photo…' : pending ? 'Saving…' : initial ? 'Save pin' : 'Drop pin'}
       </Button>
+      {!initial && !inline ? <SaveThenTrip disabled={pending || photoBusy} /> : null}
     </form>
   );
 }

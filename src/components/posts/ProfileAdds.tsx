@@ -9,6 +9,7 @@ import { Button } from '@/components/retro/Button';
 import { ACTIVITIES, ACTIVITY_META } from '@/lib/activities';
 import { formatFeetGain, formatMiles, packTrack } from '@/lib/gpx';
 import { cleanRouteTitle, routeTitle } from '@/lib/route-title';
+import { SaveThenTrip } from '@/components/trips/SaveThenTrip';
 import { useReportCreated } from '@/components/trips/use-created';
 import type { DraftItem } from '@/lib/trip-draft';
 
@@ -101,6 +102,7 @@ export function RouteUpload({
       <Button type="submit" disabled={pending || !trackJson}>
         {pending ? 'Saving…' : 'Save route'}
       </Button>
+      {inline ? null : <SaveThenTrip disabled={pending || !trackJson} />}
     </form>
   );
 }
@@ -132,6 +134,9 @@ export function PhotoUpload({
       <Button type="submit" disabled={pending || photos.length === 0 || photos.some((photo) => photo.lat == null)}>
         {pending ? 'Saving…' : 'Save photos'}
       </Button>
+      {inline ? null : (
+        <SaveThenTrip disabled={pending || photos.length === 0 || photos.some((photo) => photo.lat == null)} />
+      )}
     </form>
   );
 }
