@@ -14,7 +14,6 @@ export function CountControl({
   removeLabel,
   add,
   remove,
-  spread = false,
   children,
 }: {
   count: number;
@@ -23,7 +22,6 @@ export function CountControl({
   removeLabel: string;
   add: Step;
   remove: Step;
-  spread?: boolean;
   children?: ReactNode;
 }) {
   if (count < 1) {
@@ -38,7 +36,8 @@ export function CountControl({
   }
 
   return (
-    <div className="flex items-center gap-2" onClick={stop} onKeyDown={stop}>
+    <div className="inline-flex items-center gap-2" onClick={stop} onKeyDown={stop}>
+      {children ? <p className="text-sm font-bold">{children}</p> : null}
       <form action={remove.action}>
         <Fields fields={remove.fields} />
         <button
@@ -49,9 +48,7 @@ export function CountControl({
           −
         </button>
       </form>
-      <p className={`text-sm font-bold ${spread ? 'min-w-0 flex-1 truncate' : 'min-w-4 text-center'}`}>
-        {children ?? count}
-      </p>
+      {children ? null : <p className="min-w-4 text-center text-sm font-bold">{count}</p>}
       <form action={add.action}>
         <Fields fields={add.fields} />
         <button
