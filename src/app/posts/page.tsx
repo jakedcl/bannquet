@@ -3,11 +3,24 @@ import PageWrapper from '@/components/ui/PageWrapper';
 import TripCard from '@/components/trip-reports/TripCard';
 import { Button, StatusBar, Window } from '@/components/retro';
 import { isDatabaseConfigured } from '@/db';
+import { isPostKind, type PostKind } from '@/lib/post-kinds';
 import { listTripReports } from '@/lib/trip-reports';
 
 export const dynamic = 'force-dynamic';
 
-export default async function PostsPage() {
+const FILTERS: Array<{ href: string; id: 'all' | PostKind; label: string }> = [
+  { href: '/posts', id: 'all', label: 'All' },
+  { href: '/posts?type=trip_report', id: 'trip_report', label: 'Trip reports' },
+  { href: '/posts?type=general', id: 'general', label: 'General' },
+];
+
+type PageProps = {
+  searchParams: Promise<{ type?: string }>;
+};
+
+export default async function PostsPage({ searchParams }: PageProps) {
+  const params = await searchParams;
+  const postKind = params.type && isPostKind(params.type) ? params.type : null;
   if (!isDatabaseConfigured()) {
     return (
       <PageWrapper className="bg-gray-50">
@@ -23,7 +36,7 @@ export default async function PostsPage() {
   let posts: Awaited<ReturnType<typeof listTripReports>> | null = null;
   let failed = false;
   try {
-    posts = await listTripReports();
+    posts = await listTripReports({ postKind });
   } catch {
     failed = true;
   }
@@ -43,10 +56,16 @@ export default async function PostsPage() {
 
   return (
     <PageWrapper className="bg-gray-50">
-      <FeedShell count={posts.length}>
+      <FeedShell count={posts.length} active={postKind ?? 'all'}>
         {posts.length === 0 ? (
           <Window title="Empty">
-            <p className="text-gray-700">No posts yet. When someone writes one, it lands here and on the map.</p>
+            <p className="text-gray-700">
+              {postKind === 'trip_report'
+                ? 'No trip reports yet.'
+                : postKind === 'general'
+                  ? 'No general posts yet.'
+                  : 'No posts yet. When someone writes one, it lands here and on the map.'}
+            </p>
           </Window>
         ) : (
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -60,7 +79,15 @@ export default async function PostsPage() {
   );
 }
 
-function FeedShell({ children, count }: { children: ReactNode; count?: number }) {
+function FeedShell({
+  children,
+  count,
+  active = 'all',
+}: {
+  children: ReactNode;
+  count?: number;
+  active?: 'all' | PostKind;
+}) {
   return (
     <div className="mx-auto max-w-7xl px-4 py-12">
       <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
@@ -68,13 +95,20 @@ function FeedShell({ children, count }: { children: ReactNode; count?: number })
           <p className="text-sm uppercase tracking-[0.3em] text-brand-green/70">posts</p>
           <h1 className="text-4xl font-bold text-gray-900 md:text-5xl">Posts</h1>
           <p className="max-w-2xl text-gray-600">
-            Stories, photos, and routes from the group. Each one also shows on the map.
+            Stories, photos, and routes from the group. Trip reports also show on the map.
           </p>
         </div>
         <div className="flex gap-3">
           <Button tone="green" href="/upload?kind=post">Write a post</Button>
           <Button tone="blue" href="/map">Map</Button>
         </div>
+      </div>
+      <div className="mb-6 flex flex-wrap gap-2">
+        {FILTERS.map((filter) => (
+          <Button key={filter.id} href={filter.href} tone={active === filter.id ? 'yellow' : 'default'}>
+            {filter.label}
+          </Button>
+        ))}
       </div>
       {children}
       {typeof count === 'number' ? (

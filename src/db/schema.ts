@@ -35,6 +35,7 @@ const createdAt = timestamp('created_at', { withTimezone: true }).defaultNow().n
 
 export const userRoleEnum = pgEnum('user_role', ['member', 'admin', 'pending']);
 export const activityEnum = pgEnum('activity', ACTIVITIES);
+export const postKindEnum = pgEnum('post_kind', ['trip_report', 'general']);
 export const tripStatusEnum = pgEnum('trip_status', ['planned', 'done', 'cancelled']);
 export const rsvpEnum = pgEnum('rsvp', ['going', 'maybe', 'no']);
 export const tripMemberRoleEnum = pgEnum('trip_member_role', ['organizer', 'member']);
@@ -187,6 +188,7 @@ export const tripReports = pgTable(
     legacyAuthorEmail: text('legacy_author_email'),
     title: text('title').notNull(),
     body: text('body').notNull().default(''),
+    postKind: postKindEnum('post_kind').notNull().default('trip_report'),
     tripDate: date('trip_date'),
     activity: activityEnum('activity'),
     taggedUserIds: text('tagged_user_ids')

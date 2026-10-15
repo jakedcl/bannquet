@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Badge } from '@/components/retro';
 import { ACTIVITY_META, isActivity, mapColorForActivity } from '@/lib/activities';
+import { POST_KIND_LABELS } from '@/lib/post-kinds';
 import { formatTripDate } from '@/lib/utils';
 import { TripReportListItem } from '@/types/trip-reports';
 
@@ -48,14 +49,21 @@ export default function TripCard({ trip, index }: TripCardProps) {
         </div>
 
         <div className="p-6">
+          <div className="mb-2">
+            <Badge>{POST_KIND_LABELS[trip.postKind]}</Badge>
+          </div>
           <h2 className="mb-2 line-clamp-2 text-xl font-bold text-gray-900 retro-text-shadow transition-colors group-hover:text-brand-green">
             {trip.title}
           </h2>
 
           <div className="mb-3 flex flex-wrap items-center gap-3 text-sm text-gray-600">
             <span className="font-medium">{trip.authorName}</span>
-            <span>•</span>
-            <span>{formatTripDate(trip.tripDate)}</span>
+            {trip.tripDate ? (
+              <>
+                <span>•</span>
+                <span>{formatTripDate(trip.tripDate)}</span>
+              </>
+            ) : null}
             {trip.activity && isActivity(trip.activity) ? (
               <span className="inline-flex items-center gap-1 font-bold text-gray-800">
                 <span className="inline-block h-2 w-2" style={{ background: mapColorForActivity(trip.activity) }} />
