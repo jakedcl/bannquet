@@ -22,6 +22,13 @@ export function getBaseUrl(): string {
   return 'https://bannquet.com';
 }
 
+export function formatOptionalDate(value: string | null): string | null {
+  if (!value) return null;
+  const date = new Date(`${value.slice(0, 10)}T00:00:00`);
+  if (Number.isNaN(date.getTime())) return null;
+  return new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).format(date);
+}
+
 export function formatTripDate(value: string | null, pattern: 'short' | 'long' = 'short'): string {
   if (!value) return 'Date unknown';
   const date = new Date(`${value.slice(0, 10)}T00:00:00`);

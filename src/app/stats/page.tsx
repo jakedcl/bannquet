@@ -3,14 +3,11 @@ import PageWrapper from '@/components/ui/PageWrapper';
 import { ChallengeBadge } from '@/components/stats/ChallengeBadge';
 import { Table } from '@/components/retro/Table';
 import { Window } from '@/components/retro/Window';
-import { toggleSummit } from '@/app/stats/actions';
-import { getViewer } from '@/app/sign-in/actions';
 import { listMembers } from '@/lib/auth/members';
 import { challengeProgress, loadChallenges } from '@/lib/challenges';
 import { formatFeetGain, formatMiles } from '@/lib/gpx';
 import { LEADER_GROUPS, buildLeaderboards, type LeaderStat } from '@/lib/leaderboard';
-import { canContribute } from '@/lib/membership';
-import { ensurePeaks, listSummitCredits, summitCountsByActivity, summitCountsByUser } from '@/lib/summits';
+import { ensurePeaks, summitCountsByActivity, summitCountsByUser } from '@/lib/summits';
 import { trackTotals } from '@/lib/trips';
 import { isDatabaseConfigured } from '@/db';
 
@@ -18,24 +15,28 @@ export const dynamic = 'force-dynamic';
 
 export default async function StatsPage() {
   const challenges = loadChallenges();
-  const viewer = await getViewer();
-  const canMark = Boolean(viewer && canContribute(viewer.role));
   const ready = isDatabaseConfigured();
-  if (ready) await ensurePeaks();
+  let error: string | null = ready ? null : 'Postgres is not connected, so the numbers cannot load.';
+  let members: Awaited<ReturnType<typeof listMembers>> = [];
+  let counts: Awaited<ReturnType<typeof summitCountsByUser>> = [];
+  let totals: Awaited<ReturnType<typeof trackTotals>> = [];
+  let summitActivities: Awaited<ReturnType<typeof summitCountsByActivity>> = [];
 
-  const [members, counts, credits, totals, summitActivities] = ready
-    ? await Promise.all([
-      listMembers(),
-      summitCountsByUser(),
-      viewer ? listSummitCredits(viewer.id) : Promise.resolve([]),
-      trackTotals(),
-      summitCountsByActivity(),
-    ])
-    : [[], [], [], [], []];
+  if (ready) {
+    try {
+      await ensurePeaks();
+      [members, counts, totals, summitActivities] = await Promise.all([
+        listMembers(),
+        summitCountsByUser(),
+        trackTotals(),
+        summitCountsByActivity(),
+      ]);
+    } catch (err) {
+      error = err instanceof Error ? err.message : 'The stats did not load.';
+    }
+  }
 
   const crew = members.filter((member) => member.role !== 'pending');
-  const creditSet = new Set(credits.map((credit) => credit.peakSlug));
-  const fromRoute = new Set(credits.filter((credit) => credit.fromRoute).map((credit) => credit.peakSlug));
   const countFor = (userId: string, listId: string) =>
     counts.find((row) => row.userId === userId && row.listId === listId)?.count ?? 0;
 
@@ -79,9 +80,15 @@ export default async function StatsPage() {
   return (
     <PageWrapper>
       <div className="mx-auto max-w-3xl space-y-6 px-4 py-10">
+        {error ? (
+          <Window title="Stats">
+            <p className="text-sm font-bold">{error}</p>
+          </Window>
+        ) : null}
         <Window title="Challenges">
           <p className="mb-4 text-sm text-gray-700">
-            A route counts when it passes within about 500 feet of the summit. You can also mark one by hand.
+            Summits count when someone logs them on the <Link href="/peaks" className="underline">peaks page</Link>.
+            Miles and elevation come from routes.
           </p>
           {crew.length === 0 ? (
             <p className="text-sm">Nobody is on the list yet.</p>
@@ -107,39 +114,6 @@ export default async function StatsPage() {
             />
           )}
         </Window>
-
-        {canMark && viewer ? challenges.map((challenge) => {
-          const climbed = challenge.peaks.filter((peak) => creditSet.has(peak.slug)).length;
-          const progress = challengeProgress(challenge.peaks.length, climbed);
-          return (
-            <Window key={challenge.id} title={challenge.name}>
-              <p className="mb-3 text-sm font-bold">
-                {progress.climbed} / {progress.total}
-                {progress.complete ? <span className="ml-3"><ChallengeBadge short={challenge.short} /></span> : null}
-              </p>
-              <ul className="space-y-1">
-                {challenge.peaks.map((peak) => {
-                  const done = creditSet.has(peak.slug);
-                  return (
-                    <li key={peak.slug} className="flex items-center justify-between gap-3 text-sm">
-                      <span>
-                        {peak.name}
-                        <span className="ml-2 text-gray-600">{peak.elevationFt.toLocaleString('en-US')} ft</span>
-                        {done && fromRoute.has(peak.slug) ? <span className="ml-2 text-gray-600">from a route</span> : null}
-                      </span>
-                      <form action={toggleSummit}>
-                        <input type="hidden" name="peakSlug" value={peak.slug} />
-                        <button type="submit" className="retro-button rounded-none px-2 py-1 text-xs font-bold uppercase">
-                          {done ? 'Climbed' : 'I climbed this'}
-                        </button>
-                      </form>
-                    </li>
-                  );
-                })}
-              </ul>
-            </Window>
-          );
-        }) : null}
 
         {LEADER_GROUPS.map((group) => (
           <Window key={group.id} title={group.label}>

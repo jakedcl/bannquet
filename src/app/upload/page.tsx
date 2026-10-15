@@ -7,6 +7,8 @@ import { Button } from '@/components/retro/Button';
 import { Window } from '@/components/retro/Window';
 import { getViewer } from '@/app/sign-in/actions';
 import { listMembers } from '@/lib/auth/members';
+import { isDatabaseConfigured } from '@/db';
+import { listAttachables, type AttachChoice } from '@/lib/library';
 import { APPROVAL_WAIT, canContribute } from '@/lib/membership';
 
 export const dynamic = 'force-dynamic';
@@ -54,6 +56,7 @@ export default async function UploadPage({
         label: member.displayName || member.handle || member.email || 'Friend',
       }))
     : [];
+  const saved = kind === 'post' ? await loadSaved(viewer.id) : { routes: [], pins: [], photos: [] };
 
   return (
     <PageWrapper>
@@ -75,8 +78,9 @@ export default async function UploadPage({
             <p className="mb-4 text-sm text-gray-700">
               Pick Trip report or General. A trip report can include the day, photos, and a route.
               A general post is a note and an optional photo.
+              You can attach a route, pin, or photo you already saved, or add a new one here.
             </p>
-            <PostForm friends={friends} />
+            <PostForm friends={friends} routes={saved.routes} pins={saved.pins} photos={saved.photos} />
           </Window>
         ) : null}
         {kind === 'route' ? (
@@ -106,4 +110,14 @@ export default async function UploadPage({
       </div>
     </PageWrapper>
   );
+}
+
+async function loadSaved(userId: string): Promise<{ routes: AttachChoice[]; pins: AttachChoice[]; photos: AttachChoice[] }> {
+  const empty = { routes: [], pins: [], photos: [] };
+  if (!isDatabaseConfigured()) return empty;
+  try {
+    return await listAttachables(userId);
+  } catch {
+    return empty;
+  }
 }

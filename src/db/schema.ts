@@ -224,7 +224,7 @@ export const pins = pgTable(
     note: text('note'),
     visitedOn: date('visited_on'),
     tripId: uuid('trip_id').references(() => trips.id, { onDelete: 'set null' }),
-    tripReportId: uuid('trip_report_id').references(() => tripReports.id, { onDelete: 'cascade' }),
+    tripReportId: uuid('trip_report_id').references(() => tripReports.id, { onDelete: 'set null' }),
     createdBy: text('created_by').references(() => users.id, { onDelete: 'set null' }),
     createdAt,
   },
@@ -242,7 +242,7 @@ export const tracks = pgTable(
     id: uuid('id').primaryKey().defaultRandom(),
     userId: text('user_id').references(() => users.id, { onDelete: 'set null' }),
     tripId: uuid('trip_id').references(() => trips.id, { onDelete: 'set null' }),
-    tripReportId: uuid('trip_report_id').references(() => tripReports.id, { onDelete: 'cascade' }),
+    tripReportId: uuid('trip_report_id').references(() => tripReports.id, { onDelete: 'set null' }),
     source: trackSourceEnum('source').notNull(),
     externalId: text('external_id'),
     name: text('name').notNull(),
@@ -280,7 +280,7 @@ export const photos = pgTable(
   {
     id: uuid('id').primaryKey().defaultRandom(),
     albumId: uuid('album_id').references(() => albums.id, { onDelete: 'set null' }),
-    tripReportId: uuid('trip_report_id').references(() => tripReports.id, { onDelete: 'cascade' }),
+    tripReportId: uuid('trip_report_id').references(() => tripReports.id, { onDelete: 'set null' }),
     userId: text('user_id').references(() => users.id, { onDelete: 'set null' }),
     blobUrl: text('blob_url').notNull(),
     width: integer('width'),
@@ -383,6 +383,7 @@ export const packingListItems = pgTable(
     qty: integer('qty').notNull().default(1),
     weightG: integer('weight_g'),
     assignedTo: text('assigned_to').references(() => users.id, { onDelete: 'set null' }),
+    addedBy: text('added_by').references(() => users.id, { onDelete: 'set null' }),
     packed: boolean('packed').notNull().default(false),
     shared: boolean('shared').notNull().default(false),
   },
@@ -420,14 +421,14 @@ export const summits = pgTable(
     peakSlug: text('peak_slug')
       .notNull()
       .references(() => peaks.slug, { onDelete: 'cascade' }),
-    summitedAt: timestamp('summited_at', { withTimezone: true }).notNull(),
+    summitedAt: timestamp('summited_at', { withTimezone: true }),
     trackId: uuid('track_id').references(() => tracks.id, { onDelete: 'set null' }),
     photoId: uuid('photo_id').references(() => photos.id, { onDelete: 'set null' }),
     verified: boolean('verified').notNull().default(false),
     createdAt,
   },
   (table) => [
-    uniqueIndex('summits_user_peak_unique').on(table.userId, table.peakSlug),
+    index('summits_user_peak_idx').on(table.userId, table.peakSlug),
   ],
 );
 

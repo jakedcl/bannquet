@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 
 const SECTIONS = [
   { href: '/posts', label: 'Posts' },
+  { href: '/peaks', label: 'Peaks' },
   { href: '/stats', label: 'Stats' },
   { href: '/trips', label: 'Trips' },
 ] as const;

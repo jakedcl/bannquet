@@ -134,7 +134,7 @@ export async function deletePinAction(
   if (!PIN_ID.test(id)) return { error: 'That pin is missing.' };
   let removed = false;
   try {
-    removed = await deletePin(id, who.viewer.id);
+    removed = await deletePin(id, { id: who.viewer.id, admin: who.viewer.role === 'admin' });
   } catch {
     return { error: 'Could not delete that pin. Try again in a minute.' };
   }
