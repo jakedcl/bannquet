@@ -12,7 +12,7 @@ export const metadata = {
   description: 'Regional mountain weather, a map, and posts',
   appleWebApp: {
     capable: true,
-    title: 'Bannquet',
+    title: 'BANNQUET',
     statusBarStyle: 'black',
   },
 };
