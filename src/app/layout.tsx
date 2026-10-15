@@ -11,8 +11,14 @@ export const metadata = {
   title: 'Bannquet',
   description: 'Regional mountain weather, a map, and posts',
   appleWebApp: {
-    title: 'BANNQUET',
+    capable: true,
+    title: 'Bannquet',
+    statusBarStyle: 'black',
   },
+};
+
+export const viewport = {
+  themeColor: '#1e4d2b',
 };
 
 export default async function RootLayout({
