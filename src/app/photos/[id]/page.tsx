@@ -19,8 +19,15 @@ export const dynamic = 'force-dynamic';
 
 const ID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
-export default async function PhotoPage({ params }: { params: Promise<{ id: string }> }) {
+export default async function PhotoPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ id: string }>;
+  searchParams: Promise<{ addTrip?: string }>;
+}) {
   const { id } = await params;
+  const { addTrip } = await searchParams;
   if (!ID.test(id)) notFound();
   if (!isDatabaseConfigured()) {
     return (
@@ -113,6 +120,7 @@ export default async function PhotoPage({ params }: { params: Promise<{ id: stri
             entityId={photo.id}
             trips={tripChoices}
             attached={attachedTrips}
+            startOpen={addTrip === '1'}
           />
         ) : null}
       </div>

@@ -9,13 +9,15 @@ export function AddToTrip({
   entityId,
   trips,
   attached,
+  startOpen = false,
 }: {
   kind: 'route' | 'pin' | 'photo';
   entityId: string;
   trips: Array<{ id: string; title: string }>;
   attached: Array<{ id: string; title: string }>;
+  startOpen?: boolean;
 }) {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(startOpen);
   const [attachState, attach, attachPending] = useActionState(attachToTripAction, null);
   const [detachState, detach, detachPending] = useActionState(detachFromTripAction, null);
   const on = new Set(attached.map((trip) => trip.id));

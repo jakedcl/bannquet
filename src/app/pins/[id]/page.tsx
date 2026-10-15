@@ -23,8 +23,15 @@ export const dynamic = 'force-dynamic';
 
 const PIN_ID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
-export default async function PinPage({ params }: { params: Promise<{ id: string }> }) {
+export default async function PinPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ id: string }>;
+  searchParams: Promise<{ addTrip?: string }>;
+}) {
   const { id } = await params;
+  const { addTrip } = await searchParams;
   if (!PIN_ID.test(id) || !isDatabaseConfigured()) notFound();
   const pin = await loadPin(id);
   if (!pin) notFound();
@@ -108,6 +115,7 @@ export default async function PinPage({ params }: { params: Promise<{ id: string
             entityId={pin.id}
             trips={tripChoices}
             attached={attachedTrips}
+            startOpen={addTrip === '1'}
           />
         ) : null}
       </div>
