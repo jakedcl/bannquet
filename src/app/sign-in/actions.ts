@@ -1,6 +1,7 @@
 'use server';
 
 import { cookies, headers } from 'next/headers';
+import { revalidatePath, refresh } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { getAuth, isAuthConfigured } from '@/lib/auth/server';
 import {
@@ -336,7 +337,13 @@ export async function approveMember(
   if (!admin.member) return { error: admin.error ?? 'Only Jake can approve someone.' };
   const userId = String(formData.get('userId') ?? '').trim();
   if (!userId || userId === admin.member.id) return { error: 'That person is not waiting anymore.' };
-  return approvePendingMember(userId, admin.member.role);
+  const result = await approvePendingMember(userId, admin.member.role);
+  if (!result.error) {
+    revalidatePath('/admin');
+    revalidatePath('/', 'layout');
+    refresh();
+  }
+  return result;
 }
 
 export async function denyMember(
@@ -347,7 +354,13 @@ export async function denyMember(
   if (!admin.member) return { error: admin.error ?? 'Only Jake can turn someone away.' };
   const userId = String(formData.get('userId') ?? '').trim();
   if (!userId || userId === admin.member.id) return { error: 'That person is not waiting anymore.' };
-  return denyPendingMember(userId, admin.member.role);
+  const result = await denyPendingMember(userId, admin.member.role);
+  if (!result.error) {
+    revalidatePath('/admin');
+    revalidatePath('/', 'layout');
+    refresh();
+  }
+  return result;
 }
 
 export async function inviteFriend(
