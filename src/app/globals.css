@@ -311,6 +311,103 @@ button, .retro-button {
   background: #e8e8e8;
 }
 
+/* First column of every shared table: one line, ellipsis, avatars stay put. */
+.cell-primary {
+  width: 1%;
+  min-width: 7.5rem;
+  max-width: 9.5rem;
+  overflow: hidden;
+}
+
+@media (min-width: 768px) {
+  .cell-primary {
+    max-width: 18rem;
+  }
+}
+
+td.cell-primary {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+td.cell-primary > a {
+  display: block;
+  max-width: 100%;
+  min-width: 0;
+}
+
+td.cell-primary > a:not(:has(.flex)):not(:has(img)):not(:has(.avatar-frame)):not(:has(svg)) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+td.cell-primary .flex:not(.avatar-frame) {
+  min-width: 0;
+  max-width: 100%;
+  width: 100%;
+}
+
+td.cell-primary .flex:not(.avatar-frame) > :last-child {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+td.cell-primary :is(img, .avatar-frame, svg) {
+  flex-shrink: 0;
+  flex-grow: 0;
+  width: 2rem;
+  height: 2rem;
+  min-width: 2rem;
+  max-width: 2rem;
+  min-height: 2rem;
+}
+
+/* Own bar under the brown section nav. Cream, with dark type. */
+.back-bar {
+  background: #faf6ee;
+  color: #1a1a1a;
+  border-bottom: 1px solid #e4dccb;
+}
+
+.back-bar a {
+  color: #1a1a1a;
+}
+
+/* Brown section bar: one row. Shrink on a phone; scroll sideways if it still overflows. */
+.section-nav-link {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  height: 1.75rem;
+  padding: 0 0.35rem;
+  font-size: 0.625rem;
+  line-height: 1;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+@media (min-width: 380px) {
+  .section-nav-link {
+    height: 2rem;
+    padding: 0 0.5rem;
+    font-size: 0.75rem;
+  }
+}
+
+@media (min-width: 640px) {
+  .section-nav-link {
+    padding: 0 0.75rem;
+  }
+}
+
 .retro-banner {
   background: linear-gradient(to bottom, var(--brand-green-light) 0%, var(--brand-green) 50%, var(--brand-green-dark) 100%);
   border-bottom: 4px solid var(--brand-green-dark);

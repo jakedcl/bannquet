@@ -21,8 +21,8 @@ export default function PageWrapper({ children, className = '' }: PageWrapperPro
     >
       <LeafProvider>
         <Suspense fallback={null}>
-          {pathname === '/' ? null : <BackBar />}
           <SectionChrome />
+          {pathname === '/' ? null : <BackBar />}
         </Suspense>
         {children}
       </LeafProvider>
