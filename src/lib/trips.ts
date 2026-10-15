@@ -1,6 +1,5 @@
 import { sql } from 'drizzle-orm';
 import { getDb } from '@/db';
-import { gramsToOunces, ouncesToGrams } from '@/lib/packing';
 
 type QueryRows = { rows?: Record<string, unknown>[] };
 
@@ -36,15 +35,6 @@ export type TripPerson = {
   handle: string | null;
 };
 
-export type PackingRow = {
-  id: string;
-  label: string;
-  ounces: number | null;
-  assignedTo: string | null;
-  assignedName: string | null;
-  addedBy: string | null;
-};
-
 export type TripAttachment = {
   kind: 'pin' | 'route' | 'photo';
   id: string;
@@ -60,7 +50,6 @@ export type TripDetail = TripSummary & {
   notes: string;
   upcoming: boolean;
   people: TripPerson[];
-  items: PackingRow[];
   attachments: TripAttachment[];
   posts: Array<{ id: string; title: string; tripDate: string | null }>;
 };
@@ -94,7 +83,7 @@ export async function listTrips(): Promise<TripSummary[]> {
 
 export async function getTrip(id: string): Promise<TripDetail | null> {
   const db = getDb();
-  const [tripResult, peopleResult, itemResult, attachmentResult] = await Promise.all([
+  const [tripResult, peopleResult, attachmentResult] = await Promise.all([
     db.execute(sql`
       select t.id::text as id, t.title,
         coalesce(t.trip_date, t.start_at::date)::text as trip_date,
@@ -110,15 +99,6 @@ export async function getTrip(id: string): Promise<TripDetail | null> {
       join users u on u.id = tm.user_id
       where tm.trip_id = ${id}::uuid and tm.rsvp = 'going'
       order by tm.role desc, name
-    `),
-    db.execute(sql`
-      select i.id::text as id, i.label, i.weight_g, i.assigned_to, i.added_by,
-        coalesce(nullif(u.display_name, ''), nullif(u.handle, ''), null) as assigned_name
-      from packing_list_items i
-      join packing_lists l on l.id = i.list_id
-      left join users u on u.id = i.assigned_to
-      where l.trip_id = ${id}::uuid
-      order by i.label
     `),
     db.execute(sql`
       select 'pin' as kind, p.id::text as id, p.title as label, null::text as thumb
@@ -156,19 +136,6 @@ export async function getTrip(id: string): Promise<TripDetail | null> {
       const personId = text(person.id);
       if (!personId) return [];
       return [{ id: personId, name: text(person.name) ?? 'Friend', handle: text(person.handle) }];
-    }),
-    items: asRows(itemResult).flatMap((item) => {
-      const itemId = text(item.id);
-      if (!itemId) return [];
-      const grams = num(item.weight_g);
-      return [{
-        id: itemId,
-        label: text(item.label) ?? 'Item',
-        ounces: grams == null ? null : gramsToOunces(grams),
-        assignedTo: text(item.assigned_to),
-        assignedName: text(item.assigned_name),
-        addedBy: text(item.added_by),
-      }];
     }),
     attachments: asRows(attachmentResult).flatMap((item) => {
       const itemId = text(item.id);
@@ -231,41 +198,6 @@ export async function setTripGoing(tripId: string, userId: string, going: boolea
     values (${tripId}::uuid, ${userId}, 'going', 'member')
     on conflict (trip_id, user_id) do update set rsvp = 'going'
   `);
-}
-
-export async function claimPackingItem(itemId: string, userId: string): Promise<void> {
-  await getDb().execute(sql`
-    update packing_list_items
-    set assigned_to = case when assigned_to = ${userId} then null else ${userId} end
-    where id = ${itemId}::uuid
-  `);
-}
-
-export async function setPackingWeight(itemId: string, ounces: number | null): Promise<void> {
-  const grams = ounces == null ? null : ouncesToGrams(ounces);
-  await getDb().execute(sql`
-    update packing_list_items set weight_g = ${grams} where id = ${itemId}::uuid
-  `);
-}
-
-export async function addPackingItem(tripId: string, label: string, userId: string): Promise<void> {
-  await getDb().execute(sql`
-    insert into packing_list_items (list_id, label, shared, added_by)
-    select id, ${label}, true, ${userId} from packing_lists where trip_id = ${tripId}::uuid limit 1
-  `);
-}
-
-export async function deletePackingItem(itemId: string, actor: { id: string; admin: boolean }): Promise<boolean> {
-  const result = await getDb().execute(sql`
-    delete from packing_list_items i
-    using packing_lists l, trips t
-    where i.id = ${itemId}::uuid
-      and i.list_id = l.id
-      and l.trip_id = t.id
-      and (${actor.admin} or i.added_by = ${actor.id} or t.created_by = ${actor.id})
-    returning i.id::text as id
-  `);
-  return asRows(result).length > 0;
 }
 
 export async function deleteTrip(id: string, actor: { id: string; admin: boolean }): Promise<boolean> {

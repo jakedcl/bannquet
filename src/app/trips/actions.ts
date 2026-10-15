@@ -6,15 +6,11 @@ import { getViewer } from '@/app/sign-in/actions';
 import { APPROVAL_WAIT, canContribute } from '@/lib/membership';
 import { redirectToSignIn } from '@/lib/sign-in-redirect';
 import {
-  addPackingItem,
   attachItemToTrip,
-  claimPackingItem,
   createTrip,
-  deletePackingItem,
   deleteTrip,
   detachItemFromTrip,
   linkPostToTrip,
-  setPackingWeight,
   setTripGoing,
 } from '@/lib/trips';
 
@@ -58,58 +54,6 @@ export async function toggleGoing(formData: FormData): Promise<void> {
   if (!tripId) return;
   await setTripGoing(tripId, viewer.id, going);
   revalidatePath(`/trips/${tripId}`);
-}
-
-export async function toggleClaim(formData: FormData): Promise<void> {
-  const { viewer } = await contributor();
-  if (!viewer) return;
-  const tripId = String(formData.get('tripId') ?? '');
-  const itemId = String(formData.get('itemId') ?? '');
-  if (!tripId || !itemId) return;
-  await claimPackingItem(itemId, viewer.id);
-  revalidatePath(`/trips/${tripId}`);
-}
-
-export async function saveWeight(formData: FormData): Promise<void> {
-  const { viewer } = await contributor();
-  if (!viewer) return;
-  const tripId = String(formData.get('tripId') ?? '');
-  const itemId = String(formData.get('itemId') ?? '');
-  const raw = String(formData.get('ounces') ?? '').trim();
-  if (!tripId || !itemId) return;
-  if (raw === '') {
-    await setPackingWeight(itemId, null);
-  } else {
-    const ounces = Number(raw);
-    if (!Number.isFinite(ounces) || ounces < 0 || ounces > 500) return;
-    await setPackingWeight(itemId, ounces);
-  }
-  revalidatePath(`/trips/${tripId}`);
-}
-
-export async function addItem(formData: FormData): Promise<void> {
-  const { viewer } = await contributor();
-  if (!viewer) return;
-  const tripId = String(formData.get('tripId') ?? '');
-  const label = String(formData.get('label') ?? '').trim().slice(0, 80);
-  if (!tripId || !label) return;
-  await addPackingItem(tripId, label, viewer.id);
-  revalidatePath(`/trips/${tripId}`);
-}
-
-export async function deleteItem(
-  _prev: { error?: string } | null,
-  formData: FormData,
-): Promise<{ error?: string }> {
-  const { error, viewer } = await contributor();
-  if (!viewer) return { error: error ?? 'Sign in to delete that.' };
-  const tripId = String(formData.get('tripId') ?? '');
-  const itemId = String(formData.get('itemId') ?? '');
-  if (!tripId || !itemId) return { error: 'That item is missing.' };
-  const ok = await deletePackingItem(itemId, { id: viewer.id, admin: viewer.role === 'admin' });
-  if (!ok) return { error: 'You can only delete an item you added, or one on a trip you planned.' };
-  revalidatePath(`/trips/${tripId}`);
-  return {};
 }
 
 export async function deleteTripAction(
