@@ -1,17 +1,23 @@
 'use client';
 
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
-import { NavButton } from '@/components/ui/NavButton';
+import Link from 'next/link';
+import { menuItemClass, NavButton } from '@/components/ui/NavButton';
+import { NavMenu } from '@/components/ui/NavMenu';
 import PageWrapper from '@/components/ui/PageWrapper';
+import { COMMUNITY_LINKS, WEATHER_LINKS } from '@/lib/sections';
 
 export default function Home() {
+  const [openMenu, setOpenMenu] = useState<string | null>(null);
+
   return (
     <PageWrapper>
-      <section className="relative min-h-[calc(100vh-72px)] text-white flex items-center justify-center overflow-hidden border-b-4 border-brand-green-dark" style={{ boxShadow: '0 4px 12px rgba(0, 0, 0, 0.4)' }}>
+      <section className="relative flex min-h-[calc(100vh-72px)] items-center justify-center overflow-visible border-b-4 border-brand-green-dark text-white" style={{ boxShadow: '0 4px 12px rgba(0, 0, 0, 0.4)' }}>
         {/* Background Image */}
         <div 
-          className="absolute inset-0 z-0"
+          className="absolute inset-0 z-0 overflow-hidden"
           style={{
             backgroundImage: 'url(/background.jpeg)',
             backgroundSize: 'cover',
@@ -57,11 +63,37 @@ export default function Home() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2, duration: 0.6 }}
-              className="flex flex-col sm:flex-row items-center justify-center gap-6"
+              className="relative z-20 mx-auto flex w-full max-w-sm flex-col items-stretch gap-4 overflow-visible sm:max-w-none sm:flex-row sm:flex-wrap sm:items-center sm:justify-center sm:gap-6"
             >
-              <NavButton href="/mountain-weather">Mountain Weather</NavButton>
-              <NavButton href="/map">Map</NavButton>
-              <NavButton href="/community">Community</NavButton>
+              <NavMenu
+                layout="responsive"
+                size="lg"
+                href="/mountain-weather"
+                label="Mountain Weather"
+                open={openMenu === 'weather'}
+                onOpen={() => setOpenMenu('weather')}
+              >
+                {WEATHER_LINKS.map((item) => (
+                  <Link key={item.href} href={item.href} className={menuItemClass(true, 'lg')}>
+                    {item.label}
+                  </Link>
+                ))}
+              </NavMenu>
+              <NavButton href="/map" size="lg" className="w-full sm:w-auto">Map</NavButton>
+              <NavMenu
+                layout="responsive"
+                size="lg"
+                href="/community"
+                label="Community"
+                open={openMenu === 'community'}
+                onOpen={() => setOpenMenu('community')}
+              >
+                {COMMUNITY_LINKS.map((item) => (
+                  <Link key={item.href} href={item.href} className={menuItemClass(true, 'lg')}>
+                    {item.label}
+                  </Link>
+                ))}
+              </NavMenu>
             </motion.div>
           </div>
         </div>

@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import WeatherDashboard from '@/components/WeatherDashboard';
 import WeatherTicker from '@/components/ui/WeatherTicker';
 import { useRegion } from '@/contexts/RegionContext';
@@ -13,16 +14,24 @@ const STATE_NAMES: Record<string, string> = {
   me: 'Maine',
 };
 
-export function MountainWeather() {
+export function MountainWeather({ state }: { state?: string }) {
+  const router = useRouter();
   const { setRegion } = useRegion();
-  const [region, setLocalRegion] = useState(DEFAULT_REGION);
+  const requested = isRegionCode(state) ? state : DEFAULT_REGION;
+  const [region, setLocalRegion] = useState(requested);
   const sections = REGION_WEATHER_SECTIONS[region] ?? REGION_WEATHER_SECTIONS[DEFAULT_REGION];
   const regionLabel = REGION_LABELS[region] ?? region.toUpperCase();
+
+  useEffect(() => {
+    setLocalRegion(requested);
+    setRegion(requested);
+  }, [requested, setRegion]);
 
   function chooseState(next: string) {
     if (!isRegionCode(next)) return;
     setLocalRegion(next);
     setRegion(next);
+    router.replace(`/mountain-weather?state=${next}`, { scroll: false });
   }
 
   return (
