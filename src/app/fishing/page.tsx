@@ -90,36 +90,50 @@ async function forecastPanel(site: string | null, gauge: GaugeView | null) {
     );
   }
 
-  const hourly = (weather.hourlyForecast ?? []).slice(0, 6);
+  const periods = weather.forecastPeriods ?? [];
   const nws = `https://forecast.weather.gov/MapClick.php?lat=${gauge.lat}&lon=${gauge.lon}`;
 
   return (
-    <section key="forecast" className="space-y-2 border border-border-gray bg-beige/40 p-3">
+    <section key="forecast" className="space-y-2 border border-border-gray bg-beige/40 px-3 py-2">
       <h2 className="text-sm font-bold uppercase">{gauge.name}</h2>
       <p className="text-sm">
         {typeof weather.temperature === 'number' ? `Air ${weather.temperature}°F` : 'Air temperature missing'}
         {weather.windSpeed ? ` · Wind ${weather.windSpeed}` : ''}
         {weather.windDirection ? ` ${weather.windDirection}` : ''}
         {typeof weather.windGust === 'number' ? ` · Gust ${Math.round(weather.windGust)} mph` : ''}
+        {weather.conditions[0] ? ` · ${weather.conditions[0]}` : ''}
       </p>
-      {weather.conditions[0] ? <p className="text-sm text-gray-700">{weather.conditions[0]}</p> : null}
-      {hourly.length > 0 ? (
-        <ul className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-          {hourly.map((period) => (
-            <li key={period.startTime} className="bg-white p-2 text-sm retro-box-inset">
-              <span className="block font-bold">{period.name}</span>
-              <span className="block">{typeof period.temperature === 'number' ? `${period.temperature}°F` : ''}</span>
-              {period.windSpeed ? <span className="block">{period.windSpeed}</span> : null}
-              {period.shortForecast ? <span className="block text-gray-700">{period.shortForecast}</span> : null}
+      {periods.length > 0 ? (
+        <ul className="flex gap-2 overflow-x-auto pb-1">
+          {periods.map((period) => (
+            <li key={period.startTime} className="w-28 shrink-0 bg-white px-2 py-1 text-xs">
+              <span className="block font-bold">{periodLabel(period.name)}</span>
+              <span className="block">{typeof period.temperature === 'number' ? `${period.temperature}°` : '—'}</span>
+              <span className="block truncate">{period.windSpeed || '—'}</span>
+              <span className="block truncate text-gray-700">{period.shortForecast || '—'}</span>
             </li>
           ))}
         </ul>
       ) : (
-        <p className="text-sm">The forecast did not include hourly periods.</p>
+        <p className="text-sm">The forecast did not include periods.</p>
       )}
       <a href={nws} target="_blank" rel="noopener noreferrer" className="inline-block text-sm font-bold underline">
         National Weather Service forecast
       </a>
     </section>
   );
+}
+
+function periodLabel(name: string): string {
+  const trimmed = name.trim();
+  if (/^tonight$/i.test(trimmed)) return 'Tonight';
+  if (/^this afternoon$/i.test(trimmed)) return 'Today';
+  if (/^this morning$/i.test(trimmed)) return 'Morning';
+  if (/^this evening$/i.test(trimmed)) return 'Evening';
+  if (/^overnight$/i.test(trimmed)) return 'Overnight';
+  const match = trimmed.match(/^(Sunday|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday)( Night)?$/i);
+  if (!match) return trimmed;
+  const short = match[1].slice(0, 3);
+  const day = short.charAt(0).toUpperCase() + short.slice(1).toLowerCase();
+  return match[2] ? `${day} night` : day;
 }

@@ -140,7 +140,8 @@ test('flow trend ignores a prior reading that is not about 24 hours back', () =>
 })
 
 test('age and eastern clock come from the observation time', () => {
-  assert.equal(formatAge('2026-10-15T14:30:00Z', NOW), '1 hr 30 min')
+  assert.equal(formatAge('2026-10-15T14:30:00Z', NOW), '1h 30m ago')
+  assert.equal(formatAge('2026-10-15T15:21:00Z', NOW), '39m ago')
   assert.equal(formatFlowDelta(0), '0')
   assert.equal(formatFlowDelta(5.3), '+5.3')
   const clock = formatEastern('2026-10-15T15:15:00Z')
