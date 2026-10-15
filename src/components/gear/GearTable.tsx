@@ -70,7 +70,7 @@ export function GearTable({
       header: 'Item',
       sticky: true,
       sortValue: (row) => row.name,
-      cell: (row) => <span className="font-bold">{row.name}</span>,
+      cell: (row) => <Link href={`/gear/${row.id}`} className="font-bold underline">{row.name}</Link>,
     },
     {
       id: 'category',
