@@ -78,6 +78,13 @@
       "when": 1792040000000,
       "tag": "0010_chat_gear",
       "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1792044000000,
+      "tag": "0011_gear_category",
+      "breakpoints": true
     }
   ]
 }

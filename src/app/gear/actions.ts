@@ -2,7 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 import { getViewer } from '@/app/sign-in/actions';
-import { addGearItem, deleteGearHold, deleteGearItem, setGearHold } from '@/lib/gear';
+import { addGearItem, adjustGearHold, deleteGearHold, deleteGearItem, setGearHold } from '@/lib/gear';
 import { APPROVAL_WAIT, canContribute, canDeleteOwned } from '@/lib/membership';
 import { redirectToSignIn } from '@/lib/sign-in-redirect';
 
@@ -15,11 +15,26 @@ export async function addGearAction(
   const viewer = await getViewer();
   if (!viewer) return redirectToSignIn();
   if (!canContribute(viewer.role)) return { error: APPROVAL_WAIT };
-  const result = await addGearItem(String(formData.get('name') ?? ''), viewer.id);
+  const result = await addGearItem(
+    String(formData.get('name') ?? ''),
+    viewer.id,
+    String(formData.get('category') ?? ''),
+  );
   if (result === 'empty') return { error: 'Name the item.' };
   if (result === 'taken') return { error: 'That item is already on the list.' };
   revalidatePath('/gear');
   return {};
+}
+
+export async function changeHoldAction(formData: FormData): Promise<void> {
+  const viewer = await getViewer();
+  if (!viewer) return redirectToSignIn();
+  if (!canContribute(viewer.role)) return;
+  const gearId = String(formData.get('gearId') ?? '');
+  const delta = Number(formData.get('delta'));
+  if (!UUID.test(gearId) || (delta !== 1 && delta !== -1)) return;
+  await adjustGearHold(gearId, viewer.id, delta);
+  revalidatePath('/gear');
 }
 
 export async function setHoldAction(formData: FormData): Promise<void> {

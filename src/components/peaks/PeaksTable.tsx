@@ -2,123 +2,122 @@
 
 import { useMemo, useState } from 'react';
 import Link from 'next/link';
-import { Table } from '@/components/retro/Table';
+import { logClimbAction, removeLatestClimbAction } from '@/app/peaks/actions';
+import { DataTable, type DataColumn } from '@/components/ui/DataTable';
+import { FilterPills } from '@/components/ui/FilterPills';
+import { SearchBar } from '@/components/ui/SearchBar';
+import { CountControl } from '@/components/ui/CountControl';
 
 export type PeakTableRow = {
   slug: string;
   name: string;
   elevationFt: number;
-  listId: string;
-  listName: string;
-  area: string;
+  state: string;
   climbs: number;
+  mine: number;
 };
+
+const STATE_ORDER = ['NY', 'NH', 'VT', 'ME'];
 
 export function PeaksTable({
   rows,
-  lists,
-  areas,
+  canMark,
 }: {
   rows: PeakTableRow[];
-  lists: Array<{ id: string; name: string }>;
-  areas: string[];
+  canMark: boolean;
 }) {
   const [query, setQuery] = useState('');
-  const [area, setArea] = useState('');
-  const [listId, setListId] = useState('');
-  const [climbedOnly, setClimbedOnly] = useState(false);
+  const [state, setState] = useState('all');
+  const [climbed, setClimbed] = useState('all');
+  const states = useMemo(() => {
+    const found = new Set(rows.map((row) => row.state));
+    return [...STATE_ORDER.filter((code) => found.has(code)), ...[...found].filter((code) => !STATE_ORDER.includes(code)).sort()];
+  }, [rows]);
 
   const shown = useMemo(() => {
     const needle = query.trim().toLowerCase();
     return rows.filter((row) => {
       if (needle && !row.name.toLowerCase().includes(needle)) return false;
-      if (area && row.area !== area) return false;
-      if (listId && row.listId !== listId) return false;
-      if (climbedOnly && row.climbs < 1) return false;
+      if (state !== 'all' && row.state !== state) return false;
+      if (climbed === 'yes' && row.mine < 1) return false;
+      if (climbed === 'no' && row.mine > 0) return false;
       return true;
     });
-  }, [rows, query, area, listId, climbedOnly]);
+  }, [rows, query, state, climbed]);
+
+  const columns: DataColumn<PeakTableRow>[] = [
+    {
+      id: 'name',
+      header: 'Peak',
+      sticky: true,
+      sortValue: (row) => row.name,
+      cell: (row) => <Link href={`/peaks/${row.slug}`} className="font-bold underline">{row.name}</Link>,
+    },
+    {
+      id: 'state',
+      header: 'State',
+      sortValue: (row) => row.state,
+      cell: (row) => row.state,
+    },
+    {
+      id: 'elevation',
+      header: 'Elevation',
+      align: 'right',
+      sortValue: (row) => row.elevationFt,
+      cell: (row) => `${row.elevationFt.toLocaleString('en-US')} ft`,
+    },
+    {
+      id: 'climbs',
+      header: 'Climbs',
+      align: 'right',
+      sortValue: (row) => row.climbs,
+      cell: (row) => String(row.climbs),
+    },
+    {
+      id: 'you',
+      header: 'You',
+      sortValue: (row) => row.mine,
+      cell: (row) => canMark ? (
+        <CountControl
+          count={row.mine}
+          zeroLabel="I climbed this"
+          addLabel="Log another climb"
+          removeLabel="Remove a climb"
+          add={{ action: logClimbAction, fields: { peakSlug: row.slug } }}
+          remove={{ action: removeLatestClimbAction, fields: { peakSlug: row.slug } }}
+        />
+      ) : (
+        <span>{row.mine > 0 ? row.mine : '—'}</span>
+      ),
+    },
+  ];
 
   return (
-    <div className="space-y-4">
-      <div className="grid gap-2 sm:grid-cols-2">
-        <label className="block space-y-1 sm:col-span-2">
-          <span className="text-xs font-bold uppercase">Search</span>
-          <input
-            value={query}
-            onChange={(event) => setQuery(event.target.value)}
-            placeholder="Peak name"
-            className="w-full retro-box-inset bg-white px-3 py-2 text-sm"
-          />
-        </label>
-        <label className="block space-y-1">
-          <span className="text-xs font-bold uppercase">Area</span>
-          <select
-            value={area}
-            onChange={(event) => setArea(event.target.value)}
-            className="w-full retro-box-inset bg-white px-3 py-2 text-sm"
-          >
-            <option value="">All areas</option>
-            {areas.map((item) => (
-              <option key={item} value={item}>{item}</option>
-            ))}
-          </select>
-        </label>
-        <label className="block space-y-1">
-          <span className="text-xs font-bold uppercase">List</span>
-          <select
-            value={listId}
-            onChange={(event) => setListId(event.target.value)}
-            className="w-full retro-box-inset bg-white px-3 py-2 text-sm"
-          >
-            <option value="">All lists</option>
-            {lists.map((item) => (
-              <option key={item.id} value={item.id}>{item.name}</option>
-            ))}
-          </select>
-        </label>
-        <label className="flex items-center gap-2 text-sm font-bold sm:col-span-2">
-          <input
-            type="checkbox"
-            checked={climbedOnly}
-            onChange={(event) => setClimbedOnly(event.target.checked)}
-          />
-          Climbed only
-        </label>
-      </div>
-
-      {shown.length === 0 ? (
-        <p className="text-sm">No peaks match.</p>
-      ) : (
-        <>
-          <ul className="space-y-2 md:hidden">
-            {shown.map((row) => (
-              <li key={row.slug}>
-                <Link href={`/peaks/${row.slug}`} className="block bg-white p-3 retro-box-inset">
-                  <span className="font-bold">{row.name}</span>
-                  <span className="mt-1 block text-sm text-gray-700">
-                    {row.elevationFt.toLocaleString('en-US')} ft · {row.area}
-                  </span>
-                  <span className="block text-sm text-gray-700">
-                    {row.listName} · {row.climbs} {row.climbs === 1 ? 'climb' : 'climbs'}
-                  </span>
-                </Link>
-              </li>
-            ))}
-          </ul>
-          <div className="hidden md:block">
-            <Table
-              headers={['Peak', 'Elevation', 'Area', 'Climbs']}
-              rows={shown.map((row) => [
-                <Link key={row.slug} href={`/peaks/${row.slug}`} className="font-bold underline">{row.name}</Link>,
-                `${row.elevationFt.toLocaleString('en-US')} ft`,
-                row.area,
-                String(row.climbs),
-              ])}
-            />
-          </div>
-        </>
-      )}
+    <div className="space-y-3">
+      <SearchBar value={query} onChange={setQuery} placeholder="Peak name" />
+      <FilterPills
+        label="State"
+        value={state}
+        onChange={setState}
+        options={[{ id: 'all', label: 'All' }, ...states.map((code) => ({ id: code, label: code }))]}
+      />
+      <FilterPills
+        label="Climbed"
+        value={climbed}
+        onChange={setClimbed}
+        options={[
+          { id: 'all', label: 'All' },
+          { id: 'yes', label: 'Climbed' },
+          { id: 'no', label: 'Not climbed' },
+        ]}
+      />
+      <DataTable
+        rows={shown}
+        columns={columns}
+        rowKey={(row) => row.slug}
+        empty={rows.length === 0 ? 'No peaks yet.' : 'No peaks match.'}
+        defaultSort={{ id: 'climbs', dir: 'desc' }}
+      />
     </div>
   );
 }
