@@ -4,12 +4,25 @@ import { useActionState } from 'react';
 import { createAccount } from '@/app/sign-in/actions';
 import { Button } from '@/components/retro/Button';
 import { PasswordField } from '@/components/auth/PasswordField';
+import { SignupTraps } from '@/components/auth/SignupTraps';
 
-export function CreateAccountForm({ email, inviteCode }: { email: string; inviteCode: string }) {
+export function CreateAccountForm({
+  email,
+  inviteCode,
+  stamp,
+}: {
+  email: string;
+  inviteCode: string;
+  stamp: string;
+}) {
   const [state, action, pending] = useActionState(createAccount, null);
+  if (state?.done) {
+    return <p className="text-sm">Account made. Sign in with that email.</p>;
+  }
 
   return (
     <form action={action} className="space-y-4">
+      <SignupTraps stamp={stamp} />
       <p className="text-sm text-gray-700">
         This invite is for the email below. Add your name, pick a username, and choose a password you can
         remember.
