@@ -49,6 +49,8 @@ export interface WeatherData {
   icon?: string;
   hourlyForecast?: ForecastSnippet[];
   dailyForecast?: ForecastSnippet[];
+  /** NWS 12-hour periods, with the original names (Tonight, Thursday, Thursday Night). */
+  forecastPeriods?: ForecastSnippet[];
 }
 
 export type ForecastSnippet = {

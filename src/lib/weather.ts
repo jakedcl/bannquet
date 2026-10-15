@@ -145,6 +145,7 @@ export async function getWeather(lat: number, lon: number): Promise<WeatherData>
 
   const hourlyForecast = mapForecastSlice(hourlyPeriods.slice(0, 8));
   const dailyForecast = buildDailyHighLow(dailyPeriods, 7);
+  const forecastPeriods = mapForecastSlice(dailyPeriods.slice(0, 8));
   
   return {
     temperature: temperatureF,
@@ -168,6 +169,7 @@ export async function getWeather(lat: number, lon: number): Promise<WeatherData>
     icon: currentPeriod.icon,
     hourlyForecast,
     dailyForecast,
+    forecastPeriods,
   };
 }
 

@@ -20,21 +20,28 @@ function blank(state: FieldState): string {
 }
 
 function reading(state: FieldState, value: string | null, note: string | null) {
-  if (state !== 'value' || !value) return <span className="text-gray-700">{blank(state)}</span>;
+  const text = state === 'value' && value ? value : blank(state);
   return (
-    <span>
-      {value}
-      {note ? <span className="mt-1 block text-xs text-gray-700">{note}</span> : null}
+    <span className="whitespace-nowrap" title={note ?? undefined}>
+      {text}
     </span>
   );
 }
 
-function updated(iso: string | null, now: number): string {
-  if (!iso) return '';
+function updated(iso: string | null, now: number) {
+  if (!iso) return '—';
   const age = formatAge(iso, now);
   const clock = formatEastern(iso);
-  if (age && clock) return `${age} · ${clock}`;
-  return clock ?? age ?? '';
+  return (
+    <span className="whitespace-nowrap" title={clock ?? undefined}>
+      {age ?? clock ?? '—'}
+    </span>
+  );
+}
+
+function line(value: string | null | undefined) {
+  if (!value) return '';
+  return <span className="whitespace-nowrap" title={value}>{value}</span>;
 }
 
 function leadingNumber(value: string | null): number | null {
@@ -106,12 +113,12 @@ export function RiversBoard({
       sticky: true,
       sortValue: (gauge) => gauge.name,
       cell: (gauge) => (
-        <span>
-          <button type="button" onClick={() => select(gauge.site)} className="text-left font-bold underline">
+        <span className="inline-flex max-w-full items-baseline gap-2">
+          <button type="button" onClick={() => select(gauge.site)} title={gauge.name} className="min-w-0 truncate text-left font-bold underline">
             {gauge.name}
           </button>
-          {selected === gauge.site ? <span className="mt-1 block text-xs font-bold uppercase">Selected</span> : null}
-          <a href={gauge.usgsHref} target="_blank" rel="noopener noreferrer" className="mt-1 block text-xs underline">
+          {selected === gauge.site ? <span className="shrink-0 text-xs font-bold uppercase">Selected</span> : null}
+          <a href={gauge.usgsHref} target="_blank" rel="noopener noreferrer" className="shrink-0 whitespace-nowrap text-xs underline">
             USGS
           </a>
         </span>
@@ -121,7 +128,7 @@ export function RiversBoard({
       id: 'region',
       header: 'Region',
       sortValue: (gauge) => gauge.region,
-      cell: (gauge) => gauge.county ? `${gauge.region} · ${gauge.county}` : gauge.region,
+      cell: (gauge) => line(gauge.county ? `${gauge.region} · ${gauge.county}` : gauge.region),
     },
     {
       id: 'flow',
@@ -135,7 +142,7 @@ export function RiversBoard({
       header: '24h',
       align: 'right',
       sortValue: (gauge) => leadingNumber(gauge.trend),
-      cell: (gauge) => gauge.trend ?? '—',
+      cell: (gauge) => line(gauge.trend ?? '—'),
     },
     {
       id: 'height',
@@ -160,28 +167,35 @@ export function RiversBoard({
       id: 'status',
       header: 'Status',
       sortValue: (gauge) => gauge.status,
-      cell: (gauge) => gauge.status ?? '',
+      cell: (gauge) => line(gauge.status),
     },
   ];
 
   const parkingColumns: DataColumn<ParkingArea>[] = [
-    { id: 'water', header: 'Water', sticky: true, sortValue: (area) => area.water, cell: (area) => area.water },
-    { id: 'town', header: 'Town', sortValue: (area) => area.town, cell: (area) => area.town ?? '' },
-    { id: 'county', header: 'County', sortValue: (area) => area.county, cell: (area) => area.county ?? '' },
-    { id: 'road', header: 'Road', sortValue: (area) => area.road, cell: (area) => area.road ?? '' },
-    { id: 'stocked', header: 'Stocked', sortValue: (area) => area.stocked, cell: (area) => area.stocked ?? '' },
-    { id: 'trout', header: 'Trout present', sortValue: (area) => area.troutPresent, cell: (area) => area.troutPresent ?? '' },
+    {
+      id: 'water',
+      header: 'Water',
+      sticky: true,
+      sortValue: (area) => area.water,
+      cell: (area) => <span className="block truncate font-bold" title={area.water}>{area.water}</span>,
+    },
+    { id: 'town', header: 'Town', sortValue: (area) => area.town, cell: (area) => line(area.town) },
+    { id: 'county', header: 'County', sortValue: (area) => area.county, cell: (area) => line(area.county) },
+    { id: 'road', header: 'Road', sortValue: (area) => area.road, cell: (area) => line(area.road) },
+    { id: 'stocked', header: 'Stocked', sortValue: (area) => area.stocked, cell: (area) => line(area.stocked) },
+    { id: 'trout', header: 'Trout present', sortValue: (area) => area.troutPresent, cell: (area) => line(area.troutPresent) },
     {
       id: 'links',
       header: 'Links',
       sortValue: () => null,
       cell: (area) => (
-        <span>
+        <span className="whitespace-nowrap">
           {area.mapHref ? (
-            <a href={area.mapHref} target="_blank" rel="noopener noreferrer" className="block underline">PDF map</a>
+            <a href={area.mapHref} target="_blank" rel="noopener noreferrer" className="underline">Map</a>
           ) : null}
+          {area.mapHref && area.rulesHref ? ' · ' : null}
           {area.rulesHref ? (
-            <a href={area.rulesHref} target="_blank" rel="noopener noreferrer" className="block underline">Special regulations</a>
+            <a href={area.rulesHref} target="_blank" rel="noopener noreferrer" className="underline">Rules</a>
           ) : null}
         </span>
       ),

@@ -148,10 +148,10 @@ export function formatAge(iso: string, now: number): string | null {
   const minutes = Math.round((now - time) / 60000)
   if (minutes < 0 || minutes > 48 * 60) return null
   if (minutes < 1) return 'just now'
-  if (minutes < 60) return `${minutes} min`
+  if (minutes < 60) return `${minutes}m ago`
   const hours = Math.floor(minutes / 60)
   const remainder = minutes % 60
-  return remainder ? `${hours} hr ${remainder} min` : `${hours} hr`
+  return remainder ? `${hours}h ${remainder}m ago` : `${hours}h ago`
 }
 
 export function formatEastern(iso: string): string | null {
