@@ -22,7 +22,7 @@ export function SectionChrome() {
     <>
       {showNav && section ? (
         <nav aria-label={`${section.label} sections`} className="border-b-2 border-[#3d2412] bg-[#5c3a1e]">
-          <div className="mx-auto flex max-w-3xl flex-wrap gap-2 px-4 py-2">
+          <div className="mx-auto flex w-full max-w-3xl flex-wrap items-center justify-start gap-2 px-4 py-2">
             {section.links.map((item) => {
               const active = linkOn(pathname, query, item.href);
               return (
