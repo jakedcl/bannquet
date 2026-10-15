@@ -14,7 +14,7 @@ export function SectionChrome() {
   const listCrumb = profileListCrumb(pathname);
   const section = listCrumb ? null : matchSection(pathname, query, account);
   const crumb = listCrumb ?? section?.crumb ?? null;
-  const showNav = Boolean(section && !section.landing);
+  const showNav = Boolean(section && !section.landing && section.links.length > 0);
 
   if (!showNav && !crumb) return null;
 

@@ -62,7 +62,7 @@ export function nextStopForMember(member: {
   handle: string | null;
   displayName: string | null;
 }): string {
-  if (profileNeedsNames(member) || !member.handle) return '/settings?welcome=1';
+  if (profileNeedsNames(member) || !member.handle) return '/account?welcome=1';
   return `/user/${member.handle}`;
 }
 

@@ -57,13 +57,13 @@ test('display name is required and stays short', () => {
   assert.equal(displayNameProblem('Jake'), null);
 });
 
-test('sign-in sends people missing a name or username to settings', () => {
+test('sign-in sends people missing a name or username to account', () => {
   assert.equal(profileNeedsNames({ handle: null, displayName: 'Jake' }), true);
   assert.equal(profileNeedsNames({ handle: 'jake', displayName: null }), true);
   assert.equal(profileNeedsNames({ handle: 'jake', displayName: '   ' }), true);
   assert.equal(profileNeedsNames({ handle: 'jake', displayName: 'Jake' }), false);
-  assert.equal(nextStopForMember({ handle: null, displayName: 'Jake' }), '/settings?welcome=1');
-  assert.equal(nextStopForMember({ handle: 'jake', displayName: null }), '/settings?welcome=1');
+  assert.equal(nextStopForMember({ handle: null, displayName: 'Jake' }), '/account?welcome=1');
+  assert.equal(nextStopForMember({ handle: 'jake', displayName: null }), '/account?welcome=1');
   assert.equal(nextStopForMember({ handle: 'jake', displayName: 'Jake' }), '/user/jake');
 });
 

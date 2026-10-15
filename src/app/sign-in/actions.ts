@@ -288,7 +288,7 @@ export async function finishSignIn(nextRaw?: string | null): Promise<void> {
     if (saved.member) member = saved.member;
   }
 
-  if (profileNeedsNames(member)) redirect('/settings?welcome=1');
+  if (profileNeedsNames(member)) redirect('/account?welcome=1');
   redirect(safeNextPath(nextRaw) ?? nextStopForMember(member));
 }
 

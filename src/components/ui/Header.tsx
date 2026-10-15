@@ -9,7 +9,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { signOutAction } from '@/app/sign-in/actions';
 import { useRegion } from '@/contexts/RegionContext';
 import { REGION_OPTIONS } from '@/lib/regions';
-import { COMMUNITY_LINKS, UPLOAD_LINKS, communitySection, pathOn, settingsLinks, settingsSection } from '@/lib/sections';
+import { COMMUNITY_LINKS, UPLOAD_LINKS, communitySection, pathOn, settingsLinks, settingsSection, visibleLinks } from '@/lib/sections';
 import { menuItemClass, navButtonClass, NavButton } from './NavButton';
 import WeatherTicker from './WeatherTicker';
 
@@ -169,7 +169,7 @@ function SiteNav({ account, pathname, home }: { account: HeaderAccount; pathname
       ) : null}
       {account ? (
         <DesktopMenu href="/settings" label="Settings" active={settingsOn} align="right">
-          {settingsLinks(account).map((item) => (
+          {visibleLinks(settingsLinks(account)).map((item) => (
             <Link key={item.href} href={item.href} className={menuItemClass(false)}>
               {item.label}
               {item.href === '/admin' && account.pendingCount ? (
@@ -274,7 +274,7 @@ function MobileNav({ account, pathname }: { account: HeaderAccount; pathname: st
       ) : null}
       {account ? (
         <MobileFold href="/settings" label="Settings" active={settingsOn}>
-          {settingsLinks(account).map((item) => (
+          {visibleLinks(settingsLinks(account)).map((item) => (
             <Link key={item.href} href={item.href} className={menuItemClass(true)}>
               {item.label}
               {item.href === '/admin' && account.pendingCount ? (
