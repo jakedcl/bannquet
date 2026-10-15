@@ -87,7 +87,6 @@ export default async function PeakPage({ params }: { params: Promise<{ slug: str
                 zeroLabel="I climbed this"
                 addLabel="Log another climb"
                 removeLabel="Remove a climb"
-                spread
                 add={{ action: logClimbAction, fields: { peakSlug: peak.slug } }}
                 remove={{ action: removeLatestClimbAction, fields: { peakSlug: peak.slug } }}
               >
