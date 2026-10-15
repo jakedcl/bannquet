@@ -46,7 +46,7 @@ function readPostFields(formData: FormData): {
   };
 } {
   const postKindRaw = String(formData.get('postKind') ?? 'trip_report');
-  if (!isPostKind(postKindRaw)) return { error: 'Pick Trip report or General.' };
+  if (!isPostKind(postKindRaw)) return { error: 'Pick Trip or General.' };
   const title = String(formData.get('title') ?? '').trim();
   const body = String(formData.get('body') ?? '').trim().slice(0, 8000);
   if (title.length < 1 || title.length > 120) return { error: 'Add a title. Keep it under 120 characters.' };
@@ -144,7 +144,7 @@ export async function publishPost(
     });
   } catch (error) {
     const message = error instanceof Error ? error.message : '';
-    if (message.includes('already on a trip report')) return { error: message };
+    if (message.includes('already on a trip')) return { error: message };
     return { error: 'Could not save that post. Try again in a minute.' };
   }
   redirect(`/posts/${id}`);

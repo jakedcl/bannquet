@@ -34,11 +34,11 @@ export async function GET(request: NextRequest) {
     response.headers.set('Cache-Control', 'public, s-maxage=120, stale-while-revalidate=300');
     return response;
   } catch (error) {
-    console.error('Error fetching trip reports:', error);
+    console.error('Error fetching trips:', error);
     return NextResponse.json(
       {
         success: false,
-        error: error instanceof Error ? error.message : 'Failed to fetch trip reports',
+        error: error instanceof Error ? error.message : 'Failed to fetch trips',
       },
       { status: 500 },
     );

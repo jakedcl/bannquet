@@ -9,7 +9,7 @@ type RouteParams = {
 export async function GET(_request: Request, { params }: RouteParams) {
   const { id } = await params;
   if (!id) {
-    return NextResponse.json({ success: false, error: 'Trip report ID is required' }, { status: 400 });
+    return NextResponse.json({ success: false, error: 'Trip ID is required' }, { status: 400 });
   }
 
   if (!isDatabaseConfigured()) {
@@ -22,18 +22,18 @@ export async function GET(_request: Request, { params }: RouteParams) {
   try {
     const report = await getTripReport(id);
     if (!report) {
-      return NextResponse.json({ success: false, error: 'Trip report not found' }, { status: 404 });
+      return NextResponse.json({ success: false, error: 'Trip not found' }, { status: 404 });
     }
 
     const response = NextResponse.json({ success: true, data: report });
     response.headers.set('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=600');
     return response;
   } catch (error) {
-    console.error('Error fetching trip report:', error);
+    console.error('Error fetching trip:', error);
     return NextResponse.json(
       {
         success: false,
-        error: error instanceof Error ? error.message : 'Failed to fetch trip report',
+        error: error instanceof Error ? error.message : 'Failed to fetch trip',
       },
       { status: 500 },
     );

@@ -144,7 +144,7 @@ export async function loadPin(id: string): Promise<PinDetail | null> {
     createdBy: text(row.created_by),
     who: text(row.who) ?? 'Friend',
     handle: text(row.handle),
-    post: text(row.post_id) ? { id: text(row.post_id) as string, title: text(row.post_title) ?? 'Trip report' } : null,
+    post: text(row.post_id) ? { id: text(row.post_id) as string, title: text(row.post_title) ?? 'Trip' } : null,
     photos: asRows(photoResult).flatMap((photo) => {
       const photoId = text(photo.id);
       const url = text(photo.url);

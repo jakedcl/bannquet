@@ -41,13 +41,13 @@ export function AttachReport({
           <Button type="submit" disabled={detachPending}>{detachPending ? 'Detaching…' : 'Detach'}</Button>
         </form>
       ) : reports.length === 0 ? (
-        <p className="text-sm">Write a trip report first, then you can attach this.</p>
+        <p className="text-sm">Write a trip first, then you can attach this.</p>
       ) : (
         <form action={attach} className="flex flex-wrap items-center gap-2">
           <input type="hidden" name="kind" value={kind} />
           <input type="hidden" name="entityId" value={entityId} />
           <input type="hidden" name="returnTo" value={returnTo} />
-          <label className="text-sm font-bold" htmlFor={`report-${entityId}`}>Attach to trip report</label>
+          <label className="text-sm font-bold" htmlFor={`report-${entityId}`}>Attach to trip</label>
           <select id={`report-${entityId}`} name="reportId" className="retro-box-inset bg-white px-2 py-1 text-sm">
             {reports.map((report) => (
               <option key={report.id} value={report.id}>{report.title}</option>

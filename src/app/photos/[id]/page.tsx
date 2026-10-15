@@ -13,7 +13,7 @@ import { isDatabaseConfigured } from '@/db';
 import { loadPhoto } from '@/lib/library';
 import { canContribute, canDeleteOwned } from '@/lib/membership';
 import { loadMapData } from '@/lib/posts';
-import { listAuthorPosts } from '@/lib/trips';
+import { listTripChoices, tripsForItem } from '@/lib/trips';
 
 export const dynamic = 'force-dynamic';
 
@@ -60,7 +60,12 @@ export default async function PhotoPage({ params }: { params: Promise<{ id: stri
     actorId: viewer.id,
     ownerId: photo.userId,
   }));
-  const reports = viewer && manage ? await listAuthorPosts(viewer.id).catch(() => []) : [];
+  const [tripChoices, attachedTrips] = viewer && manage
+    ? await Promise.all([
+      listTripChoices().catch(() => []),
+      tripsForItem('photo', photo.id).catch(() => []),
+    ])
+    : [[], []];
   const map = photo.lat != null && photo.lng != null ? await loadMapData().catch(() => null) : null;
 
   return (
@@ -106,8 +111,8 @@ export default async function PhotoPage({ params }: { params: Promise<{ id: stri
           <AddToTrip
             kind="photo"
             entityId={photo.id}
-            reports={reports.map((item) => ({ id: item.id, title: item.title }))}
-            attached={photo.post}
+            trips={tripChoices}
+            attached={attachedTrips}
           />
         ) : null}
       </div>

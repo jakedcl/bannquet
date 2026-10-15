@@ -3,15 +3,16 @@
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { getViewer } from '@/app/sign-in/actions';
-import { isActivity } from '@/lib/activities';
 import { APPROVAL_WAIT, canContribute } from '@/lib/membership';
 import { redirectToSignIn } from '@/lib/sign-in-redirect';
 import {
   addPackingItem,
+  attachItemToTrip,
   claimPackingItem,
   createTrip,
   deletePackingItem,
   deleteTrip,
+  detachItemFromTrip,
   linkPostToTrip,
   setPackingWeight,
   setTripGoing,
@@ -29,29 +30,19 @@ export async function createTripAction(
   formData: FormData,
 ): Promise<{ error?: string }> {
   const { error, viewer } = await contributor();
-  if (!viewer) return { error: error ?? 'Sign in to plan a trip.' };
+  if (!viewer) return { error: error ?? 'Sign in to add a trip.' };
   const title = String(formData.get('title') ?? '').trim();
   const tripDate = String(formData.get('tripDate') ?? '').trim();
-  const activity = String(formData.get('activity') ?? '');
-  const trailheadName = String(formData.get('trailheadName') ?? '').trim().slice(0, 80);
-  const lat = Number(formData.get('lat'));
-  const lng = Number(formData.get('lng'));
+  const notes = String(formData.get('notes') ?? '').trim().slice(0, 4000);
   if (!title || title.length > 80) return { error: 'Give the trip a short name.' };
   if (!/^\d{4}-\d{2}-\d{2}$/.test(tripDate)) return { error: 'Pick a date.' };
-  if (!isActivity(activity)) return { error: 'Pick what you are going to do.' };
-  if (!Number.isFinite(lat) || !Number.isFinite(lng) || Math.abs(lat) > 90 || Math.abs(lng) > 180) {
-    return { error: 'Drop a pin for the trailhead.' };
-  }
   let id = '';
   try {
     id = await createTrip({
       userId: viewer.id,
       title,
       tripDate,
-      activity,
-      trailheadName,
-      lat,
-      lng,
+      notes,
     });
   } catch {
     return { error: 'Could not save that trip. Try again in a minute.' };
@@ -134,6 +125,59 @@ export async function deleteTripAction(
   revalidatePath('/trips');
   revalidatePath('/map');
   redirect('/trips');
+}
+
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+function itemKind(value: string): 'pin' | 'route' | 'photo' | null {
+  if (value === 'pin' || value === 'route' || value === 'photo') return value;
+  return null;
+}
+
+export async function attachToTripAction(
+  _prev: { error?: string } | null,
+  formData: FormData,
+): Promise<{ error?: string }> {
+  const { error, viewer } = await contributor();
+  if (!viewer) return { error: error ?? 'Sign in to add that to a trip.' };
+  const kind = itemKind(String(formData.get('kind') ?? ''));
+  const entityId = String(formData.get('entityId') ?? '');
+  const tripId = String(formData.get('tripId') ?? '');
+  if (!kind || !UUID.test(entityId) || !UUID.test(tripId)) return { error: 'Pick a trip.' };
+  const result = await attachItemToTrip({
+    tripId,
+    kind,
+    entityId,
+    actorId: viewer.id,
+    admin: viewer.role === 'admin',
+  });
+  if (result === 'forbidden') return { error: 'You can only attach your own pins, routes, and photos.' };
+  if (result === 'missing') return { error: 'That item is missing.' };
+  revalidatePath(`/trips/${tripId}`);
+  revalidatePath('/map');
+  redirect(kind === 'route' ? `/routes/${entityId}` : kind === 'pin' ? `/pins/${entityId}` : `/photos/${entityId}`);
+}
+
+export async function detachFromTripAction(
+  _prev: { error?: string } | null,
+  formData: FormData,
+): Promise<{ error?: string }> {
+  const { error, viewer } = await contributor();
+  if (!viewer) return { error: error ?? 'Sign in to remove that.' };
+  const kind = itemKind(String(formData.get('kind') ?? ''));
+  const entityId = String(formData.get('entityId') ?? '');
+  const tripId = String(formData.get('tripId') ?? '');
+  if (!kind || !UUID.test(entityId) || !UUID.test(tripId)) return { error: 'That item is missing.' };
+  const ok = await detachItemFromTrip({
+    tripId,
+    kind,
+    entityId,
+    actorId: viewer.id,
+    admin: viewer.role === 'admin',
+  });
+  if (!ok) return { error: 'You can only remove your own pins, routes, and photos.' };
+  revalidatePath(`/trips/${tripId}`);
+  redirect(kind === 'route' ? `/routes/${entityId}` : kind === 'pin' ? `/pins/${entityId}` : `/photos/${entityId}`);
 }
 
 export async function linkPost(formData: FormData): Promise<void> {

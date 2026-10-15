@@ -119,6 +119,9 @@ export const trips = pgTable(
     trailheadPoint: geographyPoint('trailhead_point'),
     trailheadName: text('trailhead_name'),
     routePlan: text('route_plan'),
+    notes: text('notes'),
+    tripDate: date('trip_date'),
+    legacyReportId: uuid('legacy_report_id'),
     status: tripStatusEnum('status').notNull().default('planned'),
     createdBy: text('created_by').references(() => users.id, { onDelete: 'set null' }),
     createdAt,
@@ -126,6 +129,7 @@ export const trips = pgTable(
   (table) => [
     index('trips_trailhead_point_idx').using('gist', table.trailheadPoint),
     index('trips_created_by_idx').on(table.createdBy),
+    uniqueIndex('trips_legacy_report_id_unique').on(table.legacyReportId),
   ],
 );
 
@@ -302,6 +306,54 @@ export const photos = pgTable(
     index('photos_trip_report_idx').on(table.tripReportId),
     uniqueIndex('photos_report_asset_unique').on(table.tripReportId, table.legacySanityAssetId),
   ],
+);
+
+export const tripReportMap = pgTable('trip_report_map', {
+  reportId: uuid('report_id')
+    .primaryKey()
+    .references(() => tripReports.id, { onDelete: 'cascade' }),
+  tripId: uuid('trip_id')
+    .notNull()
+    .references(() => trips.id, { onDelete: 'cascade' }),
+});
+
+export const tripPins = pgTable(
+  'trip_pins',
+  {
+    tripId: uuid('trip_id')
+      .notNull()
+      .references(() => trips.id, { onDelete: 'cascade' }),
+    pinId: uuid('pin_id')
+      .notNull()
+      .references(() => pins.id, { onDelete: 'cascade' }),
+  },
+  (table) => [primaryKey({ columns: [table.tripId, table.pinId] })],
+);
+
+export const tripRoutes = pgTable(
+  'trip_routes',
+  {
+    tripId: uuid('trip_id')
+      .notNull()
+      .references(() => trips.id, { onDelete: 'cascade' }),
+    trackId: uuid('track_id')
+      .notNull()
+      .references(() => tracks.id, { onDelete: 'cascade' }),
+  },
+  (table) => [primaryKey({ columns: [table.tripId, table.trackId] })],
+);
+
+export const tripPhotos = pgTable(
+  'trip_photos',
+  {
+    tripId: uuid('trip_id')
+      .notNull()
+      .references(() => trips.id, { onDelete: 'cascade' }),
+    photoId: uuid('photo_id')
+      .notNull()
+      .references(() => photos.id, { onDelete: 'cascade' }),
+  },
+  (table) => [primaryKey({ columns: [table.tripId, table.photoId] })],
 );
 
 export const conditionReports = pgTable(

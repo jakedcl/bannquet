@@ -4,11 +4,12 @@ import PageWrapper from '@/components/ui/PageWrapper';
 import { Button } from '@/components/retro/Button';
 import { Window } from '@/components/retro/Window';
 import { ConfirmDelete } from '@/components/delete/ConfirmDelete';
-import { deleteTripAction, linkPost, toggleGoing } from '@/app/trips/actions';
+import { deleteTripAction, toggleGoing } from '@/app/trips/actions';
 import { getViewer } from '@/app/sign-in/actions';
-import { ACTIVITY_META, isActivity } from '@/lib/activities';
+import { LinkedText } from '@/components/ui/LinkedText';
+import Image from 'next/image';
 import { canContribute, canDeleteOwned } from '@/lib/membership';
-import { getTrip, listAuthorPosts } from '@/lib/trips';
+import { getTrip } from '@/lib/trips';
 import { formatTripDate } from '@/lib/utils';
 import { getWeather } from '@/lib/weather';
 import { isDatabaseConfigured } from '@/db';
@@ -21,7 +22,6 @@ export default async function TripPage({ params }: { params: Promise<{ id: strin
   const trip = await getTrip(id);
   if (!trip) notFound();
   const viewer = await getViewer();
-  const canEdit = Boolean(viewer && canContribute(viewer.role));
   const canRsvp = !viewer || canContribute(viewer.role);
   const canDeleteTrip = Boolean(viewer && canDeleteOwned({
     actorRole: viewer.role,
@@ -29,8 +29,6 @@ export default async function TripPage({ params }: { params: Promise<{ id: strin
     ownerId: trip.createdBy,
   }));
   const going = Boolean(viewer && trip.people.some((person) => person.id === viewer.id));
-  const posts = viewer && canEdit ? await listAuthorPosts(viewer.id) : [];
-  const unlinked = posts.filter((post) => post.tripId !== trip.id);
 
   return (
     <PageWrapper>
@@ -38,8 +36,9 @@ export default async function TripPage({ params }: { params: Promise<{ id: strin
         <Window title={trip.title}>
           <p className="text-sm">
             {formatTripDate(trip.tripDate, 'long')}
-            {trip.activity && isActivity(trip.activity) ? ` · ${ACTIVITY_META[trip.activity].label}` : ''}
+            {` · ${trip.upcoming ? 'Upcoming' : 'Past'}`}
           </p>
+          {trip.notes ? <div className="mt-3"><LinkedText text={trip.notes} /></div> : null}
           {trip.trailheadName ? <p className="mt-1 text-sm">Trailhead: {trip.trailheadName}</p> : null}
           {trip.lat != null && trip.lng != null ? (
             <p className="mt-2">
@@ -84,28 +83,18 @@ export default async function TripPage({ params }: { params: Promise<{ id: strin
           </Window>
         ) : null}
 
-        <Window title="Posts">
-          {trip.posts.length === 0 ? <p className="text-sm">No posts from this trip yet.</p> : (
-            <ul className="space-y-1 text-sm">
-              {trip.posts.map((post) => (
-                <li key={post.id}>
-                  <Link href={`/posts/${post.id}`} className="font-bold underline">{post.title}</Link>
-                  <span className="ml-2 text-gray-700">{formatTripDate(post.tripDate)}</span>
+        <Window title="Attached">
+          {trip.attachments.length === 0 ? <p className="text-sm">No pins, routes, or photos yet.</p> : (
+            <ul className="space-y-2 text-sm">
+              {trip.attachments.map((item) => (
+                <li key={`${item.kind}-${item.id}`} className="flex items-center gap-2">
+                  {item.thumb ? <Image src={item.thumb} alt="" width={32} height={32} className="h-8 w-8 object-cover" /> : null}
+                  <Link href={item.href} className="min-w-0 flex-1 truncate font-bold underline">{item.label}</Link>
+                  <span className="text-xs uppercase text-gray-600">{item.kind}</span>
                 </li>
               ))}
             </ul>
           )}
-          {canEdit && unlinked.length > 0 ? (
-            <form action={linkPost} className="mt-4 flex flex-wrap items-center gap-2">
-              <input type="hidden" name="tripId" value={trip.id} />
-              <select name="postId" className="retro-box-inset bg-white px-3 py-2">
-                {unlinked.map((post) => (
-                  <option key={post.id} value={post.id}>{post.title}</option>
-                ))}
-              </select>
-              <Button type="submit">Link this post</Button>
-            </form>
-          ) : null}
         </Window>
       </div>
     </PageWrapper>

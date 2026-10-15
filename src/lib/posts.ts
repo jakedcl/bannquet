@@ -424,7 +424,7 @@ export async function createPost(input: {
         where id = ${routeId}::uuid and user_id = ${input.authorId} and trip_report_id is null
         returning id::text as id
       `);
-      if (!text(asRows(linked)[0]?.id)) throw new Error('One of those routes is already on a trip report.');
+      if (!text(asRows(linked)[0]?.id)) throw new Error('One of those routes is already on a trip.');
     }
     for (const pinId of pinIds) {
       const linked = await tx.execute(sql`
@@ -433,7 +433,7 @@ export async function createPost(input: {
         where id = ${pinId}::uuid and created_by = ${input.authorId} and trip_report_id is null
         returning id::text as id
       `);
-      if (!text(asRows(linked)[0]?.id)) throw new Error('One of those pins is already on a trip report.');
+      if (!text(asRows(linked)[0]?.id)) throw new Error('One of those pins is already on a trip.');
     }
     for (const photoId of photoIds) {
       const linked = await tx.execute(sql`
@@ -442,7 +442,7 @@ export async function createPost(input: {
         where id = ${photoId}::uuid and user_id = ${input.authorId} and trip_report_id is null
         returning id::text as id
       `);
-      if (!text(asRows(linked)[0]?.id)) throw new Error('One of those photos is already on a trip report.');
+      if (!text(asRows(linked)[0]?.id)) throw new Error('One of those photos is already on a trip.');
     }
 
     return id;

@@ -182,7 +182,7 @@ export function PostForm({
             <GroupMap points={EMPTY} lines={EMPTY} picking onPick={(lng, lat) => setPoint({ lng, lat })} />
           </div>
           <p className="text-sm text-gray-700">
-            {point ? `Pin at ${point.lat.toFixed(4)}, ${point.lng.toFixed(4)}.` : 'Click the map if this report needs a new pin.'}
+            {point ? `Pin at ${point.lat.toFixed(4)}, ${point.lng.toFixed(4)}.` : 'Click the map if this trip needs a new pin.'}
           </p>
         </fieldset>
       ) : null}
@@ -216,7 +216,7 @@ function AttachList({
               <input type="checkbox" name={name} value={item.id} disabled={item.taken} />
               <span className={item.taken ? 'text-gray-500' : ''}>
                 {item.label}
-                {item.taken ? ' (already on a report)' : ''}
+                {item.taken ? ' (already on a trip)' : ''}
               </span>
             </label>
           ))}

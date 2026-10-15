@@ -14,7 +14,7 @@ import { formatFeetGain, formatMiles } from '@/lib/gpx';
 import { loadRoute } from '@/lib/library';
 import { canContribute, canDeleteOwned } from '@/lib/membership';
 import { loadMapData } from '@/lib/posts';
-import { listAuthorPosts } from '@/lib/trips';
+import { listTripChoices, tripsForItem } from '@/lib/trips';
 
 export const dynamic = 'force-dynamic';
 
@@ -61,7 +61,12 @@ export default async function RoutePage({ params }: { params: Promise<{ id: stri
     actorId: viewer.id,
     ownerId: route.userId,
   }));
-  const reports = viewer && manage ? await listAuthorPosts(viewer.id).catch(() => []) : [];
+  const [tripChoices, attachedTrips] = viewer && manage
+    ? await Promise.all([
+      listTripChoices().catch(() => []),
+      tripsForItem('route', route.id).catch(() => []),
+    ])
+    : [[], []];
   const map = route.lat != null && route.lng != null ? await loadMapData().catch(() => null) : null;
 
   return (
@@ -100,8 +105,8 @@ export default async function RoutePage({ params }: { params: Promise<{ id: stri
           <AddToTrip
             kind="route"
             entityId={route.id}
-            reports={reports.map((item) => ({ id: item.id, title: item.title }))}
-            attached={route.post}
+            trips={tripChoices}
+            attached={attachedTrips}
           />
         ) : null}
       </div>

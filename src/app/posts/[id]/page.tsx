@@ -13,6 +13,7 @@ import { canDeleteOwned } from '@/lib/membership';
 import { POST_KIND_LABELS } from '@/lib/post-kinds';
 import { loadReportTrail } from '@/lib/posts';
 import { getTripReport } from '@/lib/trip-reports';
+import { tripIdForReport } from '@/lib/trips';
 import { formatTripDate } from '@/lib/utils';
 
 export const dynamic = 'force-dynamic';
@@ -43,12 +44,20 @@ export default async function PostDetailPage({ params }: PageProps) {
         <div className="mx-auto max-w-4xl px-4 py-12">
           <Window title="Posts">
             <p className="mb-4 text-gray-700">Postgres is not connected, so this post cannot be loaded.</p>
-            <Button tone="blue" href="/posts">Back to posts</Button>
+            <Button tone="blue" href="/trips">Back to trips</Button>
           </Window>
         </div>
       </PageWrapper>
     );
   }
+
+  let mapped: string | null = null;
+  try {
+    mapped = await tripIdForReport(id);
+  } catch {
+    mapped = null;
+  }
+  if (mapped) redirect(`/trips/${mapped}`);
 
   let report: Awaited<ReturnType<typeof getTripReport>> = null;
   let error: string | null = null;
@@ -64,7 +73,7 @@ export default async function PostDetailPage({ params }: PageProps) {
         <div className="mx-auto max-w-4xl px-4 py-12">
           <Window title="Error">
             <p className="mb-4 text-red-800">{error}</p>
-            <Button tone="blue" href="/posts">Back to posts</Button>
+            <Button tone="blue" href="/trips">Back to trips</Button>
           </Window>
         </div>
       </PageWrapper>
@@ -104,7 +113,7 @@ export default async function PostDetailPage({ params }: PageProps) {
     <PageWrapper className="bg-gray-50">
       <div className="mx-auto max-w-4xl px-4 py-12">
         <div className="mb-6 flex flex-wrap gap-3">
-          <Button tone="default" href="/posts">Back to posts</Button>
+          <Button tone="default" href="/trips">Back to trips</Button>
           {showOnMap ? <Button tone="blue" href={`/map?post=${report.id}`}>On the map</Button> : null}
           {canEdit ? <Button tone="yellow" href={`/posts/${report.id}/edit`}>Edit</Button> : null}
         </div>
@@ -143,12 +152,12 @@ export default async function PostDetailPage({ params }: PageProps) {
               ? report.body.split(/\n{2,}/).map((paragraph, index) => (
                 <p key={index} className="whitespace-pre-wrap leading-relaxed">{paragraph}</p>
               ))
-              : <p className="text-gray-600">This post has no written notes.</p>}
+              : <p className="text-gray-600">This trip has no written notes.</p>}
           </div>
           <div className="mt-6">
             <p className="text-sm font-bold">Routes, pins, and photos</p>
             {attachmentRows.length === 0 ? (
-              <p className="mt-1 text-sm text-gray-700">No routes, pins, or photos on this report.</p>
+              <p className="mt-1 text-sm text-gray-700">No routes, pins, or photos on this trip.</p>
             ) : (
               <ul className="mt-2 space-y-1 text-sm">
                 {attachmentRows.map((item) => (

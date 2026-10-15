@@ -1,6 +1,5 @@
 import { sql } from 'drizzle-orm';
 import { getDb } from '@/db';
-import type { Activity } from '@/lib/activities';
 import { gramsToOunces, ouncesToGrams } from '@/lib/packing';
 
 type QueryRows = { rows?: Record<string, unknown>[] };
@@ -46,22 +45,38 @@ export type PackingRow = {
   addedBy: string | null;
 };
 
+export type TripAttachment = {
+  kind: 'pin' | 'route' | 'photo';
+  id: string;
+  label: string;
+  href: string;
+  thumb: string | null;
+};
+
 export type TripDetail = TripSummary & {
   lat: number | null;
   lng: number | null;
   createdBy: string | null;
+  notes: string;
+  upcoming: boolean;
   people: TripPerson[];
   items: PackingRow[];
+  attachments: TripAttachment[];
   posts: Array<{ id: string; title: string; tripDate: string | null }>;
 };
 
 export async function listTrips(): Promise<TripSummary[]> {
   const result = await getDb().execute(sql`
-    select t.id::text as id, t.title, t.start_at::date::text as trip_date, t.activity::text as activity,
-      t.trailhead_name,
+    select t.id::text as id, t.title,
+      coalesce(t.trip_date, t.start_at::date)::text as trip_date,
+      t.activity::text as activity, t.trailhead_name,
       (select count(*)::int from trip_members tm where tm.trip_id = t.id and tm.rsvp = 'going') as going
     from trips t
-    order by t.start_at asc nulls last, t.created_at desc
+    order by
+      case when coalesce(t.trip_date, t.start_at::date) >= current_date then 0 else 1 end,
+      case when coalesce(t.trip_date, t.start_at::date) >= current_date then coalesce(t.trip_date, t.start_at::date) end asc nulls last,
+      case when coalesce(t.trip_date, t.start_at::date) < current_date then coalesce(t.trip_date, t.start_at::date) end desc nulls last,
+      t.created_at desc
   `);
   return asRows(result).flatMap((row) => {
     const id = text(row.id);
@@ -79,10 +94,12 @@ export async function listTrips(): Promise<TripSummary[]> {
 
 export async function getTrip(id: string): Promise<TripDetail | null> {
   const db = getDb();
-  const [tripResult, peopleResult, itemResult, postResult] = await Promise.all([
+  const [tripResult, peopleResult, itemResult, postResult, attachmentResult] = await Promise.all([
     db.execute(sql`
-      select t.id::text as id, t.title, t.start_at::date::text as trip_date, t.activity::text as activity,
-        t.trailhead_name, t.created_by,
+      select t.id::text as id, t.title,
+        coalesce(t.trip_date, t.start_at::date)::text as trip_date,
+        t.activity::text as activity, t.trailhead_name, t.created_by, t.notes,
+        (coalesce(t.trip_date, t.start_at::date) is null or coalesce(t.trip_date, t.start_at::date) >= current_date) as upcoming,
         ST_Y(t.trailhead_point::geometry) as lat, ST_X(t.trailhead_point::geometry) as lng
       from trips t
       where t.id = ${id}::uuid
@@ -109,6 +126,22 @@ export async function getTrip(id: string): Promise<TripDetail | null> {
       where trip_id = ${id}::uuid and published = true
       order by trip_date desc nulls last
     `),
+    db.execute(sql`
+      select 'pin' as kind, p.id::text as id, p.title as label, null::text as thumb
+      from trip_pins tp
+      join pins p on p.id = tp.pin_id
+      where tp.trip_id = ${id}::uuid
+      union all
+      select 'route', t.id::text, t.name, null::text
+      from trip_routes tr
+      join tracks t on t.id = tr.track_id
+      where tr.trip_id = ${id}::uuid
+      union all
+      select 'photo', ph.id::text, coalesce(ph.caption, ph.alt, 'Photo'), ph.blob_url
+      from trip_photos tp
+      join photos ph on ph.id = tp.photo_id
+      where tp.trip_id = ${id}::uuid
+    `),
   ]);
   const row = asRows(tripResult)[0];
   const tripId = text(row?.id);
@@ -123,6 +156,8 @@ export async function getTrip(id: string): Promise<TripDetail | null> {
     lat: num(row.lat),
     lng: num(row.lng),
     createdBy: text(row.created_by),
+    notes: text(row.notes) ?? '',
+    upcoming: row.upcoming === true || row.upcoming === 't' || row.upcoming === 'true',
     people: asRows(peopleResult).flatMap((person) => {
       const personId = text(person.id);
       if (!personId) return [];
@@ -141,6 +176,13 @@ export async function getTrip(id: string): Promise<TripDetail | null> {
         addedBy: text(item.added_by),
       }];
     }),
+    attachments: asRows(attachmentResult).flatMap((item) => {
+      const itemId = text(item.id);
+      const kind = text(item.kind);
+      if (!itemId || (kind !== 'pin' && kind !== 'route' && kind !== 'photo')) return [];
+      const href = kind === 'pin' ? `/pins/${itemId}` : kind === 'route' ? `/routes/${itemId}` : `/photos/${itemId}`;
+      return [{ kind, id: itemId, label: text(item.label) ?? 'Item', href, thumb: text(item.thumb) }];
+    }),
     posts: asRows(postResult).flatMap((post) => {
       const postId = text(post.id);
       if (!postId) return [];
@@ -158,22 +200,19 @@ export async function createTrip(input: {
   userId: string;
   title: string;
   tripDate: string;
-  activity: Activity;
-  trailheadName: string;
-  lat: number;
-  lng: number;
+  notes: string;
 }): Promise<string> {
   const db = getDb();
   return db.transaction(async (tx) => {
     const inserted = await tx.execute(sql`
-      insert into trips (title, slug, activity, start_at, trailhead_point, trailhead_name, status, created_by)
+      insert into trips (title, slug, activity, start_at, trip_date, notes, status, created_by)
       values (
         ${input.title},
         ${tripSlug(input.title)},
-        ${input.activity}::activity,
+        'hike'::activity,
         ${input.tripDate}::date,
-        ST_SetSRID(ST_MakePoint(${input.lng}, ${input.lat}), 4326)::geography,
-        ${input.trailheadName || null},
+        ${input.tripDate}::date,
+        ${input.notes || null},
         'planned',
         ${input.userId}
       )
@@ -250,7 +289,7 @@ export async function deleteTrip(id: string, actor: { id: string; admin: boolean
 
 export async function listTripsByOwner(userId: string): Promise<TripSummary[]> {
   const result = await getDb().execute(sql`
-    select t.id::text as id, t.title, t.start_at::date::text as trip_date, t.activity::text as activity,
+    select t.id::text as id, t.title, coalesce(t.trip_date, t.start_at::date)::text as trip_date, t.activity::text as activity,
       t.trailhead_name,
       (select count(*)::int from trip_members tm where tm.trip_id = t.id and tm.rsvp = 'going') as going
     from trips t
@@ -279,6 +318,96 @@ export async function linkPostToTrip(tripId: string, postId: string, authorId: s
     returning id::text as id
   `);
   return asRows(result).length > 0;
+}
+
+export async function listTripChoices(): Promise<Array<{ id: string; title: string }>> {
+  const result = await getDb().execute(sql`
+    select id::text as id, title
+    from trips
+    order by coalesce(trip_date, start_at::date) desc nulls last, created_at desc
+  `);
+  return asRows(result).flatMap((row) => {
+    const id = text(row.id);
+    if (!id) return [];
+    return [{ id, title: text(row.title) ?? 'Trip' }];
+  });
+}
+
+export async function tripsForItem(kind: 'pin' | 'route' | 'photo', entityId: string): Promise<Array<{ id: string; title: string }>> {
+  const table = kind === 'pin' ? 'trip_pins' : kind === 'route' ? 'trip_routes' : 'trip_photos';
+  const column = kind === 'pin' ? 'pin_id' : kind === 'route' ? 'track_id' : 'photo_id';
+  const result = await getDb().execute(sql`
+    select t.id::text as id, t.title
+    from ${sql.raw(table)} link
+    join trips t on t.id = link.trip_id
+    where link.${sql.raw(column)} = ${entityId}::uuid
+    order by t.title
+  `);
+  return asRows(result).flatMap((row) => {
+    const id = text(row.id);
+    if (!id) return [];
+    return [{ id, title: text(row.title) ?? 'Trip' }];
+  });
+}
+
+export async function attachItemToTrip(input: {
+  tripId: string;
+  kind: 'pin' | 'route' | 'photo';
+  entityId: string;
+  actorId: string;
+  admin: boolean;
+}): Promise<'ok' | 'missing' | 'forbidden'> {
+  const owned = await itemOwned(input.kind, input.entityId, input.actorId, input.admin);
+  if (owned === 'missing') return 'missing';
+  if (owned === 'forbidden') return 'forbidden';
+  const trip = await getDb().execute(sql`select id::text as id from trips where id = ${input.tripId}::uuid`);
+  if (asRows(trip).length === 0) return 'missing';
+  const table = input.kind === 'pin' ? 'trip_pins' : input.kind === 'route' ? 'trip_routes' : 'trip_photos';
+  const column = input.kind === 'pin' ? 'pin_id' : input.kind === 'route' ? 'track_id' : 'photo_id';
+  await getDb().execute(sql`
+    insert into ${sql.raw(table)} (trip_id, ${sql.raw(column)})
+    values (${input.tripId}::uuid, ${input.entityId}::uuid)
+    on conflict do nothing
+  `);
+  return 'ok';
+}
+
+export async function detachItemFromTrip(input: {
+  tripId: string;
+  kind: 'pin' | 'route' | 'photo';
+  entityId: string;
+  actorId: string;
+  admin: boolean;
+}): Promise<boolean> {
+  const owned = await itemOwned(input.kind, input.entityId, input.actorId, input.admin);
+  if (owned !== 'ok') return false;
+  const table = input.kind === 'pin' ? 'trip_pins' : input.kind === 'route' ? 'trip_routes' : 'trip_photos';
+  const column = input.kind === 'pin' ? 'pin_id' : input.kind === 'route' ? 'track_id' : 'photo_id';
+  const result = await getDb().execute(sql`
+    delete from ${sql.raw(table)}
+    where trip_id = ${input.tripId}::uuid and ${sql.raw(column)} = ${input.entityId}::uuid
+    returning trip_id::text as id
+  `);
+  return asRows(result).length > 0;
+}
+
+async function itemOwned(kind: 'pin' | 'route' | 'photo', entityId: string, actorId: string, admin: boolean): Promise<'ok' | 'missing' | 'forbidden'> {
+  const result = kind === 'pin'
+    ? await getDb().execute(sql`select created_by as owner from pins where id = ${entityId}::uuid`)
+    : kind === 'route'
+      ? await getDb().execute(sql`select user_id as owner from tracks where id = ${entityId}::uuid`)
+      : await getDb().execute(sql`select user_id as owner from photos where id = ${entityId}::uuid`);
+  const owner = text(asRows(result)[0]?.owner);
+  if (asRows(result).length === 0) return 'missing';
+  if (!admin && owner !== actorId) return 'forbidden';
+  return 'ok';
+}
+
+export async function tripIdForReport(reportId: string): Promise<string | null> {
+  const result = await getDb().execute(sql`
+    select trip_id::text as id from trip_report_map where report_id = ${reportId}::uuid
+  `);
+  return text(asRows(result)[0]?.id);
 }
 
 export async function listAuthorPosts(authorId: string): Promise<Array<{ id: string; title: string; tripId: string | null }>> {

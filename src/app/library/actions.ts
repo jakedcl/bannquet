@@ -36,10 +36,10 @@ export async function attachToReportAction(
   const kind = kindOf(String(formData.get('kind') ?? ''));
   const entityId = String(formData.get('entityId') ?? '');
   const reportId = String(formData.get('reportId') ?? '');
-  if (!kind || !UUID.test(entityId) || !UUID.test(reportId)) return { error: 'Pick one of your trip reports.' };
+  if (!kind || !UUID.test(entityId) || !UUID.test(reportId)) return { error: 'Pick one of your trips.' };
   const result = await attachEntity({ actor: who.viewer, reportId, kind, entityId });
-  if (result === 'taken') return { error: 'Detach it from the other trip report first.' };
-  if (result === 'forbidden') return { error: 'You can only attach your own things to your own trip report.' };
+  if (result === 'taken') return { error: 'Detach it from the other trip first.' };
+  if (result === 'forbidden') return { error: 'You can only attach your own things to your own trip.' };
   if (result === 'missing') return { error: 'That item is missing.' };
   revalidatePath(`/posts/${reportId}`);
   revalidatePath('/map');
@@ -96,12 +96,12 @@ export async function deleteReportAction(
   formData: FormData,
 ): Promise<{ error?: string }> {
   const who = await actor();
-  if (!who.viewer) return { error: who.error ?? 'Sign in to delete a trip report.' };
+  if (!who.viewer) return { error: who.error ?? 'Sign in to delete a trip.' };
   const id = String(formData.get('id') ?? '');
   const mode = String(formData.get('mode') ?? 'report') === 'all' ? 'all' : 'report';
-  if (!UUID.test(id)) return { error: 'That trip report is missing.' };
+  if (!UUID.test(id)) return { error: 'That trip is missing.' };
   const ok = await deleteReport(id, who.viewer, mode);
-  if (!ok) return { error: 'You can only delete your own trip reports.' };
+  if (!ok) return { error: 'You can only delete your own trips.' };
   revalidatePath('/posts');
   revalidatePath('/map');
   redirect(safePath(formData, '/posts'));
