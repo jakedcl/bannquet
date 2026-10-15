@@ -8,6 +8,11 @@ import { redirectToSignIn } from '@/lib/sign-in-redirect';
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
+function refreshGear(gearId?: string) {
+  revalidatePath('/gear');
+  if (gearId && UUID.test(gearId)) revalidatePath(`/gear/${gearId}`);
+}
+
 export async function addGearAction(
   _prev: { error?: string } | null,
   formData: FormData,
@@ -34,7 +39,7 @@ export async function changeHoldAction(formData: FormData): Promise<void> {
   const delta = Number(formData.get('delta'));
   if (!UUID.test(gearId) || (delta !== 1 && delta !== -1)) return;
   await adjustGearHold(gearId, viewer.id, delta);
-  revalidatePath('/gear');
+  refreshGear(gearId);
 }
 
 export async function setHoldAction(formData: FormData): Promise<void> {
@@ -45,7 +50,7 @@ export async function setHoldAction(formData: FormData): Promise<void> {
   const qty = Number(formData.get('qty'));
   if (!UUID.test(gearId) || !Number.isInteger(qty) || qty < 0 || qty > 99) return;
   await setGearHold(gearId, viewer.id, qty);
-  revalidatePath('/gear');
+  refreshGear(gearId);
 }
 
 export async function deleteGearItemAction(
@@ -59,7 +64,7 @@ export async function deleteGearItemAction(
   if (!UUID.test(id)) return { error: 'That item is missing.' };
   const ok = await deleteGearItem(id, { id: viewer.id, admin: viewer.role === 'admin' });
   if (!ok) return { error: 'You can only remove an item you added.' };
-  revalidatePath('/gear');
+  refreshGear(id);
   return {};
 }
 
@@ -78,6 +83,6 @@ export async function deleteGearHoldAction(
   }
   const ok = await deleteGearHold(gearId, userId, { id: viewer.id, admin: viewer.role === 'admin' });
   if (!ok) return { error: 'That mark is already gone.' };
-  revalidatePath('/gear');
+  refreshGear(gearId);
   return {};
 }
