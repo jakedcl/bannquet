@@ -5,7 +5,7 @@ import { useActionState, useState } from 'react';
 import { publishPost, savePostEdits } from '@/app/trip-reports/actions';
 import { PhotoFields } from '@/components/posts/PhotoFields';
 import type { UploadedPhoto } from '@/components/posts/prepare-photo';
-import { Button } from '@/components/retro/Button';
+import { SubmitButton } from '@/components/ui/SubmitButton';
 import { ACTIVITIES, ACTIVITY_META, isActivity } from '@/lib/activities';
 import { formatFeetGain, formatMiles, packTrack } from '@/lib/gpx';
 import { PIN_KINDS, PIN_KIND_LABELS } from '@/lib/pin-kinds';
@@ -40,7 +40,7 @@ export function PostForm({
     activity: string | null;
   };
 }) {
-  const [state, action, pending] = useActionState(initial ? savePostEdits : publishPost, null);
+  const [state, action] = useActionState(initial ? savePostEdits : publishPost, null);
   const postKind: PostKind = initial?.postKind ?? 'trip_report';
   const [photos, setPhotos] = useState<UploadedPhoto[]>([]);
   const [trackJson, setTrackJson] = useState('');
@@ -186,9 +186,9 @@ export function PostForm({
       ) : null}
 
       {state?.error ? <p className="text-sm font-bold text-red-700">{state.error}</p> : null}
-      <Button tone="green" type="submit" disabled={pending || (tripReport && photos.some((photo) => photo.lat == null))}>
-        {pending ? 'Saving…' : initial ? 'Save' : 'Post it'}
-      </Button>
+      <SubmitButton tone="green" pendingLabel="Saving…" disabled={tripReport && photos.some((photo) => photo.lat == null)}>
+        {initial ? 'Save' : 'Post it'}
+      </SubmitButton>
     </form>
   );
 }

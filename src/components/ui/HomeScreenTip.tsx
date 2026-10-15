@@ -2,10 +2,10 @@
 
 import { useEffect, useState } from 'react';
 import { markHomeScreenTipSeen } from '@/app/home-screen-tip';
+import { SubmitButton } from '@/components/ui/SubmitButton';
 
 export function HomeScreenTip({ show }: { show: boolean }) {
   const [open, setOpen] = useState(false);
-  const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -30,15 +30,10 @@ export function HomeScreenTip({ show }: { show: boolean }) {
             <Step n={3} title="Keep Open as Web App on, then tap Add." art={<ToggleArt />} />
           </ol>
           {error ? <p className="text-sm font-bold text-red-700">{error}</p> : null}
-          <button
-            type="button"
-            disabled={pending}
-            className="retro-button-yellow w-full rounded-none px-4 py-2 text-sm font-bold uppercase disabled:opacity-60"
-            onClick={async () => {
-              setPending(true);
+          <form
+            action={async () => {
               setError(null);
               const result = await markHomeScreenTipSeen();
-              setPending(false);
               if (result?.error) {
                 setError(result.error);
                 return;
@@ -46,8 +41,8 @@ export function HomeScreenTip({ show }: { show: boolean }) {
               setOpen(false);
             }}
           >
-            {pending ? 'Saving…' : 'Got it'}
-          </button>
+            <SubmitButton tone="yellow" pendingLabel="Saving…" className="w-full">Got it</SubmitButton>
+          </form>
         </div>
       </div>
     </div>

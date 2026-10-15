@@ -11,6 +11,7 @@ import { useRegion } from '@/contexts/RegionContext';
 import { REGION_OPTIONS } from '@/lib/regions';
 import { COMMUNITY_LINKS, UPLOAD_LINKS, WEATHER_LINKS, communitySection, pathOn, settingsHref, settingsLinks, settingsSection, visibleLinks } from '@/lib/sections';
 import { menuItemClass, NavButton } from './NavButton';
+import { SubmitButton } from '@/components/ui/SubmitButton';
 import { NavMenu } from './NavMenu';
 import WeatherTicker from './WeatherTicker';
 
@@ -189,7 +190,7 @@ function SiteNav({ account, pathname, home }: { account: HeaderAccount; pathname
             </Link>
           ))}
           <form action={signOutAction}>
-            <button type="submit" className={menuItemClass(false)}>Log out</button>
+            <SubmitButton unstyled pendingLabel="Signing out…" className={menuItemClass(false)}>Log out</SubmitButton>
           </form>
         </NavMenu>
       ) : (
@@ -276,7 +277,7 @@ function MobileNav({ account, pathname }: { account: HeaderAccount; pathname: st
             </Link>
           ))}
           <form action={signOutAction}>
-            <button type="submit" className={menuItemClass(true)}>Log out</button>
+            <SubmitButton unstyled pendingLabel="Signing out…" className={menuItemClass(true)}>Log out</SubmitButton>
           </form>
         </NavMenu>
       ) : (

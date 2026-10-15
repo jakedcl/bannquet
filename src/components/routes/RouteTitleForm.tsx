@@ -3,11 +3,11 @@
 import { useActionState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { updateRouteTitleAction } from '@/app/library/actions';
-import { Button } from '@/components/retro/Button';
+import { SubmitButton } from '@/components/ui/SubmitButton';
 
 export function RouteTitleForm({ id, title, notes }: { id: string; title: string; notes: string }) {
   const router = useRouter();
-  const [state, action, pending] = useActionState(updateRouteTitleAction, null);
+  const [state, action] = useActionState(updateRouteTitleAction, null);
 
   useEffect(() => {
     if (!state?.saved) return;
@@ -38,7 +38,7 @@ export function RouteTitleForm({ id, title, notes }: { id: string; title: string
       </label>
       {state?.error ? <p className="text-sm font-bold text-red-700">{state.error}</p> : null}
       {state?.saved ? <p className="text-sm">Saved.</p> : null}
-      <Button type="submit" disabled={pending}>{pending ? 'Saving…' : 'Save'}</Button>
+      <SubmitButton pendingLabel="Saving…">Save</SubmitButton>
     </form>
   );
 }

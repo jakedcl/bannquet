@@ -3,12 +3,12 @@
 import { useActionState } from 'react';
 import Link from 'next/link';
 import { createPublicAccount } from '@/app/sign-in/actions';
-import { Button } from '@/components/retro/Button';
+import { SubmitButton } from '@/components/ui/SubmitButton';
 import { PasswordField } from '@/components/auth/PasswordField';
 import { SignupTraps } from '@/components/auth/SignupTraps';
 
 export function SignUpForm({ stamp }: { stamp: string }) {
-  const [state, action, pending] = useActionState(createPublicAccount, null);
+  const [state, action] = useActionState(createPublicAccount, null);
   if (state?.done) {
     return (
       <p className="text-sm">
@@ -67,9 +67,7 @@ export function SignUpForm({ stamp }: { stamp: string }) {
       />
       <PasswordField name="confirm" label="Password again" autoComplete="new-password" />
       {state?.error ? <p className="text-sm font-bold text-red-700">{state.error}</p> : null}
-      <Button tone="green" type="submit" disabled={pending}>
-        {pending ? 'Making the account…' : 'Create account'}
-      </Button>
+      <SubmitButton tone="green" pendingLabel="Making the account…">Create account</SubmitButton>
       <p className="text-sm">
         Already have one?{' '}
         <Link href="/sign-in" className="underline">

@@ -60,6 +60,28 @@
   object-fit: contain;
 }
 
+/* Chat composer: @, the field, and Send share one 2.5rem row. */
+.composer-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.composer-control,
+.composer-field {
+  box-sizing: border-box;
+  height: 2.5rem;
+  min-height: 2.5rem;
+  max-height: 2.5rem;
+}
+
+.composer-field {
+  padding-top: 0;
+  padding-bottom: 0;
+  line-height: calc(2.5rem - 6px);
+  resize: none;
+}
+
 @utility max-w-container {
   max-width: 1440px;
 }

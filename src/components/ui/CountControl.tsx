@@ -1,6 +1,7 @@
 'use client';
 
 import type { ReactNode } from 'react';
+import { SubmitButton } from '@/components/ui/SubmitButton';
 
 type Step = {
   action: (formData: FormData) => void | Promise<void>;
@@ -28,9 +29,9 @@ export function CountControl({
     return (
       <form action={add.action} onClick={stop} onKeyDown={stop}>
         <Fields fields={add.fields} />
-        <button type="submit" className="retro-button-yellow rounded-none px-3 py-2 text-xs font-bold uppercase">
+        <SubmitButton tone="yellow" pendingLabel="Saving…" className="px-3 py-2 text-xs">
           {zeroLabel}
-        </button>
+        </SubmitButton>
       </form>
     );
   }
@@ -40,24 +41,16 @@ export function CountControl({
       {children ? <p className="text-sm font-bold">{children}</p> : null}
       <form action={remove.action}>
         <Fields fields={remove.fields} />
-        <button
-          type="submit"
-          aria-label={removeLabel}
-          className="retro-button-yellow inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-none p-0 text-lg font-bold"
-        >
+        <SubmitButton icon tone="yellow" pendingLabel="Saving…" ariaLabel={removeLabel}>
           −
-        </button>
+        </SubmitButton>
       </form>
       {children ? null : <p className="min-w-4 text-center text-sm font-bold">{count}</p>}
       <form action={add.action}>
         <Fields fields={add.fields} />
-        <button
-          type="submit"
-          aria-label={addLabel}
-          className="retro-button-yellow inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-none p-0 text-lg font-bold"
-        >
+        <SubmitButton icon tone="yellow" pendingLabel="Saving…" ariaLabel={addLabel}>
           +
-        </button>
+        </SubmitButton>
       </form>
     </div>
   );

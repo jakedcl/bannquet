@@ -3,6 +3,7 @@
 import { useActionState, useState } from 'react';
 import Link from 'next/link';
 import { attachToTripAction, detachFromTripAction } from '@/app/trips/actions';
+import { SubmitButton } from '@/components/ui/SubmitButton';
 
 export function AddToTrip({
   kind,
@@ -18,8 +19,8 @@ export function AddToTrip({
   startOpen?: boolean;
 }) {
   const [open, setOpen] = useState(startOpen);
-  const [attachState, attach, attachPending] = useActionState(attachToTripAction, null);
-  const [detachState, detach, detachPending] = useActionState(detachFromTripAction, null);
+  const [attachState, attach] = useActionState(attachToTripAction, null);
+  const [detachState, detach] = useActionState(detachFromTripAction, null);
   const on = new Set(attached.map((trip) => trip.id));
 
   return (
@@ -48,18 +49,18 @@ export function AddToTrip({
                         <input type="hidden" name="kind" value={kind} />
                         <input type="hidden" name="entityId" value={entityId} />
                         <input type="hidden" name="tripId" value={trip.id} />
-                        <button type="submit" disabled={detachPending} className="w-full py-1 text-left text-sm underline disabled:opacity-60">
+                        <SubmitButton unstyled pendingLabel="Removing…" className="w-full justify-start py-1 text-left text-sm underline">
                           {trip.title} · remove
-                        </button>
+                        </SubmitButton>
                       </form>
                     ) : (
                       <form action={attach} className="min-w-0 flex-1">
                         <input type="hidden" name="kind" value={kind} />
                         <input type="hidden" name="entityId" value={entityId} />
                         <input type="hidden" name="tripId" value={trip.id} />
-                        <button type="submit" disabled={attachPending} className="w-full py-1 text-left text-sm underline disabled:opacity-60">
+                        <SubmitButton unstyled pendingLabel="Adding…" className="w-full justify-start py-1 text-left text-sm underline">
                           {trip.title}
-                        </button>
+                        </SubmitButton>
                       </form>
                     )}
                   </li>

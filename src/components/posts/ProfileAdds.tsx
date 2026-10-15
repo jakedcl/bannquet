@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { publishProfilePhotos, publishProfileTrack } from '@/app/trip-reports/actions';
 import { PhotoFields } from '@/components/posts/PhotoFields';
 import type { UploadedPhoto } from '@/components/posts/prepare-photo';
-import { Button } from '@/components/retro/Button';
+import { SubmitButton } from '@/components/ui/SubmitButton';
 import { ACTIVITIES, ACTIVITY_META } from '@/lib/activities';
 import { formatFeetGain, formatMiles, packTrack } from '@/lib/gpx';
 import { cleanRouteTitle, routeTitle } from '@/lib/route-title';
@@ -108,9 +108,9 @@ export function RouteUpload({
           Route saved. It is on the map.
         </p>
       ) : null}
-      <Button type="submit" disabled={pending || !trackJson}>
-        {pending ? 'Saving…' : 'Save route'}
-      </Button>
+      <SubmitButton pendingLabel="Saving…" disabled={!trackJson}>
+        Save route
+      </SubmitButton>
       {inline ? null : <SaveThenTrip disabled={pending || !trackJson} />}
     </form>
   );
@@ -140,9 +140,9 @@ export function PhotoUpload({
       <p className="text-sm font-bold">Add photos</p>
       <PhotoFields photos={photos} onChange={setPhotos} />
       {state?.error ? <p className="text-sm font-bold text-red-700">{state.error}</p> : null}
-      <Button type="submit" disabled={pending || photos.length === 0 || photos.some((photo) => photo.lat == null)}>
-        {pending ? 'Saving…' : 'Save photos'}
-      </Button>
+      <SubmitButton pendingLabel="Saving…" disabled={photos.length === 0 || photos.some((photo) => photo.lat == null)}>
+        Save photos
+      </SubmitButton>
       {inline ? null : (
         <SaveThenTrip disabled={pending || photos.length === 0 || photos.some((photo) => photo.lat == null)} />
       )}

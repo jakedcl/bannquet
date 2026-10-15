@@ -2,7 +2,7 @@
 
 import { useActionState } from 'react';
 import { createAccount } from '@/app/sign-in/actions';
-import { Button } from '@/components/retro/Button';
+import { SubmitButton } from '@/components/ui/SubmitButton';
 import { PasswordField } from '@/components/auth/PasswordField';
 import { SignupTraps } from '@/components/auth/SignupTraps';
 
@@ -15,7 +15,7 @@ export function CreateAccountForm({
   inviteCode: string;
   stamp: string;
 }) {
-  const [state, action, pending] = useActionState(createAccount, null);
+  const [state, action] = useActionState(createAccount, null);
   if (state?.done) {
     return <p className="text-sm">Account made. Sign in with that email.</p>;
   }
@@ -69,9 +69,7 @@ export function CreateAccountForm({
       />
       <PasswordField name="confirm" label="Password again" autoComplete="new-password" />
       {state?.error ? <p className="text-sm font-bold text-red-700">{state.error}</p> : null}
-      <Button tone="green" type="submit" disabled={pending}>
-        {pending ? 'Making the account…' : 'Create account'}
-      </Button>
+      <SubmitButton tone="green" pendingLabel="Making the account…">Create account</SubmitButton>
     </form>
   );
 }

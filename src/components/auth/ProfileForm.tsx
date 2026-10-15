@@ -4,11 +4,11 @@ import { useActionState, useEffect, useRef, useState, type ChangeEvent, type For
 import { saveProfile } from '@/app/sign-in/actions';
 import { prepareAvatar } from '@/components/auth/prepare-avatar';
 import { homeStateCode, US_STATES } from '@/lib/us-states';
-import { Button } from '@/components/retro/Button';
+import { SubmitButton } from '@/components/ui/SubmitButton';
 import type { Member } from '@/lib/auth/members';
 
 export function ProfileForm({ member }: { member: Member }) {
-  const [state, action, pending] = useActionState(saveProfile, null);
+  const [state, action] = useActionState(saveProfile, null);
   const [photoBusy, setPhotoBusy] = useState(false);
   const [photoError, setPhotoError] = useState<string | null>(null);
 
@@ -85,9 +85,9 @@ export function ProfileForm({ member }: { member: Member }) {
       {state?.error || photoError ? (
         <p className="text-sm font-bold text-red-700">{photoError || state?.error}</p>
       ) : null}
-      <Button tone="green" type="submit" disabled={pending || photoBusy}>
-        {photoBusy ? 'Preparing photo…' : pending ? 'Saving…' : 'Save profile'}
-      </Button>
+      <SubmitButton tone="green" pendingLabel="Saving…" disabled={photoBusy}>
+        {photoBusy ? 'Preparing photo…' : 'Save profile'}
+      </SubmitButton>
     </form>
   );
 }

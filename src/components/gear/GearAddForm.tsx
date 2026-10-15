@@ -2,6 +2,7 @@
 
 import { useActionState, useEffect, useState } from 'react';
 import { addGearAction } from '@/app/gear/actions';
+import { SubmitButton } from '@/components/ui/SubmitButton';
 
 export function GearAddForm({
   action,
@@ -10,7 +11,7 @@ export function GearAddForm({
   action: typeof addGearAction;
   onAdded?: () => void;
 }) {
-  const [state, formAction, pending] = useActionState(action, null);
+  const [state, formAction] = useActionState(action, null);
   useEffect(() => {
     if (state && !state.error) onAdded?.();
   }, [state, onAdded]);
@@ -24,9 +25,9 @@ export function GearAddForm({
         <span className="sr-only">Category</span>
         <input name="category" maxLength={40} placeholder="Category (optional)" className="w-full retro-box-inset bg-white px-3 py-2 text-sm" />
       </label>
-      <button type="submit" disabled={pending} className="retro-button-yellow rounded-none px-3 py-2 text-xs font-bold uppercase disabled:opacity-60">
-        {pending ? 'Adding…' : 'Add'}
-      </button>
+      <SubmitButton tone="yellow" pendingLabel="Adding…" className="px-3 py-2 text-xs">
+        Add
+      </SubmitButton>
       {state?.error ? <p className="w-full text-sm font-bold text-red-700">{state.error}</p> : null}
     </form>
   );

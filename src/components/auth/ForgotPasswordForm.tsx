@@ -3,10 +3,10 @@
 import { useActionState } from 'react';
 import Link from 'next/link';
 import { requestPasswordResetEmail } from '@/app/sign-in/actions';
-import { Button } from '@/components/retro/Button';
+import { SubmitButton } from '@/components/ui/SubmitButton';
 
 export function ForgotPasswordForm() {
-  const [state, action, pending] = useActionState(requestPasswordResetEmail, null);
+  const [state, action] = useActionState(requestPasswordResetEmail, null);
 
   return (
     <form action={action} className="space-y-4">
@@ -29,9 +29,7 @@ export function ForgotPasswordForm() {
           If that email can sign in, a reset link is on the way. It can take a minute.
         </p>
       ) : null}
-      <Button tone="green" type="submit" disabled={pending}>
-        {pending ? 'Sending…' : 'Email me a reset link'}
-      </Button>
+      <SubmitButton tone="green" pendingLabel="Sending…">Email me a reset link</SubmitButton>
       <p className="text-sm">
         <Link href="/sign-in" className="underline">
           Back to sign in

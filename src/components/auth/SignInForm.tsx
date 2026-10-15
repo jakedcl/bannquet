@@ -3,11 +3,11 @@
 import { useActionState } from 'react';
 import Link from 'next/link';
 import { signInWithPassword } from '@/app/sign-in/actions';
-import { Button } from '@/components/retro/Button';
+import { SubmitButton } from '@/components/ui/SubmitButton';
 import { PasswordField } from '@/components/auth/PasswordField';
 
 export function SignInForm({ next = '' }: { next?: string }) {
-  const [state, action, pending] = useActionState(signInWithPassword, null);
+  const [state, action] = useActionState(signInWithPassword, null);
 
   return (
     <form action={action} className="space-y-4">
@@ -24,9 +24,7 @@ export function SignInForm({ next = '' }: { next?: string }) {
       </label>
       <PasswordField name="password" label="Password" autoComplete="current-password" />
       {state?.error ? <p className="text-sm font-bold text-red-700">{state.error}</p> : null}
-      <Button tone="green" type="submit" disabled={pending}>
-        {pending ? 'Signing in…' : 'Sign in'}
-      </Button>
+      <SubmitButton tone="green" pendingLabel="Signing in…">Sign in</SubmitButton>
       <p className="text-sm">
         <Link href="/forgot-password" className="underline">
           Forgot your password?
