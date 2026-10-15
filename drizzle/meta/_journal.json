@@ -92,6 +92,13 @@
       "when": 1792048000000,
       "tag": "0012_trip_entity",
       "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "7",
+      "when": 1792052000000,
+      "tag": "0013_drop_trip_reports",
+      "breakpoints": true
     }
   ]
 }

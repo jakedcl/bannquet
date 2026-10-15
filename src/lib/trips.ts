@@ -94,7 +94,7 @@ export async function listTrips(): Promise<TripSummary[]> {
 
 export async function getTrip(id: string): Promise<TripDetail | null> {
   const db = getDb();
-  const [tripResult, peopleResult, itemResult, postResult, attachmentResult] = await Promise.all([
+  const [tripResult, peopleResult, itemResult, attachmentResult] = await Promise.all([
     db.execute(sql`
       select t.id::text as id, t.title,
         coalesce(t.trip_date, t.start_at::date)::text as trip_date,
@@ -119,12 +119,6 @@ export async function getTrip(id: string): Promise<TripDetail | null> {
       left join users u on u.id = i.assigned_to
       where l.trip_id = ${id}::uuid
       order by i.label
-    `),
-    db.execute(sql`
-      select id::text as id, title, trip_date::text as trip_date
-      from trip_reports
-      where trip_id = ${id}::uuid and published = true
-      order by trip_date desc nulls last
     `),
     db.execute(sql`
       select 'pin' as kind, p.id::text as id, p.title as label, null::text as thumb
@@ -183,11 +177,7 @@ export async function getTrip(id: string): Promise<TripDetail | null> {
       const href = kind === 'pin' ? `/pins/${itemId}` : kind === 'route' ? `/routes/${itemId}` : `/photos/${itemId}`;
       return [{ kind, id: itemId, label: text(item.label) ?? 'Item', href, thumb: text(item.thumb) }];
     }),
-    posts: asRows(postResult).flatMap((post) => {
-      const postId = text(post.id);
-      if (!postId) return [];
-      return [{ id: postId, title: text(post.title) ?? 'Post', tripDate: text(post.trip_date) }];
-    }),
+    posts: [],
   };
 }
 
@@ -310,14 +300,8 @@ export async function listTripsByOwner(userId: string): Promise<TripSummary[]> {
   });
 }
 
-export async function linkPostToTrip(tripId: string, postId: string, authorId: string): Promise<boolean> {
-  const result = await getDb().execute(sql`
-    update trip_reports
-    set trip_id = ${tripId}::uuid
-    where id = ${postId}::uuid and author_id = ${authorId} and published = true
-    returning id::text as id
-  `);
-  return asRows(result).length > 0;
+export async function linkPostToTrip(_tripId: string, _postId: string, _authorId: string): Promise<boolean> {
+  return false;
 }
 
 export async function listTripChoices(): Promise<Array<{ id: string; title: string }>> {
@@ -403,25 +387,8 @@ async function itemOwned(kind: 'pin' | 'route' | 'photo', entityId: string, acto
   return 'ok';
 }
 
-export async function tripIdForReport(reportId: string): Promise<string | null> {
-  const result = await getDb().execute(sql`
-    select trip_id::text as id from trip_report_map where report_id = ${reportId}::uuid
-  `);
-  return text(asRows(result)[0]?.id);
-}
-
-export async function listAuthorPosts(authorId: string): Promise<Array<{ id: string; title: string; tripId: string | null }>> {
-  const result = await getDb().execute(sql`
-    select id::text as id, title, trip_id::text as trip_id
-    from trip_reports
-    where author_id = ${authorId} and published = true and post_kind = 'trip_report'
-    order by trip_date desc nulls last, created_at desc
-  `);
-  return asRows(result).flatMap((row) => {
-    const id = text(row.id);
-    if (!id) return [];
-    return [{ id, title: text(row.title) ?? 'Post', tripId: text(row.trip_id) }];
-  });
+export async function tripIdForReport(_reportId: string): Promise<string | null> {
+  return null;
 }
 
 export async function trackTotals(): Promise<Array<{ userId: string; activity: string; distanceM: number; elevGainM: number }>> {
