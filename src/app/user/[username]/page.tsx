@@ -6,7 +6,7 @@ import { ChallengeBadge } from '@/components/stats/ChallengeBadge';
 import { Badge } from '@/components/retro/Badge';
 import { Button } from '@/components/retro/Button';
 import { Window } from '@/components/retro/Window';
-import { getViewer } from '@/app/sign-in/actions';
+import { getViewer, signOutAction } from '@/app/sign-in/actions';
 import { findHandleRedirect, findMemberByHandle } from '@/lib/auth/members';
 import { ACTIVITY_META } from '@/lib/activities';
 import { loadLoggedActivities, loadProfilePins } from '@/lib/pins';
@@ -167,6 +167,11 @@ export default async function UserPage({ params }: { params: Promise<{ username:
           <Window title="Gear">
             <GearRows items={heldGear} />
           </Window>
+        ) : null}
+        {viewer?.id === member.id ? (
+          <form action={signOutAction}>
+            <Button type="submit">Log out</Button>
+          </form>
         ) : null}
       </div>
     </PageWrapper>

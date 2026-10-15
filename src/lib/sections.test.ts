@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { communitySection, linkOn, pageTrail } from './sections';
+import { communitySection, linkOn, matchSection, pageTrail, settingsHref, visibleLinks, settingsLinks } from './sections';
 
 const nobody = null;
 
@@ -37,6 +37,18 @@ test('member pages stay in Community, except your own profile', () => {
   assert.equal(communitySection('/user/jake/pins', jake), false);
   assert.equal(communitySection('/peaks/adk46_algonquin_peak', null), true);
   assert.equal(linkOn('/user/jkiddf', '', '/members'), true);
+});
+
+test('settings opens the profile, and the owner also gets Admin', () => {
+  const member = { handle: 'jkiddf', role: 'member' as const };
+  const owner = { handle: 'jake', role: 'admin' as const };
+  assert.equal(settingsHref(member), '/user/jkiddf');
+  assert.deepEqual(visibleLinks(settingsLinks(member)).map((link) => link.label), ['Profile']);
+  assert.deepEqual(visibleLinks(settingsLinks(owner)).map((link) => link.label), ['Profile', 'Admin']);
+  assert.equal(matchSection('/user/jake', '', owner), null);
+  assert.equal(matchSection('/user/jkiddf', '', owner)?.id, 'community');
+  assert.equal(matchSection('/account', '', owner), null);
+  assert.equal(matchSection('/admin', '', owner), null);
 });
 
 test('an upload form sits under Upload', () => {
