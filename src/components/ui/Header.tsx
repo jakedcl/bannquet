@@ -154,7 +154,7 @@ function SiteNav({ account, pathname, home }: { account: HeaderAccount; pathname
           <NavButton href="/map" active={pathOn(pathname, '/map')}>
             Map
           </NavButton>
-          <NavMenu href="/community" label="Community" active={communitySection(pathname)}>
+          <NavMenu href="/community" label="Community" active={communitySection(pathname, account)}>
             {COMMUNITY_LINKS.map((item) => (
               <Link key={item.href} href={item.href} className={menuItemClass(false)}>
                 {item.label}
@@ -223,7 +223,7 @@ function MobileNav({ account, pathname }: { account: HeaderAccount; pathname: st
         layout="inline"
         href="/community"
         label="Community"
-        active={communitySection(pathname)}
+        active={communitySection(pathname, account)}
         open={openMenu === 'community'}
         onOpen={() => setOpenMenu('community')}
       >

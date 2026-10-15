@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { pageTrail } from './sections';
+import { communitySection, linkOn, pageTrail } from './sections';
 
 const nobody = null;
 
@@ -28,6 +28,15 @@ test('section pages back up to home and show no breadcrumb', () => {
     assert.equal(trail.parentHref, '/', path);
     assert.equal(trail.crumbs, null, path);
   }
+});
+
+test('member pages stay in Community, except your own profile', () => {
+  const jake = { handle: 'jake', role: 'admin' as const };
+  assert.equal(communitySection('/user/jkiddf', jake), true);
+  assert.equal(communitySection('/user/jake', jake), false);
+  assert.equal(communitySection('/user/jake/pins', jake), false);
+  assert.equal(communitySection('/peaks/adk46_algonquin_peak', null), true);
+  assert.equal(linkOn('/user/jkiddf', '', '/members'), true);
 });
 
 test('an upload form sits under Upload', () => {
