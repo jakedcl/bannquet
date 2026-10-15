@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { createTripAction } from '@/app/trips/actions';
 import { PinForm } from '@/components/pins/PinForm';
 import { PhotoUpload, RouteUpload } from '@/components/posts/ProfileAdds';
-import { Button } from '@/components/retro/Button';
+import { SubmitButton } from '@/components/ui/SubmitButton';
 import { AttachPicker, type AttachPickerHandle } from '@/components/trips/AttachPicker';
 import type { ChatCatalogItem } from '@/lib/chat-view';
 import type { DraftItem } from '@/lib/trip-draft';
@@ -27,7 +27,7 @@ export function NewTripForm({
   catalog: ChatCatalogItem[];
   preset: DraftItem[];
 }) {
-  const [state, action, pending] = useActionState(createTripAction, null);
+  const [state, action] = useActionState(createTripAction, null);
   const [title, setTitle] = useState('');
   const [tripDate, setTripDate] = useState('');
   const [notes, setNotes] = useState('');
@@ -150,7 +150,7 @@ export function NewTripForm({
           </div>
         </div>
         {state?.error ? <p className="text-sm font-bold text-red-700">{state.error}</p> : null}
-        <Button type="submit" tone="yellow" disabled={pending}>{pending ? 'Saving…' : 'Save trip'}</Button>
+        <SubmitButton tone="yellow" pendingLabel="Saving…">Save trip</SubmitButton>
       </form>
       <AttachPicker
         ref={pickerRef}

@@ -1,6 +1,7 @@
 'use client';
 
 import { useActionState } from 'react';
+import { SubmitButton } from '@/components/ui/SubmitButton';
 
 type Action = (
   state: { error?: string } | null,
@@ -21,18 +22,20 @@ export function TrashButton({
   onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }) {
   return (
-    <button
-      type="submit"
+    <SubmitButton
+      icon
+      tone="yellow"
+      pendingLabel="Deleting…"
+      ariaLabel={label}
+      title={label}
       name={name}
       value={value}
-      aria-label={label}
-      title={label}
       disabled={pending}
       onClick={onClick}
-      className="retro-button-yellow inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-none p-0 disabled:opacity-60"
+      className="h-7 w-7 text-base"
     >
       <TrashIcon />
-    </button>
+    </SubmitButton>
   );
 }
 

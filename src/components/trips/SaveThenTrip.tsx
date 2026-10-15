@@ -1,12 +1,14 @@
+import { SubmitButton } from '@/components/ui/SubmitButton';
+
 export function SaveThenTrip({ disabled = false }: { disabled?: boolean }) {
   return (
     <div className="flex flex-col items-start gap-1">
-      <button type="submit" name="next" value="existing" disabled={disabled} className="text-xs underline disabled:opacity-60">
+      <SubmitButton unstyled name="next" value="existing" disabled={disabled} pendingLabel="Saving…" className="text-xs underline">
         Add to an existing trip
-      </button>
-      <button type="submit" name="next" value="new" disabled={disabled} className="text-xs underline disabled:opacity-60">
+      </SubmitButton>
+      <SubmitButton unstyled name="next" value="new" disabled={disabled} pendingLabel="Saving…" className="text-xs underline">
         Add to a new trip
-      </button>
+      </SubmitButton>
     </div>
   );
 }

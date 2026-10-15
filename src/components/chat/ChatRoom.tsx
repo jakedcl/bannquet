@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { deleteChatAction, sendChatAction } from '@/app/chat/actions';
 import { SearchBar } from '@/components/ui/SearchBar';
+import { SubmitButton } from '@/components/ui/SubmitButton';
 import { formatChatTime, type ChatCatalogItem, type ChatMessage, type ChatRefKind } from '@/lib/chat-view';
 
 const GROUPS: Array<{ id: ChatRefKind; label: string }> = [
@@ -119,13 +120,13 @@ export function ChatRoom({
             <button type="button" className="text-xs underline" onClick={() => setAttached(null)}>Remove</button>
           </p>
         ) : null}
-        <div className="flex items-end gap-2">
+        <div className="composer-row">
           <button
             type="button"
             aria-label="Attach a pin, route, or photo"
             disabled={!canSend}
             onClick={openPicker}
-            className="retro-button-blue nav-button w-10 rounded-none px-0 text-lg"
+            className="composer-control retro-button-blue w-10 shrink-0 rounded-none p-0 text-lg leading-none"
           >
             @
           </button>
@@ -133,16 +134,16 @@ export function ChatRoom({
             <span className="sr-only">Message</span>
             <textarea
               name="body"
-              rows={2}
+              rows={1}
               maxLength={500}
               disabled={!canSend || pending}
               placeholder="A note for the group"
-              className="w-full retro-box-inset bg-white px-3 py-2 text-sm"
+              className="composer-field w-full bg-white px-3 text-sm retro-box-inset"
             />
           </label>
-          <button type="submit" disabled={!canSend || pending} className="retro-button-yellow rounded-none px-3 py-2 text-xs font-bold uppercase disabled:opacity-60">
-            {pending ? 'Sending…' : 'Send'}
-          </button>
+          <SubmitButton tone="yellow" pendingLabel="Sending…" disabled={!canSend} className="composer-control shrink-0 px-3 py-0 text-xs">
+            Send
+          </SubmitButton>
         </div>
         {state?.error ? <p className="text-sm font-bold text-red-700">{state.error}</p> : null}
       </form>
@@ -234,7 +235,6 @@ function ChatLine({
 }) {
   const [open, setOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [pending, setPending] = useState(false);
   const hold = useRef<number | null>(null);
   const origin = useRef<{ x: number; y: number } | null>(null);
 
@@ -302,14 +302,8 @@ function ChatLine({
           {open ? (
             <form
               className="absolute right-0 top-7 z-20 bg-[#5c3a1e] p-1"
-              onSubmit={async (event) => {
-                event.preventDefault();
-                if (!window.confirm('Delete this message?')) return;
-                setPending(true);
-                const data = new FormData();
-                data.set('id', message.id);
-                const result = await deleteChatAction(null, data);
-                setPending(false);
+              action={async (formData) => {
+                const result = await deleteChatAction(null, formData);
                 if (result?.error) {
                   setError(result.error);
                   return;
@@ -317,10 +311,14 @@ function ChatLine({
                 setOpen(false);
                 onRemove();
               }}
+              onSubmit={(event) => {
+                if (!window.confirm('Delete this message?')) event.preventDefault();
+              }}
             >
-              <button type="submit" disabled={pending} className="retro-button-yellow rounded-none px-3 py-1 text-xs font-bold uppercase">
-                {pending ? 'Deleting…' : 'Delete'}
-              </button>
+              <input type="hidden" name="id" value={message.id} />
+              <SubmitButton tone="yellow" pendingLabel="Deleting…" className="px-3 py-1 text-xs">
+                Delete
+              </SubmitButton>
             </form>
           ) : null}
         </div>

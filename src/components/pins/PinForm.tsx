@@ -8,7 +8,7 @@ import { createPinAction, deletePinAction, updatePinAction } from '@/app/pins/ac
 import { PhotoFields } from '@/components/posts/PhotoFields';
 import type { UploadedPhoto } from '@/components/posts/prepare-photo';
 import { TrashButton } from '@/components/delete/ConfirmDelete';
-import { Button } from '@/components/retro/Button';
+import { SubmitButton } from '@/components/ui/SubmitButton';
 import { NEUTRAL_PIN_COLOR } from '@/lib/map';
 import { PIN_KINDS, PIN_KIND_LABELS, type PinKind } from '@/lib/pin-kinds';
 import type { MapFeatureCollection } from '@/lib/posts';
@@ -191,9 +191,9 @@ export function PinForm({
       ) : null}
       <PhotoFields photos={photos} onChange={onPhotos} onBusy={setPhotoBusy} requireLocation={false} />
       {state?.error ? <p className="text-sm font-bold text-red-700">{state.error}</p> : null}
-      <Button tone="green" type="submit" disabled={pending || photoBusy}>
-        {photoBusy ? 'Preparing photo…' : pending ? 'Saving…' : initial ? 'Save pin' : 'Drop pin'}
-      </Button>
+      <SubmitButton tone="green" pendingLabel="Saving…" disabled={photoBusy}>
+        {photoBusy ? 'Preparing photo…' : initial ? 'Save pin' : 'Drop pin'}
+      </SubmitButton>
       {!initial && !inline ? <SaveThenTrip disabled={pending || photoBusy} /> : null}
     </form>
   );

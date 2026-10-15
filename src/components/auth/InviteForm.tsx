@@ -2,10 +2,10 @@
 
 import { useActionState } from 'react';
 import { inviteFriend } from '@/app/sign-in/actions';
-import { Button } from '@/components/retro/Button';
+import { SubmitButton } from '@/components/ui/SubmitButton';
 
 export function InviteForm() {
-  const [state, action, pending] = useActionState(inviteFriend, null);
+  const [state, action] = useActionState(inviteFriend, null);
 
   return (
     <form action={action} className="space-y-3">
@@ -27,9 +27,7 @@ export function InviteForm() {
           <input readOnly value={state.url} className="w-full retro-box-inset bg-white px-3 py-2 text-sm" />
         </label>
       ) : null}
-      <Button tone="green" type="submit" disabled={pending}>
-        {pending ? 'Sending…' : 'Invite'}
-      </Button>
+      <SubmitButton tone="green" pendingLabel="Sending…">Invite</SubmitButton>
     </form>
   );
 }

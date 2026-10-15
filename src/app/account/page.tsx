@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation';
 import PageWrapper from '@/components/ui/PageWrapper';
 import { ProfileForm } from '@/components/auth/ProfileForm';
-import { Button } from '@/components/retro/Button';
+import { SubmitButton } from '@/components/ui/SubmitButton';
 import { Window } from '@/components/retro/Window';
 import { getViewer, signOutAction } from '@/app/sign-in/actions';
 import { APPROVAL_WAIT, canContribute } from '@/lib/membership';
@@ -31,7 +31,7 @@ export default async function AccountPage({
           </Window>
         </div>
         <form action={signOutAction}>
-          <Button type="submit">Sign out</Button>
+          <SubmitButton pendingLabel="Signing out…">Sign out</SubmitButton>
         </form>
       </div>
     </PageWrapper>

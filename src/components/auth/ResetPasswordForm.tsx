@@ -3,11 +3,11 @@
 import { useActionState } from 'react';
 import Link from 'next/link';
 import { completePasswordReset } from '@/app/sign-in/actions';
-import { Button } from '@/components/retro/Button';
+import { SubmitButton } from '@/components/ui/SubmitButton';
 import { PasswordField } from '@/components/auth/PasswordField';
 
 export function ResetPasswordForm({ token }: { token: string }) {
-  const [state, action, pending] = useActionState(completePasswordReset, null);
+  const [state, action] = useActionState(completePasswordReset, null);
 
   if (!token) {
     return (
@@ -32,9 +32,7 @@ export function ResetPasswordForm({ token }: { token: string }) {
       />
       <PasswordField name="confirm" label="New password again" autoComplete="new-password" />
       {state?.error ? <p className="text-sm font-bold text-red-700">{state.error}</p> : null}
-      <Button tone="green" type="submit" disabled={pending}>
-        {pending ? 'Saving…' : 'Save password'}
-      </Button>
+      <SubmitButton tone="green" pendingLabel="Saving…">Save password</SubmitButton>
     </form>
   );
 }

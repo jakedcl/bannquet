@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import PageWrapper from '@/components/ui/PageWrapper';
-import { Button } from '@/components/retro/Button';
+import { SubmitButton } from '@/components/ui/SubmitButton';
 import { Window } from '@/components/retro/Window';
 import { CrumbLeaf } from '@/components/ui/BackBar';
 import { ConfirmDelete } from '@/components/delete/ConfirmDelete';
@@ -64,7 +64,7 @@ export default async function TripPage({ params }: { params: Promise<{ id: strin
               <form action={toggleGoing} className="mt-3">
                 <input type="hidden" name="tripId" value={trip.id} />
                 <input type="hidden" name="going" value={going ? '0' : '1'} />
-                <Button type="submit" tone={going ? 'default' : 'yellow'}>{going ? "I'm out" : "I'm in"}</Button>
+                <SubmitButton tone={going ? 'default' : 'yellow'} pendingLabel={going ? 'Leaving…' : 'Saving…'}>{going ? "I'm out" : "I'm in"}</SubmitButton>
               </form>
             ) : null}
           </div>

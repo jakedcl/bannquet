@@ -3,7 +3,7 @@
 import { useActionState } from 'react';
 import Link from 'next/link';
 import { attachToReportAction, detachFromReportAction } from '@/app/library/actions';
-import { Button } from '@/components/retro/Button';
+import { SubmitButton } from '@/components/ui/SubmitButton';
 
 export function SeeMore({ post }: { post: { id: string; title: string } | null }) {
   if (!post) return null;
@@ -27,8 +27,8 @@ export function AttachReport({
   attached: boolean;
   returnTo: string;
 }) {
-  const [attachState, attach, attachPending] = useActionState(attachToReportAction, null);
-  const [detachState, detach, detachPending] = useActionState(detachFromReportAction, null);
+  const [attachState, attach] = useActionState(attachToReportAction, null);
+  const [detachState, detach] = useActionState(detachFromReportAction, null);
 
   return (
     <div className="space-y-3">
@@ -38,7 +38,7 @@ export function AttachReport({
           <input type="hidden" name="entityId" value={entityId} />
           <input type="hidden" name="returnTo" value={returnTo} />
           {detachState?.error ? <p className="text-sm font-bold text-red-700">{detachState.error}</p> : null}
-          <Button type="submit" disabled={detachPending}>{detachPending ? 'Detaching…' : 'Detach'}</Button>
+          <SubmitButton pendingLabel="Detaching…">Detach</SubmitButton>
         </form>
       ) : reports.length === 0 ? (
         <p className="text-sm">Write a trip first, then you can attach this.</p>
@@ -53,7 +53,7 @@ export function AttachReport({
               <option key={report.id} value={report.id}>{report.title}</option>
             ))}
           </select>
-          <Button type="submit" tone="yellow" disabled={attachPending}>{attachPending ? 'Attaching…' : 'Attach'}</Button>
+          <SubmitButton tone="yellow" pendingLabel="Attaching…">Attach</SubmitButton>
           {attachState?.error ? <p className="w-full text-sm font-bold text-red-700">{attachState.error}</p> : null}
         </form>
       )}

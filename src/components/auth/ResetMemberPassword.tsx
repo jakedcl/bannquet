@@ -2,10 +2,10 @@
 
 import { useActionState } from 'react';
 import { createMemberResetLink } from '@/app/sign-in/actions';
-import { Button } from '@/components/retro/Button';
+import { SubmitButton } from '@/components/ui/SubmitButton';
 
 export function ResetMemberPassword({ userId }: { userId: string }) {
-  const [state, action, pending] = useActionState(createMemberResetLink, null);
+  const [state, action] = useActionState(createMemberResetLink, null);
 
   return (
     <form action={action} className="space-y-2">
@@ -14,9 +14,7 @@ export function ResetMemberPassword({ userId }: { userId: string }) {
         <input type="checkbox" name="emailToo" value="yes" />
         Also email a reset link
       </label>
-      <Button tone="default" type="submit" disabled={pending}>
-        {pending ? 'Making a link…' : 'Reset password'}
-      </Button>
+      <SubmitButton pendingLabel="Making a link…">Reset password</SubmitButton>
       {state?.error ? <p className="text-sm font-bold text-red-700">{state.error}</p> : null}
       {state?.emailNote ? <p className="text-sm text-brand-green-dark">{state.emailNote}</p> : null}
       {state?.url ? (
