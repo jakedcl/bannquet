@@ -2,16 +2,18 @@
 
 import { redirect } from 'next/navigation';
 import { getViewer } from '@/app/sign-in/actions';
-import { isActivity } from '@/lib/activities';
+import { isActivity, type Activity } from '@/lib/activities';
+import type { TrackPoint } from '@/lib/gpx';
 import { APPROVAL_WAIT, canContribute } from '@/lib/membership';
-import { parseGpx, type TrackPoint } from '@/lib/gpx';
-import { addProfilePhotos, addProfileTrack, createPost, parseUploadedPhotos, type PreparedPhoto } from '@/lib/posts';
+import { parseGpx } from '@/lib/gpx';
+import { isPostKind, type PostKind } from '@/lib/post-kinds';
+import { addProfilePhotos, addProfileTrack, createPost, parseUploadedPhotos, updatePost, type PreparedPhoto } from '@/lib/posts';
 
 const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
 const ID_PATTERN = /^[A-Za-z0-9_-]{8,80}$/;
 
-function cleanPhotos(raw: string): { photos: PreparedPhoto[]; error: string | null } {
-  return parseUploadedPhotos(raw);
+function cleanPhotos(raw: string, skipLocation = false): { photos: PreparedPhoto[]; error: string | null } {
+  return parseUploadedPhotos(raw, { requireLocation: !skipLocation });
 }
 
 function cleanTrack(raw: string): { track: { name: string | null; points: TrackPoint[] } | null; error: string | null } {
@@ -19,6 +21,60 @@ function cleanTrack(raw: string): { track: { name: string | null; points: TrackP
   const parsed = parseGpx(raw);
   if (parsed.points.length < 2) return { track: null, error: 'That GPX file has no route in it.' };
   return { track: parsed, error: null };
+}
+
+function readPostFields(formData: FormData): {
+  error?: string;
+  fields?: {
+    postKind: PostKind;
+    title: string;
+    body: string;
+    tripDate: string | null;
+    activity: Activity | null;
+    photos: PreparedPhoto[];
+    track: { name: string | null; points: TrackPoint[] } | null;
+  };
+} {
+  const postKindRaw = String(formData.get('postKind') ?? 'trip_report');
+  if (!isPostKind(postKindRaw)) return { error: 'Pick Trip report or General.' };
+  const title = String(formData.get('title') ?? '').trim();
+  const body = String(formData.get('body') ?? '').trim().slice(0, 8000);
+  if (title.length < 1 || title.length > 120) return { error: 'Add a title. Keep it under 120 characters.' };
+
+  const photos = cleanPhotos(String(formData.get('photos') ?? ''), postKindRaw === 'general');
+  if (photos.error) return { error: photos.error };
+
+  if (postKindRaw === 'general') {
+    return {
+      fields: {
+        postKind: postKindRaw,
+        title,
+        body,
+        tripDate: null,
+        activity: null,
+        photos: photos.photos,
+        track: null,
+      },
+    };
+  }
+
+  const tripDate = String(formData.get('tripDate') ?? '').trim();
+  const activity = String(formData.get('activity') ?? '');
+  if (!DATE_PATTERN.test(tripDate)) return { error: 'Pick the day you went.' };
+  if (!isActivity(activity)) return { error: 'Pick what you were doing.' };
+  const track = cleanTrack(String(formData.get('gpxText') ?? ''));
+  if (track.error) return { error: track.error };
+  return {
+    fields: {
+      postKind: postKindRaw,
+      title,
+      body,
+      tripDate,
+      activity,
+      photos: photos.photos,
+      track: track.track,
+    },
+  };
 }
 
 export async function publishPost(
@@ -29,19 +85,9 @@ export async function publishPost(
   if (!viewer) return { error: 'Sign in to post.' };
   if (!canContribute(viewer.role)) return { error: APPROVAL_WAIT };
 
-  const title = String(formData.get('title') ?? '').trim();
-  const body = String(formData.get('body') ?? '').trim().slice(0, 8000);
-  const tripDate = String(formData.get('tripDate') ?? '').trim();
-  const activity = String(formData.get('activity') ?? '');
-  if (title.length < 1 || title.length > 120) return { error: 'Add a title. Keep it under 120 characters.' };
-  if (!DATE_PATTERN.test(tripDate)) return { error: 'Pick the day you went.' };
-  if (!isActivity(activity)) return { error: 'Pick what you were doing.' };
-
-  const photos = cleanPhotos(String(formData.get('photos') ?? ''));
-  if (photos.error) return { error: photos.error };
-  const track = cleanTrack(String(formData.get('gpxText') ?? ''));
-  if (track.error) return { error: track.error };
-
+  const parsed = readPostFields(formData);
+  if (parsed.error || !parsed.fields) return { error: parsed.error ?? 'Could not save that post.' };
+  const fields = parsed.fields;
   const taggedUserIds = formData
     .getAll('friend')
     .filter((value): value is string => typeof value === 'string' && ID_PATTERN.test(value) && value !== viewer.id);
@@ -51,17 +97,51 @@ export async function publishPost(
     id = await createPost({
       authorId: viewer.id,
       authorName: viewer.displayName || viewer.handle || 'Friend',
-      title,
-      body,
-      tripDate,
-      activity,
-      taggedUserIds,
-      track: track.track,
-      photos: photos.photos,
+      title: fields.title,
+      body: fields.body,
+      postKind: fields.postKind,
+      tripDate: fields.tripDate,
+      activity: fields.activity,
+      taggedUserIds: fields.postKind === 'trip_report' ? taggedUserIds : [],
+      track: fields.track,
+      photos: fields.photos,
     });
   } catch {
     return { error: 'Could not save that post. Try again in a minute.' };
   }
+  redirect(`/posts/${id}`);
+}
+
+export async function savePostEdits(
+  _prev: { error?: string } | null,
+  formData: FormData,
+): Promise<{ error?: string }> {
+  const viewer = await getViewer();
+  if (!viewer) return { error: 'Sign in to edit a post.' };
+  if (!canContribute(viewer.role)) return { error: APPROVAL_WAIT };
+  const postId = String(formData.get('postId') ?? '').trim();
+  if (!/^[0-9a-f-]{36}$/i.test(postId)) return { error: 'That post is not yours.' };
+
+  const parsed = readPostFields(formData);
+  if (parsed.error || !parsed.fields) return { error: parsed.error ?? 'Could not save that post.' };
+  const fields = parsed.fields;
+  let id: string | null = null;
+  try {
+    id = await updatePost({
+      id: postId,
+      authorId: viewer.id,
+      title: fields.title,
+      body: fields.body,
+      postKind: fields.postKind,
+      tripDate: fields.tripDate,
+      activity: fields.activity,
+      track: fields.track,
+      photos: fields.photos,
+    });
+  } catch {
+    return { error: 'Could not save that post. Try again in a minute.' };
+  }
+  if (!id) return { error: 'That post is not yours.' };
   redirect(`/posts/${id}`);
 }
 

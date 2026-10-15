@@ -13,16 +13,18 @@ export function PhotoFields({
   onChange,
   onBusy,
   requireLocation = true,
+  showLocation = true,
 }: {
   photos: UploadedPhoto[];
   onChange: (photos: UploadedPhoto[]) => void;
   onBusy?: (busy: boolean) => void;
   requireLocation?: boolean;
+  showLocation?: boolean;
 }) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [pinning, setPinning] = useState<number | null>(null);
-  const missing = requireLocation && photos.some((photo) => photo.lat == null || photo.lng == null);
+  const missing = showLocation && requireLocation && photos.some((photo) => photo.lat == null || photo.lng == null);
 
   function setWorking(next: boolean) {
     setBusy(next);
@@ -92,19 +94,21 @@ export function PhotoFields({
                   <p className="text-xs text-gray-700">
                     {photo.source === 'exif' ? 'Location came from the photo.' : 'Pin dropped on the map.'}
                   </p>
-                ) : requireLocation ? (
+                ) : showLocation && requireLocation ? (
                   <p className="text-xs font-bold text-red-700">
                     This photo has no location. Drop a pin on the map, or remove it.
                   </p>
-                ) : (
+                ) : showLocation ? (
                   <p className="text-xs text-gray-700">
                     No location on this photo. The pin uses the spot you chose.
                   </p>
-                )}
+                ) : null}
                 <div className="flex gap-2">
-                  <button type="button" className="text-xs font-bold uppercase underline" onClick={() => setPinning(index)}>
-                    {located ? 'Move pin' : 'Drop a pin'}
-                  </button>
+                  {showLocation ? (
+                    <button type="button" className="text-xs font-bold uppercase underline" onClick={() => setPinning(index)}>
+                      {located ? 'Move pin' : 'Drop a pin'}
+                    </button>
+                  ) : null}
                   <button
                     type="button"
                     className="text-xs font-bold uppercase underline"
@@ -118,7 +122,7 @@ export function PhotoFields({
           );
         })}
       </div>
-      {missing || pinning != null ? (
+      {showLocation && (missing || pinning != null) ? (
         <div className="h-64 overflow-hidden retro-box">
           <GroupMap
             points={EMPTY}

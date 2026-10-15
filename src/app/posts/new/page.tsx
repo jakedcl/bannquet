@@ -35,8 +35,8 @@ export default async function NewPostPage() {
       <div className="mx-auto max-w-2xl px-4 py-10">
         <Window title="New post">
           <p className="mb-4 text-sm text-gray-700">
-            Title, the day, what you were doing, who came, and the story. Photos and a GPX file are optional.
-            Anything you add here shows on the map and in the posts.
+            Pick Trip report or General. A trip report can include the day, photos, and a route.
+            A general post is a note and an optional photo.
           </p>
           <PostForm friends={friends} />
         </Window>

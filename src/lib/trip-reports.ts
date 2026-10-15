@@ -1,6 +1,7 @@
 import { and, asc, desc, eq, inArray, or, sql, type SQL } from 'drizzle-orm';
 import { getDb } from '@/db';
 import { photos, tripReports } from '@/db/schema';
+import { isPostKind, type PostKind } from '@/lib/post-kinds';
 import type { TripReportDetail, TripReportListItem, TripReportPhoto } from '@/types/trip-reports';
 
 const UUID_PATTERN =
@@ -12,6 +13,8 @@ type ReportRow = {
   authorName: string | null;
   tripDate: string | null;
   activity: string | null;
+  postKind: string | null;
+  authorId: string | null;
   tags: string[] | null;
   body: string;
   legacySanityId: string | null;
@@ -32,6 +35,7 @@ function listItem(row: ReportRow, reportPhotos: TripReportPhoto[]): TripReportLi
     authorName: row.authorName || 'Unknown',
     tripDate: row.tripDate,
     activity: row.activity,
+    postKind: row.postKind && isPostKind(row.postKind) ? row.postKind : 'trip_report',
     tags: row.tags ?? [],
     excerpt: excerptFrom(row.body),
     coverUrl: reportPhotos[0]?.url ?? null,
@@ -80,6 +84,8 @@ const reportColumns = {
   authorName: tripReports.legacyAuthorName,
   tripDate: tripReports.tripDate,
   activity: tripReports.activity,
+  postKind: tripReports.postKind,
+  authorId: tripReports.authorId,
   tags: tripReports.tags,
   body: tripReports.body,
   legacySanityId: tripReports.legacySanityId,
@@ -90,6 +96,7 @@ const reportColumns = {
 export async function listTripReports(filters?: {
   authorName?: string | null;
   tag?: string | null;
+  postKind?: PostKind | null;
   limit?: number | null;
 }): Promise<TripReportListItem[]> {
   const conditions: SQL[] = [eq(tripReports.published, true)];
@@ -98,6 +105,9 @@ export async function listTripReports(filters?: {
   }
   if (filters?.tag) {
     conditions.push(sql`${filters.tag} = ANY(${tripReports.tags})`);
+  }
+  if (filters?.postKind) {
+    conditions.push(eq(tripReports.postKind, filters.postKind));
   }
 
   const base = getDb()
@@ -128,8 +138,39 @@ export async function getTripReport(id: string): Promise<TripReportDetail | null
   return {
     ...listItem(row, reportPhotos),
     body: row.body,
+    authorId: row.authorId,
     lat: row.lat,
     lng: row.lng,
     photos: reportPhotos,
+  };
+}
+
+export async function getEditablePost(id: string): Promise<{
+  id: string;
+  authorId: string | null;
+  title: string;
+  body: string;
+  tripDate: string | null;
+  activity: string | null;
+  postKind: PostKind;
+} | null> {
+  if (!UUID_PATTERN.test(id)) return null;
+  const [row] = await getDb()
+    .select({
+      id: tripReports.id,
+      authorId: tripReports.authorId,
+      title: tripReports.title,
+      body: tripReports.body,
+      tripDate: tripReports.tripDate,
+      activity: tripReports.activity,
+      postKind: tripReports.postKind,
+    })
+    .from(tripReports)
+    .where(and(eq(tripReports.published, true), eq(tripReports.id, id)))
+    .limit(1);
+  if (!row) return null;
+  return {
+    ...row,
+    postKind: isPostKind(row.postKind) ? row.postKind : 'trip_report',
   };
 }

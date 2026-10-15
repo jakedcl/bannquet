@@ -13,6 +13,7 @@ export type TripReportListItem = {
   authorName: string;
   tripDate: string | null;
   activity: string | null;
+  postKind: 'trip_report' | 'general';
   tags: string[];
   excerpt: string;
   coverUrl: string | null;
@@ -22,6 +23,7 @@ export type TripReportListItem = {
 
 export type TripReportDetail = TripReportListItem & {
   body: string;
+  authorId: string | null;
   lat: number | null;
   lng: number | null;
   photos: TripReportPhoto[];
