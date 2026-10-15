@@ -1,12 +1,17 @@
 import adk46 from '../../config/challenges/adk46.json';
+import cat3500 from '../../config/challenges/cat3500.json';
+import groupsFile from '../../config/challenges/groups.json';
+import me4000 from '../../config/challenges/me4000.json';
 import nh48 from '../../config/challenges/nh48.json';
+import vt4000 from '../../config/challenges/vt4000.json';
 import type { TrackPoint } from '@/lib/gpx';
 
 /**
  * A new challenge is a JSON file in config/challenges plus one import in this
  * file. The id is stored as text, so Colorado 14ers do not need a migration.
+ * A group, such as the New England 67, points at other lists and does not copy peaks.
  */
-const CHALLENGE_FILES = [adk46, nh48];
+const CHALLENGE_FILES = [cat3500, adk46, nh48, vt4000, me4000];
 
 /** About 500 feet. Enough for tree cover and a drifted GPS, not the next peak. */
 export const SUMMIT_MATCH_METERS = 152;
@@ -19,6 +24,8 @@ export type ChallengePeak = {
   elevationFt: number;
   lat: number;
   lng: number;
+  winter?: boolean;
+  note?: string;
 };
 
 export type Challenge = {
@@ -28,11 +35,25 @@ export type Challenge = {
   peaks: ChallengePeak[];
 };
 
+export type ChallengeGroup = {
+  id: string;
+  name: string;
+  short: string;
+  listIds: string[];
+};
+
 type ChallengeFile = {
   id: string;
   name: string;
   short: string;
-  peaks: ChallengePeak[];
+  peaks: Array<ChallengePeak & { winter?: boolean; note?: string }>;
+};
+
+type GroupFile = {
+  id: string;
+  name: string;
+  short: string;
+  lists: string[];
 };
 
 function asChallenge(file: ChallengeFile): Challenge {
@@ -50,17 +71,55 @@ function asChallenge(file: ChallengeFile): Challenge {
     if (!Number.isFinite(peak.elevationFt) || peak.elevationFt < 1000) {
       throw new Error(`${peak.slug} is missing an elevation.`);
     }
+    if (peak.winter != null && typeof peak.winter !== 'boolean') {
+      throw new Error(`${peak.slug} has a bad winter flag.`);
+    }
+    if (peak.note != null && typeof peak.note !== 'string') {
+      throw new Error(`${peak.slug} has a bad note.`);
+    }
   }
   return {
     id: file.id,
     name: file.name,
     short: file.short,
-    peaks: [...file.peaks].sort((a, b) => a.name.localeCompare(b.name)),
+    peaks: [...file.peaks]
+      .map((peak) => ({
+        slug: peak.slug,
+        name: peak.name,
+        elevationFt: peak.elevationFt,
+        lat: peak.lat,
+        lng: peak.lng,
+        ...(peak.winter ? { winter: true } : {}),
+        ...(peak.note ? { note: peak.note } : {}),
+      }))
+      .sort((a, b) => a.name.localeCompare(b.name)),
   };
 }
 
 export function loadChallenges(): Challenge[] {
   return CHALLENGE_FILES.map((file) => asChallenge(file));
+}
+
+export function loadGroups(): ChallengeGroup[] {
+  const known = new Set(loadChallenges().map((challenge) => challenge.id));
+  return (groupsFile as GroupFile[]).map((group) => {
+    if (!/^[a-z0-9]+$/.test(group.id)) throw new Error(`Group id ${group.id} should be simple letters and numbers.`);
+    if (!group.name || !group.short) throw new Error(`Group ${group.id} needs a name.`);
+    if (!Array.isArray(group.lists) || group.lists.length === 0) throw new Error(`Group ${group.id} needs lists.`);
+    for (const listId of group.lists) {
+      if (!known.has(listId)) throw new Error(`Group ${group.id} points at a missing list ${listId}.`);
+    }
+    return { id: group.id, name: group.name, short: group.short, listIds: [...group.lists] };
+  });
+}
+
+export function groupPeaks(group: ChallengeGroup): Array<ChallengePeak & { listId: string }> {
+  const wanted = new Set(group.listIds);
+  return allPeaks().filter((peak) => wanted.has(peak.listId));
+}
+
+export function climbButtonLabel(times: number): string {
+  return times > 0 ? 'I climbed this again' : 'I climbed this';
 }
 
 export function allPeaks(): Array<ChallengePeak & { listId: string }> {

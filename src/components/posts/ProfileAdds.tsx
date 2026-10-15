@@ -45,7 +45,6 @@ export function RouteUpload() {
       {state?.saved ? (
         <p className="text-sm">
           Route saved. It is on the map.
-          {state.peaks ? ` It passes ${state.peaks}.` : ''}
         </p>
       ) : null}
       <Button type="submit" disabled={pending || !gpxText || parseGpx(gpxText).points.length < 2}>

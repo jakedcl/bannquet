@@ -10,6 +10,8 @@ import {
   addPackingItem,
   claimPackingItem,
   createTrip,
+  deletePackingItem,
+  deleteTrip,
   linkPostToTrip,
   setPackingWeight,
   setTripGoing,
@@ -103,8 +105,38 @@ export async function addItem(formData: FormData): Promise<void> {
   const tripId = String(formData.get('tripId') ?? '');
   const label = String(formData.get('label') ?? '').trim().slice(0, 80);
   if (!tripId || !label) return;
-  await addPackingItem(tripId, label);
+  await addPackingItem(tripId, label, viewer.id);
   revalidatePath(`/trips/${tripId}`);
+}
+
+export async function deleteItem(
+  _prev: { error?: string } | null,
+  formData: FormData,
+): Promise<{ error?: string }> {
+  const { error, viewer } = await contributor();
+  if (!viewer) return { error: error ?? 'Sign in to delete that.' };
+  const tripId = String(formData.get('tripId') ?? '');
+  const itemId = String(formData.get('itemId') ?? '');
+  if (!tripId || !itemId) return { error: 'That item is missing.' };
+  const ok = await deletePackingItem(itemId, { id: viewer.id, admin: viewer.role === 'admin' });
+  if (!ok) return { error: 'You can only delete an item you added, or one on a trip you planned.' };
+  revalidatePath(`/trips/${tripId}`);
+  return {};
+}
+
+export async function deleteTripAction(
+  _prev: { error?: string } | null,
+  formData: FormData,
+): Promise<{ error?: string }> {
+  const { error, viewer } = await contributor();
+  if (!viewer) return { error: error ?? 'Sign in to delete a trip.' };
+  const id = String(formData.get('id') ?? '');
+  if (!id) return { error: 'That trip is missing.' };
+  const ok = await deleteTrip(id, { id: viewer.id, admin: viewer.role === 'admin' });
+  if (!ok) return { error: 'You can only delete a trip you planned.' };
+  revalidatePath('/trips');
+  revalidatePath('/map');
+  redirect('/trips');
 }
 
 export async function linkPost(formData: FormData): Promise<void> {

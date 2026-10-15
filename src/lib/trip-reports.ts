@@ -15,6 +15,7 @@ type ReportRow = {
   tags: string[] | null;
   body: string;
   legacySanityId: string | null;
+  authorId: string | null;
   lat: number | null;
   lng: number | null;
 };
@@ -83,6 +84,7 @@ const reportColumns = {
   tags: tripReports.tags,
   body: tripReports.body,
   legacySanityId: tripReports.legacySanityId,
+  authorId: tripReports.authorId,
   lat: sql<number | null>`ST_Y(${tripReports.point}::geometry)`,
   lng: sql<number | null>`ST_X(${tripReports.point}::geometry)`,
 };
@@ -128,6 +130,7 @@ export async function getTripReport(id: string): Promise<TripReportDetail | null
   return {
     ...listItem(row, reportPhotos),
     body: row.body,
+    authorId: row.authorId,
     lat: row.lat,
     lng: row.lng,
     photos: reportPhotos,

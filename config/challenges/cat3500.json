@@ -1,0 +1,258 @@
+{
+  "id": "cat3500",
+  "name": "Catskill 3500",
+  "short": "CAT 35",
+  "peaks": [
+    {
+      "slug": "cat3500_balsam",
+      "name": "Balsam Mountain",
+      "elevationFt": 3607,
+      "lat": 42.086,
+      "lng": -74.4938,
+      "winter": true
+    },
+    {
+      "slug": "cat3500_balsam_cap",
+      "name": "Balsam Cap",
+      "elevationFt": 3608,
+      "lat": 42.0279,
+      "lng": -74.3849
+    },
+    {
+      "slug": "cat3500_balsam_lake",
+      "name": "Balsam Lake Mountain",
+      "elevationFt": 3729,
+      "lat": 42.0448,
+      "lng": -74.5948
+    },
+    {
+      "slug": "cat3500_bearpen",
+      "name": "Bearpen Mountain",
+      "elevationFt": 3587,
+      "lat": 42.2766,
+      "lng": -74.4683
+    },
+    {
+      "slug": "cat3500_big_indian",
+      "name": "Big Indian Mountain",
+      "elevationFt": 3699,
+      "lat": 42.0755,
+      "lng": -74.4633
+    },
+    {
+      "slug": "cat3500_black_dome",
+      "name": "Black Dome",
+      "elevationFt": 3994,
+      "lat": 42.2733,
+      "lng": -74.1258
+    },
+    {
+      "slug": "cat3500_blackhead",
+      "name": "Blackhead Mountain",
+      "elevationFt": 3940,
+      "lat": 42.2695,
+      "lng": -74.103,
+      "winter": true
+    },
+    {
+      "slug": "cat3500_cornell",
+      "name": "Cornell Mountain",
+      "elevationFt": 3857,
+      "lat": 42.0015,
+      "lng": -74.3524
+    },
+    {
+      "slug": "cat3500_doubletop",
+      "name": "Doubletop Mountain",
+      "elevationFt": 3860,
+      "lat": 42.0322,
+      "lng": -74.5319,
+      "note": "Closed to the public."
+    },
+    {
+      "slug": "cat3500_eagle",
+      "name": "Eagle Mountain",
+      "elevationFt": 3583,
+      "lat": 42.1238,
+      "lng": -74.5533
+    },
+    {
+      "slug": "cat3500_fir",
+      "name": "Fir Mountain",
+      "elevationFt": 3629,
+      "lat": 42.0571,
+      "lng": -74.4408
+    },
+    {
+      "slug": "cat3500_friday",
+      "name": "Friday Mountain",
+      "elevationFt": 3692,
+      "lat": 41.9905,
+      "lng": -74.4074
+    },
+    {
+      "slug": "cat3500_graham",
+      "name": "Graham Mountain",
+      "elevationFt": 3868,
+      "lat": 42.0394,
+      "lng": -74.5506,
+      "note": "Closed to the public."
+    },
+    {
+      "slug": "cat3500_halcott",
+      "name": "Halcott Mountain",
+      "elevationFt": 3509,
+      "lat": 42.1788,
+      "lng": -74.4433
+    },
+    {
+      "slug": "cat3500_hunter",
+      "name": "Hunter Mountain",
+      "elevationFt": 4030,
+      "lat": 42.1778,
+      "lng": -74.2304
+    },
+    {
+      "slug": "cat3500_indian_head",
+      "name": "Indian Head Mountain",
+      "elevationFt": 3573,
+      "lat": 42.1288,
+      "lng": -74.1263
+    },
+    {
+      "slug": "cat3500_kaaterskill",
+      "name": "Kaaterskill High Peak",
+      "elevationFt": 3652,
+      "lat": 42.1624,
+      "lng": -74.0863
+    },
+    {
+      "slug": "cat3500_lone",
+      "name": "Lone Mountain",
+      "elevationFt": 3700,
+      "lat": 42.0009,
+      "lng": -74.3758
+    },
+    {
+      "slug": "cat3500_north_dome",
+      "name": "North Dome",
+      "elevationFt": 3605,
+      "lat": 42.2038,
+      "lng": -74.3258
+    },
+    {
+      "slug": "cat3500_panther",
+      "name": "Panther Mountain",
+      "elevationFt": 3724,
+      "lat": 42.0563,
+      "lng": -74.3954,
+      "winter": true
+    },
+    {
+      "slug": "cat3500_peekamoose",
+      "name": "Peekamoose Mountain",
+      "elevationFt": 3819,
+      "lat": 41.9533,
+      "lng": -74.4166
+    },
+    {
+      "slug": "cat3500_plateau",
+      "name": "Plateau Mountain",
+      "elevationFt": 3835,
+      "lat": 42.1408,
+      "lng": -74.157
+    },
+    {
+      "slug": "cat3500_rocky",
+      "name": "Rocky Mountain",
+      "elevationFt": 3487,
+      "lat": 41.9758,
+      "lng": -74.3983
+    },
+    {
+      "slug": "cat3500_rusk",
+      "name": "Rusk Mountain",
+      "elevationFt": 3686,
+      "lat": 42.2013,
+      "lng": -74.2666
+    },
+    {
+      "slug": "cat3500_sherrill",
+      "name": "Mount Sherrill",
+      "elevationFt": 3558,
+      "lat": 42.1066,
+      "lng": -74.4383
+    },
+    {
+      "slug": "cat3500_slide",
+      "name": "Slide Mountain",
+      "elevationFt": 4180,
+      "lat": 41.9984,
+      "lng": -74.3865,
+      "winter": true
+    },
+    {
+      "slug": "cat3500_southwest_hunter",
+      "name": "Southwest Hunter Mountain",
+      "elevationFt": 3753,
+      "lat": 42.1683,
+      "lng": -74.2467
+    },
+    {
+      "slug": "cat3500_sugarloaf",
+      "name": "Sugarloaf Mountain",
+      "elevationFt": 3783,
+      "lat": 42.1402,
+      "lng": -74.1866
+    },
+    {
+      "slug": "cat3500_table",
+      "name": "Table Mountain",
+      "elevationFt": 3825,
+      "lat": 42.0104,
+      "lng": -74.3648
+    },
+    {
+      "slug": "cat3500_thomas_cole",
+      "name": "Thomas Cole Mountain",
+      "elevationFt": 3953,
+      "lat": 42.2712,
+      "lng": -74.1406
+    },
+    {
+      "slug": "cat3500_twin",
+      "name": "Twin Mountain",
+      "elevationFt": 3650,
+      "lat": 42.1363,
+      "lng": -74.1744
+    },
+    {
+      "slug": "cat3500_vly",
+      "name": "Vly Mountain",
+      "elevationFt": 3541,
+      "lat": 42.2533,
+      "lng": -74.4483
+    },
+    {
+      "slug": "cat3500_west_kill",
+      "name": "West Kill Mountain",
+      "elevationFt": 3898,
+      "lat": 42.1754,
+      "lng": -74.2888
+    },
+    {
+      "slug": "cat3500_windham",
+      "name": "Windham High Peak",
+      "elevationFt": 3525,
+      "lat": 42.3134,
+      "lng": -74.1483
+    },
+    {
+      "slug": "cat3500_wittenberg",
+      "name": "Wittenberg Mountain",
+      "elevationFt": 3782,
+      "lat": 42.0087,
+      "lng": -74.3476
+    }
+  ]
+}
