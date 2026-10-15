@@ -2,6 +2,8 @@
 
 import { motion } from 'framer-motion';
 import { ReactNode, Suspense } from 'react';
+import { usePathname } from 'next/navigation';
+import { BackBar, LeafProvider } from '@/components/ui/BackBar';
 import { SectionChrome } from '@/components/ui/SectionChrome';
 
 interface PageWrapperProps {
@@ -10,16 +12,20 @@ interface PageWrapperProps {
 }
 
 export default function PageWrapper({ children, className = '' }: PageWrapperProps) {
+  const pathname = usePathname();
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       className={`page-frame mt-[72px] min-h-[calc(100vh-72px)] ${className}`}
     >
-      <Suspense fallback={null}>
-        <SectionChrome />
-      </Suspense>
-      {children}
+      <LeafProvider>
+        <Suspense fallback={null}>
+          {pathname === '/' ? null : <BackBar />}
+          <SectionChrome />
+        </Suspense>
+        {children}
+      </LeafProvider>
     </motion.div>
   );
 } 

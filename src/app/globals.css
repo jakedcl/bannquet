@@ -345,7 +345,7 @@ button, .retro-button {
   min-height: calc(100vh - 10rem);
 }
 
-.has-pending .map-bleed .map-controls,
-.has-pending .map-bleed .maplibregl-ctrl-top-right {
-  top: 5.75rem;
+.has-pending .map-bleed {
+  top: 10rem;
+  height: calc(100dvh - 10rem);
 }
