@@ -7,16 +7,14 @@ import { loadMaineStocking, loadPlannedStocking, type PlannedStockingLoad } from
 
 export const dynamic = 'force-dynamic';
 
-function message(error: unknown, fallback: string): string {
-  return error instanceof Error ? error.message : fallback;
-}
-
 export default async function StockingPage() {
   const [plannedResult, maineResult] = await Promise.allSettled([loadPlannedStocking(), loadMaineStocking()]);
   const planned = plannedResult.status === 'fulfilled' ? plannedResult.value : null;
-  const plannedError = plannedResult.status === 'rejected' ? message(plannedResult.reason, 'The NY planned list did not load.') : null;
+  const plannedError = plannedResult.status === 'rejected';
   const maine = maineResult.status === 'fulfilled' ? maineResult.value : null;
-  const maineError = maineResult.status === 'rejected' ? message(maineResult.reason, 'The Maine stocking report did not load.') : null;
+  const maineError = maineResult.status === 'rejected';
+  if (plannedError) console.error('NY planned stocking did not load');
+  if (maineError) console.error('Maine stocking did not load');
 
   return (
     <PageWrapper>
@@ -33,7 +31,7 @@ export default async function StockingPage() {
                 These rows are the current-season spring trout plan from NY DEC. A month or week in the table is the planned window, not a date the fish were stocked.
               </p>
               <StateLinks state="New York" />
-              {plannedError ? <p className="text-sm font-bold">{plannedError}</p> : null}
+              {plannedError ? <p className="text-sm font-bold">Data unavailable</p> : null}
               {planned ? <PlannedTable load={planned} /> : null}
             </section>
 
@@ -52,7 +50,7 @@ export default async function StockingPage() {
             <section className="space-y-3">
               <h2 className="text-sm font-bold uppercase">Maine</h2>
               <StateLinks state="Maine" />
-              {maineError ? <p className="text-sm font-bold">{maineError}</p> : null}
+              {maineError ? <p className="text-sm font-bold">Data unavailable</p> : null}
               {maine ? <MaineTable report={maine} /> : null}
             </section>
           </div>
