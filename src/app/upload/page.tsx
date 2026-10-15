@@ -3,8 +3,9 @@ import PageWrapper from '@/components/ui/PageWrapper';
 import { PinForm } from '@/components/pins/PinForm';
 import { PhotoUpload, RouteUpload } from '@/components/posts/ProfileAdds';
 import { PostForm } from '@/components/posts/PostForm';
-import { Button } from '@/components/retro/Button';
 import { Window } from '@/components/retro/Window';
+import { SectionList } from '@/components/ui/SectionList';
+import { UPLOAD_LINKS } from '@/lib/sections';
 import { getViewer } from '@/app/sign-in/actions';
 import { listMembers } from '@/lib/auth/members';
 import { isDatabaseConfigured } from '@/db';
@@ -66,13 +67,7 @@ export default async function UploadPage({
           <p className="mb-4 text-sm text-gray-700">
             Add a trip report, a route, a pin, or a photo. They show on the map and on your page. Chat is text only.
           </p>
-          <div className="flex flex-wrap gap-2">
-            {KINDS.map((item) => (
-              <Button key={item.id} href={`/upload?kind=${item.id}`} tone={kind === item.id ? 'yellow' : 'default'}>
-                {item.label}
-              </Button>
-            ))}
-          </div>
+          {kind ? null : <SectionList links={UPLOAD_LINKS} label="Upload" />}
         </Window>
         {kind === 'post' ? (
           <Window title="Post">
