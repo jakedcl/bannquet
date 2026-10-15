@@ -124,7 +124,7 @@ export async function loadRoute(id: string): Promise<RouteDetail | null> {
     userId: text(row.user_id),
     who: text(row.who) ?? 'Friend',
     handle: text(row.handle),
-    post: postId ? { id: postId, title: text(row.post_title) ?? 'Trip report' } : null,
+    post: postId ? { id: postId, title: text(row.post_title) ?? 'Trip' } : null,
     lat: num(row.lat),
     lng: num(row.lng),
   };
@@ -167,7 +167,7 @@ export async function loadPhoto(id: string): Promise<PhotoDetail | null> {
     userId: text(row.user_id),
     who: text(row.who) ?? 'Friend',
     handle: text(row.handle),
-    post: postId ? { id: postId, title: text(row.post_title) ?? 'Trip report' } : null,
+    post: postId ? { id: postId, title: text(row.post_title) ?? 'Trip' } : null,
     pinId: text(row.pin_id),
     lat: num(row.lat),
     lng: num(row.lng),

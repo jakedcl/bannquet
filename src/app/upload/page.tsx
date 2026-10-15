@@ -2,21 +2,17 @@ import { redirect } from 'next/navigation';
 import PageWrapper from '@/components/ui/PageWrapper';
 import { PinForm } from '@/components/pins/PinForm';
 import { PhotoUpload, RouteUpload } from '@/components/posts/ProfileAdds';
-import { PostForm } from '@/components/posts/PostForm';
 import { Window } from '@/components/retro/Window';
 import { SectionList } from '@/components/ui/SectionList';
 import { UPLOAD_LINKS } from '@/lib/sections';
 import { getViewer } from '@/app/sign-in/actions';
-import { listMembers } from '@/lib/auth/members';
-import { isDatabaseConfigured } from '@/db';
-import { listAttachables, type AttachChoice } from '@/lib/library';
 import { APPROVAL_WAIT, canContribute } from '@/lib/membership';
 import { signInPath } from '@/lib/sign-in-next';
 
 export const dynamic = 'force-dynamic';
 
 const KINDS = [
-  { id: 'post', label: 'Trip report' },
+  { id: 'post', label: 'Trip' },
   { id: 'route', label: 'Route (GPX)' },
   { id: 'pin', label: 'Pin' },
   { id: 'photo', label: 'Photo' },
@@ -35,6 +31,7 @@ export default async function UploadPage({
 }) {
   const params = await searchParams;
   const kind = isKind(params.kind) ? params.kind : null;
+  if (kind === 'post') redirect('/trips/new');
   const viewer = await getViewer();
   if (!viewer) redirect(signInPath(kind ? `/upload?kind=${kind}` : '/upload'));
 
@@ -50,38 +47,19 @@ export default async function UploadPage({
     );
   }
 
-  const friends = kind === 'post'
-    ? (await listMembers())
-      .filter((member) => member.id !== viewer.id && canContribute(member.role))
-      .map((member) => ({
-        id: member.id,
-        label: member.displayName || member.handle || member.email || 'Friend',
-      }))
-    : [];
-  const saved = kind === 'post' ? await loadSaved(viewer.id) : { routes: [], pins: [], photos: [] };
-
   return (
     <PageWrapper>
       <div className="mx-auto max-w-2xl space-y-4 px-4 py-10">
         <Window title="Upload">
           <p className="mb-4 text-sm text-gray-700">
-            Add a trip report, a route, a pin, or a photo. They show on the map and on your page. Chat is text only.
+            Add a route, a pin, or a photo. They show on the map and on your page. A trip is its own page.
           </p>
           {kind ? null : <SectionList links={UPLOAD_LINKS} label="Upload" />}
         </Window>
-        {kind === 'post' ? (
-          <Window title="Post">
-            <p className="mb-4 text-sm text-gray-700">
-              A trip report can include the day, photos, and a route.
-              You can attach a route, pin, or photo you already saved, or add a new one here.
-            </p>
-            <PostForm friends={friends} routes={saved.routes} pins={saved.pins} photos={saved.photos} />
-          </Window>
-        ) : null}
         {kind === 'route' ? (
           <Window title="Route (GPX)">
             <p className="mb-4 text-sm text-gray-700">
-              A route added here is the same thing as one inside a post. Both show on the map.
+              A route added here shows on the map and on your page.
             </p>
             <RouteUpload />
           </Window>
@@ -105,14 +83,4 @@ export default async function UploadPage({
       </div>
     </PageWrapper>
   );
-}
-
-async function loadSaved(userId: string): Promise<{ routes: AttachChoice[]; pins: AttachChoice[]; photos: AttachChoice[] }> {
-  const empty = { routes: [], pins: [], photos: [] };
-  if (!isDatabaseConfigured()) return empty;
-  try {
-    return await listAttachables(userId);
-  } catch {
-    return empty;
-  }
 }

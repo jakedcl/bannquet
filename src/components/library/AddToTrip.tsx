@@ -2,77 +2,70 @@
 
 import { useActionState, useState } from 'react';
 import Link from 'next/link';
-import { attachToReportAction, detachFromReportAction } from '@/app/library/actions';
+import { attachToTripAction, detachFromTripAction } from '@/app/trips/actions';
 
 export function AddToTrip({
   kind,
   entityId,
-  reports,
+  trips,
   attached,
 }: {
   kind: 'route' | 'pin' | 'photo';
   entityId: string;
-  reports: Array<{ id: string; title: string }>;
-  attached: { id: string; title: string } | null;
+  trips: Array<{ id: string; title: string }>;
+  attached: Array<{ id: string; title: string }>;
 }) {
   const [open, setOpen] = useState(false);
-  const [attachState, attach, attachPending] = useActionState(attachToReportAction, null);
-  const [detachState, detach, detachPending] = useActionState(detachFromReportAction, null);
-  const returnTo = kind === 'route' ? `/routes/${entityId}` : kind === 'pin' ? `/pins/${entityId}` : `/photos/${entityId}`;
+  const [attachState, attach, attachPending] = useActionState(attachToTripAction, null);
+  const [detachState, detach, detachPending] = useActionState(detachFromTripAction, null);
+  const on = new Set(attached.map((trip) => trip.id));
 
   return (
     <div className="text-sm">
       <button type="button" className="underline" onClick={() => setOpen(true)}>
-        {attached ? `On ${attached.title}` : 'Add to trip'}
+        {attached.length > 0 ? `On ${attached.map((trip) => trip.title).join(', ')}` : 'Add to trip'}
       </button>
       {open ? (
         <div className="fixed inset-0 z-40 flex items-end justify-center bg-black/40 p-4 sm:items-center" onClick={() => setOpen(false)}>
           <div
             role="dialog"
-            aria-label="Add to a trip report"
+            aria-label="Add to a trip"
             className="w-full max-w-sm bg-beige p-3 retro-box"
             onClick={(event) => event.stopPropagation()}
           >
             <div className="mb-3 flex items-start justify-between gap-3">
-              <p className="text-sm font-bold uppercase">Trip reports</p>
-              <Link href="/posts/new" className="shrink-0 text-xs font-bold uppercase underline">
-                + New trip report
-              </Link>
+              <p className="text-sm font-bold uppercase">Trips</p>
+              <Link href="/trips/new" className="shrink-0 text-xs font-bold uppercase underline">+ New trip</Link>
             </div>
-            {attached ? (
-              <p className="mb-2 text-sm">Already on {attached.title}.</p>
-            ) : null}
-            {reports.length === 0 ? (
-              <p className="text-sm">No trip reports yet.</p>
-            ) : (
+            {trips.length === 0 ? <p className="text-sm">No trips yet.</p> : (
               <ul className="max-h-64 space-y-1 overflow-y-auto">
-                {reports.map((report) => (
-                  <li key={report.id}>
-                    <form action={attach}>
-                      <input type="hidden" name="kind" value={kind} />
-                      <input type="hidden" name="entityId" value={entityId} />
-                      <input type="hidden" name="reportId" value={report.id} />
-                      <input type="hidden" name="returnTo" value={returnTo} />
-                      <button type="submit" disabled={attachPending} className="w-full py-1 text-left text-sm underline disabled:opacity-60">
-                        {report.title}
-                      </button>
-                    </form>
+                {trips.map((trip) => (
+                  <li key={trip.id} className="flex items-center gap-2">
+                    {on.has(trip.id) ? (
+                      <form action={detach} className="min-w-0 flex-1">
+                        <input type="hidden" name="kind" value={kind} />
+                        <input type="hidden" name="entityId" value={entityId} />
+                        <input type="hidden" name="tripId" value={trip.id} />
+                        <button type="submit" disabled={detachPending} className="w-full py-1 text-left text-sm underline disabled:opacity-60">
+                          {trip.title} · remove
+                        </button>
+                      </form>
+                    ) : (
+                      <form action={attach} className="min-w-0 flex-1">
+                        <input type="hidden" name="kind" value={kind} />
+                        <input type="hidden" name="entityId" value={entityId} />
+                        <input type="hidden" name="tripId" value={trip.id} />
+                        <button type="submit" disabled={attachPending} className="w-full py-1 text-left text-sm underline disabled:opacity-60">
+                          {trip.title}
+                        </button>
+                      </form>
+                    )}
                   </li>
                 ))}
               </ul>
             )}
             {attachState?.error ? <p className="mt-2 text-sm font-bold text-red-700">{attachState.error}</p> : null}
-            {attached ? (
-              <form action={detach} className="mt-3">
-                <input type="hidden" name="kind" value={kind} />
-                <input type="hidden" name="entityId" value={entityId} />
-                <input type="hidden" name="returnTo" value={returnTo} />
-                <button type="submit" disabled={detachPending} className="text-xs font-bold uppercase underline">
-                  {detachPending ? 'Detaching…' : 'Detach'}
-                </button>
-                {detachState?.error ? <p className="mt-1 text-sm font-bold text-red-700">{detachState.error}</p> : null}
-              </form>
-            ) : null}
+            {detachState?.error ? <p className="mt-2 text-sm font-bold text-red-700">{detachState.error}</p> : null}
             <button type="button" className="mt-3 text-xs uppercase underline" onClick={() => setOpen(false)}>Close</button>
           </div>
         </div>

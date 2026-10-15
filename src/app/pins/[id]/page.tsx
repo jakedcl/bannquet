@@ -16,7 +16,7 @@ import { canContribute, canDeleteOwned } from '@/lib/membership';
 import { loadPin } from '@/lib/pins';
 import { PIN_KIND_LABELS, isPinKind } from '@/lib/pin-kinds';
 import { loadMapData } from '@/lib/posts';
-import { listAuthorPosts } from '@/lib/trips';
+import { listTripChoices, tripsForItem } from '@/lib/trips';
 import { formatTripDate } from '@/lib/utils';
 
 export const dynamic = 'force-dynamic';
@@ -35,7 +35,12 @@ export default async function PinPage({ params }: { params: Promise<{ id: string
     actorId: viewer.id,
     ownerId: pin.createdBy,
   }));
-  const reports = viewer && manage ? await listAuthorPosts(viewer.id).catch(() => []) : [];
+  const [tripChoices, attachedTrips] = viewer && manage
+    ? await Promise.all([
+      listTripChoices().catch(() => []),
+      tripsForItem('pin', pin.id).catch(() => []),
+    ])
+    : [[], []];
   const data = await loadMapData();
   const activity = pin.activity && isActivity(pin.activity) ? ACTIVITY_META[pin.activity].label : null;
   const category = isPinKind(pin.kind) ? PIN_KIND_LABELS[pin.kind] : 'Other';
@@ -103,8 +108,8 @@ export default async function PinPage({ params }: { params: Promise<{ id: string
           <AddToTrip
             kind="pin"
             entityId={pin.id}
-            reports={reports.map((item) => ({ id: item.id, title: item.title }))}
-            attached={pin.post}
+            trips={tripChoices}
+            attached={attachedTrips}
           />
         ) : null}
       </div>

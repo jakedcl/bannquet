@@ -7,6 +7,7 @@ import { isDatabaseConfigured } from '@/db';
 import { APPROVAL_WAIT, canContribute } from '@/lib/membership';
 import { signInPath } from '@/lib/sign-in-next';
 import { getEditablePost } from '@/lib/trip-reports';
+import { tripIdForReport } from '@/lib/trips';
 
 export const dynamic = 'force-dynamic';
 
@@ -18,6 +19,16 @@ export default async function EditPostPage({ params }: PageProps) {
   const { id } = await params;
   const viewer = await getViewer();
   if (!viewer) redirect(signInPath(`/posts/${id}/edit`));
+
+  if (isDatabaseConfigured()) {
+    let mapped: string | null = null;
+    try {
+      mapped = await tripIdForReport(id);
+    } catch {
+      mapped = null;
+    }
+    if (mapped) redirect(`/trips/${mapped}`);
+  }
 
   if (!isDatabaseConfigured()) {
     return (
