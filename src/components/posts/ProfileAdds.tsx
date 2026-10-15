@@ -7,13 +7,14 @@ import { PhotoFields } from '@/components/posts/PhotoFields';
 import type { UploadedPhoto } from '@/components/posts/prepare-photo';
 import { Button } from '@/components/retro/Button';
 import { ACTIVITIES, ACTIVITY_META } from '@/lib/activities';
-import { parseGpx } from '@/lib/gpx';
+import { formatFeetGain, formatMiles, packTrack } from '@/lib/gpx';
 
 export function RouteUpload() {
   const router = useRouter();
   const refreshed = useRef(false);
   const [state, action, pending] = useActionState(publishProfileTrack, null);
-  const [gpxText, setGpxText] = useState('');
+  const [trackJson, setTrackJson] = useState('');
+  const [note, setNote] = useState<string | null>(null);
   useEffect(() => {
     if (!state?.saved || refreshed.current) return;
     refreshed.current = true;
@@ -37,17 +38,37 @@ export function RouteUpload() {
         className="block w-full text-sm"
         onChange={async (event) => {
           const file = event.target.files?.[0];
-          setGpxText(file ? await file.text() : '');
+          if (!file) {
+            setTrackJson('');
+            setNote(null);
+            return;
+          }
+          try {
+            const packed = packTrack(await file.text());
+            if (!packed) {
+              setTrackJson('');
+              setNote('That file has no route in it.');
+              return;
+            }
+            setTrackJson(JSON.stringify(packed));
+            setNote(`${packed.name || file.name}: ${formatMiles(packed.distanceM)}, ${formatFeetGain(packed.elevGainM)}`);
+          } catch {
+            setTrackJson('');
+            setNote('That file could not be read.');
+          }
         }}
       />
-      <input type="hidden" name="gpxText" value={gpxText} />
+      <input type="hidden" name="trackJson" value={trackJson} />
+      {note ? (
+        <p className={`text-sm ${trackJson ? 'text-gray-700' : 'font-bold text-red-700'}`}>{note}</p>
+      ) : null}
       {state?.error ? <p className="text-sm font-bold text-red-700">{state.error}</p> : null}
       {state?.saved ? (
         <p className="text-sm">
           Route saved. It is on the map.
         </p>
       ) : null}
-      <Button type="submit" disabled={pending || !gpxText || parseGpx(gpxText).points.length < 2}>
+      <Button type="submit" disabled={pending || !trackJson}>
         {pending ? 'Saving…' : 'Save route'}
       </Button>
     </form>

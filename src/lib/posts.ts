@@ -1,7 +1,7 @@
 import { sql } from 'drizzle-orm';
 import { getDb } from '@/db';
 import { isActivity, mapColorForActivity, type Activity } from '@/lib/activities';
-import { lineWkt, trackStats, type TrackPoint } from '@/lib/gpx';
+import { lineWkt, type PackedTrack, type TrackPoint } from '@/lib/gpx';
 import { PIN_KIND_LABELS, isPinKind } from '@/lib/pin-kinds';
 import { NEUTRAL_PIN_COLOR } from '@/lib/map';
 import { isLatLng, isPublicBlobUrl } from '@/lib/photos';
@@ -314,7 +314,7 @@ export async function createPost(input: {
   tripDate: string | null;
   activity: Activity | null;
   taggedUserIds: string[];
-  track: { name: string | null; points: TrackPoint[] } | null;
+  track: PackedTrack | null;
   photos: PreparedPhoto[];
   pin: { title: string; note: string; kind: string; lat: number; lng: number } | null;
   attachRouteIds: string[];
@@ -357,7 +357,6 @@ export async function createPost(input: {
 
     if (track && track.points.length >= 2 && input.activity) {
       const wkt = lineWkt(track.points);
-      const stats = trackStats(track.points);
       if (wkt) {
         await tx.execute(sql`
           insert into tracks (user_id, trip_report_id, source, name, activity, line, distance_m, elev_gain_m, started_at)
@@ -368,8 +367,8 @@ export async function createPost(input: {
             ${track.name || input.title},
             ${input.activity}::activity,
             ST_GeogFromText(${wkt}),
-            ${stats.distanceM},
-            ${stats.elevGainM},
+            ${track.distanceM},
+            ${track.elevGainM},
             ${input.tripDate}::date
           )
         `);
@@ -460,7 +459,7 @@ export async function updatePost(input: {
   postKind: PostKind;
   tripDate: string | null;
   activity: Activity | null;
-  track: { name: string | null; points: TrackPoint[] } | null;
+  track: PackedTrack | null;
   photos: PreparedPhoto[];
 }): Promise<string | null> {
   const track = input.postKind === 'trip_report' ? input.track : null;
@@ -483,7 +482,6 @@ export async function updatePost(input: {
 
     if (track && track.points.length >= 2 && input.activity && input.tripDate) {
       const wkt = lineWkt(track.points);
-      const stats = trackStats(track.points);
       if (wkt) {
         await tx.execute(sql`
           insert into tracks (user_id, trip_report_id, source, name, activity, line, distance_m, elev_gain_m, started_at)
@@ -494,8 +492,8 @@ export async function updatePost(input: {
             ${track.name || input.title},
             ${input.activity}::activity,
             ST_GeogFromText(${wkt}),
-            ${stats.distanceM},
-            ${stats.elevGainM},
+            ${track.distanceM},
+            ${track.elevGainM},
             ${input.tripDate}::date
           )
         `);
@@ -542,11 +540,10 @@ export async function updatePost(input: {
 export async function addProfileTrack(input: {
   userId: string;
   activity: Activity;
-  track: { name: string | null; points: TrackPoint[] };
+  track: PackedTrack;
 }): Promise<void> {
   const wkt = lineWkt(input.track.points);
   if (!wkt) throw new Error('That GPX needs at least two points.');
-  const stats = trackStats(input.track.points);
   await getDb().execute(sql`
     insert into tracks (user_id, source, name, activity, line, distance_m, elev_gain_m, started_at)
     values (
@@ -555,8 +552,8 @@ export async function addProfileTrack(input: {
       ${input.track.name || 'Route'},
       ${input.activity}::activity,
       ST_GeogFromText(${wkt}),
-      ${stats.distanceM},
-      ${stats.elevGainM},
+      ${input.track.distanceM},
+      ${input.track.elevGainM},
       now()
     )
   `);

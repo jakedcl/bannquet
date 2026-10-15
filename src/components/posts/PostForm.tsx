@@ -7,7 +7,7 @@ import { PhotoFields } from '@/components/posts/PhotoFields';
 import type { UploadedPhoto } from '@/components/posts/prepare-photo';
 import { Button } from '@/components/retro/Button';
 import { ACTIVITIES, ACTIVITY_META, isActivity } from '@/lib/activities';
-import { parseGpx, formatFeetGain, formatMiles, trackStats } from '@/lib/gpx';
+import { formatFeetGain, formatMiles, packTrack } from '@/lib/gpx';
 import { PIN_KINDS, PIN_KIND_LABELS } from '@/lib/pin-kinds';
 import type { AttachChoice } from '@/lib/library';
 import type { MapFeatureCollection } from '@/lib/posts';
@@ -43,7 +43,7 @@ export function PostForm({
   const [state, action, pending] = useActionState(initial ? savePostEdits : publishPost, null);
   const [postKind, setPostKind] = useState<PostKind>(initial?.postKind ?? 'trip_report');
   const [photos, setPhotos] = useState<UploadedPhoto[]>([]);
-  const [gpxText, setGpxText] = useState('');
+  const [trackJson, setTrackJson] = useState('');
   const [gpxNote, setGpxNote] = useState<string | null>(null);
   const [point, setPoint] = useState<{ lat: number; lng: number } | null>(null);
   const tripReport = postKind === 'trip_report';
@@ -153,25 +153,28 @@ export function PostForm({
             onChange={async (event) => {
               const file = event.target.files?.[0];
               if (!file) {
-                setGpxText('');
+                setTrackJson('');
                 setGpxNote(null);
                 return;
               }
-              const text = await file.text();
-              const parsed = parseGpx(text);
-              if (parsed.points.length < 2) {
-                setGpxText('');
-                setGpxNote('That file has no route in it.');
-                return;
+              try {
+                const packed = packTrack(await file.text());
+                if (!packed) {
+                  setTrackJson('');
+                  setGpxNote('That file has no route in it.');
+                  return;
+                }
+                setTrackJson(JSON.stringify(packed));
+                setGpxNote(`${packed.name || file.name}: ${formatMiles(packed.distanceM)}, ${formatFeetGain(packed.elevGainM)}`);
+              } catch {
+                setTrackJson('');
+                setGpxNote('That file could not be read.');
               }
-              const stats = trackStats(parsed.points);
-              setGpxText(text);
-              setGpxNote(`${parsed.name || file.name}: ${formatMiles(stats.distanceM)}, ${formatFeetGain(stats.elevGainM)}`);
             }}
           />
         </label>
       ) : null}
-      <input type="hidden" name="gpxText" value={tripReport ? gpxText : ''} />
+      <input type="hidden" name="trackJson" value={tripReport ? trackJson : ''} />
       {tripReport && gpxNote ? <p className="text-sm text-gray-700">{gpxNote}</p> : null}
 
       {canAttach ? (
