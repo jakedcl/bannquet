@@ -20,7 +20,7 @@ export async function sendChatAction(
   const refId = String(formData.get('refId') ?? '').trim();
   const refKind = kindRaw && isChatRefKind(kindRaw) ? kindRaw : null;
   if ((kindRaw && !refKind) || (refId && !UUID.test(refId)) || (refKind && !refId) || (!refKind && refId)) {
-    return { error: 'That attachment is not one of yours.' };
+    return { error: 'That attachment is missing.' };
   }
   const result = await sendChatMessage({
     userId: viewer.id,
@@ -28,8 +28,8 @@ export async function sendChatAction(
     refKind,
     refId: refId || null,
   });
-  if (result === 'empty') return { error: 'Write a note, or attach something you saved.' };
-  if (result === 'missing') return { error: 'That attachment is not one of yours.' };
+  if (result === 'empty') return { error: 'Write a note, or attach a pin, route, or photo.' };
+  if (result === 'missing') return { error: 'That attachment is missing.' };
   revalidatePath('/chat');
   return {};
 }

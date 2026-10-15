@@ -4,35 +4,36 @@ import { useActionState, useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { deleteChatAction, sendChatAction } from '@/app/chat/actions';
-import { formatChatTime, type ChatMessage, type ChatRefKind } from '@/lib/chat-view';
+import { SearchBar } from '@/components/ui/SearchBar';
+import { formatChatTime, type ChatCatalogItem, type ChatMessage, type ChatRefKind } from '@/lib/chat-view';
 
-type SavedItem = { id: string; label: string; url?: string };
-
-const KINDS: Array<{ id: ChatRefKind; label: string }> = [
-  { id: 'pin', label: 'Pin' },
-  { id: 'route', label: 'Route' },
-  { id: 'photo', label: 'Photo' },
+const GROUPS: Array<{ id: ChatRefKind; label: string }> = [
+  { id: 'pin', label: 'Pins' },
+  { id: 'route', label: 'Routes' },
+  { id: 'photo', label: 'Photos' },
 ];
 
 export function ChatRoom({
   initial,
   canSend,
   notice,
-  items,
+  catalog,
   viewerId,
   moderator,
 }: {
   initial: ChatMessage[];
   canSend: boolean;
   notice: string | null;
-  items: { pins: SavedItem[]; routes: SavedItem[]; photos: SavedItem[] };
+  catalog: ChatCatalogItem[];
   viewerId: string | null;
   moderator: boolean;
 }) {
   const [messages, setMessages] = useState(initial);
   const [refreshNote, setRefreshNote] = useState<string | null>(null);
-  const [picker, setPicker] = useState<null | 'menu' | ChatRefKind>(null);
-  const [attached, setAttached] = useState<SavedItem & { kind: ChatRefKind } | null>(null);
+  const [attached, setAttached] = useState<ChatCatalogItem | null>(null);
+  const [tab, setTab] = useState<'mine' | 'everyone'>('mine');
+  const [query, setQuery] = useState('');
+  const dialogRef = useRef<HTMLDialogElement | null>(null);
   const [state, action, pending] = useActionState(sendChatAction, null);
   const scroller = useRef<HTMLDivElement | null>(null);
   const formRef = useRef<HTMLFormElement | null>(null);
@@ -48,7 +49,7 @@ export function ChatRoom({
     if (!state || state.error) return;
     formRef.current?.reset();
     setAttached(null);
-    setPicker(null);
+    dialogRef.current?.close();
   }, [state]);
 
   useEffect(() => {
@@ -80,7 +81,18 @@ export function ChatRoom({
     return () => window.clearInterval(timer);
   }, []);
 
-  const list = picker === 'pin' ? items.pins : picker === 'route' ? items.routes : picker === 'photo' ? items.photos : [];
+  const needle = query.trim().toLowerCase();
+  const visible = catalog.filter((item) => {
+    if (tab === 'mine' && item.ownerId !== viewerId) return false;
+    if (needle && !`${item.label} ${item.ownerName}`.toLowerCase().includes(needle)) return false;
+    return true;
+  });
+
+  function openPicker() {
+    setTab('mine');
+    setQuery('');
+    dialogRef.current?.showModal();
+  }
 
   return (
     <div className="space-y-3">
@@ -103,70 +115,20 @@ export function ChatRoom({
         <input type="hidden" name="refId" value={attached?.id ?? ''} />
         {attached ? (
           <p className="flex items-center gap-2 text-sm">
-            <Chip refItem={{ kind: attached.kind, label: attached.label, href: '#', thumb: attached.url ?? null, missing: false }} />
+            <Chip refItem={{ kind: attached.kind, label: attached.label, href: attached.href, thumb: attached.thumb, missing: false }} />
             <button type="button" className="text-xs underline" onClick={() => setAttached(null)}>Remove</button>
           </p>
         ) : null}
         <div className="flex items-end gap-2">
-          <div className="relative">
-            <button
-              type="button"
-              aria-label="Attach a pin, route, or photo"
-              aria-expanded={picker != null}
-              disabled={!canSend}
-              onClick={() => setPicker((current) => (current ? null : 'menu'))}
-              className="retro-button-blue nav-button w-10 rounded-none px-0 text-lg"
-            >
-              @
-            </button>
-            {picker ? (
-              <div className="absolute bottom-full left-0 z-20 mb-1 w-56 bg-[#5c3a1e] p-1">
-                {picker === 'menu' ? (
-                  <div className="flex flex-col gap-1">
-                    {KINDS.map((kind) => (
-                      <button
-                        key={kind.id}
-                        type="button"
-                        className="retro-button-yellow rounded-none px-3 py-1 text-left text-xs font-bold uppercase"
-                        onClick={() => setPicker(kind.id)}
-                      >
-                        {kind.label}
-                      </button>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="space-y-1 bg-beige p-2">
-                    <button type="button" className="text-xs font-bold uppercase underline" onClick={() => setPicker('menu')}>
-                      Back
-                    </button>
-                    {list.length === 0 ? (
-                      <p className="text-sm">Nothing saved here yet.</p>
-                    ) : (
-                      <ul className="max-h-48 space-y-1 overflow-y-auto">
-                        {list.map((item) => (
-                          <li key={item.id}>
-                            <button
-                              type="button"
-                              className="flex w-full items-center gap-2 text-left text-sm underline"
-                              onClick={() => {
-                                setAttached({ ...item, kind: picker });
-                                setPicker(null);
-                              }}
-                            >
-                              {picker === 'photo' && item.url ? (
-                                <Image src={item.url} alt="" width={32} height={32} className="h-8 w-8 object-cover" />
-                              ) : null}
-                              {item.label}
-                            </button>
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-                  </div>
-                )}
-              </div>
-            ) : null}
-          </div>
+          <button
+            type="button"
+            aria-label="Attach a pin, route, or photo"
+            disabled={!canSend}
+            onClick={openPicker}
+            className="retro-button-blue nav-button w-10 rounded-none px-0 text-lg"
+          >
+            @
+          </button>
           <label className="min-w-0 flex-1">
             <span className="sr-only">Message</span>
             <textarea
@@ -184,8 +146,81 @@ export function ChatRoom({
         </div>
         {state?.error ? <p className="text-sm font-bold text-red-700">{state.error}</p> : null}
       </form>
+      <dialog
+        ref={dialogRef}
+        aria-label="Attach a pin, route, or photo"
+        className="m-auto w-[min(32rem,calc(100%-2rem))] max-h-[min(36rem,calc(100%-2rem))] border-4 border-[#5c3a1e] bg-beige p-4 shadow-[0_16px_40px_rgba(0,0,0,0.22)] backdrop:bg-black/40"
+        onClick={(event) => {
+          if (event.target === dialogRef.current) dialogRef.current.close();
+        }}
+      >
+        <div className="mb-3 flex items-center justify-between gap-3">
+          <p className="text-sm font-bold uppercase">Attach</p>
+          <button type="button" aria-label="Close" className="text-lg font-bold leading-none" onClick={() => dialogRef.current?.close()}>
+            ×
+          </button>
+        </div>
+        <div className="mb-3 flex gap-2">
+          <button
+            type="button"
+            className={`${tab === 'mine' ? 'retro-button-yellow' : 'retro-button'} rounded-none px-3 py-1 text-xs font-bold uppercase`}
+            onClick={() => setTab('mine')}
+          >
+            Mine
+          </button>
+          <button
+            type="button"
+            className={`${tab === 'everyone' ? 'retro-button-yellow' : 'retro-button'} rounded-none px-3 py-1 text-xs font-bold uppercase`}
+            onClick={() => setTab('everyone')}
+          >
+            Everyone
+          </button>
+        </div>
+        <SearchBar value={query} onChange={setQuery} placeholder="Search pins, routes, photos" label="Search attachments" />
+        <div className="mt-3 max-h-72 space-y-3 overflow-y-auto">
+          {visible.length === 0 ? (
+            <p className="text-sm">{tab === 'mine' ? 'Nothing of yours yet.' : 'Nothing saved here yet.'}</p>
+          ) : GROUPS.map((group) => {
+            const items = visible.filter((item) => item.kind === group.id);
+            if (items.length === 0) return null;
+            return (
+              <section key={group.id}>
+                <h3 className="text-xs font-bold uppercase tracking-wide">{group.label}</h3>
+                <ul className="mt-1 space-y-1">
+                  {items.map((item) => (
+                    <li key={`${item.kind}-${item.id}`}>
+                      <button
+                        type="button"
+                        className="flex w-full items-center gap-2 py-1 text-left text-sm"
+                        onClick={() => {
+                          setAttached(item);
+                          dialogRef.current?.close();
+                        }}
+                      >
+                        <Thumb item={item} />
+                        <span className="min-w-0">
+                          <span className="block truncate font-bold underline">{item.label}</span>
+                          {tab === 'everyone' ? <span className="block truncate text-xs text-gray-600">{item.ownerName}</span> : null}
+                        </span>
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            );
+          })}
+        </div>
+      </dialog>
     </div>
   );
+}
+
+function Thumb({ item }: { item: ChatCatalogItem }) {
+  if (item.kind === 'photo' && item.thumb) {
+    return <Image src={item.thumb} alt="" width={32} height={32} className="h-8 w-8 shrink-0 object-cover" />;
+  }
+  const color = item.kind === 'pin' ? 'bg-[#c0392b]' : item.kind === 'route' ? 'bg-[#1f4e9c]' : 'bg-[#e67e22]';
+  return <span className={`inline-block h-8 w-8 shrink-0 ${color}`} aria-hidden="true" />;
 }
 
 function ChatLine({

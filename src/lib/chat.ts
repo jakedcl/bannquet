@@ -1,8 +1,8 @@
 import { sql } from 'drizzle-orm';
 import { getDb } from '@/db';
-import { isChatRefKind, type ChatMessage, type ChatRef, type ChatRefKind } from '@/lib/chat-view';
+import { isChatRefKind, type ChatCatalogItem, type ChatMessage, type ChatRef, type ChatRefKind } from '@/lib/chat-view';
 
-export type { ChatMessage, ChatRef, ChatRefKind } from '@/lib/chat-view';
+export type { ChatCatalogItem, ChatMessage, ChatRef, ChatRefKind } from '@/lib/chat-view';
 export { formatChatTime, isChatRefKind } from '@/lib/chat-view';
 
 type QueryRows = { rows?: Record<string, unknown>[] };
@@ -106,8 +106,8 @@ export async function sendChatMessage(input: {
   const body = input.body.trim().slice(0, 500);
   if (!body && !input.refId) return 'empty';
   if (input.refKind && input.refId) {
-    const owned = await ownsRef(input.userId, input.refKind, input.refId);
-    if (!owned) return 'missing';
+    const exists = await existsRef(input.refKind, input.refId);
+    if (!exists) return 'missing';
   }
   if (input.refKind && input.refId) {
     await getDb().execute(sql`
@@ -132,11 +132,58 @@ export async function deleteChatMessage(id: string, actor: { id: string; admin: 
   return asRows(result).length > 0;
 }
 
-async function ownsRef(userId: string, kind: ChatRefKind, id: string): Promise<boolean> {
+async function existsRef(kind: ChatRefKind, id: string): Promise<boolean> {
   const result = kind === 'pin'
-    ? await getDb().execute(sql`select id::text as id from pins where id = ${id}::uuid and created_by = ${userId}`)
+    ? await getDb().execute(sql`select id::text as id from pins where id = ${id}::uuid`)
     : kind === 'route'
-      ? await getDb().execute(sql`select id::text as id from tracks where id = ${id}::uuid and user_id = ${userId}`)
-      : await getDb().execute(sql`select id::text as id from photos where id = ${id}::uuid and user_id = ${userId}`);
+      ? await getDb().execute(sql`select id::text as id from tracks where id = ${id}::uuid`)
+      : await getDb().execute(sql`select id::text as id from photos where id = ${id}::uuid`);
   return asRows(result).length > 0;
+}
+
+export async function listChatCatalog(): Promise<ChatCatalogItem[]> {
+  const db = getDb();
+  const [pins, routes, photos] = await Promise.all([
+    db.execute(sql`
+      select p.id::text as id, p.title as label, p.created_by as owner_id,
+        coalesce(nullif(u.display_name, ''), nullif(u.handle, ''), 'Friend') as owner_name
+      from pins p
+      left join users u on u.id = p.created_by
+      order by p.created_at desc
+    `),
+    db.execute(sql`
+      select t.id::text as id, t.name as label, t.user_id as owner_id,
+        coalesce(nullif(u.display_name, ''), nullif(u.handle, ''), 'Friend') as owner_name
+      from tracks t
+      left join users u on u.id = t.user_id
+      order by t.created_at desc
+    `),
+    db.execute(sql`
+      select ph.id::text as id, coalesce(ph.caption, ph.alt, 'Photo') as label, ph.blob_url as thumb,
+        ph.user_id as owner_id,
+        coalesce(nullif(u.display_name, ''), nullif(u.handle, ''), 'Friend') as owner_name
+      from photos ph
+      left join users u on u.id = ph.user_id
+      order by ph.created_at desc
+    `),
+  ]);
+  const pinsOut = asRows(pins).flatMap((row) => catalogRow(row, 'pin'));
+  const routesOut = asRows(routes).flatMap((row) => catalogRow(row, 'route'));
+  const photosOut = asRows(photos).flatMap((row) => catalogRow(row, 'photo'));
+  return [...pinsOut, ...routesOut, ...photosOut];
+}
+
+function catalogRow(row: Record<string, unknown>, kind: ChatRefKind): ChatCatalogItem[] {
+  const id = text(row.id);
+  if (!id) return [];
+  const href = kind === 'pin' ? `/pins/${id}` : kind === 'route' ? `/routes/${id}` : `/photos/${id}`;
+  return [{
+    kind,
+    id,
+    label: text(row.label) ?? (kind === 'pin' ? 'Pin' : kind === 'route' ? 'Route' : 'Photo'),
+    href,
+    thumb: text(row.thumb),
+    ownerId: text(row.owner_id),
+    ownerName: text(row.owner_name) ?? 'Friend',
+  }];
 }

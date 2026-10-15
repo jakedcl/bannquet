@@ -10,6 +10,16 @@ export type ChatRef = {
   missing: boolean;
 };
 
+export type ChatCatalogItem = {
+  kind: ChatRefKind;
+  id: string;
+  label: string;
+  href: string;
+  thumb: string | null;
+  ownerId: string | null;
+  ownerName: string;
+};
+
 export type ChatMessage = {
   id: string;
   userId: string | null;

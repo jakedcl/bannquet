@@ -2,8 +2,7 @@ import PageWrapper from '@/components/ui/PageWrapper';
 import { ChatRoom } from '@/components/chat/ChatRoom';
 import { Window } from '@/components/retro/Window';
 import { getViewer } from '@/app/sign-in/actions';
-import { listChatMessages } from '@/lib/chat';
-import { listAttachables } from '@/lib/library';
+import { listChatCatalog, listChatMessages, type ChatCatalogItem } from '@/lib/chat';
 import { APPROVAL_WAIT, canContribute } from '@/lib/membership';
 import { isDatabaseConfigured } from '@/db';
 
@@ -14,18 +13,13 @@ export default async function ChatPage() {
   const ready = isDatabaseConfigured();
   let error: string | null = ready ? null : 'Postgres is not connected, so chat cannot load.';
   let messages: Awaited<ReturnType<typeof listChatMessages>> = [];
-  let items = { pins: [] as Array<{ id: string; label: string; url?: string }>, routes: [] as Array<{ id: string; label: string }>, photos: [] as Array<{ id: string; label: string; url?: string }> };
+  let catalog: ChatCatalogItem[] = [];
 
   if (ready) {
     try {
       messages = await listChatMessages();
-      if (viewer && canContribute(viewer.role)) {
-        const saved = await listAttachables(viewer.id);
-        items = {
-          pins: saved.pins.map((item) => ({ id: item.id, label: item.label })),
-          routes: saved.routes.map((item) => ({ id: item.id, label: item.label })),
-          photos: saved.photos.map((item) => ({ id: item.id, label: item.label, url: item.url })),
-        };
+      if (!viewer || canContribute(viewer.role)) {
+        catalog = await listChatCatalog();
       }
     } catch (err) {
       error = err instanceof Error ? err.message : 'Chat did not load.';
@@ -40,13 +34,13 @@ export default async function ChatPage() {
       <div className="mx-auto max-w-3xl px-4 py-10">
         <Window title="Chat">
           <p className="mb-3 text-sm text-gray-700">
-            One thread for the group. Text only. Trip reports stay on their own pages.
+            One thread for the group. Text only. Trips stay on their own pages.
           </p>
           <ChatRoom
             initial={messages}
             canSend={canSend}
             notice={notice}
-            items={items}
+            catalog={catalog}
             viewerId={viewer?.id ?? null}
             moderator={viewer?.role === 'admin'}
           />
