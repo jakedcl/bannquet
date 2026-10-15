@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import PageWrapper from '@/components/ui/PageWrapper';
 import { MapCanvas } from '@/components/map/MapCanvas';
 import { ConfirmDelete } from '@/components/delete/ConfirmDelete';
+import { RouteTitleForm } from '@/components/routes/RouteTitleForm';
 import { SeeMore } from '@/components/library/AttachReport';
 import { AddToTrip } from '@/components/library/AddToTrip';
 import { Window } from '@/components/retro/Window';
@@ -72,7 +73,16 @@ export default async function RoutePage({ params }: { params: Promise<{ id: stri
   return (
     <PageWrapper>
       <div className="mx-auto max-w-3xl space-y-4 px-4 py-10">
-        <Window title={route.name}>
+        <Window
+          title={route.name}
+          action={manage && viewer ? (
+            <ConfirmDelete
+              action={deleteRouteAction}
+              confirm="Delete this route?"
+              fields={{ id: route.id, returnTo: viewer.handle ? `/user/${viewer.handle}` : '/' }}
+            />
+          ) : null}
+        >
           <p className="text-sm text-gray-700">
             {isActivity(route.activity) ? ACTIVITY_META[route.activity].label : route.activity}
             {route.distanceM != null ? ` · ${formatMiles(route.distanceM)}` : ''}
@@ -84,22 +94,14 @@ export default async function RoutePage({ params }: { params: Promise<{ id: stri
           <div className="mt-3">
             <SeeMore post={route.post} />
           </div>
+          {viewer && canContribute(viewer.role) && viewer.id === route.userId ? (
+            <RouteTitleForm key={route.title ?? ''} id={route.id} title={route.title ?? ''} />
+          ) : null}
         </Window>
         {map && route.lat != null && route.lng != null ? (
           <div className="h-80 min-h-[420px] overflow-hidden bg-white retro-box">
             <MapCanvas points={map.points} lines={map.lines} focus={{ lng: route.lng, lat: route.lat, zoom: 12 }} />
           </div>
-        ) : null}
-        {manage && viewer ? (
-          <Window title="This route">
-            <div>
-              <ConfirmDelete
-                action={deleteRouteAction}
-                confirm="Delete this route?"
-                fields={{ id: route.id, returnTo: viewer.handle ? `/user/${viewer.handle}` : '/' }}
-              />
-            </div>
-          </Window>
         ) : null}
         {viewer && canContribute(viewer.role) && viewer.id === route.userId ? (
           <AddToTrip

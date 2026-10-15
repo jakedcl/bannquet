@@ -3,7 +3,8 @@
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { getViewer } from '@/app/sign-in/actions';
-import { attachEntity, deletePhoto, deleteReport, deleteRoute, detachEntity } from '@/lib/library';
+import { attachEntity, deletePhoto, deleteReport, deleteRoute, detachEntity, updateRouteTitle } from '@/lib/library';
+import { cleanRouteTitle } from '@/lib/route-title';
 import { APPROVAL_WAIT, canContribute } from '@/lib/membership';
 import { redirectToSignIn } from '@/lib/sign-in-redirect';
 
@@ -61,6 +62,22 @@ export async function detachFromReportAction(
   revalidatePath('/map');
   revalidatePath('/posts');
   redirect(safePath(formData, kind === 'route' ? `/routes/${entityId}` : kind === 'pin' ? `/pins/${entityId}` : `/photos/${entityId}`));
+}
+
+export async function updateRouteTitleAction(
+  _prev: { error?: string; saved?: true } | null,
+  formData: FormData,
+): Promise<{ error?: string; saved?: true }> {
+  const who = await actor();
+  if (!who.viewer) return { error: who.error ?? 'Sign in to edit a route.' };
+  const id = String(formData.get('id') ?? '');
+  if (!UUID.test(id)) return { error: 'That route is missing.' };
+  const title = cleanRouteTitle(String(formData.get('title') ?? ''));
+  const ok = await updateRouteTitle(id, title, who.viewer);
+  if (!ok) return { error: 'You can only edit your own routes.' };
+  revalidatePath(`/routes/${id}`);
+  revalidatePath('/map');
+  return { saved: true };
 }
 
 export async function deleteRouteAction(

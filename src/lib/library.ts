@@ -1,6 +1,7 @@
 import { sql } from 'drizzle-orm';
 import { getDb } from '@/db';
 import { removeBlobs } from '@/lib/blobs';
+import { cleanRouteTitle, routeTitle } from '@/lib/route-title';
 import type { MemberRole } from '@/lib/membership';
 
 type QueryRows = { rows?: Record<string, unknown>[] };
@@ -43,7 +44,7 @@ export async function listAttachables(userId: string): Promise<{
   const db = getDb();
   const [routes, pins, photos] = await Promise.all([
     db.execute(sql`
-      select t.id::text as id, t.name
+      select t.id::text as id, t.title
       from tracks t
       where t.user_id = ${userId}
       order by t.created_at desc
@@ -65,7 +66,7 @@ export async function listAttachables(userId: string): Promise<{
     routes: asRows(routes).flatMap((row) => {
       const id = text(row.id);
       if (!id) return [];
-      return [{ id, label: text(row.name) ?? 'Route', taken: false }];
+      return [{ id, label: routeTitle(text(row.title)), taken: false }];
     }),
     pins: asRows(pins).flatMap((row) => {
       const id = text(row.id);
@@ -86,6 +87,7 @@ export type LinkedPost = { id: string; title: string };
 export type RouteDetail = {
   id: string;
   name: string;
+  title: string | null;
   activity: string;
   distanceM: number | null;
   elevGainM: number | null;
@@ -99,7 +101,7 @@ export type RouteDetail = {
 
 export async function loadRoute(id: string): Promise<RouteDetail | null> {
   const result = await getDb().execute(sql`
-    select t.id::text as id, t.name, t.activity::text as activity, t.distance_m, t.elev_gain_m, t.user_id,
+    select t.id::text as id, t.title, t.activity::text as activity, t.distance_m, t.elev_gain_m, t.user_id,
       coalesce(nullif(u.display_name, ''), nullif(u.handle, ''), 'Friend') as who,
       u.handle,
       ST_Y(ST_StartPoint(t.line::geometry)) as lat,
@@ -114,7 +116,8 @@ export async function loadRoute(id: string): Promise<RouteDetail | null> {
   if (!row || !routeId || !activity) return null;
   return {
     id: routeId,
-    name: text(row.name) ?? 'Route',
+    name: routeTitle(text(row.title)),
+    title: cleanRouteTitle(text(row.title)),
     activity,
     distanceM: num(row.distance_m),
     elevGainM: num(row.elev_gain_m),
@@ -197,6 +200,16 @@ export async function detachEntity(_input: {
   entityId: string;
 }): Promise<boolean> {
   return false;
+}
+
+export async function updateRouteTitle(id: string, title: string | null, actor: Actor): Promise<boolean> {
+  const result = await getDb().execute(sql`
+    update tracks
+    set title = ${title}
+    where id = ${id}::uuid and user_id = ${actor.id}
+    returning id::text as id
+  `);
+  return Boolean(text(asRows(result)[0]?.id));
 }
 
 export async function deleteRoute(id: string, actor: Actor): Promise<boolean> {

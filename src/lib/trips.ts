@@ -1,4 +1,5 @@
 import { sql } from 'drizzle-orm';
+import { routeTitle } from '@/lib/route-title';
 import { getDb } from '@/db';
 
 type QueryRows = { rows?: Record<string, unknown>[] };
@@ -106,7 +107,7 @@ export async function getTrip(id: string): Promise<TripDetail | null> {
       join pins p on p.id = tp.pin_id
       where tp.trip_id = ${id}::uuid
       union all
-      select 'route', t.id::text, t.name, null::text
+      select 'route', t.id::text, t.title, null::text
       from trip_routes tr
       join tracks t on t.id = tr.track_id
       where tr.trip_id = ${id}::uuid
@@ -142,7 +143,9 @@ export async function getTrip(id: string): Promise<TripDetail | null> {
       const kind = text(item.kind);
       if (!itemId || (kind !== 'pin' && kind !== 'route' && kind !== 'photo')) return [];
       const href = kind === 'pin' ? `/pins/${itemId}` : kind === 'route' ? `/routes/${itemId}` : `/photos/${itemId}`;
-      return [{ kind, id: itemId, label: text(item.label) ?? 'Item', href, thumb: text(item.thumb) }];
+      const raw = text(item.label);
+      const label = kind === 'route' ? routeTitle(raw) : (raw ?? 'Item');
+      return [{ kind, id: itemId, label, href, thumb: text(item.thumb) }];
     }),
     posts: [],
   };

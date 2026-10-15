@@ -10,6 +10,7 @@ import { isPinKind } from '@/lib/pin-kinds';
 import { isLatLng } from '@/lib/photos';
 import { isPostKind, type PostKind } from '@/lib/post-kinds';
 import { addProfilePhotos, addProfileTrack, parseUploadedPhotos, type PreparedPhoto } from '@/lib/posts';
+import { cleanRouteTitle } from '@/lib/route-title';
 
 const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
 const ID_PATTERN = /^[A-Za-z0-9_-]{8,80}$/;
@@ -119,8 +120,9 @@ export async function publishProfileTrack(
   if (!isActivity(activity)) return { error: 'Pick what you were doing.' };
   const track = readTrack(formData);
   if (track.error || !track.track) return { error: track.error ?? 'Choose a GPX file.' };
+  const title = cleanRouteTitle(String(formData.get('title') ?? ''));
   try {
-    await addProfileTrack({ userId: viewer.id, activity, track: track.track });
+    await addProfileTrack({ userId: viewer.id, activity, track: track.track, title });
     return { saved: true };
   } catch {
     return { error: 'Could not save that route. Try again in a minute.' };
