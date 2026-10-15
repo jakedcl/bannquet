@@ -32,6 +32,7 @@ export async function createTripAction(
   const notes = String(formData.get('notes') ?? '').trim().slice(0, 4000);
   if (!title || title.length > 80) return { error: 'Give the trip a short name.' };
   if (!/^\d{4}-\d{2}-\d{2}$/.test(tripDate)) return { error: 'Pick a date.' };
+  const attachments = readAttachments(formData);
   let id = '';
   try {
     id = await createTrip({
@@ -39,6 +40,7 @@ export async function createTripAction(
       title,
       tripDate,
       notes,
+      attachments,
     });
   } catch {
     return { error: 'Could not save that trip. Try again in a minute.' };
@@ -72,6 +74,22 @@ export async function deleteTripAction(
 }
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+function readAttachments(formData: FormData): Array<{ kind: 'pin' | 'route' | 'photo'; id: string }> {
+  const out: Array<{ kind: 'pin' | 'route' | 'photo'; id: string }> = [];
+  const seen = new Set<string>();
+  for (const kind of ['pin', 'route', 'photo'] as const) {
+    for (const value of formData.getAll(kind)) {
+      if (typeof value !== 'string' || !UUID.test(value)) continue;
+      const key = `${kind}:${value}`;
+      if (seen.has(key)) continue;
+      seen.add(key);
+      out.push({ kind, id: value });
+      if (out.length >= 40) return out;
+    }
+  }
+  return out;
+}
 
 function itemKind(value: string): 'pin' | 'route' | 'photo' | null {
   if (value === 'pin' || value === 'route' || value === 'photo') return value;

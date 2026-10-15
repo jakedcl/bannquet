@@ -10,7 +10,8 @@ import { isPinKind } from '@/lib/pin-kinds';
 import { isLatLng } from '@/lib/photos';
 import { isPostKind, type PostKind } from '@/lib/post-kinds';
 import { addProfilePhotos, addProfileTrack, parseUploadedPhotos, type PreparedPhoto } from '@/lib/posts';
-import { cleanRouteTitle } from '@/lib/route-title';
+import { cleanRouteTitle, routeTitle } from '@/lib/route-title';
+import type { DraftItem } from '@/lib/trip-draft';
 
 const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
 const ID_PATTERN = /^[A-Za-z0-9_-]{8,80}$/;
@@ -110,9 +111,9 @@ export async function savePostEdits(
 }
 
 export async function publishProfileTrack(
-  _prev: { error?: string; saved?: true } | null,
+  _prev: { error?: string; saved?: true; created?: DraftItem[] } | null,
   formData: FormData,
-): Promise<{ error?: string; saved?: true; peaks?: string }> {
+): Promise<{ error?: string; saved?: true; created?: DraftItem[] }> {
   const viewer = await getViewer();
   if (!viewer) return redirectToSignIn();
   if (!canContribute(viewer.role)) return { error: APPROVAL_WAIT };
@@ -121,28 +122,46 @@ export async function publishProfileTrack(
   const track = readTrack(formData);
   if (track.error || !track.track) return { error: track.error ?? 'Choose a GPX file.' };
   const title = cleanRouteTitle(String(formData.get('title') ?? ''));
+  let id = '';
   try {
-    await addProfileTrack({ userId: viewer.id, activity, track: track.track, title });
-    return { saved: true };
+    id = await addProfileTrack({ userId: viewer.id, activity, track: track.track, title });
   } catch {
     return { error: 'Could not save that route. Try again in a minute.' };
   }
+  const created: DraftItem[] = [{ kind: 'route', id, label: routeTitle(title), thumb: null }];
+  if (formData.get('inline') === '1') return { created };
+  const next = String(formData.get('next') ?? '');
+  if (next === 'existing') redirect(`/routes/${id}?addTrip=1`);
+  if (next === 'new') redirect(`/upload?kind=trip&route=${id}`);
+  return { saved: true };
 }
 
 export async function publishProfilePhotos(
-  _prev: { error?: string; saved?: true } | null,
+  _prev: { error?: string; saved?: true; created?: DraftItem[] } | null,
   formData: FormData,
-): Promise<{ error?: string; saved?: true }> {
+): Promise<{ error?: string; saved?: true; created?: DraftItem[] }> {
   const viewer = await getViewer();
   if (!viewer) return redirectToSignIn();
   if (!canContribute(viewer.role)) return { error: APPROVAL_WAIT };
   const photos = cleanPhotos(String(formData.get('photos') ?? ''));
   if (photos.error) return { error: photos.error };
   if (photos.photos.length === 0) return { error: 'Choose a photo.' };
+  let saved: Array<{ id: string; url: string }> = [];
   try {
-    await addProfilePhotos({ userId: viewer.id, photos: photos.photos });
+    saved = await addProfilePhotos({ userId: viewer.id, photos: photos.photos });
   } catch {
     return { error: 'Could not save those photos. Try again in a minute.' };
+  }
+  if (saved.length === 0) return { error: 'Choose a photo.' };
+  const created: DraftItem[] = saved.map((photo) => ({ kind: 'photo', id: photo.id, label: 'Photo', thumb: photo.url }));
+  if (formData.get('inline') === '1') return { created };
+  const next = String(formData.get('next') ?? '');
+  const first = saved[0];
+  if (next === 'existing' && first) redirect(`/photos/${first.id}?addTrip=1`);
+  if (next === 'new') {
+    const params = new URLSearchParams({ kind: 'trip' });
+    for (const photo of saved) params.append('photo', photo.id);
+    redirect(`/upload?${params.toString()}`);
   }
   return { saved: true };
 }

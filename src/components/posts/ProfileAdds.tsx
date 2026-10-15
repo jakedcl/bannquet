@@ -9,11 +9,20 @@ import { Button } from '@/components/retro/Button';
 import { ACTIVITIES, ACTIVITY_META } from '@/lib/activities';
 import { formatFeetGain, formatMiles, packTrack } from '@/lib/gpx';
 import { cleanRouteTitle, routeTitle } from '@/lib/route-title';
+import { useReportCreated } from '@/components/trips/use-created';
+import type { DraftItem } from '@/lib/trip-draft';
 
-export function RouteUpload() {
+export function RouteUpload({
+  inline = false,
+  onCreated,
+}: {
+  inline?: boolean;
+  onCreated?: (items: DraftItem[]) => void;
+}) {
   const router = useRouter();
   const refreshed = useRef(false);
   const [state, action, pending] = useActionState(publishProfileTrack, null);
+  useReportCreated(inline, state?.created, onCreated);
   const [trackJson, setTrackJson] = useState('');
   const [note, setNote] = useState<string | null>(null);
   const [title, setTitle] = useState('');
@@ -26,6 +35,7 @@ export function RouteUpload() {
 
   return (
     <form action={action} className="space-y-3">
+      {inline ? <input type="hidden" name="inline" value="1" /> : null}
       <p className="text-sm font-bold">Add a route</p>
       <label className="block space-y-1">
         <span className="text-sm">Title</span>
@@ -95,11 +105,18 @@ export function RouteUpload() {
   );
 }
 
-export function PhotoUpload() {
+export function PhotoUpload({
+  inline = false,
+  onCreated,
+}: {
+  inline?: boolean;
+  onCreated?: (items: DraftItem[]) => void;
+}) {
   const router = useRouter();
   const refreshed = useRef(false);
   const [photos, setPhotos] = useState<UploadedPhoto[]>([]);
   const [state, action, pending] = useActionState(publishProfilePhotos, null);
+  useReportCreated(inline, state?.created, onCreated);
   useEffect(() => {
     if (!state?.saved || refreshed.current) return;
     refreshed.current = true;
@@ -108,6 +125,7 @@ export function PhotoUpload() {
 
   return (
     <form action={action} className="space-y-3">
+      {inline ? <input type="hidden" name="inline" value="1" /> : null}
       <p className="text-sm font-bold">Add photos</p>
       <PhotoFields photos={photos} onChange={setPhotos} />
       {state?.error ? <p className="text-sm font-bold text-red-700">{state.error}</p> : null}
