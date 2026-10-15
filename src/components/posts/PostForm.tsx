@@ -5,6 +5,7 @@ import { useActionState, useState } from 'react';
 import { publishPost, savePostEdits } from '@/app/trip-reports/actions';
 import { PhotoFields } from '@/components/posts/PhotoFields';
 import type { UploadedPhoto } from '@/components/posts/prepare-photo';
+import { FileInput } from '@/components/ui/FileInput';
 import { SubmitButton } from '@/components/ui/SubmitButton';
 import { ACTIVITIES, ACTIVITY_META, isActivity } from '@/lib/activities';
 import { formatFeetGain, formatMiles, packTrack } from '@/lib/gpx';
@@ -124,14 +125,12 @@ export function PostForm({
       <PhotoFields photos={photos} onChange={setPhotos} showLocation={tripReport} requireLocation={tripReport} />
 
       {tripReport ? (
-        <label className="block space-y-1">
-          <span className="text-sm font-bold">GPX route, if you have one</span>
-          <input
-            type="file"
+        <div className="space-y-1">
+          <span className="block text-sm font-bold">GPX route, if you have one</span>
+          <FileInput
             accept=".gpx,application/gpx+xml,application/xml,text/xml"
-            className="block w-full text-sm"
-            onChange={async (event) => {
-              const file = event.target.files?.[0];
+            onChange={async (files) => {
+              const file = files[0];
               if (!file) {
                 setTrackJson('');
                 setGpxNote(null);
@@ -152,7 +151,7 @@ export function PostForm({
               }
             }}
           />
-        </label>
+        </div>
       ) : null}
       <input type="hidden" name="trackJson" value={tripReport ? trackJson : ''} />
       {tripReport && gpxNote ? <p className="text-sm text-gray-700">{gpxNote}</p> : null}

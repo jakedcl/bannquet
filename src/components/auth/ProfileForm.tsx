@@ -1,9 +1,10 @@
 'use client';
 
-import { useActionState, useEffect, useRef, useState, type ChangeEvent, type FormEvent } from 'react';
+import { useActionState, useEffect, useRef, useState, type FormEvent } from 'react';
 import { saveProfile } from '@/app/sign-in/actions';
 import { prepareAvatar } from '@/components/auth/prepare-avatar';
 import { homeStateCode, US_STATES } from '@/lib/us-states';
+import { FileInput } from '@/components/ui/FileInput';
 import { SubmitButton } from '@/components/ui/SubmitButton';
 import type { Member } from '@/lib/auth/members';
 
@@ -103,7 +104,6 @@ function PhotoField({
   onBusy: (busy: boolean) => void;
   onError: (message: string | null) => void;
 }) {
-  const inputRef = useRef<HTMLInputElement>(null);
   const objectUrl = useRef<string | null>(null);
   const [preview, setPreview] = useState<string | null>(currentUrl);
   const [avatarUrl, setAvatarUrl] = useState('');
@@ -114,9 +114,7 @@ function PhotoField({
     };
   }, []);
 
-  async function onChange(event: ChangeEvent<HTMLInputElement>) {
-    const file = event.target.files?.[0];
-    event.target.value = '';
+  async function onFile(file: File | undefined) {
     if (objectUrl.current) {
       URL.revokeObjectURL(objectUrl.current);
       objectUrl.current = null;
@@ -153,20 +151,10 @@ function PhotoField({
           )}
         </div>
         <div>
-          <button
-            type="button"
-            className="retro-button retro-button-blue"
-            disabled={busy}
-            onClick={() => inputRef.current?.click()}
-          >
-            Choose photo
-          </button>
-          <input
-            ref={inputRef}
-            type="file"
+          <FileInput
             accept="image/jpeg,image/png,image/webp"
-            className="sr-only"
-            onChange={(event) => { void onChange(event); }}
+            disabled={busy}
+            onChange={(files) => { void onFile(files[0]); }}
           />
           <input type="hidden" name="avatarUrl" value={avatarUrl} />
           <span className="mt-1 block text-xs text-gray-600">

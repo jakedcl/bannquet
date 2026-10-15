@@ -3,6 +3,7 @@
 import dynamic from 'next/dynamic';
 import { useState } from 'react';
 import { preparePhoto, type UploadedPhoto } from '@/components/posts/prepare-photo';
+import { FileInput } from '@/components/ui/FileInput';
 
 const GroupMap = dynamic(() => import('@/components/map/GroupMap'), { ssr: false });
 
@@ -31,13 +32,13 @@ export function PhotoFields({
     onBusy?.(next);
   }
 
-  async function addFiles(list: FileList | null) {
-    if (!list || list.length === 0) return;
+  async function addFiles(list: File[]) {
+    if (list.length === 0) return;
     setWorking(true);
     setError(null);
     const next = [...photos];
     try {
-      for (const file of Array.from(list)) {
+      for (const file of list) {
         if (!file.type.startsWith('image/')) {
           setError('Use a photo file, like a JPG or PNG.');
           continue;
@@ -54,19 +55,15 @@ export function PhotoFields({
 
   return (
     <div className="space-y-3">
-      <label className="block space-y-1">
-        <span className="text-sm font-bold">Photos</span>
-        <input
-          type="file"
+      <div className="space-y-1">
+        <span className="block text-sm font-bold">Photos</span>
+        <FileInput
           accept="image/*"
           multiple
-          className="block w-full text-sm"
-          onChange={(event) => {
-            void addFiles(event.target.files);
-            event.target.value = '';
-          }}
+          disabled={busy}
+          onChange={(files) => { void addFiles(files); }}
         />
-      </label>
+      </div>
       {busy ? <p className="text-sm">Working on the photos…</p> : null}
       {error ? <p className="text-sm font-bold text-red-700">{error}</p> : null}
       <input
