@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import PageWrapper from '@/components/ui/PageWrapper';
 import { InviteForm } from '@/components/auth/InviteForm';
-import { PendingDecision } from '@/components/auth/PendingDecision';
+import { PendingQueue } from '@/components/auth/PendingDecision';
 import { ResetMemberPassword } from '@/components/auth/ResetMemberPassword';
 import { Table } from '@/components/retro/Table';
 import { Window } from '@/components/retro/Window';
@@ -56,21 +56,14 @@ export default async function AdminPage() {
           )}
         </Window>
 
-        <Window title={pending.length > 0 ? `Waiting (${pending.length})` : 'Waiting'}>
-          {pending.length === 0 ? (
-            <p className="text-sm">Nobody is waiting for approval.</p>
-          ) : (
-            <Table
-              headers={['Name', 'Email', 'Username', 'Decision']}
-              rows={pending.map((member) => [
-                member.displayName || 'Friend',
-                member.email ?? '—',
-                member.handle ? `@${member.handle}` : '—',
-                <PendingDecision key={member.id} userId={member.id} />,
-              ])}
-            />
-          )}
-        </Window>
+        <PendingQueue
+          members={pending.map((member) => ({
+            id: member.id,
+            displayName: member.displayName,
+            email: member.email,
+            handle: member.handle,
+          }))}
+        />
 
         <Window title="Members">
           {approved.length === 0 ? (
