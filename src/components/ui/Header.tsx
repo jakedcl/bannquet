@@ -9,7 +9,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { signOutAction } from '@/app/sign-in/actions';
 import { useRegion } from '@/contexts/RegionContext';
 import { REGION_OPTIONS } from '@/lib/regions';
-import { COMMUNITY_LINKS, UPLOAD_LINKS, WEATHER_LINKS, communitySection, pathOn, settingsLinks, settingsSection, visibleLinks } from '@/lib/sections';
+import { COMMUNITY_LINKS, UPLOAD_LINKS, WEATHER_LINKS, communitySection, pathOn, settingsHref, settingsLinks, settingsSection, visibleLinks } from '@/lib/sections';
 import { menuItemClass, NavButton } from './NavButton';
 import { NavMenu } from './NavMenu';
 import WeatherTicker from './WeatherTicker';
@@ -173,7 +173,7 @@ function SiteNav({ account, pathname, home }: { account: HeaderAccount; pathname
         </NavMenu>
       ) : null}
       {account ? (
-        <NavMenu href="/settings" label="Settings" active={settingsOn} align="right">
+        <NavMenu href={settingsHref(account)} label="Settings" active={settingsOn} align="right">
           {visibleLinks(settingsLinks(account)).map((item) => (
             <Link key={item.href} href={item.href} className={menuItemClass(false)}>
               {item.label}
@@ -252,7 +252,7 @@ function MobileNav({ account, pathname }: { account: HeaderAccount; pathname: st
       {account ? (
         <NavMenu
           layout="inline"
-          href="/settings"
+          href={settingsHref(account)}
           label="Settings"
           active={settingsOn}
           open={openMenu === 'settings'}

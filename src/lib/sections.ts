@@ -102,11 +102,15 @@ export function settingsLinks(account: NavAccount): NavLink[] {
   return links;
 }
 
+export function settingsHref(account: NavAccount): string {
+  if (account?.handle) return `/user/${account.handle}`;
+  return '/account';
+}
+
 export function settingsSection(pathname: string, account: NavAccount): boolean {
   if (!account) return false;
   if (pathOn(pathname, '/settings') || pathOn(pathname, '/account') || pathOn(pathname, '/admin')) return true;
-  const profile = account.handle ? `/user/${account.handle}` : null;
-  return profile != null && pathname === profile;
+  return ownProfile(pathname, account);
 }
 
 function named(href: string, label: string, leaf: string | null | undefined): Crumb {
@@ -261,7 +265,7 @@ export function pageTrail(pathname: string, search: string, account: NavAccount,
 }
 
 export function matchSection(pathname: string, search: string, account: NavAccount): SectionMatch | null {
-  if (communitySection(pathname)) {
+  if (communitySection(pathname, account)) {
     return {
       id: 'community',
       href: '/community',
@@ -292,12 +296,5 @@ export function matchSection(pathname: string, search: string, account: NavAccou
     };
   }
 
-  if (!settingsSection(pathname, account)) return null;
-  return {
-    id: 'settings',
-    href: '/settings',
-    label: 'Settings',
-    links: visibleLinks(settingsLinks(account)),
-    landing: pathname === '/settings',
-  };
+  return null;
 }
