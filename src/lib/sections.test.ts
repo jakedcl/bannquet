@@ -37,6 +37,10 @@ test('member pages stay in Community, except your own profile', () => {
   assert.equal(communitySection('/user/jake/pins', jake), false);
   assert.equal(communitySection('/peaks/adk46_algonquin_peak', null), true);
   assert.equal(linkOn('/user/jkiddf', '', '/members'), true);
+  assert.equal(linkOn('/mountain-weather', '', '/mountain-weather?state=ny'), true);
+  assert.equal(linkOn('/mountain-weather', '', '/mountain-weather?state=vt'), false);
+  assert.equal(linkOn('/mountain-weather', 'state=vt', '/mountain-weather?state=vt'), true);
+  assert.equal(linkOn('/mountain-weather', 'state=nh', '/mountain-weather?state=ny'), false);
 });
 
 test('settings opens the profile, and the owner also gets Admin', () => {
