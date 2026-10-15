@@ -3,9 +3,8 @@
 import { redirect } from 'next/navigation';
 import { getViewer } from '@/app/sign-in/actions';
 import { isActivity, type Activity } from '@/lib/activities';
-import type { TrackPoint } from '@/lib/gpx';
+import { packTrack, unpackTrack, type PackedTrack } from '@/lib/gpx';
 import { APPROVAL_WAIT, canContribute } from '@/lib/membership';
-import { parseGpx } from '@/lib/gpx';
 import { isPinKind } from '@/lib/pin-kinds';
 import { isLatLng } from '@/lib/photos';
 import { isPostKind, type PostKind } from '@/lib/post-kinds';
@@ -23,11 +22,14 @@ function cleanPhotos(raw: string, skipLocation = false): { photos: PreparedPhoto
   return parseUploadedPhotos(raw, { requireLocation: !skipLocation });
 }
 
-function cleanTrack(raw: string): { track: { name: string | null; points: TrackPoint[] } | null; error: string | null } {
-  if (!raw.trim()) return { track: null, error: null };
-  const parsed = parseGpx(raw);
-  if (parsed.points.length < 2) return { track: null, error: 'That GPX file has no route in it.' };
-  return { track: parsed, error: null };
+function readTrack(formData: FormData): { track: PackedTrack | null; error: string | null } {
+  const packed = String(formData.get('trackJson') ?? '');
+  if (packed.trim()) return unpackTrack(packed);
+  const raw = String(formData.get('gpxText') ?? '').trim();
+  if (!raw) return { track: null, error: null };
+  const track = packTrack(raw);
+  if (!track) return { track: null, error: 'That GPX file has no route in it.' };
+  return { track, error: null };
 }
 
 function readPostFields(formData: FormData): {
@@ -39,7 +41,7 @@ function readPostFields(formData: FormData): {
     tripDate: string | null;
     activity: Activity | null;
     photos: PreparedPhoto[];
-    track: { name: string | null; points: TrackPoint[] } | null;
+    track: PackedTrack | null;
   };
 } {
   const postKindRaw = String(formData.get('postKind') ?? 'trip_report');
@@ -69,7 +71,7 @@ function readPostFields(formData: FormData): {
   const activity = String(formData.get('activity') ?? '');
   if (!DATE_PATTERN.test(tripDate)) return { error: 'Pick the day you went.' };
   if (!isActivity(activity)) return { error: 'Pick what you were doing.' };
-  const track = cleanTrack(String(formData.get('gpxText') ?? ''));
+  const track = readTrack(formData);
   if (track.error) return { error: track.error };
   return {
     fields: {
@@ -188,7 +190,7 @@ export async function publishProfileTrack(
   if (!canContribute(viewer.role)) return { error: APPROVAL_WAIT };
   const activity = String(formData.get('activity') ?? '');
   if (!isActivity(activity)) return { error: 'Pick what you were doing.' };
-  const track = cleanTrack(String(formData.get('gpxText') ?? ''));
+  const track = readTrack(formData);
   if (track.error || !track.track) return { error: track.error ?? 'Choose a GPX file.' };
   try {
     await addProfileTrack({ userId: viewer.id, activity, track: track.track });

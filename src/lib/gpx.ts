@@ -92,6 +92,76 @@ export function lineWkt(points: TrackPoint[], maxPoints = 800): string | null {
   return `SRID=4326;LINESTRING(${body})`;
 }
 
+/** Points kept for the map line. The full file is only used to measure distance and climb. */
+export const PACKED_TRACK_POINTS = 800;
+
+export type PackedTrack = {
+  name: string | null;
+  points: TrackPoint[];
+  distanceM: number;
+  elevGainM: number;
+};
+
+/**
+ * A watch GPX is mostly XML and sensor tags. The save action only needs the
+ * line and the totals, and the action body is capped at 1 MB.
+ */
+export function packTrack(xml: string): PackedTrack | null {
+  const parsed = parseGpx(xml);
+  if (parsed.points.length < 2) return null;
+  const stats = trackStats(parsed.points);
+  const name = parsed.name?.slice(0, 160) || null;
+  return {
+    name,
+    points: simplifyTrack(parsed.points, PACKED_TRACK_POINTS),
+    distanceM: stats.distanceM,
+    elevGainM: stats.elevGainM,
+  };
+}
+
+export function unpackTrack(raw: string): { track: PackedTrack | null; error: string | null } {
+  if (!raw.trim()) return { track: null, error: null };
+  let value: unknown;
+  try {
+    value = JSON.parse(raw);
+  } catch {
+    return { track: null, error: 'That route could not be read.' };
+  }
+  if (!value || typeof value !== 'object') return { track: null, error: 'That route could not be read.' };
+  const record = value as Record<string, unknown>;
+  if (!Array.isArray(record.points) || record.points.length < 2 || record.points.length > PACKED_TRACK_POINTS) {
+    return { track: null, error: 'That GPX file has no route in it.' };
+  }
+  const points: TrackPoint[] = [];
+  for (const item of record.points) {
+    if (!item || typeof item !== 'object') return { track: null, error: 'That route could not be read.' };
+    const point = item as Record<string, unknown>;
+    const lat = typeof point.lat === 'number' ? point.lat : Number.NaN;
+    const lng = typeof point.lng === 'number' ? point.lng : Number.NaN;
+    if (!Number.isFinite(lat) || lat < -90 || lat > 90 || !Number.isFinite(lng) || lng < -180 || lng > 180) {
+      return { track: null, error: 'That route could not be read.' };
+    }
+    let ele: number | null = null;
+    if (point.ele != null) {
+      if (typeof point.ele !== 'number' || !Number.isFinite(point.ele)) {
+        return { track: null, error: 'That route could not be read.' };
+      }
+      ele = point.ele;
+    }
+    points.push({ lat, lng, ele });
+  }
+  const distanceM = typeof record.distanceM === 'number' ? Math.round(record.distanceM) : trackStats(points).distanceM;
+  const elevGainM = typeof record.elevGainM === 'number' ? Math.round(record.elevGainM) : trackStats(points).elevGainM;
+  if (!Number.isFinite(distanceM) || distanceM < 0 || distanceM > 2_000_000) {
+    return { track: null, error: 'That route could not be read.' };
+  }
+  if (!Number.isFinite(elevGainM) || elevGainM < 0 || elevGainM > 100_000) {
+    return { track: null, error: 'That route could not be read.' };
+  }
+  const name = typeof record.name === 'string' ? record.name.trim().slice(0, 160) || null : null;
+  return { track: { name, points, distanceM, elevGainM }, error: null };
+}
+
 export function formatMiles(meters: number): string {
   const miles = meters / 1609.344;
   return `${miles.toFixed(miles >= 10 ? 0 : 1)} mi`;
