@@ -81,7 +81,9 @@ function PendingDecision({ userId, onDone }: { userId: string; onDone: () => voi
   const error = approveState?.error || denyState?.error;
   const finished = Boolean((approveState && !approveState.error) || (denyState && !denyState.error));
   const onDoneRef = useRef(onDone);
-  onDoneRef.current = onDone;
+  useEffect(() => {
+    onDoneRef.current = onDone;
+  }, [onDone]);
 
   useEffect(() => {
     if (finished) onDoneRef.current();
