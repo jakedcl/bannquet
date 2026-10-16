@@ -12,14 +12,16 @@ export function MapCanvas({
   points,
   lines,
   focus,
+  preview = false,
 }: {
   points: MapFeatureCollection;
   lines: MapFeatureCollection;
   focus?: { lng: number; lat: number; zoom?: number } | null;
+  preview?: boolean;
 }) {
   return (
-    <div className="relative h-full w-full">
-      <GroupMap points={points} lines={lines} focus={focus} />
+    <div className={`relative h-full w-full ${preview ? 'pointer-events-none' : ''}`}>
+      <GroupMap points={points} lines={lines} focus={focus} preview={preview} />
     </div>
   );
 }

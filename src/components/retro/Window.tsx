@@ -1,11 +1,12 @@
 type WindowProps = {
-  title?: string;
+  title?: React.ReactNode;
   action?: React.ReactNode;
   children: React.ReactNode;
   className?: string;
+  pad?: 'regular' | 'tight';
 };
 
-export function Window({ title, action, children, className = '' }: WindowProps) {
+export function Window({ title, action, children, className = '', pad = 'regular' }: WindowProps) {
   return (
     <section className={`retro-box retro-window min-w-0 max-w-full rounded-none bg-white ${className}`}>
       {title ? (
@@ -14,7 +15,7 @@ export function Window({ title, action, children, className = '' }: WindowProps)
           {action ? <span className="shrink-0">{action}</span> : null}
         </header>
       ) : null}
-      <div className="min-w-0 p-4">{children}</div>
+      <div className={pad === 'tight' ? 'min-w-0 p-2' : 'min-w-0 p-4'}>{children}</div>
     </section>
   );
 }

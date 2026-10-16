@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import {
+  LngLatBounds,
   Map as MlMap,
   NavigationControl,
   Popup,
@@ -52,7 +53,24 @@ type Props = {
   picking?: boolean;
   onPick?: (lng: number, lat: number) => void;
   className?: string;
+  preview?: boolean;
 };
+
+function fitPins(map: MlMap, points: MapFeatureCollection) {
+  const coords: [number, number][] = [];
+  for (const feature of points.features) {
+    if (feature.geometry.type !== 'Point') continue;
+    const [lng, lat] = feature.geometry.coordinates;
+    if (typeof lng === 'number' && typeof lat === 'number') coords.push([lng, lat]);
+  }
+  if (coords.length === 0) return;
+  if (coords.length === 1) {
+    map.jumpTo({ center: coords[0], zoom: 10 });
+    return;
+  }
+  const bounds = coords.reduce((box, coord) => box.extend(coord), new LngLatBounds(coords[0], coords[0]));
+  map.fitBounds(bounds, { padding: 24, maxZoom: 11, animate: false });
+}
 
 function activityLabel(activity: string | null): string {
   if (activity && isActivity(activity)) return ACTIVITY_META[activity].label;
@@ -144,6 +162,7 @@ export default function GroupMap({
   picking = false,
   onPick,
   className = '',
+  preview = false,
 }: Props) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<MlMap | null>(null);
@@ -172,16 +191,26 @@ export default function GroupMap({
       container,
       style: OPENFREEMAP_STYLE_URL,
       center: [focus?.lng ?? MAP_CENTER.lng, focus?.lat ?? MAP_CENTER.lat],
-      zoom: focus?.zoom ?? 8,
+      zoom: focus?.zoom ?? (preview ? 6 : 8),
       pitch: 0,
-      maxPitch: 75,
+      maxPitch: preview ? 0 : 75,
       attributionControl: false,
+      interactive: !preview,
+      dragPan: !preview,
+      scrollZoom: !preview,
+      boxZoom: !preview,
+      dragRotate: !preview,
+      keyboard: !preview,
+      doubleClickZoom: !preview,
+      touchZoomRotate: !preview,
+      touchPitch: !preview,
     });
-    map.addControl(new NavigationControl({ visualizePitch: true }), 'top-right');
+    if (!preview) map.addControl(new NavigationControl({ visualizePitch: true }), 'top-right');
     mapRef.current = map;
     requestAnimationFrame(() => map.resize());
 
     map.on('click', (event) => {
+      if (preview) return;
       const pick = onPickRef.current;
       if (!pickingRef.current || !pick) return;
       const layers = ['clusters', 'pins', 'pin-markers', 'routes'].filter((id) => Boolean(map.getLayer(id)));
@@ -197,7 +226,7 @@ export default function GroupMap({
       map.remove();
       mapRef.current = null;
     };
-  }, [focus?.lat, focus?.lng, focus?.zoom]);
+  }, [focus?.lat, focus?.lng, focus?.zoom, preview]);
 
   useEffect(() => {
     const map = mapRef.current;
@@ -250,9 +279,11 @@ export default function GroupMap({
         map.easeTo({ pitch: 62, duration: 600 });
         map.dragRotate.enable();
         map.touchZoomRotate.enableRotation();
-      } else {
+      } else if (!preview) {
         map.setTerrain(null);
         map.easeTo({ pitch: 0, bearing: 0, duration: 400 });
+      } else {
+        map.setTerrain(null);
       }
 
       map.addSource('routes', { type: 'geojson', data: linesRef.current });
@@ -328,10 +359,11 @@ export default function GroupMap({
           'text-halo-width': 1.5,
         },
       });
+      if (preview) fitPins(map, pointsRef.current);
     };
 
     const onCluster = async (event: MapLayerMouseEvent) => {
-      if (pickingRef.current) return;
+      if (preview || pickingRef.current) return;
       const feature = event.features?.[0];
       const clusterId = feature?.properties?.cluster_id;
       const source = map.getSource('places') as GeoJSONSource | undefined;
@@ -345,7 +377,7 @@ export default function GroupMap({
       showPopup(map, popupRef, coords, leaves);
     };
     const onPin = (event: MapLayerMouseEvent) => {
-      if (pickingRef.current) return;
+      if (preview || pickingRef.current) return;
       const feature = event.features?.[0];
       if (!feature) return;
       const leaf = leafFromFeature(feature);
@@ -353,7 +385,7 @@ export default function GroupMap({
       showPopup(map, popupRef, [leaf.lng, leaf.lat], [leaf]);
     };
     const onRoute = (event: MapLayerMouseEvent) => {
-      if (pickingRef.current) return;
+      if (preview || pickingRef.current) return;
       const feature = event.features?.[0];
       if (!feature) return;
       const props = (feature.properties ?? {}) as Record<string, unknown>;
@@ -362,6 +394,13 @@ export default function GroupMap({
     };
 
     map.on('style.load', draw);
+    if (map.isStyleLoaded()) draw();
+    if (preview) {
+      return () => {
+        popupRef.current?.remove();
+        map.off('style.load', draw);
+      };
+    }
     map.on('click', 'clusters', onCluster);
     map.on('click', 'pins', onPin);
     map.on('click', 'pin-markers', onPin);
@@ -374,7 +413,6 @@ export default function GroupMap({
     map.on('mouseleave', 'pin-markers', () => { map.getCanvas().style.cursor = picking ? 'crosshair' : ''; });
     map.on('mouseenter', 'routes', () => { map.getCanvas().style.cursor = 'pointer'; });
     map.on('mouseleave', 'routes', () => { map.getCanvas().style.cursor = picking ? 'crosshair' : ''; });
-    if (map.isStyleLoaded()) draw();
 
     return () => {
       popupRef.current?.remove();
@@ -384,14 +422,15 @@ export default function GroupMap({
       map.off('click', 'pin-markers', onPin);
       map.off('click', 'routes', onRoute);
     };
-  }, [terrain, basemap, picking]);
+  }, [terrain, basemap, picking, preview]);
 
   useEffect(() => {
     const map = mapRef.current;
     if (!map?.getSource('places')) return;
     (map.getSource('places') as GeoJSONSource).setData(points);
     (map.getSource('routes') as GeoJSONSource).setData(lines);
-  }, [points, lines]);
+    if (preview) fitPins(map, points);
+  }, [points, lines, preview]);
 
   useEffect(() => {
     if (!layersOpen) return;
@@ -416,6 +455,12 @@ export default function GroupMap({
   return (
     <div className={`relative h-full w-full ${className}`}>
       <div ref={containerRef} className={`h-full w-full ${picking ? 'cursor-crosshair' : ''}`} />
+      {preview ? (
+        <p className="pointer-events-none absolute bottom-1 left-1 z-10 max-w-[70%] truncate text-[10px] text-gray-700">
+          {BASEMAP_ATTRIBUTION.standard}
+        </p>
+      ) : null}
+      {preview ? null : (
       <div ref={controlsRef} className="map-controls absolute left-3 top-3 z-10 flex items-start gap-2">
         <div className="relative">
           <button
@@ -459,10 +504,13 @@ export default function GroupMap({
           3D
         </button>
       </div>
-      <p className="absolute bottom-2 left-3 right-3 z-10 bg-white/90 px-2 py-1 text-[11px] leading-snug text-gray-800 retro-box-inset">
-        {attribution}
-        {picking ? ' Click the map to drop a pin.' : ' Drag to move. Right-drag turns the map when 3D is on.'}
-      </p>
+      )}
+      {preview ? null : (
+        <p className="absolute bottom-2 left-3 right-3 z-10 bg-white/90 px-2 py-1 text-[11px] leading-snug text-gray-800 retro-box-inset">
+          {attribution}
+          {picking ? ' Click the map to drop a pin.' : ' Drag to move. Right-drag turns the map when 3D is on.'}
+        </p>
+      )}
     </div>
   );
 }
