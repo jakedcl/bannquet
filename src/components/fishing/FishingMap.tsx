@@ -98,13 +98,11 @@ function parkingPopup(properties: Record<string, string>): HTMLElement {
 export default function FishingMap({
   gauges,
   parking,
-  selected,
   showParking,
   onSelect,
 }: {
   gauges: GaugeView[];
   parking: ParkingArea[];
-  selected: string | null;
   showParking: boolean;
   onSelect: (site: string) => void;
 }) {
@@ -114,16 +112,14 @@ export default function FishingMap({
   const onSelectRef = useRef(onSelect);
   const gaugesRef = useRef(gauges);
   const parkingRef = useRef(parking);
-  const selectedRef = useRef(selected);
   const showParkingRef = useRef(showParking);
 
   useEffect(() => {
     onSelectRef.current = onSelect;
     gaugesRef.current = gauges;
     parkingRef.current = parking;
-    selectedRef.current = selected;
     showParkingRef.current = showParking;
-  }, [gauges, onSelect, parking, selected, showParking]);
+  }, [gauges, onSelect, parking, showParking]);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -158,8 +154,8 @@ export default function FishingMap({
         type: 'circle',
         source: 'gauges',
         paint: {
-          'circle-radius': ['case', ['==', ['get', 'site'], selectedRef.current ?? ''], 8, 5],
-          'circle-color': ['case', ['==', ['get', 'site'], selectedRef.current ?? ''], '#ffd700', '#1e4d2b'],
+          'circle-radius': 5,
+          'circle-color': '#1e4d2b',
           'circle-stroke-width': 1,
           'circle-stroke-color': '#1a1a1a',
         },
@@ -217,14 +213,10 @@ export default function FishingMap({
     if (!map?.isStyleLoaded()) return;
     (map.getSource('gauges') as GeoJSONSource | undefined)?.setData(gaugePoints(gauges));
     (map.getSource('parking') as GeoJSONSource | undefined)?.setData(parkingPoints(parking));
-    if (map.getLayer('gauges')) {
-      map.setPaintProperty('gauges', 'circle-radius', ['case', ['==', ['get', 'site'], selected ?? ''], 8, 5]);
-      map.setPaintProperty('gauges', 'circle-color', ['case', ['==', ['get', 'site'], selected ?? ''], '#ffd700', '#1e4d2b']);
-    }
     if (map.getLayer('parking')) {
       map.setLayoutProperty('parking', 'visibility', showParking ? 'visible' : 'none');
     }
-  }, [gauges, parking, selected, showParking]);
+  }, [gauges, parking, showParking]);
 
   return <div ref={containerRef} className="h-96 w-full" />;
 }

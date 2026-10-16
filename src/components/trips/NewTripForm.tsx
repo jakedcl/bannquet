@@ -38,7 +38,7 @@ export function NewTripForm({
   const pickerRef = useRef<AttachPickerHandle>(null);
   const createRef = useRef<HTMLDialogElement>(null);
 
-  function addItems(items: DraftItem[]) {
+  function addItems(items: DraftItem[], keepOpen = false) {
     setAttached((current) => {
       const seen = new Set(current.map((item) => `${item.kind}:${item.id}`));
       const next = [...current];
@@ -50,19 +50,26 @@ export function NewTripForm({
       }
       return next;
     });
-    setExtra((current) => [
-      ...items.map((item) => ({
-        kind: item.kind,
-        id: item.id,
-        label: item.label,
-        href: hrefFor(item),
-        thumb: item.thumb,
-        ownerId: viewerId,
-        ownerName: '',
-      })),
-      ...current,
-    ]);
-    createRef.current?.close();
+    setExtra((current) => {
+      const seen = new Set(current.map((item) => `${item.kind}:${item.id}`));
+      const next = [...current];
+      for (const item of items) {
+        const key = `${item.kind}:${item.id}`;
+        if (seen.has(key)) continue;
+        seen.add(key);
+        next.unshift({
+          kind: item.kind,
+          id: item.id,
+          label: item.label,
+          href: hrefFor(item),
+          thumb: item.thumb,
+          ownerId: viewerId,
+          ownerName: '',
+        });
+      }
+      return next;
+    });
+    if (!keepOpen) createRef.current?.close();
   }
 
   function openCreate(kind: DraftItem['kind']) {

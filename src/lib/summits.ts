@@ -84,6 +84,18 @@ export type ClimbRow = {
   handle: string | null;
 };
 
+export async function climbedPeakSlugs(userId: string): Promise<Set<string>> {
+  const result = await getDb().execute(sql`
+    select distinct peak_slug
+    from summits
+    where user_id = ${userId}
+  `);
+  return new Set(asRows(result).flatMap((row) => {
+    const slug = row.peak_slug == null ? '' : String(row.peak_slug);
+    return slug ? [slug] : [];
+  }));
+}
+
 export async function listClimbs(): Promise<ClimbRow[]> {
   const result = await getDb().execute(sql`
     select s.id::text as id, s.user_id, s.peak_slug,
