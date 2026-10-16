@@ -12,7 +12,7 @@ export default function WeatherPage() {
 
   return (
     <PageWrapper className="bg-gray-50">
-      <div className="container mx-auto space-y-8 px-4 py-10">
+      <div className="container mx-auto min-w-0 space-y-8 px-4 py-10">
         <h1 className="text-sm font-bold uppercase">
           Mountain Conditions — {regionLabel}
         </h1>
@@ -29,20 +29,20 @@ export default function WeatherPage() {
 function RegionSection({ section }: { section: WeatherSection }) {
   return (
     <section className="space-y-4">
-      <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-        <h2 className="text-sm font-bold uppercase">{section.title}</h2>
+      <div className="flex min-w-0 flex-col gap-3 md:flex-row md:items-center md:justify-between">
+        <h2 className="min-w-0 text-sm font-bold uppercase">{section.title}</h2>
         {section.banner ? (
           <a
             href={section.banner.href}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-sm font-bold underline"
+            className="min-w-0 break-words text-sm font-bold underline"
           >
             {section.banner.label}
           </a>
         ) : null}
       </div>
-      <div className="grid gap-4 md:grid-cols-2">
+      <div className="grid min-w-0 gap-4 lg:grid-cols-2">
         {section.spots.map((spot) => (
           <WeatherDashboard key={spot.id} spot={spot} />
         ))}

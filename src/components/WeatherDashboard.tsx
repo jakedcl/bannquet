@@ -86,24 +86,24 @@ export default function WeatherDashboard({ spot }: WeatherDashboardProps) {
     <Window title={spot.name} action={icon}>
       <div className="space-y-3">
         <p className="text-sm">Elevation {spot.elevation} ft</p>
-        <div className="retro-box-inset bg-white p-3">
-          <div className="flex items-start justify-between gap-4">
-            <div>
+        <div className="retro-box-inset min-w-0 bg-white p-3">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
+            <div className="min-w-0">
               <p className="text-xs font-bold uppercase">Current</p>
               <p className="text-sm font-bold">{Math.round(weather.temperature)}°F</p>
-              <p className="text-sm">{weather.conditions[0]}</p>
+              <p className="break-words text-sm">{weather.conditions[0]}</p>
             </div>
-            <div className="text-right">
+            <div className="min-w-0 sm:text-right">
               <p className="text-xs font-bold uppercase">Feels like</p>
               <p className="text-sm font-bold">{Math.round(feelsLike)}°F</p>
-              <p className="text-sm">
+              <p className="break-words text-sm">
                 {summitWind} {weather.windDirection}
                 {windGust ? ` · gust ${windGust}` : ''}
               </p>
             </div>
           </div>
         </div>
-        <div className="grid grid-cols-3 gap-2">
+        <div className="grid min-w-0 grid-cols-3 gap-2">
           <Metric label="Precip chance" value={`${weather.precipitation}%`} />
           <Metric label="Humidity" value={humidity} />
           <Metric label="Visibility" value={visibilityLabel} />
@@ -115,14 +115,16 @@ export default function WeatherDashboard({ spot }: WeatherDashboardProps) {
             <p className="mb-2 text-sm font-bold uppercase">Hazards</p>
             <ul className="space-y-2">
               {weather.hazards.map((hazard) => (
-                <li key={hazard.id} className="text-sm">
-                  <span className="font-bold">{hazard.event}</span>
-                  {hazard.severity ? (
-                    <span className="retro-button-yellow ml-2 inline-block rounded-none px-2 py-0.5 text-xs uppercase">
-                      {hazard.severity}
-                    </span>
-                  ) : null}
-                  {hazard.headline ? <p className="mt-1 text-sm">{hazard.headline}</p> : null}
+                <li key={hazard.id} className="min-w-0 text-sm">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="font-bold">{hazard.event}</span>
+                    {hazard.severity ? (
+                      <span className="retro-button-yellow inline-block rounded-none px-2 py-0.5 text-xs uppercase">
+                        {hazard.severity}
+                      </span>
+                    ) : null}
+                  </div>
+                  {hazard.headline ? <p className="mt-1 break-words text-sm">{hazard.headline}</p> : null}
                 </li>
               ))}
             </ul>
@@ -141,9 +143,9 @@ export default function WeatherDashboard({ spot }: WeatherDashboardProps) {
 
 function Metric({ label, value }: { label: string; value: string }) {
   return (
-    <div className="retro-box-inset bg-white px-2 py-2">
-      <p className="text-xs font-bold uppercase">{label}</p>
-      <p className="text-sm font-bold">{value}</p>
+    <div className="retro-box-inset min-w-0 bg-white px-2 py-2">
+      <p className="break-words text-xs font-bold uppercase leading-tight">{label}</p>
+      <p className="break-words text-sm font-bold">{value}</p>
     </div>
   );
 }
@@ -160,9 +162,9 @@ function ForecastStrip({
   if (items.length === 0) return null;
 
   return (
-    <section className="space-y-2 border border-border-gray bg-beige/40 px-3 py-2">
+    <section className="min-w-0 max-w-full space-y-2 border border-border-gray bg-beige/40 px-3 py-2">
       <h3 className="text-sm font-bold uppercase">{label}</h3>
-      <ul className="flex gap-2 overflow-x-auto pb-1">
+      <ul className="flex w-full min-w-0 gap-2 overflow-x-auto overscroll-x-contain pb-1">
         {items.map((period) => (
           <li key={`${period.startTime}-${label}`} className="w-28 shrink-0 bg-white px-2 py-1 text-xs">
             <span className="block font-bold">
