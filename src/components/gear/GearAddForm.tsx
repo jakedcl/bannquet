@@ -52,13 +52,13 @@ export function GearAddButton() {
       </button>
       {open ? (
         <div
-          className="fixed inset-0 z-40 flex items-center justify-center bg-black/40 p-4"
+          className="motion-sheet fixed inset-0 z-40 flex items-center justify-center bg-black/40 p-4"
           onClick={() => setOpen(false)}
         >
           <div
             role="dialog"
             aria-label="Add gear"
-            className="retro-box w-full max-w-sm bg-beige p-4 text-gray-900"
+            className="motion-panel retro-box w-full max-w-sm bg-beige p-4 text-gray-900"
             onClick={(event) => event.stopPropagation()}
           >
             <div className="mb-3 flex items-center justify-between gap-2">

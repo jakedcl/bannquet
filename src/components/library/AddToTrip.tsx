@@ -29,11 +29,11 @@ export function AddToTrip({
         {attached.length > 0 ? `On ${attached.map((trip) => trip.title).join(', ')}` : 'Add to trip'}
       </button>
       {open ? (
-        <div className="fixed inset-0 z-40 flex items-end justify-center bg-black/40 p-4 sm:items-center" onClick={() => setOpen(false)}>
+        <div className="motion-sheet fixed inset-0 z-40 flex items-end justify-center bg-black/40 p-4 sm:items-center" onClick={() => setOpen(false)}>
           <div
             role="dialog"
             aria-label="Add to a trip"
-            className="w-full max-w-sm bg-beige p-3 retro-box"
+            className="motion-panel w-full max-w-sm bg-beige p-3 retro-box"
             onClick={(event) => event.stopPropagation()}
           >
             <div className="mb-3 flex items-start justify-between gap-3">
