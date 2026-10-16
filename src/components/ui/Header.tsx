@@ -52,7 +52,7 @@ export default function Header({ account = null }: { account?: HeaderAccount }) 
       initial={{ y: -8, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={tween}
-      className={`fixed z-50 h-header w-full rounded-none text-white retro-banner ${
+      className={`site-header fixed z-50 h-header w-full rounded-none text-white retro-banner ${
         scrolled ? 'shadow-lg' : ''
       } ${isHomepage ? '!pl-0 !pr-0' : ''}`}
     >
