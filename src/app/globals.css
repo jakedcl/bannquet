@@ -137,7 +137,6 @@ button, .retro-button {
   font-weight: bold;
   text-transform: uppercase;
   cursor: pointer;
-  transition: all 0.1s;
 }
 
 .retro-button:hover {
@@ -527,4 +526,286 @@ td.cell-primary :is(img, .avatar-frame, svg) {
 .has-pending .map-bleed {
   top: 10rem;
   height: calc(100dvh - 10rem);
+}
+
+/* Shared motion. 160ms, transform and opacity. Retro colors and bevels stay. */
+:root {
+  --motion: 160ms;
+  --motion-ease: cubic-bezier(0.2, 0, 0, 1);
+}
+
+:is(
+  .retro-button,
+  .retro-button-blue,
+  .retro-button-yellow,
+  .retro-button-green,
+  .retro-button-orange,
+  .retro-button-pink,
+  .retro-button-purple,
+  .retro-button-primary,
+  .nav-button,
+  button
+) {
+  transition: transform var(--motion) var(--motion-ease), opacity var(--motion) var(--motion-ease);
+}
+
+:is(
+  .retro-button,
+  .retro-button-blue,
+  .retro-button-yellow,
+  .retro-button-green,
+  .retro-button-orange,
+  .retro-button-pink,
+  .retro-button-purple,
+  .retro-button-primary,
+  .nav-button,
+  button
+):active:not(:disabled) {
+  transform: translate(1px, 1px);
+}
+
+.motion-swap {
+  transition-property: transform, opacity;
+  transition-duration: var(--motion);
+  transition-timing-function: var(--motion-ease);
+}
+
+.page-frame.route-rise {
+  animation: route-rise-live 220ms var(--motion-ease) both;
+}
+
+.map-bleed.route-fade {
+  animation: route-fade 220ms var(--motion-ease) both;
+}
+
+.nav-drop {
+  display: flex;
+  transform-origin: top center;
+  opacity: 0;
+  transform: translateY(-6px) scale(0.98);
+  pointer-events: none;
+  visibility: hidden;
+  transition:
+    opacity var(--motion) var(--motion-ease),
+    transform var(--motion) var(--motion-ease),
+    visibility 0s linear var(--motion);
+}
+
+.group:hover > .nav-drop,
+.group:focus-within > .nav-drop {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+  visibility: visible;
+  transition:
+    opacity var(--motion) var(--motion-ease),
+    transform var(--motion) var(--motion-ease),
+    visibility 0s;
+}
+
+.site-header {
+  view-transition-name: site-header;
+}
+
+::view-transition {
+  pointer-events: none;
+}
+
+::view-transition-group(site-header) {
+  animation: none;
+  z-index: 100;
+}
+
+::view-transition-old(site-header) {
+  display: none;
+}
+
+::view-transition-new(site-header) {
+  animation: none;
+}
+
+::view-transition-old(root) {
+  animation: 180ms var(--motion-ease) both route-out;
+}
+
+::view-transition-new(root) {
+  animation: 220ms var(--motion-ease) both route-in;
+}
+
+tr.row-in td {
+  animation: row-in var(--motion) var(--motion-ease) both;
+}
+
+dialog {
+  opacity: 0;
+  transform: translateY(6px) scale(0.98);
+  transition:
+    opacity var(--motion) var(--motion-ease),
+    transform var(--motion) var(--motion-ease),
+    overlay var(--motion) var(--motion-ease) allow-discrete,
+    display var(--motion) var(--motion-ease) allow-discrete;
+}
+
+dialog[open] {
+  opacity: 1;
+  transform: none;
+}
+
+@starting-style {
+  dialog[open] {
+    opacity: 0;
+    transform: translateY(6px) scale(0.98);
+  }
+}
+
+dialog::backdrop {
+  opacity: 0;
+  transition:
+    opacity var(--motion) var(--motion-ease),
+    overlay var(--motion) var(--motion-ease) allow-discrete,
+    display var(--motion) var(--motion-ease) allow-discrete;
+}
+
+dialog[open]::backdrop {
+  opacity: 1;
+}
+
+@starting-style {
+  dialog[open]::backdrop {
+    opacity: 0;
+  }
+}
+
+.motion-sheet {
+  animation: img-in var(--motion) var(--motion-ease) both;
+}
+
+.motion-panel {
+  animation: pop-in var(--motion) var(--motion-ease) both;
+}
+
+.maplibregl-popup {
+  animation: img-in var(--motion) var(--motion-ease) both;
+}
+
+.skeleton-bar {
+  position: relative;
+  height: 0.75rem;
+  overflow: hidden;
+  background: #e4dccb;
+}
+
+.skeleton-bar::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.75), transparent);
+  transform: translateX(-100%);
+  animation: shimmer 1.2s ease-in-out infinite;
+}
+
+@keyframes route-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes route-rise-live {
+  from { opacity: 0.72; transform: translateY(8px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes route-fade {
+  from { opacity: 0.72; }
+  to { opacity: 1; }
+}
+
+@keyframes route-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes img-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes row-in {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes pop-in {
+  from { opacity: 0; transform: translateY(6px) scale(0.98); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes shimmer {
+  to { transform: translateX(100%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .route-rise,
+  .route-fade,
+  .nav-drop,
+  .motion-swap,
+  .motion-sheet,
+  .motion-panel,
+  .maplibregl-popup,
+  tbody tr td,
+  tr.row-in td,
+  dialog,
+  dialog::backdrop,
+  .skeleton-bar::after {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  dialog,
+  dialog[open],
+  dialog::backdrop,
+  dialog[open]::backdrop {
+    opacity: 1;
+    transform: none;
+  }
+
+  :is(
+    .retro-button,
+    .retro-button-blue,
+    .retro-button-yellow,
+    .retro-button-green,
+    .retro-button-orange,
+    .retro-button-pink,
+    .retro-button-purple,
+    .retro-button-primary,
+    .nav-button,
+    button
+  ) {
+    transition: none;
+  }
+
+  :is(
+    .retro-button,
+    .retro-button-blue,
+    .retro-button-yellow,
+    .retro-button-green,
+    .retro-button-orange,
+    .retro-button-pink,
+    .retro-button-purple,
+    .retro-button-primary,
+    .nav-button,
+    button
+  ):active:not(:disabled) {
+    transform: none;
+  }
+
+  .nav-drop,
+  .group:hover > .nav-drop,
+  .group:focus-within > .nav-drop {
+    transform: none;
+  }
+
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 0s !important;
+  }
 }

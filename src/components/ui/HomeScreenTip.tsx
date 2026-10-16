@@ -18,8 +18,8 @@ export function HomeScreenTip({ show }: { show: boolean }) {
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-[60] flex items-end justify-center bg-black/50 p-4 sm:items-center">
-      <div role="dialog" aria-labelledby="home-tip-title" className="w-full max-w-md bg-beige retro-box">
+    <div className="motion-sheet fixed inset-0 z-[60] flex items-end justify-center bg-black/50 p-4 sm:items-center">
+      <div role="dialog" aria-labelledby="home-tip-title" className="motion-panel w-full max-w-md bg-beige retro-box">
         <header className="bg-[#5c3a1e] px-4 py-2 text-sm font-bold uppercase tracking-wide text-[#ffd700]">
           Add BANNQUET to your Home Screen
         </header>
