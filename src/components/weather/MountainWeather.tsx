@@ -28,7 +28,7 @@ export function MountainWeather({ state }: { state?: string }) {
     <div className="container mx-auto space-y-8 px-4 py-10">
       <header className="space-y-4">
         <WeatherTicker placement="page" />
-        <h1 className="text-4xl font-bold text-gray-900 md:text-5xl">
+        <h1 className="text-sm font-bold uppercase">
           {stateName} Mountain Weather
         </h1>
       </header>
@@ -48,20 +48,19 @@ function RegionSection({ section }: { section: WeatherSection }) {
   return (
     <section className="space-y-4">
       <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-        <h3 className="text-xl font-semibold text-gray-900">{section.title}</h3>
+        <h2 className="text-sm font-bold uppercase">{section.title}</h2>
         {section.banner ? (
           <a
             href={section.banner.href}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 text-sm font-semibold text-brand-green"
+            className="text-sm font-bold underline"
           >
             {section.banner.label}
-            <span aria-hidden="true">↗</span>
           </a>
         ) : null}
       </div>
-      <div className="grid gap-6 md:grid-cols-2">
+      <div className="grid gap-4 md:grid-cols-2">
         {section.spots.map((spot) => (
           <WeatherDashboard key={spot.id} spot={spot} />
         ))}

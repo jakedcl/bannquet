@@ -12,15 +12,11 @@ export default function WeatherPage() {
 
   return (
     <PageWrapper className="bg-gray-50">
-      <div className="container mx-auto px-4 py-12 space-y-10">
-        <header className="space-y-3">
-          <p className="text-sm uppercase tracking-[0.3em] text-brand-green/70">weather</p>
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900">
-            Mountain Conditions — {regionLabel}
-      </h1>
-        </header>
-
-        <div className="space-y-12">
+      <div className="container mx-auto space-y-8 px-4 py-10">
+        <h1 className="text-sm font-bold uppercase">
+          Mountain Conditions — {regionLabel}
+        </h1>
+        <div className="space-y-8">
           {sections.map((section) => (
             <RegionSection key={section.id} section={section} />
           ))}
@@ -32,27 +28,25 @@ export default function WeatherPage() {
 
 function RegionSection({ section }: { section: WeatherSection }) {
   return (
-    <section className="space-y-6">
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-        <h2 className="text-2xl font-semibold text-gray-900">{section.title}</h2>
-        {section.banner && (
+    <section className="space-y-4">
+      <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+        <h2 className="text-sm font-bold uppercase">{section.title}</h2>
+        {section.banner ? (
           <a
             href={section.banner.href}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 text-sm font-semibold text-brand-green border border-brand-green/40 rounded-full px-4 py-2 hover:bg-brand-green/5 transition-colors"
+            className="text-sm font-bold underline"
           >
             {section.banner.label}
-            <span aria-hidden="true">↗</span>
           </a>
-        )}
+        ) : null}
       </div>
-
-      <div className="grid gap-6 md:grid-cols-2">
+      <div className="grid gap-4 md:grid-cols-2">
         {section.spots.map((spot) => (
           <WeatherDashboard key={spot.id} spot={spot} />
         ))}
       </div>
     </section>
   );
-} 
+}
