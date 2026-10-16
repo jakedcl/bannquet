@@ -24,6 +24,12 @@ export function MountainWeather({ state }: { state?: string }) {
     setRegion(region);
   }, [region, setRegion]);
 
+  useEffect(() => {
+    const id = window.location.hash.slice(1);
+    if (!id) return;
+    document.getElementById(id)?.scrollIntoView({ block: 'start' });
+  }, [region]);
+
   return (
     <div className="container mx-auto min-w-0 space-y-8 px-4 py-10">
       <header className="space-y-4">
@@ -46,7 +52,7 @@ export function MountainWeather({ state }: { state?: string }) {
 
 function RegionSection({ section }: { section: WeatherSection }) {
   return (
-    <section className="space-y-4">
+    <section id={section.id} className="scroll-mt-36 space-y-4">
       <div className="flex min-w-0 flex-col gap-3 md:flex-row md:items-center md:justify-between">
         <h2 className="min-w-0 text-sm font-bold uppercase">{section.title}</h2>
         {section.banner ? (

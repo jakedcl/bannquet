@@ -1,4 +1,4 @@
-import { DEFAULT_REGION, REGION_OPTIONS, isRegionCode } from '@/lib/regions';
+import { REGION_OPTIONS, isRegionCode } from '@/lib/regions';
 
 export type NavLink = {
   href: string;
@@ -99,7 +99,7 @@ export function linkOn(pathname: string, search: string, href: string): boolean 
   const want = new URLSearchParams(query);
   const have = new URLSearchParams(search.startsWith('?') ? search.slice(1) : search);
   if (path === '/mountain-weather' && want.has('state')) {
-    return (have.get('state') || DEFAULT_REGION) === want.get('state');
+    return have.get('state') === want.get('state');
   }
   for (const [key, value] of want) {
     if (have.get(key) !== value) return false;
@@ -305,13 +305,15 @@ export function pageTrail(pathname: string, search: string, account: NavAccount,
 
   if (pathname === '/mountain-weather') {
     const requested = new URLSearchParams(search).get('state');
-    const region = isRegionCode(requested) ? requested : DEFAULT_REGION;
-    const name = STATE_NAMES[region] ?? region.toUpperCase();
+    if (!isRegionCode(requested)) {
+      return { parentHref: '/', crumbs: [{ href: '/mountain-weather', label: 'Mountain Weather' }] };
+    }
+    const name = STATE_NAMES[requested] ?? requested.toUpperCase();
     return {
-      parentHref: '/',
+      parentHref: '/mountain-weather',
       crumbs: [
         { href: '/mountain-weather', label: 'Mountain Weather' },
-        { href: `/mountain-weather?state=${region}`, label: name },
+        { href: `/mountain-weather?state=${requested}`, label: name },
       ],
     };
   }
@@ -359,7 +361,7 @@ export function matchSection(pathname: string, search: string, account: NavAccou
       href: '/community',
       label: 'Community',
       links: COMMUNITY_LINKS,
-      landing: pathname === '/community',
+      landing: false,
     };
   }
 
