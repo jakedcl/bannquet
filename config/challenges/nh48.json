@@ -33,7 +33,7 @@
     },
     {
       "slug": "nh48_galehead",
-      "name": "Galehead",
+      "name": "Galehead Mountain",
       "elevationFt": 4024,
       "lat": 44.184811,
       "lng": -71.573392
@@ -82,7 +82,7 @@
     },
     {
       "slug": "nh48_eisenhower",
-      "name": "Mount Eisenhower",
+      "name": "Mount Eisenhower (Mount Pleasant)",
       "elevationFt": 4780,
       "lat": 44.240733,
       "lng": -71.350181
@@ -208,7 +208,7 @@
     },
     {
       "slug": "nh48_pierce",
-      "name": "Mount Pierce",
+      "name": "Mount Pierce (Mount Clinton)",
       "elevationFt": 4310,
       "lat": 44.226523,
       "lng": -71.365973
@@ -257,7 +257,7 @@
     },
     {
       "slug": "nh48_zealand",
-      "name": "Mount Zealand",
+      "name": "Zealand Mountain",
       "elevationFt": 4260,
       "lat": 44.179667,
       "lng": -71.521333
@@ -327,7 +327,7 @@
     },
     {
       "slug": "nh48_wildcat",
-      "name": "Wildcat",
+      "name": "Wildcat Mountain",
       "elevationFt": 4422,
       "lat": 44.258889,
       "lng": -71.201389

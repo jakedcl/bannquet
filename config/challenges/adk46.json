@@ -47,7 +47,7 @@
     },
     {
       "slug": "adk46_carson_peak",
-      "name": "Carson Peak",
+      "name": "Carson Peak (South Dix)",
       "elevationFt": 4068,
       "lat": 44.060073,
       "lng": -73.774443
@@ -117,7 +117,7 @@
     },
     {
       "slug": "adk46_grace_peak",
-      "name": "Grace Peak",
+      "name": "Grace Peak (East Dix)",
       "elevationFt": 4026,
       "lat": 44.06534,
       "lng": -73.757444
@@ -257,7 +257,7 @@
     },
     {
       "slug": "adk46_saddleback",
-      "name": "Saddleback Mountain",
+      "name": "Saddleback Mountain (NY)",
       "elevationFt": 4528,
       "lat": 44.126584,
       "lng": -73.875073
