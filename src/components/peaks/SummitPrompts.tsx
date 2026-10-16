@@ -31,7 +31,7 @@ export function SummitPrompts({
     <ul className="space-y-2">
       {left.map((peak) => (
         <li key={peak.slug} className="retro-box-inset flex flex-wrap items-center justify-between gap-2 bg-white px-3 py-2">
-          <p className="min-w-0 text-sm">Looks like you summited {peak.name}. Log a climb?</p>
+          <p className="min-w-0 text-sm">Looks like you summited {peak.name}, but you&apos;ve never logged a climb there.</p>
           <div className="flex shrink-0 flex-wrap items-center gap-2">
             <form
               action={async (formData) => {
