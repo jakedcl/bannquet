@@ -6,7 +6,7 @@ import type { MapFeatureCollection } from '@/lib/posts';
 
 export type CommunityPeek = {
   chat: { id: string; name: string; handle: string | null; body: string }[];
-  peaks: { slug: string; name: string; who: string | null; handle: string | null; detail: string | null }[];
+  peaks: { slug: string; name: string; detail: string | null }[];
   trips: { id: string; title: string; when: string | null }[];
   members: { id: string; name: string; handle: string | null; detail: string | null }[];
   gear: { id: string; name: string; detail: string | null }[];
@@ -45,15 +45,7 @@ export function CommunityBoard({ peek }: { peek: CommunityPeek }) {
             {peek.peaks.map((peak) => (
               <li key={peak.slug} className="flex min-w-0 items-baseline justify-between gap-2">
                 <Link href={`/peaks/${peak.slug}`} className="min-w-0 truncate font-bold underline">{peak.name}</Link>
-                {peak.who ? (
-                  peak.handle ? (
-                    <Link href={`/user/${peak.handle}`} className="shrink-0 underline">{peak.who}</Link>
-                  ) : (
-                    <span className="shrink-0">{peak.who}</span>
-                  )
-                ) : peak.detail ? (
-                  <span className="shrink-0">{peak.detail}</span>
-                ) : null}
+                {peak.detail ? <span className="shrink-0">{peak.detail}</span> : null}
               </li>
             ))}
           </ul>

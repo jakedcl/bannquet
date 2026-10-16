@@ -34,34 +34,24 @@ async function loadPeek(): Promise<CommunityPeek> {
     listGear(),
     loadMapData(),
   ]);
-  const peaks = allPeaks();
-  const bySlug = new Map(peaks.map((peak) => [peak.slug, peak]));
-  const recent: CommunityPeek['peaks'] = [];
-  const seen = new Set<string>();
-  for (let index = climbs.length - 1; index >= 0 && recent.length < PEEK; index -= 1) {
-    const climb = climbs[index];
-    if (seen.has(climb.peakSlug)) continue;
-    const peak = bySlug.get(climb.peakSlug);
-    if (!peak) continue;
-    seen.add(climb.peakSlug);
-    recent.push({
-      slug: peak.slug,
-      name: peak.name,
-      who: climb.name,
-      handle: climb.handle,
-      detail: null,
-    });
+  const counts = new Map<string, number>();
+  for (const climb of climbs) {
+    counts.set(climb.peakSlug, (counts.get(climb.peakSlug) ?? 0) + 1);
   }
-  const peakRows = recent.length > 0 ? recent : [...peaks]
-    .sort((a, b) => b.elevationFt - a.elevationFt)
+  const peakRows = allPeaks()
+    .flatMap((peak) => {
+      const total = counts.get(peak.slug) ?? 0;
+      if (total < 1) return [];
+      return [{
+        slug: peak.slug,
+        name: peak.name,
+        detail: total === 1 ? '1 climb' : `${total} climbs`,
+        total,
+      }];
+    })
+    .sort((a, b) => b.total - a.total || a.name.localeCompare(b.name))
     .slice(0, PEEK)
-    .map((peak) => ({
-      slug: peak.slug,
-      name: peak.name,
-      who: null,
-      handle: null,
-      detail: `${peak.elevationFt.toLocaleString('en-US')} ft`,
-    }));
+    .map(({ slug, name, detail }) => ({ slug, name, detail }));
 
   return {
     chat: messages.slice(-PEEK).map((message) => ({
