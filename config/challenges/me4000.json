@@ -5,7 +5,7 @@
   "peaks": [
     {
       "slug": "me4000_abraham",
-      "name": "Mount Abraham",
+      "name": "Mount Abraham (ME)",
       "elevationFt": 4050,
       "lat": 44.9769,
       "lng": -70.3267
@@ -68,7 +68,7 @@
     },
     {
       "slug": "me4000_saddleback",
-      "name": "Saddleback Mountain",
+      "name": "Saddleback Mountain (ME)",
       "elevationFt": 4120,
       "lat": 44.9367,
       "lng": -70.5042
@@ -96,7 +96,7 @@
     },
     {
       "slug": "me4000_sugarloaf",
-      "name": "Sugarloaf Mountain",
+      "name": "Sugarloaf Mountain (ME)",
       "elevationFt": 4250,
       "lat": 45.0314,
       "lng": -70.3133
