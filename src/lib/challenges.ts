@@ -16,6 +16,9 @@ const CHALLENGE_FILES = [cat3500, adk46, nh48, vt4000, me4000];
 /** About 500 feet. Enough for tree cover and a drifted GPS, not the next peak. */
 export const SUMMIT_MATCH_METERS = 152;
 
+/** A route upload only suggests a summit the line actually passes. */
+export const SUMMIT_SUGGEST_METERS = 50;
+
 const METERS_PER_DEGREE_LAT = 111_320;
 
 export type ChallengePeak = {
@@ -175,4 +178,14 @@ export function peaksNearTrack(
     if (nearest <= radiusM) matched.push(peak.slug);
   }
   return matched;
+}
+
+export function suggestSummits(
+  points: TrackPoint[],
+  climbed: ReadonlySet<string>,
+  peaks: ChallengePeak[] = allPeaks(),
+): Array<{ slug: string; name: string }> {
+  const open = peaks.filter((peak) => !climbed.has(peak.slug));
+  const near = new Set(peaksNearTrack(points, open, SUMMIT_SUGGEST_METERS));
+  return open.filter((peak) => near.has(peak.slug)).map((peak) => ({ slug: peak.slug, name: peak.name }));
 }
