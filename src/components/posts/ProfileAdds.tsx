@@ -10,6 +10,7 @@ import { SubmitButton } from '@/components/ui/SubmitButton';
 import { ACTIVITIES, ACTIVITY_META } from '@/lib/activities';
 import { formatFeetGain, formatMiles, packTrack } from '@/lib/gpx';
 import { cleanRouteTitle, routeTitle } from '@/lib/route-title';
+import { SummitPrompts } from '@/components/peaks/SummitPrompts';
 import { SaveThenTrip } from '@/components/trips/SaveThenTrip';
 import { useReportCreated } from '@/components/trips/use-created';
 import type { DraftItem } from '@/lib/trip-draft';
@@ -19,12 +20,16 @@ export function RouteUpload({
   onCreated,
 }: {
   inline?: boolean;
-  onCreated?: (items: DraftItem[]) => void;
+  onCreated?: (items: DraftItem[], keepOpen?: boolean) => void;
 }) {
   const router = useRouter();
   const refreshed = useRef(false);
+  const continued = useRef('');
+  const held = useRef('');
   const [state, action, pending] = useActionState(publishProfileTrack, null);
-  useReportCreated(inline, state?.created, onCreated);
+  const suggestions = state?.suggestions ?? [];
+  const saveId = state?.created?.[0]?.id ?? '';
+  useReportCreated(inline && suggestions.length === 0, state?.created, onCreated);
   const [trackJson, setTrackJson] = useState('');
   const [note, setNote] = useState<string | null>(null);
   const [title, setTitle] = useState('');
@@ -35,7 +40,24 @@ export function RouteUpload({
     router.refresh();
   }, [router, state]);
 
+  useEffect(() => {
+    if (!inline || suggestions.length === 0 || !state?.created?.length || held.current === saveId) return;
+    held.current = saveId;
+    onCreated?.(state.created, true);
+  }, [inline, onCreated, saveId, state, suggestions.length]);
+
+  function finishSuggestions() {
+    if (!saveId || continued.current === saveId) return;
+    continued.current = saveId;
+    if (state?.continueTo) {
+      router.push(state.continueTo);
+      return;
+    }
+    if (inline && state?.created?.length) onCreated?.(state.created);
+  }
+
   return (
+    <div className="space-y-3">
     <form action={action} className="space-y-3">
       {inline ? <input type="hidden" name="inline" value="1" /> : null}
       <p className="text-sm font-bold">Add a route</p>
@@ -102,7 +124,7 @@ export function RouteUpload({
         <p className={`text-sm ${trackJson ? 'text-gray-700' : 'font-bold text-red-700'}`}>{note}</p>
       ) : null}
       {state?.error ? <p className="text-sm font-bold text-red-700">{state.error}</p> : null}
-      {state?.saved ? (
+      {state?.saved || (inline && suggestions.length > 0) ? (
         <p className="text-sm">
           Route saved. It is on the map.
         </p>
@@ -112,6 +134,10 @@ export function RouteUpload({
       </SubmitButton>
       {inline ? null : <SaveThenTrip disabled={pending || !trackJson} />}
     </form>
+    {suggestions.length > 0 ? (
+      <SummitPrompts key={saveId || 'summits'} peaks={suggestions} onClear={finishSuggestions} />
+    ) : null}
+    </div>
   );
 }
 

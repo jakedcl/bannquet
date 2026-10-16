@@ -18,15 +18,25 @@ function refresh(handle: string | null, peakSlug: string) {
 }
 
 export async function logClimbAction(formData: FormData): Promise<void> {
+  await recordClimb(formData);
+}
+
+/** One climb, only after the person confirms. The form stays pending until this returns. */
+export async function confirmSummitAction(formData: FormData): Promise<{ ok: true } | { ok: false }> {
+  return recordClimb(formData);
+}
+
+async function recordClimb(formData: FormData): Promise<{ ok: true } | { ok: false }> {
   const viewer = await getViewer();
   if (!viewer) return redirectToSignIn();
-  if (!canContribute(viewer.role)) return;
+  if (!canContribute(viewer.role)) return { ok: false };
   const peakSlug = String(formData.get('peakSlug') ?? '').trim();
-  if (!peakSlug) return;
+  if (!peakSlug) return { ok: false };
   await ensurePeaks();
   const result = await logClimb(viewer.id, peakSlug, null);
-  if (result === 'missing') return;
+  if (result === 'missing') return { ok: false };
   refresh(viewer.handle, peakSlug);
+  return { ok: true };
 }
 
 export async function removeLatestClimbAction(formData: FormData): Promise<void> {
