@@ -33,8 +33,10 @@ test('every section page has a breadcrumb, including the parent', () => {
   assert.deepEqual(pageTrail('/members', '', nobody).crumbs?.map((crumb) => crumb.label), ['Community', 'Members']);
   assert.deepEqual(pageTrail('/map', '', nobody).crumbs?.map((crumb) => crumb.label), ['Map']);
   assert.deepEqual(pageTrail('/upload', '', nobody).crumbs?.map((crumb) => crumb.label), ['Upload']);
-  assert.deepEqual(pageTrail('/mountain-weather', '', nobody).crumbs?.map((crumb) => crumb.label), ['Mountain Weather', 'New York']);
+  assert.deepEqual(pageTrail('/mountain-weather', '', nobody).crumbs?.map((crumb) => crumb.label), ['Mountain Weather']);
+  assert.equal(pageTrail('/mountain-weather', '', nobody).parentHref, '/');
   assert.deepEqual(pageTrail('/mountain-weather', 'state=vt', nobody).crumbs?.map((crumb) => crumb.label), ['Mountain Weather', 'Vermont']);
+  assert.equal(pageTrail('/mountain-weather', 'state=ny', nobody).parentHref, '/mountain-weather');
   assert.deepEqual(pageTrail('/fishing', '', nobody).crumbs?.map((crumb) => crumb.label), ['Fishing']);
   assert.equal(pageTrail('/fishing', '', nobody).parentHref, '/');
   assert.equal(pageTrail('/', '', nobody).crumbs, null);
@@ -47,7 +49,8 @@ test('member pages stay in Community, except your own profile', () => {
   assert.equal(communitySection('/user/jake/pins', jake), false);
   assert.equal(communitySection('/peaks/adk46_algonquin_peak', null), true);
   assert.equal(linkOn('/user/jkiddf', '', '/members'), true);
-  assert.equal(linkOn('/mountain-weather', '', '/mountain-weather?state=ny'), true);
+  assert.equal(linkOn('/mountain-weather', '', '/mountain-weather?state=ny'), false);
+  assert.equal(linkOn('/mountain-weather', 'state=ny', '/mountain-weather?state=ny'), true);
   assert.equal(linkOn('/mountain-weather', '', '/mountain-weather?state=vt'), false);
   assert.equal(linkOn('/mountain-weather', 'state=vt', '/mountain-weather?state=vt'), true);
   assert.equal(linkOn('/mountain-weather', 'state=nh', '/mountain-weather?state=ny'), false);
@@ -61,6 +64,7 @@ test('settings opens the profile, and the owner also gets Admin', () => {
   assert.deepEqual(visibleLinks(settingsLinks(owner)).map((link) => link.label), ['Profile', 'Admin']);
   assert.equal(matchSection('/user/jake', '', owner), null);
   assert.equal(matchSection('/user/jkiddf', '', owner)?.id, 'community');
+  assert.equal(matchSection('/community', '', owner)?.landing, false);
   assert.equal(matchSection('/account', '', owner), null);
   assert.equal(matchSection('/admin', '', owner), null);
 });
