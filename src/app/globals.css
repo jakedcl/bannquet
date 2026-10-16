@@ -578,6 +578,22 @@ td.cell-primary :is(img, .avatar-frame, svg) {
   animation: route-fade 220ms var(--motion-ease) both;
 }
 
+html.load-enter main.route-stage {
+  animation: load-rise 280ms var(--motion-ease) both;
+}
+
+html.load-enter-fade .map-bleed {
+  animation: load-fade 280ms var(--motion-ease) both;
+}
+
+html.home-enter .home-hero-logo {
+  animation: home-rise 280ms var(--motion-ease) both;
+}
+
+html.home-enter .home-hero-actions {
+  animation: home-rise 300ms var(--motion-ease) 200ms both;
+}
+
 .nav-drop {
   display: flex;
   transform-origin: top center;
@@ -719,6 +735,21 @@ dialog[open]::backdrop {
   to { opacity: 1; }
 }
 
+@keyframes home-rise {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes load-rise {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes load-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
 @keyframes route-out {
   from { opacity: 1; }
   to { opacity: 0; }
@@ -746,6 +777,10 @@ dialog[open]::backdrop {
 @media (prefers-reduced-motion: reduce) {
   .route-rise,
   .route-fade,
+  html.load-enter main.route-stage,
+  html.load-enter-fade .map-bleed,
+  html.home-enter .home-hero-logo,
+  html.home-enter .home-hero-actions,
   .nav-drop,
   .motion-swap,
   .motion-sheet,

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { MOTION_TWEEN } from '@/lib/motion';
 import Image from 'next/image';
@@ -15,8 +15,23 @@ export default function Home() {
   const reduce = useReducedMotion();
   const tween = reduce ? { duration: 0 } : MOTION_TWEEN;
 
+  useEffect(() => {
+    const root = document.documentElement;
+    if (!root.classList.contains('home-enter')) return;
+    const timer = window.setTimeout(() => root.classList.remove('home-enter'), 520);
+    return () => {
+      window.clearTimeout(timer);
+      root.classList.remove('home-enter');
+    };
+  }, []);
+
   return (
     <PageWrapper>
+      <script
+        dangerouslySetInnerHTML={{
+          __html: `(function(){try{if(window.__bannquetHomeEnter)return;window.__bannquetHomeEnter=1;if(window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;document.documentElement.classList.add('home-enter');}catch(e){}})();`,
+        }}
+      />
       <section className="relative flex min-h-[calc(100vh-72px)] items-center justify-center overflow-visible border-b-4 border-brand-green-dark text-white" style={{ boxShadow: '0 4px 12px rgba(0, 0, 0, 0.4)' }}>
         {/* Background Image */}
         <div 
@@ -34,11 +49,7 @@ export default function Home() {
         <div className="relative z-10 max-w-container mx-auto px-4 w-full">
           <div className="space-y-12 text-center">
             {/* Hero Section */}
-            <motion.div
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={tween}
-            >
+            <div className="home-hero-logo">
               <div className="w-full flex justify-center -mt-8 sm:-mt-12">
                 <div className="w-full max-w-[280px] sm:max-w-[350px] md:max-w-[420px] lg:max-w-[500px]">
                   <motion.div
@@ -59,15 +70,9 @@ export default function Home() {
                   </motion.div>
                 </div>
               </div>
-            </motion.div>
+            </div>
 
-            {/* CTA Buttons */}
-            <motion.div
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={tween}
-              className="relative z-20 mx-auto flex w-full max-w-sm flex-col items-stretch gap-4 overflow-visible sm:max-w-none sm:flex-row sm:flex-wrap sm:items-center sm:justify-center sm:gap-6"
-            >
+            <div className="home-hero-actions relative z-20 mx-auto flex w-full max-w-sm flex-col items-stretch gap-4 overflow-visible sm:max-w-none sm:flex-row sm:flex-wrap sm:items-center sm:justify-center sm:gap-6">
               <NavMenu
                 layout="responsive"
                 size="lg"
@@ -98,7 +103,7 @@ export default function Home() {
                   </Link>
                 ))}
               </NavMenu>
-            </motion.div>
+            </div>
           </div>
         </div>
       </section>
