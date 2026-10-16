@@ -39,6 +39,7 @@ export function ChatRoom({
   const scroller = useRef<HTMLDivElement | null>(null);
   const formRef = useRef<HTMLFormElement | null>(null);
   const latest = useRef(initial.at(-1) ?? null);
+  const [acked, setAcked] = useState(state);
 
   useEffect(() => {
     latest.current = messages.at(-1) ?? null;
@@ -49,7 +50,6 @@ export function ChatRoom({
   useEffect(() => {
     if (!state || state.error) return;
     formRef.current?.reset();
-    setAttached(null);
     dialogRef.current?.close();
   }, [state]);
 
@@ -81,6 +81,11 @@ export function ChatRoom({
     }, 5000);
     return () => window.clearInterval(timer);
   }, []);
+
+  if (state !== acked) {
+    setAcked(state);
+    if (state && !state.error) setAttached(null);
+  }
 
   const needle = query.trim().toLowerCase();
   const visible = catalog.filter((item) => {

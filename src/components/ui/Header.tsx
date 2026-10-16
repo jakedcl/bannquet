@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useSyncExternalStore } from 'react';
 import { createPortal } from 'react-dom';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -16,6 +16,18 @@ import { SubmitButton } from '@/components/ui/SubmitButton';
 import { NavMenu } from './NavMenu';
 import WeatherTicker from './WeatherTicker';
 
+function subscribeClient() {
+  return () => {};
+}
+
+function clientReady() {
+  return true;
+}
+
+function serverReady() {
+  return false;
+}
+
 export type HeaderAccount = {
   handle: string | null;
   displayName: string | null;
@@ -28,7 +40,7 @@ export default function Header({ account = null }: { account?: HeaderAccount }) 
   const [openPath, setOpenPath] = useState<string | null>(null);
   const mobileMenuOpen = openPath === pathname;
   const [scrolled, setScrolled] = useState(false);
-  const [menuReady, setMenuReady] = useState(false);
+  const menuReady = useSyncExternalStore(subscribeClient, clientReady, serverReady);
   const isHomepage = pathname === '/';
   const onWeather = pathname === '/weather' || pathname.startsWith('/weather/');
 
@@ -38,10 +50,6 @@ export default function Header({ account = null }: { account?: HeaderAccount }) 
     };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  useEffect(() => {
-    setMenuReady(true);
   }, []);
 
   const reduce = useReducedMotion();

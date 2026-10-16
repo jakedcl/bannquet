@@ -9,8 +9,11 @@ export function useReportCreated(
   onCreated?: (items: DraftItem[]) => void,
 ) {
   const onCreatedRef = useRef(onCreated);
-  onCreatedRef.current = onCreated;
   const reported = useRef('');
+
+  useEffect(() => {
+    onCreatedRef.current = onCreated;
+  }, [onCreated]);
 
   useEffect(() => {
     if (!inline || !created?.length) return;

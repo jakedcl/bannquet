@@ -1,21 +1,28 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState, useSyncExternalStore } from 'react';
 import { markHomeScreenTipSeen } from '@/app/home-screen-tip';
 import { SubmitButton } from '@/components/ui/SubmitButton';
 
+function subscribeClient() {
+  return () => {};
+}
+
+function serverReady() {
+  return false;
+}
+
+function tipInBrowser() {
+  const nav = navigator as Navigator & { standalone?: boolean };
+  return !(window.matchMedia('(display-mode: standalone)').matches || nav.standalone === true);
+}
+
 export function HomeScreenTip({ show }: { show: boolean }) {
-  const [open, setOpen] = useState(false);
+  const [dismissed, setDismissed] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const inBrowser = useSyncExternalStore(subscribeClient, tipInBrowser, serverReady);
 
-  useEffect(() => {
-    if (!show) return;
-    const nav = navigator as Navigator & { standalone?: boolean };
-    const standalone = window.matchMedia('(display-mode: standalone)').matches || nav.standalone === true;
-    if (!standalone) setOpen(true);
-  }, [show]);
-
-  if (!open) return null;
+  if (!show || dismissed || !inBrowser) return null;
 
   return (
     <div className="motion-sheet fixed inset-0 z-[60] flex items-end justify-center bg-black/50 p-4 sm:items-center">
@@ -38,7 +45,7 @@ export function HomeScreenTip({ show }: { show: boolean }) {
                 setError(result.error);
                 return;
               }
-              setOpen(false);
+              setDismissed(true);
             }}
           >
             <SubmitButton tone="yellow" pendingLabel="Saving…" className="w-full">Got it</SubmitButton>
