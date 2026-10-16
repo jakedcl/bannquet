@@ -13,6 +13,15 @@ function prefersReducedMotion() {
   return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 }
 
+function viewTransitionsEnabled() {
+  if (typeof document.startViewTransition !== 'function') return false;
+  if (prefersReducedMotion()) return false;
+  const nav = navigator as Navigator & { standalone?: boolean };
+  if (nav.standalone === true) return false;
+  if (window.matchMedia('(display-mode: standalone)').matches) return false;
+  return true;
+}
+
 export function RouteMotion() {
   const pathname = usePathname();
   const search = useSearchParams().toString();
@@ -31,36 +40,46 @@ export function RouteMotion() {
     }
     if (!changed || prefersReducedMotion()) return;
     const main = document.querySelector('main.route-stage');
-    if (!(main instanceof HTMLElement)) return;
-    main.classList.remove('route-rise');
-    void main.offsetWidth;
-    main.classList.add('route-rise');
+    const frame = main?.querySelector(':scope > .page-frame');
+    const map = main?.querySelector(':scope > .map-bleed');
+    const el = frame instanceof HTMLElement ? frame : map instanceof HTMLElement ? map : null;
+    if (!el) return;
+    const klass = frame instanceof HTMLElement ? 'route-rise' : 'route-fade';
+    el.classList.remove('route-rise', 'route-fade');
+    void el.offsetWidth;
+    el.classList.add(klass);
   }, [pathname, search]);
 
   useLayoutEffect(() => {
     const arm = (target: string | null, go: () => void) => {
       job.current?.finish();
-      const reduce = prefersReducedMotion();
-      const start = document.startViewTransition?.bind(document);
-      if (reduce || !start) {
+      if (!viewTransitionsEnabled()) {
         go();
         return;
       }
-      start(() => {
-        return new Promise<void>((resolve) => {
-          let settled = false;
-          const finish = () => {
-            if (settled) return;
-            settled = true;
-            window.clearTimeout(timer);
-            if (job.current?.finish === finish) job.current = null;
-            resolve();
-          };
-          job.current = { target, finish };
-          const timer = window.setTimeout(finish, 1200);
-          go();
+      let started = false;
+      try {
+        const transition = document.startViewTransition(() => {
+          started = true;
+          return new Promise<void>((resolve) => {
+            let settled = false;
+            const finish = () => {
+              if (settled) return;
+              settled = true;
+              window.clearTimeout(timer);
+              if (job.current?.finish === finish) job.current = null;
+              resolve();
+            };
+            job.current = { target, finish };
+            const timer = window.setTimeout(finish, 1200);
+            go();
+          });
         });
-      });
+        transition.ready.catch(() => {});
+        transition.finished.catch(() => {});
+      } catch {
+        if (!started) go();
+      }
     };
 
     const onClick = (event: MouseEvent) => {
