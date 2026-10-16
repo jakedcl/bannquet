@@ -570,8 +570,66 @@ td.cell-primary :is(img, .avatar-frame, svg) {
   transition-timing-function: var(--motion-ease);
 }
 
-.page-enter {
-  animation: page-enter var(--motion) var(--motion-ease) both;
+.route-stage.route-rise {
+  animation: route-rise 220ms var(--motion-ease);
+}
+
+.nav-drop {
+  display: flex;
+  transform-origin: top center;
+  opacity: 0;
+  translate: 0 -6px;
+  scale: 0.98;
+  pointer-events: none;
+  visibility: hidden;
+  transition:
+    opacity var(--motion) var(--motion-ease),
+    translate var(--motion) var(--motion-ease),
+    scale var(--motion) var(--motion-ease),
+    visibility 0s linear var(--motion);
+}
+
+.group:hover > .nav-drop,
+.group:focus-within > .nav-drop {
+  opacity: 1;
+  translate: 0 0;
+  scale: 1;
+  pointer-events: auto;
+  visibility: visible;
+  transition:
+    opacity var(--motion) var(--motion-ease),
+    translate var(--motion) var(--motion-ease),
+    scale var(--motion) var(--motion-ease),
+    visibility 0s;
+}
+
+.site-header {
+  view-transition-name: site-header;
+}
+
+::view-transition {
+  pointer-events: none;
+}
+
+::view-transition-group(site-header) {
+  animation: none;
+  z-index: 100;
+}
+
+::view-transition-old(site-header) {
+  display: none;
+}
+
+::view-transition-new(site-header) {
+  animation: none;
+}
+
+::view-transition-old(root) {
+  animation: 180ms var(--motion-ease) both route-out;
+}
+
+::view-transition-new(root) {
+  animation: 220ms var(--motion-ease) both route-rise;
 }
 
 .page-frame img {
@@ -654,9 +712,14 @@ dialog[open]::backdrop {
   animation: shimmer 1.2s ease-in-out infinite;
 }
 
-@keyframes page-enter {
-  from { opacity: 0; }
-  to { opacity: 1; }
+@keyframes route-rise {
+  from { opacity: 0; translate: 0 8px; }
+  to { opacity: 1; translate: none; }
+}
+
+@keyframes route-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
 }
 
 @keyframes img-in {
@@ -679,7 +742,8 @@ dialog[open]::backdrop {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .page-enter,
+  .route-rise,
+  .nav-drop,
   .motion-swap,
   .page-frame img,
   .motion-sheet,
@@ -730,5 +794,17 @@ dialog[open]::backdrop {
     button
   ):active:not(:disabled) {
     transform: none;
+  }
+
+  .nav-drop,
+  .group:hover > .nav-drop,
+  .group:focus-within > .nav-drop {
+    translate: none;
+    scale: none;
+  }
+
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 0s !important;
   }
 }

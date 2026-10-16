@@ -13,7 +13,7 @@ interface PageWrapperProps {
 export default function PageWrapper({ children, className = '' }: PageWrapperProps) {
   const pathname = usePathname();
   return (
-    <div className={`page-enter page-frame mt-[72px] min-h-[calc(100vh-72px)] ${className}`}>
+    <div className={`page-frame mt-[72px] min-h-[calc(100vh-72px)] ${className}`}>
       <LeafProvider>
         <Suspense fallback={null}>
           <SectionChrome />

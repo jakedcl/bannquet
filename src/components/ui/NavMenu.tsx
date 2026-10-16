@@ -38,7 +38,7 @@ export function NavMenu({
       {hover ? (
         <div className={`group relative ${layout === 'responsive' ? 'hidden sm:inline-flex' : 'inline-flex'}`}>
           <NavButton href={href} active={active} size={size}>{label}</NavButton>
-          <div className={`absolute top-full z-40 hidden w-max min-w-full flex-col gap-1 bg-[#5c3a1e] p-1 group-hover:flex group-focus-within:flex ${align === 'right' ? 'right-0' : 'left-0'}`}>
+          <div className={`nav-drop absolute top-full z-40 w-max min-w-full flex-col gap-1 bg-[#5c3a1e] p-1 ${align === 'right' ? 'right-0' : 'left-0'}`}>
             {children}
           </div>
         </div>
