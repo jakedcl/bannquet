@@ -1,6 +1,7 @@
 import { Suspense } from 'react';
 import Header from '@/components/ui/Header';
 import { HomeScreenTip } from '@/components/ui/HomeScreenTip';
+import { LoadEntrance } from '@/components/ui/LoadEntrance';
 import { RouteMotion } from '@/components/ui/RouteMotion';
 import { getViewer } from '@/app/sign-in/actions';
 import { countPendingMembers } from '@/lib/auth/members';
@@ -60,6 +61,7 @@ export default async function RootLayout({
             <Suspense fallback={null}>
               <RouteMotion />
             </Suspense>
+            <LoadEntrance />
             <main className="route-stage flex-1 bg-gray-50">
               {children}
             </main>
