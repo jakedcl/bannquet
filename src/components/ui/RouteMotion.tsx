@@ -2,6 +2,7 @@
 
 import { useLayoutEffect, useRef } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { clearLoadEntrance } from '@/components/ui/LoadEntrance';
 
 type Job = { target: string | null; finish: () => void };
 
@@ -33,6 +34,7 @@ export function RouteMotion() {
     const url = here();
     const changed = seen.current !== null && seen.current !== url;
     seen.current = url;
+    if (changed) clearLoadEntrance();
     const pending = job.current;
     if (pending && (pending.target === null || pending.target === url)) {
       pending.finish();
@@ -52,6 +54,7 @@ export function RouteMotion() {
 
   useLayoutEffect(() => {
     const arm = (target: string | null, go: () => void) => {
+      clearLoadEntrance();
       job.current?.finish();
       if (!viewTransitionsEnabled()) {
         go();

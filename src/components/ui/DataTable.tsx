@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState, type ReactNode } from 'react';
+import { useState, type ReactNode } from 'react';
 
 /** Rows shown before "See all" on an embedded table. */
 export const TABLE_PREVIEW = 8;
@@ -40,13 +40,18 @@ export function DataTable<T>({
 }) {
   const [sort, setSort] = useState(defaultSort ?? null);
   const [open, setOpen] = useState(false);
-  const ordered = useMemo(() => {
-    if (!sort) return rows;
-    const column = columns.find((item) => item.id === sort.id);
-    if (!column) return rows;
-    const dir = sort.dir === 'asc' ? 1 : -1;
-    return [...rows].sort((a, b) => dir * compare(column.sortValue(a), column.sortValue(b)));
-  }, [rows, columns, sort]);
+  const sortSig = sort ? `${sort.id}:${sort.dir}` : '';
+  const [pinned, setPinned] = useState<{ sig: string; keys: string[] } | null>(null);
+  // Counter edits change sort values. Keep the loaded order until the user picks a sort.
+  const hold = pinned !== null && pinned.sig === sortSig && !(pinned.keys.length === 0 && rows.length > 0);
+  let keys: string[];
+  if (hold && pinned) {
+    keys = pinned.keys;
+  } else {
+    keys = sortedKeys(rows, columns, sort, rowKey);
+    setPinned({ sig: sortSig, keys });
+  }
+  const ordered = arrange(rows, keys, rowKey);
 
   if (ordered.length === 0) return <p className="text-sm">{empty}</p>;
 
@@ -177,6 +182,40 @@ function Row<T>({
       ) : null}
     </>
   );
+}
+
+function sortedKeys<T>(
+  rows: T[],
+  columns: DataColumn<T>[],
+  sort: { id: string; dir: 'asc' | 'desc' } | null,
+  rowKey: (row: T) => string,
+): string[] {
+  if (!sort) return rows.map(rowKey);
+  const column = columns.find((item) => item.id === sort.id);
+  if (!column) return rows.map(rowKey);
+  const dir = sort.dir === 'asc' ? 1 : -1;
+  return [...rows]
+    .sort((a, b) => dir * compare(column.sortValue(a), column.sortValue(b)))
+    .map(rowKey);
+}
+
+function arrange<T>(rows: T[], keys: string[], rowKey: (row: T) => string): T[] {
+  const byKey = new Map(rows.map((row) => [rowKey(row), row]));
+  const ordered: T[] = [];
+  const seen = new Set<string>();
+  for (const key of keys) {
+    const row = byKey.get(key);
+    if (!row || seen.has(key)) continue;
+    ordered.push(row);
+    seen.add(key);
+  }
+  for (const row of rows) {
+    const key = rowKey(row);
+    if (seen.has(key)) continue;
+    ordered.push(row);
+    seen.add(key);
+  }
+  return ordered;
 }
 
 function compare(a: SortValue, b: SortValue): number {
