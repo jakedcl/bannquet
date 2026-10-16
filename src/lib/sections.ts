@@ -93,7 +93,7 @@ export function linkOn(pathname: string, search: string, href: string): boolean 
   const [path, query] = href.split('?');
   if (path.startsWith('/user/')) return pathname === path;
   if (path === '/members' && pathname.startsWith('/user/')) return true;
-  if (path === '/fishing') return pathname === '/fishing';
+  if (path === '/fishing') return pathname === '/fishing' || /^\/fishing\/\d+$/.test(pathname);
   if (!query) return pathOn(pathname, path);
   if (pathname !== path) return false;
   const want = new URLSearchParams(query);
@@ -318,6 +318,16 @@ export function pageTrail(pathname: string, search: string, account: NavAccount,
 
   if (pathname === '/fishing') {
     return { parentHref: '/', crumbs: [{ href: '/fishing', label: 'Fishing' }] };
+  }
+
+  if (/^\/fishing\/\d+$/.test(pathname)) {
+    return {
+      parentHref: '/fishing',
+      crumbs: [
+        { href: '/fishing', label: 'Fishing' },
+        named(pathname, 'Gauge', leaf),
+      ],
+    };
   }
 
   if (pathOn(pathname, '/fishing')) {

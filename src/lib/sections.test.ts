@@ -99,4 +99,11 @@ test('fishing is its own section, outside community', () => {
 
   const guides = pageTrail('/fishing/guides', '', nobody);
   assert.deepEqual(guides.crumbs?.map((crumb) => crumb.label), ['Fishing', 'Guides']);
+
+  assert.equal(linkOn('/fishing/01362500', '', '/fishing'), true);
+  assert.equal(linkOn('/fishing/01362500', '', '/fishing/stocking'), false);
+  const spot = pageTrail('/fishing/01362500', '', nobody, 'Esopus Creek');
+  assert.equal(spot.parentHref, '/fishing');
+  assert.deepEqual(spot.crumbs?.map((crumb) => crumb.label), ['Fishing', 'Esopus Creek']);
+  assert.deepEqual(pageTrail('/fishing/01362500', '', nobody).crumbs?.map((crumb) => crumb.label), ['Fishing', 'Gauge']);
 });

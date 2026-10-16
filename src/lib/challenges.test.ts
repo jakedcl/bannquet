@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { challengeProgress, climbButtonLabel, groupPeaks, loadChallenges, loadGroups, peaksNearTrack, SUMMIT_MATCH_METERS } from './challenges';
+import { challengeProgress, climbButtonLabel, groupPeaks, loadChallenges, loadGroups, peaksNearTrack, suggestSummits, SUMMIT_MATCH_METERS, SUMMIT_SUGGEST_METERS } from './challenges';
 
 test('the starter challenges are the Adirondack 46 and the New Hampshire 48', () => {
   const challenges = loadChallenges();
@@ -47,6 +47,18 @@ test('a route credits a summit it passes and ignores the next mountain', () => {
   const east = { lat: marcy.lat, lng: marcy.lng + 300 / (111_320 * Math.cos((marcy.lat * Math.PI) / 180)), ele: null };
   assert.deepEqual(peaksNearTrack([west, east], [marcy]), ['adk46_marcy']);
   assert.ok(SUMMIT_MATCH_METERS < 200);
+  assert.equal(SUMMIT_SUGGEST_METERS, 50);
+});
+
+test('a route suggests a summit within 50 m and skips one already climbed', () => {
+  const marcy = loadChallenges().flatMap((challenge) => challenge.peaks).find((peak) => peak.slug === 'adk46_marcy');
+  const algonquin = loadChallenges().flatMap((challenge) => challenge.peaks).find((peak) => peak.slug === 'adk46_algonquin_peak');
+  assert.ok(marcy && algonquin);
+  const close = { lat: marcy.lat + 40 / 111_320, lng: marcy.lng, ele: null };
+  const hundred = { lat: marcy.lat + 100 / 111_320, lng: marcy.lng, ele: null };
+  assert.deepEqual(suggestSummits([close], new Set(), [marcy, algonquin]), [{ slug: marcy.slug, name: marcy.name }]);
+  assert.deepEqual(suggestSummits([hundred], new Set(), [marcy, algonquin]), []);
+  assert.deepEqual(suggestSummits([close], new Set([marcy.slug]), [marcy, algonquin]), []);
 });
 
 test('finishing every peak on a list is the only way to complete it', () => {

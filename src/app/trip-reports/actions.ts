@@ -3,6 +3,7 @@
 import { redirect } from 'next/navigation';
 import { getViewer } from '@/app/sign-in/actions';
 import { isActivity, type Activity } from '@/lib/activities';
+import { suggestSummits } from '@/lib/challenges';
 import { packTrack, unpackTrack, type PackedTrack } from '@/lib/gpx';
 import { APPROVAL_WAIT, canContribute } from '@/lib/membership';
 import { redirectToSignIn } from '@/lib/sign-in-redirect';
@@ -11,7 +12,20 @@ import { isLatLng } from '@/lib/photos';
 import { isPostKind, type PostKind } from '@/lib/post-kinds';
 import { addProfilePhotos, addProfileTrack, parseUploadedPhotos, type PreparedPhoto } from '@/lib/posts';
 import { cleanRouteNotes, cleanRouteTitle, routeTitle } from '@/lib/route-title';
+import { climbedPeakSlugs } from '@/lib/summits';
 import type { DraftItem } from '@/lib/trip-draft';
+
+type SummitSuggestion = { slug: string; name: string };
+
+async function summitsOnTrack(userId: string, track: PackedTrack): Promise<SummitSuggestion[]> {
+  try {
+    const climbed = await climbedPeakSlugs(userId);
+    return suggestSummits(track.points, climbed);
+  } catch (err) {
+    console.error('Summit suggestions did not load', err);
+    return [];
+  }
+}
 
 const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
 const ID_PATTERN = /^[A-Za-z0-9_-]{8,80}$/;
@@ -111,9 +125,9 @@ export async function savePostEdits(
 }
 
 export async function publishProfileTrack(
-  _prev: { error?: string; saved?: true; created?: DraftItem[] } | null,
+  _prev: { error?: string; saved?: true; created?: DraftItem[]; suggestions?: SummitSuggestion[]; continueTo?: string } | null,
   formData: FormData,
-): Promise<{ error?: string; saved?: true; created?: DraftItem[] }> {
+): Promise<{ error?: string; saved?: true; created?: DraftItem[]; suggestions?: SummitSuggestion[]; continueTo?: string }> {
   const viewer = await getViewer();
   if (!viewer) return redirectToSignIn();
   if (!canContribute(viewer.role)) return { error: APPROVAL_WAIT };
@@ -130,11 +144,16 @@ export async function publishProfileTrack(
     return { error: 'Could not save that route. Try again in a minute.' };
   }
   const created: DraftItem[] = [{ kind: 'route', id, label: routeTitle(title), thumb: null }];
-  if (formData.get('inline') === '1') return { created };
+  const suggestions = await summitsOnTrack(viewer.id, track.track);
   const next = String(formData.get('next') ?? '');
-  if (next === 'existing') redirect(`/routes/${id}?addTrip=1`);
-  if (next === 'new') redirect(`/upload?kind=trip&route=${id}`);
-  return { saved: true };
+  const continueTo = next === 'existing'
+    ? `/routes/${id}?addTrip=1`
+    : next === 'new'
+      ? `/upload?kind=trip&route=${id}`
+      : undefined;
+  if (formData.get('inline') === '1') return { created, suggestions };
+  if (continueTo && suggestions.length === 0) redirect(continueTo);
+  return { saved: true, created, suggestions, continueTo };
 }
 
 export async function publishProfilePhotos(

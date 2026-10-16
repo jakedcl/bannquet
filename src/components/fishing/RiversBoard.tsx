@@ -1,7 +1,8 @@
 'use client';
 
 import dynamic from 'next/dynamic';
-import { useMemo, useState, type ReactNode } from 'react';
+import { useMemo, useState } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { DataTable, type DataColumn } from '@/components/ui/DataTable';
 import { FilterPills } from '@/components/ui/FilterPills';
@@ -55,18 +56,14 @@ export function RiversBoard({
   parking,
   parkingError,
   parkingTruncated,
-  selected,
   now,
-  forecast,
 }: {
   gauges: GaugeView[];
   gaugesUnavailable?: boolean;
   parking: ParkingArea[];
   parkingError: string | null;
   parkingTruncated: boolean;
-  selected: string | null;
   now: number;
-  forecast: ReactNode;
 }) {
   const router = useRouter();
   const [query, setQuery] = useState('');
@@ -102,8 +99,8 @@ export function RiversBoard({
     });
   }, [county, parking, parkingQuery]);
 
-  function select(site: string) {
-    router.push(site === selected ? '/fishing' : `/fishing?site=${site}`, { scroll: false });
+  function openSpot(site: string) {
+    router.push(`/fishing/${site}`);
   }
 
   const columns: DataColumn<GaugeView>[] = [
@@ -114,10 +111,9 @@ export function RiversBoard({
       sortValue: (gauge) => gauge.name,
       cell: (gauge) => (
         <span className="inline-flex max-w-full items-baseline gap-2">
-          <button type="button" onClick={() => select(gauge.site)} title={gauge.name} className="min-w-0 truncate text-left font-bold underline">
+          <Link href={`/fishing/${gauge.site}`} title={gauge.name} className="min-w-0 truncate text-left font-bold underline">
             {gauge.name}
-          </button>
-          {selected === gauge.site ? <span className="shrink-0 text-xs font-bold uppercase">Selected</span> : null}
+          </Link>
           <a href={gauge.usgsHref} target="_blank" rel="noopener noreferrer" className="shrink-0 whitespace-nowrap text-xs underline">
             USGS
           </a>
@@ -207,7 +203,6 @@ export function RiversBoard({
 
   return (
     <div className="space-y-4">
-      {forecast ? <div key="forecast">{forecast}</div> : null}
       <div className="space-y-2">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <p className="text-xs font-bold uppercase">Map</p>
@@ -220,9 +215,8 @@ export function RiversBoard({
           <FishingMap
             gauges={shown}
             parking={showParking ? parkingShown : []}
-            selected={selected}
             showParking={showParking}
-            onSelect={select}
+            onSelect={openSpot}
           />
         </div>
         <p className="text-xs text-gray-700">
@@ -246,7 +240,7 @@ export function RiversBoard({
         columns={columns}
         rowKey={(gauge) => gauge.site}
         empty={gaugesUnavailable ? 'Data unavailable' : gaugeFiltered ? 'No gauges match.' : 'No gauges came back.'}
-        onRowClick={(gauge) => select(gauge.site)}
+        onRowClick={(gauge) => openSpot(gauge.site)}
         defaultSort={{ id: 'name', dir: 'asc' }}
         collapsed
       />
