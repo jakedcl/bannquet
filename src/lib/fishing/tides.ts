@@ -81,10 +81,13 @@ async function predictions(stationId: string, begin: string, end: string, interv
 }
 
 async function readTides(stationId: string, begin: string, end: string): Promise<TideSet> {
-  const [extremes, curve] = await Promise.all([
-    predictions(stationId, begin, end, 'hilo'),
-    predictions(stationId, begin, end, '30'),
-  ])
+  const extremes = await predictions(stationId, begin, end, 'hilo')
+  let curve: Prediction[] = []
+  try {
+    curve = await predictions(stationId, begin, end, '30')
+  } catch (error) {
+    console.error('NOAA tide curve did not load', stationId, error)
+  }
   return { extremes: parseExtremes(extremes), curve: parseCurve(curve) }
 }
 

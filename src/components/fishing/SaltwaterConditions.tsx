@@ -86,7 +86,7 @@ export function SaltwaterConditions({
           <div className="retro-box-inset bg-white">
             <TideChart curve={tides.curve} extremes={tides.extremes} />
           </div>
-        ) : (
+        ) : tides ? null : (
           <p className="text-sm font-bold">{UNAVAILABLE}</p>
         )}
 

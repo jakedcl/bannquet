@@ -108,12 +108,42 @@ async function nws<T>(url: string): Promise<T> {
   return response.json() as Promise<T>
 }
 
-async function readMarine(lat: number, lon: number): Promise<MarineForecast> {
+export function pickMarineZone(urls: (string | null | undefined)[]): string | null {
+  for (const url of urls) {
+    const id = url?.split('/').pop() ?? ''
+    if (id.startsWith('ANZ')) return url ?? null
+  }
+  return null
+}
+
+async function forecastZoneAt(lat: number, lon: number): Promise<string | null> {
   const point = await nws<{ properties?: { forecastZone?: string } }>(
     `https://api.weather.gov/points/${lat.toFixed(4)},${lon.toFixed(4)}`,
   )
-  const zoneUrl = point.properties?.forecastZone
-  if (!zoneUrl) throw new Error('NWS point had no marine zone')
+  return point.properties?.forecastZone ?? null
+}
+
+async function marineZoneUrl(lat: number, lon: number): Promise<string> {
+  const direct = await forecastZoneAt(lat, lon)
+  const exact = pickMarineZone([direct])
+  if (exact) return exact
+  const directions = [[0, 1], [0, -1], [1, 0], [-1, 0]]
+  for (const step of [0.04, 0.08]) {
+    const nearby = await Promise.all(directions.map(async ([north, east]) => {
+      try {
+        return await forecastZoneAt(lat + north * step, lon + east * step)
+      } catch {
+        return null
+      }
+    }))
+    const marine = pickMarineZone(nearby)
+    if (marine) return marine
+  }
+  throw new Error('NWS point had no marine zone')
+}
+
+async function readMarine(lat: number, lon: number): Promise<MarineForecast> {
+  const zoneUrl = await marineZoneUrl(lat, lon)
   const [zone, forecast, alerts] = await Promise.all([
     nws<{ properties?: { id?: string; name?: string } }>(zoneUrl),
     nws<{ properties?: { periods?: { name?: string; detailedForecast?: string }[] } }>(`${zoneUrl}/forecast`),
@@ -142,7 +172,7 @@ async function readMarine(lat: number, lon: number): Promise<MarineForecast> {
 
 export const loadWater = unstable_cache(readWater, ['noaa-water-temp-v1'], { revalidate: 900 })
 export const loadWind = unstable_cache(readWind, ['noaa-wind-v1'], { revalidate: 900 })
-export const loadMarine = unstable_cache(readMarine, ['nws-marine-zone-v1'], { revalidate: 900 })
+export const loadMarine = unstable_cache(readMarine, ['nws-marine-zone-v2'], { revalidate: 900 })
 
 export function sensorOrder(lat: number, lon: number): string[] {
   return nearestSensor(lat, lon).map((sensor: SensorStation) => sensor.id)

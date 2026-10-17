@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
-import { sensorOrder } from '@/lib/fishing/marine'
+import { pickMarineZone, sensorOrder } from '@/lib/fishing/marine'
 import { tideStation } from '@/lib/fishing/tide-stations'
 
 test('Great Kills is the default, and each picker station keeps its CO-OPS id', () => {
@@ -10,6 +10,14 @@ test('Great Kills is the default, and each picker station keeps its CO-OPS id', 
   assert.equal(tideStation('bergen-point').id, '8519483')
   assert.equal(tideStation('princes-bay').id, '8519726')
   assert.equal(tideStation('sandy-hook').id, '8531680')
+})
+
+test('a land forecast zone is skipped for the marine zone', () => {
+  assert.equal(pickMarineZone([
+    'https://api.weather.gov/zones/forecast/NYZ074',
+    'https://api.weather.gov/zones/forecast/ANZ338',
+  ]), 'https://api.weather.gov/zones/forecast/ANZ338')
+  assert.equal(pickMarineZone(['https://api.weather.gov/zones/forecast/NYZ074']), null)
 })
 
 test('harbor stations take Battery water, and the south shore takes Sandy Hook', () => {
