@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
-import { assembleFreshwaterRows } from '@/lib/fishing/freshwater-rows'
+import { assembleFreshwaterRows, freshwaterLayout } from '@/lib/fishing/freshwater-rows'
 import type { FishingLake } from '@/lib/fishing/lakes'
 import type { MaineStockingRow } from '@/lib/fishing/maine-stocking'
 import type { GaugeView } from '@/lib/fishing/readings'
@@ -84,8 +84,25 @@ test('all states and all types share one list, with links where a state has no t
   assert.equal(listing.rows.some((row) => row.stateCode === 'ny' && row.kind === 'Stocking' && row.external), false)
   assert.equal(listing.sourceLinks.some((link) => link.href.includes('e52k-ymww')), true)
   const pequest = listing.rows.find((row) => row.site === '01445500')
-  assert.equal(pequest?.detail, 'High, 2x normal, rising · 120 cfs · 55.0 °F')
+  assert.equal(pequest?.status, 'High, 2x normal, rising')
+  assert.equal(pequest?.flow, '120 cfs')
+  assert.equal(pequest?.temp, '55.0 °F')
   assert.equal(pequest?.href, '/fishing/01445500')
+  const ashokan = listing.rows.find((row) => row.name === 'Ashokan Reservoir')
+  assert.equal(ashokan?.status, 'Walleye')
+  assert.equal(ashokan?.species, 'Walleye')
+  assert.equal(ashokan?.launch, 'Boat launch')
+  assert.equal(ashokan?.href, null)
+  const esopus = listing.rows.find((row) => row.name === 'Esopus Creek')
+  assert.equal(esopus?.status, 'April 2025')
+  assert.equal(esopus?.number, '1000')
+  const vermont = listing.rows.find((row) => row.stateCode === 'vt' && row.kind === 'Lake')
+  assert.equal(vermont?.status, null)
+  assert.equal(freshwaterLayout('all', 'rivers'), 'summary')
+  assert.equal(freshwaterLayout('ny', 'all'), 'summary')
+  assert.equal(freshwaterLayout('nj', 'rivers'), 'River')
+  assert.equal(freshwaterLayout('ny', 'lakes'), 'Lake')
+  assert.equal(freshwaterLayout('me', 'stocking'), 'Stocking')
 })
 
 test('a state with only link-outs still has rows, and a rivers-only filter keeps a links section', () => {

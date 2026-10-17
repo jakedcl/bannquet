@@ -11,10 +11,11 @@ import {
 } from '@/lib/fishing/freshwater-states'
 import type { FishingLake } from '@/lib/fishing/lakes'
 import type { MaineStockingRow } from '@/lib/fishing/maine-stocking'
-import { plainWaterName, type GaugeView } from '@/lib/fishing/readings'
+import { parseGaugeNumber, plainWaterName, type FieldState, type GaugeView } from '@/lib/fishing/readings'
 import type { ActualStocking } from '@/lib/fishing/stocking'
 
 export type FreshwaterKind = 'River' | 'Lake' | 'Stocking'
+export type FreshwaterLayout = 'summary' | FreshwaterKind
 
 export type FreshwaterRow = {
   id: string
@@ -22,11 +23,53 @@ export type FreshwaterRow = {
   stateLabel: string
   stateCode: FreshwaterState | null
   kind: FreshwaterKind
-  detail: string
+  /** Verdict, species, or last stocked date. Empty values render as a dash in the mixed list. */
+  status: string | null
   href: string | null
   external: boolean
+  usgsHref: string | null
   search: string
   site: string | null
+  flow: string | null
+  flowSort: number | null
+  flowState: FieldState | null
+  temp: string | null
+  tempState: FieldState | null
+  verdict: string | null
+  county: string | null
+  species: string | null
+  launch: string | null
+  when: string | null
+  number: string | null
+  numberSort: number | null
+}
+
+const EMPTY_FIELDS = {
+  status: null,
+  href: null,
+  external: false,
+  usgsHref: null,
+  site: null,
+  flow: null,
+  flowSort: null,
+  flowState: null,
+  temp: null,
+  tempState: null,
+  verdict: null,
+  county: null,
+  species: null,
+  launch: null,
+  when: null,
+  number: null,
+  numberSort: null,
+} satisfies Omit<FreshwaterRow, 'id' | 'name' | 'stateLabel' | 'stateCode' | 'kind' | 'search'>
+
+/** All states or all types share one short table. One state and one type keep that type's columns. */
+export function freshwaterLayout(state: FreshwaterStateFilter, tab: FreshwaterTab): FreshwaterLayout {
+  if (state === 'all' || tab === 'all') return 'summary'
+  if (tab === 'lakes') return 'Lake'
+  if (tab === 'stocking') return 'Stocking'
+  return 'River'
 }
 
 export type FreshwaterSources = {
@@ -51,15 +94,15 @@ function haystack(...parts: (string | null | undefined)[]): string {
   return parts.filter((part) => part && part.trim()).join(' ').toLowerCase()
 }
 
-function joinDetail(parts: (string | null | undefined)[], empty: string): string {
-  const text = parts.filter((part): part is string => Boolean(part && part.trim()))
-  return text.length > 0 ? text.join(' · ') : empty
+function leadingNumber(value: string | null): number | null {
+  if (!value) return null
+  return parseGaugeNumber(value.split(' ')[0] ?? '')
 }
 
-function riverDetail(gauge: GaugeView): string {
-  const flow = gauge.flowState === 'value' ? gauge.flow : null
-  const temp = gauge.tempState === 'value' ? gauge.temp : null
-  return joinDetail([gauge.verdict, flow, temp], 'No current reading')
+function countNumber(value: string | null): number | null {
+  if (!value) return null
+  const parsed = Number(value.replace(/,/g, ''))
+  return Number.isFinite(parsed) ? parsed : null
 }
 
 export function assembleFreshwaterRows(
@@ -81,18 +124,28 @@ export function assembleFreshwaterRows(
       const code = freshwaterStateCode(gauge.state)
       if (state !== 'all' && code !== state) continue
       const name = plainWaterName(gauge.name)
-      const detail = riverDetail(gauge)
+      const flow = gauge.flowState === 'value' ? gauge.flow : null
+      const temp = gauge.tempState === 'value' ? gauge.temp : null
+      const verdict = gauge.verdict?.trim() ? gauge.verdict : null
       rows.push({
+        ...EMPTY_FIELDS,
         id: `river-${gauge.site}`,
         name,
         stateLabel: code ? freshwaterStateLabel(code) : '—',
         stateCode: code,
         kind: 'River',
-        detail,
+        status: verdict,
         href: `/fishing/${gauge.site}`,
-        external: false,
-        search: haystack(name, gauge.name, gauge.county, gauge.state, gauge.region, gauge.site, detail, 'river'),
+        usgsHref: gauge.usgsHref,
+        search: haystack(name, gauge.name, gauge.county, gauge.state, gauge.region, gauge.site, verdict, flow, temp, 'river'),
         site: gauge.site,
+        flow,
+        flowSort: leadingNumber(flow),
+        flowState: gauge.flowState,
+        temp,
+        tempState: gauge.tempState,
+        verdict,
+        county: gauge.county,
       })
     }
   }
@@ -100,18 +153,18 @@ export function assembleFreshwaterRows(
   if (nyLakes) {
     for (const lake of sources.lakes) {
       const name = plainWaterName(lake.name)
-      const detail = joinDetail([lake.species, lake.launch], 'Public water')
       rows.push({
+        ...EMPTY_FIELDS,
         id: `lake-${lake.id}`,
         name,
         stateLabel: 'NY',
         stateCode: 'ny',
         kind: 'Lake',
-        detail,
-        href: null,
-        external: false,
-        search: haystack(name, lake.county, lake.species, lake.launch, lake.note, detail, 'lake', 'ny'),
-        site: null,
+        status: lake.species,
+        search: haystack(name, lake.county, lake.species, lake.launch, lake.note, 'lake', 'ny'),
+        county: lake.county,
+        species: lake.species,
+        launch: lake.launch,
       })
     }
   }
@@ -119,18 +172,20 @@ export function assembleFreshwaterRows(
   if (nyStocked) {
     for (const row of sources.nyStocking) {
       const name = plainWaterName(row.waterbody)
-      const detail = joinDetail([row.when, row.species, row.number], row.when)
       rows.push({
+        ...EMPTY_FIELDS,
         id: `ny-stock-${row.id}`,
         name,
         stateLabel: 'NY',
         stateCode: 'ny',
         kind: 'Stocking',
-        detail,
-        href: null,
-        external: false,
-        search: haystack(name, row.county, row.town, row.species, row.when, detail, 'stocking', 'ny'),
-        site: null,
+        status: row.when,
+        search: haystack(name, row.county, row.town, row.species, row.when, row.number, 'stocking', 'ny'),
+        county: row.county,
+        species: row.species,
+        when: row.when,
+        number: row.number,
+        numberSort: countNumber(row.number),
       })
     }
     sourceLinks.push(...(STOCKING_LINKS.ny ?? []))
@@ -139,18 +194,20 @@ export function assembleFreshwaterRows(
   if (meStocked) {
     sources.meStocking.forEach((row, index) => {
       const name = plainWaterName(row.water)
-      const detail = joinDetail([row.date, row.species, row.quantity], row.date)
       rows.push({
+        ...EMPTY_FIELDS,
         id: `me-stock-${row.date}-${row.water}-${index}`,
         name,
         stateLabel: 'ME',
         stateCode: 'me',
         kind: 'Stocking',
-        detail,
-        href: null,
-        external: false,
-        search: haystack(name, row.county, row.town, row.species, row.date, detail, 'stocking', 'me'),
-        site: null,
+        status: row.date,
+        search: haystack(name, row.county, row.town, row.species, row.date, row.quantity, 'stocking', 'me'),
+        county: row.county,
+        species: row.species,
+        when: row.date,
+        number: row.quantity,
+        numberSort: countNumber(row.quantity),
       })
     })
     sourceLinks.push(...(STOCKING_LINKS.me ?? []))
@@ -174,16 +231,15 @@ export function assembleFreshwaterRows(
 
 function linkRow(code: FreshwaterState, kind: FreshwaterKind, link: OutboundLink, index: number): FreshwaterRow {
   return {
+    ...EMPTY_FIELDS,
     id: `link-${kind.toLowerCase()}-${code}-${index}`,
     name: link.label,
     stateLabel: freshwaterStateLabel(code),
     stateCode: code,
     kind,
-    detail: link.note,
     href: link.href,
     external: true,
     search: haystack(link.label, link.note, kind, freshwaterStateLabel(code), 'link'),
-    site: null,
   }
 }
 

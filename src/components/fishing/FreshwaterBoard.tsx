@@ -7,27 +7,60 @@ import { useRouter } from 'next/navigation';
 import { DataTable, type DataColumn } from '@/components/ui/DataTable';
 import { FilterPills } from '@/components/ui/FilterPills';
 import { SearchBar } from '@/components/ui/SearchBar';
-import type { FreshwaterRow } from '@/lib/fishing/freshwater-rows';
+import type { FreshwaterLayout, FreshwaterRow } from '@/lib/fishing/freshwater-rows';
 import type { ParkingArea } from '@/lib/fishing/pfr';
-import type { GaugeView } from '@/lib/fishing/readings';
+import type { FieldState, GaugeView } from '@/lib/fishing/readings';
 
 const FishingMap = dynamic(() => import('@/components/fishing/FishingMap'), {
   ssr: false,
   loading: () => <p className="text-sm">Loading the map.</p>,
 });
 
-function line(value: string) {
+const DASH = '—';
+
+function line(value: string | null) {
+  if (!value) return DASH;
   return <span className="block max-w-xs truncate" title={value}>{value}</span>;
+}
+
+function reading(state: FieldState | null, value: string | null) {
+  if (state === 'value' && value) return <span className="whitespace-nowrap">{value}</span>;
+  return state === 'not-measured' ? 'Not measured' : 'No current reading';
+}
+
+function waterName(row: FreshwaterRow, linked: boolean) {
+  const name = linked && row.href
+    ? row.external
+      ? <a href={row.href} target="_blank" rel="noopener noreferrer" className="font-bold underline" title={row.name}>{row.name}</a>
+      : <Link href={row.href} className="font-bold underline" title={row.name}>{row.name}</Link>
+    : <span className="font-bold" title={row.name}>{row.name}</span>;
+  if (!linked || !row.usgsHref) return name;
+  return (
+    <span className="inline-flex max-w-full items-baseline gap-2">
+      {name}
+      <a href={row.usgsHref} target="_blank" rel="noopener noreferrer" className="shrink-0 whitespace-nowrap text-xs underline">USGS</a>
+    </span>
+  );
+}
+
+function linkCell(row: FreshwaterRow) {
+  if (!row.href) return DASH;
+  const label = row.external ? 'Site' : 'Page';
+  return row.external
+    ? <a href={row.href} target="_blank" rel="noopener noreferrer" className="underline" title={row.href}>{label}</a>
+    : <Link href={row.href} className="underline">{label}</Link>;
 }
 
 export function FreshwaterBoard({
   rows,
+  layout,
   gauges,
   parking,
   parkingError,
   parkingTruncated,
 }: {
   rows: FreshwaterRow[];
+  layout: FreshwaterLayout;
   gauges: GaugeView[];
   parking: ParkingArea[];
   parkingError: string | null;
@@ -66,34 +99,41 @@ export function FreshwaterBoard({
     });
   }, [county, parking, parkingQuery]);
 
-  const columns: DataColumn<FreshwaterRow>[] = [
-    {
-      id: 'name',
-      header: 'Water',
-      sticky: true,
-      sortValue: (row) => row.name,
-      cell: (row) => {
-        if (row.href && row.external) {
-          return (
-            <a href={row.href} target="_blank" rel="noopener noreferrer" className="font-bold underline" title={row.name}>
-              {row.name}
-            </a>
-          );
-        }
-        if (row.href) {
-          return (
-            <Link href={row.href} className="font-bold underline" title={row.name}>
-              {row.name}
-            </Link>
-          );
-        }
-        return <span className="font-bold" title={row.name}>{row.name}</span>;
-      },
-    },
-    { id: 'state', header: 'State', sortValue: (row) => row.stateLabel, cell: (row) => row.stateLabel },
-    { id: 'kind', header: 'Type', sortValue: (row) => row.kind, cell: (row) => row.kind },
-    { id: 'detail', header: 'Detail', sortValue: (row) => row.detail, cell: (row) => line(row.detail) },
-  ];
+  const nameColumn = (header: string, linked: boolean): DataColumn<FreshwaterRow> => ({
+    id: 'name',
+    header,
+    sticky: true,
+    sortValue: (row) => row.name,
+    cell: (row) => waterName(row, linked),
+  });
+  const columns: DataColumn<FreshwaterRow>[] = layout === 'summary'
+    ? [
+      nameColumn('Water', false),
+      { id: 'state', header: 'State', sortValue: (row) => row.stateLabel, cell: (row) => row.stateLabel },
+      { id: 'kind', header: 'Type', sortValue: (row) => row.kind, cell: (row) => row.kind },
+      { id: 'status', header: 'Status', sortValue: (row) => row.status, cell: (row) => line(row.status) },
+      { id: 'link', header: 'Link', sortValue: (row) => (row.href ? (row.external ? 'Site' : 'Page') : null), cell: linkCell },
+    ]
+    : layout === 'River'
+      ? [
+        nameColumn('River', true),
+        { id: 'flow', header: 'Flow (cfs)', align: 'right', sortValue: (row) => row.flowSort, cell: (row) => reading(row.flowState, row.flow) },
+        { id: 'temp', header: 'Water', sortValue: (row) => row.temp, cell: (row) => reading(row.tempState, row.temp) },
+        { id: 'verdict', header: 'Verdict', sortValue: (row) => row.verdict, cell: (row) => line(row.verdict) },
+      ]
+      : layout === 'Lake'
+        ? [
+          nameColumn('Water', true),
+          { id: 'county', header: 'County', sortValue: (row) => row.county, cell: (row) => line(row.county) },
+          { id: 'species', header: 'Species', sortValue: (row) => row.species, cell: (row) => line(row.species) },
+          { id: 'launch', header: 'Launch', sortValue: (row) => row.launch, cell: (row) => line(row.launch) },
+        ]
+        : [
+          nameColumn('Water', true),
+          { id: 'when', header: 'When', sortValue: (row) => row.when, cell: (row) => line(row.when) },
+          { id: 'species', header: 'Species', sortValue: (row) => row.species, cell: (row) => line(row.species) },
+          { id: 'number', header: 'Number', align: 'right', sortValue: (row) => row.numberSort, cell: (row) => row.number || DASH },
+        ];
 
   const parkingColumns: DataColumn<ParkingArea>[] = [
     {

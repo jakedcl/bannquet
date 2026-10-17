@@ -5,7 +5,7 @@ import PageWrapper from '@/components/ui/PageWrapper';
 import { easternDate } from '@/lib/fishing/clock';
 import { easternMonthDay, loadDailyMedians } from '@/lib/fishing/daily-stats';
 import { withVerdicts } from '@/lib/fishing/flow-verdict';
-import { assembleFreshwaterRows } from '@/lib/fishing/freshwater-rows';
+import { assembleFreshwaterRows, freshwaterLayout } from '@/lib/fishing/freshwater-rows';
 import {
   FRESHWATER_STATE_FILTERS,
   freshwaterHref,
@@ -85,6 +85,7 @@ export default async function FreshwaterPage({
           {loaded.problems.map((problem) => <p key={problem} className="mb-3 text-sm font-bold">{problem}</p>)}
           <FreshwaterBoard
             rows={listing.rows}
+            layout={freshwaterLayout(state, tab)}
             gauges={gauges}
             parking={loaded.parking}
             parkingError={loaded.parkingError}
