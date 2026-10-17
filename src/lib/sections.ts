@@ -71,9 +71,8 @@ export type PageTrail = {
 };
 
 export const FISHING_LINKS: NavLink[] = [
-  { href: '/fishing', label: 'Mountain fishing' },
-  { href: '/fishing/stocking', label: 'Stocking' },
-  { href: '/fishing/guides', label: 'Guides' },
+  { href: '/fishing/saltwater', label: 'Saltwater' },
+  { href: '/fishing/freshwater', label: 'Freshwater' },
 ];
 
 export type SectionMatch = {
@@ -93,7 +92,8 @@ export function linkOn(pathname: string, search: string, href: string): boolean 
   const [path, query] = href.split('?');
   if (path.startsWith('/user/')) return pathname === path;
   if (path === '/members' && pathname.startsWith('/user/')) return true;
-  if (path === '/fishing') return pathname === '/fishing' || /^\/fishing\/\d+$/.test(pathname);
+  if (path === '/fishing') return pathname === '/fishing';
+  if (path === '/fishing/freshwater') return pathname === path || /^\/fishing\/\d+$/.test(pathname);
   if (!query) return pathOn(pathname, path);
   if (pathname !== path) return false;
   const want = new URLSearchParams(query);
@@ -324,10 +324,22 @@ export function pageTrail(pathname: string, search: string, account: NavAccount,
 
   if (/^\/fishing\/\d+$/.test(pathname)) {
     return {
+      parentHref: '/fishing/freshwater',
+      crumbs: [
+        { href: '/fishing', label: 'Fishing' },
+        { href: '/fishing/freshwater', label: 'Freshwater' },
+        named(pathname, 'Gauge', leaf),
+      ],
+    };
+  }
+
+  if (pathname === '/fishing/stocking' || pathname === '/fishing/guides') {
+    const label = pathname === '/fishing/stocking' ? 'Stocking' : 'Guides';
+    return {
       parentHref: '/fishing',
       crumbs: [
         { href: '/fishing', label: 'Fishing' },
-        named(pathname, 'Gauge', leaf),
+        { href: pathname, label },
       ],
     };
   }

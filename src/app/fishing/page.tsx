@@ -1,9 +1,13 @@
+import Link from 'next/link';
 import { redirect } from 'next/navigation';
+import { DashboardGrid } from '@/components/ui/DashboardGrid';
+import { DashboardWindow } from '@/components/ui/DashboardWindow';
 import PageWrapper from '@/components/ui/PageWrapper';
-import { Window } from '@/components/retro/Window';
-import { RiversBoard } from '@/components/fishing/RiversBoard';
-import { loadParkingAreas } from '@/lib/fishing/pfr';
+import { addCalendarDays, easternDate, formatEasternTime } from '@/lib/fishing/clock';
+import { loadWater, loadWind, type WaterReading, type WindReading } from '@/lib/fishing/marine';
 import type { GaugeView } from '@/lib/fishing/readings';
+import { DEFAULT_TIDE_STATION } from '@/lib/fishing/tide-stations';
+import { loadTides, nextExtreme, type TideSet } from '@/lib/fishing/tides';
 import { loadMountainGauges } from '@/lib/fishing/usgs';
 
 export const dynamic = 'force-dynamic';
@@ -18,44 +22,77 @@ export default async function FishingPage({
   const site = (await searchParams).site;
   if (site && /^\d+$/.test(site)) redirect(`/fishing/${site}`);
 
+  // eslint-disable-next-line react-hooks/purity
+  const now = Date.now();
+  const station = DEFAULT_TIDE_STATION;
+  const begin = easternDate(now);
+
+  let tides: TideSet | null = null;
+  try {
+    tides = await loadTides(station.id, begin, addCalendarDays(begin, 1));
+  } catch {
+    console.error('Dashboard tides did not load');
+  }
+
+  let water: WaterReading | null = null;
+  try {
+    water = await loadWater(station.lat, station.lon);
+  } catch {
+    console.error('Dashboard water temperature did not load');
+  }
+
+  let wind: WindReading | null = null;
+  try {
+    wind = await loadWind(station.lat, station.lon);
+  } catch {
+    console.error('Dashboard wind did not load');
+  }
+
   let gauges: GaugeView[] = [];
   let gaugesUnavailable = false;
   try {
     gauges = await loadMountainGauges();
   } catch {
-    console.error('Mountain gauges did not load');
+    console.error('Dashboard gauges did not load');
     gaugesUnavailable = true;
   }
 
-  let parking: Awaited<ReturnType<typeof loadParkingAreas>> = { areas: [], truncated: false };
-  let parkingUnavailable = false;
-  try {
-    parking = await loadParkingAreas();
-  } catch {
-    console.error('Fishing parking did not load');
-    parkingUnavailable = true;
-  }
-
-  // Server clock so the age labels in the HTML match the client.
-  // eslint-disable-next-line react-hooks/purity
-  const now = Date.now();
+  const next = tides ? nextExtreme(tides.extremes, now) : null;
+  const rivers = gauges.filter((gauge) => gauge.flowState === 'value' && gauge.flow).slice(0, 4);
 
   return (
     <PageWrapper>
-      <div className="mx-auto max-w-6xl space-y-4 px-4 py-10">
-        <Window title="Mountain fishing">
-          <p className="mb-4 text-sm text-gray-700">
-            Mountain rivers in the Catskills, Adirondacks, Greens, Whites, and Maine.
-          </p>
-          <RiversBoard
-            gauges={gauges}
-            gaugesUnavailable={gaugesUnavailable}
-            parking={parking.areas}
-            parkingError={parkingUnavailable ? UNAVAILABLE : null}
-            parkingTruncated={parking.truncated}
-            now={now}
-          />
-        </Window>
+      <div className="mx-auto max-w-6xl px-4 py-6 md:py-10">
+        <DashboardGrid>
+          <DashboardWindow title="Next tide" href="/fishing/saltwater">
+            <p className="text-sm font-bold">{station.label}</p>
+            <p className="mt-1 text-sm">
+              {next ? `${next.kind === 'H' ? 'High' : 'Low'} ${next.feet.toFixed(1)} ft at ${formatEasternTime(next.time)}` : tides ? 'No upcoming tide' : UNAVAILABLE}
+            </p>
+          </DashboardWindow>
+          <DashboardWindow title="Water" href="/fishing/saltwater">
+            <p className="text-sm font-bold">{water ? `${water.fahrenheit.toFixed(1)} °F` : UNAVAILABLE}</p>
+            <p className="mt-1 text-sm">{water ? water.stationName : station.label}</p>
+          </DashboardWindow>
+          <DashboardWindow title="Wind" href="/fishing/saltwater">
+            <p className="text-sm font-bold">{wind ? wind.text : UNAVAILABLE}</p>
+            <p className="mt-1 text-sm">{wind ? wind.stationName : station.label}</p>
+          </DashboardWindow>
+          <DashboardWindow title="Rivers" href="/fishing/freshwater">
+            {gaugesUnavailable ? <p className="text-sm font-bold">{UNAVAILABLE}</p> : null}
+            {!gaugesUnavailable && rivers.length === 0 ? <p className="text-sm">No current readings.</p> : null}
+            <ul className="space-y-1">
+              {rivers.map((gauge) => (
+                <li key={gauge.site} className="truncate text-sm">
+                  <Link href={`/fishing/${gauge.site}`} className="font-bold underline">{gauge.name}</Link>
+                  {' '}
+                  {gauge.flow} cfs
+                  {gauge.trend ? ` ${gauge.trend}` : ''}
+                </li>
+              ))}
+            </ul>
+          </DashboardWindow>
+        </DashboardGrid>
       </div>
     </PageWrapper>
   );

@@ -10,7 +10,7 @@ import { MOTION_TWEEN } from '@/lib/motion';
 import { signOutAction } from '@/app/sign-in/actions';
 import { useRegion } from '@/contexts/RegionContext';
 import { REGION_OPTIONS } from '@/lib/regions';
-import { COMMUNITY_LINKS, UPLOAD_LINKS, WEATHER_LINKS, communitySection, pathOn, settingsHref, settingsLinks, settingsSection, visibleLinks } from '@/lib/sections';
+import { COMMUNITY_LINKS, FISHING_LINKS, UPLOAD_LINKS, WEATHER_LINKS, communitySection, pathOn, settingsHref, settingsLinks, settingsSection, visibleLinks } from '@/lib/sections';
 import { menuItemClass, NavButton } from './NavButton';
 import { SubmitButton } from '@/components/ui/SubmitButton';
 import { NavMenu } from './NavMenu';
@@ -169,9 +169,13 @@ function SiteNav({ account, pathname, home }: { account: HeaderAccount; pathname
           <NavButton href="/map" active={pathOn(pathname, '/map')}>
             Map
           </NavButton>
-          <NavButton href="/fishing" active={pathOn(pathname, '/fishing')}>
-            Fishing
-          </NavButton>
+          <NavMenu href="/fishing" label="Fishing" active={pathOn(pathname, '/fishing')}>
+            {FISHING_LINKS.map((item) => (
+              <Link key={item.href} href={item.href} className={menuItemClass(false)}>
+                {item.label}
+              </Link>
+            ))}
+          </NavMenu>
           <NavMenu href="/community" label="Community" active={communitySection(pathname, account)}>
             {COMMUNITY_LINKS.map((item) => (
               <Link key={item.href} href={item.href} className={menuItemClass(false)}>
@@ -237,9 +241,20 @@ function MobileNav({ account, pathname }: { account: HeaderAccount; pathname: st
       <NavButton href="/map" active={pathOn(pathname, '/map')} className="w-full">
         Map
       </NavButton>
-      <NavButton href="/fishing" active={pathOn(pathname, '/fishing')} className="w-full">
-        Fishing
-      </NavButton>
+      <NavMenu
+        layout="inline"
+        href="/fishing"
+        label="Fishing"
+        active={pathOn(pathname, '/fishing')}
+        open={openMenu === 'fishing'}
+        onOpen={() => setOpenMenu('fishing')}
+      >
+        {FISHING_LINKS.map((item) => (
+          <Link key={item.href} href={item.href} className={menuItemClass(true)}>
+            {item.label}
+          </Link>
+        ))}
+      </NavMenu>
       <NavMenu
         layout="inline"
         href="/community"

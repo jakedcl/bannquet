@@ -92,9 +92,11 @@ test('fishing is its own section, outside community', () => {
   assert.equal(main?.id, 'fishing');
   assert.equal(main?.label, 'Fishing');
   assert.equal(main?.landing, false);
-  assert.equal(main?.links.some((link) => link.href === '/fishing/guides'), true);
-  assert.equal(linkOn('/fishing', '', '/fishing'), true);
-  assert.equal(linkOn('/fishing/stocking', '', '/fishing'), false);
+  assert.equal(main?.links.some((link) => link.href === '/fishing/saltwater'), true);
+  assert.equal(main?.links.some((link) => link.href === '/fishing/freshwater'), true);
+  assert.equal(linkOn('/fishing', '', '/fishing/saltwater'), false);
+  assert.equal(linkOn('/fishing/saltwater', '', '/fishing/saltwater'), true);
+  assert.equal(linkOn('/fishing/saltwater', '', '/fishing/freshwater'), false);
   assert.equal(linkOn('/fishing/stocking', '', '/fishing/stocking'), true);
 
   const stocking = pageTrail('/fishing/stocking', '', nobody);
@@ -104,10 +106,13 @@ test('fishing is its own section, outside community', () => {
   const guides = pageTrail('/fishing/guides', '', nobody);
   assert.deepEqual(guides.crumbs?.map((crumb) => crumb.label), ['Fishing', 'Guides']);
 
-  assert.equal(linkOn('/fishing/01362500', '', '/fishing'), true);
-  assert.equal(linkOn('/fishing/01362500', '', '/fishing/stocking'), false);
+  const salt = pageTrail('/fishing/saltwater', '', nobody);
+  assert.deepEqual(salt.crumbs?.map((crumb) => crumb.label), ['Fishing', 'Saltwater']);
+
+  assert.equal(linkOn('/fishing/01362500', '', '/fishing/freshwater'), true);
+  assert.equal(linkOn('/fishing/01362500', '', '/fishing/saltwater'), false);
   const spot = pageTrail('/fishing/01362500', '', nobody, 'Esopus Creek');
-  assert.equal(spot.parentHref, '/fishing');
-  assert.deepEqual(spot.crumbs?.map((crumb) => crumb.label), ['Fishing', 'Esopus Creek']);
-  assert.deepEqual(pageTrail('/fishing/01362500', '', nobody).crumbs?.map((crumb) => crumb.label), ['Fishing', 'Gauge']);
+  assert.equal(spot.parentHref, '/fishing/freshwater');
+  assert.deepEqual(spot.crumbs?.map((crumb) => crumb.label), ['Fishing', 'Freshwater', 'Esopus Creek']);
+  assert.deepEqual(pageTrail('/fishing/01362500', '', nobody).crumbs?.map((crumb) => crumb.label), ['Fishing', 'Freshwater', 'Gauge']);
 });

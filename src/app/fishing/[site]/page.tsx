@@ -43,7 +43,7 @@ export default async function FishingSpotPage({ params }: { params: Promise<{ si
           <Window title="Gauge">
             <p className="text-sm font-bold">That gauge is not in this list.</p>
             <p className="mt-3 text-sm">
-              <Link href="/fishing" className="font-bold underline">Mountain fishing</Link>
+              <Link href="/fishing/freshwater" className="font-bold underline">Freshwater</Link>
             </p>
           </Window>
         )}
