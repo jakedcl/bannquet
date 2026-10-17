@@ -5,8 +5,10 @@ import { DashboardWindow } from '@/components/ui/DashboardWindow';
 import PageWrapper from '@/components/ui/PageWrapper';
 import { addCalendarDays, easternDate, formatEasternTime } from '@/lib/fishing/clock';
 import { loadWater, loadWind, type WaterReading, type WindReading } from '@/lib/fishing/marine';
+import { easternMonthDay, loadDailyMedians } from '@/lib/fishing/daily-stats';
+import { withVerdicts } from '@/lib/fishing/flow-verdict';
 import { openSpecies } from '@/lib/fishing/marine-regs';
-import type { GaugeView } from '@/lib/fishing/readings';
+import { plainWaterName, type GaugeView } from '@/lib/fishing/readings';
 import { DEFAULT_TIDE_STATION } from '@/lib/fishing/tide-stations';
 import { loadTides, nextExtreme, type TideSet } from '@/lib/fishing/tides';
 import { loadMountainGauges } from '@/lib/fishing/usgs';
@@ -58,8 +60,18 @@ export default async function FishingPage({
     gaugesUnavailable = true;
   }
 
+  let medians: Record<string, number> = {};
+  if (!gaugesUnavailable && gauges.length > 0) {
+    try {
+      const { month, day } = easternMonthDay(now);
+      medians = await loadDailyMedians(gauges.map((gauge) => gauge.site), month, day);
+    } catch {
+      console.error('Dashboard medians did not load');
+    }
+  }
+
   const next = tides ? nextExtreme(tides.extremes, now) : null;
-  const rivers = gauges.filter((gauge) => gauge.flowState === 'value' && gauge.flow).slice(0, 4);
+  const rivers = withVerdicts(gauges, medians).filter((gauge) => gauge.flowState === 'value' && gauge.flow).slice(0, 4);
   const inSeason = openSpecies(begin).filter((row) => row.id !== 'striped-bass-hudson' && row.id !== 'blackfish-sound');
 
   return (
@@ -94,10 +106,8 @@ export default async function FishingPage({
             <ul className="space-y-1">
               {rivers.map((gauge) => (
                 <li key={gauge.site} className="truncate text-sm">
-                  <Link href={`/fishing/${gauge.site}`} className="font-bold underline">{gauge.name}</Link>
-                  {' '}
-                  {gauge.flow} cfs
-                  {gauge.trend ? ` ${gauge.trend}` : ''}
+                  <Link href={`/fishing/${gauge.site}`} className="font-bold underline">{plainWaterName(gauge.name)}</Link>
+                  {gauge.verdict ? ` ${gauge.verdict}` : ` ${gauge.flow} cfs`}
                 </li>
               ))}
             </ul>

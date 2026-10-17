@@ -9,7 +9,7 @@ import { FilterPills } from '@/components/ui/FilterPills';
 import { SearchBar } from '@/components/ui/SearchBar';
 import { FISHING_REGIONS } from '@/lib/fishing/gauges';
 import type { ParkingArea } from '@/lib/fishing/pfr';
-import { formatAge, formatEastern, parseGaugeNumber, type FieldState, type GaugeView } from '@/lib/fishing/readings';
+import { parseGaugeNumber, plainWaterName, type FieldState, type GaugeView } from '@/lib/fishing/readings';
 
 const FishingMap = dynamic(() => import('@/components/fishing/FishingMap'), {
   ssr: false,
@@ -25,17 +25,6 @@ function reading(state: FieldState, value: string | null, note: string | null) {
   return (
     <span className="whitespace-nowrap" title={note ?? undefined}>
       {text}
-    </span>
-  );
-}
-
-function updated(iso: string | null, now: number) {
-  if (!iso) return '—';
-  const age = formatAge(iso, now);
-  const clock = formatEastern(iso);
-  return (
-    <span className="whitespace-nowrap" title={clock ?? undefined}>
-      {age ?? clock ?? '—'}
     </span>
   );
 }
@@ -56,32 +45,36 @@ export function RiversBoard({
   parking,
   parkingError,
   parkingTruncated,
-  now,
 }: {
   gauges: GaugeView[];
   gaugesUnavailable?: boolean;
   parking: ParkingArea[];
   parkingError: string | null;
   parkingTruncated: boolean;
-  now: number;
 }) {
   const router = useRouter();
   const [query, setQuery] = useState('');
   const [region, setRegion] = useState('all');
   const [parkingQuery, setParkingQuery] = useState('');
   const [county, setCounty] = useState('all');
-  const [showParking, setShowParking] = useState(true);
+  const [showParking, setShowParking] = useState(false);
+
+  const regions = useMemo(
+    () => FISHING_REGIONS.filter((item) => gauges.some((gauge) => gauge.region === item)),
+    [gauges],
+  );
+  const activeRegion = regions.some((item) => item === region) ? region : 'all';
 
   const shown = useMemo(() => {
     const needle = query.trim().toLowerCase();
     return gauges.filter((gauge) => {
-      if (region !== 'all' && gauge.region !== region) return false;
+      if (activeRegion !== 'all' && gauge.region !== activeRegion) return false;
       if (!needle) return true;
       return [gauge.name, gauge.county, gauge.state, gauge.region, gauge.site].some((value) =>
         value?.toLowerCase().includes(needle),
       );
     });
-  }, [gauges, query, region]);
+  }, [activeRegion, gauges, query]);
 
   const counties = useMemo(
     () => [...new Set(parking.flatMap((area) => (area.county ? [area.county] : [])))].sort((a, b) => a.localeCompare(b)),
@@ -112,19 +105,13 @@ export function RiversBoard({
       cell: (gauge) => (
         <span className="inline-flex max-w-full items-baseline gap-2">
           <Link href={`/fishing/${gauge.site}`} title={gauge.name} className="min-w-0 truncate text-left font-bold underline">
-            {gauge.name}
+            {plainWaterName(gauge.name)}
           </Link>
           <a href={gauge.usgsHref} target="_blank" rel="noopener noreferrer" className="shrink-0 whitespace-nowrap text-xs underline">
             USGS
           </a>
         </span>
       ),
-    },
-    {
-      id: 'region',
-      header: 'Region',
-      sortValue: (gauge) => gauge.region,
-      cell: (gauge) => line(gauge.county ? `${gauge.region} · ${gauge.county}` : gauge.region),
     },
     {
       id: 'flow',
@@ -134,36 +121,16 @@ export function RiversBoard({
       cell: (gauge) => reading(gauge.flowState, gauge.flow, gauge.flowNote),
     },
     {
-      id: 'trend',
-      header: '24h',
-      align: 'right',
-      sortValue: (gauge) => leadingNumber(gauge.trend),
-      cell: (gauge) => line(gauge.trend ?? '—'),
-    },
-    {
-      id: 'height',
-      header: 'Gauge height',
-      align: 'right',
-      sortValue: (gauge) => gauge.heightState === 'value' ? leadingNumber(gauge.height) : null,
-      cell: (gauge) => reading(gauge.heightState, gauge.height, gauge.heightNote),
-    },
-    {
       id: 'temp',
-      header: 'Water temp',
+      header: 'Water',
       sortValue: (gauge) => gauge.tempState === 'value' ? leadingNumber(gauge.temp) : null,
       cell: (gauge) => reading(gauge.tempState, gauge.temp, gauge.tempNote),
     },
     {
-      id: 'updated',
-      header: 'Updated',
-      sortValue: (gauge) => gauge.updatedAt ? Date.parse(gauge.updatedAt) : null,
-      cell: (gauge) => updated(gauge.updatedAt, now) || '—',
-    },
-    {
-      id: 'status',
-      header: 'Status',
-      sortValue: (gauge) => gauge.status,
-      cell: (gauge) => line(gauge.status),
+      id: 'verdict',
+      header: 'Verdict',
+      sortValue: (gauge) => gauge.verdict ?? null,
+      cell: (gauge) => line(gauge.verdict ?? '—'),
     },
   ];
 
@@ -198,7 +165,7 @@ export function RiversBoard({
     },
   ];
 
-  const gaugeFiltered = query.trim().length > 0 || region !== 'all';
+  const gaugeFiltered = query.trim().length > 0 || activeRegion !== 'all';
   const parkingFiltered = parkingQuery.trim().length > 0 || county !== 'all';
 
   return (
@@ -206,21 +173,23 @@ export function RiversBoard({
       <div className="space-y-2">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <p className="text-xs font-bold uppercase">Map</p>
-          <label className="flex items-center gap-2 text-sm font-bold">
-            <input type="checkbox" checked={showParking} onChange={(event) => setShowParking(event.target.checked)} />
-            Public fishing rights parking
-          </label>
+          {parking.length > 0 ? (
+            <label className="flex items-center gap-2 text-sm font-bold">
+              <input type="checkbox" checked={showParking} onChange={(event) => setShowParking(event.target.checked)} />
+              Angler parking
+            </label>
+          ) : null}
         </div>
         <div className="retro-box-inset bg-white">
           <FishingMap
             gauges={shown}
             parking={showParking ? parkingShown : []}
-            showParking={showParking}
+            showParking={showParking && parking.length > 0}
             onSelect={openSpot}
           />
         </div>
         <p className="text-xs text-gray-700">
-          Green pins are USGS gauges. Brown pins are NY public fishing rights parking in Catskill and Adirondack counties.
+          {parking.length > 0 ? 'Green pins are gauges. Brown pins are angler parking.' : 'Green pins are gauges.'}
         </p>
         {parkingError ? <p className="text-sm font-bold">{parkingError}</p> : null}
         {parkingTruncated ? (
@@ -229,12 +198,14 @@ export function RiversBoard({
       </div>
 
       <SearchBar value={query} onChange={setQuery} placeholder="River or gauge" />
-      <FilterPills
-        label="Region"
-        value={region}
-        options={[{ id: 'all', label: 'All' }, ...FISHING_REGIONS.map((item) => ({ id: item, label: item }))]}
-        onChange={setRegion}
-      />
+      {regions.length > 1 ? (
+        <FilterPills
+          label="Region"
+          value={activeRegion}
+          options={[{ id: 'all', label: 'All' }, ...regions.map((item) => ({ id: item, label: item }))]}
+          onChange={setRegion}
+        />
+      ) : null}
       <DataTable
         rows={shown}
         columns={columns}
@@ -245,35 +216,28 @@ export function RiversBoard({
         collapsed
       />
 
-      <div className="space-y-3">
-        <h2 className="text-sm font-bold uppercase">Public fishing rights parking</h2>
-        <p className="text-sm text-gray-700">
-          NY DEC parking areas in Catskill and Adirondack counties, from data.ny.gov. Vermont, New Hampshire, and Maine are not in this file.
-        </p>
-        {parkingError ? null : parking.length === 0 ? (
-          <p className="text-sm">No parking areas came back for those counties.</p>
-        ) : (
-          <>
-            <SearchBar value={parkingQuery} onChange={setParkingQuery} placeholder="Water or town" label="Search parking" />
-            {counties.length > 1 ? (
-              <FilterPills
-                label="County"
-                value={county}
-                options={[{ id: 'all', label: 'All' }, ...counties.map((item) => ({ id: item, label: item }))]}
-                onChange={setCounty}
-              />
-            ) : null}
-            <DataTable
-              rows={parkingShown}
-              columns={parkingColumns}
-              rowKey={(area) => area.id}
-              empty={parkingFiltered ? 'No parking areas match.' : 'No parking areas came back for those counties.'}
-              defaultSort={{ id: 'water', dir: 'asc' }}
-              collapsed
+      {parking.length > 0 ? (
+        <details className="space-y-3">
+          <summary className="cursor-pointer text-sm font-bold uppercase">Angler parking</summary>
+          <SearchBar value={parkingQuery} onChange={setParkingQuery} placeholder="Water or town" label="Search parking" />
+          {counties.length > 1 ? (
+            <FilterPills
+              label="County"
+              value={county}
+              options={[{ id: 'all', label: 'All' }, ...counties.map((item) => ({ id: item, label: item }))]}
+              onChange={setCounty}
             />
-          </>
-        )}
-      </div>
+          ) : null}
+          <DataTable
+            rows={parkingShown}
+            columns={parkingColumns}
+            rowKey={(area) => area.id}
+            empty={parkingFiltered ? 'No parking areas match.' : 'No parking areas came back.'}
+            defaultSort={{ id: 'water', dir: 'asc' }}
+            collapsed
+          />
+        </details>
+      ) : null}
     </div>
   );
 }

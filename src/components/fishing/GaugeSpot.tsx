@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import type { ReactNode } from 'react';
 import { Window } from '@/components/retro/Window';
-import { formatAge, formatEastern, type FieldState, type GaugeView } from '@/lib/fishing/readings';
+import { formatAge, formatEastern, plainWaterName, type FieldState, type GaugeView } from '@/lib/fishing/readings';
 import { getWeather } from '@/lib/weather';
 import type { WeatherData } from '@/types/weather';
 
@@ -38,12 +38,15 @@ export function GaugeSpot({
     ? formatAge(gauge.updatedAt, now) ?? formatEastern(gauge.updatedAt) ?? '—'
     : '—';
 
+  const name = plainWaterName(gauge.name);
+
   return (
-    <Window title={gauge.name}>
+    <Window title={name}>
       <p className="mb-4 break-words text-sm">
-        <Link href="/fishing" className="font-bold underline">Fishing</Link>
+        <Link href="/fishing/freshwater" className="font-bold underline">Freshwater</Link>
         {place ? ` · ${place}` : ''}
       </p>
+      {gauge.verdict ? <p className="mb-3 text-sm font-bold">{gauge.verdict}</p> : null}
       <div className="mb-4 grid min-w-0 grid-cols-2 gap-2 sm:grid-cols-3">
         <Metric label="Flow" value={shown(gauge.flowState, gauge.flow)} note={gauge.flowNote} />
         <Metric label="24h" value={gauge.trend ?? '—'} />
