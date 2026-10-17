@@ -1,17 +1,12 @@
-import nextDynamic from 'next/dynamic';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Window } from '@/components/retro/Window';
 import { FishingRows } from '@/components/fishing/FishingRows';
+import { ShoreMapFrame } from '@/components/fishing/ShoreMapFrame';
 import { CrumbLeaf } from '@/components/ui/BackBar';
 import PageWrapper from '@/components/ui/PageWrapper';
 import { ADVISORIES_CHECKED, ADVISORIES_SOURCE, adviceFor, waterBody } from '@/lib/fishing/advisories';
 import { nearestTideStation, shoreSpot } from '@/lib/fishing/shore-spots';
-
-const ShoreMap = nextDynamic(() => import('@/components/fishing/ShoreMap'), {
-  ssr: false,
-  loading: () => <p className="text-sm">Loading the map.</p>,
-});
 
 export const dynamic = 'force-dynamic';
 
@@ -35,7 +30,7 @@ export default async function ShoreSpotPage({ params }: { params: Promise<{ slug
             </Link>
           </p>
           <div className="retro-box-inset mt-4 bg-white">
-            <ShoreMap lat={spot.lat} lon={spot.lon} name={spot.name} />
+            <ShoreMapFrame lat={spot.lat} lon={spot.lon} name={spot.name} />
           </div>
         </Window>
         <Window title="Eat safe">
