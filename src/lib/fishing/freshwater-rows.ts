@@ -13,6 +13,7 @@ import type { FishingLake } from '@/lib/fishing/lakes'
 import type { MaineStockingRow } from '@/lib/fishing/maine-stocking'
 import { parseGaugeNumber, plainWaterName, type FieldState, type GaugeView } from '@/lib/fishing/readings'
 import type { ActualStocking } from '@/lib/fishing/stocking'
+import { indexWaterPlaces, locateWater, type WaterPlace } from '@/lib/fishing/water-places'
 
 export type FreshwaterKind = 'River' | 'Lake' | 'Stocking'
 export type FreshwaterLayout = 'summary' | FreshwaterKind
@@ -42,6 +43,8 @@ export type FreshwaterRow = {
   when: string | null
   number: string | null
   numberSort: number | null
+  lat: number | null
+  lon: number | null
 }
 
 const EMPTY_FIELDS = {
@@ -62,6 +65,8 @@ const EMPTY_FIELDS = {
   when: null,
   number: null,
   numberSort: null,
+  lat: null,
+  lon: null,
 } satisfies Omit<FreshwaterRow, 'id' | 'name' | 'stateLabel' | 'stateCode' | 'kind' | 'search'>
 
 /** All states or all types share one short table. One state and one type keep that type's columns. */
@@ -112,6 +117,7 @@ export function assembleFreshwaterRows(
 ): FreshwaterListing {
   const rows: FreshwaterRow[] = []
   const sourceLinks: OutboundLink[] = []
+  const places = indexWaterPlaces(catalogPlaces(sources))
   const showRivers = tab === 'all' || tab === 'rivers'
   const showLakes = tab === 'all' || tab === 'lakes'
   const showStocking = tab === 'all' || tab === 'stocking'
@@ -146,6 +152,8 @@ export function assembleFreshwaterRows(
         tempState: gauge.tempState,
         verdict,
         county: gauge.county,
+        lat: gauge.lat,
+        lon: gauge.lon,
       })
     }
   }
@@ -153,6 +161,9 @@ export function assembleFreshwaterRows(
   if (nyLakes) {
     for (const lake of sources.lakes) {
       const name = plainWaterName(lake.name)
+      const point = lake.lat != null && lake.lon != null
+        ? { lat: lake.lat, lon: lake.lon }
+        : locateWater(name, lake.county, 'ny', places)
       rows.push({
         ...EMPTY_FIELDS,
         id: `lake-${lake.id}`,
@@ -165,6 +176,8 @@ export function assembleFreshwaterRows(
         county: lake.county,
         species: lake.species,
         launch: lake.launch,
+        lat: point?.lat ?? null,
+        lon: point?.lon ?? null,
       })
     }
   }
@@ -172,6 +185,7 @@ export function assembleFreshwaterRows(
   if (nyStocked) {
     for (const row of sources.nyStocking) {
       const name = plainWaterName(row.waterbody)
+      const point = locateWater(name, row.county, 'ny', places)
       rows.push({
         ...EMPTY_FIELDS,
         id: `ny-stock-${row.id}`,
@@ -186,6 +200,8 @@ export function assembleFreshwaterRows(
         when: row.when,
         number: row.number,
         numberSort: countNumber(row.number),
+        lat: point?.lat ?? null,
+        lon: point?.lon ?? null,
       })
     }
     sourceLinks.push(...(STOCKING_LINKS.ny ?? []))
@@ -194,6 +210,7 @@ export function assembleFreshwaterRows(
   if (meStocked) {
     sources.meStocking.forEach((row, index) => {
       const name = plainWaterName(row.water)
+      const point = locateWater(name, row.county, 'me', places)
       rows.push({
         ...EMPTY_FIELDS,
         id: `me-stock-${row.date}-${row.water}-${index}`,
@@ -208,6 +225,8 @@ export function assembleFreshwaterRows(
         when: row.date,
         number: row.quantity,
         numberSort: countNumber(row.quantity),
+        lat: point?.lat ?? null,
+        lon: point?.lon ?? null,
       })
     })
     sourceLinks.push(...(STOCKING_LINKS.me ?? []))
@@ -227,6 +246,31 @@ export function assembleFreshwaterRows(
   }
 
   return { rows, sourceLinks, emptyLinks: rows.length === 0 ? stateLinks(state) : [] }
+}
+
+function catalogPlaces(sources: FreshwaterSources): WaterPlace[] {
+  const places: WaterPlace[] = []
+  for (const gauge of sources.gauges) {
+    if (gauge.lat == null || gauge.lon == null) continue
+    places.push({
+      name: gauge.name,
+      county: gauge.county,
+      state: freshwaterStateCode(gauge.state),
+      lat: gauge.lat,
+      lon: gauge.lon,
+    })
+  }
+  for (const lake of sources.lakes) {
+    if (lake.lat == null || lake.lon == null) continue
+    places.push({
+      name: lake.name,
+      county: lake.county,
+      state: 'ny',
+      lat: lake.lat,
+      lon: lake.lon,
+    })
+  }
+  return places
 }
 
 function linkRow(code: FreshwaterState, kind: FreshwaterKind, link: OutboundLink, index: number): FreshwaterRow {

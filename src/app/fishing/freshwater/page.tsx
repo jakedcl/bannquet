@@ -51,9 +51,6 @@ export default async function FreshwaterPage({
   const listing = assembleFreshwaterRows(state, tab, loaded);
   const trout = troutStreamStatus(easternDate(now));
   const showTrout = (state === 'all' || state === 'ny') && (tab === 'all' || tab === 'rivers');
-  const gauges = (tab === 'all' || tab === 'rivers')
-    ? loaded.gauges.filter((gauge) => state === 'all' || freshwaterStateCode(gauge.state) === state)
-    : [];
 
   return (
     <PageWrapper>
@@ -86,7 +83,6 @@ export default async function FreshwaterPage({
           <FreshwaterBoard
             rows={listing.rows}
             layout={freshwaterLayout(state, tab)}
-            gauges={gauges}
             parking={loaded.parking}
             parkingError={loaded.parkingError}
             parkingTruncated={loaded.parkingTruncated}
@@ -119,13 +115,15 @@ async function loadFreshwater(state: FreshwaterStateFilter, tab: FreshwaterTab, 
   const wantMeStock = (tab === 'all' || tab === 'stocking') && (state === 'all' || state === 'me');
   const wantParking = wantRivers && (state === 'all' || state === 'ny');
   const problems: string[] = [];
-
-  const gauges = wantRivers ? await readOrNull(loadMountainGauges(), 'River readings are unavailable.', problems) : [];
+  // Stocking files have no coordinates. Lakes and gauges are the name catalog.
+  const rawGauges = (wantRivers || wantNyStock)
+    ? await readOrNull(loadMountainGauges(), wantRivers ? 'River readings are unavailable.' : null, problems)
+    : [];
   let medians: Record<string, number> = {};
-  if (gauges && gauges.length > 0) {
+  if (wantRivers && rawGauges && rawGauges.length > 0) {
     try {
       const { month, day } = easternMonthDay(now);
-      const sites = gauges
+      const sites = rawGauges
         .filter((gauge) => state === 'all' || freshwaterStateCode(gauge.state) === state)
         .map((gauge) => gauge.site);
       if (sites.length > 0) medians = await loadDailyMedians(sites, month, day);
@@ -134,7 +132,13 @@ async function loadFreshwater(state: FreshwaterStateFilter, tab: FreshwaterTab, 
     }
   }
 
-  const lakes = wantLakes ? await readOrNull(loadFishingLakes(), 'NY lakes are unavailable.', problems) : [];
+  const lakes = (wantLakes || wantNyStock)
+    ? await readOrNull(
+      loadFishingLakes(),
+      wantLakes ? 'NY lakes are unavailable.' : 'Lake locations are unavailable, so some stocking pins are missing.',
+      problems,
+    )
+    : [];
   const nyStock = wantNyStock ? await readOrNull(loadActualStocking(), 'NY stocking is unavailable.', problems) : null;
   const maine = wantMeStock ? await readOrNull(loadMaineStocking(), 'Maine stocking is unavailable.', problems) : null;
   let parking: Awaited<ReturnType<typeof loadParkingAreas>> | null = null;
@@ -154,7 +158,7 @@ async function loadFreshwater(state: FreshwaterStateFilter, tab: FreshwaterTab, 
     : null;
 
   return {
-    gauges: gauges ? withVerdicts(gauges, medians) : [],
+    gauges: rawGauges ? (wantRivers ? withVerdicts(rawGauges, medians) : rawGauges) : [],
     lakes: lakes ?? [],
     nyStocking: nyStock?.rows ?? [],
     meStocking: maine?.rows ?? [],
@@ -167,12 +171,12 @@ async function loadFreshwater(state: FreshwaterStateFilter, tab: FreshwaterTab, 
   };
 }
 
-async function readOrNull<T>(work: Promise<T>, problem: string, problems: string[]): Promise<T | null> {
+async function readOrNull<T>(work: Promise<T>, problem: string | null, problems: string[]): Promise<T | null> {
   try {
     return await work;
   } catch (error) {
-    console.error(problem, error);
-    problems.push(problem);
+    console.error(problem ?? 'Freshwater data did not load', error);
+    if (problem) problems.push(problem);
     return null;
   }
 }

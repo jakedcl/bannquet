@@ -109,6 +109,7 @@ test('a state with only link-outs still has rows, and a rivers-only filter keeps
   const lakes = assembleFreshwaterRows('vt', 'lakes', { gauges: [], lakes: [], nyStocking: [], meStocking: [] })
   assert.equal(lakes.rows.length > 0, true)
   assert.equal(lakes.rows.every((row) => row.external && row.kind === 'Lake' && row.stateCode === 'vt'), true)
+  assert.equal(lakes.rows.every((row) => row.lat == null && row.lon == null), true)
   assert.deepEqual(lakes.emptyLinks, [])
 
   const rivers = assembleFreshwaterRows('nh', 'rivers', { gauges: [], lakes: [], nyStocking: [], meStocking: [] })
@@ -128,4 +129,52 @@ test('a chosen state and type leave the other lists out', () => {
   })
   assert.deepEqual(listing.rows.map((row) => row.site), ['01445500'])
   assert.deepEqual(listing.sourceLinks, [])
+})
+
+test('map points come from the water itself or one same-state name match', () => {
+  const sources = {
+    gauges: [
+      gauge({ site: '01445500', name: 'PEQUEST RIVER AT PEQUEST NJ', state: 'New Jersey', region: 'New Jersey', county: 'Warren', lat: 40.8, lon: -74.9 }),
+      gauge({ site: '01362200', name: 'ESOPUS CREEK AT ALLABEN NY', state: 'New York', county: 'Ulster County', lat: 42.1, lon: -74.3 }),
+      gauge({ site: '1', name: 'MIRROR LAKE NY', state: 'New York', county: 'Essex', lat: 44.2, lon: -73.9 }),
+    ],
+    lakes: [
+      { ...lake, lat: 41.95, lon: -74.2 },
+      { ...lake, id: 'long-warren', name: 'LONG POND', county: 'Warren', lat: 43.68, lon: -73.65 },
+      { ...lake, id: 'long-chenango', name: 'LONG POND', county: 'Chenango', lat: 42.42, lon: -75.85 },
+      { ...lake, id: 'mirror', name: 'MIRROR LAKE', county: 'Essex', lat: null, lon: null },
+      { ...lake, id: 'hidden', name: 'HIDDEN POND', county: 'Essex', lat: null, lon: null },
+    ],
+    nyStocking: [
+      nyStock,
+      { ...nyStock, id: 'ash', waterbody: 'ASHOKAN RESERVOIR', county: 'Ulster' },
+      { ...nyStock, id: 'long-w', waterbody: 'Long Pond', county: 'Warren' },
+      { ...nyStock, id: 'long-open', waterbody: 'Long Pond', county: null },
+      { ...nyStock, id: 'mystery', waterbody: 'No Such Pond', county: 'Essex' },
+    ],
+    meStocking: [{ ...meStock, water: 'ASHOKAN RESERVOIR', county: 'Ulster' }],
+  }
+  const listing = assembleFreshwaterRows('all', 'all', sources)
+  assert.equal(listing.rows.find((row) => row.site === '01445500')?.lat, 40.8)
+  assert.equal(listing.rows.find((row) => row.kind === 'Lake' && row.name === 'Ashokan Reservoir')?.lon, -74.2)
+  const stockedAshokan = listing.rows.find((row) => row.kind === 'Stocking' && row.stateCode === 'ny' && row.name === 'Ashokan Reservoir')
+  assert.equal(stockedAshokan?.lat, 41.95)
+  assert.equal(stockedAshokan?.lon, -74.2)
+  assert.equal(listing.rows.find((row) => row.kind === 'Stocking' && row.name === 'Esopus Creek')?.lat, null)
+  assert.equal(listing.rows.find((row) => row.id === 'ny-stock-long-w')?.lat, 43.68)
+  assert.equal(listing.rows.find((row) => row.id === 'ny-stock-long-open')?.lat, null)
+  assert.equal(listing.rows.find((row) => row.name === 'No Such Pond')?.lat, null)
+  assert.equal(listing.rows.find((row) => row.stateCode === 'me' && row.name === 'Ashokan Reservoir')?.lat, null)
+  assert.equal(listing.rows.find((row) => row.name === 'Mirror Lake')?.lat, 44.2)
+  assert.equal(listing.rows.find((row) => row.name === 'Hidden Pond')?.lat, null)
+
+  const rivers = assembleFreshwaterRows('nj', 'rivers', sources)
+  assert.deepEqual(rivers.rows.map((row) => row.kind), ['River'])
+  assert.equal(rivers.rows[0]?.lat, 40.8)
+  const lakesOnly = assembleFreshwaterRows('ny', 'lakes', sources)
+  assert.equal(lakesOnly.rows.every((row) => row.kind === 'Lake'), true)
+  assert.equal(lakesOnly.rows.some((row) => row.lat != null), true)
+  const stocked = assembleFreshwaterRows('ny', 'stocking', sources)
+  assert.equal(stocked.rows.every((row) => row.kind === 'Stocking'), true)
+  assert.equal(stocked.rows.find((row) => row.name === 'Ashokan Reservoir')?.lat, 41.95)
 })

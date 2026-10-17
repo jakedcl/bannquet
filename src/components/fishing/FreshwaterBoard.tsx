@@ -7,9 +7,10 @@ import { useRouter } from 'next/navigation';
 import { DataTable, type DataColumn } from '@/components/ui/DataTable';
 import { FilterPills } from '@/components/ui/FilterPills';
 import { SearchBar } from '@/components/ui/SearchBar';
-import type { FreshwaterLayout, FreshwaterRow } from '@/lib/fishing/freshwater-rows';
+import type { FreshwaterKind, FreshwaterLayout, FreshwaterRow } from '@/lib/fishing/freshwater-rows';
 import type { ParkingArea } from '@/lib/fishing/pfr';
-import type { FieldState, GaugeView } from '@/lib/fishing/readings';
+import type { FieldState } from '@/lib/fishing/readings';
+import { WATER_PIN_COLOR } from '@/lib/fishing/water-places';
 
 const FishingMap = dynamic(() => import('@/components/fishing/FishingMap'), {
   ssr: false,
@@ -17,6 +18,16 @@ const FishingMap = dynamic(() => import('@/components/fishing/FishingMap'), {
 });
 
 const DASH = '—';
+
+const LEGEND: { kind: FreshwaterKind; label: string }[] = [
+  { kind: 'River', label: 'Rivers' },
+  { kind: 'Lake', label: 'Lakes & ponds' },
+  { kind: 'Stocking', label: 'Stocking' },
+];
+
+function hasPoint(row: FreshwaterRow): row is FreshwaterRow & { lat: number; lon: number } {
+  return row.lat != null && row.lon != null;
+}
 
 function line(value: string | null) {
   if (!value) return DASH;
@@ -54,14 +65,12 @@ function linkCell(row: FreshwaterRow) {
 export function FreshwaterBoard({
   rows,
   layout,
-  gauges,
   parking,
   parkingError,
   parkingTruncated,
 }: {
   rows: FreshwaterRow[];
   layout: FreshwaterLayout;
-  gauges: GaugeView[];
   parking: ParkingArea[];
   parkingError: string | null;
   parkingTruncated: boolean;
@@ -78,10 +87,14 @@ export function FreshwaterBoard({
     return rows.filter((row) => row.search.includes(needle));
   }, [query, rows]);
 
-  const mapGauges = useMemo(() => {
-    const sites = new Set(shown.flatMap((row) => (row.site ? [row.site] : [])));
-    return gauges.filter((gauge) => sites.has(gauge.site));
-  }, [gauges, shown]);
+  const plotted = useMemo(() => shown.filter(hasPoint), [shown]);
+  const legend = useMemo(() => {
+    const items: { label: string; color: string }[] = LEGEND
+      .filter((item) => plotted.some((row) => row.kind === item.kind))
+      .map((item) => ({ label: item.label, color: WATER_PIN_COLOR[item.kind] }));
+    if (showParking) items.push({ label: 'Angler parking', color: WATER_PIN_COLOR.parking });
+    return items;
+  }, [plotted, showParking]);
 
   const counties = useMemo(
     () => [...new Set(parking.flatMap((area) => (area.county ? [area.county] : [])))].sort((a, b) => a.localeCompare(b)),
@@ -162,7 +175,7 @@ export function FreshwaterBoard({
 
   return (
     <div className="space-y-4">
-      {gauges.length > 0 ? (
+      {plotted.length > 0 || parking.length > 0 ? (
         <div className="space-y-2">
           <div className="flex flex-wrap items-center justify-between gap-2">
             <p className="text-xs font-bold uppercase">Map</p>
@@ -175,19 +188,26 @@ export function FreshwaterBoard({
           </div>
           <div className="retro-box-inset bg-white">
             <FishingMap
-              gauges={mapGauges}
+              places={plotted}
               parking={showParking ? parkingShown : []}
               showParking={showParking && parking.length > 0}
               onSelect={(site) => router.push(`/fishing/${site}`)}
             />
           </div>
-          <p className="text-xs text-gray-700">
-            {parking.length > 0 ? 'Green pins are gauges. Brown pins are angler parking.' : 'Green pins are gauges.'}
-          </p>
-          {parkingError ? <p className="text-sm font-bold">{parkingError}</p> : null}
-          {parkingTruncated ? <p className="text-sm font-bold">The parking list hit the request limit, so it may be incomplete.</p> : null}
+          {legend.length > 0 ? (
+            <ul aria-label="Map legend" className="flex flex-wrap gap-x-4 gap-y-1 text-xs">
+              {legend.map((item) => (
+                <li key={item.label} className="flex items-center gap-1.5">
+                  <span aria-hidden className="inline-block h-2.5 w-2.5 rounded-full border border-black" style={{ backgroundColor: item.color }} />
+                  {item.label}
+                </li>
+              ))}
+            </ul>
+          ) : null}
         </div>
       ) : null}
+      {parkingError ? <p className="text-sm font-bold">{parkingError}</p> : null}
+      {parkingTruncated ? <p className="text-sm font-bold">The parking list hit the request limit, so it may be incomplete.</p> : null}
 
       <SearchBar value={query} onChange={setQuery} placeholder="Water, state, or species" />
       <DataTable
