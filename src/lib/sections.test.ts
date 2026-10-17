@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { communitySection, linkOn, matchSection, pageTrail, settingsHref, visibleLinks, settingsLinks } from './sections';
+import { communitySection, HOME_ACTIONS, linkOn, matchSection, pageTrail, settingsHref, visibleLinks, settingsLinks } from './sections';
 
 const nobody = null;
 
@@ -82,6 +82,19 @@ test('a trip, pin, route, photo, and gear item name the record', () => {
   assert.equal(pageTrail('/photos/abc', '', nobody).crumbs?.at(-1)?.label, 'Photo');
   assert.equal(pageTrail('/gear/abc', '', nobody, 'Stove').parentHref, '/gear');
   assert.equal(pageTrail('/trips/new', '', nobody).crumbs?.at(-1)?.label, 'New trip');
+});
+
+test('the home hero opens fishing the same way as the other parent sections', () => {
+  const fishing = HOME_ACTIONS.find((action) => action.id === 'fishing');
+  assert.deepEqual(fishing && visibleLinks(fishing.links).map((link) => [link.href, link.label]), [
+    ['/fishing/saltwater', 'Saltwater'],
+    ['/fishing/freshwater', 'Freshwater'],
+  ]);
+  assert.deepEqual(
+    HOME_ACTIONS.filter((action) => action.links.length > 0).map((action) => action.label),
+    ['Mountain Weather', 'Fishing', 'Community'],
+  );
+  assert.deepEqual(HOME_ACTIONS.find((action) => action.id === 'map')?.links, []);
 });
 
 test('fishing is its own section, outside community', () => {

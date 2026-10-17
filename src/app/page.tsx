@@ -8,7 +8,7 @@ import Link from 'next/link';
 import { menuItemClass, NavButton } from '@/components/ui/NavButton';
 import { NavMenu } from '@/components/ui/NavMenu';
 import PageWrapper from '@/components/ui/PageWrapper';
-import { COMMUNITY_LINKS, WEATHER_LINKS } from '@/lib/sections';
+import { HOME_ACTIONS, visibleLinks } from '@/lib/sections';
 
 export default function Home() {
   const [openMenu, setOpenMenu] = useState<string | null>(null);
@@ -73,36 +73,33 @@ export default function Home() {
             </div>
 
             <div className="home-hero-actions relative z-20 mx-auto flex w-full max-w-sm flex-col items-stretch gap-4 overflow-visible sm:max-w-none sm:flex-row sm:flex-wrap sm:items-center sm:justify-center sm:gap-6">
-              <NavMenu
-                layout="responsive"
-                size="lg"
-                href="/mountain-weather"
-                label="Mountain Weather"
-                open={openMenu === 'weather'}
-                onOpen={() => setOpenMenu('weather')}
-              >
-                {WEATHER_LINKS.map((item) => (
-                  <Link key={item.href} href={item.href} className={menuItemClass(true, 'lg')}>
-                    {item.label}
-                  </Link>
-                ))}
-              </NavMenu>
-              <NavButton href="/map" size="lg" className="w-full sm:w-auto">Map</NavButton>
-              <NavButton href="/fishing" size="lg" className="w-full sm:w-auto">Fishing</NavButton>
-              <NavMenu
-                layout="responsive"
-                size="lg"
-                href="/community"
-                label="Community"
-                open={openMenu === 'community'}
-                onOpen={() => setOpenMenu('community')}
-              >
-                {COMMUNITY_LINKS.map((item) => (
-                  <Link key={item.href} href={item.href} className={menuItemClass(true, 'lg')}>
-                    {item.label}
-                  </Link>
-                ))}
-              </NavMenu>
+              {HOME_ACTIONS.map((action) => {
+                const links = visibleLinks(action.links);
+                if (links.length === 0) {
+                  return (
+                    <NavButton key={action.id} href={action.href} size="lg" className="w-full sm:w-auto">
+                      {action.label}
+                    </NavButton>
+                  );
+                }
+                return (
+                  <NavMenu
+                    key={action.id}
+                    layout="responsive"
+                    size="lg"
+                    href={action.href}
+                    label={action.label}
+                    open={openMenu === action.id}
+                    onOpen={() => setOpenMenu(action.id)}
+                  >
+                    {links.map((item) => (
+                      <Link key={item.href} href={item.href} className={menuItemClass(true, 'lg')}>
+                        {item.label}
+                      </Link>
+                    ))}
+                  </NavMenu>
+                );
+              })}
             </div>
           </div>
         </div>

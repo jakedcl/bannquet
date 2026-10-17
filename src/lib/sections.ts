@@ -75,6 +75,20 @@ export const FISHING_LINKS: NavLink[] = [
   { href: '/fishing/freshwater', label: 'Freshwater' },
 ];
 
+export type HomeAction = {
+  id: string;
+  href: string;
+  label: string;
+  links: NavLink[];
+};
+
+export const HOME_ACTIONS: HomeAction[] = [
+  { id: 'weather', href: '/mountain-weather', label: 'Mountain Weather', links: WEATHER_LINKS },
+  { id: 'map', href: '/map', label: 'Map', links: [] },
+  { id: 'fishing', href: '/fishing', label: 'Fishing', links: FISHING_LINKS },
+  { id: 'community', href: '/community', label: 'Community', links: COMMUNITY_LINKS },
+];
+
 export type SectionMatch = {
   id: 'community' | 'upload' | 'weather' | 'settings' | 'fishing';
   href: string;
