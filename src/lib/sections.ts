@@ -333,6 +333,17 @@ export function pageTrail(pathname: string, search: string, account: NavAccount,
     };
   }
 
+  if (/^\/fishing\/saltwater\/[^/]+$/.test(pathname)) {
+    return {
+      parentHref: '/fishing/saltwater',
+      crumbs: [
+        { href: '/fishing', label: 'Fishing' },
+        { href: '/fishing/saltwater', label: 'Saltwater' },
+        named(pathname, 'Spot', leaf),
+      ],
+    };
+  }
+
   if (pathname === '/fishing/stocking' || pathname === '/fishing/guides') {
     const label = pathname === '/fishing/stocking' ? 'Stocking' : 'Guides';
     return {

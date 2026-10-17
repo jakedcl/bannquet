@@ -108,6 +108,8 @@ test('fishing is its own section, outside community', () => {
 
   const salt = pageTrail('/fishing/saltwater', '', nobody);
   assert.deepEqual(salt.crumbs?.map((crumb) => crumb.label), ['Fishing', 'Saltwater']);
+  assert.equal(linkOn('/fishing/saltwater/great-kills', '', '/fishing/saltwater'), true);
+  assert.deepEqual(pageTrail('/fishing/saltwater/great-kills', '', nobody, 'Great Kills').crumbs?.map((crumb) => crumb.label), ['Fishing', 'Saltwater', 'Great Kills']);
 
   assert.equal(linkOn('/fishing/01362500', '', '/fishing/freshwater'), true);
   assert.equal(linkOn('/fishing/01362500', '', '/fishing/saltwater'), false);

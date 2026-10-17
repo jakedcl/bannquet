@@ -5,6 +5,7 @@ import { DashboardWindow } from '@/components/ui/DashboardWindow';
 import PageWrapper from '@/components/ui/PageWrapper';
 import { addCalendarDays, easternDate, formatEasternTime } from '@/lib/fishing/clock';
 import { loadWater, loadWind, type WaterReading, type WindReading } from '@/lib/fishing/marine';
+import { openSpecies } from '@/lib/fishing/marine-regs';
 import type { GaugeView } from '@/lib/fishing/readings';
 import { DEFAULT_TIDE_STATION } from '@/lib/fishing/tide-stations';
 import { loadTides, nextExtreme, type TideSet } from '@/lib/fishing/tides';
@@ -59,6 +60,7 @@ export default async function FishingPage({
 
   const next = tides ? nextExtreme(tides.extremes, now) : null;
   const rivers = gauges.filter((gauge) => gauge.flowState === 'value' && gauge.flow).slice(0, 4);
+  const inSeason = openSpecies(begin).filter((row) => row.id !== 'striped-bass-hudson' && row.id !== 'blackfish-sound');
 
   return (
     <PageWrapper>
@@ -77,6 +79,14 @@ export default async function FishingPage({
           <DashboardWindow title="Wind" href="/fishing/saltwater">
             <p className="text-sm font-bold">{wind ? wind.text : UNAVAILABLE}</p>
             <p className="mt-1 text-sm">{wind ? wind.stationName : station.label}</p>
+          </DashboardWindow>
+          <DashboardWindow title="In season" href="/fishing/saltwater#in-season">
+            {inSeason.length === 0 ? <p className="text-sm">Nothing open.</p> : null}
+            <ul className="space-y-1">
+              {inSeason.slice(0, 6).map((row) => (
+                <li key={row.id} className="truncate text-sm">{row.name}</li>
+              ))}
+            </ul>
           </DashboardWindow>
           <DashboardWindow title="Rivers" href="/fishing/freshwater">
             {gaugesUnavailable ? <p className="text-sm font-bold">{UNAVAILABLE}</p> : null}
