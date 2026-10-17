@@ -30,20 +30,30 @@ export function parseDailyMedians(body: string, month: number, day: number): Rec
   return found
 }
 
-async function readDailyMedians(sites: string[], month: number, day: number): Promise<Record<string, number>> {
-  if (sites.length === 0) return {}
-  const url = new URL('https://waterservices.usgs.gov/nwis/stat/')
-  url.searchParams.set('sites', sites.join(','))
-  url.searchParams.set('parameterCd', '00060')
-  url.searchParams.set('statReportType', 'daily')
-  url.searchParams.set('statTypeCd', 'median')
-  url.searchParams.set('format', 'rdb')
-  const response = await fetch(url, {
-    headers: { Accept: 'text/plain', 'User-Agent': 'Bannquet (admin@bannquet.com)' },
-    cache: 'no-store',
-  })
-  if (!response.ok) throw new Error(`USGS daily statistics returned ${response.status}`)
-  return parseDailyMedians(await response.text(), month, day)
+/** USGS daily statistics reject more than 10 site numbers in one request. */
+export function medianSiteChunks(sites: string[], size = 10): string[][] {
+  const chunks: string[][] = []
+  for (let index = 0; index < sites.length; index += size) chunks.push(sites.slice(index, index + size))
+  return chunks
 }
 
-export const loadDailyMedians = unstable_cache(readDailyMedians, ['usgs-daily-median-v1'], { revalidate: 3600 })
+async function readDailyMedians(sites: string[], month: number, day: number): Promise<Record<string, number>> {
+  const found: Record<string, number> = {}
+  for (const chunk of medianSiteChunks(sites)) {
+    const url = new URL('https://waterservices.usgs.gov/nwis/stat/')
+    url.searchParams.set('sites', chunk.join(','))
+    url.searchParams.set('parameterCd', '00060')
+    url.searchParams.set('statReportType', 'daily')
+    url.searchParams.set('statTypeCd', 'median')
+    url.searchParams.set('format', 'rdb')
+    const response = await fetch(url, {
+      headers: { Accept: 'text/plain', 'User-Agent': 'Bannquet (admin@bannquet.com)' },
+      cache: 'no-store',
+    })
+    if (!response.ok) throw new Error(`USGS daily statistics returned ${response.status}`)
+    Object.assign(found, parseDailyMedians(await response.text(), month, day))
+  }
+  return found
+}
+
+export const loadDailyMedians = unstable_cache(readDailyMedians, ['usgs-daily-median-v2'], { revalidate: 3600 })

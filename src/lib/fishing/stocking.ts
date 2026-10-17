@@ -64,7 +64,7 @@ async function fetchPlannedStocking(): Promise<PlannedStockingLoad> {
 
 async function fetchMaineStocking(): Promise<MaineStockingReport> {
   const response = await fetch(MAINE_PDF, {
-    headers: { 'User-Agent': 'Bannquet (admin@bannquet.com)' },
+    headers: { 'User-Agent': 'Mozilla/5.0 (compatible; Bannquet/1.0; +https://bannquet.com)' },
     cache: 'no-store',
   })
   if (!response.ok) throw new Error(`Maine stocking PDF returned ${response.status}`)
@@ -79,7 +79,7 @@ async function fetchMaineStocking(): Promise<MaineStockingReport> {
 
 export const loadPlannedStocking = unstable_cache(fetchPlannedStocking, ['fishing-ny-planned-v1'], { revalidate: 3600 })
 
-export const loadMaineStocking = unstable_cache(fetchMaineStocking, ['fishing-me-stocking-v1'], { revalidate: 3600 })
+export const loadMaineStocking = unstable_cache(fetchMaineStocking, ['fishing-me-stocking-v2'], { revalidate: 3600 })
 
 export type ActualStocking = {
   id: string
