@@ -82,11 +82,17 @@ export function SaltwaterConditions({
           </div>
         ) : null}
 
-        {tides && tides.curve.length > 1 ? (
+        {tides && (tides.curve.length > 1 || tides.extremes.length > 1) ? (
           <div className="retro-box-inset bg-white">
-            <TideChart curve={tides.curve} extremes={tides.extremes} />
+            <TideChart
+              curve={tides.curve}
+              extremes={tides.extremes}
+              now={now}
+              latitude={station.lat}
+              longitude={station.lon}
+            />
           </div>
-        ) : tides ? null : (
+        ) : (
           <p className="text-sm font-bold">{UNAVAILABLE}</p>
         )}
 

@@ -1,35 +1,33 @@
 import Link from 'next/link';
-import { LakesBoard } from '@/components/fishing/LakesBoard';
-import { RiversBoard } from '@/components/fishing/RiversBoard';
-import { StockingBoard, type StockRow } from '@/components/fishing/StockingBoard';
+import { FreshwaterBoard } from '@/components/fishing/FreshwaterBoard';
 import { Window } from '@/components/retro/Window';
 import PageWrapper from '@/components/ui/PageWrapper';
 import { easternDate } from '@/lib/fishing/clock';
 import { easternMonthDay, loadDailyMedians } from '@/lib/fishing/daily-stats';
 import { withVerdicts } from '@/lib/fishing/flow-verdict';
+import { assembleFreshwaterRows } from '@/lib/fishing/freshwater-rows';
 import {
-  FRESHWATER_STATES,
+  FRESHWATER_STATE_FILTERS,
   freshwaterHref,
   freshwaterStateCode,
-  LAKE_LINKS,
   readFreshwaterState,
   readFreshwaterTab,
-  STOCKING_LINKS,
-  type FreshwaterState,
+  type FreshwaterStateFilter,
   type FreshwaterTab,
+  type OutboundLink,
 } from '@/lib/fishing/freshwater-states';
 import { loadFishingLakes, type FishingLake } from '@/lib/fishing/lakes';
-import { loadParkingAreas } from '@/lib/fishing/pfr';
+import type { MaineStockingRow } from '@/lib/fishing/maine-stocking';
+import { loadParkingAreas, type ParkingArea } from '@/lib/fishing/pfr';
 import type { GaugeView } from '@/lib/fishing/readings';
-import { loadActualStocking, loadMaineStocking, type ActualStockingLoad } from '@/lib/fishing/stocking';
+import { loadActualStocking, loadMaineStocking, type ActualStocking } from '@/lib/fishing/stocking';
 import { TROUT_CHECKED, TROUT_SOURCE, troutStreamStatus } from '@/lib/fishing/trout';
 import { loadMountainGauges } from '@/lib/fishing/usgs';
-import type { MaineStockingReport } from '@/lib/fishing/maine-stocking';
 
 export const dynamic = 'force-dynamic';
 
-const UNAVAILABLE = 'Data unavailable';
 const TABS: { id: FreshwaterTab; label: string }[] = [
+  { id: 'all', label: 'All' },
   { id: 'rivers', label: 'Rivers' },
   { id: 'lakes', label: 'Lakes & ponds' },
   { id: 'stocking', label: 'Stocking' },
@@ -49,12 +47,19 @@ export default async function FreshwaterPage({
   const tab = readFreshwaterTab(query.tab);
   // eslint-disable-next-line react-hooks/purity
   const now = Date.now();
+  const loaded = await loadFreshwater(state, tab, now);
+  const listing = assembleFreshwaterRows(state, tab, loaded);
+  const trout = troutStreamStatus(easternDate(now));
+  const showTrout = (state === 'all' || state === 'ny') && (tab === 'all' || tab === 'rivers');
+  const gauges = (tab === 'all' || tab === 'rivers')
+    ? loaded.gauges.filter((gauge) => state === 'all' || freshwaterStateCode(gauge.state) === state)
+    : [];
 
   return (
     <PageWrapper>
       <div className="mx-auto max-w-6xl space-y-4 px-4 py-6 md:py-10">
         <div className="flex gap-2 max-md:flex-nowrap max-md:overflow-x-auto md:flex-wrap" role="group" aria-label="State">
-          {FRESHWATER_STATES.map((item) => (
+          {FRESHWATER_STATE_FILTERS.map((item) => (
             <Link key={item.code} href={freshwaterHref(item.code, tab)} aria-current={item.code === state ? 'page' : undefined} className={pillClass(item.code === state)}>
               {item.label}
             </Link>
@@ -67,158 +72,112 @@ export default async function FreshwaterPage({
             </Link>
           ))}
         </div>
-        {tab === 'rivers' ? <RiversTab state={state} now={now} /> : null}
-        {tab === 'lakes' ? <LakesTab state={state} /> : null}
-        {tab === 'stocking' ? <StockingTab state={state} year={Number(easternDate(now).slice(0, 4))} /> : null}
+        <Window title="Freshwater">
+          {showTrout ? (
+            <p className="mb-4 text-sm">
+              <span className="font-bold">{trout.title}.</span> {trout.detail}{' '}
+              <a href={TROUT_SOURCE} target="_blank" rel="noopener noreferrer" className="underline">
+                Last checked {TROUT_CHECKED}
+              </a>
+            </p>
+          ) : null}
+          {loaded.stockingNote ? <p className="mb-3 text-sm">{loaded.stockingNote}</p> : null}
+          {loaded.problems.map((problem) => <p key={problem} className="mb-3 text-sm font-bold">{problem}</p>)}
+          <FreshwaterBoard
+            rows={listing.rows}
+            gauges={gauges}
+            parking={loaded.parking}
+            parkingError={loaded.parkingError}
+            parkingTruncated={loaded.parkingTruncated}
+          />
+          {loaded.stockingTruncated ? <p className="mt-3 text-sm font-bold">The stocking list hit the request limit.</p> : null}
+          <Outbound links={listing.sourceLinks.length > 0 ? listing.sourceLinks : listing.emptyLinks} />
+        </Window>
       </div>
     </PageWrapper>
   );
 }
 
-async function RiversTab({ state, now }: { state: FreshwaterState; now: number }) {
-  let gauges: GaugeView[] = [];
-  let gaugesUnavailable = false;
-  try {
-    gauges = await loadMountainGauges();
-  } catch {
-    console.error('Mountain gauges did not load');
-    gaugesUnavailable = true;
-  }
-  const rows = gauges.filter((gauge) => freshwaterStateCode(gauge.state) === state);
+type LoadedFreshwater = {
+  gauges: GaugeView[];
+  lakes: FishingLake[];
+  nyStocking: ActualStocking[];
+  meStocking: MaineStockingRow[];
+  parking: ParkingArea[];
+  parkingError: string | null;
+  parkingTruncated: boolean;
+  stockingNote: string | null;
+  stockingTruncated: boolean;
+  problems: string[];
+};
 
+async function loadFreshwater(state: FreshwaterStateFilter, tab: FreshwaterTab, now: number): Promise<LoadedFreshwater> {
+  const wantRivers = tab === 'all' || tab === 'rivers';
+  const wantLakes = (tab === 'all' || tab === 'lakes') && (state === 'all' || state === 'ny');
+  const wantNyStock = (tab === 'all' || tab === 'stocking') && (state === 'all' || state === 'ny');
+  const wantMeStock = (tab === 'all' || tab === 'stocking') && (state === 'all' || state === 'me');
+  const wantParking = wantRivers && (state === 'all' || state === 'ny');
+  const problems: string[] = [];
+
+  const gauges = wantRivers ? await readOrNull(loadMountainGauges(), 'River readings are unavailable.', problems) : [];
   let medians: Record<string, number> = {};
-  if (rows.length > 0) {
+  if (gauges && gauges.length > 0) {
     try {
       const { month, day } = easternMonthDay(now);
-      medians = await loadDailyMedians(rows.map((gauge) => gauge.site), month, day);
-    } catch {
-      console.error('USGS daily medians did not load');
+      const sites = gauges
+        .filter((gauge) => state === 'all' || freshwaterStateCode(gauge.state) === state)
+        .map((gauge) => gauge.site);
+      if (sites.length > 0) medians = await loadDailyMedians(sites, month, day);
+    } catch (error) {
+      console.error('USGS daily medians did not load', error);
     }
   }
 
-  let parking: Awaited<ReturnType<typeof loadParkingAreas>> = { areas: [], truncated: false };
-  let parkingUnavailable = false;
-  if (state === 'ny') {
+  const lakes = wantLakes ? await readOrNull(loadFishingLakes(), 'NY lakes are unavailable.', problems) : [];
+  const nyStock = wantNyStock ? await readOrNull(loadActualStocking(), 'NY stocking is unavailable.', problems) : null;
+  const maine = wantMeStock ? await readOrNull(loadMaineStocking(), 'Maine stocking is unavailable.', problems) : null;
+  let parking: Awaited<ReturnType<typeof loadParkingAreas>> | null = null;
+  let parkingError: string | null = null;
+  if (wantParking) {
     try {
       parking = await loadParkingAreas();
-    } catch {
-      console.error('Fishing parking did not load');
-      parkingUnavailable = true;
+    } catch (error) {
+      console.error('Angler parking did not load', error);
+      parkingError = 'Angler parking is unavailable.';
     }
   }
 
-  const trout = troutStreamStatus(easternDate(now));
+  const year = Number(easternDate(now).slice(0, 4));
+  const stockingNote = nyStock
+    ? `Actual stockings for ${nyStock.year}. The file has a month, not a day.${Number(nyStock.year) < year ? ' The newer season is not in this file yet.' : ''}`
+    : null;
 
-  return (
-    <Window title="Rivers">
-      {state === 'ny' ? (
-        <p className="mb-4 text-sm">
-          <span className="font-bold">{trout.title}.</span> {trout.detail}{' '}
-          <a href={TROUT_SOURCE} target="_blank" rel="noopener noreferrer" className="underline">
-            Last checked {TROUT_CHECKED}
-          </a>
-        </p>
-      ) : null}
-      <RiversBoard
-        gauges={withVerdicts(rows, medians)}
-        gaugesUnavailable={gaugesUnavailable}
-        parking={state === 'ny' ? parking.areas : []}
-        parkingError={parkingUnavailable ? UNAVAILABLE : null}
-        parkingTruncated={parking.truncated}
-      />
-    </Window>
-  );
+  return {
+    gauges: gauges ? withVerdicts(gauges, medians) : [],
+    lakes: lakes ?? [],
+    nyStocking: nyStock?.rows ?? [],
+    meStocking: maine?.rows ?? [],
+    parking: wantParking ? parking?.areas ?? [] : [],
+    parkingError,
+    parkingTruncated: parking?.truncated ?? false,
+    stockingNote,
+    stockingTruncated: nyStock?.truncated ?? false,
+    problems,
+  };
 }
 
-async function LakesTab({ state }: { state: FreshwaterState }) {
-  if (state !== 'ny') {
-    return (
-      <Window title="Lakes and ponds">
-        <Outbound links={LAKE_LINKS[state] ?? []} />
-      </Window>
-    );
-  }
-  let lakes: FishingLake[] = [];
-  let unavailable = false;
+async function readOrNull<T>(work: Promise<T>, problem: string, problems: string[]): Promise<T | null> {
   try {
-    lakes = await loadFishingLakes();
-  } catch {
-    console.error('NY fishing lakes did not load');
-    unavailable = true;
+    return await work;
+  } catch (error) {
+    console.error(problem, error);
+    problems.push(problem);
+    return null;
   }
-  return (
-    <Window title="Lakes and ponds">
-      {unavailable ? <p className="text-sm font-bold">{UNAVAILABLE}</p> : <LakesBoard lakes={lakes} />}
-    </Window>
-  );
 }
 
-async function StockingTab({ state, year }: { state: FreshwaterState; year: number }) {
-  const links = STOCKING_LINKS[state] ?? [];
-  if (state === 'ny') {
-    let load: ActualStockingLoad | null = null;
-    let unavailable = false;
-    try {
-      load = await loadActualStocking();
-    } catch {
-      console.error('NY actual stocking did not load');
-      unavailable = true;
-    }
-    const rows: StockRow[] = (load?.rows ?? []).map((row) => ({
-      id: row.id,
-      water: row.waterbody,
-      when: row.when,
-      species: row.species ?? '',
-      number: row.number ?? '',
-      place: [row.town, row.county].filter(Boolean).join(', '),
-    }));
-    return (
-      <Window title="Stocking">
-        <p className="mb-3 text-sm">
-          {load ? `Actual stockings for ${load.year}. The file has a month, not a day.` : null}
-          {load && Number(load.year) < year ? ' The newer season is not in this file yet.' : null}
-        </p>
-        {unavailable ? <p className="text-sm font-bold">{UNAVAILABLE}</p> : <StockingBoard rows={rows} />}
-        {load?.truncated ? <p className="mt-3 text-sm font-bold">The list hit the request limit.</p> : null}
-        <Outbound links={links} />
-      </Window>
-    );
-  }
-
-  if (state === 'me') {
-    let report: MaineStockingReport | null = null;
-    let unavailable = false;
-    try {
-      report = await loadMaineStocking();
-    } catch {
-      console.error('Maine stocking did not load');
-      unavailable = true;
-    }
-    const rows: StockRow[] = (report?.rows ?? []).map((row, index) => ({
-      id: `${row.date}-${row.water}-${index}`,
-      water: row.water,
-      when: row.date,
-      species: row.species,
-      number: row.quantity,
-      place: [row.town, row.county].filter(Boolean).join(', '),
-    }));
-    return (
-      <Window title="Stocking">
-        {unavailable ? <p className="mb-3 text-sm font-bold">{UNAVAILABLE}</p> : <StockingBoard rows={rows} />}
-        <Outbound links={links} />
-      </Window>
-    );
-  }
-
-  return (
-    <Window title="Stocking">
-      <Outbound links={links} />
-    </Window>
-  );
-}
-
-function Outbound({ links }: { links: { href: string; label: string; note: string }[] }) {
-  if (links.length === 0) return <p className="text-sm">No free list for this state.</p>;
+function Outbound({ links }: { links: OutboundLink[] }) {
+  if (links.length === 0) return null;
   return (
     <ul className="mt-3 space-y-2">
       {links.map((link) => (

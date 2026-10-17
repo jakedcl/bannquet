@@ -10,7 +10,13 @@ export const FRESHWATER_STATES = [
 ] as const
 
 export type FreshwaterState = (typeof FRESHWATER_STATES)[number]['code']
-export type FreshwaterTab = 'rivers' | 'lakes' | 'stocking'
+export type FreshwaterStateFilter = 'all' | FreshwaterState
+export type FreshwaterTab = 'all' | 'rivers' | 'lakes' | 'stocking'
+
+export const FRESHWATER_STATE_FILTERS: { code: FreshwaterStateFilter; label: string }[] = [
+  { code: 'all', label: 'All' },
+  ...FRESHWATER_STATES,
+]
 
 const NAMES: Record<string, FreshwaterState> = {
   ny: 'ny',
@@ -36,20 +42,24 @@ export function freshwaterStateCode(state: string | null | undefined): Freshwate
   return NAMES[state.trim().toLowerCase()] ?? null
 }
 
-export function readFreshwaterState(value: string | undefined): FreshwaterState {
-  return freshwaterStateCode(value) ?? 'ny'
+export function freshwaterStateLabel(code: FreshwaterState): string {
+  return FRESHWATER_STATES.find((item) => item.code === code)?.label ?? code.toUpperCase()
+}
+
+export function readFreshwaterState(value: string | undefined): FreshwaterStateFilter {
+  if (!value || value === 'all') return 'all'
+  return freshwaterStateCode(value) ?? 'all'
 }
 
 export function readFreshwaterTab(value: string | undefined): FreshwaterTab {
-  if (value === 'lakes' || value === 'stocking') return value
-  return 'rivers'
+  if (value === 'rivers' || value === 'lakes' || value === 'stocking') return value
+  return 'all'
 }
 
-export function freshwaterHref(state: FreshwaterState, tab: FreshwaterTab): string {
-  if (state === 'ny' && tab === 'rivers') return '/fishing/freshwater'
+export function freshwaterHref(state: FreshwaterStateFilter, tab: FreshwaterTab): string {
   const params = new URLSearchParams()
-  if (state !== 'ny') params.set('state', state)
-  if (tab !== 'rivers') params.set('tab', tab)
+  if (state !== 'all') params.set('state', state)
+  if (tab !== 'all') params.set('tab', tab)
   const query = params.toString()
   return query ? `/fishing/freshwater?${query}` : '/fishing/freshwater'
 }
