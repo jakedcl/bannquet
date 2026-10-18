@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { communitySection, linkOn, matchSection, pageTrail, settingsHref, visibleLinks, settingsLinks } from './sections';
+import { communitySection, HOME_ACTIONS, linkOn, matchSection, pageTrail, settingsHref, visibleLinks, settingsLinks } from './sections';
 
 const nobody = null;
 
@@ -84,6 +84,19 @@ test('a trip, pin, route, photo, and gear item name the record', () => {
   assert.equal(pageTrail('/trips/new', '', nobody).crumbs?.at(-1)?.label, 'New trip');
 });
 
+test('the home hero opens fishing the same way as the other parent sections', () => {
+  const fishing = HOME_ACTIONS.find((action) => action.id === 'fishing');
+  assert.deepEqual(fishing && visibleLinks(fishing.links).map((link) => [link.href, link.label]), [
+    ['/fishing/saltwater', 'Saltwater'],
+    ['/fishing/freshwater', 'Freshwater'],
+  ]);
+  assert.deepEqual(
+    HOME_ACTIONS.filter((action) => action.links.length > 0).map((action) => action.label),
+    ['Mountain Weather', 'Fishing', 'Community'],
+  );
+  assert.deepEqual(HOME_ACTIONS.find((action) => action.id === 'map')?.links, []);
+});
+
 test('fishing is its own section, outside community', () => {
   assert.equal(communitySection('/fishing'), false);
   assert.equal(communitySection('/fishing/stocking'), false);
@@ -92,9 +105,11 @@ test('fishing is its own section, outside community', () => {
   assert.equal(main?.id, 'fishing');
   assert.equal(main?.label, 'Fishing');
   assert.equal(main?.landing, false);
-  assert.equal(main?.links.some((link) => link.href === '/fishing/guides'), true);
-  assert.equal(linkOn('/fishing', '', '/fishing'), true);
-  assert.equal(linkOn('/fishing/stocking', '', '/fishing'), false);
+  assert.equal(main?.links.some((link) => link.href === '/fishing/saltwater'), true);
+  assert.equal(main?.links.some((link) => link.href === '/fishing/freshwater'), true);
+  assert.equal(linkOn('/fishing', '', '/fishing/saltwater'), false);
+  assert.equal(linkOn('/fishing/saltwater', '', '/fishing/saltwater'), true);
+  assert.equal(linkOn('/fishing/saltwater', '', '/fishing/freshwater'), false);
   assert.equal(linkOn('/fishing/stocking', '', '/fishing/stocking'), true);
 
   const stocking = pageTrail('/fishing/stocking', '', nobody);
@@ -104,10 +119,15 @@ test('fishing is its own section, outside community', () => {
   const guides = pageTrail('/fishing/guides', '', nobody);
   assert.deepEqual(guides.crumbs?.map((crumb) => crumb.label), ['Fishing', 'Guides']);
 
-  assert.equal(linkOn('/fishing/01362500', '', '/fishing'), true);
-  assert.equal(linkOn('/fishing/01362500', '', '/fishing/stocking'), false);
+  const salt = pageTrail('/fishing/saltwater', '', nobody);
+  assert.deepEqual(salt.crumbs?.map((crumb) => crumb.label), ['Fishing', 'Saltwater']);
+  assert.equal(linkOn('/fishing/saltwater/great-kills', '', '/fishing/saltwater'), true);
+  assert.deepEqual(pageTrail('/fishing/saltwater/great-kills', '', nobody, 'Great Kills').crumbs?.map((crumb) => crumb.label), ['Fishing', 'Saltwater', 'Great Kills']);
+
+  assert.equal(linkOn('/fishing/01362500', '', '/fishing/freshwater'), true);
+  assert.equal(linkOn('/fishing/01362500', '', '/fishing/saltwater'), false);
   const spot = pageTrail('/fishing/01362500', '', nobody, 'Esopus Creek');
-  assert.equal(spot.parentHref, '/fishing');
-  assert.deepEqual(spot.crumbs?.map((crumb) => crumb.label), ['Fishing', 'Esopus Creek']);
-  assert.deepEqual(pageTrail('/fishing/01362500', '', nobody).crumbs?.map((crumb) => crumb.label), ['Fishing', 'Gauge']);
+  assert.equal(spot.parentHref, '/fishing/freshwater');
+  assert.deepEqual(spot.crumbs?.map((crumb) => crumb.label), ['Fishing', 'Freshwater', 'Esopus Creek']);
+  assert.deepEqual(pageTrail('/fishing/01362500', '', nobody).crumbs?.map((crumb) => crumb.label), ['Fishing', 'Freshwater', 'Gauge']);
 });

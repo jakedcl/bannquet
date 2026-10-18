@@ -71,9 +71,22 @@ export type PageTrail = {
 };
 
 export const FISHING_LINKS: NavLink[] = [
-  { href: '/fishing', label: 'Mountain fishing' },
-  { href: '/fishing/stocking', label: 'Stocking' },
-  { href: '/fishing/guides', label: 'Guides' },
+  { href: '/fishing/saltwater', label: 'Saltwater' },
+  { href: '/fishing/freshwater', label: 'Freshwater' },
+];
+
+export type HomeAction = {
+  id: string;
+  href: string;
+  label: string;
+  links: NavLink[];
+};
+
+export const HOME_ACTIONS: HomeAction[] = [
+  { id: 'weather', href: '/mountain-weather', label: 'Mountain Weather', links: WEATHER_LINKS },
+  { id: 'map', href: '/map', label: 'Map', links: [] },
+  { id: 'fishing', href: '/fishing', label: 'Fishing', links: FISHING_LINKS },
+  { id: 'community', href: '/community', label: 'Community', links: COMMUNITY_LINKS },
 ];
 
 export type SectionMatch = {
@@ -93,7 +106,8 @@ export function linkOn(pathname: string, search: string, href: string): boolean 
   const [path, query] = href.split('?');
   if (path.startsWith('/user/')) return pathname === path;
   if (path === '/members' && pathname.startsWith('/user/')) return true;
-  if (path === '/fishing') return pathname === '/fishing' || /^\/fishing\/\d+$/.test(pathname);
+  if (path === '/fishing') return pathname === '/fishing';
+  if (path === '/fishing/freshwater') return pathname === path || /^\/fishing\/\d+$/.test(pathname);
   if (!query) return pathOn(pathname, path);
   if (pathname !== path) return false;
   const want = new URLSearchParams(query);
@@ -324,10 +338,33 @@ export function pageTrail(pathname: string, search: string, account: NavAccount,
 
   if (/^\/fishing\/\d+$/.test(pathname)) {
     return {
+      parentHref: '/fishing/freshwater',
+      crumbs: [
+        { href: '/fishing', label: 'Fishing' },
+        { href: '/fishing/freshwater', label: 'Freshwater' },
+        named(pathname, 'Gauge', leaf),
+      ],
+    };
+  }
+
+  if (/^\/fishing\/saltwater\/[^/]+$/.test(pathname)) {
+    return {
+      parentHref: '/fishing/saltwater',
+      crumbs: [
+        { href: '/fishing', label: 'Fishing' },
+        { href: '/fishing/saltwater', label: 'Saltwater' },
+        named(pathname, 'Spot', leaf),
+      ],
+    };
+  }
+
+  if (pathname === '/fishing/stocking' || pathname === '/fishing/guides') {
+    const label = pathname === '/fishing/stocking' ? 'Stocking' : 'Guides';
+    return {
       parentHref: '/fishing',
       crumbs: [
         { href: '/fishing', label: 'Fishing' },
-        named(pathname, 'Gauge', leaf),
+        { href: pathname, label },
       ],
     };
   }

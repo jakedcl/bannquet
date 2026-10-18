@@ -3,11 +3,17 @@
 import { useEffect, useRef } from 'react';
 import { type GeoJSONSource, LngLatBounds, Map as MlMap, NavigationControl, Popup, setWorkerUrl } from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
+import type { FreshwaterKind, FreshwaterRow } from '@/lib/fishing/freshwater-rows';
 import { MAP_CENTER, OPENFREEMAP_STYLE_URL } from '@/lib/map';
 import type { ParkingArea } from '@/lib/fishing/pfr';
-import type { GaugeView } from '@/lib/fishing/readings';
+import { WATER_PIN_COLOR } from '@/lib/fishing/water-places';
 
 setWorkerUrl('/maplibre-gl-worker.mjs');
+
+export type MapPlace = Pick<FreshwaterRow, 'id' | 'kind' | 'name' | 'status' | 'href' | 'external' | 'site'> & {
+  lat: number;
+  lon: number;
+};
 
 type PointCollection = {
   type: 'FeatureCollection';
@@ -18,21 +24,31 @@ type PointCollection = {
   }>;
 };
 
+const LAYERS: { id: FreshwaterKind; radius: number }[] = [
+  { id: 'Lake', radius: 7 },
+  { id: 'River', radius: 5 },
+  { id: 'Stocking', radius: 4 },
+];
+
 function collection(features: PointCollection['features']): PointCollection {
   return { type: 'FeatureCollection', features };
 }
 
-function gaugePoints(gauges: GaugeView[]): PointCollection {
+function placePoints(places: MapPlace[], kind: FreshwaterKind): PointCollection {
   return collection(
-    gauges.flatMap((gauge) => {
-      if (gauge.lat == null || gauge.lon == null) return [];
+    places.flatMap((place) => {
+      if (place.kind !== kind) return [];
       return [{
         type: 'Feature' as const,
-        geometry: { type: 'Point' as const, coordinates: [gauge.lon, gauge.lat] as [number, number] },
+        geometry: { type: 'Point' as const, coordinates: [place.lon, place.lat] as [number, number] },
         properties: {
-          site: gauge.site,
-          name: gauge.name,
-          region: gauge.region,
+          id: place.id,
+          kind: place.kind,
+          name: place.name,
+          status: place.status ?? '',
+          href: place.href ?? '',
+          external: place.external ? 'true' : 'false',
+          site: place.site ?? '',
         },
       }];
     }),
@@ -95,13 +111,44 @@ function parkingPopup(properties: Record<string, string>): HTMLElement {
   return root;
 }
 
+function placePopup(properties: Record<string, string>): HTMLElement {
+  const root = document.createElement('div');
+  root.className = 'space-y-1 text-sm';
+  line(root, properties.name || 'Water', 'pr-6 font-bold');
+  if (properties.kind) line(root, properties.kind, 'text-gray-700');
+  if (properties.status) line(root, properties.status, '');
+  if (properties.href) {
+    const link = document.createElement('a');
+    link.href = properties.href;
+    if (properties.external === 'true') {
+      link.target = '_blank';
+      link.rel = 'noopener noreferrer';
+    }
+    link.className = 'block font-bold underline';
+    link.textContent = properties.external === 'true' ? 'Site' : 'Page';
+    root.append(link);
+  }
+  return root;
+}
+
+function fit(map: MlMap, places: MapPlace[], parking: ParkingArea[], showParking: boolean) {
+  const bounds = new LngLatBounds();
+  for (const place of places) bounds.extend([place.lon, place.lat]);
+  if (showParking) {
+    for (const area of parking) {
+      if (area.lat != null && area.lon != null) bounds.extend([area.lon, area.lat]);
+    }
+  }
+  if (!bounds.isEmpty()) map.fitBounds(bounds, { padding: 36, maxZoom: 9 });
+}
+
 export default function FishingMap({
-  gauges,
+  places,
   parking,
   showParking,
   onSelect,
 }: {
-  gauges: GaugeView[];
+  places: MapPlace[];
   parking: ParkingArea[];
   showParking: boolean;
   onSelect: (site: string) => void;
@@ -110,16 +157,16 @@ export default function FishingMap({
   const mapRef = useRef<MlMap | null>(null);
   const popupRef = useRef<Popup | null>(null);
   const onSelectRef = useRef(onSelect);
-  const gaugesRef = useRef(gauges);
+  const placesRef = useRef(places);
   const parkingRef = useRef(parking);
   const showParkingRef = useRef(showParking);
 
   useEffect(() => {
     onSelectRef.current = onSelect;
-    gaugesRef.current = gauges;
+    placesRef.current = places;
     parkingRef.current = parking;
     showParkingRef.current = showParking;
-  }, [gauges, onSelect, parking, showParking]);
+  }, [onSelect, parking, places, showParking]);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -135,7 +182,6 @@ export default function FishingMap({
     mapRef.current = map;
 
     map.on('load', () => {
-      map.addSource('gauges', { type: 'geojson', data: gaugePoints(gaugesRef.current) });
       map.addSource('parking', { type: 'geojson', data: parkingPoints(parkingRef.current) });
       map.addLayer({
         id: 'parking',
@@ -144,59 +190,60 @@ export default function FishingMap({
         layout: { visibility: showParkingRef.current ? 'visible' : 'none' },
         paint: {
           'circle-radius': 4,
-          'circle-color': '#8a5a2a',
+          'circle-color': WATER_PIN_COLOR.parking,
           'circle-stroke-width': 1,
           'circle-stroke-color': '#1a1a1a',
         },
       });
-      map.addLayer({
-        id: 'gauges',
-        type: 'circle',
-        source: 'gauges',
-        paint: {
-          'circle-radius': 5,
-          'circle-color': '#1e4d2b',
-          'circle-stroke-width': 1,
-          'circle-stroke-color': '#1a1a1a',
-        },
+      for (const layer of LAYERS) {
+        map.addSource(layer.id, { type: 'geojson', data: placePoints(placesRef.current, layer.id) });
+        map.addLayer({
+          id: layer.id,
+          type: 'circle',
+          source: layer.id,
+          paint: {
+            'circle-radius': layer.radius,
+            'circle-color': WATER_PIN_COLOR[layer.id],
+            'circle-stroke-width': 1,
+            'circle-stroke-color': '#1a1a1a',
+          },
+        });
+      }
+
+      map.on('click', 'River', (event) => {
+        const site = event.features?.[0]?.properties?.site;
+        if (typeof site === 'string' && site) onSelectRef.current(site);
       });
-
-      const bounds = new LngLatBounds();
-      for (const gauge of gaugesRef.current) {
-        if (gauge.lat != null && gauge.lon != null) bounds.extend([gauge.lon, gauge.lat]);
+      for (const layer of ['Lake', 'Stocking'] as const) {
+        map.on('click', layer, (event) => {
+          const properties = event.features?.[0]?.properties;
+          if (!properties) return;
+          popupRef.current?.remove();
+          popupRef.current = new Popup({ closeButton: true, maxWidth: '18rem', className: 'bnqt-popup', offset: 8 })
+            .setLngLat(event.lngLat)
+            .setDOMContent(placePopup(properties as Record<string, string>))
+            .addTo(map);
+        });
       }
-      for (const area of parkingRef.current) {
-        if (area.lat != null && area.lon != null) bounds.extend([area.lon, area.lat]);
+      map.on('click', 'parking', (event) => {
+        const properties = event.features?.[0]?.properties;
+        if (!properties) return;
+        popupRef.current?.remove();
+        popupRef.current = new Popup({ closeButton: true, maxWidth: '18rem', className: 'bnqt-popup', offset: 8 })
+          .setLngLat(event.lngLat)
+          .setDOMContent(parkingPopup(properties as Record<string, string>))
+          .addTo(map);
+      });
+      for (const layer of ['River', 'Lake', 'Stocking', 'parking']) {
+        map.on('mouseenter', layer, () => {
+          map.getCanvas().style.cursor = 'pointer';
+        });
+        map.on('mouseleave', layer, () => {
+          map.getCanvas().style.cursor = '';
+        });
       }
-      if (!bounds.isEmpty()) map.fitBounds(bounds, { padding: 36, maxZoom: 9 });
-    });
 
-    map.on('click', 'gauges', (event) => {
-      const site = event.features?.[0]?.properties?.site;
-      if (typeof site === 'string' && site) onSelectRef.current(site);
-    });
-    map.on('click', 'parking', (event) => {
-      const feature = event.features?.[0];
-      const properties = feature?.properties;
-      if (!properties) return;
-      popupRef.current?.remove();
-      const popup = new Popup({ closeButton: true, maxWidth: '18rem', className: 'bnqt-popup', offset: 8 })
-        .setLngLat(event.lngLat)
-        .setDOMContent(parkingPopup(properties as Record<string, string>))
-        .addTo(map);
-      popupRef.current = popup;
-    });
-    map.on('mouseenter', 'gauges', () => {
-      map.getCanvas().style.cursor = 'pointer';
-    });
-    map.on('mouseleave', 'gauges', () => {
-      map.getCanvas().style.cursor = '';
-    });
-    map.on('mouseenter', 'parking', () => {
-      map.getCanvas().style.cursor = 'pointer';
-    });
-    map.on('mouseleave', 'parking', () => {
-      map.getCanvas().style.cursor = '';
+      fit(map, placesRef.current, parkingRef.current, showParkingRef.current);
     });
 
     const frame = requestAnimationFrame(() => map.resize());
@@ -210,13 +257,16 @@ export default function FishingMap({
 
   useEffect(() => {
     const map = mapRef.current;
-    if (!map?.isStyleLoaded()) return;
-    (map.getSource('gauges') as GeoJSONSource | undefined)?.setData(gaugePoints(gauges));
+    if (!map?.isStyleLoaded() || !map.getSource('River')) return;
+    for (const layer of LAYERS) {
+      (map.getSource(layer.id) as GeoJSONSource | undefined)?.setData(placePoints(places, layer.id));
+    }
     (map.getSource('parking') as GeoJSONSource | undefined)?.setData(parkingPoints(parking));
     if (map.getLayer('parking')) {
       map.setLayoutProperty('parking', 'visibility', showParking ? 'visible' : 'none');
     }
-  }, [gauges, parking, showParking]);
+    fit(map, places, parking, showParking);
+  }, [parking, places, showParking]);
 
   return <div ref={containerRef} className="h-96 w-full" />;
 }

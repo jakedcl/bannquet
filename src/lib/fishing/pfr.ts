@@ -91,4 +91,4 @@ async function fetchParking(): Promise<ParkingLoad> {
   return { areas, truncated: body.length >= LIMIT }
 }
 
-export const loadParkingAreas = unstable_cache(fetchParking, ['fishing-ny-pfr-v1'], { revalidate: 86400 })
+export const loadParkingAreas = unstable_cache(fetchParking, ['fishing-ny-pfr-v1'], { revalidate: 3600 })

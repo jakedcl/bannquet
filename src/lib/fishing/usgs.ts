@@ -218,7 +218,7 @@ async function fetchGaugeSource(now: number): Promise<GaugeView[]> {
 
 const cachedGaugeSource = unstable_cache(
   async () => fetchGaugeSource(Date.now()),
-  ['fishing-mountain-gauges-v2'],
+  ['fishing-mountain-gauges-v3'],
   { revalidate: 900 },
 )
 
