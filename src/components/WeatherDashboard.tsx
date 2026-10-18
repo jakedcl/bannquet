@@ -6,7 +6,8 @@ import { Window } from '@/components/retro/Window';
 import { LoadingLines } from '@/components/ui/LoadingLines';
 import { getWeather } from '@/lib/weather';
 import type { WeatherSpot } from '@/lib/regions';
-import type { ForecastSnippet, WeatherData } from '@/types/weather';
+import { ForecastStrip } from '@/components/ui/ForecastStrip';
+import type { WeatherData } from '@/types/weather';
 
 type WeatherDashboardProps = {
   spot: WeatherSpot;
@@ -150,45 +151,3 @@ function Metric({ label, value }: { label: string; value: string }) {
   );
 }
 
-function ForecastStrip({
-  label,
-  items,
-  variant = 'hourly',
-}: {
-  label: string;
-  items: ForecastSnippet[];
-  variant?: 'hourly' | 'daily';
-}) {
-  if (items.length === 0) return null;
-
-  return (
-    <section className="min-w-0 max-w-full space-y-2 border border-border-gray bg-beige/40 px-3 py-2">
-      <h3 className="text-sm font-bold uppercase">{label}</h3>
-      <ul className="flex w-full min-w-0 gap-2 overflow-x-auto overscroll-x-contain pb-1">
-        {items.map((period) => (
-          <li key={`${period.startTime}-${label}`} className="w-28 shrink-0 bg-white px-2 py-1 text-xs">
-            <span className="block font-bold">
-              {variant === 'daily' ? period.name : periodLabel(period)}
-            </span>
-            {variant === 'daily' && period.secondaryTemp !== undefined ? (
-              <>
-                <span className="block">{period.temperature}° hi</span>
-                <span className="block">{period.secondaryTemp}° lo</span>
-              </>
-            ) : (
-              <span className="block">{period.temperature}°</span>
-            )}
-            <span className="block truncate">{period.windSpeed || '—'}</span>
-            <span className="block truncate">{period.shortForecast || '—'}</span>
-          </li>
-        ))}
-      </ul>
-    </section>
-  );
-}
-
-function periodLabel(period: ForecastSnippet): string {
-  const name = period.name?.trim() ?? '';
-  if (name && name !== 'This Afternoon' && name !== 'Overnight') return name;
-  return new Date(period.startTime).toLocaleTimeString([], { hour: 'numeric' });
-}

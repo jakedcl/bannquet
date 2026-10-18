@@ -95,7 +95,7 @@ test('assemble keeps measured fields and leaves the rest blank', () => {
   assert.equal(neversink.flow, '133')
   assert.equal(neversink.trend, '-8')
   assert.equal(neversink.height, '6.82 ft')
-  assert.equal(neversink.temp, '11.7 °C (53.1 °F)')
+  assert.equal(neversink.temp, '53.1 °F (11.7 °C)')
   assert.equal(neversink.tempState, 'value')
   assert.equal(neversink.status, 'Provisional')
 

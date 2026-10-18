@@ -64,7 +64,7 @@ async function fetchPlannedStocking(): Promise<PlannedStockingLoad> {
 
 async function fetchMaineStocking(): Promise<MaineStockingReport> {
   const response = await fetch(MAINE_PDF, {
-    headers: { 'User-Agent': 'Bannquet (admin@bannquet.com)' },
+    headers: { 'User-Agent': 'Mozilla/5.0 (compatible; Bannquet/1.0; +https://bannquet.com)' },
     cache: 'no-store',
   })
   if (!response.ok) throw new Error(`Maine stocking PDF returned ${response.status}`)
@@ -77,6 +77,69 @@ async function fetchMaineStocking(): Promise<MaineStockingReport> {
   return report
 }
 
-export const loadPlannedStocking = unstable_cache(fetchPlannedStocking, ['fishing-ny-planned-v1'], { revalidate: 86400 })
+export const loadPlannedStocking = unstable_cache(fetchPlannedStocking, ['fishing-ny-planned-v1'], { revalidate: 3600 })
 
-export const loadMaineStocking = unstable_cache(fetchMaineStocking, ['fishing-me-stocking-v1'], { revalidate: 21600 })
+export const loadMaineStocking = unstable_cache(fetchMaineStocking, ['fishing-me-stocking-v2'], { revalidate: 3600 })
+
+export type ActualStocking = {
+  id: string
+  county: string | null
+  town: string | null
+  waterbody: string
+  when: string
+  number: string | null
+  species: string | null
+}
+
+export type ActualStockingLoad = {
+  year: string
+  rows: ActualStocking[]
+  truncated: boolean
+}
+
+const ACTUAL_LIMIT = 3000
+
+async function fetchActualStocking(): Promise<ActualStockingLoad> {
+  const headers = { Accept: 'application/json', 'User-Agent': 'Bannquet (admin@bannquet.com)' }
+  const yearsUrl = new URL('https://data.ny.gov/resource/e52k-ymww.json')
+  yearsUrl.searchParams.set('$select', 'year')
+  yearsUrl.searchParams.set('$group', 'year')
+  yearsUrl.searchParams.set('$order', 'year DESC')
+  yearsUrl.searchParams.set('$limit', '1')
+  const yearsResponse = await fetch(yearsUrl, { headers, cache: 'no-store' })
+  if (!yearsResponse.ok) throw new Error(`NY actual stocking returned ${yearsResponse.status}`)
+  const years = (await yearsResponse.json()) as unknown
+  const year = Array.isArray(years) && years[0] && typeof years[0] === 'object' ? text((years[0] as Record<string, unknown>).year) : null
+  if (!year) throw new Error('NY actual stocking had no year')
+
+  const url = new URL('https://data.ny.gov/resource/e52k-ymww.json')
+  url.searchParams.set('$select', 'year,county,town,waterbody,month,number,species')
+  url.searchParams.set('$where', `year='${year.replaceAll("'", '')}'`)
+  url.searchParams.set('$limit', String(ACTUAL_LIMIT))
+  url.searchParams.set('$order', 'county,waterbody')
+  const response = await fetch(url, { headers, cache: 'no-store' })
+  if (!response.ok) throw new Error(`NY actual stocking returned ${response.status}`)
+  const body = (await response.json()) as unknown
+  if (!Array.isArray(body)) throw new Error('NY actual stocking did not return a list')
+
+  const rows: ActualStocking[] = []
+  body.forEach((row, index) => {
+    if (!row || typeof row !== 'object') return
+    const record = row as Record<string, unknown>
+    const waterbody = text(record.waterbody)
+    if (!waterbody) return
+    const month = text(record.month)
+    rows.push({
+      id: `${year}-${waterbody}-${index}`,
+      county: text(record.county),
+      town: text(record.town),
+      waterbody,
+      when: month ? `${month} ${year}` : year,
+      number: text(record.number),
+      species: text(record.species),
+    })
+  })
+  return { year, rows, truncated: body.length >= ACTUAL_LIMIT }
+}
+
+export const loadActualStocking = unstable_cache(fetchActualStocking, ['fishing-ny-actual-v1'], { revalidate: 3600 })

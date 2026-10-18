@@ -63,6 +63,7 @@ export type GaugeView = {
   tempAt: string | null
   status: string | null
   usgsHref: string
+  verdict?: string | null
 }
 
 export function parseGaugeNumber(value: unknown): number | null {
@@ -172,7 +173,20 @@ export function formatTemperature(value: string, unit: string | null): string | 
   const celsius = parseGaugeNumber(value)
   if (celsius == null) return null
   const fahrenheit = celsiusToFahrenheit(celsius)
-  return `${value} °C (${fahrenheit.toFixed(1)} °F)`
+  return `${fahrenheit.toFixed(1)} °F (${value} °C)`
+}
+
+const SMALL_WORDS = new Set(['near', 'at', 'below', 'above', 'of', 'the', 'and', 'on', 'for', 'by'])
+const TRAILING_STATE = /\s+(NY|NJ|PA|CT|MA|VT|NH|ME)$/i
+
+export function plainWaterName(name: string): string {
+  const trimmed = name.replace(TRAILING_STATE, '').replace(/\s+/g, ' ').trim()
+  return trimmed.split(/(\s+|-)/).map((part, index) => {
+    if (!part.trim() || part === '-') return part
+    const lower = part.toLowerCase()
+    if (index > 0 && SMALL_WORDS.has(lower)) return lower
+    return lower.charAt(0).toUpperCase() + lower.slice(1)
+  }).join('')
 }
 
 type Field = {

@@ -14,7 +14,17 @@
  * Laplatte River at Shelburne Falls is in the Champlain valley, so it is not
  * listed under the Greens.
  */
-export const FISHING_REGIONS = ['Catskills', 'Adirondacks', 'Greens', 'Whites', 'Maine'] as const
+export const FISHING_REGIONS = [
+  'Catskills',
+  'Adirondacks',
+  'Greens',
+  'Whites',
+  'Maine',
+  'New Jersey',
+  'Pennsylvania',
+  'Connecticut',
+  'Massachusetts',
+] as const
 
 export type FishingRegion = (typeof FISHING_REGIONS)[number]
 
@@ -23,6 +33,11 @@ export type CuratedGauge = {
   region: FishingRegion
 }
 
+/**
+ * New Jersey, Pennsylvania, Connecticut, and Massachusetts sites were returned
+ * by the USGS monitoring-locations API on 2026-10-17, each with a current
+ * discharge. They are fishing gauges only, not mountain-weather spots.
+ */
 export const MOUNTAIN_GAUGES: CuratedGauge[] = [
   { site: '0136219503', region: 'Catskills' },
   { site: '01362200', region: 'Catskills' },
@@ -58,6 +73,21 @@ export const MOUNTAIN_GAUGES: CuratedGauge[] = [
   { site: '01137500', region: 'Whites' },
   { site: '01054200', region: 'Maine' },
   { site: '01029100', region: 'Maine' },
+  { site: '01445500', region: 'New Jersey' },
+  { site: '01457000', region: 'New Jersey' },
+  { site: '01443500', region: 'New Jersey' },
+  { site: '01440000', region: 'New Jersey' },
+  { site: '01387500', region: 'New Jersey' },
+  { site: '01442500', region: 'Pennsylvania' },
+  { site: '01431500', region: 'Pennsylvania' },
+  { site: '01447500', region: 'Pennsylvania' },
+  { site: '01539000', region: 'Pennsylvania' },
+  { site: '01199000', region: 'Connecticut' },
+  { site: '01188090', region: 'Connecticut' },
+  { site: '01193500', region: 'Connecticut' },
+  { site: '01168500', region: 'Massachusetts' },
+  { site: '01181000', region: 'Massachusetts' },
+  { site: '01175500', region: 'Massachusetts' },
 ]
 
 export const MOUNTAIN_NY_COUNTIES = [

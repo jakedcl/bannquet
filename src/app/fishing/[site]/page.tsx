@@ -4,7 +4,9 @@ import { GaugeForecast, GaugeSpot } from '@/components/fishing/GaugeSpot';
 import { Window } from '@/components/retro/Window';
 import { CrumbLeaf } from '@/components/ui/BackBar';
 import PageWrapper from '@/components/ui/PageWrapper';
-import type { GaugeView } from '@/lib/fishing/readings';
+import { easternMonthDay, loadDailyMedians } from '@/lib/fishing/daily-stats';
+import { withVerdicts } from '@/lib/fishing/flow-verdict';
+import { plainWaterName, type GaugeView } from '@/lib/fishing/readings';
 import { loadMountainGauges } from '@/lib/fishing/usgs';
 
 export const dynamic = 'force-dynamic';
@@ -25,25 +27,34 @@ export default async function FishingSpotPage({ params }: { params: Promise<{ si
   }
 
   const gauge = gauges.find((item) => item.site === site) ?? null;
-  // Server clock so the age label in the HTML matches the client.
   // eslint-disable-next-line react-hooks/purity
   const now = Date.now();
+  let shown = gauge;
+  if (gauge) {
+    try {
+      const { month, day } = easternMonthDay(now);
+      const medians = await loadDailyMedians([gauge.site], month, day);
+      shown = withVerdicts([gauge], medians)[0] ?? gauge;
+    } catch {
+      console.error('Gauge median did not load', site);
+    }
+  }
 
   return (
     <PageWrapper>
-      <CrumbLeaf label={gauge?.name ?? 'Gauge'} />
+      <CrumbLeaf label={shown ? plainWaterName(shown.name) : 'Gauge'} />
       <div className="mx-auto max-w-3xl px-4 py-10">
         {unavailable ? (
           <Window title="Gauge">
             <p className="text-sm font-bold">Data unavailable</p>
           </Window>
-        ) : gauge ? (
-          <GaugeSpot gauge={gauge} now={now} forecast={<GaugeForecast gauge={gauge} />} />
+        ) : shown ? (
+          <GaugeSpot gauge={shown} now={now} forecast={<GaugeForecast gauge={shown} />} />
         ) : (
           <Window title="Gauge">
             <p className="text-sm font-bold">That gauge is not in this list.</p>
             <p className="mt-3 text-sm">
-              <Link href="/fishing" className="font-bold underline">Mountain fishing</Link>
+              <Link href="/fishing/freshwater" className="font-bold underline">Freshwater</Link>
             </p>
           </Window>
         )}
