@@ -1,7 +1,7 @@
 'use client';
 
 import { useActionState, useRef, useState } from 'react';
-import Image from 'next/image';
+import { draftPhotoSources, SmallPhotoImage } from '@/components/ui/SmallPhotoImage';
 import { createTripAction } from '@/app/trips/actions';
 import { PinForm } from '@/components/pins/PinForm';
 import { PhotoUpload, RouteUpload } from '@/components/posts/ProfileAdds';
@@ -124,9 +124,22 @@ export function NewTripForm({
               {attached.map((item) => (
                 <li key={`${item.kind}-${item.id}`} className="flex items-center gap-2 text-sm">
                   <input type="hidden" name={item.kind} value={item.id} />
-                  {item.thumb ? (
-                    <Image src={item.thumb} alt="" width={32} height={32} className="h-8 w-8 shrink-0 object-cover" />
-                  ) : (
+                  {(() => {
+                    const photo = draftPhotoSources(item);
+                    if (photo) {
+                      return (
+                        <SmallPhotoImage
+                          url={photo.url}
+                          thumbUrl={photo.thumbUrl}
+                          alt=""
+                          width={32}
+                          height={32}
+                          className="h-8 w-8 shrink-0 object-cover"
+                        />
+                      );
+                    }
+                    return null;
+                  })() ?? (
                     <span className={`inline-block h-8 w-8 shrink-0 ${item.kind === 'pin' ? 'bg-[#c0392b]' : item.kind === 'route' ? 'bg-[#1f4e9c]' : 'bg-[#e67e22]'}`} aria-hidden="true" />
                   )}
                   <span className="min-w-0 flex-1 truncate font-bold">{item.label}</span>
@@ -163,7 +176,14 @@ export function NewTripForm({
         ref={pickerRef}
         catalog={[...extra, ...catalog]}
         viewerId={viewerId}
-        onPick={(item) => addItems([{ kind: item.kind, id: item.id, label: item.label, thumb: item.thumb }])}
+        onPick={(item) => addItems([{
+          kind: item.kind,
+          id: item.id,
+          label: item.label,
+          thumb: item.thumb,
+          photoUrl: item.photoUrl,
+          photoThumbUrl: item.photoThumbUrl,
+        }])}
       />
       <dialog
         ref={createRef}

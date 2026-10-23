@@ -202,6 +202,7 @@ export const photos = pgTable(
     id: uuid('id').primaryKey().defaultRandom(),
     userId: text('user_id').references(() => users.id, { onDelete: 'set null' }),
     blobUrl: text('blob_url').notNull(),
+    thumbUrl: text('thumb_url'),
     width: integer('width'),
     height: integer('height'),
     takenAt: timestamp('taken_at', { withTimezone: true }),

@@ -10,10 +10,6 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
-        hostname: "cdn.sanity.io",
-      },
-      {
-        protocol: "https",
         hostname: "*.public.blob.vercel-storage.com",
       },
     ],

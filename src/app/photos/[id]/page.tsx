@@ -86,6 +86,8 @@ export default async function PhotoPage({
             alt={photo.caption || ''}
             width={1200}
             height={800}
+            unoptimized
+            sizes="(max-width: 768px) 100vw, 48rem"
             className="h-auto w-full bg-white object-contain retro-box"
           />
           <p className="mt-3 text-sm">

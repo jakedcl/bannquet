@@ -1,4 +1,4 @@
-import Image from 'next/image';
+import { SmallPhotoImage } from '@/components/ui/SmallPhotoImage';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import PageWrapper from '@/components/ui/PageWrapper';
@@ -75,7 +75,14 @@ export default async function PinPage({
             <div className="mt-4 grid grid-cols-3 gap-2">
               {pin.photos.map((photo) => (
                 <Link key={photo.id} href={`/photos/${photo.id}`}>
-                  <Image src={photo.url} alt={photo.alt || ''} width={240} height={240} className="h-28 w-full object-cover retro-box" />
+                  <SmallPhotoImage
+                    url={photo.url}
+                    thumbUrl={photo.thumbUrl}
+                    alt={photo.alt || ''}
+                    width={240}
+                    height={240}
+                    className="h-28 w-full object-cover retro-box"
+                  />
                 </Link>
               ))}
             </div>

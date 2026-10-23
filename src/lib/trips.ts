@@ -42,6 +42,8 @@ export type TripAttachment = {
   label: string;
   href: string;
   thumb: string | null;
+  photoUrl?: string | null;
+  photoThumbUrl?: string | null;
 };
 
 export type TripDetail = TripSummary & {
@@ -112,7 +114,7 @@ export async function getTrip(id: string): Promise<TripDetail | null> {
       join tracks t on t.id = tr.track_id
       where tr.trip_id = ${id}::uuid
       union all
-      select 'photo', ph.id::text, coalesce(ph.caption, ph.alt, 'Photo'), ph.blob_url
+      select 'photo', ph.id::text, coalesce(ph.caption, ph.alt, 'Photo'), ph.blob_url, ph.thumb_url
       from trip_photos tp
       join photos ph on ph.id = tp.photo_id
       where tp.trip_id = ${id}::uuid
@@ -145,7 +147,17 @@ export async function getTrip(id: string): Promise<TripDetail | null> {
       const href = kind === 'pin' ? `/pins/${itemId}` : kind === 'route' ? `/routes/${itemId}` : `/photos/${itemId}`;
       const raw = text(item.label);
       const label = kind === 'route' ? routeTitle(raw) : (raw ?? 'Item');
-      return [{ kind, id: itemId, label, href, thumb: text(item.thumb) }];
+      const photoUrl = kind === 'photo' ? text(item.thumb) : null;
+      const photoThumbUrl = kind === 'photo' ? text(item.thumb_url) : null;
+      return [{
+        kind,
+        id: itemId,
+        label,
+        href,
+        thumb: photoThumbUrl ?? photoUrl,
+        photoUrl,
+        photoThumbUrl,
+      }];
     }),
     posts: [],
   };
