@@ -1,5 +1,17 @@
 export const PHOTO_MAX_EDGE = 2000;
+export const PHOTO_THUMB_MAX_EDGE = 480;
 export const PHOTO_JPEG_QUALITY = 0.85;
+
+/** Small grid / chip photos: Blob thumb when present, else full URL via Vercel Image Optimization. */
+export function smallPhotoImageProps(photo: {
+  url: string;
+  thumbUrl?: string | null;
+}): { src: string; unoptimized: boolean } {
+  if (photo.thumbUrl) {
+    return { src: photo.thumbUrl, unoptimized: true };
+  }
+  return { src: photo.url, unoptimized: false };
+}
 
 export function fittedSize(
   width: number,

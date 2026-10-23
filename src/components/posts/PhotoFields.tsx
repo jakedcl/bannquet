@@ -71,6 +71,7 @@ export function PhotoFields({
         name="photos"
         value={JSON.stringify(photos.map((photo) => ({
           url: photo.url,
+          thumbUrl: photo.thumbUrl,
           width: photo.width,
           height: photo.height,
           lat: photo.lat,

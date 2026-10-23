@@ -18,6 +18,7 @@ export type MapFeatureCollection = {
 
 export type PreparedPhoto = {
   url: string;
+  thumbUrl: string | null;
   width: number;
   height: number;
   lat: number | null;
@@ -52,8 +53,11 @@ export function parseUploadedPhotos(
       return { photos: [], error: 'A photo has no location. Drop a pin on the map, or remove it.' };
     }
     const source = record.source === 'exif' || record.source === 'manual' ? record.source : 'manual';
+    const thumbRaw = typeof record.thumbUrl === 'string' ? record.thumbUrl : '';
+    const thumbUrl = thumbRaw && isPublicBlobUrl(thumbRaw) ? thumbRaw : null;
     photos.push({
       url,
+      thumbUrl,
       width: typeof record.width === 'number' ? record.width : 0,
       height: typeof record.height === 'number' ? record.height : 0,
       lat: located ? lat : null,
@@ -287,18 +291,21 @@ export async function addProfileTrack(input: {
   return id;
 }
 
-export async function addProfilePhotos(input: { userId: string; photos: PreparedPhoto[] }): Promise<Array<{ id: string; url: string }>> {
+export async function addProfilePhotos(
+  input: { userId: string; photos: PreparedPhoto[] },
+): Promise<Array<{ id: string; url: string; thumbUrl: string | null }>> {
   const db = getDb();
-  const saved: Array<{ id: string; url: string }> = [];
+  const saved: Array<{ id: string; url: string; thumbUrl: string | null }> = [];
   for (const [index, photo] of input.photos.entries()) {
     if (!isPublicBlobUrl(photo.url) || photo.lat == null || photo.lng == null || !isLatLng(photo.lat, photo.lng)) {
       continue;
     }
     const inserted = await db.execute(sql`
-      insert into photos (user_id, blob_url, width, height, point, point_source, sort_order, alt)
+      insert into photos (user_id, blob_url, thumb_url, width, height, point, point_source, sort_order, alt)
       values (
         ${input.userId},
         ${photo.url},
+        ${photo.thumbUrl},
         ${photo.width || null},
         ${photo.height || null},
         ST_SetSRID(ST_MakePoint(${photo.lng}, ${photo.lat}), 4326)::geography,
@@ -309,7 +316,7 @@ export async function addProfilePhotos(input: { userId: string; photos: Prepared
       returning id::text as id
     `);
     const id = text(asRows(inserted)[0]?.id);
-    if (id) saved.push({ id, url: photo.url });
+    if (id) saved.push({ id, url: photo.url, thumbUrl: photo.thumbUrl });
   }
   return saved;
 }
@@ -317,7 +324,7 @@ export async function addProfilePhotos(input: { userId: string; photos: Prepared
 export type ProfileLibrary = {
   posts: Array<{ id: string; title: string; tripDate: string | null; activity: string | null; tagged: boolean }>;
   routes: Array<{ id: string; name: string; activity: string; distanceM: number | null; elevGainM: number | null; postId: string | null }>;
-  photos: Array<{ id: string; url: string; caption: string | null; postId: string | null; pinId: string | null }>;
+  photos: Array<{ id: string; url: string; thumbUrl: string | null; caption: string | null; postId: string | null; pinId: string | null }>;
 };
 
 export async function loadProfileLibrary(userId: string): Promise<ProfileLibrary> {
@@ -330,7 +337,7 @@ export async function loadProfileLibrary(userId: string): Promise<ProfileLibrary
       order by started_at desc nulls last, created_at desc
     `),
     db.execute(sql`
-      select id::text as id, blob_url as url, caption, pin_id::text as pin_id
+      select id::text as id, blob_url as url, thumb_url as thumb_url, caption, pin_id::text as pin_id
       from photos
       where user_id = ${userId}
       order by created_at desc
@@ -356,7 +363,14 @@ export async function loadProfileLibrary(userId: string): Promise<ProfileLibrary
       const id = text(row.id);
       const url = text(row.url);
       if (!id || !url) return [];
-      return [{ id, url, caption: text(row.caption), postId: null, pinId: text(row.pin_id) }];
+      return [{
+        id,
+        url,
+        thumbUrl: text(row.thumb_url),
+        caption: text(row.caption),
+        postId: null,
+        pinId: text(row.pin_id),
+      }];
     }),
   };
 }
