@@ -104,12 +104,12 @@ export async function getTrip(id: string): Promise<TripDetail | null> {
       order by tm.role desc, name
     `),
     db.execute(sql`
-      select 'pin' as kind, p.id::text as id, p.title as label, null::text as thumb
+      select 'pin' as kind, p.id::text as id, p.title as label, null::text as thumb, null::text as thumb_url
       from trip_pins tp
       join pins p on p.id = tp.pin_id
       where tp.trip_id = ${id}::uuid
       union all
-      select 'route', t.id::text, t.title, null::text
+      select 'route', t.id::text, t.title, null::text, null::text
       from trip_routes tr
       join tracks t on t.id = tr.track_id
       where tr.trip_id = ${id}::uuid
