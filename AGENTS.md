@@ -17,10 +17,11 @@ Mountain weather, trip posts, peaks challenges, trips, and a map for a Northeast
 
 ## Commands
 - `npm run dev`, `npm run build`, `npm run lint`, `npm run typecheck`, `npm test` (tsx --test; new test files must be added to the script list).
-- `npm run db:generate` (SQL from schema), `npm run db:migrate` (applies to `DATABASE_URL_UNPOOLED`).
+- `npm run db:generate` (SQL from schema). Do **not** run `npm run db:migrate` on production; see `docs/environments.md`.
 
 ## Gotchas
-- `DATABASE_URL` is the pooled Neon URL (`-pooler`); migrations use the direct `DATABASE_URL_UNPOOLED`. Run migrations on a Neon branch before production.
+- `DATABASE_URL` is the pooled Neon URL (`-pooler`); `DATABASE_URL_UNPOOLED` is the direct one.
+- **Read `docs/environments.md` before any DB, auth or preview work.** In short: Vercel previews use the Neon `preview` branch (its own data and Neon Auth), and production uses `main`. Migrations from 0010 on are applied by hand with `IF NOT EXISTS` SQL. Cloud agents write the SQL file but don't apply it. Test with the standing `bqtester` account on preview only. Blob and Sanity are still shared with live.
 - Sanity import writes only with `CONFIRM_SANITY_MIGRATION=yes`. Always `--dry-run` first, against a branch.
 - New sign-ups can read but can't post until approved on `/admin`; invite links skip that. `ADMIN_EMAIL` (comma-separated) are admins.
 - Old `/trip-reports/<id>` links redirect to `/posts/<id>`; `/hikers/<u>` redirects to `/user/<u>`. Keep those redirects.
