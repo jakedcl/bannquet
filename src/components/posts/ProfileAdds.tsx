@@ -148,13 +148,19 @@ export function PhotoUpload({
   onCreated?: (items: DraftItem[]) => void;
 }) {
   const router = useRouter();
-  const refreshed = useRef(false);
+  const refreshed = useRef<unknown>(null);
   const [photos, setPhotos] = useState<UploadedPhoto[]>([]);
   const [state, action, pending] = useActionState(publishProfilePhotos, null);
+  const [seenState, setSeenState] = useState(state);
+  if (state !== seenState) {
+    setSeenState(state);
+    // Saved photos leave the form so a second tap cannot save them twice.
+    if (state?.saved || state?.created) setPhotos([]);
+  }
   useReportCreated(inline, state?.created, onCreated);
   useEffect(() => {
-    if (!state?.saved || refreshed.current) return;
-    refreshed.current = true;
+    if (!state?.saved || refreshed.current === state) return;
+    refreshed.current = state;
     router.refresh();
   }, [router, state]);
 
@@ -164,6 +170,7 @@ export function PhotoUpload({
       <p className="text-sm font-bold">Add photos</p>
       <PhotoFields photos={photos} onChange={setPhotos} />
       {state?.error ? <p className="text-sm font-bold text-red-700">{state.error}</p> : null}
+      {state?.saved && photos.length === 0 ? <p className="text-sm">Photos saved.</p> : null}
       <SubmitButton pendingLabel="Saving…" disabled={photos.length === 0 || photos.some((photo) => photo.lat == null)}>
         Save photos
       </SubmitButton>

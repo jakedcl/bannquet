@@ -300,6 +300,17 @@ export async function addProfilePhotos(
     if (!isPublicBlobUrl(photo.url) || photo.lat == null || photo.lng == null || !isLatLng(photo.lat, photo.lng)) {
       continue;
     }
+    // A repeat submit of the same upload returns the row that already exists.
+    const existing = await db.execute(sql`
+      select id::text as id, thumb_url from photos
+      where user_id = ${input.userId} and blob_url = ${photo.url}
+      limit 1
+    `);
+    const existingId = text(asRows(existing)[0]?.id);
+    if (existingId) {
+      saved.push({ id: existingId, url: photo.url, thumbUrl: text(asRows(existing)[0]?.thumb_url) });
+      continue;
+    }
     const inserted = await db.execute(sql`
       insert into photos (user_id, blob_url, thumb_url, width, height, point, point_source, sort_order, alt)
       values (
