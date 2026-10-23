@@ -1,4 +1,4 @@
-import Image from 'next/image';
+import { AvatarImage } from '@/components/ui/AvatarImage';
 import { notFound, redirect } from 'next/navigation';
 import PageWrapper from '@/components/ui/PageWrapper';
 import { ClimbRows, GearRows, PhotoGrid, PinRows, PostRows, RouteRows, SeeAll, TripRows } from '@/components/profile/ProfileLists';
@@ -82,9 +82,8 @@ export default async function UserPage({ params }: { params: Promise<{ username:
         <Window title={name}>
           <div className="flex items-start gap-4">
             {member.avatarUrl ? (
-              <Image
+              <AvatarImage
                 src={member.avatarUrl}
-                alt=""
                 width={88}
                 height={88}
                 className="avatar-frame h-[88px] w-[88px] object-cover"

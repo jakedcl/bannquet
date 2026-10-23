@@ -25,7 +25,7 @@ test('a new trip only keeps real ids that were asked for', () => {
     photo: undefined,
   });
   assert.deepEqual(preset, [
-    { kind: 'pin', id: PIN, label: 'Heart Lake', thumb: null },
-    { kind: 'route', id: ROUTE, label: 'Route', thumb: null },
+    { kind: 'pin', id: PIN, label: 'Heart Lake', thumb: null, photoUrl: null, photoThumbUrl: null },
+    { kind: 'route', id: ROUTE, label: 'Route', thumb: null, photoUrl: null, photoThumbUrl: null },
   ]);
 });

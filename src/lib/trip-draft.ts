@@ -7,6 +7,8 @@ export type DraftItem = {
   id: string;
   label: string;
   thumb: string | null;
+  photoUrl?: string | null;
+  photoThumbUrl?: string | null;
 };
 
 const FALLBACK: Record<DraftItem['kind'], string> = {
@@ -38,6 +40,8 @@ export function presetFromCatalog(
         id,
         label: found?.label ?? FALLBACK[kind],
         thumb: found?.thumb ?? null,
+        photoUrl: found?.photoUrl ?? null,
+        photoThumbUrl: found?.photoThumbUrl ?? null,
       });
     }
   }

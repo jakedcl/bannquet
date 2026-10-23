@@ -17,7 +17,7 @@ function RegionRow({ region }: { region: RegionGlance }) {
       <Link href={region.href} className="block min-w-0 py-1 text-xs no-underline">
         <span className="flex min-w-0 items-center gap-2">
           {region.icon ? (
-            <Image src={region.icon} alt="" width={20} height={20} className="h-5 w-5 shrink-0 object-contain" />
+            <Image src={region.icon} alt="" width={20} height={20} unoptimized className="h-5 w-5 shrink-0 object-contain" />
           ) : (
             <span className="h-5 w-5 shrink-0" aria-hidden="true" />
           )}

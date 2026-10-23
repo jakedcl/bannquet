@@ -38,14 +38,18 @@ function refFrom(row: Record<string, unknown>): ChatRef | null {
     return { kind, id, label: routeTitle(text(row.route_name)), href: `/routes/${id}`, thumb: null, missing: !exists };
   }
   const label = text(row.photo_label);
-  const thumb = text(row.photo_url);
+  const photoUrl = text(row.photo_url);
+  const photoThumbUrl = text(row.photo_thumb_url);
+  const thumb = photoThumbUrl ?? photoUrl;
   return {
     kind,
     id,
     label: label ?? 'Photo',
     href: `/photos/${id}`,
     thumb,
-    missing: !thumb,
+    photoUrl,
+    photoThumbUrl,
+    missing: !photoUrl,
   };
 }
 
@@ -79,7 +83,8 @@ function messageQuery(cursor?: { after: string; afterId: string } | null) {
       t.id::text as route_id,
       t.title as route_name,
       coalesce(ph.caption, ph.alt, 'Photo') as photo_label,
-      ph.blob_url as photo_url
+      ph.blob_url as photo_url,
+      ph.thumb_url as photo_thumb_url
     from chat_messages m
     left join users u on u.id = m.user_id
     left join pins p on m.ref_kind = 'pin' and p.id = m.ref_id
@@ -161,7 +166,8 @@ export async function listChatCatalog(): Promise<ChatCatalogItem[]> {
       order by t.created_at desc
     `),
     db.execute(sql`
-      select ph.id::text as id, coalesce(ph.caption, ph.alt, 'Photo') as label, ph.blob_url as thumb,
+      select ph.id::text as id, coalesce(ph.caption, ph.alt, 'Photo') as label,
+        ph.blob_url as photo_url, ph.thumb_url as photo_thumb_url,
         ph.user_id as owner_id,
         coalesce(nullif(u.display_name, ''), nullif(u.handle, ''), 'Friend') as owner_name
       from photos ph
@@ -184,7 +190,9 @@ function catalogRow(row: Record<string, unknown>, kind: ChatRefKind): ChatCatalo
     id,
     label: kind === 'route' ? routeTitle(text(row.label)) : (text(row.label) ?? (kind === 'pin' ? 'Pin' : 'Photo')),
     href,
-    thumb: text(row.thumb),
+    thumb: text(row.photo_thumb_url) ?? text(row.photo_url),
+    photoUrl: kind === 'photo' ? text(row.photo_url) : null,
+    photoThumbUrl: kind === 'photo' ? text(row.photo_thumb_url) : null,
     ownerId: text(row.owner_id),
     ownerName: text(row.owner_name) ?? 'Friend',
   }];

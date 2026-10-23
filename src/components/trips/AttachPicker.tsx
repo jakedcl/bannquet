@@ -1,7 +1,7 @@
 'use client';
 
 import { forwardRef, useImperativeHandle, useRef, useState } from 'react';
-import Image from 'next/image';
+import { draftPhotoSources, SmallPhotoImage } from '@/components/ui/SmallPhotoImage';
 import { SearchBar } from '@/components/ui/SearchBar';
 import type { ChatCatalogItem, ChatRefKind } from '@/lib/chat-view';
 
@@ -106,8 +106,18 @@ export const AttachPicker = forwardRef<AttachPickerHandle, {
 });
 
 function Thumb({ item }: { item: ChatCatalogItem }) {
-  if (item.kind === 'photo' && item.thumb) {
-    return <Image src={item.thumb} alt="" width={32} height={32} className="h-8 w-8 shrink-0 object-cover" />;
+  const photo = draftPhotoSources(item);
+  if (photo) {
+    return (
+      <SmallPhotoImage
+        url={photo.url}
+        thumbUrl={photo.thumbUrl}
+        alt=""
+        width={32}
+        height={32}
+        className="h-8 w-8 shrink-0 object-cover"
+      />
+    );
   }
   const color = item.kind === 'pin' ? 'bg-[#c0392b]' : item.kind === 'route' ? 'bg-[#1f4e9c]' : 'bg-[#e67e22]';
   return <span className={`inline-block h-8 w-8 shrink-0 ${color}`} aria-hidden="true" />;

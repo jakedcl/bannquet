@@ -1,6 +1,6 @@
 'use client';
 
-import Image from 'next/image';
+import { SmallPhotoImage } from '@/components/ui/SmallPhotoImage';
 import Link from 'next/link';
 import { ConfirmDelete } from '@/components/delete/ConfirmDelete';
 import { DeleteReport } from '@/components/posts/DeleteReport';
@@ -239,7 +239,7 @@ export function PhotoGrid({
   manage,
   profilePath,
 }: {
-  photos: Array<{ id: string; url: string; caption: string | null }>;
+  photos: Array<{ id: string; url: string; thumbUrl: string | null; caption: string | null }>;
   manage: boolean;
   profilePath: string;
 }) {
@@ -248,7 +248,14 @@ export function PhotoGrid({
       {photos.map((photo) => (
         <figure key={photo.id} className="relative">
           <Link href={`/photos/${photo.id}`}>
-            <Image src={photo.url} alt={photo.caption || ''} width={240} height={240} className="h-28 w-full object-cover retro-box" />
+            <SmallPhotoImage
+              url={photo.url}
+              thumbUrl={photo.thumbUrl}
+              alt={photo.caption || ''}
+              width={240}
+              height={240}
+              className="h-28 w-full object-cover retro-box"
+            />
           </Link>
           {manage ? (
             <div className="absolute right-1 top-1">

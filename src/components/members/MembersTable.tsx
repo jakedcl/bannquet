@@ -1,6 +1,6 @@
 'use client';
 
-import Image from 'next/image';
+import { AvatarImage } from '@/components/ui/AvatarImage';
 import Link from 'next/link';
 import { BrowseTable } from '@/components/ui/BrowseTable';
 import type { DataColumn } from '@/components/ui/DataTable';
@@ -17,7 +17,7 @@ export function MembersTable({ rows }: { rows: DirectoryMember[] }) {
       cell: (row) => {
         const initial = row.name.slice(0, 1).toUpperCase();
         const face = row.avatarUrl ? (
-          <Image src={row.avatarUrl} alt="" width={32} height={32} className="avatar-frame h-8 w-8 object-cover" />
+          <AvatarImage src={row.avatarUrl} width={32} height={32} className="avatar-frame h-8 w-8 object-cover" />
         ) : (
           <span className="avatar-frame flex h-8 w-8 items-center justify-center bg-beige text-xs font-bold">{initial}</span>
         );

@@ -1,7 +1,7 @@
 'use client';
 
 import { useActionState, useEffect, useRef, useState } from 'react';
-import Image from 'next/image';
+import { draftPhotoSources, SmallPhotoImage } from '@/components/ui/SmallPhotoImage';
 import Link from 'next/link';
 import { deleteChatAction, sendChatAction } from '@/app/chat/actions';
 import { SearchBar } from '@/components/ui/SearchBar';
@@ -121,7 +121,17 @@ export function ChatRoom({
         <input type="hidden" name="refId" value={attached?.id ?? ''} />
         {attached ? (
           <p className="flex items-center gap-2 text-sm">
-            <Chip refItem={{ kind: attached.kind, label: attached.label, href: attached.href, thumb: attached.thumb, missing: false }} />
+            <Chip
+              refItem={{
+                kind: attached.kind,
+                label: attached.label,
+                href: attached.href,
+                thumb: attached.thumb,
+                photoUrl: attached.photoUrl,
+                photoThumbUrl: attached.photoThumbUrl,
+                missing: false,
+              }}
+            />
             <button type="button" className="text-xs underline" onClick={() => setAttached(null)}>Remove</button>
           </p>
         ) : null}
@@ -222,8 +232,18 @@ export function ChatRoom({
 }
 
 function Thumb({ item }: { item: ChatCatalogItem }) {
-  if (item.kind === 'photo' && item.thumb) {
-    return <Image src={item.thumb} alt="" width={32} height={32} className="h-8 w-8 shrink-0 object-cover" />;
+  const photo = draftPhotoSources(item);
+  if (photo) {
+    return (
+      <SmallPhotoImage
+        url={photo.url}
+        thumbUrl={photo.thumbUrl}
+        alt=""
+        width={32}
+        height={32}
+        className="h-8 w-8 shrink-0 object-cover"
+      />
+    );
   }
   const color = item.kind === 'pin' ? 'bg-[#c0392b]' : item.kind === 'route' ? 'bg-[#1f4e9c]' : 'bg-[#e67e22]';
   return <span className={`inline-block h-8 w-8 shrink-0 ${color}`} aria-hidden="true" />;
@@ -332,13 +352,35 @@ function ChatLine({
   );
 }
 
-function Chip({ refItem }: { refItem: { kind: string; label: string; href: string; thumb: string | null; missing: boolean } }) {
+function Chip({
+  refItem,
+}: {
+  refItem: {
+    kind: string;
+    label: string;
+    href: string;
+    thumb: string | null;
+    photoUrl?: string | null;
+    photoThumbUrl?: string | null;
+    missing: boolean;
+  };
+}) {
   if (refItem.missing) {
     return <span className="mt-1 inline-block text-xs text-gray-500">That {refItem.kind} is gone.</span>;
   }
+  const photo = draftPhotoSources(refItem);
   return (
     <Link href={refItem.href} className="mt-1 inline-flex items-center gap-2 border border-gray-400 bg-white px-2 py-1 text-xs font-bold">
-      {refItem.thumb ? <Image src={refItem.thumb} alt="" width={28} height={28} className="h-7 w-7 object-cover" /> : null}
+      {photo ? (
+        <SmallPhotoImage
+          url={photo.url}
+          thumbUrl={photo.thumbUrl}
+          alt=""
+          width={28}
+          height={28}
+          className="h-7 w-7 object-cover"
+        />
+      ) : null}
       {refItem.label}
     </Link>
   );
