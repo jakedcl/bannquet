@@ -128,7 +128,6 @@ export function PostForm({
         <div className="space-y-1">
           <span className="block text-sm font-bold">GPX route, if you have one</span>
           <FileInput
-            accept=".gpx,application/gpx+xml,application/xml,text/xml"
             onChange={async (files) => {
               const file = files[0];
               if (!file) {

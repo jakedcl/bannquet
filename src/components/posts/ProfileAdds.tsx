@@ -92,7 +92,6 @@ export function RouteUpload({
         </select>
       </label>
       <FileInput
-        accept=".gpx,application/gpx+xml,text/xml"
         onChange={async (files) => {
           const file = files[0];
           if (!file) {
