@@ -8,14 +8,27 @@ const MAX_FAILURES = 8;
 export const SIGN_IN_RATE_LIMIT_MESSAGE =
   'Too many tries. Wait a few minutes, then try again.';
 
-function bucketKeys(email: string, ip: string): string[] {
-  return [`email:${email}`, `ip:${ip}`];
+export type SignInRateLimitBuckets = {
+  ip: string;
+  email?: string;
+  login?: string;
+};
+
+export function loginRateLimitKey(loginRaw: string): string {
+  return loginRaw.trim().toLowerCase();
 }
 
-export async function signInRateLimitBlocked(email: string, ip: string): Promise<boolean> {
+function bucketKeys(buckets: SignInRateLimitBuckets): string[] {
+  const keys: string[] = [`ip:${buckets.ip}`];
+  if (buckets.email) keys.push(`email:${buckets.email}`);
+  if (buckets.login) keys.push(`login:${buckets.login}`);
+  return keys;
+}
+
+export async function signInRateLimitBlocked(buckets: SignInRateLimitBuckets): Promise<boolean> {
   if (!isDatabaseConfigured()) return false;
   const since = new Date(Date.now() - WINDOW_MS);
-  const keys = bucketKeys(email, ip);
+  const keys = bucketKeys(buckets);
   const db = getDb();
 
   for (const bucketKey of keys) {
@@ -28,20 +41,20 @@ export async function signInRateLimitBlocked(email: string, ip: string): Promise
   return false;
 }
 
-export async function recordSignInFailure(email: string, ip: string): Promise<void> {
+export async function recordSignInFailure(buckets: SignInRateLimitBuckets): Promise<void> {
   if (!isDatabaseConfigured()) return;
   const db = getDb();
-  const keys = bucketKeys(email, ip);
+  const keys = bucketKeys(buckets);
   await db.insert(signInAttempts).values(keys.map((bucketKey) => ({ bucketKey })));
 
   const cutoff = new Date(Date.now() - WINDOW_MS * 2);
   await db.delete(signInAttempts).where(sql`${signInAttempts.attemptedAt} < ${cutoff}`);
 }
 
-export async function clearSignInFailures(email: string, ip: string): Promise<void> {
+export async function clearSignInFailures(buckets: SignInRateLimitBuckets): Promise<void> {
   if (!isDatabaseConfigured()) return;
   const db = getDb();
-  for (const bucketKey of bucketKeys(email, ip)) {
+  for (const bucketKey of bucketKeys(buckets)) {
     await db.delete(signInAttempts).where(eq(signInAttempts.bucketKey, bucketKey));
   }
 }

@@ -26,6 +26,7 @@ import {
 import { resolveLoginIdentifier } from '@/lib/auth/resolve-login';
 import {
   clearSignInFailures,
+  loginRateLimitKey,
   recordSignInFailure,
   SIGN_IN_RATE_LIMIT_MESSAGE,
   signInRateLimitBlocked,
@@ -110,24 +111,31 @@ export async function signInWithPassword(
   if (!isAuthConfigured()) return { error: 'Sign-in is not set up yet.' };
   if (!isDatabaseConfigured()) return { error: 'The member list is not connected yet.' };
 
+  const ip = await clientIp();
+  const loginBucket = loginRateLimitKey(loginRaw);
+
   const resolved = await resolveLoginIdentifier(loginRaw);
   const login = resolved.login;
   if (resolved.kind === 'unknown') {
+    if (await signInRateLimitBlocked({ ip, login: loginBucket })) {
+      logSignInFailure({ login, reason: 'rate_limited' });
+      return { error: SIGN_IN_RATE_LIMIT_MESSAGE };
+    }
+    await recordSignInFailure({ ip, login: loginBucket });
     logSignInFailure({ login, reason: 'no_account' });
     return { error: SIGN_IN_MISMATCH };
   }
 
   const email = resolved.email;
-  const ip = await clientIp();
 
-  if (await signInRateLimitBlocked(email, ip)) {
+  if (await signInRateLimitBlocked({ ip, email })) {
     logSignInFailure({ login, email, reason: 'rate_limited' });
     return { error: SIGN_IN_RATE_LIMIT_MESSAGE };
   }
 
   const allowed = await emailMaySignIn(email);
   if (!allowed) {
-    await recordSignInFailure(email, ip);
+    await recordSignInFailure({ ip, email, login: loginBucket });
     logSignInFailure({ login, email, reason: 'no_account' });
     return { error: SIGN_IN_MISMATCH };
   }
@@ -139,7 +147,7 @@ export async function signInWithPassword(
       logSignInFailure({ login, email, reason: 'rate_limited' });
       return { error: rateMessage };
     }
-    await recordSignInFailure(email, ip);
+    await recordSignInFailure({ ip, email, login: loginBucket });
     logSignInFailure({
       login,
       email,
@@ -148,7 +156,7 @@ export async function signInWithPassword(
     return { error: SIGN_IN_MISMATCH };
   }
 
-  await clearSignInFailures(email, ip);
+  await clearSignInFailures({ ip, email, login: loginBucket });
   const member = await findMemberByEmail(email);
   if (member) await recordLastSignIn(member.id);
   logSignInSuccess(login, email);
