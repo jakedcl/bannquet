@@ -10,6 +10,7 @@ import {
   passwordResetAudit,
   resetLinkExpiry,
   resetLinkState,
+  signInFailureReason,
 } from './passwords';
 
 test('passwords only need a short length', () => {
@@ -57,6 +58,12 @@ test('the reset log stores a hash, never the link secret or a password', () => {
   assert.equal(Object.hasOwn(audit, 'password'), false);
   assert.equal(Object.hasOwn(audit, 'token'), false);
   assert.deepEqual(Object.keys(audit).sort(), ['actorId', 'emailed', 'targetUserId', 'tokenHash']);
+});
+
+test('sign-in failures classify password mistakes separately from other auth errors', () => {
+  assert.equal(signInFailureReason({ code: 'INVALID_EMAIL_OR_PASSWORD' }), 'wrong_password');
+  assert.equal(signInFailureReason({ message: 'Invalid credentials' }), 'wrong_password');
+  assert.equal(signInFailureReason({ code: 'SOMETHING_ELSE' }), 'auth_error');
 });
 
 test('auth failures stay in plain language', () => {

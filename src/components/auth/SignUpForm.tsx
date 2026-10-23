@@ -37,6 +37,7 @@ export function SignUpForm({ stamp }: { stamp: string }) {
         <span className="text-sm font-bold">Username</span>
         <input
           name="username"
+          autoComplete="username"
           required
           minLength={3}
           maxLength={24}

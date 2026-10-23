@@ -29,6 +29,7 @@ export function PasswordField({ name, label, autoComplete, hint }: PasswordField
           type="button"
           className="retro-button shrink-0 px-3 py-2 text-sm font-bold"
           aria-pressed={visible}
+          aria-label={visible ? `Hide ${label.toLowerCase()}` : `Show ${label.toLowerCase()}`}
           onClick={() => setVisible((current) => !current)}
         >
           {visible ? 'Hide' : 'Show'}

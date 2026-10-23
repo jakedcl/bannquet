@@ -120,6 +120,13 @@
       "when": 1792064000000,
       "tag": "0016_track_notes",
       "breakpoints": true
+    },
+    {
+      "idx": 17,
+      "version": "7",
+      "when": 1792068000000,
+      "tag": "0017_sign_in_auth",
+      "breakpoints": true
     }
   ]
 }

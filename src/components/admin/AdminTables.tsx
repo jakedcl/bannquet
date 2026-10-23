@@ -54,6 +54,7 @@ export type AdminMemberRow = {
   href: string | null;
   email: string;
   role: string;
+  lastSignIn: string;
   canReset: boolean;
 };
 
@@ -79,6 +80,12 @@ export function AdminMemberTable({ rows }: { rows: AdminMemberRow[] }) {
       cell: (row) => row.role,
     },
     {
+      id: 'lastSignIn',
+      header: 'Last sign-in',
+      sortValue: (row) => row.lastSignIn,
+      cell: (row) => row.lastSignIn,
+    },
+    {
       id: 'password',
       header: 'Password',
       sortValue: () => null,
@@ -93,7 +100,7 @@ export function AdminMemberTable({ rows }: { rows: AdminMemberRow[] }) {
       empty="Nobody has signed in yet."
       defaultSort={{ id: 'name', dir: 'asc' }}
       placeholder="Name, email, or role"
-      searchText={(row) => `${row.name} ${row.email} ${row.role}`}
+      searchText={(row) => `${row.name} ${row.email} ${row.role} ${row.lastSignIn}`}
       facets={[{ id: 'role', label: 'Role', value: (row) => row.role }]}
       collapsed
     />

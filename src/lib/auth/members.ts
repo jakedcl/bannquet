@@ -33,6 +33,7 @@ export type Member = {
   favoriteActivities: Activity[];
   role: MemberRole;
   homeScreenTipSeenAt: Date | null;
+  lastSignInAt: Date | null;
 };
 
 export type InviteRow = {
@@ -71,7 +72,13 @@ function toMember(row: typeof users.$inferSelect): Member {
     favoriteActivities: asActivities(row.favoriteActivities),
     role: row.role,
     homeScreenTipSeenAt: row.homeScreenTipSeenAt,
+    lastSignInAt: row.lastSignInAt,
   };
+}
+
+export async function recordLastSignIn(userId: string, when = new Date()): Promise<void> {
+  if (!isDatabaseConfigured()) return;
+  await getDb().update(users).set({ lastSignInAt: when }).where(eq(users.id, userId));
 }
 
 export async function findMemberByAuthId(id: string): Promise<Member | null> {
