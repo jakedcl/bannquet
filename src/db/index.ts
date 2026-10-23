@@ -1,6 +1,7 @@
 import { attachDatabasePool } from '@vercel/functions';
 import { drizzle, type NodePgDatabase } from 'drizzle-orm/node-postgres';
 import { Pool } from 'pg';
+import { databaseConnectionString } from '@/db/connection';
 import * as schema from './schema';
 
 export type Database = NodePgDatabase<typeof schema>;
@@ -20,7 +21,7 @@ export function getDb(): Database {
     throw new Error('DATABASE_URL is not set');
   }
 
-  pool = new Pool({ connectionString, max: 5 });
+  pool = new Pool({ connectionString: databaseConnectionString(connectionString), max: 5 });
   attachDatabasePool(pool);
   database = drizzle(pool, { schema });
   return database;

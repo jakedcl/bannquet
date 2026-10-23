@@ -15,11 +15,25 @@ import {
   findMemberByAuthId,
   findMemberByEmail,
   findMemberByHandle,
+  recordLastSignIn,
   updateMemberProfile,
 } from '@/lib/auth/members';
+import { clientIp } from '@/lib/auth/client-ip';
+import {
+  deliverPasswordResetEmail,
+  sendPasswordResetEmailAtUrl,
+} from '@/lib/auth/password-reset-mail';
+import { resolveLoginIdentifier } from '@/lib/auth/resolve-login';
+import {
+  clearSignInFailures,
+  loginRateLimitKey,
+  recordSignInFailure,
+  SIGN_IN_RATE_LIMIT_MESSAGE,
+  signInRateLimitBlocked,
+} from '@/lib/auth/sign-in-rate-limit';
+import { logSignInFailure, logSignInSuccess } from '@/lib/auth/sign-in-log';
 import {
   findPasswordResetLink,
-  markPasswordResetEmailed,
   markPasswordResetLinkUsed,
   savePasswordResetLink,
 } from '@/lib/auth/resets';
@@ -32,6 +46,7 @@ import {
   passwordResetAudit,
   resetLinkExpiry,
   resetLinkState,
+  signInFailureReason,
 } from '@/lib/passwords';
 import { isDatabaseConfigured } from '@/db';
 import {
@@ -74,7 +89,7 @@ export async function getViewer() {
   return findMemberByAuthId(user.id);
 }
 
-const SIGN_IN_MISMATCH = "That email and password didn't match.";
+const SIGN_IN_MISMATCH = "That sign-in didn't match.";
 const RESET_LINK_BAD = 'That reset link is used or expired. Ask Jake for a new one.';
 
 async function requireAdmin() {
@@ -89,18 +104,63 @@ export async function signInWithPassword(
   _prev: { error?: string } | null,
   formData: FormData,
 ): Promise<{ error?: string }> {
-  const email = normalizeEmail(String(formData.get('email') ?? ''));
+  const loginRaw = String(formData.get('login') ?? formData.get('email') ?? '').trim();
   const password = String(formData.get('password') ?? '');
-  if (!isEmail(email)) return { error: 'Enter a real email address.' };
+  if (!loginRaw) return { error: 'Type your email or username.' };
   if (!password) return { error: 'Type your password.' };
   if (!isAuthConfigured()) return { error: 'Sign-in is not set up yet.' };
   if (!isDatabaseConfigured()) return { error: 'The member list is not connected yet.' };
 
+  const ip = await clientIp();
+  const loginBucket = loginRateLimitKey(loginRaw);
+
+  const resolved = await resolveLoginIdentifier(loginRaw);
+  const login = resolved.login;
+  if (resolved.kind === 'unknown') {
+    if (await signInRateLimitBlocked({ ip, login: loginBucket })) {
+      logSignInFailure({ login, reason: 'rate_limited' });
+      return { error: SIGN_IN_RATE_LIMIT_MESSAGE };
+    }
+    await recordSignInFailure({ ip, login: loginBucket });
+    logSignInFailure({ login, reason: 'no_account' });
+    return { error: SIGN_IN_MISMATCH };
+  }
+
+  const email = resolved.email;
+
+  if (await signInRateLimitBlocked({ ip, email })) {
+    logSignInFailure({ login, email, reason: 'rate_limited' });
+    return { error: SIGN_IN_RATE_LIMIT_MESSAGE };
+  }
+
   const allowed = await emailMaySignIn(email);
-  if (!allowed) return { error: 'No account for that email yet. Make one, or ask Jake for an invite.' };
+  if (!allowed) {
+    await recordSignInFailure({ ip, email, login: loginBucket });
+    logSignInFailure({ login, email, reason: 'no_account' });
+    return { error: SIGN_IN_MISMATCH };
+  }
 
   const { error } = await getAuth().signIn.email({ email, password, rememberMe: true });
-  if (error) return { error: passwordAuthError(error, SIGN_IN_MISMATCH) };
+  if (error) {
+    const rateMessage = passwordAuthError(error, SIGN_IN_MISMATCH);
+    if (rateMessage !== SIGN_IN_MISMATCH && rateMessage.includes('Wait a few minutes')) {
+      logSignInFailure({ login, email, reason: 'rate_limited' });
+      return { error: rateMessage };
+    }
+    await recordSignInFailure({ ip, email, login: loginBucket });
+    logSignInFailure({
+      login,
+      email,
+      reason: signInFailureReason(error),
+    });
+    return { error: SIGN_IN_MISMATCH };
+  }
+
+  await clearSignInFailures({ ip, email, login: loginBucket });
+  const member = await findMemberByEmail(email);
+  if (member) await recordLastSignIn(member.id);
+  logSignInSuccess(login, email);
+
   const next = safeNextPath(String(formData.get('next') ?? ''));
   redirect(next ? `/auth/continue?next=${encodeURIComponent(next)}` : '/auth/continue');
 }
@@ -219,11 +279,26 @@ export async function requestPasswordResetEmail(
   const allowed = await emailMaySignIn(email);
   if (allowed) {
     const origin = await appOrigin();
-    const { error } = await getAuth().requestPasswordReset({
-      email,
-      redirectTo: `${origin}/reset-password`,
-    });
-    if (error) return { error: passwordAuthError(error, 'The reset email did not send. Try again in a minute.') };
+    const member = await findMemberByEmail(email);
+    if (member) {
+      const result = await deliverPasswordResetEmail({
+        memberId: member.id,
+        email,
+        createdBy: member.id,
+        origin,
+      });
+      if (!result.ok) {
+        return { error: 'The reset email did not send. Try again in a minute.' };
+      }
+    } else {
+      const { error } = await getAuth().requestPasswordReset({
+        email,
+        redirectTo: `${origin}/reset-password`,
+      });
+      if (error) {
+        return { error: passwordAuthError(error, 'The reset email did not send. Try again in a minute.') };
+      }
+    }
   }
   return { sent: true };
 }
@@ -277,6 +352,7 @@ export async function finishSignIn(nextRaw?: string | null): Promise<void> {
   }
 
   let member = result.member;
+  await recordLastSignIn(member.id);
   if (claim && profileNeedsNames(member)) {
     const saved = await updateMemberProfile(member.id, {
       displayName: claim.displayName,
@@ -454,17 +530,19 @@ export async function createMemberResetLink(
     return { url, emailNote: 'Text them this link. It works once and lasts 24 hours.' };
   }
 
-  const { error } = await getAuth().requestPasswordReset({
+  const mailed = await sendPasswordResetEmailAtUrl({
+    memberId: member.id,
     email: member.email,
-    redirectTo: `${origin}/reset-password`,
+    origin,
+    resetUrl: url,
+    tokenHash,
   });
-  if (error) {
+  if (!mailed.ok) {
     return {
       url,
       emailNote: 'The email did not send. Text them the link instead. It works once and lasts 24 hours.',
     };
   }
-  await markPasswordResetEmailed(tokenHash);
   return {
     url,
     emailNote: 'A reset email is on the way too. The link below is the one to text. It works once and lasts 24 hours.',

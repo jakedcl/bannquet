@@ -11,6 +11,15 @@ import { signInPath } from '@/lib/sign-in-next';
 
 export const dynamic = 'force-dynamic';
 
+function formatLastSignIn(value: Date | null): string {
+  if (!value) return '—';
+  return value.toLocaleString('en-US', {
+    dateStyle: 'medium',
+    timeStyle: 'short',
+    timeZone: 'America/New_York',
+  });
+}
+
 export default async function AdminPage() {
   const viewer = await getViewer();
   if (!viewer) redirect(signInPath('/admin'));
@@ -65,6 +74,7 @@ export default async function AdminPage() {
                 href: member.handle ? `/user/${member.handle}` : null,
                 email: member.email ?? '—',
                 role: member.role,
+                lastSignIn: formatLastSignIn(member.lastSignInAt),
                 canReset: Boolean(member.email),
               }))}
             />

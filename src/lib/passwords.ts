@@ -64,6 +64,21 @@ export function passwordResetAudit(input: {
 
 type AuthFailure = { message?: string; code?: string } | null | undefined;
 
+export function signInFailureReason(error: AuthFailure): 'wrong_password' | 'auth_error' {
+  const code = (error?.code ?? '').toUpperCase();
+  const message = (error?.message ?? '').toLowerCase();
+  if (
+    code === 'INVALID_EMAIL_OR_PASSWORD' ||
+    code === 'INVALID_CREDENTIALS' ||
+    message.includes('invalid email or password') ||
+    message.includes('invalid credentials') ||
+    message.includes('incorrect password')
+  ) {
+    return 'wrong_password';
+  }
+  return 'auth_error';
+}
+
 export function passwordAuthError(error: AuthFailure, fallback: string): string {
   const code = error?.code ?? '';
   const message = (error?.message ?? '').toLowerCase();

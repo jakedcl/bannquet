@@ -63,8 +63,19 @@ export const users = pgTable('users', {
   favoriteActivities: text('favorite_activities').array().notNull().default(sql`ARRAY[]::text[]`),
   role: userRoleEnum('role').notNull().default('member'),
   homeScreenTipSeenAt: timestamp('home_screen_tip_seen_at', { withTimezone: true }),
+  lastSignInAt: timestamp('last_sign_in_at', { withTimezone: true }),
   createdAt,
 });
+
+export const signInAttempts = pgTable(
+  'sign_in_attempts',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    bucketKey: text('bucket_key').notNull(),
+    attemptedAt: timestamp('attempted_at', { withTimezone: true }).defaultNow().notNull(),
+  },
+  (table) => [index('sign_in_attempts_bucket_attempted_idx').on(table.bucketKey, table.attemptedAt)],
+);
 
 export const handleRedirects = pgTable('handle_redirects', {
   handle: text('handle').primaryKey(),
