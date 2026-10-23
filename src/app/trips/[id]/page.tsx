@@ -17,9 +17,11 @@ import { isDatabaseConfigured } from '@/db';
 
 export const dynamic = 'force-dynamic';
 
+const ID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
 export default async function TripPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  if (!isDatabaseConfigured()) notFound();
+  if (!ID.test(id) || !isDatabaseConfigured()) notFound();
   const trip = await getTrip(id);
   if (!trip) notFound();
   const viewer = await getViewer();

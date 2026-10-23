@@ -1,6 +1,6 @@
 import { sql } from 'drizzle-orm';
 import { getDb } from '@/db';
-import { removeBlobs } from '@/lib/blobs';
+import { removePhotoFiles } from '@/lib/blobs';
 import { sortLoggedActivities, type Activity } from '@/lib/activities';
 import { isLatLng } from '@/lib/photos';
 import { isPinKind, type PinKind } from '@/lib/pin-kinds';
@@ -221,7 +221,8 @@ export async function updatePin(input: {
   photos: PreparedPhoto[];
   removePhotoIds: string[];
 }): Promise<boolean> {
-  return getDb().transaction(async (tx) => {
+  const removedUrls: string[] = [];
+  const saved = await getDb().transaction(async (tx) => {
     const updated = await tx.execute(sql`
       update pins
       set title = ${input.title},
@@ -232,17 +233,16 @@ export async function updatePin(input: {
       returning id::text as id
     `);
     if (!text(asRows(updated)[0]?.id)) return false;
-    const removedUrls: string[] = [];
     for (const photoId of input.removePhotoIds) {
       const found = await tx.execute(sql`
         delete from photos
         where id = ${photoId}::uuid and pin_id = ${input.id}::uuid and user_id = ${input.userId}
-        returning blob_url
+        returning blob_url, thumb_url
       `);
-      const url = text(asRows(found)[0]?.blob_url);
-      if (url) removedUrls.push(url);
+      for (const url of [text(asRows(found)[0]?.blob_url), text(asRows(found)[0]?.thumb_url)]) {
+        if (url) removedUrls.push(url);
+      }
     }
-    if (removedUrls.length > 0) await removeBlobs(removedUrls);
     const count = await tx.execute(sql`
       select count(*)::int as n from photos where pin_id = ${input.id}::uuid
     `);
@@ -256,17 +256,19 @@ export async function updatePin(input: {
     });
     return true;
   });
+  if (saved) await removePhotoFiles(removedUrls);
+  return saved;
 }
 
 export async function deletePin(id: string, actor: { id: string; admin: boolean }): Promise<boolean> {
   const db = getDb();
   const photos = await db.execute(sql`
-    select ph.blob_url
+    select ph.blob_url, ph.thumb_url
     from photos ph
     join pins p on p.id = ph.pin_id
     where p.id = ${id}::uuid and (${actor.admin} or p.created_by = ${actor.id})
   `);
-  const urls = asRows(photos).map((row) => text(row.blob_url)).filter((url): url is string => Boolean(url));
+  const urls = asRows(photos).flatMap((row) => [text(row.blob_url), text(row.thumb_url)]);
   const removed = await db.transaction(async (tx) => {
     const owned = await tx.execute(sql`
       select id::text as id from pins
@@ -277,6 +279,6 @@ export async function deletePin(id: string, actor: { id: string; admin: boolean 
     await tx.execute(sql`delete from pins where id = ${id}::uuid`);
     return true;
   });
-  if (removed) await removeBlobs(urls);
+  if (removed) await removePhotoFiles(urls);
   return removed;
 }
