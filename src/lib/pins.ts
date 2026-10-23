@@ -19,6 +19,7 @@ export type PinSummary = {
 export type PinPhoto = {
   id: string;
   url: string;
+  thumbUrl: string | null;
   alt: string | null;
 };
 
@@ -118,7 +119,7 @@ export async function loadPin(id: string): Promise<PinDetail | null> {
       where p.id = ${id}::uuid
     `),
     db.execute(sql`
-      select id::text as id, blob_url as url, alt
+      select id::text as id, blob_url as url, thumb_url as thumb_url, alt
       from photos
       where pin_id = ${id}::uuid
       order by sort_order asc, created_at asc
@@ -147,7 +148,7 @@ export async function loadPin(id: string): Promise<PinDetail | null> {
       const photoId = text(photo.id);
       const url = text(photo.url);
       if (!photoId || !url) return [];
-      return [{ id: photoId, url, alt: text(photo.alt) }];
+      return [{ id: photoId, url, thumbUrl: text(photo.thumb_url), alt: text(photo.alt) }];
     }),
   };
 }
@@ -162,11 +163,12 @@ async function insertPinPhotos(
       ? sql`ST_SetSRID(ST_MakePoint(${photo.lng}, ${photo.lat}), 4326)::geography`
       : sql`null`;
     await tx.execute(sql`
-      insert into photos (pin_id, user_id, blob_url, width, height, point, point_source, sort_order, alt, caption)
+      insert into photos (pin_id, user_id, blob_url, thumb_url, width, height, point, point_source, sort_order, alt, caption)
       values (
         ${input.pinId}::uuid,
         ${input.userId},
         ${photo.url},
+        ${photo.thumbUrl},
         ${photo.width || null},
         ${photo.height || null},
         ${pointSql},

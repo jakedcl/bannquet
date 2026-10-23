@@ -51,6 +51,7 @@ export default function WeatherDashboard({ spot }: WeatherDashboardProps) {
       alt={weather.conditions[0] || spot.name}
       width={28}
       height={28}
+      unoptimized
       className="h-7 w-7 object-contain"
     />
   ) : null;

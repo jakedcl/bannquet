@@ -7,6 +7,8 @@ export type ChatRef = {
   label: string;
   href: string;
   thumb: string | null;
+  photoUrl?: string | null;
+  photoThumbUrl?: string | null;
   missing: boolean;
 };
 
@@ -16,6 +18,8 @@ export type ChatCatalogItem = {
   label: string;
   href: string;
   thumb: string | null;
+  photoUrl?: string | null;
+  photoThumbUrl?: string | null;
   ownerId: string | null;
   ownerName: string;
 };

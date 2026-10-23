@@ -166,14 +166,21 @@ export async function publishProfilePhotos(
   const photos = cleanPhotos(String(formData.get('photos') ?? ''));
   if (photos.error) return { error: photos.error };
   if (photos.photos.length === 0) return { error: 'Choose a photo.' };
-  let saved: Array<{ id: string; url: string }> = [];
+  let saved: Array<{ id: string; url: string; thumbUrl: string | null }> = [];
   try {
     saved = await addProfilePhotos({ userId: viewer.id, photos: photos.photos });
   } catch {
     return { error: 'Could not save those photos. Try again in a minute.' };
   }
   if (saved.length === 0) return { error: 'Choose a photo.' };
-  const created: DraftItem[] = saved.map((photo) => ({ kind: 'photo', id: photo.id, label: 'Photo', thumb: photo.url }));
+  const created: DraftItem[] = saved.map((photo) => ({
+    kind: 'photo',
+    id: photo.id,
+    label: 'Photo',
+    thumb: photo.thumbUrl ?? photo.url,
+    photoUrl: photo.url,
+    photoThumbUrl: photo.thumbUrl,
+  }));
   if (formData.get('inline') === '1') return { created };
   const next = String(formData.get('next') ?? '');
   const first = saved[0];

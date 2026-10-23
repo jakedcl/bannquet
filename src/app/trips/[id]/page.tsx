@@ -8,7 +8,7 @@ import { ConfirmDelete } from '@/components/delete/ConfirmDelete';
 import { deleteTripAction, toggleGoing } from '@/app/trips/actions';
 import { getViewer } from '@/app/sign-in/actions';
 import { LinkedText } from '@/components/ui/LinkedText';
-import Image from 'next/image';
+import { draftPhotoSources, SmallPhotoImage } from '@/components/ui/SmallPhotoImage';
 import { canContribute, canDeleteOwned } from '@/lib/membership';
 import { getTrip } from '@/lib/trips';
 import { formatTripDate } from '@/lib/utils';
@@ -90,7 +90,20 @@ export default async function TripPage({ params }: { params: Promise<{ id: strin
             <ul className="space-y-2 text-sm">
               {trip.attachments.map((item) => (
                 <li key={`${item.kind}-${item.id}`} className="flex items-center gap-2">
-                  {item.thumb ? <Image src={item.thumb} alt="" width={32} height={32} className="h-8 w-8 object-cover" /> : null}
+                  {(() => {
+                    const photo = draftPhotoSources(item);
+                    if (!photo) return null;
+                    return (
+                      <SmallPhotoImage
+                        url={photo.url}
+                        thumbUrl={photo.thumbUrl}
+                        alt=""
+                        width={32}
+                        height={32}
+                        className="h-8 w-8 object-cover"
+                      />
+                    );
+                  })()}
                   <Link href={item.href} className="min-w-0 flex-1 truncate font-bold underline">{item.label}</Link>
                   <span className="text-xs uppercase text-gray-600">{item.kind}</span>
                 </li>
