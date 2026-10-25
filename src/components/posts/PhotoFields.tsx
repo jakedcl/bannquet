@@ -43,11 +43,14 @@ export function PhotoFields({
           setError('Use a photo file, like a JPG or PNG.');
           continue;
         }
-        next.push(await preparePhoto(file));
+        try {
+          next.push(await preparePhoto(file));
+        } catch (err) {
+          // Keep the photos that worked; one bad file should not drop the rest.
+          setError(err instanceof Error ? err.message : 'That photo did not upload.');
+        }
       }
       onChange(next);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'That photo did not upload.');
     } finally {
       setWorking(false);
     }
