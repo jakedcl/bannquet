@@ -122,5 +122,5 @@ export async function deleteReportAction(
   if (!ok) return { error: 'You can only delete your own trips.' };
   revalidatePath('/posts');
   revalidatePath('/map');
-  redirect(safePath(formData, '/posts'));
+  redirect(safePath(formData, '/trips'));
 }
