@@ -4,11 +4,13 @@ import { useActionState } from 'react';
 import Link from 'next/link';
 import { createPublicAccount } from '@/app/sign-in/actions';
 import { SubmitButton } from '@/components/ui/SubmitButton';
+import { useHardRedirect } from '@/components/auth/use-hard-redirect';
 import { PasswordField } from '@/components/auth/PasswordField';
 import { SignupTraps } from '@/components/auth/SignupTraps';
 
 export function SignUpForm({ stamp }: { stamp: string }) {
   const [state, action] = useActionState(createPublicAccount, null);
+  useHardRedirect(state?.redirectTo);
   if (state?.done) {
     return (
       <p className="text-sm">

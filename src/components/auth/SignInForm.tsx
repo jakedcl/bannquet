@@ -4,10 +4,12 @@ import { useActionState } from 'react';
 import Link from 'next/link';
 import { signInWithPassword } from '@/app/sign-in/actions';
 import { SubmitButton } from '@/components/ui/SubmitButton';
+import { useHardRedirect } from '@/components/auth/use-hard-redirect';
 import { PasswordField } from '@/components/auth/PasswordField';
 
 export function SignInForm({ next = '' }: { next?: string }) {
   const [state, action] = useActionState(signInWithPassword, null);
+  useHardRedirect(state?.redirectTo);
 
   return (
     <form action={action} className="space-y-4">
