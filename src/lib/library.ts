@@ -1,6 +1,6 @@
 import { sql } from 'drizzle-orm';
 import { getDb } from '@/db';
-import { removeBlobs } from '@/lib/blobs';
+import { removePhotoFiles } from '@/lib/blobs';
 import { cleanRouteTitle, routeTitle } from '@/lib/route-title';
 import type { MemberRole } from '@/lib/membership';
 
@@ -231,13 +231,13 @@ export async function deleteRoute(id: string, actor: Actor): Promise<boolean> {
 export async function deletePhoto(id: string, actor: Actor): Promise<boolean> {
   const db = getDb();
   const found = await db.execute(sql`
-    select blob_url from photos
+    select blob_url, thumb_url from photos
     where id = ${id}::uuid and (${isAdmin(actor)} or user_id = ${actor.id})
   `);
-  const url = text(asRows(found)[0]?.blob_url);
-  if (!asRows(found).length) return false;
+  const row = asRows(found)[0];
+  if (!row) return false;
   await db.execute(sql`delete from photos where id = ${id}::uuid`);
-  if (url) await removeBlobs([url]);
+  await removePhotoFiles([text(row.blob_url), text(row.thumb_url)]);
   return true;
 }
 

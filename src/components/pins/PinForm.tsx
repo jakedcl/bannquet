@@ -25,7 +25,7 @@ type InitialPin = {
   kind: PinKind;
   lat: number;
   lng: number;
-  photos: Array<{ id: string; url: string }>;
+  photos: Array<{ id: string; url: string; thumbUrl?: string | null }>;
 };
 
 export function PinForm({
@@ -182,7 +182,7 @@ export function PinForm({
           {initial.photos.map((photo) => (
             <label key={photo.id} className="flex items-center gap-3 text-sm">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={photo.url} alt="" className="h-12 w-12 object-cover" />
+              <img src={photo.thumbUrl ?? photo.url} alt="" className="h-12 w-12 object-cover" />
               <input type="checkbox" name="removePhoto" value={photo.id} />
               Remove
             </label>
