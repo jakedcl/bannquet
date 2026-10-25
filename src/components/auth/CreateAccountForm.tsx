@@ -3,6 +3,7 @@
 import { useActionState } from 'react';
 import { createAccount } from '@/app/sign-in/actions';
 import { SubmitButton } from '@/components/ui/SubmitButton';
+import { useHardRedirect } from '@/components/auth/use-hard-redirect';
 import { PasswordField } from '@/components/auth/PasswordField';
 import { SignupTraps } from '@/components/auth/SignupTraps';
 
@@ -16,6 +17,7 @@ export function CreateAccountForm({
   stamp: string;
 }) {
   const [state, action] = useActionState(createAccount, null);
+  useHardRedirect(state?.redirectTo);
   if (state?.done) {
     return <p className="text-sm">Account made. Sign in with that email.</p>;
   }

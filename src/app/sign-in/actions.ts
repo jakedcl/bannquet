@@ -100,10 +100,18 @@ async function requireAdmin() {
   return { error: null, member };
 }
 
+/**
+ * Sign-in and sign-up forms load /auth/continue as a full page instead of a
+ * server-action redirect. A soft redirect into that route handler left the
+ * browser's app URL on /auth/continue, so the next form on the page posted
+ * there and crashed with a 405.
+ */
+export type AuthFormState = { error?: string; done?: true; redirectTo?: string };
+
 export async function signInWithPassword(
-  _prev: { error?: string } | null,
+  _prev: AuthFormState | null,
   formData: FormData,
-): Promise<{ error?: string }> {
+): Promise<AuthFormState> {
   const loginRaw = String(formData.get('login') ?? formData.get('email') ?? '').trim();
   const password = String(formData.get('password') ?? '');
   if (!loginRaw) return { error: 'Type your email or username.' };
@@ -162,13 +170,13 @@ export async function signInWithPassword(
   logSignInSuccess(login, email);
 
   const next = safeNextPath(String(formData.get('next') ?? ''));
-  redirect(next ? `/auth/continue?next=${encodeURIComponent(next)}` : '/auth/continue');
+  return { redirectTo: next ? `/auth/continue?next=${encodeURIComponent(next)}` : '/auth/continue' };
 }
 
 export async function createAccount(
-  _prev: { error?: string; done?: true } | null,
+  _prev: AuthFormState | null,
   formData: FormData,
-): Promise<{ error?: string; done?: true }> {
+): Promise<AuthFormState> {
   const quiet = quietSignupBlock(formData);
   if (quiet) return quiet;
   const email = normalizeEmail(String(formData.get('email') ?? ''));
@@ -214,13 +222,14 @@ export async function createAccount(
 
   // The new session cookie is on this response. The next request reads it and
   // finishes the member row. Reading the session in this same action misses it.
-  redirect('/auth/continue');
+  // The form does a full page load there (see useHardRedirect).
+  return { redirectTo: '/auth/continue' };
 }
 
 export async function createPublicAccount(
-  _prev: { error?: string; done?: true } | null,
+  _prev: AuthFormState | null,
   formData: FormData,
-): Promise<{ error?: string; done?: true }> {
+): Promise<AuthFormState> {
   const quiet = quietSignupBlock(formData);
   if (quiet) return quiet;
   const email = normalizeEmail(String(formData.get('email') ?? ''));
@@ -263,7 +272,7 @@ export async function createPublicAccount(
     maxAge: 60 * 15,
   });
 
-  redirect('/auth/continue');
+  return { redirectTo: '/auth/continue' };
 }
 
 export async function requestPasswordResetEmail(
