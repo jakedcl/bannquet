@@ -4,7 +4,7 @@ import { useActionState } from 'react';
 import { deleteReportAction } from '@/app/library/actions';
 import { TrashButton } from '@/components/delete/ConfirmDelete';
 
-export function DeleteReport({ id, returnTo = '/posts' }: { id: string; returnTo?: string }) {
+export function DeleteReport({ id, returnTo = '/trips' }: { id: string; returnTo?: string }) {
   const [state, action, pending] = useActionState(deleteReportAction, null);
   return (
     <form action={action} className="relative flex shrink-0 items-center gap-1">
