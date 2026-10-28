@@ -13,8 +13,7 @@ Neon project: `hidden-cherry-64820503`. All PR previews share the one `preview` 
 
 ## What is still shared with live
 - **Vercel Blob** (photos): a photo uploaded on a preview is stored with the real photos. Delete test uploads.
-- **Sanity**: one dataset. Don't edit Sanity content from a preview.
-- Everything else in Vercel env vars (`ADMIN_EMAIL`, Mapbox, USGS key, cookie secret) is the same in both.
+- Everything else in Vercel env vars (`ADMIN_EMAIL`, USGS key, cookie secret) is the same in both.
 
 ## Data vs structure
 - **Data never moves from preview to main.** Merging a PR carries code only.

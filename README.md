@@ -47,18 +47,7 @@ npm run db:migrate    # apply drizzle/ to DATABASE_URL_UNPOOLED
 
 Run migrations against a Neon branch before production. The first migration enables PostGIS.
 
-### Sanity import
-
-`scripts/migrate-sanity-trip-reports.ts` copies existing `tripReport` documents into `trip_reports`, `photos`, and `pins`. It is not part of the site build, and it will not write unless you opt in.
-
-```sh
-npm run db:migrate-sanity -- --dry-run
-CONFIRM_SANITY_MIGRATION=yes npm run db:migrate-sanity
-```
-
-The dry run only talks to Sanity. The real run needs `SANITY_PROJECT_ID`, `SANITY_API_TOKEN`, and `DATABASE_URL`. Set `BLOB_READ_WRITE_TOKEN` if images should be copied into Vercel Blob. Without it, photo rows keep the Sanity CDN URL.
-
-Old `/trip-reports/<sanity-id>` links redirect to `/posts/<id>` after a report is imported. The public feed is `/posts`. Profile pages live at `/user/<username>`; `/hikers/<username>` redirects there.
+Old `/trip-reports/<id>` links redirect to `/posts/<id>`. The public feed is `/posts`. Profile pages live at `/user/<username>`; `/hikers/<username>` redirects there.
 
 ## Scripts
 
