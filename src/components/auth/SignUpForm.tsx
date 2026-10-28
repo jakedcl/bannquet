@@ -8,14 +8,15 @@ import { useHardRedirect } from '@/components/auth/use-hard-redirect';
 import { PasswordField } from '@/components/auth/PasswordField';
 import { SignupTraps } from '@/components/auth/SignupTraps';
 
-export function SignUpForm({ stamp }: { stamp: string }) {
+export function SignUpForm({ stamp, next = '' }: { stamp: string; next?: string }) {
+  const signIn = next ? `/sign-in?next=${encodeURIComponent(next)}` : '/sign-in';
   const [state, action] = useActionState(createPublicAccount, null);
   useHardRedirect(state?.redirectTo);
   if (state?.done) {
     return (
       <p className="text-sm">
         Account made.{' '}
-        <Link href="/sign-in" className="underline">
+        <Link href={signIn} className="underline">
           Sign in
         </Link>
       </p>
@@ -25,6 +26,7 @@ export function SignUpForm({ stamp }: { stamp: string }) {
   return (
     <form action={action} className="space-y-4">
       <SignupTraps stamp={stamp} />
+      {next ? <input type="hidden" name="next" value={next} /> : null}
       <label className="block space-y-1">
         <span className="text-sm font-bold">Display name</span>
         <input
@@ -73,7 +75,7 @@ export function SignUpForm({ stamp }: { stamp: string }) {
       <SubmitButton tone="green" pendingLabel="Making the account…">Create account</SubmitButton>
       <p className="text-sm">
         Already have one?{' '}
-        <Link href="/sign-in" className="underline">
+        <Link href={signIn} className="underline">
           Sign in
         </Link>
       </p>

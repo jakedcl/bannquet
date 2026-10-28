@@ -33,6 +33,10 @@ export default async function PeakPage({ params }: { params: Promise<{ slug: str
   const { slug } = await params;
   const peak = allPeaks().find((item) => item.slug === slug);
   if (!peak) notFound();
+  const list = LISTS[peak.listId] ?? peak.listId;
+  const areaName = AREAS[peak.listId] ?? 'Northeast';
+  // "New Hampshire · New Hampshire 48" says the state twice.
+  const area = list.startsWith(areaName) ? null : areaName;
 
   const viewer = await getViewer();
   const ready = isDatabaseConfigured();
@@ -55,11 +59,11 @@ export default async function PeakPage({ params }: { params: Promise<{ slug: str
       <div className="mx-auto max-w-3xl space-y-4 px-4 py-10">
         <Window title={peak.name}>
           <p className="text-sm text-gray-700">
-            {peak.elevationFt.toLocaleString('en-US')} ft
-            {' · '}
-            {AREAS[peak.listId] ?? 'Northeast'}
-            {' · '}
-            {LISTS[peak.listId] ?? peak.listId}
+            {[
+              `${peak.elevationFt.toLocaleString('en-US')} ft`,
+              area,
+              list,
+            ].filter(Boolean).join(' · ')}
           </p>
           {peak.note ? <p className="mt-2 text-sm">{peak.note}</p> : null}
           <p className="mt-3 text-sm">

@@ -432,6 +432,17 @@ export default function GroupMap({
     if (preview) fitPins(map, points);
   }, [points, lines, preview]);
 
+  // Escape closes an open popup, like the layers menu.
+  useEffect(() => {
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key !== 'Escape' || !popupRef.current) return;
+      popupRef.current.remove();
+      popupRef.current = null;
+    };
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, []);
+
   useEffect(() => {
     if (!layersOpen) return;
     const close = (event: PointerEvent) => {

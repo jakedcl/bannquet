@@ -6,14 +6,13 @@ import { getViewer } from '@/app/sign-in/actions';
 import { attachEntity, deletePhoto, deleteReport, deleteRoute, detachEntity, updateRouteTitle } from '@/lib/library';
 import { cleanRouteNotes, cleanRouteTitle } from '@/lib/route-title';
 import { APPROVAL_WAIT, canContribute } from '@/lib/membership';
+import { safeNextPath } from '@/lib/sign-in-next';
 import { redirectToSignIn } from '@/lib/sign-in-redirect';
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 function safePath(value: FormData, fallback: string): string {
-  const raw = String(value.get('returnTo') ?? '');
-  if (raw.startsWith('/') && !raw.startsWith('//') && !raw.includes('://')) return raw;
-  return fallback;
+  return safeNextPath(String(value.get('returnTo') ?? '')) ?? fallback;
 }
 
 async function actor() {

@@ -282,7 +282,8 @@ export async function createPublicAccount(
     maxAge: 60 * 15,
   });
 
-  return { redirectTo: '/auth/continue' };
+  const next = safeNextPath(String(formData.get('next') ?? ''));
+  return { redirectTo: next ? `/auth/continue?next=${encodeURIComponent(next)}` : '/auth/continue' };
 }
 
 export async function requestPasswordResetEmail(
