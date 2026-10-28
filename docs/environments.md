@@ -7,9 +7,14 @@ Bannquet has two live environments. Each one talks to its own Neon database.
 | Site | www.bannquet.com (Vercel production, builds from `main`) | `bannquet-git-<branch>-jakedcl.vercel.app` (Vercel preview, every non-main push / PR) |
 | Neon branch | `main` (`br-icy-waterfall-b7djctpq`) | `preview` (`br-curly-snow-b73nm5ro`) |
 | Neon Auth | main's own | preview's own (separate member accounts) |
-| Vercel env vars | `DATABASE_URL`, `DATABASE_URL_UNPOOLED`, `NEON_AUTH_BASE_URL`, `NEON_AUTH_JWKS_URL` scoped to **production + development** | the same four keys scoped to **preview only**, pointing at the `preview` branch |
+| Vercel env vars | `DATABASE_URL`, `DATABASE_URL_UNPOOLED`, `NEON_AUTH_BASE_URL`, `NEON_AUTH_JWKS_URL` scoped to **production only** | the same four keys, pointing at the `preview` branch, scoped to **preview** and to **development** (separate entries) |
 
 Neon project: `hidden-cherry-64820503`. All PR previews share the one `preview` branch.
+
+## Local development
+- Local dev (`npm run dev` on localhost) uses the **`preview` branch**, never `main`. `vercel env pull` gives you the development values, which point at `preview`.
+- The `main` branch's Neon Auth has **allow localhost turned off**, so a laptop can't sign in against the live site. The `preview` branch's Neon Auth allows localhost.
+- Sign in locally with the preview test account (below), not a real member account.
 
 ## What is still shared with live
 - **Vercel Blob** (photos): a photo uploaded on a preview is stored with the real photos. Delete test uploads.
@@ -46,5 +51,6 @@ Neon project: `hidden-cherry-64820503`. All PR previews share the one `preview` 
   2. Re-check the trusted domains for the open preview.
 
 ## Never
-- Never point a preview at `main`, and never create test accounts on `main`.
+- Never point a preview or a local dev setup at `main`, and never create test accounts on `main`.
+- Never turn allow localhost back on for `main`'s Neon Auth.
 - Never run `db:migrate` on `main`.

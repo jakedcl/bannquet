@@ -20,7 +20,7 @@ Mountain weather, trip posts, peaks challenges, trips, and a map for a Northeast
 
 ## Gotchas
 - `DATABASE_URL` is the pooled Neon URL (`-pooler`); `DATABASE_URL_UNPOOLED` is the direct one.
-- **Read `docs/environments.md` before any DB, auth or preview work.** In short: Vercel previews use the Neon `preview` branch (its own data and Neon Auth), and production uses `main`. Migrations from 0010 on are applied by hand with `IF NOT EXISTS` SQL. Cloud agents write the SQL file but don't apply it. Test with the standing `bqtester` account on preview only. Blob is still shared with live.
+- **Read `docs/environments.md` before any DB, auth or preview work.** In short: Vercel previews and local dev use the Neon `preview` branch (its own data and Neon Auth), and only production uses `main` (its Neon Auth refuses localhost). Migrations from 0010 on are applied by hand with `IF NOT EXISTS` SQL. Cloud agents write the SQL file but don't apply it. Test with the standing `bqtester` account on preview only. Blob is still shared with live.
 - New sign-ups can read but can't post until approved on `/admin`; invite links skip that. `ADMIN_EMAIL` (comma-separated) are admins.
 - Old `/trip-reports/<id>` links redirect to `/posts/<id>`; `/hikers/<u>` redirects to `/user/<u>`. Keep those redirects.
 - Weather pages must work with no keys. The live-map socket server is a separate repo, `jakedcl/bannquet-io`.
