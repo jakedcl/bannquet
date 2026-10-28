@@ -241,7 +241,7 @@ export async function updateRouteTitle(
   const result = await getDb().execute(sql`
     update tracks
     set title = ${title}, notes = ${notes}, hide_ends = ${hideEnds}
-    where id = ${id}::uuid and user_id = ${actor.id}
+    where id = ${id}::uuid and (${isAdmin(actor)} or user_id = ${actor.id})
     returning id::text as id
   `);
   return Boolean(text(asRows(result)[0]?.id));

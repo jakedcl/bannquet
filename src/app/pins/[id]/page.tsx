@@ -12,7 +12,7 @@ import { Window } from '@/components/retro/Window';
 import { getViewer } from '@/app/sign-in/actions';
 import { ACTIVITY_META, isActivity } from '@/lib/activities';
 import { isDatabaseConfigured } from '@/db';
-import { canContribute, canDeleteOwned } from '@/lib/membership';
+import { canEditOwned } from '@/lib/membership';
 import { loadPin } from '@/lib/pins';
 import { PIN_KIND_LABELS, isPinKind } from '@/lib/pin-kinds';
 import { loadMapData } from '@/lib/posts';
@@ -37,7 +37,7 @@ export default async function PinPage({
   if (!pin) notFound();
 
   const viewer = await getViewer();
-  const manage = Boolean(viewer && canDeleteOwned({
+  const manage = Boolean(viewer && canEditOwned({
     actorRole: viewer.role,
     actorId: viewer.id,
     ownerId: pin.createdBy,
@@ -98,7 +98,6 @@ export default async function PinPage({
         </div>
         {manage && viewer ? (
           <Window title="Edit this pin">
-            {viewer.id === pin.createdBy ? (
             <PinForm
               initial={{
                 id: pin.id,
@@ -110,13 +109,12 @@ export default async function PinPage({
                 photos: pin.photos,
               }}
             />
-            ) : null}
             <div className="mt-4">
               <DeletePinButton id={pin.id} />
             </div>
           </Window>
         ) : null}
-        {viewer && canContribute(viewer.role) && viewer.id === pin.createdBy ? (
+        {manage ? (
           <AddToTrip
             kind="pin"
             entityId={pin.id}
