@@ -15,3 +15,11 @@ export function routeCutSql(): SQL {
 export function shownLineSql(viewerId: string | null): SQL {
   return sql`(case when cut.line is not null and t.user_id is distinct from ${viewerId ?? ''}::text then cut.line else t.line::geometry end)`;
 }
+
+/**
+ * Where the route's marker goes. A route with hidden ends puts it mid-line,
+ * so the marker doesn't sit on the cut and look like a trailhead.
+ */
+export function markerPointSql(): SQL {
+  return sql`(case when cut.line is not null then ST_LineInterpolatePoint(shown.line, 0.5) else ST_StartPoint(shown.line) end)`;
+}

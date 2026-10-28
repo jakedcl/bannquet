@@ -7,7 +7,7 @@ import { PIN_KIND_LABELS, isPinKind } from '@/lib/pin-kinds';
 import { NEUTRAL_PIN_COLOR } from '@/lib/map';
 import { isLatLng, isPublicBlobUrl } from '@/lib/photos';
 import { oneAtATime } from '@/lib/dedupe';
-import { routeCutSql, shownLineSql } from '@/lib/route-privacy-sql';
+import { markerPointSql, routeCutSql, shownLineSql } from '@/lib/route-privacy-sql';
 import { zoneRadiusAtZoom0 } from '@/lib/route-privacy';
 
 export type MapFeatureCollection = {
@@ -134,8 +134,8 @@ export async function loadMapData(viewerId: string | null): Promise<{ points: Ma
         (coalesce(t.started_at, t.created_at) at time zone 'America/New_York')::date::text as trip_date,
         ${whoSql('u')} as who,
         ST_AsGeoJSON(shown.line) as geojson,
-        ST_Y(ST_StartPoint(shown.line)) as lat,
-        ST_X(ST_StartPoint(shown.line)) as lng,
+        ST_Y(${markerPointSql()}) as lat,
+        ST_X(${markerPointSql()}) as lng,
         ST_AsGeoJSON(ST_StartPoint(cut.line)) as zone_start,
         ST_AsGeoJSON(ST_EndPoint(cut.line)) as zone_end
       from tracks t

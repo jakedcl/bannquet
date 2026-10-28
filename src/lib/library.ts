@@ -2,7 +2,7 @@ import { sql } from 'drizzle-orm';
 import { getDb } from '@/db';
 import { removePhotoFiles } from '@/lib/blobs';
 import { cleanRouteTitle, routeTitle } from '@/lib/route-title';
-import { routeCutSql, shownLineSql } from '@/lib/route-privacy-sql';
+import { markerPointSql, routeCutSql, shownLineSql } from '@/lib/route-privacy-sql';
 import type { MemberRole } from '@/lib/membership';
 
 type QueryRows = { rows?: Record<string, unknown>[] };
@@ -113,8 +113,8 @@ export async function loadRoute(id: string, viewerId: string | null): Promise<Ro
       (coalesce(t.started_at, t.created_at) at time zone 'America/New_York')::date::text as route_date,
       coalesce(nullif(u.display_name, ''), nullif(u.handle, ''), 'Friend') as who,
       u.handle,
-      ST_Y(ST_StartPoint(shown.line)) as lat,
-      ST_X(ST_StartPoint(shown.line)) as lng
+      ST_Y(${markerPointSql()}) as lat,
+      ST_X(${markerPointSql()}) as lng
     from tracks t
     left join users u on u.id = t.user_id
     cross join lateral (${routeCutSql()}) cut

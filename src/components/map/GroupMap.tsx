@@ -308,8 +308,8 @@ export default function GroupMap({
         filter: ['==', ['get', 'kind'], 'hidden-end'],
         paint: {
           'circle-color': '#f4f1ea',
-          'circle-opacity': 0.85,
-          'circle-blur': 1,
+          'circle-opacity': 0.95,
+          'circle-blur': 0.9,
           'circle-radius': [
             'interpolate', ['exponential', 2], ['zoom'],
             0, ['get', 'zoneRadius'],
