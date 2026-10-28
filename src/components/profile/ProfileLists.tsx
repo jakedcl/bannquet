@@ -3,7 +3,6 @@
 import { SmallPhotoImage } from '@/components/ui/SmallPhotoImage';
 import Link from 'next/link';
 import { ConfirmDelete } from '@/components/delete/ConfirmDelete';
-import { DeleteReport } from '@/components/posts/DeleteReport';
 import { BrowseTable } from '@/components/ui/BrowseTable';
 import type { DataColumn } from '@/components/ui/DataTable';
 import { deletePhotoAction, deleteRouteAction } from '@/app/library/actions';
@@ -48,63 +47,6 @@ function activityLabel(activity: string | null | undefined): string | null {
 
 function Trash({ children }: { children: React.ReactNode }) {
   return <div className="flex justify-end">{children}</div>;
-}
-
-export function PostRows({
-  posts,
-  manage,
-  profilePath,
-  collapsed = false,
-}: {
-  posts: Array<{ id: string; title: string; tripDate: string | null; activity: string | null; tagged: boolean }>;
-  manage: boolean;
-  profilePath: string;
-  collapsed?: boolean;
-}) {
-  const columns: DataColumn<(typeof posts)[number]>[] = [
-    {
-      id: 'title',
-      header: 'Title',
-      sticky: true,
-      sortValue: (row) => row.title,
-      cell: (row) => <Link href={`/posts/${row.id}`} className="font-bold underline">{row.title}</Link>,
-    },
-    {
-      id: 'date',
-      header: 'Date',
-      sortValue: (row) => row.tripDate,
-      cell: (row) => formatTripDate(row.tripDate),
-    },
-    {
-      id: 'activity',
-      header: 'Activity',
-      sortValue: (row) => activityLabel(row.activity),
-      cell: (row) => activityLabel(row.activity) ?? '—',
-    },
-  ];
-  if (manage) {
-    columns.push({
-      id: 'delete',
-      header: '',
-      sortValue: () => null,
-      cell: (row) => (row.tagged ? null : (
-        <Trash><DeleteReport id={row.id} returnTo={profilePath} /></Trash>
-      )),
-    });
-  }
-  return (
-    <BrowseTable
-      rows={posts}
-      columns={columns}
-      rowKey={(row) => row.id}
-      empty="No posts yet."
-      defaultSort={{ id: 'date', dir: 'desc' }}
-      placeholder="Post title"
-      searchText={(row) => `${row.title} ${activityLabel(row.activity) ?? ''}`}
-      facets={[{ id: 'activity', label: 'Activity', value: (row) => activityLabel(row.activity) }]}
-      collapsed={collapsed}
-    />
-  );
 }
 
 export function RouteRows({

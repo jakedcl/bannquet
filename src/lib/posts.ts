@@ -350,7 +350,6 @@ export async function addProfilePhotos(
 }
 
 export type ProfileLibrary = {
-  posts: Array<{ id: string; title: string; tripDate: string | null; activity: string | null; tagged: boolean }>;
   routes: Array<{ id: string; name: string; activity: string; distanceM: number | null; elevGainM: number | null; date: string | null; postId: string | null }>;
   photos: Array<{ id: string; url: string; thumbUrl: string | null; caption: string | null; postId: string | null; pinId: string | null }>;
 };
@@ -374,7 +373,6 @@ export async function loadProfileLibrary(userId: string): Promise<ProfileLibrary
   ]);
 
   return {
-    posts: [],
     routes: asRows(routes).flatMap((row) => {
       const id = text(row.id);
       const activity = text(row.activity);

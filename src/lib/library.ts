@@ -177,37 +177,6 @@ export async function loadPhoto(id: string): Promise<PhotoDetail | null> {
   };
 }
 
-export type ReportAttachment = {
-  id: string;
-  title: string;
-  href: string;
-};
-
-export async function listReportAttachments(_reportId: string): Promise<{
-  routes: ReportAttachment[];
-  pins: ReportAttachment[];
-  photos: ReportAttachment[];
-}> {
-  return { routes: [], pins: [], photos: [] };
-}
-
-export async function attachEntity(_input: {
-  actor: Actor;
-  reportId: string;
-  kind: 'route' | 'pin' | 'photo';
-  entityId: string;
-}): Promise<'ok' | 'missing' | 'forbidden' | 'taken'> {
-  return 'missing';
-}
-
-export async function detachEntity(_input: {
-  actor: Actor;
-  kind: 'route' | 'pin' | 'photo';
-  entityId: string;
-}): Promise<boolean> {
-  return false;
-}
-
 export async function updateRouteTitle(
   id: string,
   title: string | null,
@@ -245,6 +214,3 @@ export async function deletePhoto(id: string, actor: Actor): Promise<boolean> {
   return true;
 }
 
-export async function deleteReport(_id: string, _actor: Actor, _mode: 'report' | 'all'): Promise<boolean> {
-  return false;
-}

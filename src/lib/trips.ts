@@ -281,10 +281,6 @@ export async function listTripsByOwner(userId: string): Promise<TripSummary[]> {
   });
 }
 
-export async function linkPostToTrip(_tripId: string, _postId: string, _authorId: string): Promise<boolean> {
-  return false;
-}
-
 export async function listTripChoices(): Promise<Array<{ id: string; title: string }>> {
   const result = await getDb().execute(sql`
     select id::text as id, title
@@ -366,10 +362,6 @@ async function itemOwned(kind: 'pin' | 'route' | 'photo', entityId: string, acto
   if (asRows(result).length === 0) return 'missing';
   if (!admin && owner !== actorId) return 'forbidden';
   return 'ok';
-}
-
-export async function tripIdForReport(_reportId: string): Promise<string | null> {
-  return null;
 }
 
 export async function trackTotals(): Promise<Array<{ userId: string; activity: string; distanceM: number; elevGainM: number }>> {
