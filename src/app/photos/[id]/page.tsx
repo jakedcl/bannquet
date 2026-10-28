@@ -7,7 +7,6 @@ import { ConfirmDelete } from '@/components/delete/ConfirmDelete';
 import { SeeMore } from '@/components/library/AttachReport';
 import { AddToTrip } from '@/components/library/AddToTrip';
 import { Window } from '@/components/retro/Window';
-import { CrumbLeaf } from '@/components/ui/BackBar';
 import { deletePhotoAction } from '@/app/library/actions';
 import { getViewer } from '@/app/sign-in/actions';
 import { isDatabaseConfigured } from '@/db';
@@ -78,8 +77,7 @@ export default async function PhotoPage({
   const map = photo.lat != null && photo.lng != null ? await loadMapData().catch(() => null) : null;
 
   return (
-    <PageWrapper>
-      <CrumbLeaf label={photo.caption || 'Photo'} />
+    <PageWrapper leaf={photo.caption || 'Photo'}>
       <div className="mx-auto max-w-3xl space-y-4 px-4 py-10">
         <Window title={photo.caption || 'Photo'}>
           <Image

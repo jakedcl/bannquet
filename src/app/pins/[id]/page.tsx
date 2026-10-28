@@ -4,7 +4,6 @@ import { notFound } from 'next/navigation';
 import PageWrapper from '@/components/ui/PageWrapper';
 import { MapCanvas } from '@/components/map/MapCanvas';
 import { DeletePinButton, PinForm } from '@/components/pins/PinForm';
-import { CrumbLeaf } from '@/components/ui/BackBar';
 import { SeeMore } from '@/components/library/AttachReport';
 import { AddToTrip } from '@/components/library/AddToTrip';
 import { Badge } from '@/components/retro/Badge';
@@ -54,8 +53,7 @@ export default async function PinPage({
   const category = isPinKind(pin.kind) ? PIN_KIND_LABELS[pin.kind] : 'Other';
 
   return (
-    <PageWrapper>
-      <CrumbLeaf label={pin.title} />
+    <PageWrapper leaf={pin.title}>
       <div className="mx-auto max-w-3xl space-y-4 px-4 py-10">
         <Window title={pin.title}>
           <div className="mb-3 flex flex-wrap items-center gap-2">
