@@ -69,6 +69,21 @@ export async function deleteLatestClimb(userId: string, peakSlug: string): Promi
   return asRows(result).length > 0;
 }
 
+/** The climber or an admin may change the date. `user_id` never changes. */
+export async function updateClimbDate(
+  id: string,
+  climbedOn: string | null,
+  actor: { id: string; admin: boolean },
+): Promise<boolean> {
+  const result = await getDb().execute(sql`
+    update summits
+    set summited_at = ${climbedOn}::date
+    where id = ${id}::uuid and (${actor.admin} or user_id = ${actor.id})
+    returning id::text as id
+  `);
+  return asRows(result).length > 0;
+}
+
 export async function deleteClimb(id: string, actor: { id: string; admin: boolean }): Promise<boolean> {
   const result = await getDb().execute(sql`
     delete from summits
