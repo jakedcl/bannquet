@@ -59,14 +59,19 @@ export function parseUploadedPhotos(
     photos.push({
       url,
       thumbUrl,
-      width: typeof record.width === 'number' ? record.width : 0,
-      height: typeof record.height === 'number' ? record.height : 0,
+      width: photoSide(record.width),
+      height: photoSide(record.height),
       lat: located ? lat : null,
       lng: located ? lng : null,
       source: located ? source : null,
     });
   }
   return { photos, error: null };
+}
+
+/** Pixel size from the browser. Anything that isn't a sane whole number is stored as unknown. */
+function photoSide(value: unknown): number {
+  return typeof value === 'number' && Number.isInteger(value) && value > 0 && value <= 20_000 ? value : 0;
 }
 
 type QueryRows = { rows?: Record<string, unknown>[] };
