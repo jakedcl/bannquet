@@ -7,6 +7,7 @@ import {
   type Observation,
   type SeriesMeta,
 } from '@/lib/fishing/readings'
+import { outsideFetch } from '@/lib/outside-fetch'
 
 const BASE = 'https://api.waterdata.usgs.gov/ogcapi/v0/collections'
 const USER_AGENT = 'Bannquet (admin@bannquet.com)'
@@ -63,7 +64,7 @@ function itemsUrl(collection: string, params: Record<string, string>, offset: nu
 async function usgsFetch(url: URL, apiKey: string | null): Promise<Response> {
   const headers: Record<string, string> = { Accept: 'application/json', 'User-Agent': USER_AGENT }
   if (apiKey) headers['X-Api-Key'] = apiKey
-  return fetch(url, { headers, cache: 'no-store' })
+  return outsideFetch(url, { headers, cache: 'no-store' }, 4_000)
 }
 
 async function rejectedKey(response: Response): Promise<boolean> {

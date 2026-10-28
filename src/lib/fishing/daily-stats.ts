@@ -1,5 +1,6 @@
 import { unstable_cache } from 'next/cache'
 import { easternDate } from '@/lib/fishing/clock'
+import { outsideFetch } from '@/lib/outside-fetch'
 
 export function easternMonthDay(time: number): { month: number; day: number } {
   const [, month, day] = easternDate(time).split('-').map(Number)
@@ -46,7 +47,7 @@ async function readDailyMedians(sites: string[], month: number, day: number): Pr
     url.searchParams.set('statReportType', 'daily')
     url.searchParams.set('statTypeCd', 'median')
     url.searchParams.set('format', 'rdb')
-    const response = await fetch(url, {
+    const response = await outsideFetch(url, {
       headers: { Accept: 'text/plain', 'User-Agent': 'Bannquet (admin@bannquet.com)' },
       cache: 'no-store',
     })
