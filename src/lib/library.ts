@@ -2,6 +2,7 @@ import { sql } from 'drizzle-orm';
 import { getDb } from '@/db';
 import { removePhotoFiles } from '@/lib/blobs';
 import { cleanRouteTitle, routeTitle } from '@/lib/route-title';
+import { routeCutSql, shownLineSql } from '@/lib/route-privacy-sql';
 import type { MemberRole } from '@/lib/membership';
 
 type QueryRows = { rows?: Record<string, unknown>[] };
@@ -98,20 +99,26 @@ export type RouteDetail = {
   who: string;
   handle: string | null;
   post: LinkedPost | null;
+  /** Start and end are hidden from everyone but the owner. */
+  hideEnds: boolean;
   lat: number | null;
   lng: number | null;
 };
 
-export async function loadRoute(id: string): Promise<RouteDetail | null> {
+/** `viewerId` matters for a hidden-ends route: only its owner gets the real start. */
+export async function loadRoute(id: string, viewerId: string | null): Promise<RouteDetail | null> {
   const result = await getDb().execute(sql`
     select t.id::text as id, t.title, t.notes, t.activity::text as activity, t.distance_m, t.elev_gain_m, t.user_id,
+      t.hide_ends,
       (coalesce(t.started_at, t.created_at) at time zone 'America/New_York')::date::text as route_date,
       coalesce(nullif(u.display_name, ''), nullif(u.handle, ''), 'Friend') as who,
       u.handle,
-      ST_Y(ST_StartPoint(t.line::geometry)) as lat,
-      ST_X(ST_StartPoint(t.line::geometry)) as lng
+      ST_Y(ST_StartPoint(shown.line)) as lat,
+      ST_X(ST_StartPoint(shown.line)) as lng
     from tracks t
     left join users u on u.id = t.user_id
+    cross join lateral (${routeCutSql()}) cut
+    cross join lateral (select ${shownLineSql(viewerId)} as line) shown
     where t.id = ${id}::uuid
   `);
   const row = asRows(result)[0];
@@ -131,6 +138,7 @@ export async function loadRoute(id: string): Promise<RouteDetail | null> {
     who: text(row.who) ?? 'Friend',
     handle: text(row.handle),
     post: null,
+    hideEnds: row.hide_ends === true,
     lat: num(row.lat),
     lng: num(row.lng),
   };
@@ -182,10 +190,11 @@ export async function updateRouteTitle(
   title: string | null,
   notes: string | null,
   actor: Actor,
+  hideEnds: boolean,
 ): Promise<boolean> {
   const result = await getDb().execute(sql`
     update tracks
-    set title = ${title}, notes = ${notes}
+    set title = ${title}, notes = ${notes}, hide_ends = ${hideEnds}
     where id = ${id}::uuid and user_id = ${actor.id}
     returning id::text as id
   `);

@@ -187,6 +187,8 @@ export const tracks = pgTable(
     elevGainM: integer('elev_gain_m'),
     movingS: integer('moving_s'),
     startedAt: timestamp('started_at', { withTimezone: true }),
+    /** Hide the first and last stretch from everyone but the owner. */
+    hideEnds: boolean('hide_ends').notNull().default(false),
     createdAt,
   },
   (table) => [

@@ -74,7 +74,7 @@ export default async function PhotoPage({
       tripsForItem('photo', photo.id).catch(() => []),
     ])
     : [[], []];
-  const map = photo.lat != null && photo.lng != null ? await loadMapData().catch(() => null) : null;
+  const map = photo.lat != null && photo.lng != null ? await loadMapData(viewer?.id ?? null).catch(() => null) : null;
 
   return (
     <PageWrapper leaf={photo.caption || 'Photo'}>
