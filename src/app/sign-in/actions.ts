@@ -77,7 +77,16 @@ async function appOrigin(): Promise<string> {
 
 async function currentAuthUser() {
   if (!isAuthConfigured()) return null;
-  const { data } = await getAuth().getSession();
+  // The proxy refreshes the session before render, so this reads the fresh
+  // cookie. If the refresh failed upstream, a render can't write the new
+  // cookie; treat that one load as signed out instead of a 500.
+  let data;
+  try {
+    ({ data } = await getAuth().getSession());
+  } catch (error) {
+    console.error('[auth] getSession failed', error instanceof Error ? error.message : error);
+    return null;
+  }
   const user = data?.user;
   if (!user?.id || !user.email) return null;
   return user;
