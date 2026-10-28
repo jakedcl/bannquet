@@ -35,6 +35,8 @@ export default async function ChatPage() {
       <div className="mx-auto max-w-3xl px-4 py-10">
         <Window title="Chat">
           <ChatRoom
+            key={error ? 'failed' : 'ready'}
+            failed={Boolean(error && ready)}
             initial={messages}
             canSend={canSend}
             notice={notice}
