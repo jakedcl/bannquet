@@ -366,6 +366,7 @@ export async function finishSignIn(nextRaw?: string | null): Promise<void> {
       email: user.email,
       name: user.name,
       image: user.image,
+      emailVerified: user.emailVerified,
     },
     { publicSignUp: claim?.pending === true },
   );

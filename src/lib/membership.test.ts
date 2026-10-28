@@ -10,6 +10,7 @@ import {
   isEmail,
   normalizeEmail,
   accountCreateAllowed,
+  adminByEmail,
   publicSignUpAllowed,
   roleForNewAccount,
   signInAllowed,
@@ -80,21 +81,34 @@ test('anyone new can ask for an account, and an invite skips the wait', () => {
   assert.equal(publicSignUpAllowed({ email: 'friend@example.com', member: true }), false);
   assert.equal(publicSignUpAllowed({ email: 'not an email', member: false }), false);
   assert.equal(
-    roleForNewAccount({ email: 'friend@example.com', adminEmails: admins, openInvite: false, publicSignUp: true }),
+    roleForNewAccount({ email: 'friend@example.com', adminEmails: admins, emailVerified: true, openInvite: false, publicSignUp: true }),
     'pending',
   );
   assert.equal(
-    roleForNewAccount({ email: 'friend@example.com', adminEmails: admins, openInvite: true, publicSignUp: true }),
+    roleForNewAccount({ email: 'friend@example.com', adminEmails: admins, emailVerified: true, openInvite: true, publicSignUp: true }),
     'member',
   );
   assert.equal(
-    roleForNewAccount({ email: 'jake@example.com', adminEmails: admins, openInvite: false, publicSignUp: true }),
+    roleForNewAccount({ email: 'jake@example.com', adminEmails: admins, emailVerified: true, openInvite: false, publicSignUp: true }),
     'admin',
   );
   assert.equal(
-    roleForNewAccount({ email: 'stranger@example.com', adminEmails: admins, openInvite: false, publicSignUp: false }),
+    roleForNewAccount({ email: 'stranger@example.com', adminEmails: admins, emailVerified: true, openInvite: false, publicSignUp: false }),
     null,
   );
+});
+
+test('an admin address only makes someone admin once the email is verified', () => {
+  const admins = ['jake@example.com'];
+  assert.equal(
+    roleForNewAccount({ email: 'jake@example.com', adminEmails: admins, emailVerified: false, openInvite: false, publicSignUp: true }),
+    'pending',
+  );
+  assert.equal(
+    roleForNewAccount({ email: 'jake@example.com', adminEmails: admins, emailVerified: false, openInvite: false, publicSignUp: false }),
+    null,
+  );
+  assert.equal(adminByEmail({ email: 'Jake@Example.com', adminEmails: admins, emailVerified: true }), true);
 });
 
 test('pending people can read, and only Jake can approve them', () => {
