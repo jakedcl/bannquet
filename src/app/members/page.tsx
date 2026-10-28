@@ -3,6 +3,7 @@ import { MembersTable } from '@/components/members/MembersTable';
 import { Window } from '@/components/retro/Window';
 import { isDatabaseConfigured } from '@/db';
 import { listApprovedMembers } from '@/lib/members-directory';
+import { loadFailed } from '@/lib/load-error';
 
 export const dynamic = 'force-dynamic';
 
@@ -15,7 +16,7 @@ export default async function MembersPage() {
     try {
       rows = await listApprovedMembers();
     } catch (err) {
-      error = err instanceof Error ? err.message : 'The member list did not load.';
+      error = loadFailed('members', err, 'The member list did not load. Try again in a minute.');
     }
   }
 

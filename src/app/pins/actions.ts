@@ -4,7 +4,7 @@ import { redirect } from 'next/navigation';
 import { getViewer } from '@/app/sign-in/actions';
 import { APPROVAL_WAIT, canContribute } from '@/lib/membership';
 import { redirectToSignIn } from '@/lib/sign-in-redirect';
-import { isLatLng } from '@/lib/photos';
+import { formLatLng, isLatLng } from '@/lib/photos';
 import { createPin, deletePin, updatePin } from '@/lib/pins';
 import { isPinKind, type PinKind } from '@/lib/pin-kinds';
 import { parseUploadedPhotos, type PreparedPhoto } from '@/lib/posts';
@@ -13,9 +13,8 @@ import type { DraftItem } from '@/lib/trip-draft';
 const PIN_ID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 function placedPoint(formData: FormData, photos: PreparedPhoto[]): { lat: number; lng: number } | null {
-  const lat = Number(String(formData.get('lat') ?? '').trim());
-  const lng = Number(String(formData.get('lng') ?? '').trim());
-  if (isLatLng(lat, lng)) return { lat, lng };
+  const placed = formLatLng(formData.get('lat'), formData.get('lng'));
+  if (placed) return placed;
   const photo = photos.find((item) => item.lat != null && item.lng != null && isLatLng(item.lat, item.lng));
   if (photo?.lat != null && photo.lng != null) return { lat: photo.lat, lng: photo.lng };
   return null;

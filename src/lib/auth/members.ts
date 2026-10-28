@@ -8,7 +8,7 @@ import {
   approvalAllowed,
   inviteCode,
   inviteState,
-  isAdminEmail,
+  adminByEmail,
   normalizeEmail,
   publicSignUpAllowed,
   roleForNewAccount,
@@ -50,6 +50,7 @@ type AuthUser = {
   email: string;
   name?: string | null;
   image?: string | null;
+  emailVerified?: boolean | null;
 };
 
 function adminList(): string[] {
@@ -179,13 +180,14 @@ export async function ensureMember(
   const db = getDb();
   const email = normalizeEmail(authUser.email);
   const existing = await findMemberByAuthId(authUser.id);
+  const verifiedAdmin = adminByEmail({ email, adminEmails: adminList(), emailVerified: authUser.emailVerified === true });
   if (existing) {
-    if (existing.email !== email || (isAdminEmail(email, adminList()) && existing.role !== 'admin')) {
+    if (existing.email !== email || (verifiedAdmin && existing.role !== 'admin')) {
       const [updated] = await db
         .update(users)
         .set({
           email,
-          role: isAdminEmail(email, adminList()) ? 'admin' : existing.role,
+          role: verifiedAdmin ? 'admin' : existing.role,
         })
         .where(eq(users.id, authUser.id))
         .returning();
@@ -203,6 +205,7 @@ export async function ensureMember(
   const role = roleForNewAccount({
     email,
     adminEmails: adminList(),
+    emailVerified: authUser.emailVerified === true,
     openInvite: Boolean(openInvite),
     publicSignUp: Boolean(options.publicSignUp),
   });

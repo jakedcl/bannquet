@@ -2,11 +2,11 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { GaugeForecast, GaugeSpot } from '@/components/fishing/GaugeSpot';
 import { Window } from '@/components/retro/Window';
-import { CrumbLeaf } from '@/components/ui/BackBar';
 import PageWrapper from '@/components/ui/PageWrapper';
 import { easternMonthDay, loadDailyMedians } from '@/lib/fishing/daily-stats';
 import { withVerdicts } from '@/lib/fishing/flow-verdict';
 import { plainWaterName, type GaugeView } from '@/lib/fishing/readings';
+import { MOUNTAIN_GAUGES } from '@/lib/fishing/gauges';
 import { loadMountainGauges } from '@/lib/fishing/usgs';
 
 export const dynamic = 'force-dynamic';
@@ -15,7 +15,7 @@ const SITE = /^\d+$/;
 
 export default async function FishingSpotPage({ params }: { params: Promise<{ site: string }> }) {
   const { site } = await params;
-  if (!SITE.test(site)) notFound();
+  if (!SITE.test(site) || !MOUNTAIN_GAUGES.some((gauge) => gauge.site === site)) notFound();
 
   let gauges: GaugeView[] = [];
   let unavailable = false;
@@ -41,8 +41,7 @@ export default async function FishingSpotPage({ params }: { params: Promise<{ si
   }
 
   return (
-    <PageWrapper>
-      <CrumbLeaf label={shown ? plainWaterName(shown.name) : 'Gauge'} />
+    <PageWrapper leaf={shown ? plainWaterName(shown.name) : 'Gauge'}>
       <div className="mx-auto max-w-3xl px-4 py-10">
         {unavailable ? (
           <Window title="Gauge">

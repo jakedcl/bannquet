@@ -31,6 +31,14 @@ export const TIDE_STATIONS: TideStation[] = [
 
 export const DEFAULT_TIDE_STATION = TIDE_STATIONS[0]
 
+/**
+ * Subordinate stations: NOAA only publishes their high and low times
+ * (interval=hilo). Asking for a 30-minute curve fails every time, so the
+ * chart draws its estimate from the highs and lows instead. Checked against
+ * the datagetter on 2026-10-27.
+ */
+export const HILO_ONLY_STATIONS = new Set(['8519112', '8519726'])
+
 export const WATER_SENSORS: SensorStation[] = [
   { id: '8531680', name: 'Sandy Hook', lat: 40.4669, lon: -74.0094 },
   { id: '8518750', name: 'The Battery', lat: 40.7006, lon: -74.0142 },

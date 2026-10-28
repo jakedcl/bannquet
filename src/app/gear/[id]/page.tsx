@@ -3,12 +3,12 @@ import { notFound } from 'next/navigation';
 import PageWrapper from '@/components/ui/PageWrapper';
 import { CountControl } from '@/components/ui/CountControl';
 import { Window } from '@/components/retro/Window';
-import { CrumbLeaf } from '@/components/ui/BackBar';
 import { changeHoldAction } from '@/app/gear/actions';
 import { getViewer } from '@/app/sign-in/actions';
 import { isDatabaseConfigured } from '@/db';
 import { listGear } from '@/lib/gear';
 import { APPROVAL_WAIT, canContribute } from '@/lib/membership';
+import { loadFailed } from '@/lib/load-error';
 
 export const dynamic = 'force-dynamic';
 
@@ -23,7 +23,7 @@ export default async function GearItemPage({ params }: { params: Promise<{ id: s
   try {
     item = (await listGear()).find((row) => row.id === id) ?? null;
   } catch (err) {
-    error = err instanceof Error ? err.message : 'That item did not load.';
+    error = loadFailed('gear item', err, 'That item did not load. Try again in a minute.');
   }
   if (error) {
     return (
@@ -44,8 +44,7 @@ export default async function GearItemPage({ params }: { params: Promise<{ id: s
   const total = item.holds.reduce((sum, hold) => sum + hold.qty, 0);
 
   return (
-    <PageWrapper>
-      <CrumbLeaf label={item.name} />
+    <PageWrapper leaf={item.name}>
       <div className="mx-auto max-w-3xl px-4 py-10">
         <Window title={item.name}>
           <p className="text-sm text-gray-700">

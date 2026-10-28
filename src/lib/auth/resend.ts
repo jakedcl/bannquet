@@ -1,3 +1,5 @@
+import { outsideFetch } from '@/lib/outside-fetch';
+
 export function isResendConfigured(): boolean {
   return Boolean(process.env.RESEND_API_KEY?.trim() && emailFrom());
 }
@@ -21,7 +23,9 @@ export async function sendResendEmail(input: SendEmailInput): Promise<{ ok: true
     return { ok: false, message: 'Resend is not configured.' };
   }
 
-  const response = await fetch('https://api.resend.com/emails', {
+  let response: Response;
+  try {
+    response = await outsideFetch('https://api.resend.com/emails', {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${apiKey}`,
@@ -34,7 +38,10 @@ export async function sendResendEmail(input: SendEmailInput): Promise<{ ok: true
       html: input.html,
       text: input.text,
     }),
-  });
+    }, 8_000);
+  } catch (error) {
+    return { ok: false, message: error instanceof Error ? error.message : 'Resend did not answer.' };
+  }
 
   const body = (await response.json().catch(() => null)) as
     | { id?: string; error?: { message?: string } }

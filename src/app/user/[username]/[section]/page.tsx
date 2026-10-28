@@ -13,6 +13,7 @@ import { profileMember } from '@/lib/profile-member';
 import { canDeleteOwned } from '@/lib/membership';
 import { listClimbs } from '@/lib/summits';
 import { listTripsByOwner } from '@/lib/trips';
+import { loadFailed } from '@/lib/load-error';
 
 export const dynamic = 'force-dynamic';
 
@@ -95,7 +96,7 @@ export default async function ProfileSectionPage({
   try {
     loaded = await loadProfileSection(section, member.id, page);
   } catch (err) {
-    error = err instanceof Error ? err.message : 'This list did not load.';
+    error = loadFailed('profile list', err, 'This list did not load. Try again in a minute.');
   }
 
   const body = loaded ? sectionBody(loaded, manage, handle) : null;

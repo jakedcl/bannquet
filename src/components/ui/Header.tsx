@@ -78,6 +78,7 @@ export default function Header({ account = null }: { account?: HeaderAccount }) 
                 width={160}
                 height={40}
                 priority
+                unoptimized
                 className="header-logo hover:opacity-90"
               />
             </motion.div>

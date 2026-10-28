@@ -1,33 +1,12 @@
 'use client';
 
-import { createContext, useContext, useLayoutEffect, useMemo, useState, type ReactNode } from 'react';
+import { useMemo } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useAccount } from '@/contexts/AccountContext';
 import { allPeaks } from '@/lib/challenges';
 import { canGoBackInApp, noteFallback } from '@/lib/nav-history';
 import { pageTrail, type Crumb } from '@/lib/sections';
-
-const LeafValue = createContext<string | null>(null);
-const SetLeaf = createContext<(label: string | null) => void>(() => {});
-
-export function LeafProvider({ children }: { children: ReactNode }) {
-  const [label, setLabel] = useState<string | null>(null);
-  return (
-    <SetLeaf.Provider value={setLabel}>
-      <LeafValue.Provider value={label}>{children}</LeafValue.Provider>
-    </SetLeaf.Provider>
-  );
-}
-
-export function CrumbLeaf({ label }: { label: string }) {
-  const setLabel = useContext(SetLeaf);
-  useLayoutEffect(() => {
-    setLabel(label);
-    return () => setLabel(null);
-  }, [label, setLabel]);
-  return null;
-}
 
 function peakName(pathname: string): string | null {
   const match = pathname.match(/^\/peaks\/([^/]+)$/);
@@ -48,12 +27,16 @@ function CrumbList({ crumbs }: { crumbs: Crumb[] }) {
   });
 }
 
-export function BackBar() {
+/**
+ * The page passes its own title as `leaf` from the server, so the server and
+ * the browser render the same trail. Setting it from a child effect changed
+ * the text mid-hydration (React error #418).
+ */
+export function BackBar({ leaf = null }: { leaf?: string | null }) {
   const pathname = usePathname();
   const search = useSearchParams();
   const router = useRouter();
   const account = useAccount();
-  const leaf = useContext(LeafValue);
   const peak = useMemo(() => peakName(pathname), [pathname]);
   const trail = pageTrail(pathname, search.toString(), account, leaf || peak);
   const crumbs = trail.crumbs;
@@ -80,8 +63,7 @@ export function BackBar() {
       {crumbs && crumbs.length > 0 ? (
         <p className="crumb-trail">
           <span className="crumb-wide">
-            {crumbs.length > 2 ? '… / ' : null}
-            <CrumbList crumbs={crumbs.length > 2 ? crumbs.slice(-2) : crumbs} />
+            <CrumbList crumbs={crumbs} />
           </span>
           <span className="crumb-narrow">
             {crumbs.length > 1 ? '… / ' : null}

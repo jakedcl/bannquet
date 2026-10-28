@@ -1,5 +1,6 @@
 import { unstable_cache } from 'next/cache'
 import { nearestSensor, type SensorStation } from '@/lib/fishing/tide-stations'
+import { outsideFetch } from '@/lib/outside-fetch'
 
 const USER_AGENT = 'Bannquet (admin@bannquet.com)'
 
@@ -45,7 +46,7 @@ async function coopsLatest(stationId: string, product: string): Promise<{ name: 
   url.searchParams.set('time_zone', 'lst_ldt')
   url.searchParams.set('format', 'json')
   url.searchParams.set('application', 'bannquet')
-  const response = await fetch(url, {
+  const response = await outsideFetch(url, {
     headers: { Accept: 'application/json', 'User-Agent': USER_AGENT },
     cache: 'no-store',
   })
@@ -97,7 +98,7 @@ async function readWind(lat: number, lon: number): Promise<WindReading | null> {
 }
 
 async function nws<T>(url: string): Promise<T> {
-  const response = await fetch(url, {
+  const response = await outsideFetch(url, {
     headers: {
       'User-Agent': 'Bannquet-Weather-App (admin@bannquet.com)',
       Accept: 'application/geo+json',

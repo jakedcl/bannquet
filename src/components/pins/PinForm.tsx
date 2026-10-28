@@ -46,8 +46,6 @@ export function PinForm({
     initial ? { lat: initial.lat, lng: initial.lng } : null,
   );
   const [locateError, setLocateError] = useState<string | null>(null);
-  const latRef = useRef<HTMLInputElement>(null);
-  const lngRef = useRef<HTMLInputElement>(null);
   const placed = useRef(Boolean(initial));
   const [focus] = useState(initial ? { lng: initial.lng, lat: initial.lat, zoom: 12 } : null);
 
@@ -55,8 +53,6 @@ export function PinForm({
     placed.current = true;
     setPoint({ lat, lng });
     setLocateError(null);
-    if (latRef.current) latRef.current.value = String(lat);
-    if (lngRef.current) lngRef.current.value = String(lng);
   }
 
   function onPhotos(next: UploadedPhoto[]) {
@@ -164,8 +160,9 @@ export function PinForm({
           <p className="text-xs text-gray-700">No spot chosen yet.</p>
         )}
         {locateError ? <p className="text-sm font-bold text-red-700">{locateError}</p> : null}
-        <input type="hidden" name="lat" ref={latRef} defaultValue={initial ? String(initial.lat) : ''} />
-        <input type="hidden" name="lng" ref={lngRef} defaultValue={initial ? String(initial.lng) : ''} />
+        {/* Bound to state: React puts an uncontrolled hidden input back to its default on every render. */}
+        <input type="hidden" name="lat" value={point ? String(point.lat) : ''} />
+        <input type="hidden" name="lng" value={point ? String(point.lng) : ''} />
         <div className="h-64 overflow-hidden retro-box">
           <GroupMap
             points={draft}

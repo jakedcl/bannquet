@@ -10,7 +10,6 @@ import {
   createTrip,
   deleteTrip,
   detachItemFromTrip,
-  linkPostToTrip,
   setTripGoing,
 } from '@/lib/trips';
 
@@ -41,6 +40,7 @@ export async function createTripAction(
       tripDate,
       notes,
       attachments,
+      admin: viewer.role === 'admin',
     });
   } catch {
     return { error: 'Could not save that trip. Try again in a minute.' };
@@ -53,7 +53,7 @@ export async function toggleGoing(formData: FormData): Promise<void> {
   if (!viewer) return;
   const tripId = String(formData.get('tripId') ?? '');
   const going = String(formData.get('going') ?? '') === '1';
-  if (!tripId) return;
+  if (!UUID.test(tripId)) return;
   await setTripGoing(tripId, viewer.id, going);
   revalidatePath(`/trips/${tripId}`);
 }
@@ -140,15 +140,4 @@ export async function detachFromTripAction(
   if (!ok) return { error: 'You can only remove your own pins, routes, and photos.' };
   revalidatePath(`/trips/${tripId}`);
   redirect(kind === 'route' ? `/routes/${entityId}` : kind === 'pin' ? `/pins/${entityId}` : `/photos/${entityId}`);
-}
-
-export async function linkPost(formData: FormData): Promise<void> {
-  const { viewer } = await contributor();
-  if (!viewer) return;
-  const tripId = String(formData.get('tripId') ?? '');
-  const postId = String(formData.get('postId') ?? '');
-  if (!tripId || !postId) return;
-  await linkPostToTrip(tripId, postId, viewer.id);
-  revalidatePath(`/trips/${tripId}`);
-  revalidatePath(`/posts/${postId}`);
 }

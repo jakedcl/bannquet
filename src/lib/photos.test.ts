@@ -5,6 +5,7 @@ import {
   PHOTO_MAX_EDGE,
   PHOTO_THUMB_MAX_EDGE,
   fittedSize,
+  formLatLng,
   isPublicBlobUrl,
   smallPhotoImageProps,
 } from './photos';
@@ -37,4 +38,13 @@ test('only public blob urls are accepted as photo files', () => {
   assert.equal(isPublicBlobUrl('https://abc.public.blob.vercel-storage.com/photos/a.jpg'), true);
   assert.equal(isPublicBlobUrl('http://abc.public.blob.vercel-storage.com/a.jpg'), false);
   assert.equal(isPublicBlobUrl('https://example.com/a.jpg'), false);
+});
+
+test('a blank map point is no point, not 0, 0', () => {
+  assert.equal(formLatLng('', ''), null);
+  assert.equal(formLatLng(null, null), null);
+  assert.equal(formLatLng('44.13817', ''), null);
+  assert.equal(formLatLng('91', '0'), null);
+  assert.deepEqual(formLatLng('44.13817', '-74.0942'), { lat: 44.13817, lng: -74.0942 });
+  assert.deepEqual(formLatLng(' 0 ', '0'), { lat: 0, lng: 0 });
 });

@@ -66,13 +66,23 @@ export function publicSignUpAllowed(input: { email: string; member: boolean }): 
   return !input.member;
 }
 
+/**
+ * ADMIN_EMAIL only makes someone admin once Neon Auth has verified they own
+ * that inbox. Sign-up doesn't verify email, so otherwise anyone could
+ * register an admin address nobody had claimed yet.
+ */
+export function adminByEmail(input: { email: string; adminEmails: readonly string[]; emailVerified: boolean }): boolean {
+  return input.emailVerified && isAdminEmail(input.email, input.adminEmails);
+}
+
 export function roleForNewAccount(input: {
   email: string;
   adminEmails: readonly string[];
+  emailVerified: boolean;
   openInvite: boolean;
   publicSignUp: boolean;
 }): MemberRole | null {
-  if (isAdminEmail(input.email, input.adminEmails)) return 'admin';
+  if (adminByEmail(input)) return 'admin';
   if (input.openInvite) return 'member';
   if (input.publicSignUp) return 'pending';
   return null;

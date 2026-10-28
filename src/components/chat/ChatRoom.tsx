@@ -1,6 +1,7 @@
 'use client';
 
-import { useActionState, useEffect, useRef, useState } from 'react';
+import { useActionState, useCallback, useEffect, useRef, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { draftPhotoSources, SmallPhotoImage } from '@/components/ui/SmallPhotoImage';
 import Link from 'next/link';
 import { deleteChatAction, sendChatAction } from '@/app/chat/actions';
@@ -21,14 +22,18 @@ export function ChatRoom({
   catalog,
   viewerId,
   moderator,
+  failed = false,
 }: {
   initial: ChatMessage[];
   canSend: boolean;
   notice: string | null;
+  /** The first load failed; offer a reload. */
+  failed?: boolean;
   catalog: ChatCatalogItem[];
   viewerId: string | null;
   moderator: boolean;
 }) {
+  const router = useRouter();
   const [messages, setMessages] = useState(initial);
   const [refreshNote, setRefreshNote] = useState<string | null>(null);
   const [attached, setAttached] = useState<ChatCatalogItem | null>(null);
@@ -53,38 +58,50 @@ export function ChatRoom({
     dialogRef.current?.close();
   }, [state]);
 
-  useEffect(() => {
-    const timer = window.setInterval(async () => {
-      const cursor = latest.current;
-      const params = new URLSearchParams();
-      if (cursor) {
-        params.set('after', cursor.createdAt);
-        params.set('afterId', cursor.id);
-      }
-      try {
-        const response = await fetch(`/api/chat?${params.toString()}`, { cache: 'no-store' });
-        if (!response.ok) {
-          setRefreshNote('Chat did not refresh.');
-          return;
-        }
-        const data = await response.json() as { messages?: ChatMessage[] };
-        const next = Array.isArray(data.messages) ? data.messages : [];
-        if (next.length === 0) return;
-        setRefreshNote(null);
-        setMessages((current) => {
-          const seen = new Set(current.map((message) => message.id));
-          return [...current, ...next.filter((message) => !seen.has(message.id))];
-        });
-      } catch {
+  /** Pulls messages newer than the last one shown. */
+  const pull = useCallback(async () => {
+    const cursor = latest.current;
+    const params = new URLSearchParams();
+    if (cursor) {
+      params.set('after', cursor.createdAt);
+      params.set('afterId', cursor.id);
+    }
+    try {
+      const response = await fetch(`/api/chat?${params.toString()}`, { cache: 'no-store' });
+      if (!response.ok) {
         setRefreshNote('Chat did not refresh.');
+        return;
       }
-    }, 5000);
-    return () => window.clearInterval(timer);
+      const data = await response.json() as { messages?: ChatMessage[] };
+      const next = Array.isArray(data.messages) ? data.messages : [];
+      setRefreshNote(null);
+      if (next.length === 0) return;
+      setMessages((current) => {
+        const seen = new Set(current.map((message) => message.id));
+        return [...current, ...next.filter((message) => !seen.has(message.id))];
+      });
+    } catch {
+      setRefreshNote('Chat did not refresh.');
+    }
   }, []);
+
+  useEffect(() => {
+    const timer = window.setInterval(pull, 5000);
+    return () => window.clearInterval(timer);
+  }, [pull]);
 
   if (state !== acked) {
     setAcked(state);
     if (state && !state.error) setAttached(null);
+    // The send returns what's new, so the message shows right away
+    // instead of on the next 5-second poll.
+    const fresh = state?.messages ?? [];
+    if (fresh.length > 0) {
+      setMessages((current) => {
+        const seen = new Set(current.map((message) => message.id));
+        return [...current, ...fresh.filter((message) => !seen.has(message.id))];
+      });
+    }
   }
 
   const needle = query.trim().toLowerCase();
@@ -114,9 +131,21 @@ export function ChatRoom({
           />
         ))}
       </div>
-      {refreshNote ? <p className="text-xs font-bold">{refreshNote}</p> : null}
-      {notice ? <p className="text-sm font-bold">{notice}</p> : null}
+      {refreshNote ? (
+        <p className="text-xs font-bold">
+          {refreshNote}{' '}
+          <button type="button" className="underline" onClick={() => void pull()}>Try again</button>
+        </p>
+      ) : null}
+      {notice ? (
+        <p className="text-sm font-bold">
+          {notice}{' '}
+          {failed ? <button type="button" className="underline" onClick={() => router.refresh()}>Try again</button> : null}
+        </p>
+      ) : null}
       <form ref={formRef} action={action} className="space-y-2">
+        <input type="hidden" name="after" value={messages.at(-1)?.createdAt ?? ''} />
+        <input type="hidden" name="afterId" value={messages.at(-1)?.id ?? ''} />
         <input type="hidden" name="refKind" value={attached?.kind ?? ''} />
         <input type="hidden" name="refId" value={attached?.id ?? ''} />
         {attached ? (

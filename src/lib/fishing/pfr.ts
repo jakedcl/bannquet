@@ -1,5 +1,6 @@
 import { unstable_cache } from 'next/cache'
 import { MOUNTAIN_NY_COUNTIES } from '@/lib/fishing/gauges'
+import { outsideFetch } from '@/lib/outside-fetch'
 
 export type ParkingArea = {
   id: string
@@ -53,7 +54,7 @@ async function fetchParking(): Promise<ParkingLoad> {
   url.searchParams.set('$where', `upper(county) in(${counties})`)
   url.searchParams.set('$limit', String(LIMIT))
   url.searchParams.set('$order', 'county,water,town')
-  const response = await fetch(url, {
+  const response = await outsideFetch(url, {
     headers: { Accept: 'application/json', 'User-Agent': 'Bannquet (admin@bannquet.com)' },
     cache: 'no-store',
   })

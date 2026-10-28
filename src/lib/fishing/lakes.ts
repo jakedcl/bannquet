@@ -1,4 +1,5 @@
 import { unstable_cache } from 'next/cache'
+import { outsideFetch } from '@/lib/outside-fetch'
 
 export type FishingLake = {
   id: string
@@ -27,7 +28,7 @@ async function readLakes(): Promise<FishingLake[]> {
   url.searchParams.set('$select', 'water,county,acres_mile,fish_speci,boat_launc,comments,point_y,point_x')
   url.searchParams.set('$limit', '1000')
   url.searchParams.set('$order', 'county,water')
-  const response = await fetch(url, {
+  const response = await outsideFetch(url, {
     headers: { Accept: 'application/json', 'User-Agent': 'Bannquet (admin@bannquet.com)' },
     cache: 'no-store',
   })

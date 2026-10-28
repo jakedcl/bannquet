@@ -1,5 +1,6 @@
 import { handleUpload, type HandleUploadBody } from '@vercel/blob/client';
 import { getViewer } from '@/app/sign-in/actions';
+import { loadFailed } from '@/lib/load-error';
 import { APPROVAL_WAIT, canContribute } from '@/lib/membership';
 
 export async function POST(request: Request) {
@@ -24,7 +25,6 @@ export async function POST(request: Request) {
     });
     return Response.json(json);
   } catch (error) {
-    const message = error instanceof Error ? error.message : 'Photo upload is not set up yet.';
-    return Response.json({ error: message }, { status: 400 });
+    return Response.json({ error: loadFailed('photo upload', error, 'That photo did not upload. Try again.') }, { status: 400 });
   }
 }

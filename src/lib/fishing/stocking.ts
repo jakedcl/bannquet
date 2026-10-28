@@ -2,6 +2,7 @@ import { unstable_cache } from 'next/cache'
 import { extractText, getDocumentProxy } from 'unpdf'
 import { MOUNTAIN_NY_COUNTIES } from '@/lib/fishing/gauges'
 import { parseMaineStocking, type MaineStockingReport } from '@/lib/fishing/maine-stocking'
+import { outsideFetch } from '@/lib/outside-fetch'
 
 export type PlannedStocking = {
   year: string | null
@@ -34,7 +35,7 @@ async function fetchPlannedStocking(): Promise<PlannedStockingLoad> {
   url.searchParams.set('$where', `upper(county) in(${counties})`)
   url.searchParams.set('$limit', String(PLANNED_LIMIT))
   url.searchParams.set('$order', 'county,waterbody,species_name')
-  const response = await fetch(url, {
+  const response = await outsideFetch(url, {
     headers: { Accept: 'application/json', 'User-Agent': 'Bannquet (admin@bannquet.com)' },
     cache: 'no-store',
   })
@@ -63,10 +64,10 @@ async function fetchPlannedStocking(): Promise<PlannedStockingLoad> {
 }
 
 async function fetchMaineStocking(): Promise<MaineStockingReport> {
-  const response = await fetch(MAINE_PDF, {
+  const response = await outsideFetch(MAINE_PDF, {
     headers: { 'User-Agent': 'Mozilla/5.0 (compatible; Bannquet/1.0; +https://bannquet.com)' },
     cache: 'no-store',
-  })
+  }, 8_000)
   if (!response.ok) throw new Error(`Maine stocking PDF returned ${response.status}`)
   const pdf = await getDocumentProxy(new Uint8Array(await response.arrayBuffer()))
   const extracted = await extractText(pdf, { mergePages: true })
@@ -106,7 +107,7 @@ async function fetchActualStocking(): Promise<ActualStockingLoad> {
   yearsUrl.searchParams.set('$group', 'year')
   yearsUrl.searchParams.set('$order', 'year DESC')
   yearsUrl.searchParams.set('$limit', '1')
-  const yearsResponse = await fetch(yearsUrl, { headers, cache: 'no-store' })
+  const yearsResponse = await outsideFetch(yearsUrl, { headers, cache: 'no-store' })
   if (!yearsResponse.ok) throw new Error(`NY actual stocking returned ${yearsResponse.status}`)
   const years = (await yearsResponse.json()) as unknown
   const year = Array.isArray(years) && years[0] && typeof years[0] === 'object' ? text((years[0] as Record<string, unknown>).year) : null
@@ -117,7 +118,7 @@ async function fetchActualStocking(): Promise<ActualStockingLoad> {
   url.searchParams.set('$where', `year='${year.replaceAll("'", '')}'`)
   url.searchParams.set('$limit', String(ACTUAL_LIMIT))
   url.searchParams.set('$order', 'county,waterbody')
-  const response = await fetch(url, { headers, cache: 'no-store' })
+  const response = await outsideFetch(url, { headers, cache: 'no-store' })
   if (!response.ok) throw new Error(`NY actual stocking returned ${response.status}`)
   const body = (await response.json()) as unknown
   if (!Array.isArray(body)) throw new Error('NY actual stocking did not return a list')

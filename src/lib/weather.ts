@@ -1,5 +1,6 @@
 import { ForecastPeriod, ForecastSnippet, WeatherData, WeatherHazard } from '@/types/weather';
 import { DEFAULT_REGION, REGION_WEATHER_SECTIONS, RegionCode } from '@/lib/regions';
+import { outsideFetch } from '@/lib/outside-fetch';
 
 const USER_AGENT = 'Bannquet-Weather-App (admin@bannquet.com)';
 
@@ -10,7 +11,7 @@ export function getMountainsForRegion(region: RegionCode) {
 
 // Simple helper to fetch data
 async function fetchWeather<T = unknown>(url: string): Promise<T> {
-  const response = await fetch(url, {
+  const response = await outsideFetch(url, {
     headers: {
       'User-Agent': USER_AGENT,
       Accept: 'application/geo+json',

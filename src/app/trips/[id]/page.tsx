@@ -3,7 +3,6 @@ import { notFound } from 'next/navigation';
 import PageWrapper from '@/components/ui/PageWrapper';
 import { SubmitButton } from '@/components/ui/SubmitButton';
 import { Window } from '@/components/retro/Window';
-import { CrumbLeaf } from '@/components/ui/BackBar';
 import { ConfirmDelete } from '@/components/delete/ConfirmDelete';
 import { deleteTripAction, toggleGoing } from '@/app/trips/actions';
 import { getViewer } from '@/app/sign-in/actions';
@@ -34,8 +33,7 @@ export default async function TripPage({ params }: { params: Promise<{ id: strin
   const going = Boolean(viewer && trip.people.some((person) => person.id === viewer.id));
 
   return (
-    <PageWrapper>
-      <CrumbLeaf label={trip.title} />
+    <PageWrapper leaf={trip.title}>
       <div className="mx-auto max-w-3xl space-y-4 px-4 py-10">
         <Window title={trip.title}>
           <p className="text-sm">
