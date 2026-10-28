@@ -41,6 +41,7 @@ export async function createTripAction(
       tripDate,
       notes,
       attachments,
+      admin: viewer.role === 'admin',
     });
   } catch {
     return { error: 'Could not save that trip. Try again in a minute.' };
