@@ -62,6 +62,7 @@ export default function Home() {
                       width={500}
                       height={150}
                       priority
+                      unoptimized
                       className="object-contain w-full h-auto retro-text-shadow"
                       style={{ 
                         filter: 'drop-shadow(4px 4px 8px rgba(0, 0, 0, 0.5))',
