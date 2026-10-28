@@ -88,7 +88,8 @@ export async function loadLoggedActivities(userId: string): Promise<Activity[]> 
 
 export async function loadProfilePins(userId: string): Promise<PinSummary[]> {
   const result = await getDb().execute(sql`
-    select id::text as id, title, activity::text as activity, kind::text as kind, visited_on::text as visited_on
+    select id::text as id, title, activity::text as activity, kind::text as kind,
+      coalesce(visited_on, (created_at at time zone 'America/New_York')::date)::text as visited_on
     from pins
     where created_by = ${userId}
     order by visited_on desc nulls last, created_at desc
@@ -111,7 +112,7 @@ export async function loadPin(id: string): Promise<PinDetail | null> {
   const [pinResult, photoResult] = await Promise.all([
     db.execute(sql`
       select p.id::text as id, p.title, p.note, p.activity::text as activity, p.kind::text as kind,
-        p.visited_on::text as visited_on, p.created_by,
+        coalesce(p.visited_on, (p.created_at at time zone 'America/New_York')::date)::text as visited_on, p.created_by,
         ST_Y(p.point::geometry) as lat, ST_X(p.point::geometry) as lng,
         coalesce(nullif(u.display_name, ''), nullif(u.handle, ''), 'Friend') as who,
         u.handle

@@ -113,7 +113,7 @@ export function RouteRows({
   profilePath,
   collapsed = false,
 }: {
-  routes: Array<{ id: string; name: string; activity: string; distanceM: number | null; elevGainM: number | null }>;
+  routes: Array<{ id: string; name: string; activity: string; distanceM: number | null; elevGainM: number | null; date: string | null }>;
   manage: boolean;
   profilePath: string;
   collapsed?: boolean;
@@ -125,6 +125,12 @@ export function RouteRows({
       sticky: true,
       sortValue: (row) => row.name,
       cell: (row) => <Link href={`/routes/${row.id}`} className="font-bold underline">{row.name}</Link>,
+    },
+    {
+      id: 'date',
+      header: 'Date',
+      sortValue: (row) => row.date,
+      cell: (row) => formatTripDate(row.date),
     },
     {
       id: 'activity',
@@ -165,7 +171,7 @@ export function RouteRows({
       columns={columns}
       rowKey={(row) => row.id}
       empty="No routes yet."
-      defaultSort={{ id: 'name', dir: 'asc' }}
+      defaultSort={{ id: 'date', dir: 'desc' }}
       placeholder="Route name"
       searchText={(row) => `${row.name} ${activityLabel(row.activity) ?? ''}`}
       facets={[{ id: 'activity', label: 'Activity', value: (row) => activityLabel(row.activity) }]}

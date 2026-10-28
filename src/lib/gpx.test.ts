@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { formatFeetGain, formatMiles, lineWkt, packTrack, parseGpx, simplifyForStorage, simplifyTrack, trackStats, unpackTrack, type TrackPoint } from './gpx';
+import { activityTime, formatFeetGain, formatMiles, lineWkt, packTrack, parseGpx, simplifyForStorage, simplifyTrack, trackStats, unpackTrack, type TrackPoint } from './gpx';
 
 const SAMPLE = `<?xml version="1.0"?>
 <gpx>
@@ -104,4 +104,32 @@ test('a packed route with bad numbers is refused', () => {
 test('miles and feet are the labels friends read', () => {
   assert.equal(formatMiles(1609.344), '1.0 mi');
   assert.equal(formatFeetGain(304.8), '1,000 ft up');
+});
+
+test('packTrack reads the first point time as the start', () => {
+  const xml = `<gpx><trk><trkseg>
+    <trkpt lat="44.1" lon="-73.9"><ele>500</ele><time>2026-10-11T12:30:00Z</time></trkpt>
+    <trkpt lat="44.2" lon="-73.8"><ele>520</ele><time>2026-10-11T13:30:00Z</time></trkpt>
+  </trkseg></trk></gpx>`;
+  assert.equal(packTrack(xml)?.startedAt, '2026-10-11T12:30:00.000Z');
+});
+
+test('packTrack falls back to the file time, and ignores bad times', () => {
+  const withMeta = `<gpx><metadata><time>2026-09-01T10:00:00Z</time></metadata><trk><trkseg>
+    <trkpt lat="44.1" lon="-73.9"></trkpt><trkpt lat="44.2" lon="-73.8"></trkpt>
+  </trkseg></trk></gpx>`;
+  assert.equal(packTrack(withMeta)?.startedAt, '2026-09-01T10:00:00.000Z');
+  assert.equal(activityTime('1970-01-01T00:00:00Z'), null);
+  assert.equal(activityTime('not a date'), null);
+  assert.equal(activityTime('2999-01-01T00:00:00Z'), null);
+});
+
+test('unpackTrack keeps a valid start time', () => {
+  const raw = JSON.stringify({
+    points: [{ lat: 44.1, lng: -73.9, ele: null }, { lat: 44.2, lng: -73.8, ele: null }],
+    distanceM: 100,
+    elevGainM: 0,
+    startedAt: '2026-10-11T12:30:00.000Z',
+  });
+  assert.equal(unpackTrack(raw).track?.startedAt, '2026-10-11T12:30:00.000Z');
 });

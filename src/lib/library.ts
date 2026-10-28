@@ -92,6 +92,8 @@ export type RouteDetail = {
   activity: string;
   distanceM: number | null;
   elevGainM: number | null;
+  /** Activity date (Eastern), from the GPX start time or the upload time. */
+  date: string | null;
   userId: string | null;
   who: string;
   handle: string | null;
@@ -103,6 +105,7 @@ export type RouteDetail = {
 export async function loadRoute(id: string): Promise<RouteDetail | null> {
   const result = await getDb().execute(sql`
     select t.id::text as id, t.title, t.notes, t.activity::text as activity, t.distance_m, t.elev_gain_m, t.user_id,
+      (coalesce(t.started_at, t.created_at) at time zone 'America/New_York')::date::text as route_date,
       coalesce(nullif(u.display_name, ''), nullif(u.handle, ''), 'Friend') as who,
       u.handle,
       ST_Y(ST_StartPoint(t.line::geometry)) as lat,
@@ -123,6 +126,7 @@ export async function loadRoute(id: string): Promise<RouteDetail | null> {
     activity,
     distanceM: num(row.distance_m),
     elevGainM: num(row.elev_gain_m),
+    date: text(row.route_date),
     userId: text(row.user_id),
     who: text(row.who) ?? 'Friend',
     handle: text(row.handle),

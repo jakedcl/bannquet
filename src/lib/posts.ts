@@ -104,7 +104,7 @@ export async function loadMapData(): Promise<{ points: MapFeatureCollection; lin
   const [trackResult, photoResult, tripResult, pinResult] = await Promise.all([
     db.execute(sql`
       select t.id::text as id, t.title, t.activity::text as activity,
-        t.started_at::date::text as trip_date,
+        (coalesce(t.started_at, t.created_at) at time zone 'America/New_York')::date::text as trip_date,
         ${whoSql('u')} as who,
         ST_AsGeoJSON(t.line::geometry) as geojson,
         ST_Y(ST_StartPoint(t.line::geometry)) as lat,
@@ -293,7 +293,7 @@ export async function addProfileTrack(input: {
         ST_GeogFromText(${wkt}),
         ${input.track.distanceM},
         ${input.track.elevGainM},
-        now()
+        coalesce(${input.track.startedAt ?? null}::timestamptz, now())
       )
       returning id::text as id
     `);
@@ -346,7 +346,7 @@ export async function addProfilePhotos(
 
 export type ProfileLibrary = {
   posts: Array<{ id: string; title: string; tripDate: string | null; activity: string | null; tagged: boolean }>;
-  routes: Array<{ id: string; name: string; activity: string; distanceM: number | null; elevGainM: number | null; postId: string | null }>;
+  routes: Array<{ id: string; name: string; activity: string; distanceM: number | null; elevGainM: number | null; date: string | null; postId: string | null }>;
   photos: Array<{ id: string; url: string; thumbUrl: string | null; caption: string | null; postId: string | null; pinId: string | null }>;
 };
 
@@ -354,7 +354,8 @@ export async function loadProfileLibrary(userId: string): Promise<ProfileLibrary
   const db = getDb();
   const [routes, photos] = await Promise.all([
     db.execute(sql`
-      select id::text as id, title, activity::text as activity, distance_m, elev_gain_m
+      select id::text as id, title, activity::text as activity, distance_m, elev_gain_m,
+        (coalesce(started_at, created_at) at time zone 'America/New_York')::date::text as route_date
       from tracks
       where user_id = ${userId}
       order by started_at desc nulls last, created_at desc
@@ -379,6 +380,7 @@ export async function loadProfileLibrary(userId: string): Promise<ProfileLibrary
         activity,
         distanceM: num(row.distance_m),
         elevGainM: num(row.elev_gain_m),
+        date: text(row.route_date),
         postId: null,
       }];
     }),

@@ -18,6 +18,7 @@ import { canContribute, canDeleteOwned } from '@/lib/membership';
 import { loadMapData } from '@/lib/posts';
 import { listTripChoices, tripsForItem } from '@/lib/trips';
 import { loadFailed } from '@/lib/load-error';
+import { formatTripDate } from '@/lib/utils';
 
 export const dynamic = 'force-dynamic';
 
@@ -93,6 +94,7 @@ export default async function RoutePage({
           ) : null}
         >
           <p className="text-sm text-gray-700">
+            {route.date ? `${formatTripDate(route.date, 'long')} · ` : ''}
             {isActivity(route.activity) ? ACTIVITY_META[route.activity].label : route.activity}
             {route.distanceM != null ? ` · ${formatMiles(route.distanceM)}` : ''}
             {route.elevGainM != null ? ` · ${formatFeetGain(route.elevGainM)}` : ''}
