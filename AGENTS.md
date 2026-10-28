@@ -24,4 +24,5 @@ Mountain weather, trip posts, peaks challenges, trips, and a map for a Northeast
 - New sign-ups can read but can't post until approved on `/admin`; invite links skip that. `ADMIN_EMAIL` (comma-separated) are admins.
 - Old `/trip-reports/<id>` links redirect to `/posts/<id>`; `/hikers/<u>` redirects to `/user/<u>`. Keep those redirects.
 - Weather pages must work with no keys. The live-map socket server is a separate repo, `jakedcl/bannquet-io`.
+- **Route privacy:** a route with `hide_ends` loses its first and last ~400 m for everyone but its owner. Any query that sends route geometry to a page must go through `routeCutSql`/`shownLineSql` in `src/lib/route-privacy-sql.ts`, never `t.line` directly.
 - **Images:** Bannquet does not use Vercel Image Optimization (`next/image` with `unoptimized` on Blob and NWS URLs). Uploads get a browser-made ~480px JPEG thumb in Blob (`photos.thumb_url`); small UI uses that thumb. Legacy photos without `thumb_url` still fall back to Vercel resizing.

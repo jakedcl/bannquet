@@ -20,6 +20,7 @@ export const COMMUNITY_LINKS: NavLink[] = [
   { href: '/peaks', label: 'Peaks' },
   { href: '/trips', label: 'Trips' },
   { href: '/gear', label: 'Gear' },
+  { href: '/photos', label: 'Photos' },
   { href: '/members', label: 'Members' },
 ];
 
@@ -35,13 +36,14 @@ export const UPLOAD_LINKS: NavLink[] = [
   { href: '/upload?kind=photo', label: 'Photo' },
 ];
 
-const COMMUNITY_ROOTS = ['/community', '/chat', '/peaks', '/trips', '/gear', '/members'];
+const COMMUNITY_ROOTS = ['/community', '/chat', '/peaks', '/trips', '/gear', '/photos', '/members'];
 
 const COMMUNITY_PAGES: Record<string, string> = {
   '/chat': 'Chat',
   '/peaks': 'Peaks',
   '/trips': 'Trips',
   '/gear': 'Gear',
+  '/photos': 'Photos',
   '/members': 'Members',
 };
 
@@ -241,11 +243,8 @@ export function pageTrail(pathname: string, search: string, account: NavAccount,
 
   if (/^\/photos\/[^/]+$/.test(pathname)) {
     return {
-      parentHref: '/map',
-      crumbs: [
-        { href: '/map', label: 'Map' },
-        named(pathname, 'Photo', leaf),
-      ],
+      parentHref: '/photos',
+      crumbs: communityTrail('/photos', 'Photos', named(pathname, 'Photo', leaf)),
     };
   }
 

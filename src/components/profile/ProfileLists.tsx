@@ -186,13 +186,16 @@ export function PhotoGrid({
   photos,
   manage,
   profilePath,
+  wide = false,
 }: {
   photos: Array<{ id: string; url: string; thumbUrl: string | null; caption: string | null }>;
   manage: boolean;
   profilePath: string;
+  /** More columns on big screens, for the full gallery. */
+  wide?: boolean;
 }) {
   return (
-    <div className="grid grid-cols-3 gap-2">
+    <div className={`grid grid-cols-3 gap-2${wide ? ' sm:grid-cols-4 lg:grid-cols-6' : ''}`}>
       {photos.map((photo) => (
         <figure key={photo.id} className="relative">
           <Link href={`/photos/${photo.id}`}>

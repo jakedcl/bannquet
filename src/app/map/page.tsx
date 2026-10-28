@@ -1,6 +1,7 @@
 import { Suspense } from 'react';
 import { MapCanvas } from '@/components/map/MapCanvas';
 import { BackBar } from '@/components/ui/BackBar';
+import { getViewer } from '@/app/sign-in/actions';
 import { isDatabaseConfigured } from '@/db';
 import { MAP_CENTER } from '@/lib/map';
 import { loadMapData } from '@/lib/posts';
@@ -15,7 +16,7 @@ export default async function MapPage({
   searchParams: Promise<{ track?: string; post?: string; trip?: string; pin?: string; photo?: string }>;
 }) {
   const params = await searchParams;
-  const data = isDatabaseConfigured() ? await loadMapData() : { points: EMPTY, lines: EMPTY };
+  const data = isDatabaseConfigured() ? await loadMapData((await getViewer())?.id ?? null) : { points: EMPTY, lines: EMPTY };
   const focusId = params.track || params.post || params.trip || params.pin || params.photo;
   const focusFeature = focusId
     ? data.points.features.find((feature) => {

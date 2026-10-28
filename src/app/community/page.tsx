@@ -1,4 +1,5 @@
 import PageWrapper from '@/components/ui/PageWrapper';
+import { getViewer } from '@/app/sign-in/actions';
 import { CommunityBoard, type CommunityPeek } from '@/components/community/CommunityBoard';
 import { isDatabaseConfigured } from '@/db';
 import { allPeaks } from '@/lib/challenges';
@@ -25,14 +26,14 @@ function emptyPeek(): CommunityPeek {
   return { chat: [], peaks: [], trips: [], members: [], gear: [], points: EMPTY, lines: EMPTY };
 }
 
-async function loadPeek(): Promise<CommunityPeek> {
+async function loadPeek(viewerId: string | null): Promise<CommunityPeek> {
   const [messages, climbs, trips, members, gear, map] = await Promise.all([
     listChatMessages(),
     listClimbs(),
     listTrips(),
     listApprovedMembers(),
     listGear(),
-    loadMapData(),
+    loadMapData(viewerId),
   ]);
   const counts = new Map<string, number>();
   for (const climb of climbs) {
@@ -97,7 +98,8 @@ export default async function CommunityPage() {
     note = 'Postgres is not connected.';
   } else {
     try {
-      peek = await loadPeek();
+      const viewer = await getViewer();
+      peek = await loadPeek(viewer?.id ?? null);
     } catch {
       note = 'Community did not load.';
     }

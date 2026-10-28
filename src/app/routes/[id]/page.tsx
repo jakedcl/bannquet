@@ -14,6 +14,7 @@ import { ACTIVITY_META, isActivity } from '@/lib/activities';
 import { LinkedText } from '@/components/ui/LinkedText';
 import { formatFeetGain, formatMiles } from '@/lib/gpx';
 import { loadRoute } from '@/lib/library';
+import { seesWholeRoute } from '@/lib/route-privacy';
 import { canContribute, canDeleteOwned } from '@/lib/membership';
 import { loadMapData } from '@/lib/posts';
 import { listTripChoices, tripsForItem } from '@/lib/trips';
@@ -46,10 +47,11 @@ export default async function RoutePage({
     );
   }
 
+  const viewer = await getViewer();
   let route: Awaited<ReturnType<typeof loadRoute>> = null;
   let error: string | null = null;
   try {
-    route = await loadRoute(id);
+    route = await loadRoute(id, viewer?.id ?? null);
   } catch (err) {
     error = loadFailed('route page', err, 'That route did not load. Try again in a minute.');
   }
@@ -66,7 +68,6 @@ export default async function RoutePage({
   }
   if (!route) notFound();
 
-  const viewer = await getViewer();
   const manage = Boolean(viewer && canDeleteOwned({
     actorRole: viewer.role,
     actorId: viewer.id,
@@ -78,7 +79,7 @@ export default async function RoutePage({
       tripsForItem('route', route.id).catch(() => []),
     ])
     : [[], []];
-  const map = route.lat != null && route.lng != null ? await loadMapData().catch(() => null) : null;
+  const map = route.lat != null && route.lng != null ? await loadMapData(viewer?.id ?? null).catch(() => null) : null;
 
   return (
     <PageWrapper leaf={route.name}>
@@ -98,6 +99,11 @@ export default async function RoutePage({
             {isActivity(route.activity) ? ACTIVITY_META[route.activity].label : route.activity}
             {route.distanceM != null ? ` · ${formatMiles(route.distanceM)}` : ''}
             {route.elevGainM != null ? ` · ${formatFeetGain(route.elevGainM)}` : ''}
+            {route.hideEnds
+              ? seesWholeRoute({ hideEnds: true, ownerId: route.userId }, viewer?.id ?? null)
+                ? ' · Start and end hidden from others'
+                : ' · Start and end hidden'
+              : ''}
           </p>
           <p className="mt-2 text-sm">
             {route.handle ? <Link href={`/user/${route.handle}`} className="underline">{route.who}</Link> : route.who}
@@ -108,10 +114,11 @@ export default async function RoutePage({
           </div>
           {viewer && canContribute(viewer.role) && viewer.id === route.userId ? (
             <RouteTitleForm
-              key={`${route.title ?? ''}\n${route.notes ?? ''}`}
+              key={`${route.title ?? ''}\n${route.notes ?? ''}\n${route.hideEnds}`}
               id={route.id}
               title={route.title ?? ''}
               notes={route.notes ?? ''}
+              hideEnds={route.hideEnds}
             />
           ) : null}
         </Window>

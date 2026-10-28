@@ -32,7 +32,8 @@ export async function updateRouteTitleAction(
   if (!UUID.test(id)) return { error: 'That route is missing.' };
   const title = cleanRouteTitle(String(formData.get('title') ?? ''));
   const notes = cleanRouteNotes(String(formData.get('notes') ?? ''));
-  const ok = await updateRouteTitle(id, title, notes, who.viewer);
+  const hideEnds = formData.get('hideEnds') === 'on';
+  const ok = await updateRouteTitle(id, title, notes, who.viewer, hideEnds);
   if (!ok) return { error: 'You can only edit your own routes.' };
   revalidatePath(`/routes/${id}`);
   revalidatePath('/map');
