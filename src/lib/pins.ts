@@ -5,6 +5,7 @@ import { sortLoggedActivities, type Activity } from '@/lib/activities';
 import { isLatLng } from '@/lib/photos';
 import { isPinKind, type PinKind } from '@/lib/pin-kinds';
 import type { PreparedPhoto } from '@/lib/posts';
+import { oneAtATime } from '@/lib/dedupe';
 
 export type { PinKind } from '@/lib/pin-kinds';
 
@@ -190,7 +191,17 @@ export async function createPin(input: {
   lng: number;
   photos: PreparedPhoto[];
 }): Promise<string> {
-  const id = await getDb().transaction(async (tx) => {
+  // A repeat submit of the same pin returns the one that's already saved.
+  const id = await oneAtATime('pin', input.userId, async (tx) => {
+    const existing = await tx.execute(sql`
+      select id::text as id from pins
+      where created_by = ${input.userId} and title = ${input.title}
+        and created_at > now() - interval '2 minutes'
+        and ST_DWithin(point, ST_SetSRID(ST_MakePoint(${input.lng}, ${input.lat}), 4326)::geography, 5)
+      limit 1
+    `);
+    const existingId = text(asRows(existing)[0]?.id);
+    if (existingId) return existingId;
     const inserted = await tx.execute(sql`
       insert into pins (kind, point, title, note, created_by)
       values (

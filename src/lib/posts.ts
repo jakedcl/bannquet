@@ -6,6 +6,7 @@ import { routeTitle } from '@/lib/route-title';
 import { PIN_KIND_LABELS, isPinKind } from '@/lib/pin-kinds';
 import { NEUTRAL_PIN_COLOR } from '@/lib/map';
 import { isLatLng, isPublicBlobUrl } from '@/lib/photos';
+import { oneAtATime } from '@/lib/dedupe';
 
 export type MapFeatureCollection = {
   type: 'FeatureCollection';
@@ -270,25 +271,36 @@ export async function addProfileTrack(input: {
 }): Promise<string> {
   const wkt = lineWkt(input.track.points);
   if (!wkt) throw new Error('That GPX needs at least two points.');
-  const inserted = await getDb().execute(sql`
-    insert into tracks (user_id, source, name, title, notes, activity, line, distance_m, elev_gain_m, started_at)
-    values (
-      ${input.userId},
-      'gpx',
-      ${input.track.name || 'Route'},
-      ${input.title ?? null},
-      ${input.notes ?? null},
-      ${input.activity}::activity,
-      ST_GeogFromText(${wkt}),
-      ${input.track.distanceM},
-      ${input.track.elevGainM},
-      now()
-    )
-    returning id::text as id
-  `);
-  const id = text(asRows(inserted)[0]?.id);
-  if (!id) throw new Error('Could not save that route.');
-  return id;
+  // A repeat submit of the same GPX returns the route that's already saved.
+  return oneAtATime('track', input.userId, async (tx) => {
+    const existing = await tx.execute(sql`
+      select id::text as id from tracks
+      where user_id = ${input.userId}
+        and ST_Equals(line::geometry, ST_GeogFromText(${wkt})::geometry)
+      limit 1
+    `);
+    const existingId = text(asRows(existing)[0]?.id);
+    if (existingId) return existingId;
+    const inserted = await tx.execute(sql`
+      insert into tracks (user_id, source, name, title, notes, activity, line, distance_m, elev_gain_m, started_at)
+      values (
+        ${input.userId},
+        'gpx',
+        ${input.track.name || 'Route'},
+        ${input.title ?? null},
+        ${input.notes ?? null},
+        ${input.activity}::activity,
+        ST_GeogFromText(${wkt}),
+        ${input.track.distanceM},
+        ${input.track.elevGainM},
+        now()
+      )
+      returning id::text as id
+    `);
+    const id = text(asRows(inserted)[0]?.id);
+    if (!id) throw new Error('Could not save that route.');
+    return id;
+  });
 }
 
 export async function addProfilePhotos(
