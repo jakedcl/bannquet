@@ -128,7 +128,7 @@ function whoSql(aliasUser: string) {
 /** `viewerId` decides who gets a hidden-ends route in full: only its owner. */
 export async function loadMapData(viewerId: string | null): Promise<{ points: MapFeatureCollection; lines: MapFeatureCollection }> {
   const db = getDb();
-  const [trackResult, photoResult, tripResult, pinResult] = await Promise.all([
+  const [trackResult, photoResult, pinResult] = await Promise.all([
     db.execute(sql`
       select t.id::text as id, t.title, t.activity::text as activity,
         (coalesce(t.started_at, t.created_at) at time zone 'America/New_York')::date::text as trip_date,
@@ -152,14 +152,6 @@ export async function loadMapData(viewerId: string | null): Promise<{ points: Ma
       from photos p
       left join users u on u.id = p.user_id
       where p.point is not null and p.pin_id is null
-    `),
-    db.execute(sql`
-      select t.id::text as id, t.title, t.start_at::date::text as trip_date, t.activity::text as activity,
-        coalesce(nullif(u.display_name, ''), nullif(u.handle, ''), 'Friend') as who,
-        ST_Y(t.trailhead_point::geometry) as lat, ST_X(t.trailhead_point::geometry) as lng
-      from trips t
-      left join users u on u.id = t.created_by
-      where t.trailhead_point is not null
     `),
     db.execute(sql`
       select p.id::text as id, p.title, p.activity::text as activity, p.kind::text as kind,
@@ -238,28 +230,6 @@ export async function loadMapData(viewerId: string | null): Promise<{ points: Ma
         color: colorFor(activity),
         trackId: '',
         href: `/photos/${id}`,
-      },
-    });
-  }
-
-  for (const row of asRows(tripResult)) {
-    const id = text(row.id);
-    const lat = num(row.lat);
-    const lng = num(row.lng);
-    if (!id || lat == null || lng == null) continue;
-    const activity = text(row.activity);
-    points.push({
-      type: 'Feature',
-      geometry: { type: 'Point', coordinates: [lng, lat] },
-      properties: {
-        kind: 'trip',
-        title: text(row.title) ?? 'Trip',
-        who: text(row.who) ?? 'Friend',
-        date: text(row.trip_date),
-        activity,
-        color: colorFor(activity),
-        trackId: '',
-        href: `/trips/${id}`,
       },
     });
   }

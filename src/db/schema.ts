@@ -117,8 +117,6 @@ export const trips = pgTable(
     activity: activityEnum('activity').notNull(),
     startAt: timestamp('start_at', { withTimezone: true }),
     endAt: timestamp('end_at', { withTimezone: true }),
-    trailheadPoint: geographyPoint('trailhead_point'),
-    trailheadName: text('trailhead_name'),
     routePlan: text('route_plan'),
     notes: text('notes'),
     tripDate: date('trip_date'),
@@ -128,7 +126,6 @@ export const trips = pgTable(
     createdAt,
   },
   (table) => [
-    index('trips_trailhead_point_idx').using('gist', table.trailheadPoint),
     index('trips_created_by_idx').on(table.createdBy),
     uniqueIndex('trips_legacy_report_id_unique').on(table.legacyReportId),
   ],

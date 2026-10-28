@@ -27,7 +27,6 @@ export type TripSummary = {
   title: string;
   tripDate: string | null;
   activity: string | null;
-  trailheadName: string | null;
   going: number;
 };
 
@@ -50,8 +49,6 @@ export type TripAttachment = {
 };
 
 export type TripDetail = TripSummary & {
-  lat: number | null;
-  lng: number | null;
   createdBy: string | null;
   notes: string;
   upcoming: boolean;
@@ -64,7 +61,7 @@ export async function listTrips(): Promise<TripSummary[]> {
   const result = await getDb().execute(sql`
     select t.id::text as id, t.title,
       coalesce(t.trip_date, t.start_at::date)::text as trip_date,
-      t.activity::text as activity, t.trailhead_name,
+      t.activity::text as activity,
       (select count(*)::int from trip_members tm where tm.trip_id = t.id and tm.rsvp = 'going') as going
     from trips t
     order by
@@ -81,7 +78,6 @@ export async function listTrips(): Promise<TripSummary[]> {
       title: text(row.title) ?? 'Trip',
       tripDate: text(row.trip_date),
       activity: text(row.activity),
-      trailheadName: text(row.trailhead_name),
       going: num(row.going) ?? 0,
     }];
   });
@@ -93,9 +89,8 @@ export async function getTrip(id: string): Promise<TripDetail | null> {
     db.execute(sql`
       select t.id::text as id, t.title,
         coalesce(t.trip_date, t.start_at::date)::text as trip_date,
-        t.activity::text as activity, t.trailhead_name, t.created_by, t.notes,
-        (coalesce(t.trip_date, t.start_at::date) is null or coalesce(t.trip_date, t.start_at::date) >= current_date) as upcoming,
-        ST_Y(t.trailhead_point::geometry) as lat, ST_X(t.trailhead_point::geometry) as lng
+        t.activity::text as activity, t.created_by, t.notes,
+        (coalesce(t.trip_date, t.start_at::date) is null or coalesce(t.trip_date, t.start_at::date) >= current_date) as upcoming
       from trips t
       where t.id = ${id}::uuid
     `),
@@ -131,10 +126,7 @@ export async function getTrip(id: string): Promise<TripDetail | null> {
     title: text(row.title) ?? 'Trip',
     tripDate: text(row.trip_date),
     activity: text(row.activity),
-    trailheadName: text(row.trailhead_name),
     going: asRows(peopleResult).length,
-    lat: num(row.lat),
-    lng: num(row.lng),
     createdBy: text(row.created_by),
     notes: text(row.notes) ?? '',
     upcoming: row.upcoming === true || row.upcoming === 't' || row.upcoming === 'true',
@@ -284,7 +276,6 @@ export async function deleteTrip(id: string, actor: { id: string; admin: boolean
 export async function listTripsByOwner(userId: string): Promise<TripSummary[]> {
   const result = await getDb().execute(sql`
     select t.id::text as id, t.title, coalesce(t.trip_date, t.start_at::date)::text as trip_date, t.activity::text as activity,
-      t.trailhead_name,
       (select count(*)::int from trip_members tm where tm.trip_id = t.id and tm.rsvp = 'going') as going
     from trips t
     where t.created_by = ${userId}
@@ -298,7 +289,6 @@ export async function listTripsByOwner(userId: string): Promise<TripSummary[]> {
       title: text(row.title) ?? 'Trip',
       tripDate: text(row.trip_date),
       activity: text(row.activity),
-      trailheadName: text(row.trailhead_name),
       going: num(row.going) ?? 0,
     }];
   });

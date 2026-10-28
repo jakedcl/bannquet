@@ -12,7 +12,6 @@ import { draftPhotoSources, SmallPhotoImage } from '@/components/ui/SmallPhotoIm
 import { canContribute, canDeleteOwned, canEditOwned } from '@/lib/membership';
 import { getTrip } from '@/lib/trips';
 import { formatTripDate } from '@/lib/utils';
-import { getWeather } from '@/lib/weather';
 import { isDatabaseConfigured } from '@/db';
 
 export const dynamic = 'force-dynamic';
@@ -52,12 +51,6 @@ export default async function TripPage({ params }: { params: Promise<{ id: strin
             {` · ${trip.upcoming ? 'Upcoming' : 'Past'}`}
           </p>
           {trip.notes ? <div className="mt-3"><LinkedText text={trip.notes} /></div> : null}
-          {trip.trailheadName ? <p className="mt-1 text-sm">Trailhead: {trip.trailheadName}</p> : null}
-          {trip.lat != null && trip.lng != null ? (
-            <p className="mt-2">
-              <Link href={`/map?trip=${trip.id}`} className="text-sm underline">See the pin on the map</Link>
-            </p>
-          ) : null}
           <div className="mt-4">
             <p className="text-xs font-bold uppercase tracking-wide">Who is going</p>
             {trip.people.length === 0 ? (
@@ -104,12 +97,6 @@ export default async function TripPage({ params }: { params: Promise<{ id: strin
           ) : null}
         </Window>
 
-        {trip.lat != null && trip.lng != null ? (
-          <Window title="Trailhead forecast">
-            <TrailheadForecast lat={trip.lat} lng={trip.lng} />
-          </Window>
-        ) : null}
-
         <Window title="Attached">
           {trip.attachments.length === 0 ? <p className="text-sm">No pins, routes, or photos yet.</p> : (
             <ul className="space-y-2 text-sm">
@@ -146,30 +133,5 @@ export default async function TripPage({ params }: { params: Promise<{ id: strin
         </Window>
       </div>
     </PageWrapper>
-  );
-}
-
-async function TrailheadForecast({ lat, lng }: { lat: number; lng: number }) {
-  let days: Awaited<ReturnType<typeof getWeather>>['dailyForecast'] = [];
-  let failed = false;
-  try {
-    const weather = await getWeather(lat, lng);
-    days = (weather.dailyForecast ?? []).slice(0, 4);
-  } catch {
-    failed = true;
-  }
-  if (failed) return <p className="text-sm">The trailhead forecast did not load.</p>;
-  if (!days || days.length === 0) return <p className="text-sm">No daily forecast came back for that pin.</p>;
-  return (
-    <ul className="space-y-2 text-sm">
-      {days.map((day) => (
-        <li key={day.startTime}>
-          <span className="font-bold">{day.name}</span>
-          {day.secondaryTemp != null ? ` ${day.temperature}° / ${day.secondaryTemp}°` : ` ${day.temperature}°`}
-          {day.shortForecast ? ` · ${day.shortForecast}` : ''}
-          {day.windSpeed ? ` · wind ${day.windSpeed}` : ''}
-        </li>
-      ))}
-    </ul>
   );
 }

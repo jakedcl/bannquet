@@ -38,7 +38,7 @@ test('a cluster popup counts marker types instead of calling them stops', () => 
   assert.equal(clusterHeading(['route', 'route', 'pin']), '2 routes, 1 pin');
   assert.equal(clusterHeading(['route']), '1 route');
   assert.equal(clusterHeading(['photo', 'photo']), '2 photos');
-  assert.equal(clusterHeading(['trip', 'pin', 'photo', 'route']), '1 route, 1 pin, 1 photo, 1 trip');
+  assert.equal(clusterHeading(['photo', 'pin', 'route']), '1 route, 1 pin, 1 photo');
   assert.equal(clusterHeading(['', 'note']), '2 items here');
   assert.equal(clusterHeading(['route', '']), '1 route, 1 item');
 });

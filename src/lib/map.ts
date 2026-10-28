@@ -37,13 +37,12 @@ export function isBasemap(value: string): value is BasemapId {
   return (BASEMAPS as readonly string[]).includes(value);
 }
 
-const CLUSTER_KIND_ORDER = ['route', 'pin', 'photo', 'trip'] as const;
+const CLUSTER_KIND_ORDER = ['route', 'pin', 'photo'] as const;
 
 const CLUSTER_KIND_LABEL: Record<(typeof CLUSTER_KIND_ORDER)[number], readonly [string, string]> = {
   route: ['route', 'routes'],
   pin: ['pin', 'pins'],
   photo: ['photo', 'photos'],
-  trip: ['trip', 'trips'],
 };
 
 function isClusterKind(kind: string): kind is (typeof CLUSTER_KIND_ORDER)[number] {
