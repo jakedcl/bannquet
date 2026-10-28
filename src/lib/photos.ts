@@ -37,3 +37,15 @@ export function isPublicBlobUrl(value: string): boolean {
 export function isLatLng(lat: number, lng: number): boolean {
   return Number.isFinite(lat) && Number.isFinite(lng) && lat >= -90 && lat <= 90 && lng >= -180 && lng <= 180;
 }
+
+/**
+ * Reads a lat/lng pair from form fields. A blank field means no point:
+ * Number('') is 0, which would quietly save the pin at 0, 0.
+ */
+export function formLatLng(lat: unknown, lng: unknown): { lat: number; lng: number } | null {
+  const rawLat = String(lat ?? '').trim();
+  const rawLng = String(lng ?? '').trim();
+  if (!rawLat || !rawLng) return null;
+  const point = { lat: Number(rawLat), lng: Number(rawLng) };
+  return isLatLng(point.lat, point.lng) ? point : null;
+}

@@ -36,7 +36,7 @@ export function SignInForm({ next = '' }: { next?: string }) {
         </Link>
       </p>
       <p className="text-sm">
-        <Link href="/sign-up" className="underline">
+        <Link href={next ? `/sign-up?next=${encodeURIComponent(next)}` : '/sign-up'} className="underline">
           New here? Make an account
         </Link>
       </p>

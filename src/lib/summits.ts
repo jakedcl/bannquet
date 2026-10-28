@@ -1,6 +1,7 @@
 import { sql } from 'drizzle-orm';
 import { getDb } from '@/db';
 import { allPeaks } from '@/lib/challenges';
+import { oneAtATime } from '@/lib/dedupe';
 
 type QueryRows = { rows?: Record<string, unknown>[] };
 
@@ -37,17 +38,20 @@ export async function ensurePeaks(): Promise<void> {
 export async function logClimb(userId: string, peakSlug: string, climbedOn: string | null): Promise<'added' | 'missing'> {
   const known = allPeaks().some((peak) => peak.slug === peakSlug);
   if (!known) return 'missing';
-  if (climbedOn) {
-    await getDb().execute(sql`
+  // A second tap within a few seconds is the same climb, not a new one.
+  await oneAtATime('climb', userId, async (tx) => {
+    const recent = await tx.execute(sql`
+      select 1 from summits
+      where user_id = ${userId} and peak_slug = ${peakSlug}
+        and created_at > now() - interval '10 seconds'
+      limit 1
+    `);
+    if (asRows(recent).length > 0) return;
+    await tx.execute(sql`
       insert into summits (user_id, peak_slug, summited_at, verified)
       values (${userId}, ${peakSlug}, ${climbedOn}::date, false)
     `);
-  } else {
-    await getDb().execute(sql`
-      insert into summits (user_id, peak_slug, summited_at, verified)
-      values (${userId}, ${peakSlug}, null, false)
-    `);
-  }
+  });
   return 'added';
 }
 

@@ -6,6 +6,7 @@ import { allPeaks } from '@/lib/challenges';
 import { canContribute } from '@/lib/membership';
 import { listClimbs } from '@/lib/summits';
 import { isDatabaseConfigured } from '@/db';
+import { loadFailed } from '@/lib/load-error';
 
 export const dynamic = 'force-dynamic';
 
@@ -32,7 +33,7 @@ export default async function PeaksPage() {
         if (viewer && climb.userId === viewer.id) mine.set(climb.peakSlug, (mine.get(climb.peakSlug) ?? 0) + 1);
       }
     } catch (err) {
-      error = err instanceof Error ? err.message : 'The climb counts did not load.';
+      error = loadFailed('peaks list', err, 'The climb counts did not load. Try again in a minute.');
     }
   }
 

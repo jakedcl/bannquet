@@ -2,16 +2,17 @@
 
 import { revalidatePath } from 'next/cache';
 import { getViewer } from '@/app/sign-in/actions';
-import { deleteChatMessage, isChatRefKind, sendChatMessage } from '@/lib/chat';
+import { deleteChatMessage, isChatRefKind, listChatMessages, sendChatMessage, type ChatMessage } from '@/lib/chat';
 import { APPROVAL_WAIT, canContribute } from '@/lib/membership';
 import { redirectToSignIn } from '@/lib/sign-in-redirect';
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
+/** On success, returns the messages after the sender's last one, so the new one shows right away. */
 export async function sendChatAction(
-  _prev: { error?: string } | null,
+  _prev: { error?: string; messages?: ChatMessage[] } | null,
   formData: FormData,
-): Promise<{ error?: string }> {
+): Promise<{ error?: string; messages?: ChatMessage[] }> {
   const viewer = await getViewer();
   if (!viewer) return redirectToSignIn();
   if (!canContribute(viewer.role)) return { error: APPROVAL_WAIT };
@@ -31,7 +32,14 @@ export async function sendChatAction(
   if (result === 'empty') return { error: 'Write a note, or attach a pin, route, or photo.' };
   if (result === 'missing') return { error: 'That attachment is missing.' };
   revalidatePath('/chat');
-  return {};
+  const after = String(formData.get('after') ?? '');
+  const afterId = String(formData.get('afterId') ?? '');
+  const cursor = after && UUID.test(afterId) && !Number.isNaN(Date.parse(after)) ? { after, afterId } : null;
+  try {
+    return { messages: await listChatMessages(cursor) };
+  } catch {
+    return {};
+  }
 }
 
 export async function deleteChatAction(

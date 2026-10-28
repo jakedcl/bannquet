@@ -28,6 +28,7 @@ import {
   clearSignInFailures,
   loginRateLimitKey,
   recordSignInFailure,
+  resetRequestBlocked,
   SIGN_IN_RATE_LIMIT_MESSAGE,
   signInRateLimitBlocked,
 } from '@/lib/auth/sign-in-rate-limit';
@@ -77,7 +78,16 @@ async function appOrigin(): Promise<string> {
 
 async function currentAuthUser() {
   if (!isAuthConfigured()) return null;
-  const { data } = await getAuth().getSession();
+  // The proxy refreshes the session before render, so this reads the fresh
+  // cookie. If the refresh failed upstream, a render can't write the new
+  // cookie; treat that one load as signed out instead of a 500.
+  let data;
+  try {
+    ({ data } = await getAuth().getSession());
+  } catch (error) {
+    console.error('[auth] getSession failed', error instanceof Error ? error.message : error);
+    return null;
+  }
   const user = data?.user;
   if (!user?.id || !user.email) return null;
   return user;
@@ -272,7 +282,8 @@ export async function createPublicAccount(
     maxAge: 60 * 15,
   });
 
-  return { redirectTo: '/auth/continue' };
+  const next = safeNextPath(String(formData.get('next') ?? ''));
+  return { redirectTo: next ? `/auth/continue?next=${encodeURIComponent(next)}` : '/auth/continue' };
 }
 
 export async function requestPasswordResetEmail(
@@ -283,6 +294,10 @@ export async function requestPasswordResetEmail(
   if (!isEmail(email)) return { error: 'Enter a real email address.' };
   if (!isAuthConfigured() || !isDatabaseConfigured()) {
     return { error: 'Password reset is not set up yet.' };
+  }
+
+  if (await resetRequestBlocked({ ip: await clientIp(), email })) {
+    return { error: SIGN_IN_RATE_LIMIT_MESSAGE };
   }
 
   const allowed = await emailMaySignIn(email);
@@ -352,6 +367,7 @@ export async function finishSignIn(nextRaw?: string | null): Promise<void> {
       email: user.email,
       name: user.name,
       image: user.image,
+      emailVerified: user.emailVerified,
     },
     { publicSignUp: claim?.pending === true },
   );

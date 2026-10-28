@@ -8,6 +8,16 @@ const POINT_PATTERN = /<(trkpt|rtept)\b([^>]*)>([\s\S]*?)<\/\1>/gi;
 const LAT_PATTERN = /\blat="([^"]+)"/i;
 const LON_PATTERN = /\blon="([^"]+)"/i;
 const ELE_PATTERN = /<ele>([^<]+)<\/ele>/i;
+const TIME_PATTERN = /<time>([^<]+)<\/time>/i;
+const EARLIEST_ACTIVITY = Date.UTC(1995, 0, 1);
+
+/** An ISO time from a GPX <time>, or null if it's missing or not believable. */
+export function activityTime(value: string | null | undefined, now = Date.now()): string | null {
+  if (!value) return null;
+  const at = Date.parse(value.trim());
+  if (!Number.isFinite(at) || at < EARLIEST_ACTIVITY || at > now + 24 * 60 * 60 * 1000) return null;
+  return new Date(at).toISOString();
+}
 
 function decodeXml(value: string): string {
   return value
@@ -25,11 +35,12 @@ function numberOrNull(value: string | undefined): number | null {
   return Number.isFinite(parsed) ? parsed : null;
 }
 
-export function parseGpx(xml: string): { name: string | null; points: TrackPoint[] } {
+export function parseGpx(xml: string): { name: string | null; points: TrackPoint[]; startedAt: string | null } {
   const trackName = xml.match(/<trk\b[^>]*>[\s\S]*?<name>([^<]*)<\/name>/i);
   const anyName = xml.match(/<name>([^<]*)<\/name>/i);
   const name = decodeXml(trackName?.[1] ?? anyName?.[1] ?? '') || null;
   const points: TrackPoint[] = [];
+  let startedAt: string | null = null;
 
   for (const match of xml.matchAll(POINT_PATTERN)) {
     const attrs = match[2] ?? '';
@@ -39,10 +50,13 @@ export function parseGpx(xml: string): { name: string | null; points: TrackPoint
     if (lat == null || lng == null) continue;
     if (lat < -90 || lat > 90 || lng < -180 || lng > 180) continue;
     const ele = numberOrNull(body.match(ELE_PATTERN)?.[1] ?? undefined);
+    if (!startedAt) startedAt = activityTime(body.match(TIME_PATTERN)?.[1]);
     points.push({ lat, lng, ele });
   }
+  // Some apps only stamp the file, not each point.
+  if (!startedAt) startedAt = activityTime(xml.match(/<metadata\b[^>]*>[\s\S]*?<time>([^<]+)<\/time>/i)?.[1]);
 
-  return { name, points };
+  return { name, points, startedAt };
 }
 
 function haversineMeters(a: TrackPoint, b: TrackPoint): number {
@@ -183,6 +197,8 @@ export type PackedTrack = {
   points: TrackPoint[];
   distanceM: number;
   elevGainM: number;
+  /** When the activity started, from the GPX. Null when the file has no times. */
+  startedAt?: string | null;
 };
 
 /**
@@ -199,6 +215,7 @@ export function packTrack(xml: string): PackedTrack | null {
     points: simplifyForStorage(parsed.points),
     distanceM: stats.distanceM,
     elevGainM: stats.elevGainM,
+    startedAt: parsed.startedAt,
   };
 }
 
@@ -242,7 +259,8 @@ export function unpackTrack(raw: string): { track: PackedTrack | null; error: st
     return { track: null, error: 'That route could not be read.' };
   }
   const name = typeof record.name === 'string' ? record.name.trim().slice(0, 160) || null : null;
-  return { track: { name, points, distanceM, elevGainM }, error: null };
+  const startedAt = typeof record.startedAt === 'string' ? activityTime(record.startedAt) : null;
+  return { track: { name, points, distanceM, elevGainM, startedAt }, error: null };
 }
 
 export function formatMiles(meters: number): string {

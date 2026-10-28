@@ -9,6 +9,7 @@ import { allPeaks } from '@/lib/challenges';
 import { canContribute } from '@/lib/membership';
 import { listClimbs, type ClimbRow } from '@/lib/summits';
 import { isDatabaseConfigured } from '@/db';
+import { loadFailed } from '@/lib/load-error';
 
 export const dynamic = 'force-dynamic';
 
@@ -32,6 +33,10 @@ export default async function PeakPage({ params }: { params: Promise<{ slug: str
   const { slug } = await params;
   const peak = allPeaks().find((item) => item.slug === slug);
   if (!peak) notFound();
+  const list = LISTS[peak.listId] ?? peak.listId;
+  const areaName = AREAS[peak.listId] ?? 'Northeast';
+  // "New Hampshire · New Hampshire 48" says the state twice.
+  const area = list.startsWith(areaName) ? null : areaName;
 
   const viewer = await getViewer();
   const ready = isDatabaseConfigured();
@@ -41,7 +46,7 @@ export default async function PeakPage({ params }: { params: Promise<{ slug: str
     try {
       climbs = (await listClimbs()).filter((climb) => climb.peakSlug === peak.slug);
     } catch (err) {
-      error = err instanceof Error ? err.message : 'The climbs did not load.';
+      error = loadFailed('peak page', err, 'The climbs did not load. Try again in a minute.');
     }
   }
 
@@ -54,11 +59,11 @@ export default async function PeakPage({ params }: { params: Promise<{ slug: str
       <div className="mx-auto max-w-3xl space-y-4 px-4 py-10">
         <Window title={peak.name}>
           <p className="text-sm text-gray-700">
-            {peak.elevationFt.toLocaleString('en-US')} ft
-            {' · '}
-            {AREAS[peak.listId] ?? 'Northeast'}
-            {' · '}
-            {LISTS[peak.listId] ?? peak.listId}
+            {[
+              `${peak.elevationFt.toLocaleString('en-US')} ft`,
+              area,
+              list,
+            ].filter(Boolean).join(' · ')}
           </p>
           {peak.note ? <p className="mt-2 text-sm">{peak.note}</p> : null}
           <p className="mt-3 text-sm">

@@ -1,7 +1,7 @@
 import { AvatarImage } from '@/components/ui/AvatarImage';
 import { notFound, redirect } from 'next/navigation';
 import PageWrapper from '@/components/ui/PageWrapper';
-import { ClimbRows, GearRows, PhotoGrid, PinRows, PostRows, RouteRows, SeeAll, TripRows } from '@/components/profile/ProfileLists';
+import { ClimbRows, GearRows, PhotoGrid, PinRows, RouteRows, SeeAll, TripRows } from '@/components/profile/ProfileLists';
 import { ChallengeBadge } from '@/components/stats/ChallengeBadge';
 import { Badge } from '@/components/retro/Badge';
 import { Button } from '@/components/retro/Button';
@@ -19,6 +19,7 @@ import { PROFILE_PREVIEW } from '@/lib/list-page';
 import { ensurePeaks, listClimbs, summitCountsByUser } from '@/lib/summits';
 import { listGear } from '@/lib/gear';
 import { listTripsByOwner } from '@/lib/trips';
+import { loadFailed } from '@/lib/load-error';
 
 export const dynamic = 'force-dynamic';
 
@@ -32,7 +33,7 @@ export default async function UserPage({ params }: { params: Promise<{ username:
   }
   const viewer = await getViewer();
   const challenges = loadChallenges();
-  let library: Awaited<ReturnType<typeof loadProfileLibrary>> = { posts: [], routes: [], photos: [] };
+  let library: Awaited<ReturnType<typeof loadProfileLibrary>> = { routes: [], photos: [] };
   let activities: Awaited<ReturnType<typeof loadLoggedActivities>> = [];
   let pins: Awaited<ReturnType<typeof loadProfilePins>> = [];
   let summitCounts: Awaited<ReturnType<typeof summitCountsByUser>> = [];
@@ -52,7 +53,7 @@ export default async function UserPage({ params }: { params: Promise<{ username:
       listGear().catch(() => []),
     ]);
   } catch (err) {
-    error = err instanceof Error ? err.message : 'This page did not load.';
+    error = loadFailed('profile', err, 'This page did not load. Try again in a minute.');
   }
   const manage = Boolean(viewer && canDeleteOwned({
     actorRole: viewer.role,
@@ -126,11 +127,6 @@ export default async function UserPage({ params }: { params: Promise<{ username:
                 </div>
               ))}
             </div>
-          </Window>
-        ) : null}
-        {library.posts.length > 0 ? (
-          <Window title="Posts">
-            <PostRows posts={library.posts} manage={manage} profilePath={profilePath} collapsed />
           </Window>
         ) : null}
         {library.routes.length > 0 ? (

@@ -7,7 +7,6 @@ import { ConfirmDelete } from '@/components/delete/ConfirmDelete';
 import { SeeMore } from '@/components/library/AttachReport';
 import { AddToTrip } from '@/components/library/AddToTrip';
 import { Window } from '@/components/retro/Window';
-import { CrumbLeaf } from '@/components/ui/BackBar';
 import { deletePhotoAction } from '@/app/library/actions';
 import { getViewer } from '@/app/sign-in/actions';
 import { isDatabaseConfigured } from '@/db';
@@ -15,6 +14,7 @@ import { loadPhoto } from '@/lib/library';
 import { canContribute, canDeleteOwned } from '@/lib/membership';
 import { loadMapData } from '@/lib/posts';
 import { listTripChoices, tripsForItem } from '@/lib/trips';
+import { loadFailed } from '@/lib/load-error';
 
 export const dynamic = 'force-dynamic';
 
@@ -47,7 +47,7 @@ export default async function PhotoPage({
   try {
     photo = await loadPhoto(id);
   } catch (err) {
-    error = err instanceof Error ? err.message : 'That photo did not load.';
+    error = loadFailed('photo page', err, 'That photo did not load. Try again in a minute.');
   }
   if (error) {
     return (
@@ -77,8 +77,7 @@ export default async function PhotoPage({
   const map = photo.lat != null && photo.lng != null ? await loadMapData().catch(() => null) : null;
 
   return (
-    <PageWrapper>
-      <CrumbLeaf label={photo.caption || 'Photo'} />
+    <PageWrapper leaf={photo.caption || 'Photo'}>
       <div className="mx-auto max-w-3xl space-y-4 px-4 py-10">
         <Window title={photo.caption || 'Photo'}>
           <Image

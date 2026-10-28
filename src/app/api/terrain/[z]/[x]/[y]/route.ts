@@ -1,3 +1,5 @@
+import { outsideFetch } from '@/lib/outside-fetch';
+
 export const dynamic = 'force-dynamic';
 
 const TERRARIUM = 'https://s3.amazonaws.com/elevation-tiles-prod/terrarium';
@@ -22,14 +24,18 @@ export async function GET(
   const tileY = tileIndex(y.replace(/\.png$/, ''), zoom);
   if (tileX == null || tileY == null) return new Response(null, { status: 400 });
 
-  const upstream = await fetch(`${TERRARIUM}/${zoom}/${tileX}/${tileY}.png`);
+  let upstream: Response;
+  try {
+    upstream = await outsideFetch(`${TERRARIUM}/${zoom}/${tileX}/${tileY}.png`, {}, 8_000);
+  } catch {
+    return new Response(null, { status: 504 });
+  }
   if (!upstream.ok) return new Response(null, { status: upstream.status });
 
   return new Response(upstream.body, {
     headers: {
       'Content-Type': 'image/png',
       'Cache-Control': 'public, max-age=86400',
-      'Access-Control-Allow-Origin': '*',
     },
   });
 }

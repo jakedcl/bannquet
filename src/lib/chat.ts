@@ -1,5 +1,6 @@
 import { sql } from 'drizzle-orm';
 import { getDb } from '@/db';
+import { oneAtATime } from '@/lib/dedupe';
 import { isChatRefKind, type ChatCatalogItem, type ChatMessage, type ChatRef, type ChatRefKind } from '@/lib/chat-view';
 import { routeTitle } from '@/lib/route-title';
 
@@ -116,17 +117,21 @@ export async function sendChatMessage(input: {
     const exists = await existsRef(input.refKind, input.refId);
     if (!exists) return 'missing';
   }
-  if (input.refKind && input.refId) {
-    await getDb().execute(sql`
+  // The same message twice within a few seconds is a double tap.
+  await oneAtATime('chat', input.userId, async (tx) => {
+    const recent = await tx.execute(sql`
+      select 1 from chat_messages
+      where user_id = ${input.userId} and body = ${body}
+        and ref_id is not distinct from ${input.refId}::uuid
+        and created_at > now() - interval '15 seconds'
+      limit 1
+    `);
+    if (asRows(recent).length > 0) return;
+    await tx.execute(sql`
       insert into chat_messages (user_id, body, ref_kind, ref_id)
       values (${input.userId}, ${body}, ${input.refKind}, ${input.refId}::uuid)
     `);
-  } else {
-    await getDb().execute(sql`
-      insert into chat_messages (user_id, body)
-      values (${input.userId}, ${body})
-    `);
-  }
+  });
   return 'ok';
 }
 

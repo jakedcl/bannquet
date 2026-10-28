@@ -6,6 +6,7 @@ import { routeTitle } from '@/lib/route-title';
 import { PIN_KIND_LABELS, isPinKind } from '@/lib/pin-kinds';
 import { NEUTRAL_PIN_COLOR } from '@/lib/map';
 import { isLatLng, isPublicBlobUrl } from '@/lib/photos';
+import { oneAtATime } from '@/lib/dedupe';
 
 export type MapFeatureCollection = {
   type: 'FeatureCollection';
@@ -58,14 +59,19 @@ export function parseUploadedPhotos(
     photos.push({
       url,
       thumbUrl,
-      width: typeof record.width === 'number' ? record.width : 0,
-      height: typeof record.height === 'number' ? record.height : 0,
+      width: photoSide(record.width),
+      height: photoSide(record.height),
       lat: located ? lat : null,
       lng: located ? lng : null,
       source: located ? source : null,
     });
   }
   return { photos, error: null };
+}
+
+/** Pixel size from the browser. Anything that isn't a sane whole number is stored as unknown. */
+function photoSide(value: unknown): number {
+  return typeof value === 'number' && Number.isInteger(value) && value > 0 && value <= 20_000 ? value : 0;
 }
 
 type QueryRows = { rows?: Record<string, unknown>[] };
@@ -103,7 +109,7 @@ export async function loadMapData(): Promise<{ points: MapFeatureCollection; lin
   const [trackResult, photoResult, tripResult, pinResult] = await Promise.all([
     db.execute(sql`
       select t.id::text as id, t.title, t.activity::text as activity,
-        t.started_at::date::text as trip_date,
+        (coalesce(t.started_at, t.created_at) at time zone 'America/New_York')::date::text as trip_date,
         ${whoSql('u')} as who,
         ST_AsGeoJSON(t.line::geometry) as geojson,
         ST_Y(ST_StartPoint(t.line::geometry)) as lat,
@@ -270,25 +276,36 @@ export async function addProfileTrack(input: {
 }): Promise<string> {
   const wkt = lineWkt(input.track.points);
   if (!wkt) throw new Error('That GPX needs at least two points.');
-  const inserted = await getDb().execute(sql`
-    insert into tracks (user_id, source, name, title, notes, activity, line, distance_m, elev_gain_m, started_at)
-    values (
-      ${input.userId},
-      'gpx',
-      ${input.track.name || 'Route'},
-      ${input.title ?? null},
-      ${input.notes ?? null},
-      ${input.activity}::activity,
-      ST_GeogFromText(${wkt}),
-      ${input.track.distanceM},
-      ${input.track.elevGainM},
-      now()
-    )
-    returning id::text as id
-  `);
-  const id = text(asRows(inserted)[0]?.id);
-  if (!id) throw new Error('Could not save that route.');
-  return id;
+  // A repeat submit of the same GPX returns the route that's already saved.
+  return oneAtATime('track', input.userId, async (tx) => {
+    const existing = await tx.execute(sql`
+      select id::text as id from tracks
+      where user_id = ${input.userId}
+        and ST_Equals(line::geometry, ST_GeogFromText(${wkt})::geometry)
+      limit 1
+    `);
+    const existingId = text(asRows(existing)[0]?.id);
+    if (existingId) return existingId;
+    const inserted = await tx.execute(sql`
+      insert into tracks (user_id, source, name, title, notes, activity, line, distance_m, elev_gain_m, started_at)
+      values (
+        ${input.userId},
+        'gpx',
+        ${input.track.name || 'Route'},
+        ${input.title ?? null},
+        ${input.notes ?? null},
+        ${input.activity}::activity,
+        ST_GeogFromText(${wkt}),
+        ${input.track.distanceM},
+        ${input.track.elevGainM},
+        coalesce(${input.track.startedAt ?? null}::timestamptz, now())
+      )
+      returning id::text as id
+    `);
+    const id = text(asRows(inserted)[0]?.id);
+    if (!id) throw new Error('Could not save that route.');
+    return id;
+  });
 }
 
 export async function addProfilePhotos(
@@ -333,8 +350,7 @@ export async function addProfilePhotos(
 }
 
 export type ProfileLibrary = {
-  posts: Array<{ id: string; title: string; tripDate: string | null; activity: string | null; tagged: boolean }>;
-  routes: Array<{ id: string; name: string; activity: string; distanceM: number | null; elevGainM: number | null; postId: string | null }>;
+  routes: Array<{ id: string; name: string; activity: string; distanceM: number | null; elevGainM: number | null; date: string | null; postId: string | null }>;
   photos: Array<{ id: string; url: string; thumbUrl: string | null; caption: string | null; postId: string | null; pinId: string | null }>;
 };
 
@@ -342,7 +358,8 @@ export async function loadProfileLibrary(userId: string): Promise<ProfileLibrary
   const db = getDb();
   const [routes, photos] = await Promise.all([
     db.execute(sql`
-      select id::text as id, title, activity::text as activity, distance_m, elev_gain_m
+      select id::text as id, title, activity::text as activity, distance_m, elev_gain_m,
+        (coalesce(started_at, created_at) at time zone 'America/New_York')::date::text as route_date
       from tracks
       where user_id = ${userId}
       order by started_at desc nulls last, created_at desc
@@ -356,7 +373,6 @@ export async function loadProfileLibrary(userId: string): Promise<ProfileLibrary
   ]);
 
   return {
-    posts: [],
     routes: asRows(routes).flatMap((row) => {
       const id = text(row.id);
       const activity = text(row.activity);
@@ -367,6 +383,7 @@ export async function loadProfileLibrary(userId: string): Promise<ProfileLibrary
         activity,
         distanceM: num(row.distance_m),
         elevGainM: num(row.elev_gain_m),
+        date: text(row.route_date),
         postId: null,
       }];
     }),

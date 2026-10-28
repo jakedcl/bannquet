@@ -5,6 +5,7 @@ import { sortLoggedActivities, type Activity } from '@/lib/activities';
 import { isLatLng } from '@/lib/photos';
 import { isPinKind, type PinKind } from '@/lib/pin-kinds';
 import type { PreparedPhoto } from '@/lib/posts';
+import { oneAtATime } from '@/lib/dedupe';
 
 export type { PinKind } from '@/lib/pin-kinds';
 
@@ -87,7 +88,8 @@ export async function loadLoggedActivities(userId: string): Promise<Activity[]> 
 
 export async function loadProfilePins(userId: string): Promise<PinSummary[]> {
   const result = await getDb().execute(sql`
-    select id::text as id, title, activity::text as activity, kind::text as kind, visited_on::text as visited_on
+    select id::text as id, title, activity::text as activity, kind::text as kind,
+      coalesce(visited_on, (created_at at time zone 'America/New_York')::date)::text as visited_on
     from pins
     where created_by = ${userId}
     order by visited_on desc nulls last, created_at desc
@@ -110,7 +112,7 @@ export async function loadPin(id: string): Promise<PinDetail | null> {
   const [pinResult, photoResult] = await Promise.all([
     db.execute(sql`
       select p.id::text as id, p.title, p.note, p.activity::text as activity, p.kind::text as kind,
-        p.visited_on::text as visited_on, p.created_by,
+        coalesce(p.visited_on, (p.created_at at time zone 'America/New_York')::date)::text as visited_on, p.created_by,
         ST_Y(p.point::geometry) as lat, ST_X(p.point::geometry) as lng,
         coalesce(nullif(u.display_name, ''), nullif(u.handle, ''), 'Friend') as who,
         u.handle
@@ -190,7 +192,17 @@ export async function createPin(input: {
   lng: number;
   photos: PreparedPhoto[];
 }): Promise<string> {
-  const id = await getDb().transaction(async (tx) => {
+  // A repeat submit of the same pin returns the one that's already saved.
+  const id = await oneAtATime('pin', input.userId, async (tx) => {
+    const existing = await tx.execute(sql`
+      select id::text as id from pins
+      where created_by = ${input.userId} and title = ${input.title}
+        and created_at > now() - interval '2 minutes'
+        and ST_DWithin(point, ST_SetSRID(ST_MakePoint(${input.lng}, ${input.lat}), 4326)::geography, 5)
+      limit 1
+    `);
+    const existingId = text(asRows(existing)[0]?.id);
+    if (existingId) return existingId;
     const inserted = await tx.execute(sql`
       insert into pins (kind, point, title, note, created_by)
       values (

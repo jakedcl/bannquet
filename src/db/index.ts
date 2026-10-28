@@ -21,7 +21,14 @@ export function getDb(): Database {
     throw new Error('DATABASE_URL is not set');
   }
 
-  pool = new Pool({ connectionString: databaseConnectionString(connectionString), max: 5 });
+  // Fail fast instead of hanging until the function times out: a stalled
+  // connection left pages stuck on their loading screen with no error.
+  pool = new Pool({
+    connectionString: databaseConnectionString(connectionString),
+    max: 5,
+    connectionTimeoutMillis: 5_000,
+    query_timeout: 7_000,
+  });
   attachDatabasePool(pool);
   database = drizzle(pool, { schema });
   return database;

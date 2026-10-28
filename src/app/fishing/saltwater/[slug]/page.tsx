@@ -3,7 +3,6 @@ import { notFound } from 'next/navigation';
 import { Window } from '@/components/retro/Window';
 import { FishingRows } from '@/components/fishing/FishingRows';
 import { ShoreMapFrame } from '@/components/fishing/ShoreMapFrame';
-import { CrumbLeaf } from '@/components/ui/BackBar';
 import PageWrapper from '@/components/ui/PageWrapper';
 import { ADVISORIES_CHECKED, ADVISORIES_SOURCE, adviceFor, waterBody } from '@/lib/fishing/advisories';
 import { nearestTideStation, shoreSpot } from '@/lib/fishing/shore-spots';
@@ -18,8 +17,7 @@ export default async function ShoreSpotPage({ params }: { params: Promise<{ slug
   const advice = adviceFor(spot.waterId);
 
   return (
-    <PageWrapper>
-      <CrumbLeaf label={spot.name} />
+    <PageWrapper leaf={spot.name}>
       <div className="mx-auto max-w-3xl space-y-4 px-4 py-6 md:py-10">
         <Window title={spot.name}>
           <p className="text-sm">{spot.access}</p>

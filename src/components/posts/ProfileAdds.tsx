@@ -34,6 +34,19 @@ export function RouteUpload({
   const [note, setNote] = useState<string | null>(null);
   const [title, setTitle] = useState('');
   const [titleTouched, setTitleTouched] = useState(false);
+  const [formKey, setFormKey] = useState(0);
+  const [seenState, setSeenState] = useState(state);
+  if (state !== seenState) {
+    setSeenState(state);
+    // A saved route leaves the form, so Save can't send it again.
+    if (state?.saved || state?.created?.length) {
+      setTrackJson('');
+      setNote(null);
+      setTitle('');
+      setTitleTouched(false);
+      setFormKey((key) => key + 1);
+    }
+  }
   useEffect(() => {
     if (!state?.saved || refreshed.current) return;
     refreshed.current = true;
@@ -58,7 +71,7 @@ export function RouteUpload({
 
   return (
     <div className="space-y-3">
-    <form action={action} className="space-y-3">
+    <form key={formKey} action={action} className="space-y-3">
       {inline ? <input type="hidden" name="inline" value="1" /> : null}
       <p className="text-sm font-bold">Add a route</p>
       <label className="block space-y-1">
@@ -151,11 +164,15 @@ export function PhotoUpload({
   const refreshed = useRef<unknown>(null);
   const [photos, setPhotos] = useState<UploadedPhoto[]>([]);
   const [state, action, pending] = useActionState(publishProfilePhotos, null);
+  const [fieldsKey, setFieldsKey] = useState(0);
   const [seenState, setSeenState] = useState(state);
   if (state !== seenState) {
     setSeenState(state);
     // Saved photos leave the form so a second tap cannot save them twice.
-    if (state?.saved || state?.created) setPhotos([]);
+    if (state?.saved || state?.created) {
+      setPhotos([]);
+      setFieldsKey((key) => key + 1);
+    }
   }
   useReportCreated(inline, state?.created, onCreated);
   useEffect(() => {
@@ -168,7 +185,7 @@ export function PhotoUpload({
     <form action={action} className="space-y-3">
       {inline ? <input type="hidden" name="inline" value="1" /> : null}
       <p className="text-sm font-bold">Add photos</p>
-      <PhotoFields photos={photos} onChange={setPhotos} />
+      <PhotoFields key={fieldsKey} photos={photos} onChange={setPhotos} />
       {state?.error ? <p className="text-sm font-bold text-red-700">{state.error}</p> : null}
       {state?.saved && photos.length === 0 ? <p className="text-sm">Photos saved.</p> : null}
       <SubmitButton pendingLabel="Saving…" disabled={photos.length === 0 || photos.some((photo) => photo.lat == null)}>

@@ -1,5 +1,7 @@
 import { unstable_cache } from 'next/cache'
 import { compactDate, zonedStamp } from '@/lib/fishing/clock'
+import { HILO_ONLY_STATIONS } from '@/lib/fishing/tide-stations'
+import { outsideFetch } from '@/lib/outside-fetch'
 
 const APPLICATION = 'bannquet'
 
@@ -67,7 +69,7 @@ async function predictions(stationId: string, begin: string, end: string, interv
   url.searchParams.set('units', 'english')
   url.searchParams.set('format', 'json')
   url.searchParams.set('application', APPLICATION)
-  const response = await fetch(url, {
+  const response = await outsideFetch(url, {
     headers: { Accept: 'application/json', 'User-Agent': 'Bannquet (admin@bannquet.com)' },
     cache: 'no-store',
   })
@@ -83,6 +85,7 @@ async function predictions(stationId: string, begin: string, end: string, interv
 async function readTides(stationId: string, begin: string, end: string): Promise<TideSet> {
   const extremes = await predictions(stationId, begin, end, 'hilo')
   let curve: Prediction[] = []
+  if (HILO_ONLY_STATIONS.has(stationId)) return { extremes: parseExtremes(extremes), curve: [] }
   try {
     curve = await predictions(stationId, begin, end, '30')
   } catch (error) {

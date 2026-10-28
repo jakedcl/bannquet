@@ -586,6 +586,12 @@ html.load-enter-fade .map-bleed {
   animation: load-fade 280ms var(--motion-ease) both;
 }
 
+.home-hero-actions a:focus-visible,
+.home-hero-actions button:focus-visible {
+  outline: 3px solid #fff;
+  outline-offset: 3px;
+}
+
 html.home-enter .home-hero-logo {
   animation: home-rise 280ms var(--motion-ease) both;
 }

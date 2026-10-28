@@ -5,6 +5,7 @@ import { getViewer } from '@/app/sign-in/actions';
 import { listChatCatalog, listChatMessages, type ChatCatalogItem } from '@/lib/chat';
 import { APPROVAL_WAIT, canContribute } from '@/lib/membership';
 import { isDatabaseConfigured } from '@/db';
+import { loadFailed } from '@/lib/load-error';
 
 export const dynamic = 'force-dynamic';
 
@@ -22,7 +23,7 @@ export default async function ChatPage() {
         catalog = await listChatCatalog();
       }
     } catch (err) {
-      error = err instanceof Error ? err.message : 'Chat did not load.';
+      error = loadFailed('chat', err, 'Chat did not load. Try again in a minute.');
     }
   }
 
@@ -34,6 +35,8 @@ export default async function ChatPage() {
       <div className="mx-auto max-w-3xl px-4 py-10">
         <Window title="Chat">
           <ChatRoom
+            key={error ? 'failed' : 'ready'}
+            failed={Boolean(error && ready)}
             initial={messages}
             canSend={canSend}
             notice={notice}

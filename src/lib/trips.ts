@@ -1,6 +1,7 @@
 import { sql } from 'drizzle-orm';
 import { routeTitle } from '@/lib/route-title';
 import { getDb } from '@/db';
+import { oneAtATime } from '@/lib/dedupe';
 
 type QueryRows = { rows?: Record<string, unknown>[] };
 
@@ -180,9 +181,24 @@ export async function createTrip(input: {
   tripDate: string;
   notes: string;
   attachments?: Array<{ kind: 'pin' | 'route' | 'photo'; id: string }>;
+  admin?: boolean;
 }): Promise<string> {
-  const db = getDb();
-  return db.transaction(async (tx) => {
+  // Only items the creator owns can be attached, same as attachItemToTrip.
+  const attachments: Array<{ kind: 'pin' | 'route' | 'photo'; id: string }> = [];
+  for (const item of input.attachments ?? []) {
+    if ((await itemOwned(item.kind, item.id, input.userId, input.admin ?? false)) === 'ok') attachments.push(item);
+  }
+  // A repeat submit of the same trip returns the one that's already saved.
+  return oneAtATime('trip', input.userId, async (tx) => {
+    const existing = await tx.execute(sql`
+      select id::text as id from trips
+      where created_by = ${input.userId} and title = ${input.title}
+        and trip_date = ${input.tripDate}::date
+        and created_at > now() - interval '2 minutes'
+      limit 1
+    `);
+    const existingId = text(asRows(existing)[0]?.id);
+    if (existingId) return existingId;
     const inserted = await tx.execute(sql`
       insert into trips (title, slug, activity, start_at, trip_date, notes, status, created_by)
       values (
@@ -203,7 +219,7 @@ export async function createTrip(input: {
       insert into trip_members (trip_id, user_id, rsvp, role)
       values (${id}::uuid, ${input.userId}, 'going', 'organizer')
     `);
-    for (const item of input.attachments ?? []) {
+    for (const item of attachments) {
       const spec = ATTACH_TABLE[item.kind];
       const found = await tx.execute(sql`select id::text as id from ${sql.raw(spec.source)} where id = ${item.id}::uuid`);
       if (asRows(found).length === 0) continue;
@@ -225,9 +241,10 @@ export async function setTripGoing(tripId: string, userId: string, going: boolea
     `);
     return;
   }
+  // A trip deleted in the meantime adds nothing instead of a foreign-key error.
   await db.execute(sql`
     insert into trip_members (trip_id, user_id, rsvp, role)
-    values (${tripId}::uuid, ${userId}, 'going', 'member')
+    select id, ${userId}, 'going', 'member' from trips where id = ${tripId}::uuid
     on conflict (trip_id, user_id) do update set rsvp = 'going'
   `);
 }
@@ -262,10 +279,6 @@ export async function listTripsByOwner(userId: string): Promise<TripSummary[]> {
       going: num(row.going) ?? 0,
     }];
   });
-}
-
-export async function linkPostToTrip(_tripId: string, _postId: string, _authorId: string): Promise<boolean> {
-  return false;
 }
 
 export async function listTripChoices(): Promise<Array<{ id: string; title: string }>> {
@@ -349,10 +362,6 @@ async function itemOwned(kind: 'pin' | 'route' | 'photo', entityId: string, acto
   if (asRows(result).length === 0) return 'missing';
   if (!admin && owner !== actorId) return 'forbidden';
   return 'ok';
-}
-
-export async function tripIdForReport(_reportId: string): Promise<string | null> {
-  return null;
 }
 
 export async function trackTotals(): Promise<Array<{ userId: string; activity: string; distanceM: number; elevGainM: number }>> {

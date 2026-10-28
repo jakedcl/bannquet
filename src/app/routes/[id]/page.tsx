@@ -4,7 +4,6 @@ import PageWrapper from '@/components/ui/PageWrapper';
 import { MapCanvas } from '@/components/map/MapCanvas';
 import { ConfirmDelete } from '@/components/delete/ConfirmDelete';
 import { RouteTitleForm } from '@/components/routes/RouteTitleForm';
-import { CrumbLeaf } from '@/components/ui/BackBar';
 import { SeeMore } from '@/components/library/AttachReport';
 import { AddToTrip } from '@/components/library/AddToTrip';
 import { Window } from '@/components/retro/Window';
@@ -18,6 +17,8 @@ import { loadRoute } from '@/lib/library';
 import { canContribute, canDeleteOwned } from '@/lib/membership';
 import { loadMapData } from '@/lib/posts';
 import { listTripChoices, tripsForItem } from '@/lib/trips';
+import { loadFailed } from '@/lib/load-error';
+import { formatTripDate } from '@/lib/utils';
 
 export const dynamic = 'force-dynamic';
 
@@ -50,7 +51,7 @@ export default async function RoutePage({
   try {
     route = await loadRoute(id);
   } catch (err) {
-    error = err instanceof Error ? err.message : 'That route did not load.';
+    error = loadFailed('route page', err, 'That route did not load. Try again in a minute.');
   }
   if (error) {
     return (
@@ -80,8 +81,7 @@ export default async function RoutePage({
   const map = route.lat != null && route.lng != null ? await loadMapData().catch(() => null) : null;
 
   return (
-    <PageWrapper>
-      <CrumbLeaf label={route.name} />
+    <PageWrapper leaf={route.name}>
       <div className="mx-auto max-w-3xl space-y-4 px-4 py-10">
         <Window
           title={route.name}
@@ -94,6 +94,7 @@ export default async function RoutePage({
           ) : null}
         >
           <p className="text-sm text-gray-700">
+            {route.date ? `${formatTripDate(route.date, 'long')} · ` : ''}
             {isActivity(route.activity) ? ACTIVITY_META[route.activity].label : route.activity}
             {route.distanceM != null ? ` · ${formatMiles(route.distanceM)}` : ''}
             {route.elevGainM != null ? ` · ${formatFeetGain(route.elevGainM)}` : ''}

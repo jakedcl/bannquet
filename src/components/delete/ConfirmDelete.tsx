@@ -43,10 +43,13 @@ export function ConfirmDelete({
   action,
   confirm,
   fields,
+  label,
 }: {
   action: Action;
   confirm: string;
   fields: Record<string, string>;
+  /** Screen-reader name. Defaults to the confirm question, e.g. "Delete this route". */
+  label?: string;
 }) {
   const [state, formAction, pending] = useActionState(action, null);
   return (
@@ -63,7 +66,7 @@ export function ConfirmDelete({
       {state?.error ? (
         <p className="absolute right-0 top-full z-10 mt-1 w-44 text-right text-xs font-bold text-red-700">{state.error}</p>
       ) : null}
-      <TrashButton pending={pending} />
+      <TrashButton pending={pending} label={label ?? confirm.replace(/\?$/, '')} />
     </form>
   );
 }
