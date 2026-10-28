@@ -241,9 +241,10 @@ export async function setTripGoing(tripId: string, userId: string, going: boolea
     `);
     return;
   }
+  // A trip deleted in the meantime adds nothing instead of a foreign-key error.
   await db.execute(sql`
     insert into trip_members (trip_id, user_id, rsvp, role)
-    values (${tripId}::uuid, ${userId}, 'going', 'member')
+    select id, ${userId}, 'going', 'member' from trips where id = ${tripId}::uuid
     on conflict (trip_id, user_id) do update set rsvp = 'going'
   `);
 }
