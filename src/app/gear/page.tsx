@@ -6,6 +6,7 @@ import { getViewer } from '@/app/sign-in/actions';
 import { listGear } from '@/lib/gear';
 import { APPROVAL_WAIT, canContribute } from '@/lib/membership';
 import { isDatabaseConfigured } from '@/db';
+import { loadFailed } from '@/lib/load-error';
 
 export const dynamic = 'force-dynamic';
 
@@ -18,7 +19,7 @@ export default async function GearPage() {
     try {
       items = await listGear();
     } catch (err) {
-      error = err instanceof Error ? err.message : 'The gear list did not load.';
+      error = loadFailed('gear list', err, 'The gear list did not load. Try again in a minute.');
     }
   }
   const canEdit = Boolean(!error && (!viewer || canContribute(viewer.role)));

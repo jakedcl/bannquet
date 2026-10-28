@@ -9,6 +9,7 @@ import { getViewer } from '@/app/sign-in/actions';
 import { isDatabaseConfigured } from '@/db';
 import { listGear } from '@/lib/gear';
 import { APPROVAL_WAIT, canContribute } from '@/lib/membership';
+import { loadFailed } from '@/lib/load-error';
 
 export const dynamic = 'force-dynamic';
 
@@ -23,7 +24,7 @@ export default async function GearItemPage({ params }: { params: Promise<{ id: s
   try {
     item = (await listGear()).find((row) => row.id === id) ?? null;
   } catch (err) {
-    error = err instanceof Error ? err.message : 'That item did not load.';
+    error = loadFailed('gear item', err, 'That item did not load. Try again in a minute.');
   }
   if (error) {
     return (

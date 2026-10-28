@@ -15,6 +15,7 @@ import { loadPhoto } from '@/lib/library';
 import { canContribute, canDeleteOwned } from '@/lib/membership';
 import { loadMapData } from '@/lib/posts';
 import { listTripChoices, tripsForItem } from '@/lib/trips';
+import { loadFailed } from '@/lib/load-error';
 
 export const dynamic = 'force-dynamic';
 
@@ -47,7 +48,7 @@ export default async function PhotoPage({
   try {
     photo = await loadPhoto(id);
   } catch (err) {
-    error = err instanceof Error ? err.message : 'That photo did not load.';
+    error = loadFailed('photo page', err, 'That photo did not load. Try again in a minute.');
   }
   if (error) {
     return (

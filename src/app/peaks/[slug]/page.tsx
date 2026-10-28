@@ -9,6 +9,7 @@ import { allPeaks } from '@/lib/challenges';
 import { canContribute } from '@/lib/membership';
 import { listClimbs, type ClimbRow } from '@/lib/summits';
 import { isDatabaseConfigured } from '@/db';
+import { loadFailed } from '@/lib/load-error';
 
 export const dynamic = 'force-dynamic';
 
@@ -41,7 +42,7 @@ export default async function PeakPage({ params }: { params: Promise<{ slug: str
     try {
       climbs = (await listClimbs()).filter((climb) => climb.peakSlug === peak.slug);
     } catch (err) {
-      error = err instanceof Error ? err.message : 'The climbs did not load.';
+      error = loadFailed('peak page', err, 'The climbs did not load. Try again in a minute.');
     }
   }
 

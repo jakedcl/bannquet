@@ -18,6 +18,7 @@ import { loadRoute } from '@/lib/library';
 import { canContribute, canDeleteOwned } from '@/lib/membership';
 import { loadMapData } from '@/lib/posts';
 import { listTripChoices, tripsForItem } from '@/lib/trips';
+import { loadFailed } from '@/lib/load-error';
 
 export const dynamic = 'force-dynamic';
 
@@ -50,7 +51,7 @@ export default async function RoutePage({
   try {
     route = await loadRoute(id);
   } catch (err) {
-    error = err instanceof Error ? err.message : 'That route did not load.';
+    error = loadFailed('route page', err, 'That route did not load. Try again in a minute.');
   }
   if (error) {
     return (

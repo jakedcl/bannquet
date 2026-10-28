@@ -5,6 +5,7 @@ import { getViewer } from '@/app/sign-in/actions';
 import { listChatCatalog, listChatMessages, type ChatCatalogItem } from '@/lib/chat';
 import { APPROVAL_WAIT, canContribute } from '@/lib/membership';
 import { isDatabaseConfigured } from '@/db';
+import { loadFailed } from '@/lib/load-error';
 
 export const dynamic = 'force-dynamic';
 
@@ -22,7 +23,7 @@ export default async function ChatPage() {
         catalog = await listChatCatalog();
       }
     } catch (err) {
-      error = err instanceof Error ? err.message : 'Chat did not load.';
+      error = loadFailed('chat', err, 'Chat did not load. Try again in a minute.');
     }
   }
 

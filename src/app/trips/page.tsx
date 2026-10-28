@@ -7,6 +7,7 @@ import { canContribute } from '@/lib/membership';
 import { listTrips, type TripSummary } from '@/lib/trips';
 import { formatTripDate } from '@/lib/utils';
 import { isDatabaseConfigured } from '@/db';
+import { loadFailed } from '@/lib/load-error';
 
 export const dynamic = 'force-dynamic';
 
@@ -26,7 +27,7 @@ export default async function TripsPage() {
     try {
       trips = await listTrips();
     } catch (err) {
-      error = err instanceof Error ? err.message : 'Trips did not load.';
+      error = loadFailed('trips list', err, 'Trips did not load. Try again in a minute.');
     }
   }
   const canAdd = !viewer || canContribute(viewer.role);

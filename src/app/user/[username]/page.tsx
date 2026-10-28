@@ -19,6 +19,7 @@ import { PROFILE_PREVIEW } from '@/lib/list-page';
 import { ensurePeaks, listClimbs, summitCountsByUser } from '@/lib/summits';
 import { listGear } from '@/lib/gear';
 import { listTripsByOwner } from '@/lib/trips';
+import { loadFailed } from '@/lib/load-error';
 
 export const dynamic = 'force-dynamic';
 
@@ -52,7 +53,7 @@ export default async function UserPage({ params }: { params: Promise<{ username:
       listGear().catch(() => []),
     ]);
   } catch (err) {
-    error = err instanceof Error ? err.message : 'This page did not load.';
+    error = loadFailed('profile', err, 'This page did not load. Try again in a minute.');
   }
   const manage = Boolean(viewer && canDeleteOwned({
     actorRole: viewer.role,

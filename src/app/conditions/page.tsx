@@ -2,6 +2,7 @@ import PageWrapper from '@/components/ui/PageWrapper';
 import { Window } from '@/components/retro/Window';
 import { ConditionsReport } from '@/components/weather/ConditionsReport';
 import { loadWeatherExtremes } from '@/lib/weather-extremes';
+import { loadFailed } from '@/lib/load-error';
 
 export const dynamic = 'force-dynamic';
 
@@ -11,7 +12,7 @@ export default async function ConditionsPage() {
   try {
     report = await loadWeatherExtremes();
   } catch (err) {
-    error = err instanceof Error ? err.message : 'The live conditions did not load.';
+    error = loadFailed('conditions', err, 'The live conditions did not load. Try again in a minute.');
   }
 
   return (
