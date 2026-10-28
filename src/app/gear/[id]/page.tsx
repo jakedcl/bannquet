@@ -3,11 +3,12 @@ import { notFound } from 'next/navigation';
 import PageWrapper from '@/components/ui/PageWrapper';
 import { CountControl } from '@/components/ui/CountControl';
 import { Window } from '@/components/retro/Window';
-import { changeHoldAction } from '@/app/gear/actions';
+import { changeHoldAction, updateGearItemAction } from '@/app/gear/actions';
+import { EditDetails, EditForm } from '@/components/edit/EditForm';
 import { getViewer } from '@/app/sign-in/actions';
 import { isDatabaseConfigured } from '@/db';
 import { listGear } from '@/lib/gear';
-import { APPROVAL_WAIT, canContribute } from '@/lib/membership';
+import { APPROVAL_WAIT, canContribute, canEditOwned } from '@/lib/membership';
 import { loadFailed } from '@/lib/load-error';
 
 export const dynamic = 'force-dynamic';
@@ -66,6 +67,19 @@ export default async function GearItemPage({ params }: { params: Promise<{ id: s
                 remove={{ action: changeHoldAction, fields: { gearId: item.id, delta: '-1' } }}
               />
             </div>
+          ) : null}
+          {viewer && canEditOwned({ actorRole: viewer.role, actorId: viewer.id, ownerId: item.addedBy }) ? (
+            <EditDetails>
+              <EditForm
+                key={`${item.name}\n${item.category ?? ''}`}
+                action={updateGearItemAction}
+                hidden={{ id: item.id }}
+                fields={[
+                  { name: 'name', label: 'Name', value: item.name, maxLength: 80 },
+                  { name: 'category', label: 'Category', value: item.category ?? '', maxLength: 40 },
+                ]}
+              />
+            </EditDetails>
           ) : null}
           <h2 className="mt-6 text-xs font-bold uppercase tracking-wide">Who has it</h2>
           {item.holds.length === 0 ? (
