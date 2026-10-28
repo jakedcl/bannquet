@@ -90,14 +90,18 @@ export function ChatRoom({
     return () => window.clearInterval(timer);
   }, [pull]);
 
-  // Show a sent message right away instead of on the next 5-second poll.
-  useEffect(() => {
-    if (state && !state.error) void pull();
-  }, [state, pull]);
-
   if (state !== acked) {
     setAcked(state);
     if (state && !state.error) setAttached(null);
+    // The send returns what's new, so the message shows right away
+    // instead of on the next 5-second poll.
+    const fresh = state?.messages ?? [];
+    if (fresh.length > 0) {
+      setMessages((current) => {
+        const seen = new Set(current.map((message) => message.id));
+        return [...current, ...fresh.filter((message) => !seen.has(message.id))];
+      });
+    }
   }
 
   const needle = query.trim().toLowerCase();
@@ -140,6 +144,8 @@ export function ChatRoom({
         </p>
       ) : null}
       <form ref={formRef} action={action} className="space-y-2">
+        <input type="hidden" name="after" value={messages.at(-1)?.createdAt ?? ''} />
+        <input type="hidden" name="afterId" value={messages.at(-1)?.id ?? ''} />
         <input type="hidden" name="refKind" value={attached?.kind ?? ''} />
         <input type="hidden" name="refId" value={attached?.id ?? ''} />
         {attached ? (
