@@ -5,6 +5,7 @@ import {
   approvalAllowed,
   canContribute,
   canDeleteOwned,
+  canEditOwned,
   inviteState,
   isAdminEmail,
   isEmail,
@@ -122,4 +123,13 @@ test('pending people can read, and only Jake can approve them', () => {
   assert.equal(canDeleteOwned({ actorRole: 'member', actorId: 'a', ownerId: 'a' }), true);
   assert.equal(canDeleteOwned({ actorRole: 'member', actorId: 'a', ownerId: 'b' }), false);
   assert.equal(canDeleteOwned({ actorRole: 'admin', actorId: 'jake', ownerId: 'b' }), true);
+});
+
+test('authors and admins can edit; other members and pending sign-ups cannot', () => {
+  assert.equal(canEditOwned({ actorRole: 'member', actorId: 'a', ownerId: 'a' }), true);
+  assert.equal(canEditOwned({ actorRole: 'member', actorId: 'a', ownerId: 'b' }), false);
+  assert.equal(canEditOwned({ actorRole: 'member', actorId: 'a', ownerId: null }), false);
+  assert.equal(canEditOwned({ actorRole: 'pending', actorId: 'a', ownerId: 'a' }), false);
+  assert.equal(canEditOwned({ actorRole: 'admin', actorId: 'jake', ownerId: 'b' }), true);
+  assert.equal(canEditOwned({ actorRole: 'admin', actorId: 'jake', ownerId: null }), true);
 });

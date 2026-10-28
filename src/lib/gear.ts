@@ -69,22 +69,56 @@ export async function listGear(): Promise<GearItem[]> {
   });
 }
 
-export async function addGearItem(name: string, userId: string, category = ''): Promise<'ok' | 'taken' | 'empty'> {
+/** Shared by adding and editing an item. */
+export function cleanGearFields(name: string, category: string): { name: string; category: string | null } | null {
   const clean = name.trim().replace(/\s+/g, ' ').slice(0, 80);
-  if (clean.length < 2) return 'empty';
+  if (clean.length < 2) return null;
   const cleanCategory = category.trim().replace(/\s+/g, ' ').slice(0, 40);
-  const stored = cleanCategory.length > 0 ? cleanCategory : null;
+  return { name: clean, category: cleanCategory.length > 0 ? cleanCategory : null };
+}
+
+function duplicateName(err: unknown): boolean {
+  const message = err instanceof Error ? err.message : '';
+  return message.toLowerCase().includes('duplicate') || message.includes('community_gear_name_idx');
+}
+
+export async function addGearItem(name: string, userId: string, category = ''): Promise<'ok' | 'taken' | 'empty'> {
+  const fields = cleanGearFields(name, category);
+  if (!fields) return 'empty';
+  const clean = fields.name;
+  const stored = fields.category;
   try {
     await getDb().execute(sql`
       insert into community_gear (name, added_by, category)
       values (${clean}, ${userId}, ${stored})
     `);
   } catch (err) {
-    const message = err instanceof Error ? err.message : '';
-    if (message.toLowerCase().includes('duplicate') || message.includes('community_gear_name_idx')) return 'taken';
+    if (duplicateName(err)) return 'taken';
     throw err;
   }
   return 'ok';
+}
+
+/** Whoever added it, or an admin. `added_by` never changes. */
+export async function updateGearItem(
+  id: string,
+  raw: { name: string; category: string },
+  actor: { id: string; admin: boolean },
+): Promise<'ok' | 'taken' | 'empty' | 'forbidden'> {
+  const fields = cleanGearFields(raw.name, raw.category);
+  if (!fields) return 'empty';
+  try {
+    const result = await getDb().execute(sql`
+      update community_gear
+      set name = ${fields.name}, category = ${fields.category}
+      where id = ${id}::uuid and (${actor.admin} or added_by = ${actor.id})
+      returning id::text as id
+    `);
+    return asRows(result).length > 0 ? 'ok' : 'forbidden';
+  } catch (err) {
+    if (duplicateName(err)) return 'taken';
+    throw err;
+  }
 }
 
 export async function deleteGearItem(id: string, actor: { id: string; admin: boolean }): Promise<boolean> {

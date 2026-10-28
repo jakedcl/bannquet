@@ -222,9 +222,10 @@ export async function createPin(input: {
   return id;
 }
 
+/** The author or an admin may edit. `created_by` never changes. */
 export async function updatePin(input: {
   id: string;
-  userId: string;
+  actor: { id: string; admin: boolean };
   title: string;
   note: string;
   kind: PinKind;
@@ -241,14 +242,15 @@ export async function updatePin(input: {
           note = ${input.note || null},
           kind = ${input.kind}::pin_kind,
           point = ST_SetSRID(ST_MakePoint(${input.lng}, ${input.lat}), 4326)::geography
-      where id = ${input.id}::uuid and created_by = ${input.userId}
+      where id = ${input.id}::uuid and (${input.actor.admin} or created_by = ${input.actor.id})
       returning id::text as id
     `);
     if (!text(asRows(updated)[0]?.id)) return false;
     for (const photoId of input.removePhotoIds) {
       const found = await tx.execute(sql`
         delete from photos
-        where id = ${photoId}::uuid and pin_id = ${input.id}::uuid and user_id = ${input.userId}
+        where id = ${photoId}::uuid and pin_id = ${input.id}::uuid
+          and (${input.actor.admin} or user_id = ${input.actor.id})
         returning blob_url, thumb_url
       `);
       for (const url of [text(asRows(found)[0]?.blob_url), text(asRows(found)[0]?.thumb_url)]) {
@@ -261,7 +263,7 @@ export async function updatePin(input: {
     const startOrder = num(asRows(count)[0]?.n) ?? 0;
     await insertPinPhotos(tx, {
       pinId: input.id,
-      userId: input.userId,
+      userId: input.actor.id,
       title: input.title,
       photos: input.photos,
       startOrder,

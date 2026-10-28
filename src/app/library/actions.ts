@@ -3,7 +3,7 @@
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { getViewer } from '@/app/sign-in/actions';
-import { deletePhoto, deleteRoute, updateRouteTitle } from '@/lib/library';
+import { deletePhoto, deleteRoute, updatePhotoCaption, updateRouteTitle } from '@/lib/library';
 import { cleanRouteNotes, cleanRouteTitle } from '@/lib/route-title';
 import { APPROVAL_WAIT, canContribute } from '@/lib/membership';
 import { safeNextPath } from '@/lib/sign-in-next';
@@ -37,6 +37,22 @@ export async function updateRouteTitleAction(
   if (!ok) return { error: 'You can only edit your own routes.' };
   revalidatePath(`/routes/${id}`);
   revalidatePath('/map');
+  return { saved: true };
+}
+
+export async function updatePhotoCaptionAction(
+  _prev: { error?: string; saved?: true } | null,
+  formData: FormData,
+): Promise<{ error?: string; saved?: true }> {
+  const who = await actor();
+  if (!who.viewer) return { error: who.error ?? 'Sign in to edit a photo.' };
+  const id = String(formData.get('id') ?? '');
+  if (!UUID.test(id)) return { error: 'That photo is missing.' };
+  const caption = String(formData.get('caption') ?? '').replace(/\s+/g, ' ').trim().slice(0, 200) || null;
+  const ok = await updatePhotoCaption(id, caption, who.viewer);
+  if (!ok) return { error: 'You can only edit your own photos.' };
+  revalidatePath(`/photos/${id}`);
+  revalidatePath('/photos');
   return { saved: true };
 }
 

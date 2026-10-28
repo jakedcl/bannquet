@@ -98,6 +98,14 @@ export function canDeleteOwned(input: { actorRole: MemberRole; actorId: string; 
   return input.ownerId != null && input.ownerId === input.actorId;
 }
 
+/**
+ * Who may edit something a member made: its author, or an admin. An edit
+ * never changes who made it.
+ */
+export function canEditOwned(input: { actorRole: MemberRole; actorId: string; ownerId: string | null }): boolean {
+  return canDeleteOwned(input);
+}
+
 export function approvalAllowed(input: { actorRole: MemberRole; targetRole: MemberRole }): boolean {
   return input.actorRole === 'admin' && input.targetRole === 'pending';
 }

@@ -45,6 +45,8 @@ export type TripAttachment = {
   thumb: string | null;
   photoUrl?: string | null;
   photoThumbUrl?: string | null;
+  /** Who made the item, for the remove button. */
+  ownerId?: string | null;
 };
 
 export type TripDetail = TripSummary & {
@@ -105,17 +107,17 @@ export async function getTrip(id: string): Promise<TripDetail | null> {
       order by tm.role desc, name
     `),
     db.execute(sql`
-      select 'pin' as kind, p.id::text as id, p.title as label, null::text as thumb, null::text as thumb_url
+      select 'pin' as kind, p.id::text as id, p.title as label, null::text as thumb, null::text as thumb_url, p.created_by as owner_id
       from trip_pins tp
       join pins p on p.id = tp.pin_id
       where tp.trip_id = ${id}::uuid
       union all
-      select 'route', t.id::text, t.title, null::text, null::text
+      select 'route', t.id::text, t.title, null::text, null::text, t.user_id
       from trip_routes tr
       join tracks t on t.id = tr.track_id
       where tr.trip_id = ${id}::uuid
       union all
-      select 'photo', ph.id::text, coalesce(ph.caption, ph.alt, 'Photo'), ph.blob_url, ph.thumb_url
+      select 'photo', ph.id::text, coalesce(ph.caption, ph.alt, 'Photo'), ph.blob_url, ph.thumb_url, ph.user_id
       from trip_photos tp
       join photos ph on ph.id = tp.photo_id
       where tp.trip_id = ${id}::uuid
@@ -158,6 +160,7 @@ export async function getTrip(id: string): Promise<TripDetail | null> {
         thumb: photoThumbUrl ?? photoUrl,
         photoUrl,
         photoThumbUrl,
+        ownerId: text(item.owner_id),
       }];
     }),
     posts: [],
@@ -231,6 +234,26 @@ export async function createTrip(input: {
     }
     return id;
   });
+}
+
+/** The organizer or an admin may edit. `created_by` never changes. */
+export async function updateTrip(input: {
+  id: string;
+  title: string;
+  tripDate: string;
+  notes: string;
+  actor: { id: string; admin: boolean };
+}): Promise<boolean> {
+  const result = await getDb().execute(sql`
+    update trips
+    set title = ${input.title},
+        trip_date = ${input.tripDate}::date,
+        start_at = ${input.tripDate}::date,
+        notes = ${input.notes || null}
+    where id = ${input.id}::uuid and (${input.actor.admin} or created_by = ${input.actor.id})
+    returning id::text as id
+  `);
+  return asRows(result).length > 0;
 }
 
 export async function setTripGoing(tripId: string, userId: string, going: boolean): Promise<void> {

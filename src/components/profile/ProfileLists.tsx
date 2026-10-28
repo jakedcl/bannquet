@@ -6,7 +6,8 @@ import { ConfirmDelete } from '@/components/delete/ConfirmDelete';
 import { BrowseTable } from '@/components/ui/BrowseTable';
 import type { DataColumn } from '@/components/ui/DataTable';
 import { deletePhotoAction, deleteRouteAction } from '@/app/library/actions';
-import { deleteClimbAction } from '@/app/peaks/actions';
+import { deleteClimbAction, updateClimbDateAction } from '@/app/peaks/actions';
+import { EditForm } from '@/components/edit/EditForm';
 import { deletePinAction } from '@/app/pins/actions';
 import { deleteTripAction } from '@/app/trips/actions';
 import { ACTIVITY_META, isActivity } from '@/lib/activities';
@@ -286,7 +287,7 @@ export function ClimbRows({
   manage,
   collapsed = false,
 }: {
-  climbs: Array<{ id: string; peakSlug: string }>;
+  climbs: Array<{ id: string; peakSlug: string; climbedOn?: string | null }>;
   names: Record<string, string>;
   manage: boolean;
   collapsed?: boolean;
@@ -300,6 +301,20 @@ export function ClimbRows({
       cell: (row) => (
         <Link href={`/peaks/${row.peakSlug}`} className="font-bold underline">{names[row.peakSlug] ?? 'Peak'}</Link>
       ),
+    },
+    {
+      id: 'date',
+      header: 'Date',
+      sortValue: (row) => row.climbedOn ?? null,
+      cell: (row) => (manage ? (
+        <EditForm
+          key={row.climbedOn ?? ''}
+          inline
+          action={updateClimbDateAction}
+          hidden={{ id: row.id, peakSlug: row.peakSlug }}
+          fields={[{ name: 'climbedOn', label: 'Climb date', value: row.climbedOn ?? '', kind: 'date' }]}
+        />
+      ) : (row.climbedOn ? formatTripDate(row.climbedOn) : '—')),
     },
   ];
   if (manage) {

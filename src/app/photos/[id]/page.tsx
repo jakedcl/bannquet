@@ -7,11 +7,12 @@ import { SeeMore } from '@/components/library/AttachReport';
 import { AddToTrip } from '@/components/library/AddToTrip';
 import { Window } from '@/components/retro/Window';
 import { PhotoTags } from '@/components/photos/PhotoTags';
-import { deletePhotoAction } from '@/app/library/actions';
+import { deletePhotoAction, updatePhotoCaptionAction } from '@/app/library/actions';
+import { EditDetails, EditForm } from '@/components/edit/EditForm';
 import { getViewer } from '@/app/sign-in/actions';
 import { isDatabaseConfigured } from '@/db';
 import { loadPhoto } from '@/lib/library';
-import { canContribute, canDeleteOwned } from '@/lib/membership';
+import { canEditOwned } from '@/lib/membership';
 import { loadMapData } from '@/lib/posts';
 import { listTripChoices, tripsForItem } from '@/lib/trips';
 import { loadFailed } from '@/lib/load-error';
@@ -63,7 +64,7 @@ export default async function PhotoPage({
   }
   if (!photo) notFound();
 
-  const manage = Boolean(viewer && canDeleteOwned({
+  const manage = Boolean(viewer && canEditOwned({
     actorRole: viewer.role,
     actorId: viewer.id,
     ownerId: photo.userId,
@@ -93,6 +94,16 @@ export default async function PhotoPage({
           <div className="mt-3">
             <SeeMore post={photo.post} />
           </div>
+          {manage ? (
+            <EditDetails>
+              <EditForm
+                key={photo.caption ?? ''}
+                action={updatePhotoCaptionAction}
+                hidden={{ id: photo.id }}
+                fields={[{ name: 'caption', label: 'Caption', value: photo.caption ?? '', maxLength: 200 }]}
+              />
+            </EditDetails>
+          ) : null}
         </Window>
         {map && photo.lat != null && photo.lng != null ? (
           <div className="h-80 min-h-[420px] overflow-hidden bg-white retro-box">
@@ -110,7 +121,7 @@ export default async function PhotoPage({
             </div>
           </Window>
         ) : null}
-        {viewer && canContribute(viewer.role) && viewer.id === photo.userId ? (
+        {manage ? (
           <AddToTrip
             kind="photo"
             entityId={photo.id}

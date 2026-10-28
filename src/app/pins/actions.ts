@@ -95,7 +95,7 @@ export async function updatePinAction(
   try {
     saved = await updatePin({
       id,
-      userId: who.viewer.id,
+      actor: { id: who.viewer.id, admin: who.viewer.role === 'admin' },
       title: parsed.fields.title,
       note: parsed.fields.note,
       kind: parsed.fields.kind,

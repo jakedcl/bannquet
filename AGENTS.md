@@ -22,6 +22,7 @@ Mountain weather, trip posts, peaks challenges, trips, and a map for a Northeast
 - `DATABASE_URL` is the pooled Neon URL (`-pooler`); `DATABASE_URL_UNPOOLED` is the direct one.
 - **Read `docs/environments.md` before any DB, auth or preview work.** In short: Vercel previews and local dev use the Neon `preview` branch (its own data and Neon Auth), and only production uses `main` (its Neon Auth refuses localhost). Migrations from 0010 on are applied by hand with `IF NOT EXISTS` SQL. Cloud agents write the SQL file but don't apply it. Test with the standing `bqtester` account on preview only. Blob is still shared with live.
 - New sign-ups can read but can't post until approved on `/admin`; invite links skip that. `ADMIN_EMAIL` (comma-separated) are admins.
+- **Edits and deletes:** the author or an admin. Show controls with `canEditOwned`/`canDeleteOwned`; enforce in SQL with `(admin or <owner column> = actor id)`. An edit never changes the owner column. Admins don't edit other people's accounts or settings.
 - Old `/trip-reports/<id>` links redirect to `/posts/<id>`; `/hikers/<u>` redirects to `/user/<u>`. Keep those redirects.
 - Weather pages must work with no keys. The live-map socket server is a separate repo, `jakedcl/bannquet-io`.
 - **Route privacy:** a route with `hide_ends` loses its first and last ~400 m for everyone but its owner. Any query that sends route geometry to a page must go through `routeCutSql`/`shownLineSql` in `src/lib/route-privacy-sql.ts`, never `t.line` directly.

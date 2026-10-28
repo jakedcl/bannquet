@@ -15,7 +15,7 @@ import { LinkedText } from '@/components/ui/LinkedText';
 import { formatFeetGain, formatMiles } from '@/lib/gpx';
 import { loadRoute } from '@/lib/library';
 import { seesWholeRoute } from '@/lib/route-privacy';
-import { canContribute, canDeleteOwned } from '@/lib/membership';
+import { canEditOwned } from '@/lib/membership';
 import { loadMapData } from '@/lib/posts';
 import { listTripChoices, tripsForItem } from '@/lib/trips';
 import { loadFailed } from '@/lib/load-error';
@@ -68,7 +68,7 @@ export default async function RoutePage({
   }
   if (!route) notFound();
 
-  const manage = Boolean(viewer && canDeleteOwned({
+  const manage = Boolean(viewer && canEditOwned({
     actorRole: viewer.role,
     actorId: viewer.id,
     ownerId: route.userId,
@@ -112,7 +112,7 @@ export default async function RoutePage({
           <div className="mt-3">
             <SeeMore post={route.post} />
           </div>
-          {viewer && canContribute(viewer.role) && viewer.id === route.userId ? (
+          {manage ? (
             <RouteTitleForm
               key={`${route.title ?? ''}\n${route.notes ?? ''}\n${route.hideEnds}`}
               id={route.id}
@@ -127,7 +127,7 @@ export default async function RoutePage({
             <MapCanvas points={map.points} lines={map.lines} focus={{ lng: route.lng, lat: route.lat, zoom: 12 }} />
           </div>
         ) : null}
-        {viewer && canContribute(viewer.role) && viewer.id === route.userId ? (
+        {manage ? (
           <AddToTrip
             kind="route"
             entityId={route.id}
