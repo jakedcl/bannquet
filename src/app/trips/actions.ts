@@ -5,12 +5,15 @@ import { redirect } from 'next/navigation';
 import { getViewer } from '@/app/sign-in/actions';
 import { APPROVAL_WAIT, canContribute } from '@/lib/membership';
 import { redirectToSignIn } from '@/lib/sign-in-redirect';
+import { safeNextPath } from '@/lib/sign-in-next';
+import { cleanTripFields } from '@/lib/trip-fields';
 import {
   attachItemToTrip,
   createTrip,
   deleteTrip,
   detachItemFromTrip,
   setTripGoing,
+  updateTrip,
 } from '@/lib/trips';
 
 async function contributor() {
@@ -26,11 +29,9 @@ export async function createTripAction(
 ): Promise<{ error?: string }> {
   const { error, viewer } = await contributor();
   if (!viewer) return { error: error ?? 'Sign in to add a trip.' };
-  const title = String(formData.get('title') ?? '').trim();
-  const tripDate = String(formData.get('tripDate') ?? '').trim();
-  const notes = String(formData.get('notes') ?? '').trim().slice(0, 4000);
-  if (!title || title.length > 80) return { error: 'Give the trip a short name.' };
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(tripDate)) return { error: 'Pick a date.' };
+  const parsed = cleanTripFields({ title: formData.get('title'), tripDate: formData.get('tripDate'), notes: formData.get('notes') });
+  if ('error' in parsed) return { error: parsed.error };
+  const { title, tripDate, notes } = parsed.fields;
   const attachments = readAttachments(formData);
   let id = '';
   try {
@@ -46,6 +47,24 @@ export async function createTripAction(
     return { error: 'Could not save that trip. Try again in a minute.' };
   }
   redirect(`/trips/${id}`);
+}
+
+/** The organizer or an admin. The organizer stays the same. */
+export async function updateTripAction(
+  _prev: { error?: string; saved?: true } | null,
+  formData: FormData,
+): Promise<{ error?: string; saved?: true }> {
+  const { error, viewer } = await contributor();
+  if (!viewer) return { error: error ?? 'Sign in to edit a trip.' };
+  const id = String(formData.get('id') ?? '');
+  if (!UUID.test(id)) return { error: 'That trip is missing.' };
+  const parsed = cleanTripFields({ title: formData.get('title'), tripDate: formData.get('tripDate'), notes: formData.get('notes') });
+  if ('error' in parsed) return { error: parsed.error };
+  const ok = await updateTrip({ id, ...parsed.fields, actor: { id: viewer.id, admin: viewer.role === 'admin' } });
+  if (!ok) return { error: 'You can only edit your own trips.' };
+  revalidatePath(`/trips/${id}`);
+  revalidatePath('/trips');
+  return { saved: true };
 }
 
 export async function toggleGoing(formData: FormData): Promise<void> {
@@ -139,5 +158,7 @@ export async function detachFromTripAction(
   });
   if (!ok) return { error: 'You can only remove your own pins, routes, and photos.' };
   revalidatePath(`/trips/${tripId}`);
+  const back = safeNextPath(String(formData.get('returnTo') ?? ''));
+  if (back) redirect(back);
   redirect(kind === 'route' ? `/routes/${entityId}` : kind === 'pin' ? `/pins/${entityId}` : `/photos/${entityId}`);
 }

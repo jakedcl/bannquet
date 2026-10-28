@@ -4,11 +4,12 @@ import PageWrapper from '@/components/ui/PageWrapper';
 import { SubmitButton } from '@/components/ui/SubmitButton';
 import { Window } from '@/components/retro/Window';
 import { ConfirmDelete } from '@/components/delete/ConfirmDelete';
-import { deleteTripAction, toggleGoing } from '@/app/trips/actions';
+import { deleteTripAction, detachFromTripAction, toggleGoing, updateTripAction } from '@/app/trips/actions';
+import { EditDetails, EditForm } from '@/components/edit/EditForm';
 import { getViewer } from '@/app/sign-in/actions';
 import { LinkedText } from '@/components/ui/LinkedText';
 import { draftPhotoSources, SmallPhotoImage } from '@/components/ui/SmallPhotoImage';
-import { canContribute, canDeleteOwned } from '@/lib/membership';
+import { canContribute, canDeleteOwned, canEditOwned } from '@/lib/membership';
 import { getTrip } from '@/lib/trips';
 import { formatTripDate } from '@/lib/utils';
 import { getWeather } from '@/lib/weather';
@@ -29,6 +30,16 @@ export default async function TripPage({ params }: { params: Promise<{ id: strin
     actorRole: viewer.role,
     actorId: viewer.id,
     ownerId: trip.createdBy,
+  }));
+  const canEditTrip = Boolean(viewer && canEditOwned({
+    actorRole: viewer.role,
+    actorId: viewer.id,
+    ownerId: trip.createdBy,
+  }));
+  const canRemove = (ownerId: string | null | undefined) => Boolean(viewer && canEditOwned({
+    actorRole: viewer.role,
+    actorId: viewer.id,
+    ownerId: ownerId ?? null,
   }));
   const going = Boolean(viewer && trip.people.some((person) => person.id === viewer.id));
 
@@ -68,6 +79,20 @@ export default async function TripPage({ params }: { params: Promise<{ id: strin
               </form>
             ) : null}
           </div>
+          {canEditTrip ? (
+            <EditDetails>
+              <EditForm
+                key={`${trip.title}\n${trip.tripDate ?? ''}\n${trip.notes}`}
+                action={updateTripAction}
+                hidden={{ id: trip.id }}
+                fields={[
+                  { name: 'title', label: 'Name', value: trip.title, maxLength: 80 },
+                  { name: 'tripDate', label: 'Date', value: trip.tripDate ?? '', kind: 'date' },
+                  { name: 'notes', label: 'Notes', value: trip.notes, kind: 'textarea', maxLength: 4000 },
+                ]}
+              />
+            </EditDetails>
+          ) : null}
           {canDeleteTrip ? (
             <div className="mt-4">
               <ConfirmDelete
@@ -106,6 +131,14 @@ export default async function TripPage({ params }: { params: Promise<{ id: strin
                   })()}
                   <Link href={item.href} className="min-w-0 flex-1 truncate font-bold underline">{item.label}</Link>
                   <span className="text-xs uppercase text-gray-600">{item.kind}</span>
+                  {canRemove(item.ownerId) ? (
+                    <ConfirmDelete
+                      action={detachFromTripAction}
+                      confirm="Remove this from the trip?"
+                      label={`Remove ${item.label} from this trip`}
+                      fields={{ tripId: trip.id, kind: item.kind, entityId: item.id, returnTo: `/trips/${trip.id}` }}
+                    />
+                  ) : null}
                 </li>
               ))}
             </ul>
