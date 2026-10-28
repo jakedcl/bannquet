@@ -80,6 +80,8 @@ test('a trip, pin, route, photo, and gear item name the record', () => {
   assert.equal(pageTrail('/pins/abc', '', nobody, 'Lookout').parentHref, '/map');
   assert.equal(pageTrail('/routes/abc', '', nobody, 'Ridge').crumbs?.at(-1)?.label, 'Ridge');
   assert.equal(pageTrail('/photos/abc', '', nobody).crumbs?.at(-1)?.label, 'Photo');
+  assert.deepEqual(pageTrail('/photos/abc', '', nobody).crumbs?.map((crumb) => crumb.label), ['Community', 'Photos', 'Photo']);
+  assert.deepEqual(pageTrail('/photos', '', nobody).crumbs?.map((crumb) => crumb.label), ['Community', 'Photos']);
   assert.equal(pageTrail('/gear/abc', '', nobody, 'Stove').parentHref, '/gear');
   assert.equal(pageTrail('/trips/new', '', nobody).crumbs?.at(-1)?.label, 'New trip');
 });
