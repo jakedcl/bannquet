@@ -7,6 +7,8 @@ import { PIN_KIND_LABELS, isPinKind } from '@/lib/pin-kinds';
 import { NEUTRAL_PIN_COLOR } from '@/lib/map';
 import { isLatLng, isPublicBlobUrl } from '@/lib/photos';
 import { oneAtATime } from '@/lib/dedupe';
+import { markerPointSql, routeCutSql, shownLineSql } from '@/lib/route-privacy-sql';
+import { zoneRadiusAtZoom0 } from '@/lib/route-privacy';
 
 export type MapFeatureCollection = {
   type: 'FeatureCollection';
@@ -94,6 +96,25 @@ function num(value: unknown): number | null {
   return Number.isFinite(parsed) ? parsed : null;
 }
 
+/** Faded circles over the cut ends of a hidden-ends route. Drawn on the routes layer as points. */
+function hiddenZones(start: unknown, end: unknown, trackId: string): MapFeatureCollection['features'] {
+  return [start, end].flatMap((raw) => {
+    const json = text(raw);
+    if (!json) return [];
+    try {
+      const point = JSON.parse(json) as { type: string; coordinates: [number, number] };
+      if (point.type !== 'Point') return [];
+      return [{
+        type: 'Feature' as const,
+        geometry: { type: 'Point' as const, coordinates: point.coordinates },
+        properties: { kind: 'hidden-end', trackId, zoneRadius: zoneRadiusAtZoom0(point.coordinates[1]) },
+      }];
+    } catch {
+      return [];
+    }
+  });
+}
+
 function colorFor(activity: string | null): string {
   return activity && isActivity(activity) ? mapColorForActivity(activity) : NEUTRAL_PIN_COLOR;
 }
@@ -104,18 +125,23 @@ function whoSql(aliasUser: string) {
   );
 }
 
-export async function loadMapData(): Promise<{ points: MapFeatureCollection; lines: MapFeatureCollection }> {
+/** `viewerId` decides who gets a hidden-ends route in full: only its owner. */
+export async function loadMapData(viewerId: string | null): Promise<{ points: MapFeatureCollection; lines: MapFeatureCollection }> {
   const db = getDb();
   const [trackResult, photoResult, tripResult, pinResult] = await Promise.all([
     db.execute(sql`
       select t.id::text as id, t.title, t.activity::text as activity,
         (coalesce(t.started_at, t.created_at) at time zone 'America/New_York')::date::text as trip_date,
         ${whoSql('u')} as who,
-        ST_AsGeoJSON(t.line::geometry) as geojson,
-        ST_Y(ST_StartPoint(t.line::geometry)) as lat,
-        ST_X(ST_StartPoint(t.line::geometry)) as lng
+        ST_AsGeoJSON(shown.line) as geojson,
+        ST_Y(${markerPointSql()}) as lat,
+        ST_X(${markerPointSql()}) as lng,
+        ST_AsGeoJSON(ST_StartPoint(cut.line)) as zone_start,
+        ST_AsGeoJSON(ST_EndPoint(cut.line)) as zone_end
       from tracks t
       left join users u on u.id = t.user_id
+      cross join lateral (${routeCutSql()}) cut
+      cross join lateral (select ${shownLineSql(viewerId)} as line) shown
     `),
     db.execute(sql`
       select p.id::text as id, coalesce(p.caption, p.alt, 'Photo') as title,
@@ -191,6 +217,7 @@ export async function loadMapData(): Promise<{ points: MapFeatureCollection; lin
     } catch {
       continue;
     }
+    lines.push(...hiddenZones(row.zone_start, row.zone_end, id));
   }
 
   for (const row of asRows(photoResult)) {
@@ -273,6 +300,7 @@ export async function addProfileTrack(input: {
   track: PackedTrack;
   title?: string | null;
   notes?: string | null;
+  hideEnds?: boolean;
 }): Promise<string> {
   const wkt = lineWkt(input.track.points);
   if (!wkt) throw new Error('That GPX needs at least two points.');
@@ -287,7 +315,7 @@ export async function addProfileTrack(input: {
     const existingId = text(asRows(existing)[0]?.id);
     if (existingId) return existingId;
     const inserted = await tx.execute(sql`
-      insert into tracks (user_id, source, name, title, notes, activity, line, distance_m, elev_gain_m, started_at)
+      insert into tracks (user_id, source, name, title, notes, activity, line, distance_m, elev_gain_m, started_at, hide_ends)
       values (
         ${input.userId},
         'gpx',
@@ -298,7 +326,8 @@ export async function addProfileTrack(input: {
         ST_GeogFromText(${wkt}),
         ${input.track.distanceM},
         ${input.track.elevGainM},
-        coalesce(${input.track.startedAt ?? null}::timestamptz, now())
+        coalesce(${input.track.startedAt ?? null}::timestamptz, now()),
+        ${input.hideEnds ?? false}
       )
       returning id::text as id
     `);

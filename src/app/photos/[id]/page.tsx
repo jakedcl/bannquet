@@ -1,5 +1,4 @@
 import Image from 'next/image';
-import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import PageWrapper from '@/components/ui/PageWrapper';
 import { MapCanvas } from '@/components/map/MapCanvas';
@@ -7,6 +6,7 @@ import { ConfirmDelete } from '@/components/delete/ConfirmDelete';
 import { SeeMore } from '@/components/library/AttachReport';
 import { AddToTrip } from '@/components/library/AddToTrip';
 import { Window } from '@/components/retro/Window';
+import { PhotoTags } from '@/components/photos/PhotoTags';
 import { deletePhotoAction } from '@/app/library/actions';
 import { getViewer } from '@/app/sign-in/actions';
 import { isDatabaseConfigured } from '@/db';
@@ -42,10 +42,11 @@ export default async function PhotoPage({
     );
   }
 
+  const viewer = await getViewer();
   let photo: Awaited<ReturnType<typeof loadPhoto>> = null;
   let error: string | null = null;
   try {
-    photo = await loadPhoto(id);
+    photo = await loadPhoto(id, viewer?.id ?? null);
   } catch (err) {
     error = loadFailed('photo page', err, 'That photo did not load. Try again in a minute.');
   }
@@ -62,7 +63,6 @@ export default async function PhotoPage({
   }
   if (!photo) notFound();
 
-  const viewer = await getViewer();
   const manage = Boolean(viewer && canDeleteOwned({
     actorRole: viewer.role,
     actorId: viewer.id,
@@ -74,7 +74,7 @@ export default async function PhotoPage({
       tripsForItem('photo', photo.id).catch(() => []),
     ])
     : [[], []];
-  const map = photo.lat != null && photo.lng != null ? await loadMapData().catch(() => null) : null;
+  const map = photo.lat != null && photo.lng != null ? await loadMapData(viewer?.id ?? null).catch(() => null) : null;
 
   return (
     <PageWrapper leaf={photo.caption || 'Photo'}>
@@ -89,14 +89,7 @@ export default async function PhotoPage({
             sizes="(max-width: 768px) 100vw, 48rem"
             className="h-auto w-full bg-white object-contain retro-box"
           />
-          <p className="mt-3 text-sm">
-            {photo.handle ? <Link href={`/user/${photo.handle}`} className="underline">{photo.who}</Link> : photo.who}
-          </p>
-          {photo.pinId ? (
-            <p className="mt-2 text-sm">
-              <Link href={`/pins/${photo.pinId}`} className="underline">On a pin</Link>
-            </p>
-          ) : null}
+          <PhotoTags photo={photo} />
           <div className="mt-3">
             <SeeMore post={photo.post} />
           </div>

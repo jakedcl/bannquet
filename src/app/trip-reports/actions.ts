@@ -53,7 +53,8 @@ export async function publishProfileTrack(
   const notes = cleanRouteNotes(String(formData.get('notes') ?? ''));
   let id = '';
   try {
-    id = await addProfileTrack({ userId: viewer.id, activity, track: track.track, title, notes });
+    const hideEnds = formData.get('hideEnds') === 'on';
+    id = await addProfileTrack({ userId: viewer.id, activity, track: track.track, title, notes, hideEnds });
   } catch {
     return { error: 'Could not save that route. Try again in a minute.' };
   }

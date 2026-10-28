@@ -257,6 +257,7 @@ export default function GroupMap({
 
     const draw = () => {
       const origin = window.location.origin;
+      if (map.getLayer('route-hidden-ends')) map.removeLayer('route-hidden-ends');
       if (map.getLayer('routes')) map.removeLayer('routes');
       if (map.getLayer('cluster-count')) map.removeLayer('cluster-count');
       if (map.getLayer('clusters')) map.removeLayer('clusters');
@@ -294,8 +295,27 @@ export default function GroupMap({
         id: 'routes',
         type: 'line',
         source: 'routes',
+        filter: ['==', ['geometry-type'], 'LineString'],
         layout: { 'line-cap': 'round', 'line-join': 'round' },
         paint: { 'line-color': ['get', 'color'], 'line-width': 4, 'line-opacity': 0.9 },
+      });
+      // A route with hidden ends gets a soft fog over each cut, sized in
+      // meters, so the line fades out instead of stopping at a real spot.
+      map.addLayer({
+        id: 'route-hidden-ends',
+        type: 'circle',
+        source: 'routes',
+        filter: ['==', ['get', 'kind'], 'hidden-end'],
+        paint: {
+          'circle-color': '#f4f1ea',
+          'circle-opacity': 0.95,
+          'circle-blur': 0.9,
+          'circle-radius': [
+            'interpolate', ['exponential', 2], ['zoom'],
+            0, ['get', 'zoneRadius'],
+            24, ['*', ['get', 'zoneRadius'], 16777216],
+          ],
+        },
       });
       map.addSource('places', {
         type: 'geojson',

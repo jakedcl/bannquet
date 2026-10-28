@@ -48,7 +48,7 @@ export default async function PinPage({
       tripsForItem('pin', pin.id).catch(() => []),
     ])
     : [[], []];
-  const data = await loadMapData();
+  const data = await loadMapData(viewer?.id ?? null);
   const activity = pin.activity && isActivity(pin.activity) ? ACTIVITY_META[pin.activity].label : null;
   const category = isPinKind(pin.kind) ? PIN_KIND_LABELS[pin.kind] : 'Other';
 

@@ -4,6 +4,7 @@ import { useActionState, useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { publishProfilePhotos, publishProfileTrack } from '@/app/trip-reports/actions';
 import { PhotoFields } from '@/components/posts/PhotoFields';
+import { HideEndsToggle } from '@/components/routes/HideEndsToggle';
 import type { UploadedPhoto } from '@/components/posts/prepare-photo';
 import { FileInput } from '@/components/ui/FileInput';
 import { SubmitButton } from '@/components/ui/SubmitButton';
@@ -34,6 +35,7 @@ export function RouteUpload({
   const [note, setNote] = useState<string | null>(null);
   const [title, setTitle] = useState('');
   const [titleTouched, setTitleTouched] = useState(false);
+  const [hideEnds, setHideEnds] = useState(false);
   const [formKey, setFormKey] = useState(0);
   const [seenState, setSeenState] = useState(state);
   if (state !== seenState) {
@@ -44,6 +46,7 @@ export function RouteUpload({
       setNote(null);
       setTitle('');
       setTitleTouched(false);
+      setHideEnds(false);
       setFormKey((key) => key + 1);
     }
   }
@@ -132,6 +135,7 @@ export function RouteUpload({
         }}
       />
       <input type="hidden" name="trackJson" value={trackJson} />
+      <HideEndsToggle checked={hideEnds} onChange={setHideEnds} />
       {note ? (
         <p className={`text-sm ${trackJson ? 'text-gray-700' : 'font-bold text-red-700'}`}>{note}</p>
       ) : null}
