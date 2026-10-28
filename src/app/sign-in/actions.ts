@@ -28,6 +28,7 @@ import {
   clearSignInFailures,
   loginRateLimitKey,
   recordSignInFailure,
+  resetRequestBlocked,
   SIGN_IN_RATE_LIMIT_MESSAGE,
   signInRateLimitBlocked,
 } from '@/lib/auth/sign-in-rate-limit';
@@ -292,6 +293,10 @@ export async function requestPasswordResetEmail(
   if (!isEmail(email)) return { error: 'Enter a real email address.' };
   if (!isAuthConfigured() || !isDatabaseConfigured()) {
     return { error: 'Password reset is not set up yet.' };
+  }
+
+  if (await resetRequestBlocked({ ip: await clientIp(), email })) {
+    return { error: SIGN_IN_RATE_LIMIT_MESSAGE };
   }
 
   const allowed = await emailMaySignIn(email);
