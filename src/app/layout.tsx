@@ -12,6 +12,7 @@ import Providers from './providers';
 export const dynamic = 'force-dynamic';
 
 export const metadata = {
+  metadataBase: new URL('https://www.bannquet.com'),
   title: 'Bannquet',
   description: 'Mountain weather, a trail map, fishing conditions, and a hiking crew’s peaks, trips and photos for the Northeast',
   appleWebApp: {
