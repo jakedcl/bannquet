@@ -13,7 +13,7 @@ export const dynamic = 'force-dynamic';
 
 export const metadata = {
   title: 'Bannquet',
-  description: 'Regional mountain weather, a map, and posts',
+  description: 'Mountain weather, a trail map, fishing conditions, and a hiking crew’s peaks, trips and photos for the Northeast',
   appleWebApp: {
     capable: true,
     title: 'BANNQUET',
