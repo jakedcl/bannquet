@@ -1,4 +1,5 @@
-import { sql } from 'drizzle-orm';
+import { sql, type SQL } from 'drizzle-orm';
+import { unstable_cache } from 'next/cache';
 import { getDb } from '@/db';
 import { allPeaks } from '@/lib/challenges';
 import { oneAtATime } from '@/lib/dedupe';
@@ -115,7 +116,10 @@ export async function climbedPeakSlugs(userId: string): Promise<Set<string>> {
   }));
 }
 
-export async function listClimbs(): Promise<ClimbRow[]> {
+/** Climbs are read by many pages; writes call updateTag(CLIMBS_TAG) so cached reads refresh right away. */
+export const CLIMBS_TAG = 'climbs';
+
+async function selectClimbs(filter?: SQL): Promise<ClimbRow[]> {
   const result = await getDb().execute(sql`
     select s.id::text as id, s.user_id, s.peak_slug,
       case when s.summited_at is null then null else s.summited_at::date::text end as climbed_on,
@@ -123,7 +127,7 @@ export async function listClimbs(): Promise<ClimbRow[]> {
       u.handle
     from summits s
     join users u on u.id = s.user_id
-    where u.role <> 'pending'
+    where u.role <> 'pending'${filter ? sql` and ${filter}` : sql``}
     order by s.created_at asc
   `);
   return asRows(result).flatMap((row) => {
@@ -141,6 +145,19 @@ export async function listClimbs(): Promise<ClimbRow[]> {
       handle: row.handle == null || String(row.handle).length === 0 ? null : String(row.handle),
     }];
   });
+}
+
+export async function listClimbs(): Promise<ClimbRow[]> {
+  return selectClimbs();
+}
+
+/** Only one peak's climbs, cached for an hour or until a climb or profile changes. */
+export async function listPeakClimbs(peakSlug: string): Promise<ClimbRow[]> {
+  return unstable_cache(
+    () => selectClimbs(sql`s.peak_slug = ${peakSlug}`),
+    ['peak-climbs-v1', peakSlug],
+    { revalidate: 3600, tags: [CLIMBS_TAG] },
+  )();
 }
 
 export async function summitCountsByUser(): Promise<Array<{ userId: string; listId: string; count: number }>> {

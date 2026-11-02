@@ -1,14 +1,15 @@
 'use server';
 
-import { revalidatePath } from 'next/cache';
+import { revalidatePath, updateTag } from 'next/cache';
 import { getViewer } from '@/app/sign-in/actions';
 import { APPROVAL_WAIT, canContribute } from '@/lib/membership';
 import { redirectToSignIn } from '@/lib/sign-in-redirect';
-import { deleteClimb, deleteLatestClimb, ensurePeaks, logClimb, updateClimbDate } from '@/lib/summits';
+import { CLIMBS_TAG, deleteClimb, deleteLatestClimb, ensurePeaks, logClimb, updateClimbDate } from '@/lib/summits';
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 function refresh(handle: string | null, peakSlug: string) {
+  updateTag(CLIMBS_TAG);
   revalidatePath('/peaks');
   if (peakSlug) revalidatePath(`/peaks/${peakSlug}`);
   if (handle) {

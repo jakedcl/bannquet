@@ -1,7 +1,7 @@
 'use server';
 
 import { cookies, headers } from 'next/headers';
-import { revalidatePath, refresh } from 'next/cache';
+import { revalidatePath, refresh, updateTag } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { getAuth, isAuthConfigured } from '@/lib/auth/server';
 import {
@@ -19,6 +19,7 @@ import {
   updateMemberProfile,
 } from '@/lib/auth/members';
 import { clientIp } from '@/lib/auth/client-ip';
+import { CLIMBS_TAG } from '@/lib/summits';
 import {
   deliverPasswordResetEmail,
   sendPasswordResetEmailAtUrl,
@@ -440,6 +441,8 @@ export async function saveProfile(
     avatarUrl,
   });
   if (saved.error || !saved.member) return { error: saved.error ?? 'Could not save that profile.' };
+  // Names and handles show on the cached peak climber lists.
+  updateTag(CLIMBS_TAG);
   redirect(nextStopForMember(saved.member));
 }
 

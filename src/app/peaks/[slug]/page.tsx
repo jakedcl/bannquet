@@ -7,10 +7,11 @@ import { logClimbAction, removeLatestClimbAction } from '@/app/peaks/actions';
 import { getViewer } from '@/app/sign-in/actions';
 import { allPeaks } from '@/lib/challenges';
 import { canContribute } from '@/lib/membership';
-import { listClimbs, type ClimbRow } from '@/lib/summits';
+import { listPeakClimbs, type ClimbRow } from '@/lib/summits';
 import { isDatabaseConfigured } from '@/db';
 import { loadFailed } from '@/lib/load-error';
 
+// Dynamic because it reads the viewer's cookie; the climbs list itself is cached (listPeakClimbs).
 export const dynamic = 'force-dynamic';
 
 const AREAS: Record<string, string> = {
@@ -44,7 +45,7 @@ export default async function PeakPage({ params }: { params: Promise<{ slug: str
   let climbs: ClimbRow[] = [];
   if (ready) {
     try {
-      climbs = (await listClimbs()).filter((climb) => climb.peakSlug === peak.slug);
+      climbs = await listPeakClimbs(peak.slug);
     } catch (err) {
       error = loadFailed('peak page', err, 'The climbs did not load. Try again in a minute.');
     }
