@@ -12,7 +12,7 @@ Live at [bannquet.com](https://www.bannquet.com).
 - A ticker at the top of the homepage showing the current extremes across those regions.
 - `/peaks` lists the Catskill 35, Adirondack 46, New Hampshire 48, Vermont 4000-footers, Maine 4000-footers, and the New England 67 as those three New England lists together. A summit counts only when someone logs “I climbed this.” The lists live in `config/challenges`. A finished list shows a small 88×31 badge on the stats page and on that person's profile. `/stats` keeps the miles, elevation, and summit leaderboards for on foot, bike, and ski.
 - `/community` links to posts, peaks, stats, trips, and the map. Posts, peaks, stats, and trips share a small sub-nav.
-- `/trips` is a light planner: a title, a date, notes, an I'm-in toggle, attached pins, routes and photos, and a shared packing list. Templates for day hike, overnight, winter, bike, and ski live in `config/packing-templates.json`..
+- `/trips` is a light planner: a title, a date, notes, an I'm-in toggle, attached pins, routes and photos, and a shared packing list. Templates for day hike, overnight, winter, bike, and ski live in `config/packing-templates.json`.
 - Published trip reports read from Postgres. Signed-in friends write a post (title, date, activity, tagged friends, story, photos, optional GPX) and it shows in the feed and on the map.
 - The home page banner links to `/conditions`, which lists the same National Weather Service extremes and the spots behind them.
 - The map uses MapLibre. Standard tiles are OpenFreeMap. Topo and satellite are USGS National Map. Hybrid keeps OpenFreeMap labels on the imagery. 3D terrain uses AWS Terrarium elevation tiles. None of these are paid map APIs.
@@ -21,7 +21,7 @@ More detail on the weather endpoints is in `API_DOCUMENTATION.md`.
 
 ## Stack
 
-Next.js 16.3, React 19.2, TypeScript, Tailwind CSS 4, Framer Motion, Drizzle ORM, and Neon Postgres. Weather comes from the NWS API. Deployed on Vercel.
+Next.js 16, React 19, TypeScript, Tailwind CSS 4, Framer Motion, Drizzle ORM, and Neon Postgres. Weather comes from the NWS API. Deployed on Vercel.
 
 ## Running it locally
 
@@ -58,4 +58,4 @@ Old `/trip-reports/<id>` links redirect to `/posts/<id>`. The public feed is `/p
 - `npm run typecheck` runs TypeScript
 - `npm test` runs the small node tests
 
-The live-conditions socket server for the user map is a separate project, [bannquet-io](https://github.com/jakedcl/bannquet-io).
+The live-conditions socket server for the user map is a separate project (bannquet-io) and is not in this repo.
