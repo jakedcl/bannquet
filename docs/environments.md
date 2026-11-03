@@ -4,7 +4,7 @@ Bannquet has two live environments. Each one talks to its own Neon database.
 
 | | Production | Preview |
 |---|---|---|
-| Site | www.bannquet.com (Vercel production, builds from `main`) | `bannquet-git-<branch>-jakedcl.vercel.app` (Vercel preview, every non-main push / PR) |
+| Site | www.bannquet.com (Vercel production, builds from `main`) | `bannquet-git-<branch>-dcldev.vercel.app` (Vercel preview, every non-main push / PR) |
 | Neon branch | `main` (`br-icy-waterfall-b7djctpq`) | `preview` (`br-curly-snow-b73nm5ro`) |
 | Neon Auth | main's own | preview's own (separate member accounts) |
 | Vercel env vars | `DATABASE_URL`, `DATABASE_URL_UNPOOLED`, `NEON_AUTH_BASE_URL`, `NEON_AUTH_JWKS_URL` scoped to **production only** | the same four keys, pointing at the `preview` branch, scoped to **preview** and to **development** (separate entries) |
@@ -33,7 +33,7 @@ Neon project: `hidden-cherry-64820503`. All PR previews share the one `preview` 
 - Cloud agents: write the migration file, but don't apply it to any database. Say in the PR exactly which SQL needs applying. Jake's assistant applies it.
 
 ## Preview sign-in
-- Neon Auth only accepts sign-ins from trusted domains. Each new PR preview host (`bannquet-git-<branch>-jakedcl.vercel.app`) must be added to the **preview** branch's Neon Auth trusted domains, or sign-in on that preview is refused.
+- Neon Auth only accepts sign-ins from trusted domains. Each new PR preview host (`bannquet-git-<branch>-dcldev.vercel.app`) must be added to the **preview** branch's Neon Auth trusted domains, or sign-in on that preview is refused.
 - Preview URLs are behind Vercel login, so curl gets a 302. Test them in a signed-in browser.
 
 ## Standing test account
