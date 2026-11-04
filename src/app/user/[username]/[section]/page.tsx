@@ -4,6 +4,7 @@ import { notFound, redirect } from 'next/navigation';
 import PageWrapper from '@/components/ui/PageWrapper';
 import { PeakRows, Pager, PhotoGrid, PinRows, RouteRows, TripRows } from '@/components/profile/ProfileLists';
 import { Card } from '@/components/hub/Card';
+import { HubPage } from '@/components/hub/Page';
 import { getViewer } from '@/app/sign-in/actions';
 import { allPeaks } from '@/lib/challenges';
 import { listPage, slicePage } from '@/lib/list-page';
@@ -105,15 +106,16 @@ export default async function ProfileSectionPage({
 
   return (
     <PageWrapper>
-      <div className="mx-auto max-w-3xl px-4 py-10">
-        <Card title={SECTIONS[section]}>
-          <p className="mb-3 text-sm">
-            <Link href={`/user/${handle}`} className="underline">{name}</Link>
-          </p>
+      <HubPage
+        title={SECTIONS[section]}
+        eyebrow={<Link href={`/user/${handle}`} className="underline">{name}</Link>}
+        width="3xl"
+      >
+        <Card>
           {error ? <p className="text-sm font-bold">{error}</p> : body}
           {error || loaded?.kind !== 'photos' ? null : <Pager page={loaded.page} pages={loaded.pages} path={path} />}
         </Card>
-      </div>
+      </HubPage>
     </PageWrapper>
   );
 }

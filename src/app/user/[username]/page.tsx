@@ -7,6 +7,7 @@ import { Pill } from '@/components/hub/Button';
 import { Button } from '@/components/hub/Button';
 import { SubmitButton } from '@/components/ui/SubmitButton';
 import { Card } from '@/components/hub/Card';
+import { HubPage } from '@/components/hub/Page';
 import { getViewer, signOutAction } from '@/app/sign-in/actions';
 import { findHandleRedirect, findMemberByHandle } from '@/lib/auth/members';
 import { ACTIVITY_META } from '@/lib/activities';
@@ -79,8 +80,8 @@ export default async function UserPage({ params }: { params: Promise<{ username:
 
   return (
     <PageWrapper>
-      <div className="mx-auto max-w-3xl space-y-4 px-4 py-10">
-        <Card title={name}>
+      <HubPage title={name} subtitle={member.handle ? `@${member.handle}` : undefined} width="3xl">
+        <Card>
           <div className="flex items-start gap-4">
             {member.avatarUrl ? (
               <AvatarImage
@@ -95,7 +96,6 @@ export default async function UserPage({ params }: { params: Promise<{ username:
               </div>
             )}
             <div className="space-y-2">
-              <p className="text-sm text-gray-600">@{member.handle}</p>
               {activities.length > 0 ? (
                 <div className="flex flex-wrap gap-1">
                   {activities.map((activity) => (
@@ -112,9 +112,7 @@ export default async function UserPage({ params }: { params: Promise<{ username:
           {member.bio ? <p className="mt-4 whitespace-pre-wrap text-sm">{member.bio}</p> : null}
         </Card>
         {error ? (
-          <Card title="Could not load">
-            <p className="text-sm font-bold">{error}</p>
-          </Card>
+          <p className="t-body font-bold">{error}</p>
         ) : null}
         {startedChallenges.length > 0 ? (
           <Card title="Challenges">
@@ -165,7 +163,7 @@ export default async function UserPage({ params }: { params: Promise<{ username:
             <SubmitButton pendingLabel="Signing out…">Log out</SubmitButton>
           </form>
         ) : null}
-      </div>
+      </HubPage>
     </PageWrapper>
   );
 }

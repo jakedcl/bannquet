@@ -20,7 +20,7 @@ export function SeeAll({ href, total }: { href: string; total: number }) {
   if (total <= PROFILE_PREVIEW) return null;
   return (
     <p className="mt-3 text-sm">
-      <Link href={href} className="font-bold underline">See all ({total})</Link>
+      <Link href={href} className="inline-flex min-h-11 items-center font-bold underline">See all ({total})</Link>
     </p>
   );
 }
