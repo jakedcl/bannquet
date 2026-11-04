@@ -7,6 +7,7 @@ import { listGear } from '@/lib/gear';
 import { APPROVAL_WAIT, canContribute, viewerCanContribute } from '@/lib/membership';
 import { isDatabaseConfigured } from '@/db';
 import { loadFailed } from '@/lib/load-error';
+import { HubPage } from '@/components/hub/Page';
 
 export const dynamic = 'force-dynamic';
 
@@ -26,8 +27,8 @@ export default async function GearPage() {
 
   return (
     <PageWrapper>
-      <div className="mx-auto max-w-3xl space-y-4 px-4 py-10">
-        <Card title="Gear" action={canEdit ? <GearAddButton /> : null}>
+      <HubPage title="Gear" width="3xl" trailing={canEdit ? <GearAddButton /> : null}>
+        <Card>
           {error ? <p className="mb-3 text-sm font-bold">{error}</p> : null}
           {viewer && !canContribute(viewer.role) ? <p className="mb-3 text-sm font-bold">{APPROVAL_WAIT}</p> : null}
           {error ? null : (
@@ -38,7 +39,7 @@ export default async function GearPage() {
             />
           )}
         </Card>
-      </div>
+      </HubPage>
     </PageWrapper>
   );
 }
