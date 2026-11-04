@@ -7,7 +7,7 @@ import { suggestSummits } from '@/lib/challenges';
 import { packTrack, unpackTrack, type PackedTrack } from '@/lib/gpx';
 import { APPROVAL_WAIT, canContribute } from '@/lib/membership';
 import { redirectToSignIn } from '@/lib/sign-in-redirect';
-import { addProfilePhotos, addProfileTrack, parseUploadedPhotos, type PreparedPhoto } from '@/lib/posts';
+import { addProfilePhotos, addProfileTrack, parseUploadedPhotos } from '@/lib/posts';
 import { cleanRouteNotes, cleanRouteTitle, routeTitle } from '@/lib/route-title';
 import { climbedPeakSlugs } from '@/lib/summits';
 import type { DraftItem } from '@/lib/trip-draft';
@@ -22,10 +22,6 @@ async function summitsOnTrack(userId: string, track: PackedTrack): Promise<Summi
     console.error('Summit suggestions did not load', err);
     return [];
   }
-}
-
-function cleanPhotos(raw: string, skipLocation = false): { photos: PreparedPhoto[]; error: string | null } {
-  return parseUploadedPhotos(raw, { requireLocation: !skipLocation });
 }
 
 function readTrack(formData: FormData): { track: PackedTrack | null; error: string | null } {
@@ -78,7 +74,7 @@ export async function publishProfilePhotos(
   const viewer = await getViewer();
   if (!viewer) return redirectToSignIn();
   if (!canContribute(viewer.role)) return { error: APPROVAL_WAIT };
-  const photos = cleanPhotos(String(formData.get('photos') ?? ''));
+  const photos = parseUploadedPhotos(String(formData.get('photos') ?? ''));
   if (photos.error) return { error: photos.error };
   if (photos.photos.length === 0) return { error: 'Choose a photo.' };
   let saved: Array<{ id: string; url: string; thumbUrl: string | null }> = [];

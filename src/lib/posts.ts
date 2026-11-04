@@ -29,11 +29,8 @@ export type PreparedPhoto = {
   source: 'exif' | 'manual' | null;
 };
 
-export function parseUploadedPhotos(
-  raw: string,
-  options: { requireLocation?: boolean } = {},
-): { photos: PreparedPhoto[]; error: string | null } {
-  const requireLocation = options.requireLocation !== false;
+/** A photo's location is optional. Photos without one stay off the maps. */
+export function parseUploadedPhotos(raw: string): { photos: PreparedPhoto[]; error: string | null } {
   let parsed: unknown;
   try {
     parsed = raw ? JSON.parse(raw) : [];
@@ -52,9 +49,6 @@ export function parseUploadedPhotos(
     const lat = typeof record.lat === 'number' ? record.lat : null;
     const lng = typeof record.lng === 'number' ? record.lng : null;
     const located = lat != null && lng != null && isLatLng(lat, lng);
-    if (requireLocation && !located) {
-      return { photos: [], error: 'A photo has no location. Drop a pin on the map, or remove it.' };
-    }
     const source = record.source === 'exif' || record.source === 'manual' ? record.source : 'manual';
     const thumbRaw = typeof record.thumbUrl === 'string' ? record.thumbUrl : '';
     const thumbUrl = thumbRaw && isPublicBlobUrl(thumbRaw) ? thumbRaw : null;
@@ -349,9 +343,8 @@ export async function addProfilePhotos(
   const db = getDb();
   const saved: Array<{ id: string; url: string; thumbUrl: string | null }> = [];
   for (const [index, photo] of input.photos.entries()) {
-    if (!isPublicBlobUrl(photo.url) || photo.lat == null || photo.lng == null || !isLatLng(photo.lat, photo.lng)) {
-      continue;
-    }
+    if (!isPublicBlobUrl(photo.url)) continue;
+    const located = photo.lat != null && photo.lng != null && isLatLng(photo.lat, photo.lng);
     // A repeat submit of the same upload returns the row that already exists.
     const existing = await db.execute(sql`
       select id::text as id, thumb_url from photos
@@ -371,8 +364,8 @@ export async function addProfilePhotos(
         ${photo.thumbUrl},
         ${photo.width || null},
         ${photo.height || null},
-        ST_SetSRID(ST_MakePoint(${photo.lng}, ${photo.lat}), 4326)::geography,
-        ${photo.source},
+        ${located ? sql`ST_SetSRID(ST_MakePoint(${photo.lng}, ${photo.lat}), 4326)::geography` : null},
+        ${located ? photo.source : null},
         ${index},
         'Photo'
       )
