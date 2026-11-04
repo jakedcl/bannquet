@@ -83,8 +83,6 @@ export async function listAttachables(userId: string): Promise<{
   };
 }
 
-export type LinkedPost = { id: string; title: string };
-
 export type RouteDetail = {
   id: string;
   name: string;
@@ -98,7 +96,6 @@ export type RouteDetail = {
   userId: string | null;
   who: string;
   handle: string | null;
-  post: LinkedPost | null;
   /** Start and end are hidden from everyone but the owner. */
   hideEnds: boolean;
   lat: number | null;
@@ -137,7 +134,6 @@ export async function loadRoute(id: string, viewerId: string | null): Promise<Ro
     userId: text(row.user_id),
     who: text(row.who) ?? 'Friend',
     handle: text(row.handle),
-    post: null,
     hideEnds: row.hide_ends === true,
     lat: num(row.lat),
     lng: num(row.lng),
@@ -151,7 +147,6 @@ export type PhotoDetail = {
   userId: string | null;
   who: string;
   handle: string | null;
-  post: LinkedPost | null;
   pinId: string | null;
   pinTitle: string | null;
   /** Eastern date the photo was taken, when the camera recorded it. */
@@ -216,7 +211,6 @@ export async function loadPhoto(id: string, viewerId: string | null): Promise<Ph
     userId: text(row.user_id),
     who: text(row.who) ?? 'Friend',
     handle: text(row.handle),
-    post: null,
     pinId: text(row.pin_id),
     pinTitle: text(row.pin_title),
     takenOn: text(row.taken_on),

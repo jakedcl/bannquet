@@ -4,7 +4,6 @@ import { notFound } from 'next/navigation';
 import PageWrapper from '@/components/ui/PageWrapper';
 import { MapCanvas } from '@/components/map/MapCanvas';
 import { DeletePinButton, PinForm } from '@/components/pins/PinForm';
-import { SeeMore } from '@/components/library/AttachReport';
 import { AddToTrip } from '@/components/library/AddToTrip';
 import { Badge } from '@/components/retro/Badge';
 import { Button } from '@/components/retro/Button';
@@ -65,9 +64,6 @@ export default async function PinPage({
             {' · '}
             {pin.handle ? <Link href={`/user/${pin.handle}`} className="underline">{pin.who}</Link> : pin.who}
           </p>
-          <div className="mt-3">
-            <SeeMore post={pin.post} />
-          </div>
           {pin.note ? <p className="mt-4 whitespace-pre-wrap text-sm">{pin.note}</p> : null}
           {pin.photos.length > 0 ? (
             <div className="mt-4 grid grid-cols-3 gap-2">

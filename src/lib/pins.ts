@@ -36,7 +36,6 @@ export type PinDetail = {
   createdBy: string | null;
   who: string;
   handle: string | null;
-  post: { id: string; title: string } | null;
   photos: PinPhoto[];
 };
 
@@ -145,7 +144,6 @@ export async function loadPin(id: string): Promise<PinDetail | null> {
     createdBy: text(row.created_by),
     who: text(row.who) ?? 'Friend',
     handle: text(row.handle),
-    post: null,
     photos: asRows(photoResult).flatMap((photo) => {
       const photoId = text(photo.id);
       const url = text(photo.url);

@@ -3,7 +3,6 @@ import { notFound } from 'next/navigation';
 import PageWrapper from '@/components/ui/PageWrapper';
 import { MapCanvas } from '@/components/map/MapCanvas';
 import { ConfirmDelete } from '@/components/delete/ConfirmDelete';
-import { SeeMore } from '@/components/library/AttachReport';
 import { AddToTrip } from '@/components/library/AddToTrip';
 import { Window } from '@/components/retro/Window';
 import { PhotoTags } from '@/components/photos/PhotoTags';
@@ -91,9 +90,6 @@ export default async function PhotoPage({
             className="h-auto w-full bg-white object-contain retro-box"
           />
           <PhotoTags photo={photo} />
-          <div className="mt-3">
-            <SeeMore post={photo.post} />
-          </div>
           {manage ? (
             <EditDetails>
               <EditForm

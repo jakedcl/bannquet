@@ -4,7 +4,6 @@ import PageWrapper from '@/components/ui/PageWrapper';
 import { MapCanvas } from '@/components/map/MapCanvas';
 import { ConfirmDelete } from '@/components/delete/ConfirmDelete';
 import { RouteTitleForm } from '@/components/routes/RouteTitleForm';
-import { SeeMore } from '@/components/library/AttachReport';
 import { AddToTrip } from '@/components/library/AddToTrip';
 import { Window } from '@/components/retro/Window';
 import { deleteRouteAction } from '@/app/library/actions';
@@ -109,9 +108,6 @@ export default async function RoutePage({
             {route.handle ? <Link href={`/user/${route.handle}`} className="underline">{route.who}</Link> : route.who}
           </p>
           {route.notes ? <div className="mt-3"><LinkedText text={route.notes} /></div> : null}
-          <div className="mt-3">
-            <SeeMore post={route.post} />
-          </div>
           {manage ? (
             <RouteTitleForm
               key={`${route.title ?? ''}\n${route.notes ?? ''}\n${route.hideEnds}`}
