@@ -11,6 +11,10 @@ function asRows(result: unknown): Record<string, unknown>[] {
   return (result as QueryRows).rows ?? [];
 }
 
+/**
+ * Copies config/challenges/*.json into the `peaks` table. That table only exists
+ * so `summits.peak_slug` has a foreign key; the JSON stays the source of truth.
+ */
 export async function ensurePeaks(): Promise<void> {
   const peaks = allPeaks();
   if (peaks.length === 0) return;

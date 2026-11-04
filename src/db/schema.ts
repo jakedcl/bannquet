@@ -288,6 +288,10 @@ export const communityGearHolds = pgTable(
   (table) => [primaryKey({ columns: [table.gearId, table.userId] })],
 );
 
+/**
+ * Mirror of the peak lists in config/challenges/*.json, kept only so `summits`
+ * has a foreign key. The JSON is the source of truth; ensurePeaks() copies it in.
+ */
 export const peaks = pgTable(
   'peaks',
   {
