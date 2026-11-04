@@ -8,6 +8,7 @@ import { getViewer } from '@/app/sign-in/actions';
 import { listInvites, listMembers } from '@/lib/auth/members';
 import { inviteState } from '@/lib/membership';
 import { signInPath } from '@/lib/sign-in-next';
+import { HubPage } from '@/components/hub/Page';
 
 export const dynamic = 'force-dynamic';
 
@@ -31,7 +32,7 @@ export default async function AdminPage() {
 
   return (
     <PageWrapper>
-      <div className="mx-auto max-w-3xl space-y-6 px-4 py-10">
+      <HubPage title="Admin" width="3xl">
         <Card title="Invites">
           <InviteForm />
         </Card>
@@ -80,7 +81,7 @@ export default async function AdminPage() {
             />
           )}
         </Card>
-      </div>
+      </HubPage>
     </PageWrapper>
   );
 }
