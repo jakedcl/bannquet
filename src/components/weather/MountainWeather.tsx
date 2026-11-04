@@ -2,7 +2,6 @@
 
 import { useEffect } from 'react';
 import WeatherDashboard from '@/components/WeatherDashboard';
-import WeatherTicker from '@/components/ui/WeatherTicker';
 import { useRegion } from '@/contexts/RegionContext';
 import { DEFAULT_REGION, REGION_LABELS, REGION_WEATHER_SECTIONS, isRegionCode, type WeatherSection } from '@/lib/regions';
 
@@ -32,8 +31,7 @@ export function MountainWeather({ state }: { state?: string }) {
 
   return (
     <div className="container mx-auto min-w-0 space-y-8 px-4 py-10">
-      <header className="space-y-4">
-        <WeatherTicker placement="page" />
+      <header>
         <h1 className="text-sm font-bold uppercase">
           {stateName} Mountain Weather
         </h1>
