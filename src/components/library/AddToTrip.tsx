@@ -38,7 +38,7 @@ export function AddToTrip({
           >
             <div className="mb-3 flex items-start justify-between gap-3">
               <p className="text-sm font-bold uppercase">Trips</p>
-              <Link href="/upload?kind=trip" className="shrink-0 text-xs font-bold uppercase underline">+ New trip</Link>
+              <Link href="/upload?kind=trip" className="inline-flex min-h-11 shrink-0 items-center text-sm font-bold uppercase underline">+ New trip</Link>
             </div>
             {trips.length === 0 ? <p className="text-sm">No trips yet.</p> : (
               <ul className="max-h-64 space-y-1 overflow-y-auto">
@@ -69,7 +69,7 @@ export function AddToTrip({
             )}
             {attachState?.error ? <p className="mt-2 text-sm font-bold text-red-700">{attachState.error}</p> : null}
             {detachState?.error ? <p className="mt-2 text-sm font-bold text-red-700">{detachState.error}</p> : null}
-            <button type="button" className="mt-3 text-xs uppercase underline" onClick={() => setOpen(false)}>Close</button>
+            <button type="button" className="mt-3 min-h-11 text-sm font-bold uppercase underline" onClick={() => setOpen(false)}>Close</button>
           </div>
         </div>
       ) : null}

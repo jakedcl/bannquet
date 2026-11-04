@@ -197,7 +197,7 @@ export function NewTripForm({
       >
         <div className="mb-3 flex items-center justify-between gap-3">
           <p className="text-sm font-bold uppercase">{createKind ? CREATE_LABEL[createKind] : 'New'}</p>
-          <button type="button" aria-label="Close" className="text-lg font-bold leading-none" onClick={() => createRef.current?.close()}>
+          <button type="button" aria-label="Close" className="flex h-11 w-11 items-center justify-center text-xl font-bold leading-none" onClick={() => createRef.current?.close()}>
             ×
           </button>
         </div>

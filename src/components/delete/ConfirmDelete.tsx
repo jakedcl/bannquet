@@ -57,7 +57,7 @@ export function TrashButton({
       value={value}
       disabled={pending}
       onClick={onClick}
-      className="h-7 w-7 text-base"
+      className="text-lg"
     >
       <TrashIcon />
     </SubmitButton>

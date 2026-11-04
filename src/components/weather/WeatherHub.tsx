@@ -46,7 +46,7 @@ export function WeatherHub({ states }: { states: StateGlance[] }) {
           key={state.code}
           title={state.name}
           titleHref={state.href}
-          action={<Link href={state.href} className="text-xs text-[#ffd700] no-underline">Forecasts ›</Link>}
+          action={<Link href={state.href} className="-my-2 inline-flex min-h-11 items-center text-sm text-[#ffd700] no-underline">Forecasts ›</Link>}
           padded={false}
         >
           {state.regions.length === 0 ? (

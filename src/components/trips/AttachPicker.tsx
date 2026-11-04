@@ -48,7 +48,7 @@ export const AttachPicker = forwardRef<AttachPickerHandle, {
     >
       <div className="mb-3 flex items-center justify-between gap-3">
         <p className="text-sm font-bold uppercase">Attach</p>
-        <button type="button" aria-label="Close" className="text-lg font-bold leading-none" onClick={() => dialogRef.current?.close()}>
+        <button type="button" aria-label="Close" className="flex h-11 w-11 items-center justify-center text-xl font-bold leading-none" onClick={() => dialogRef.current?.close()}>
           ×
         </button>
       </div>
@@ -83,7 +83,7 @@ export const AttachPicker = forwardRef<AttachPickerHandle, {
                   <li key={`${item.kind}-${item.id}`}>
                     <button
                       type="button"
-                      className="flex w-full items-center gap-2 py-1 text-left text-sm"
+                      className="flex min-h-11 w-full items-center gap-2 py-1 text-left text-sm"
                       onClick={() => {
                         onPick(item);
                         dialogRef.current?.close();

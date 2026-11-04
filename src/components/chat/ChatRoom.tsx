@@ -141,7 +141,7 @@ export function ChatRoom({
       {notice ? (
         <p className="text-sm font-bold">
           {notice}{' '}
-          {failed ? <button type="button" className="underline" onClick={() => router.refresh()}>Try again</button> : null}
+          {failed ? <button type="button" className="min-h-11 underline" onClick={() => router.refresh()}>Try again</button> : null}
         </p>
       ) : null}
       <form ref={formRef} action={action} className="space-y-2">
@@ -202,7 +202,7 @@ export function ChatRoom({
       >
         <div className="mb-3 flex items-center justify-between gap-3">
           <p className="text-sm font-bold uppercase">Attach</p>
-          <button type="button" aria-label="Close" className="text-lg font-bold leading-none" onClick={() => dialogRef.current?.close()}>
+          <button type="button" aria-label="Close" className="flex h-11 w-11 items-center justify-center text-xl font-bold leading-none" onClick={() => dialogRef.current?.close()}>
             ×
           </button>
         </div>
