@@ -1,13 +1,13 @@
 import PageWrapper from '@/components/ui/PageWrapper';
-import { Window } from '@/components/retro/Window';
+import { Card } from '@/components/hub/Card';
 
 export default function PeaksLoading() {
   return (
     <PageWrapper>
       <div className="mx-auto max-w-5xl px-4 py-10">
-        <Window title="Peaks">
+        <Card title="Peaks">
           <p className="text-sm">Loading the peaks.</p>
-        </Window>
+        </Card>
       </div>
     </PageWrapper>
   );

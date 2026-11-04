@@ -9,6 +9,7 @@ import { SubmitButton } from '@/components/ui/SubmitButton';
 import { AttachPicker, type AttachPickerHandle } from '@/components/trips/AttachPicker';
 import type { ChatCatalogItem } from '@/lib/chat-view';
 import type { DraftItem } from '@/lib/trip-draft';
+import { smallButtonClass } from '@/components/hub/Button';
 
 const CREATE_LABEL = { pin: 'New pin', route: 'New route', photo: 'New photo' } as const;
 
@@ -155,16 +156,16 @@ export function NewTripForm({
             </ul>
           )}
           <div className="flex flex-wrap gap-2">
-            <button type="button" className="retro-button rounded-none px-3 py-1 text-xs font-bold uppercase" onClick={() => pickerRef.current?.open()}>
+            <button type="button" className={smallButtonClass} onClick={() => pickerRef.current?.open()}>
               Attach existing
             </button>
-            <button type="button" className="retro-button rounded-none px-3 py-1 text-xs font-bold uppercase" onClick={() => openCreate('pin')}>
+            <button type="button" className={smallButtonClass} onClick={() => openCreate('pin')}>
               + New pin
             </button>
-            <button type="button" className="retro-button rounded-none px-3 py-1 text-xs font-bold uppercase" onClick={() => openCreate('route')}>
+            <button type="button" className={smallButtonClass} onClick={() => openCreate('route')}>
               + New route
             </button>
-            <button type="button" className="retro-button rounded-none px-3 py-1 text-xs font-bold uppercase" onClick={() => openCreate('photo')}>
+            <button type="button" className={smallButtonClass} onClick={() => openCreate('photo')}>
               + New photo
             </button>
           </div>

@@ -4,7 +4,7 @@ import PageWrapper from '@/components/ui/PageWrapper';
 import { MapCanvas } from '@/components/map/MapCanvas';
 import { ConfirmDelete } from '@/components/delete/ConfirmDelete';
 import { AddToTrip } from '@/components/library/AddToTrip';
-import { Window } from '@/components/retro/Window';
+import { Card } from '@/components/hub/Card';
 import { PhotoTags } from '@/components/photos/PhotoTags';
 import { deletePhotoAction, updatePhotoCaptionAction } from '@/app/library/actions';
 import { EditDetails, EditForm } from '@/components/edit/EditForm';
@@ -34,9 +34,9 @@ export default async function PhotoPage({
     return (
       <PageWrapper>
         <div className="mx-auto max-w-3xl px-4 py-10">
-          <Window title="Photo">
+          <Card title="Photo">
             <p className="text-sm font-bold">Postgres is not connected, so this photo cannot be loaded.</p>
-          </Window>
+          </Card>
         </div>
       </PageWrapper>
     );
@@ -54,9 +54,9 @@ export default async function PhotoPage({
     return (
       <PageWrapper>
         <div className="mx-auto max-w-3xl px-4 py-10">
-          <Window title="Photo">
+          <Card title="Photo">
             <p className="text-sm font-bold">{error}</p>
-          </Window>
+          </Card>
         </div>
       </PageWrapper>
     );
@@ -79,7 +79,7 @@ export default async function PhotoPage({
   return (
     <PageWrapper leaf={photo.caption || 'Photo'}>
       <div className="mx-auto max-w-3xl space-y-4 px-4 py-10">
-        <Window title={photo.caption || 'Photo'}>
+        <Card title={photo.caption || 'Photo'}>
           <Image
             src={photo.url}
             alt={photo.caption || ''}
@@ -100,14 +100,14 @@ export default async function PhotoPage({
               />
             </EditDetails>
           ) : null}
-        </Window>
+        </Card>
         {map && photo.lat != null && photo.lng != null ? (
           <div className="h-80 min-h-[420px] overflow-hidden bg-white retro-box">
             <MapCanvas points={map.points} lines={map.lines} focus={{ lng: photo.lng, lat: photo.lat, zoom: 12 }} />
           </div>
         ) : null}
         {manage && viewer ? (
-          <Window title="This photo">
+          <Card title="This photo">
             <div>
               <ConfirmDelete
                 action={deletePhotoAction}
@@ -115,7 +115,7 @@ export default async function PhotoPage({
                 fields={{ id: photo.id, returnTo: viewer.handle ? `/user/${viewer.handle}` : '/' }}
               />
             </div>
-          </Window>
+          </Card>
         ) : null}
         {manage ? (
           <AddToTrip

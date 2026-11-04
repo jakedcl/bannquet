@@ -2,7 +2,7 @@ import { redirect } from 'next/navigation';
 import PageWrapper from '@/components/ui/PageWrapper';
 import { PinForm } from '@/components/pins/PinForm';
 import { PhotoUpload, RouteUpload } from '@/components/posts/ProfileAdds';
-import { Window } from '@/components/retro/Window';
+import { Card } from '@/components/hub/Card';
 import { SectionList } from '@/components/ui/SectionList';
 import { NewTripForm } from '@/components/trips/NewTripForm';
 import { getViewer } from '@/app/sign-in/actions';
@@ -56,9 +56,9 @@ export default async function UploadPage({
     return (
       <PageWrapper>
         <div className="mx-auto max-w-2xl px-4 py-10">
-          <Window title="Upload">
+          <Card title="Upload">
             <p className="text-sm font-bold">{APPROVAL_WAIT}</p>
-          </Window>
+          </Card>
         </div>
       </PageWrapper>
     );
@@ -68,29 +68,29 @@ export default async function UploadPage({
     <PageWrapper>
       <div className="mx-auto max-w-2xl space-y-4 px-4 py-10">
         {kind ? null : (
-          <Window title="Upload">
+          <Card title="Upload">
             <SectionList links={UPLOAD_LINKS} label="Upload" />
-          </Window>
+          </Card>
         )}
         {kind === 'trip' ? (
-          <Window title="New trip">
+          <Card title="New trip">
             <NewTripForm viewerId={viewer.id} catalog={catalog} preset={preset} />
-          </Window>
+          </Card>
         ) : null}
         {kind === 'route' ? (
-          <Window title="Route (GPX)">
+          <Card title="Route (GPX)">
             <RouteUpload />
-          </Window>
+          </Card>
         ) : null}
         {kind === 'pin' ? (
-          <Window title="Pin">
+          <Card title="Pin">
             <PinForm />
-          </Window>
+          </Card>
         ) : null}
         {kind === 'photo' ? (
-          <Window title="Photo">
+          <Card title="Photo">
             <PhotoUpload />
-          </Window>
+          </Card>
         ) : null}
       </div>
     </PageWrapper>

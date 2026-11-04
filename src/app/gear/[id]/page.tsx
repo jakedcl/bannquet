@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import PageWrapper from '@/components/ui/PageWrapper';
 import { CountControl } from '@/components/ui/CountControl';
-import { Window } from '@/components/retro/Window';
+import { Card } from '@/components/hub/Card';
 import { changeHoldAction, updateGearItemAction } from '@/app/gear/actions';
 import { EditDetails, EditForm } from '@/components/edit/EditForm';
 import { getViewer } from '@/app/sign-in/actions';
@@ -30,9 +30,9 @@ export default async function GearItemPage({ params }: { params: Promise<{ id: s
     return (
       <PageWrapper>
         <div className="mx-auto max-w-3xl px-4 py-10">
-          <Window title="Gear">
+          <Card title="Gear">
             <p className="text-sm font-bold">{error}</p>
-          </Window>
+          </Card>
         </div>
       </PageWrapper>
     );
@@ -47,7 +47,7 @@ export default async function GearItemPage({ params }: { params: Promise<{ id: s
   return (
     <PageWrapper leaf={item.name}>
       <div className="mx-auto max-w-3xl px-4 py-10">
-        <Window title={item.name}>
+        <Card title={item.name}>
           <p className="text-sm text-gray-700">
             <Link href="/gear" className="underline">Gear</Link>
             {' · '}
@@ -94,7 +94,7 @@ export default async function GearItemPage({ params }: { params: Promise<{ id: s
               ))}
             </ul>
           )}
-        </Window>
+        </Card>
       </div>
     </PageWrapper>
   );

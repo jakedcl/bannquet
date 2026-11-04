@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { Window } from '@/components/retro/Window';
+import { Card } from '@/components/hub/Card';
 import { FishingRows } from '@/components/fishing/FishingRows';
 import { ShoreMapFrame } from '@/components/fishing/ShoreMapFrame';
 import PageWrapper from '@/components/ui/PageWrapper';
@@ -19,7 +19,7 @@ export default async function ShoreSpotPage({ params }: { params: Promise<{ slug
   return (
     <PageWrapper leaf={spot.name}>
       <div className="mx-auto max-w-3xl space-y-4 px-4 py-6 md:py-10">
-        <Window title={spot.name}>
+        <Card title={spot.name}>
           <p className="text-sm">{spot.access}</p>
           <p className="mt-2 text-sm">
             Tide station{' '}
@@ -30,8 +30,8 @@ export default async function ShoreSpotPage({ params }: { params: Promise<{ slug
           <div className="retro-box-inset mt-4 bg-white">
             <ShoreMapFrame lat={spot.lat} lon={spot.lon} name={spot.name} />
           </div>
-        </Window>
-        <Window title="Eat safe">
+        </Card>
+        <Card title="Eat safe">
           <p className="mb-3 text-sm">{water?.name}</p>
           <FishingRows
             rows={advice.map((row) => ({
@@ -50,7 +50,7 @@ export default async function ShoreSpotPage({ params }: { params: Promise<{ slug
               Last checked {ADVISORIES_CHECKED}
             </a>
           </p>
-        </Window>
+        </Card>
       </div>
     </PageWrapper>
   );

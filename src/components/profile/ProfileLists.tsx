@@ -14,6 +14,7 @@ import { PIN_KIND_LABELS, isPinKind } from '@/lib/pin-kinds';
 import { formatFeetGain, formatMiles } from '@/lib/gpx';
 import { PROFILE_PREVIEW } from '@/lib/list-page';
 import { formatTripDate } from '@/lib/utils';
+import { chipClass } from '@/components/hub/Button';
 
 export function SeeAll({ href, total }: { href: string; total: number }) {
   if (total <= PROFILE_PREVIEW) return null;
@@ -30,11 +31,11 @@ export function Pager({ page, pages, path }: { page: number; pages: number; path
   return (
     <p className="mt-4 flex flex-wrap items-center gap-3 text-sm">
       {page > 1 ? (
-        <Link href={href(page - 1)} className="retro-button-yellow rounded-none px-3 py-1 text-xs font-bold uppercase">Previous</Link>
+        <Link href={href(page - 1)} className={chipClass(true)}>Previous</Link>
       ) : null}
       <span>Page {page} of {pages}</span>
       {page < pages ? (
-        <Link href={href(page + 1)} className="retro-button-yellow rounded-none px-3 py-1 text-xs font-bold uppercase">Next</Link>
+        <Link href={href(page + 1)} className={chipClass(true)}>Next</Link>
       ) : null}
     </p>
   );

@@ -6,7 +6,7 @@ import { approveMember, denyMember } from '@/app/sign-in/actions';
 import { SubmitButton } from '@/components/ui/SubmitButton';
 import { BrowseTable } from '@/components/ui/BrowseTable';
 import type { DataColumn } from '@/components/ui/DataTable';
-import { Window } from '@/components/retro/Window';
+import { Card } from '@/components/hub/Card';
 
 export type PendingMember = {
   id: string;
@@ -20,7 +20,7 @@ export function PendingQueue({ members }: { members: PendingMember[] }) {
   const waiting = members.filter((member) => !removed.includes(member.id));
 
   return (
-    <Window title={waiting.length > 0 ? `Waiting (${waiting.length})` : 'Waiting'}>
+    <Card title={waiting.length > 0 ? `Waiting (${waiting.length})` : 'Waiting'}>
       {waiting.length === 0 ? (
         <p className="text-sm">Nobody is waiting for approval.</p>
       ) : (
@@ -29,7 +29,7 @@ export function PendingQueue({ members }: { members: PendingMember[] }) {
           onDone={(id) => setRemoved((ids) => (ids.includes(id) ? ids : [...ids, id]))}
         />
       )}
-    </Window>
+    </Card>
   );
 }
 

@@ -11,6 +11,12 @@
   --color-accent-yellow: #ffd700;
   --color-accent-orange: #ff8c00;
 
+  /* Readable floor: small text 13px, body 16px on phones. */
+  --text-xs: 0.8125rem;
+  --text-xs--line-height: 1.35;
+  --text-sm: 1rem;
+  --text-sm--line-height: 1.45;
+
   --font-sans: Verdana, "Trebuchet MS", Arial, Helvetica, sans-serif;
   --font-heading: "Trebuchet MS", Verdana, Arial, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
@@ -1043,4 +1049,11 @@ dialog[open]::backdrop {
   box-shadow:
     inset 0 0 0 3px #ffd700,
     4px 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Desktop has room for slightly tighter body copy. */
+@media (min-width: 768px) {
+  :root {
+    --text-sm: 0.9375rem;
+  }
 }

@@ -1,6 +1,6 @@
 import { SaltwaterConditions } from '@/components/fishing/SaltwaterConditions';
 import { FishingRows } from '@/components/fishing/FishingRows';
-import { Window } from '@/components/retro/Window';
+import { Card } from '@/components/hub/Card';
 import PageWrapper from '@/components/ui/PageWrapper';
 import { ADVISORIES, ADVISORIES_CHECKED, ADVISORIES_SOURCE, waterBody } from '@/lib/fishing/advisories';
 import { addCalendarDays, easternDate } from '@/lib/fishing/clock';
@@ -65,7 +65,7 @@ export default async function SaltwaterPage({
           sky={skyFor(station.lat, station.lon, now)}
           now={now}
         />
-        <Window title="In season now">
+        <Card title="In season now">
           <div id="in-season">
             <FishingRows
               rows={regulationsToday(now).map((row) => ({
@@ -84,8 +84,8 @@ export default async function SaltwaterPage({
               </a>
             </p>
           </div>
-        </Window>
-        <Window title="Eat safe">
+        </Card>
+        <Card title="Eat safe">
           <FishingRows
             rows={ADVISORIES.map((row) => ({
               id: row.id,
@@ -102,8 +102,8 @@ export default async function SaltwaterPage({
               Last checked {ADVISORIES_CHECKED}
             </a>
           </p>
-        </Window>
-        <Window title="Staten Island shore">
+        </Card>
+        <Card title="Staten Island shore">
           <FishingRows
             rows={SHORE_SPOTS.map((spot) => ({
               id: spot.slug,
@@ -115,7 +115,7 @@ export default async function SaltwaterPage({
             headers={{ name: 'Spot', detail: 'Tide station', extra: 'Access' }}
             empty="No shore spots listed."
           />
-        </Window>
+        </Card>
       </div>
     </PageWrapper>
   );

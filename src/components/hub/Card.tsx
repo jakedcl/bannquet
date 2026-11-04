@@ -13,6 +13,7 @@ export function Card({
   className = '',
   bodyClassName = '',
   padded = true,
+  tight = false,
   children,
   ...rest
 }: {
@@ -23,6 +24,8 @@ export function Card({
   className?: string;
   bodyClassName?: string;
   padded?: boolean;
+  /** Smaller padding, for tables and dense lists. */
+  tight?: boolean;
   children: ReactNode;
   id?: string;
   'aria-label'?: string;
@@ -38,7 +41,7 @@ export function Card({
           {action ? <span className="shrink-0">{action}</span> : null}
         </header>
       ) : null}
-      <div className={`min-w-0 ${padded ? 'p-3 sm:p-4' : ''} ${bodyClassName}`}>{children}</div>
+      <div className={`min-w-0 ${padded ? (tight ? 'p-2 sm:p-3' : 'p-3 sm:p-4') : ''} ${bodyClassName}`}>{children}</div>
     </Tag>
   );
 }

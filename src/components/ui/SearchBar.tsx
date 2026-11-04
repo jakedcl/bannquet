@@ -40,7 +40,7 @@ export function SearchBar({
       <button
         type="submit"
         aria-label="Search"
-        className="retro-button-yellow inline-flex items-center justify-center rounded-none px-3 max-md:!px-2 max-md:!py-1"
+        className="retro-button-yellow inline-flex min-h-11 min-w-11 items-center justify-center rounded-none px-3"
       >
         <SearchIcon />
       </button>

@@ -5,7 +5,7 @@ import { MapCanvas } from '@/components/map/MapCanvas';
 import { ConfirmDelete } from '@/components/delete/ConfirmDelete';
 import { RouteTitleForm } from '@/components/routes/RouteTitleForm';
 import { AddToTrip } from '@/components/library/AddToTrip';
-import { Window } from '@/components/retro/Window';
+import { Card } from '@/components/hub/Card';
 import { deleteRouteAction } from '@/app/library/actions';
 import { getViewer } from '@/app/sign-in/actions';
 import { isDatabaseConfigured } from '@/db';
@@ -38,9 +38,9 @@ export default async function RoutePage({
     return (
       <PageWrapper>
         <div className="mx-auto max-w-3xl px-4 py-10">
-          <Window title="Route">
+          <Card title="Route">
             <p className="text-sm font-bold">Postgres is not connected, so this route cannot be loaded.</p>
-          </Window>
+          </Card>
         </div>
       </PageWrapper>
     );
@@ -58,9 +58,9 @@ export default async function RoutePage({
     return (
       <PageWrapper>
         <div className="mx-auto max-w-3xl px-4 py-10">
-          <Window title="Route">
+          <Card title="Route">
             <p className="text-sm font-bold">{error}</p>
-          </Window>
+          </Card>
         </div>
       </PageWrapper>
     );
@@ -83,7 +83,7 @@ export default async function RoutePage({
   return (
     <PageWrapper leaf={route.name}>
       <div className="mx-auto max-w-3xl space-y-4 px-4 py-10">
-        <Window
+        <Card
           title={route.name}
           action={manage && viewer ? (
             <ConfirmDelete
@@ -117,7 +117,7 @@ export default async function RoutePage({
               hideEnds={route.hideEnds}
             />
           ) : null}
-        </Window>
+        </Card>
         {map && route.lat != null && route.lng != null ? (
           <div className="h-80 min-h-[420px] overflow-hidden bg-white retro-box">
             <MapCanvas points={map.points} lines={map.lines} focus={{ lng: route.lng, lat: route.lat, zoom: 12 }} />

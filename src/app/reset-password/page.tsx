@@ -1,6 +1,6 @@
 import PageWrapper from '@/components/ui/PageWrapper';
 import { ResetPasswordForm } from '@/components/auth/ResetPasswordForm';
-import { Window } from '@/components/retro/Window';
+import { Card } from '@/components/hub/Card';
 
 export const dynamic = 'force-dynamic';
 
@@ -16,14 +16,14 @@ export default async function ResetPasswordPage({
   return (
     <PageWrapper>
       <div className="mx-auto max-w-lg px-4 py-10">
-        <Window title="New password">
+        <Card title="New password">
           {invalid ? (
             <p className="mb-4 text-sm font-bold text-red-700">
               That reset link is used or expired. Ask Jake for a new one.
             </p>
           ) : null}
           <ResetPasswordForm token={invalid ? '' : token} />
-        </Window>
+        </Card>
       </div>
     </PageWrapper>
   );

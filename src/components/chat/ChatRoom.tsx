@@ -8,6 +8,7 @@ import { deleteChatAction, sendChatAction } from '@/app/chat/actions';
 import { SearchBar } from '@/components/ui/SearchBar';
 import { SubmitButton } from '@/components/ui/SubmitButton';
 import { formatChatTime, type ChatCatalogItem, type ChatMessage, type ChatRefKind } from '@/lib/chat-view';
+import { chipClass } from '@/components/hub/Button';
 
 const GROUPS: Array<{ id: ChatRefKind; label: string }> = [
   { id: 'pin', label: 'Pins' },
@@ -170,7 +171,7 @@ export function ChatRoom({
             aria-label="Attach a pin, route, or photo"
             disabled={!canSend}
             onClick={openPicker}
-            className="composer-control retro-button-blue w-10 shrink-0 rounded-none p-0 text-lg leading-none"
+            className="composer-control retro-button-blue min-h-11 w-11 shrink-0 rounded-none p-0 text-lg leading-none"
           >
             @
           </button>
@@ -208,14 +209,14 @@ export function ChatRoom({
         <div className="mb-3 flex gap-2">
           <button
             type="button"
-            className={`${tab === 'mine' ? 'retro-button-yellow' : 'retro-button'} rounded-none px-3 py-1 text-xs font-bold uppercase`}
+            className={`${chipClass(tab === 'mine')}`}
             onClick={() => setTab('mine')}
           >
             Mine
           </button>
           <button
             type="button"
-            className={`${tab === 'everyone' ? 'retro-button-yellow' : 'retro-button'} rounded-none px-3 py-1 text-xs font-bold uppercase`}
+            className={`${chipClass(tab === 'everyone')}`}
             onClick={() => setTab('everyone')}
           >
             Everyone
@@ -337,7 +338,7 @@ function ChatLine({
         ) : (
           <span className="font-bold">{message.name}</span>
         )}
-        <span className="ml-2 text-xs text-gray-500">{formatChatTime(message.createdAt)}</span>
+        <span className="ml-2 text-xs text-gray-700">{formatChatTime(message.createdAt)}</span>
       </p>
       {message.body ? <p className="mt-1 whitespace-pre-wrap">{message.body}</p> : null}
       {message.ref ? <Chip refItem={message.ref} /> : null}
@@ -395,7 +396,7 @@ function Chip({
   };
 }) {
   if (refItem.missing) {
-    return <span className="mt-1 inline-block text-xs text-gray-500">That {refItem.kind} is gone.</span>;
+    return <span className="mt-1 inline-block text-xs text-gray-700">That {refItem.kind} is gone.</span>;
   }
   const photo = draftPhotoSources(refItem);
   return (

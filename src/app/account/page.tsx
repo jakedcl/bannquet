@@ -2,7 +2,7 @@ import { redirect } from 'next/navigation';
 import PageWrapper from '@/components/ui/PageWrapper';
 import { ProfileForm } from '@/components/auth/ProfileForm';
 import { SubmitButton } from '@/components/ui/SubmitButton';
-import { Window } from '@/components/retro/Window';
+import { Card } from '@/components/hub/Card';
 import { getViewer, signOutAction } from '@/app/sign-in/actions';
 import { APPROVAL_WAIT, canContribute } from '@/lib/membership';
 import { signInPath } from '@/lib/sign-in-next';
@@ -22,13 +22,13 @@ export default async function AccountPage({
     <PageWrapper>
       <div className="mx-auto max-w-lg space-y-4 px-4 py-10">
         <div id="edit-profile">
-          <Window title="Account">
+          <Card title="Account">
             {!canContribute(viewer.role) ? (
               <p className="text-sm font-bold">{APPROVAL_WAIT}</p>
             ) : (
               <ProfileForm member={viewer} />
             )}
-          </Window>
+          </Card>
         </div>
         <form action={signOutAction}>
           <SubmitButton pendingLabel="Signing out…">Sign out</SubmitButton>

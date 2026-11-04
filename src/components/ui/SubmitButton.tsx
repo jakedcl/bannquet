@@ -2,7 +2,7 @@
 
 import type { MouseEvent, ReactNode } from 'react';
 import { useFormStatus } from 'react-dom';
-import { BUTTON_TONE_CLASS, type ButtonTone } from '@/components/retro/Button';
+import { BUTTON_SIZE, BUTTON_TONE_CLASS, type ButtonTone } from '@/components/hub/Button';
 
 export function SubmitButton({
   children,
@@ -39,8 +39,8 @@ export function SubmitButton({
   const look = unstyled
     ? `inline-flex items-center justify-center gap-2 disabled:opacity-60 ${className}`
     : icon
-      ? `retro-button-yellow inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-none p-0 text-lg font-bold disabled:opacity-60 ${className}`
-      : `${BUTTON_TONE_CLASS[tone]} inline-flex items-center justify-center gap-2 rounded-none px-4 py-2 text-sm font-bold uppercase tracking-wide disabled:opacity-60 ${className}`;
+      ? `retro-button-yellow inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-none p-0 text-lg font-bold disabled:opacity-60 ${className}`
+      : `${BUTTON_TONE_CLASS[tone]} ${BUTTON_SIZE} ${className}`;
 
   return (
     <button

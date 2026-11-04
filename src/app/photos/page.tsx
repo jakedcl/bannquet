@@ -1,6 +1,6 @@
 import PageWrapper from '@/components/ui/PageWrapper';
-import { Button } from '@/components/retro/Button';
-import { Window } from '@/components/retro/Window';
+import { Button } from '@/components/hub/Button';
+import { Card } from '@/components/hub/Card';
 import { PhotoGrid } from '@/components/profile/ProfileLists';
 import { PhotoMemberFilter } from '@/components/photos/PhotoMemberFilter';
 import { getViewer } from '@/app/sign-in/actions';
@@ -45,7 +45,7 @@ export default async function PhotosPage({
   return (
     <PageWrapper>
       <div className="mx-auto max-w-5xl space-y-4 px-4 py-10">
-        <Window title="Photos" action={canAdd ? <Button href="/upload?kind=photo" tone="yellow">+ Add photos</Button> : null}>
+        <Card title="Photos" action={canAdd ? <Button href="/upload?kind=photo" tone="yellow">+ Add photos</Button> : null}>
           {error ? <p className="text-sm font-bold">{error}</p> : (
             <div className="space-y-4">
               {members.length > 1 ? <PhotoMemberFilter value={who ?? ''} members={members} /> : null}
@@ -60,7 +60,7 @@ export default async function PhotosPage({
               ) : null}
             </div>
           )}
-        </Window>
+        </Card>
       </div>
     </PageWrapper>
   );

@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { GaugeForecast, GaugeSpot } from '@/components/fishing/GaugeSpot';
-import { Window } from '@/components/retro/Window';
+import { Card } from '@/components/hub/Card';
 import PageWrapper from '@/components/ui/PageWrapper';
 import { easternMonthDay, loadDailyMedians } from '@/lib/fishing/daily-stats';
 import { withVerdicts } from '@/lib/fishing/flow-verdict';
@@ -44,18 +44,18 @@ export default async function FishingSpotPage({ params }: { params: Promise<{ si
     <PageWrapper leaf={shown ? plainWaterName(shown.name) : 'Gauge'}>
       <div className="mx-auto max-w-3xl px-4 py-10">
         {unavailable ? (
-          <Window title="Gauge">
+          <Card title="Gauge">
             <p className="text-sm font-bold">Data unavailable</p>
-          </Window>
+          </Card>
         ) : shown ? (
           <GaugeSpot gauge={shown} now={now} forecast={<GaugeForecast gauge={shown} />} />
         ) : (
-          <Window title="Gauge">
+          <Card title="Gauge">
             <p className="text-sm font-bold">That gauge is not in this list.</p>
             <p className="mt-3 text-sm">
               <Link href="/fishing/freshwater" className="font-bold underline">Freshwater</Link>
             </p>
-          </Window>
+          </Card>
         )}
       </div>
     </PageWrapper>

@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { SpotsTable } from '@/components/weather/SpotsTable';
-import { Window } from '@/components/retro/Window';
+import { Card } from '@/components/hub/Card';
 import type { ExtremeReport } from '@/lib/weather-extremes';
 
 export function ConditionsReport({
@@ -14,7 +14,7 @@ export function ConditionsReport({
 
   return (
     <div className="space-y-6">
-      <Window title="Live conditions">
+      <Card title="Live conditions">
         {!report.success || report.stats.length === 0 ? (
           <p className="text-sm font-bold">The live conditions did not load.</p>
         ) : (
@@ -33,11 +33,11 @@ export function ConditionsReport({
             {' '}has the forecast for each region.
           </p>
         ) : null}
-      </Window>
+      </Card>
 
-      <Window title="Spots">
+      <Card title="Spots">
         <SpotsTable spots={spots} />
-      </Window>
+      </Card>
     </div>
   );
 }

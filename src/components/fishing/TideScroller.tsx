@@ -1,6 +1,7 @@
 'use client';
 
 import type { ReactNode } from 'react';
+import { smallButtonClass } from '@/components/hub/Button';
 
 export function TideScroller({
   days,
@@ -17,7 +18,7 @@ export function TideScroller({
             <button
               key={day.id}
               type="button"
-              className="retro-button shrink-0 rounded-none px-2 py-0.5 text-[11px] font-bold uppercase"
+              className={smallButtonClass}
               onClick={() => {
                 document.getElementById(day.id)?.scrollIntoView({ behavior: 'smooth', inline: 'start', block: 'nearest' });
               }}

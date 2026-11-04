@@ -1,5 +1,5 @@
 import PageWrapper from '@/components/ui/PageWrapper';
-import { Window } from '@/components/retro/Window';
+import { Card } from '@/components/hub/Card';
 import { GearAddButton } from '@/components/gear/GearAddForm';
 import { GearTable } from '@/components/gear/GearTable';
 import { getViewer } from '@/app/sign-in/actions';
@@ -27,7 +27,7 @@ export default async function GearPage() {
   return (
     <PageWrapper>
       <div className="mx-auto max-w-3xl space-y-4 px-4 py-10">
-        <Window title="Gear" action={canEdit ? <GearAddButton /> : null}>
+        <Card title="Gear" action={canEdit ? <GearAddButton /> : null}>
           {error ? <p className="mb-3 text-sm font-bold">{error}</p> : null}
           {viewer && !canContribute(viewer.role) ? <p className="mb-3 text-sm font-bold">{APPROVAL_WAIT}</p> : null}
           {error ? null : (
@@ -37,7 +37,7 @@ export default async function GearPage() {
               viewer={viewer ? { id: viewer.id, role: viewer.role } : null}
             />
           )}
-        </Window>
+        </Card>
       </div>
     </PageWrapper>
   );

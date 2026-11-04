@@ -1,6 +1,6 @@
 import PageWrapper from '@/components/ui/PageWrapper';
 import { PeaksTable, type PeakTableRow } from '@/components/peaks/PeaksTable';
-import { Window } from '@/components/retro/Window';
+import { Card } from '@/components/hub/Card';
 import { getViewer } from '@/app/sign-in/actions';
 import { allPeaks } from '@/lib/challenges';
 import { viewerCanContribute } from '@/lib/membership';
@@ -48,10 +48,10 @@ export default async function PeaksPage() {
   return (
     <PageWrapper>
       <div className="mx-auto max-w-5xl space-y-4 px-4 py-10">
-        <Window title="Peaks">
+        <Card title="Peaks">
           {error ? <p className="mb-4 text-sm font-bold">{error}</p> : null}
           <PeaksTable rows={rows} canMark={Boolean(!error && viewerCanContribute(viewer))} />
-        </Window>
+        </Card>
       </div>
     </PageWrapper>
   );

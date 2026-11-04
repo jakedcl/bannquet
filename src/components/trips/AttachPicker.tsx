@@ -4,6 +4,7 @@ import { forwardRef, useImperativeHandle, useRef, useState } from 'react';
 import { draftPhotoSources, SmallPhotoImage } from '@/components/ui/SmallPhotoImage';
 import { SearchBar } from '@/components/ui/SearchBar';
 import type { ChatCatalogItem, ChatRefKind } from '@/lib/chat-view';
+import { chipClass } from '@/components/hub/Button';
 
 const GROUPS: Array<{ id: ChatRefKind; label: string }> = [
   { id: 'pin', label: 'Pins' },
@@ -54,14 +55,14 @@ export const AttachPicker = forwardRef<AttachPickerHandle, {
       <div className="mb-3 flex gap-2">
         <button
           type="button"
-          className={`${tab === 'mine' ? 'retro-button-yellow' : 'retro-button'} rounded-none px-3 py-1 text-xs font-bold uppercase`}
+          className={`${chipClass(tab === 'mine')}`}
           onClick={() => setTab('mine')}
         >
           Mine
         </button>
         <button
           type="button"
-          className={`${tab === 'everyone' ? 'retro-button-yellow' : 'retro-button'} rounded-none px-3 py-1 text-xs font-bold uppercase`}
+          className={`${chipClass(tab === 'everyone')}`}
           onClick={() => setTab('everyone')}
         >
           Everyone

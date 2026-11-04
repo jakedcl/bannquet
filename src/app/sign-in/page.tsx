@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation';
 import PageWrapper from '@/components/ui/PageWrapper';
 import { SignInForm } from '@/components/auth/SignInForm';
-import { Window } from '@/components/retro/Window';
+import { Card } from '@/components/hub/Card';
 import { getViewer } from '@/app/sign-in/actions';
 import { nextStopForMember, profileNeedsNames } from '@/lib/handles';
 import { safeNextPath } from '@/lib/sign-in-next';
@@ -31,10 +31,10 @@ export default async function SignInPage({
   return (
     <PageWrapper>
       <div className="mx-auto max-w-lg px-4 py-10">
-        <Window title="Sign in">
+        <Card title="Sign in">
           {banner ? <p className="mb-4 text-sm font-bold text-red-700">{banner}</p> : null}
           <SignInForm next={next ?? ''} />
-        </Window>
+        </Card>
       </div>
     </PageWrapper>
   );

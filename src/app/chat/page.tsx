@@ -1,6 +1,6 @@
 import PageWrapper from '@/components/ui/PageWrapper';
 import { ChatRoom } from '@/components/chat/ChatRoom';
-import { Window } from '@/components/retro/Window';
+import { Card } from '@/components/hub/Card';
 import { getViewer } from '@/app/sign-in/actions';
 import { listChatCatalog, listChatMessages, type ChatCatalogItem } from '@/lib/chat';
 import { APPROVAL_WAIT, canContribute, viewerCanContribute } from '@/lib/membership';
@@ -33,7 +33,7 @@ export default async function ChatPage() {
   return (
     <PageWrapper>
       <div className="mx-auto max-w-3xl px-4 py-10">
-        <Window title="Chat">
+        <Card title="Chat">
           <ChatRoom
             key={error ? 'failed' : 'ready'}
             failed={Boolean(error && ready)}
@@ -44,7 +44,7 @@ export default async function ChatPage() {
             viewerId={viewer?.id ?? null}
             moderator={viewer?.role === 'admin'}
           />
-        </Window>
+        </Card>
       </div>
     </PageWrapper>
   );

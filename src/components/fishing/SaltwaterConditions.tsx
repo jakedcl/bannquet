@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Window } from '@/components/retro/Window';
+import { Card } from '@/components/hub/Card';
 import { TideChart } from '@/components/fishing/TideChart';
 import { TideTable, type TideRow } from '@/components/fishing/TideTable';
 import { ForecastStrip } from '@/components/ui/ForecastStrip';
@@ -8,6 +8,7 @@ import type { MarineForecast, WaterReading, WindReading } from '@/lib/fishing/ma
 import type { SkyDay } from '@/lib/fishing/sky';
 import { TIDE_STATIONS, type TideStation } from '@/lib/fishing/tide-stations';
 import { nextExtreme, type TideSet } from '@/lib/fishing/tides';
+import { chipClass } from '@/components/hub/Button';
 
 const UNAVAILABLE = 'Data unavailable';
 
@@ -46,7 +47,7 @@ export function SaltwaterConditions({
   const next = tides ? nextExtreme(tides.extremes, now) : null;
 
   return (
-    <Window title={`Saltwater · ${station.label}`}>
+    <Card title={`Saltwater · ${station.label}`}>
       <div className="space-y-4">
         <div className="flex gap-2 max-md:flex-nowrap max-md:overflow-x-auto md:flex-wrap" role="group" aria-label="Tide station">
           {TIDE_STATIONS.map((item) => {
@@ -56,7 +57,7 @@ export function SaltwaterConditions({
                 key={item.slug}
                 href={`/fishing/saltwater?station=${item.slug}`}
                 aria-current={on ? 'page' : undefined}
-                className={`${on ? 'retro-button-yellow' : 'retro-button'} shrink-0 rounded-none px-3 py-1 text-xs font-bold uppercase max-md:!border max-md:!px-2 max-md:!py-0.5 max-md:!text-[11px] max-md:!leading-4 max-md:!shadow-none`}
+                className={`${chipClass(on)}`}
               >
                 {item.label}
               </Link>
@@ -128,7 +129,7 @@ export function SaltwaterConditions({
           )}
         </section>
       </div>
-    </Window>
+    </Card>
   );
 }
 

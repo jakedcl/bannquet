@@ -1,5 +1,7 @@
 'use client';
 
+import { chipClass } from '@/components/hub/Button';
+
 export function FilterPills({
   label,
   value,
@@ -21,7 +23,7 @@ export function FilterPills({
             type="button"
             aria-pressed={on}
             onClick={() => onChange(option.id)}
-            className={`${on ? 'retro-button-yellow' : 'retro-button'} shrink-0 rounded-none px-3 py-1 text-xs font-bold uppercase max-md:!border max-md:!px-2 max-md:!py-0.5 max-md:!text-[11px] max-md:!leading-4 max-md:!shadow-none`}
+            className={`${chipClass(on)}`}
           >
             {option.label}
           </button>

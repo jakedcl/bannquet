@@ -1,5 +1,5 @@
 import PageWrapper from '@/components/ui/PageWrapper';
-import { Window } from '@/components/retro/Window';
+import { Card } from '@/components/hub/Card';
 import { ConditionsReport } from '@/components/weather/ConditionsReport';
 import { loadWeatherExtremes } from '@/lib/weather-extremes';
 import { loadFailed } from '@/lib/load-error';
@@ -19,9 +19,9 @@ export default async function ConditionsPage() {
     <PageWrapper>
       <div className="mx-auto max-w-4xl px-4 py-10">
         {error || !report ? (
-          <Window title="Live conditions">
+          <Card title="Live conditions">
             <p className="text-sm font-bold">{error ?? 'The live conditions did not load.'}</p>
-          </Window>
+          </Card>
         ) : (
           <ConditionsReport report={report} />
         )}

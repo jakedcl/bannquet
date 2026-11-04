@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import PageWrapper from '@/components/ui/PageWrapper';
-import { Button } from '@/components/retro/Button';
-import { Window } from '@/components/retro/Window';
+import { Button } from '@/components/hub/Button';
+import { Card } from '@/components/hub/Card';
 import { getViewer } from '@/app/sign-in/actions';
 import { viewerCanContribute } from '@/lib/membership';
 import { listTrips, type TripSummary } from '@/lib/trips';
@@ -37,14 +37,14 @@ export default async function TripsPage() {
   return (
     <PageWrapper>
       <div className="mx-auto max-w-3xl space-y-4 px-4 py-10">
-        <Window title="Trips" action={canAdd ? <Button href="/upload?kind=trip" tone="yellow">+ New trip</Button> : null}>
+        <Card title="Trips" action={canAdd ? <Button href="/upload?kind=trip" tone="yellow">+ New trip</Button> : null}>
           {error ? <p className="text-sm font-bold">{error}</p> : trips.length === 0 ? <p className="text-sm">No trips yet.</p> : (
             <div className="space-y-4">
               <TripGroup label="Upcoming" trips={upcoming} empty="Nothing coming up." />
               <TripGroup label="Past" trips={past} empty="No past trips yet." />
             </div>
           )}
-        </Window>
+        </Card>
       </div>
     </PageWrapper>
   );

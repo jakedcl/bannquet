@@ -68,11 +68,11 @@ export default function WeatherTicker() {
               className="flex min-w-0 items-baseline justify-between gap-3 border-t border-white/15 py-1.5 first:border-t-0 sm:block sm:border-t-0 sm:border-l sm:py-0 sm:pl-3 sm:first:border-l-0 sm:first:pl-0"
             >
               <span className="min-w-0">
-                <span className="block text-[0.6875rem] font-bold uppercase tracking-wider text-white/85">{stat.label}</span>
-                <span className="block truncate text-[0.6875rem] text-white/70 sm:hidden">{stat.location}</span>
+                <span className="block text-xs font-bold uppercase tracking-wider text-white/85">{stat.label}</span>
+                <span className="block truncate text-xs text-white/70 sm:hidden">{stat.location}</span>
               </span>
               <span className="shrink-0 text-base font-bold tabular-nums text-[#ffd700] sm:mt-0.5 sm:block sm:text-lg">{stat.value}</span>
-              <span className="hidden truncate text-[0.6875rem] text-white/70 sm:block">@ {stat.location}</span>
+              <span className="hidden truncate text-xs text-white/70 sm:block">@ {stat.location}</span>
             </li>
           ))}
         </ul>

@@ -46,7 +46,7 @@ export function GearAddButton() {
           setFormKey((key) => key + 1);
           setOpen(true);
         }}
-        className="retro-button-yellow inline-flex h-6 w-6 items-center justify-center rounded-none p-0 text-base font-bold leading-none"
+        className="retro-button-yellow inline-flex h-11 w-11 items-center justify-center rounded-none p-0 text-base font-bold leading-none"
       >
         +
       </button>

@@ -13,6 +13,7 @@ import { NEUTRAL_PIN_COLOR } from '@/lib/map';
 import { PIN_KINDS, PIN_KIND_LABELS, type PinKind } from '@/lib/pin-kinds';
 import type { MapFeatureCollection } from '@/lib/posts';
 import dynamic from 'next/dynamic';
+import { smallButtonClass } from '@/components/hub/Button';
 
 const GroupMap = dynamic(() => import('@/components/map/GroupMap'), { ssr: false });
 
@@ -129,7 +130,7 @@ export function PinForm({
         <div className="flex flex-wrap gap-2">
           <button
             type="button"
-            className="retro-button rounded-none px-3 py-1 text-xs font-bold uppercase"
+            className={smallButtonClass}
             onClick={() => {
               if (!navigator.geolocation) {
                 setLocateError('This browser cannot read your location.');
@@ -147,7 +148,7 @@ export function PinForm({
           {photoPoint?.lat != null && photoPoint.lng != null ? (
             <button
               type="button"
-              className="retro-button rounded-none px-3 py-1 text-xs font-bold uppercase"
+              className={smallButtonClass}
               onClick={() => place(photoPoint.lng as number, photoPoint.lat as number)}
             >
               Use the photo&apos;s location

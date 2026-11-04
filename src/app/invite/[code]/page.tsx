@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import PageWrapper from '@/components/ui/PageWrapper';
 import { CreateAccountForm } from '@/components/auth/CreateAccountForm';
-import { Window } from '@/components/retro/Window';
+import { Card } from '@/components/hub/Card';
 import { getInviteByCode } from '@/lib/auth/members';
 import { inviteState } from '@/lib/membership';
 import { isDatabaseConfigured } from '@/db';
@@ -16,9 +16,9 @@ export default async function InvitePage({ params }: { params: Promise<{ code: s
     return (
       <PageWrapper>
         <div className="mx-auto max-w-lg px-4 py-10">
-          <Window title="Invite">
+          <Card title="Invite">
             <p>Invites are not connected yet.</p>
-          </Window>
+          </Card>
         </div>
       </PageWrapper>
     );
@@ -35,7 +35,7 @@ export default async function InvitePage({ params }: { params: Promise<{ code: s
   return (
     <PageWrapper>
       <div className="mx-auto max-w-lg px-4 py-10">
-        <Window title="You're invited">
+        <Card title="You're invited">
           {state === 'open' && invite.email ? (
             <CreateAccountForm email={invite.email} inviteCode={invite.code} stamp={issueSignupStamp()} />
           ) : null}
@@ -52,7 +52,7 @@ export default async function InvitePage({ params }: { params: Promise<{ code: s
           {state === 'open' && !invite.email ? (
             <p className="text-sm">This invite is missing an email. Ask Jake to send a new one.</p>
           ) : null}
-        </Window>
+        </Card>
       </div>
     </PageWrapper>
   );

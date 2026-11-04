@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import type { ReactNode } from 'react';
-import { Window } from '@/components/retro/Window';
+import { Card } from '@/components/hub/Card';
 import { formatAge, formatEastern, plainWaterName, type FieldState, type GaugeView } from '@/lib/fishing/readings';
 import { getWeather } from '@/lib/weather';
 import type { WeatherData } from '@/types/weather';
@@ -41,7 +41,7 @@ export function GaugeSpot({
   const name = plainWaterName(gauge.name);
 
   return (
-    <Window title={name}>
+    <Card title={name}>
       <p className="mb-4 break-words text-sm">
         <Link href="/fishing/freshwater" className="font-bold underline">Freshwater</Link>
         {place ? ` · ${place}` : ''}
@@ -61,7 +61,7 @@ export function GaugeSpot({
           USGS
         </a>
       </p>
-    </Window>
+    </Card>
   );
 }
 

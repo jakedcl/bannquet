@@ -5,9 +5,9 @@ import PageWrapper from '@/components/ui/PageWrapper';
 import { MapCanvas } from '@/components/map/MapCanvas';
 import { DeletePinButton, PinForm } from '@/components/pins/PinForm';
 import { AddToTrip } from '@/components/library/AddToTrip';
-import { Badge } from '@/components/retro/Badge';
-import { Button } from '@/components/retro/Button';
-import { Window } from '@/components/retro/Window';
+import { Pill } from '@/components/hub/Button';
+import { Button } from '@/components/hub/Button';
+import { Card } from '@/components/hub/Card';
 import { getViewer } from '@/app/sign-in/actions';
 import { ACTIVITY_META, isActivity } from '@/lib/activities';
 import { isDatabaseConfigured } from '@/db';
@@ -54,10 +54,10 @@ export default async function PinPage({
   return (
     <PageWrapper leaf={pin.title}>
       <div className="mx-auto max-w-3xl space-y-4 px-4 py-10">
-        <Window title={pin.title}>
+        <Card title={pin.title}>
           <div className="mb-3 flex flex-wrap items-center gap-2">
-            {activity ? <Badge>{activity}</Badge> : null}
-            <Badge>{category}</Badge>
+            {activity ? <Pill>{activity}</Pill> : null}
+            <Pill>{category}</Pill>
           </div>
           <p className="text-sm text-gray-700">
             {formatTripDate(pin.visitedOn)}
@@ -84,7 +84,7 @@ export default async function PinPage({
           <div className="mt-4">
             <Button href={`/map?pin=${pin.id}`} tone="blue">Open on the map</Button>
           </div>
-        </Window>
+        </Card>
         <div className="retro-box h-80 min-h-[420px] overflow-hidden bg-white">
           <MapCanvas
             points={data.points}
@@ -93,7 +93,7 @@ export default async function PinPage({
           />
         </div>
         {manage && viewer ? (
-          <Window title="Edit this pin">
+          <Card title="Edit this pin">
             <PinForm
               initial={{
                 id: pin.id,
@@ -108,7 +108,7 @@ export default async function PinPage({
             <div className="mt-4">
               <DeletePinButton id={pin.id} />
             </div>
-          </Window>
+          </Card>
         ) : null}
         {manage ? (
           <AddToTrip

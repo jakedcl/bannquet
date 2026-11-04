@@ -62,7 +62,7 @@ export function DataTable<T>({
     <div>
     <div className="overflow-x-auto bg-white max-md:border max-md:border-solid max-md:border-[#ccc] md:retro-box-inset">
       <table className="w-full border-collapse text-left text-sm max-md:[&_a]:font-normal max-md:[&_a]:text-[#6b4423] max-md:[&_a]:no-underline md:min-w-[36rem]">
-        <thead className="bg-beige font-mono text-[11px] uppercase leading-none md:text-xs md:leading-normal">
+        <thead className="bg-beige font-mono text-xs uppercase leading-none md:text-xs md:leading-normal">
           <tr>
             {columns.map((column) => {
               const active = sort?.id === column.id;

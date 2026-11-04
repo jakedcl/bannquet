@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { FreshwaterBoard } from '@/components/fishing/FreshwaterBoard';
-import { Window } from '@/components/retro/Window';
+import { Card } from '@/components/hub/Card';
 import PageWrapper from '@/components/ui/PageWrapper';
 import { easternDate } from '@/lib/fishing/clock';
 import { easternMonthDay, loadDailyMedians } from '@/lib/fishing/daily-stats';
@@ -23,6 +23,7 @@ import type { GaugeView } from '@/lib/fishing/readings';
 import { loadActualStocking, loadMaineStocking, type ActualStocking } from '@/lib/fishing/stocking';
 import { TROUT_CHECKED, TROUT_SOURCE, troutStreamStatus } from '@/lib/fishing/trout';
 import { loadMountainGauges } from '@/lib/fishing/usgs';
+import { chipClass } from '@/components/hub/Button';
 
 export const dynamic = 'force-dynamic';
 
@@ -34,7 +35,7 @@ const TABS: { id: FreshwaterTab; label: string }[] = [
 ];
 
 function pillClass(on: boolean): string {
-  return `${on ? 'retro-button-yellow' : 'retro-button'} shrink-0 rounded-none px-3 py-1 text-xs font-bold uppercase max-md:!border max-md:!px-2 max-md:!py-0.5 max-md:!text-[11px] max-md:!leading-4 max-md:!shadow-none`;
+  return `${chipClass(on)}`;
 }
 
 export default async function FreshwaterPage({
@@ -69,7 +70,7 @@ export default async function FreshwaterPage({
             </Link>
           ))}
         </div>
-        <Window title="Freshwater">
+        <Card title="Freshwater">
           {showTrout ? (
             <p className="mb-4 text-sm">
               <span className="font-bold">{trout.title}.</span> {trout.detail}{' '}
@@ -89,7 +90,7 @@ export default async function FreshwaterPage({
           />
           {loaded.stockingTruncated ? <p className="mt-3 text-sm font-bold">The stocking list hit the request limit.</p> : null}
           <Outbound links={listing.sourceLinks.length > 0 ? listing.sourceLinks : listing.emptyLinks} />
-        </Window>
+        </Card>
       </div>
     </PageWrapper>
   );
