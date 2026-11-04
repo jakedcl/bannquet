@@ -52,7 +52,7 @@ export default function WeatherTicker() {
           <span className="animate-pulse motion-reduce:animate-none" aria-hidden="true">●</span>
           Live across the Northeast
         </p>
-        <Link href="/conditions" className="text-xs font-bold uppercase tracking-wider text-white no-underline hover:underline">
+        <Link href="/conditions" className="-my-2 inline-flex min-h-11 items-center px-2 text-sm font-bold uppercase tracking-wider text-white no-underline hover:underline">
           All ›
         </Link>
       </div>

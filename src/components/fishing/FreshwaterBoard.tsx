@@ -221,7 +221,7 @@ export function FreshwaterBoard({
 
       {parking.length > 0 ? (
         <details className="space-y-3">
-          <summary className="cursor-pointer text-sm font-bold uppercase">Angler parking</summary>
+          <summary className="flex min-h-11 cursor-pointer items-center text-sm font-bold uppercase">Angler parking</summary>
           <SearchBar value={parkingQuery} onChange={setParkingQuery} placeholder="Water or town" label="Search parking" />
           {counties.length > 1 ? (
             <FilterPills

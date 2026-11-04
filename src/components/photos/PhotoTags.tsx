@@ -21,11 +21,11 @@ export function PhotoTags({ photo }: { photo: PhotoDetail }) {
   ].filter((tag): tag is Tag => Boolean(tag));
 
   return (
-    <p className="mt-3 flex flex-wrap gap-x-3 gap-y-1 text-sm text-gray-700">
+    <p className="mt-3 flex flex-wrap gap-x-4 text-sm text-gray-700">
       {tags.map((tag) => (tag.href ? (
-        <Link key={tag.key} href={tag.href} className="underline">{tag.label}</Link>
+        <Link key={tag.key} href={tag.href} className="inline-flex min-h-11 items-center underline">{tag.label}</Link>
       ) : (
-        <span key={tag.key}>{tag.label}</span>
+        <span key={tag.key} className="inline-flex min-h-11 items-center">{tag.label}</span>
       )))}
     </p>
   );

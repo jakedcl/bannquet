@@ -25,7 +25,7 @@ export function AddToTrip({
 
   return (
     <div className="text-sm">
-      <button type="button" className="underline" onClick={() => setOpen(true)}>
+      <button type="button" className="min-h-11 text-left font-bold underline" onClick={() => setOpen(true)}>
         {attached.length > 0 ? `On ${attached.map((trip) => trip.title).join(', ')}` : 'Add to trip'}
       </button>
       {open ? (

@@ -83,7 +83,7 @@ export function EditDetails({ children, look = 'retro' }: { children: React.Reac
   if (look === 'hub') {
     return (
       <details className="group">
-        <summary className="retro-button ui-press flex cursor-pointer list-none items-center justify-center rounded-none text-sm font-bold uppercase tracking-wide text-gray-800 [&::-webkit-details-marker]:hidden">
+        <summary className="retro-button ui-press flex min-h-11 cursor-pointer list-none items-center justify-center rounded-none text-sm font-bold uppercase tracking-wide text-gray-800 [&::-webkit-details-marker]:hidden">
           Edit
         </summary>
         <div className="mt-3">{children}</div>
@@ -92,7 +92,7 @@ export function EditDetails({ children, look = 'retro' }: { children: React.Reac
   }
   return (
     <details className="mt-4">
-      <summary className="cursor-pointer text-sm font-bold underline">Edit</summary>
+      <summary className="flex min-h-11 cursor-pointer items-center text-sm font-bold underline">Edit</summary>
       {children}
     </details>
   );

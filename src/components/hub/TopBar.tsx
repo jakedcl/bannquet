@@ -50,7 +50,7 @@ export function TopBar({ account }: { account: BarAccount }) {
   return (
     <header className="site-header hub-bar retro-banner fixed inset-x-0 top-0 z-50 !px-0 !py-0 text-white" style={{ height: 'var(--bar-h)' }}>
       <div className="mx-auto flex h-full max-w-6xl items-center gap-2 px-3">
-        <Link href="/" aria-label="Bannquet home" className="ui-press mr-3 flex shrink-0 items-center">
+        <Link href="/" aria-label="Bannquet home" className="ui-press mr-3 flex min-h-11 shrink-0 items-center">
           <Image src="/logo.png" alt="BANNQUET" width={398} height={114} priority unoptimized className="header-logo !h-9 md:!h-10" />
         </Link>
 

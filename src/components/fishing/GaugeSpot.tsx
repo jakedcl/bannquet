@@ -103,7 +103,7 @@ export async function GaugeForecast({ gauge }: { gauge: GaugeView }) {
       ) : (
         <p className="text-sm">The forecast did not include periods.</p>
       )}
-      <a href={nws} target="_blank" rel="noopener noreferrer" className="inline-block text-sm font-bold underline">
+      <a href={nws} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center text-sm font-bold underline">
         National Weather Service forecast
       </a>
     </section>

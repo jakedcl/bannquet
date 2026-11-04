@@ -36,7 +36,7 @@ export function Card({
       {title ? (
         <header className="ui-card-bar">
           <span className="min-w-0 flex-1 truncate">
-            {titleHref ? <Link href={titleHref} className="block truncate">{title}</Link> : title}
+            {titleHref ? <Link href={titleHref} className="-my-2 flex min-h-11 items-center truncate">{title}</Link> : title}
           </span>
           {action ? <span className="shrink-0">{action}</span> : null}
         </header>
