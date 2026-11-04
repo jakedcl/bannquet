@@ -16,7 +16,7 @@ export function SectionChrome() {
 
   return (
     <nav aria-label={`${section.label} sections`} className="section-nav w-full border-b-2 border-[#3d2412] bg-[#5c3a1e]">
-      <div className="mx-auto flex w-full max-w-6xl flex-nowrap items-center justify-start gap-1 overflow-x-auto px-3 py-1.5 sm:gap-2 sm:py-2">
+      <div className="mx-auto flex w-full max-w-6xl flex-nowrap items-center justify-start gap-2 overflow-x-auto px-3 py-2">
         {section.links.map((item) => {
           const active = linkOn(pathname, query, item.href);
           return (
