@@ -227,7 +227,7 @@ button, .retro-button {
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
-  height: 2.5rem;
+  height: 2.75rem;
   line-height: 1;
   white-space: nowrap;
   padding-top: 0;
@@ -830,14 +830,14 @@ dialog[open]::backdrop {
    ------------------------------------------------------------------ */
 :root {
   --bar-h: 64px;
-  --tab-h: calc(60px + env(safe-area-inset-bottom, 0px));
+  --tab-h: calc(68px + env(safe-area-inset-bottom, 0px));
 
   --ui-bg: #f0f0f0;
   --ui-surface: #ffffff;
   --ui-surface-2: #f6f4ef;
   --ui-label: #1a1a1a;
   --ui-label-2: #4b4b4b;
-  --ui-label-3: #8a8a8a;
+  --ui-label-3: #636363;
   --ui-separator: #d9d5cc;
   --ui-fill: #e8e6e1;
   --ui-fill-2: #dcd8cf;
@@ -887,13 +887,13 @@ dialog[open]::backdrop {
 .t-title { font-family: var(--font-heading); font-size: 1.5rem; line-height: 1.2; font-weight: 700; }
 .t-title2 { font-family: var(--font-heading); font-size: 1.125rem; line-height: 1.25; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; }
 .t-title3 { font-family: var(--font-heading); font-size: 1rem; line-height: 1.3; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; }
-.t-headline { font-size: 0.875rem; line-height: 1.35; font-weight: 700; }
-.t-body { font-size: 0.875rem; line-height: 1.45; }
-.t-callout { font-size: 0.875rem; line-height: 1.4; }
-.t-subhead { font-size: 0.8125rem; line-height: 1.4; }
-.t-footnote { font-size: 0.75rem; line-height: 1.4; }
-.t-caption { font-size: 0.6875rem; line-height: 1.35; }
-.t-eyebrow { font-size: 0.6875rem; line-height: 1.3; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ui-label-2); }
+.t-headline { font-size: 1rem; line-height: 1.35; font-weight: 700; }
+.t-body { font-size: 1rem; line-height: 1.45; }
+.t-callout { font-size: 1rem; line-height: 1.4; }
+.t-subhead { font-size: 0.9375rem; line-height: 1.4; }
+.t-footnote { font-size: 0.875rem; line-height: 1.4; }
+.t-caption { font-size: 0.8125rem; line-height: 1.35; }
+.t-eyebrow { font-size: 0.8125rem; line-height: 1.3; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ui-label-2); }
 
 @media (min-width: 768px) {
   .t-large-title { font-size: 2.125rem; }

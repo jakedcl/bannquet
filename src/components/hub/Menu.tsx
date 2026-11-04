@@ -70,4 +70,4 @@ export function barLinkClass(active: boolean): string {
 }
 
 export const menuRowClass =
-  'retro-button-yellow flex w-full items-center justify-between gap-3 rounded-none px-3 py-1.5 text-left text-xs font-bold uppercase no-underline';
+  'retro-button-yellow flex w-full items-center justify-between gap-3 min-h-11 rounded-none px-3 py-2 text-left text-sm font-bold uppercase no-underline';

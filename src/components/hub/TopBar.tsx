@@ -152,8 +152,8 @@ function MoreSheet({ account, onClose }: { account: BarAccount; onClose: () => v
       <div className="ui-panel ui-sheet-in absolute inset-x-0 bottom-0 max-h-[85dvh] overflow-y-auto pb-[calc(1rem+env(safe-area-inset-bottom,0px))]">
         <div className="ui-card-bar sticky top-0 z-10 !py-2">
           <h2 className="min-w-0 flex-1">More</h2>
-          <button type="button" onClick={onClose} aria-label="Close" className="retro-button ui-press flex h-8 w-8 items-center justify-center !p-0 text-gray-800">
-            <CloseIcon className="h-3.5 w-3.5" />
+          <button type="button" onClick={onClose} aria-label="Close" className="retro-button ui-press flex h-11 w-11 items-center justify-center !p-0 text-gray-800">
+            <CloseIcon className="h-4 w-4" />
           </button>
         </div>
         <div onClick={onClose} className="space-y-4 px-3 pt-3">

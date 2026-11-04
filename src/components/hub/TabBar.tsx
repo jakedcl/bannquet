@@ -29,7 +29,7 @@ export function TabBar({ account }: { account: NavAccount }) {
       className="hub-bar tab-bar fixed inset-x-0 bottom-0 z-50 md:hidden"
       style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}
     >
-      <ul className="mx-auto flex h-14 max-w-lg items-stretch">
+      <ul className="mx-auto flex h-16 max-w-lg items-stretch">
         {tabs.map((tab) => {
           const on = current === tab.id;
           const Icon = tab.icon;
@@ -38,10 +38,10 @@ export function TabBar({ account }: { account: NavAccount }) {
               <Link
                 href={tab.href}
                 aria-current={on ? 'page' : undefined}
-                className={`ui-press flex flex-1 flex-col items-center justify-center gap-0.5 no-underline ${on ? 'text-[#ffd700]' : 'text-white/75'}`}
+                className={`ui-press flex flex-1 flex-col items-center justify-center gap-0.5 no-underline ${on ? 'text-[#ffd700] shadow-[inset_0_3px_0_#ffd700]' : 'text-white'}`}
               >
                 <Icon className="h-6 w-6" />
-                <span className="text-[0.625rem] font-bold uppercase tracking-wider">{tab.label}</span>
+                <span className="text-xs font-bold uppercase tracking-wide">{tab.label}</span>
               </Link>
             </li>
           );
