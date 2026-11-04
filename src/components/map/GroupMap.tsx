@@ -68,7 +68,7 @@ function popupNode(leaves: Leaf[]): HTMLElement {
   const root = document.createElement('div');
   root.className = 'space-y-2 text-[15px] leading-snug';
   const heading = document.createElement('p');
-  heading.className = 'pr-6 text-xs font-bold uppercase';
+  heading.className = 'pr-10 text-sm font-bold uppercase';
   heading.textContent = clusterHeading(leaves.map((leaf) => leaf.kind));
   root.append(heading);
   for (const leaf of leaves) {
@@ -82,7 +82,7 @@ function popupNode(leaves: Leaf[]): HTMLElement {
     swatch.style.background = leaf.color;
     title.append(swatch, document.createTextNode(leaf.title));
     const meta = document.createElement('span');
-    meta.className = 'mt-1 block text-xs text-gray-700';
+    meta.className = 'mt-1 block text-sm text-gray-700';
     meta.textContent = leafMeta(leaf);
     link.append(title, meta);
     root.append(link);
@@ -473,12 +473,12 @@ export default function GroupMap({
     <div className={`relative h-full w-full ${className}`}>
       <div ref={containerRef} className={`h-full w-full ${picking ? 'cursor-crosshair' : ''}`} />
       {preview ? (
-        <p className="pointer-events-none absolute bottom-1 left-1 z-10 max-w-[70%] truncate text-[10px] text-gray-700">
+        <p className="pointer-events-none absolute bottom-1 left-1 z-10 max-w-[70%] truncate text-xs text-gray-800">
           {BASEMAP_ATTRIBUTION.standard}
         </p>
       ) : null}
       {preview ? null : (
-      <div ref={controlsRef} className="map-controls hub-bar absolute right-2.5 top-[7.5rem] z-10 flex flex-col items-end gap-2">
+      <div ref={controlsRef} className="map-controls hub-bar absolute right-2.5 top-[10.25rem] z-10 flex flex-col items-end gap-2">
         <div className="relative">
           <button
             type="button"
@@ -486,12 +486,12 @@ export default function GroupMap({
             aria-expanded={layersOpen}
             aria-haspopup="menu"
             onClick={() => setLayersOpen((open) => !open)}
-            className={`retro-button ui-press flex h-8 w-8 items-center justify-center rounded-none !p-0 text-gray-800 ${layersOpen ? 'retro-button-yellow' : ''}`}
+            className={`retro-button ui-press flex h-11 w-11 items-center justify-center rounded-none !p-0 text-gray-800 ${layersOpen ? 'retro-button-yellow' : ''}`}
           >
-            <LayersIcon className="h-[18px] w-[18px]" />
+            <LayersIcon className="h-5 w-5" />
           </button>
           {layersOpen ? (
-            <div role="menu" aria-label="Map layers" className="ui-panel ui-sheet-in absolute right-full top-0 z-20 mr-2 flex min-w-36 flex-col gap-1 p-1">
+            <div role="menu" aria-label="Map layers" className="ui-panel ui-sheet-in absolute right-full top-0 z-20 mr-2 flex min-w-40 flex-col gap-1 p-1">
               {BASEMAPS.map((id) => (
                 <button
                   key={id}
@@ -502,7 +502,7 @@ export default function GroupMap({
                     setBasemap(id);
                     setLayersOpen(false);
                   }}
-                  className={`retro-button rounded-none !px-3 !py-1 text-left text-xs font-bold uppercase ${basemap === id ? 'retro-button-yellow' : 'text-gray-800'}`}
+                  className={`retro-button flex min-h-11 items-center rounded-none !px-3 !py-0 text-left text-sm font-bold uppercase ${basemap === id ? 'retro-button-yellow' : 'text-gray-800'}`}
                 >
                   {BASEMAP_LABELS[id]}
                 </button>
@@ -517,19 +517,19 @@ export default function GroupMap({
             setLayersOpen(false);
             setTerrain((value) => !value);
           }}
-          className={`retro-button ui-press flex h-8 w-8 items-center justify-center rounded-none !p-0 text-xs font-bold ${terrain ? 'retro-button-orange' : 'text-gray-800'}`}
+          className={`retro-button ui-press flex h-11 w-11 items-center justify-center rounded-none !p-0 text-sm font-bold ${terrain ? 'retro-button-orange' : 'text-gray-800'}`}
         >
           3D
         </button>
       </div>
       )}
       {preview ? null : (
-        <p className={`hub-bar pointer-events-none absolute z-10 max-w-[min(70%,28rem)] truncate bg-white/85 px-1.5 py-0.5 text-[10px] text-gray-800 ${creditClassName}`}>
+        <p className={`hub-bar pointer-events-none absolute z-10 max-w-[min(70%,28rem)] truncate bg-white/85 px-1.5 py-0.5 text-xs text-gray-900 ${creditClassName}`}>
           {attribution}
         </p>
       )}
       {picking ? (
-        <p className="hub-bar retro-button-yellow pointer-events-none absolute left-1/2 top-3 z-10 -translate-x-1/2 px-3 py-1 text-xs font-bold uppercase">
+        <p className="hub-bar retro-button-yellow pointer-events-none absolute left-1/2 top-3 z-10 -translate-x-1/2 px-3 py-1.5 text-sm font-bold uppercase">
           Tap the map to drop a pin
         </p>
       ) : null}
