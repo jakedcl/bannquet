@@ -16,7 +16,7 @@ import { formatFeetGain, formatMiles } from '@/lib/gpx';
 import { loadRoute } from '@/lib/library';
 import { seesWholeRoute } from '@/lib/route-privacy';
 import { canEditOwned } from '@/lib/membership';
-import { loadMapData } from '@/lib/posts';
+import { loadMapDataNear } from '@/lib/posts';
 import { listTripChoices, tripsForItem } from '@/lib/trips';
 import { loadFailed } from '@/lib/load-error';
 import { formatTripDate } from '@/lib/utils';
@@ -79,7 +79,7 @@ export default async function RoutePage({
       tripsForItem('route', route.id).catch(() => []),
     ])
     : [[], []];
-  const map = route.lat != null && route.lng != null ? await loadMapData(viewer?.id ?? null).catch(() => null) : null;
+  const map = route.lat != null && route.lng != null ? await loadMapDataNear(viewer?.id ?? null, { routeId: route.id }).catch(() => null) : null;
 
   return (
     <PageWrapper leaf={route.name}>

@@ -15,7 +15,7 @@ import { isDatabaseConfigured } from '@/db';
 import { canEditOwned } from '@/lib/membership';
 import { loadPin } from '@/lib/pins';
 import { PIN_KIND_LABELS, isPinKind } from '@/lib/pin-kinds';
-import { loadMapData } from '@/lib/posts';
+import { loadMapDataNear } from '@/lib/posts';
 import { listTripChoices, tripsForItem } from '@/lib/trips';
 import { formatTripDate } from '@/lib/utils';
 
@@ -48,7 +48,7 @@ export default async function PinPage({
       tripsForItem('pin', pin.id).catch(() => []),
     ])
     : [[], []];
-  const data = await loadMapData(viewer?.id ?? null);
+  const data = await loadMapDataNear(viewer?.id ?? null, { lng: pin.lng, lat: pin.lat });
   const activity = pin.activity && isActivity(pin.activity) ? ACTIVITY_META[pin.activity].label : null;
   const category = isPinKind(pin.kind) ? PIN_KIND_LABELS[pin.kind] : 'Other';
 

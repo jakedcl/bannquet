@@ -13,7 +13,7 @@ import { getViewer } from '@/app/sign-in/actions';
 import { isDatabaseConfigured } from '@/db';
 import { loadPhoto } from '@/lib/library';
 import { canEditOwned } from '@/lib/membership';
-import { loadMapData } from '@/lib/posts';
+import { loadMapDataNear } from '@/lib/posts';
 import { listTripChoices, tripsForItem } from '@/lib/trips';
 import { loadFailed } from '@/lib/load-error';
 
@@ -75,7 +75,7 @@ export default async function PhotoPage({
       tripsForItem('photo', photo.id).catch(() => []),
     ])
     : [[], []];
-  const map = photo.lat != null && photo.lng != null ? await loadMapData(viewer?.id ?? null).catch(() => null) : null;
+  const map = photo.lat != null && photo.lng != null ? await loadMapDataNear(viewer?.id ?? null, { lng: photo.lng, lat: photo.lat }).catch(() => null) : null;
 
   return (
     <PageWrapper leaf={photo.caption || 'Photo'}>

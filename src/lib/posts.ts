@@ -125,9 +125,43 @@ function whoSql(aliasUser: string) {
   );
 }
 
+export type MapData = { points: MapFeatureCollection; lines: MapFeatureCollection };
+
+/** How far around one item a small map reaches. */
+export const NEAR_MAP_METERS = 25_000;
+
+/** What a small map is centred on: a point (photo, pin) or a whole route. */
+export type MapAnchor = { lng: number; lat: number } | { routeId: string };
+
+function anchorSql(anchor: MapAnchor) {
+  return 'routeId' in anchor
+    ? sql`(select line from tracks where id = ${anchor.routeId}::uuid)`
+    : sql`ST_SetSRID(ST_MakePoint(${anchor.lng}, ${anchor.lat}), 4326)::geography`;
+}
+
 /** `viewerId` decides who gets a hidden-ends route in full: only its owner. */
-export async function loadMapData(viewerId: string | null): Promise<{ points: MapFeatureCollection; lines: MapFeatureCollection }> {
+export async function loadMapData(viewerId: string | null): Promise<MapData> {
+  return selectMapData(viewerId, null);
+}
+
+/** Only what sits within `radiusM` of the anchor, for the small map on an item page. */
+export async function loadMapDataNear(
+  viewerId: string | null,
+  anchor: MapAnchor,
+  radiusM = NEAR_MAP_METERS,
+): Promise<MapData> {
+  return selectMapData(viewerId, { anchor, radiusM });
+}
+
+async function selectMapData(
+  viewerId: string | null,
+  near: { anchor: MapAnchor; radiusM: number } | null,
+): Promise<MapData> {
   const db = getDb();
+  // Routes test both the stored line (uses the index) and the part this viewer may see.
+  const within = (column: string) => near
+    ? sql` and ST_DWithin(${sql.raw(column)}, ${anchorSql(near.anchor)}, ${near.radiusM})`
+    : sql``;
   const [trackResult, photoResult, pinResult] = await Promise.all([
     db.execute(sql`
       select t.id::text as id, t.title, t.activity::text as activity,
@@ -142,6 +176,7 @@ export async function loadMapData(viewerId: string | null): Promise<{ points: Ma
       left join users u on u.id = t.user_id
       cross join lateral (${routeCutSql()}) cut
       cross join lateral (select ${shownLineSql(viewerId)} as line) shown
+      where true${within('t.line')}${within('shown.line::geography')}
     `),
     db.execute(sql`
       select p.id::text as id, coalesce(p.caption, p.alt, 'Photo') as title,
@@ -151,7 +186,7 @@ export async function loadMapData(viewerId: string | null): Promise<{ points: Ma
         ST_Y(p.point::geometry) as lat, ST_X(p.point::geometry) as lng
       from photos p
       left join users u on u.id = p.user_id
-      where p.point is not null and p.pin_id is null
+      where p.point is not null and p.pin_id is null${within('p.point')}
     `),
     db.execute(sql`
       select p.id::text as id, p.title, p.activity::text as activity, p.kind::text as kind,
@@ -160,6 +195,7 @@ export async function loadMapData(viewerId: string | null): Promise<{ points: Ma
         ST_Y(p.point::geometry) as lat, ST_X(p.point::geometry) as lng
       from pins p
       left join users u on u.id = p.created_by
+      where true${within('p.point')}
     `),
   ]);
 
