@@ -12,6 +12,7 @@ import { plainWaterName, type GaugeView } from '@/lib/fishing/readings';
 import { DEFAULT_TIDE_STATION } from '@/lib/fishing/tide-stations';
 import { loadTides, nextExtreme, type TideSet } from '@/lib/fishing/tides';
 import { loadMountainGauges } from '@/lib/fishing/usgs';
+import { HubPage } from '@/components/hub/Page';
 
 export const dynamic = 'force-dynamic';
 
@@ -76,7 +77,7 @@ export default async function FishingPage({
 
   return (
     <PageWrapper>
-      <div className="mx-auto max-w-6xl px-4 py-6 md:py-10">
+      <HubPage title="Fishing" width="6xl">
         <DashboardGrid>
           <DashboardWindow title="Next tide" href="/fishing/saltwater">
             <p className="text-sm font-bold">{station.label}</p>
@@ -113,7 +114,7 @@ export default async function FishingPage({
             </ul>
           </DashboardWindow>
         </DashboardGrid>
-      </div>
+      </HubPage>
     </PageWrapper>
   );
 }

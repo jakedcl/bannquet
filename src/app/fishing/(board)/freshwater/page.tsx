@@ -24,6 +24,7 @@ import { loadActualStocking, loadMaineStocking, type ActualStocking } from '@/li
 import { TROUT_CHECKED, TROUT_SOURCE, troutStreamStatus } from '@/lib/fishing/trout';
 import { loadMountainGauges } from '@/lib/fishing/usgs';
 import { chipClass } from '@/components/hub/Button';
+import { HubPage } from '@/components/hub/Page';
 
 export const dynamic = 'force-dynamic';
 
@@ -55,7 +56,7 @@ export default async function FreshwaterPage({
 
   return (
     <PageWrapper>
-      <div className="mx-auto max-w-6xl space-y-4 px-4 py-6 md:py-10">
+      <HubPage title="Freshwater" eyebrow="Fishing" width="6xl">
         <div className="flex gap-2 max-md:flex-nowrap max-md:overflow-x-auto md:flex-wrap" role="group" aria-label="State">
           {FRESHWATER_STATE_FILTERS.map((item) => (
             <Link key={item.code} href={freshwaterHref(item.code, tab)} aria-current={item.code === state ? 'page' : undefined} className={pillClass(item.code === state)}>
@@ -70,7 +71,7 @@ export default async function FreshwaterPage({
             </Link>
           ))}
         </div>
-        <Card title="Freshwater">
+        <Card>
           {showTrout ? (
             <p className="mb-4 text-sm">
               <span className="font-bold">{trout.title}.</span> {trout.detail}{' '}
@@ -91,7 +92,7 @@ export default async function FreshwaterPage({
           {loaded.stockingTruncated ? <p className="mt-3 text-sm font-bold">The stocking list hit the request limit.</p> : null}
           <Outbound links={listing.sourceLinks.length > 0 ? listing.sourceLinks : listing.emptyLinks} />
         </Card>
-      </div>
+      </HubPage>
     </PageWrapper>
   );
 }

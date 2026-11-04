@@ -6,6 +6,7 @@ import { ShoreMapFrame } from '@/components/fishing/ShoreMapFrame';
 import PageWrapper from '@/components/ui/PageWrapper';
 import { ADVISORIES_CHECKED, ADVISORIES_SOURCE, adviceFor, waterBody } from '@/lib/fishing/advisories';
 import { nearestTideStation, shoreSpot } from '@/lib/fishing/shore-spots';
+import { HubPage } from '@/components/hub/Page';
 
 export const dynamic = 'force-dynamic';
 
@@ -18,10 +19,9 @@ export default async function ShoreSpotPage({ params }: { params: Promise<{ slug
 
   return (
     <PageWrapper leaf={spot.name}>
-      <div className="mx-auto max-w-3xl space-y-4 px-4 py-6 md:py-10">
-        <Card title={spot.name}>
-          <p className="text-sm">{spot.access}</p>
-          <p className="mt-2 text-sm">
+      <HubPage title={spot.name} eyebrow="Saltwater" subtitle={spot.access} width="3xl">
+        <Card>
+          <p className="text-sm">
             Tide station{' '}
             <Link href={`/fishing/saltwater?station=${station.slug}`} className="font-bold underline">
               {station.label}
@@ -43,7 +43,7 @@ export default async function ShoreSpotPage({ params }: { params: Promise<{ slug
             headers={{ name: 'Fish', detail: 'General', extra: 'Sensitive' }}
             empty="No advisory for this water."
           />
-          <p className="mt-3 text-xs">
+          <p className="mt-3 text-sm text-gray-700">
             Sensitive: people who can become pregnant, under 50, and children under 15. Do not eat crab or lobster tomalley.
             {' '}
             <a href={ADVISORIES_SOURCE} target="_blank" rel="noopener noreferrer" className="underline">
@@ -51,7 +51,7 @@ export default async function ShoreSpotPage({ params }: { params: Promise<{ slug
             </a>
           </p>
         </Card>
-      </div>
+      </HubPage>
     </PageWrapper>
   );
 }

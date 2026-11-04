@@ -49,7 +49,7 @@ function waterName(row: FreshwaterRow, linked: boolean) {
   return (
     <span className="inline-flex max-w-full items-baseline gap-2">
       {name}
-      <a href={row.usgsHref} target="_blank" rel="noopener noreferrer" className="shrink-0 whitespace-nowrap text-xs underline">USGS</a>
+      <a href={row.usgsHref} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 shrink-0 items-center whitespace-nowrap text-sm underline">USGS</a>
     </span>
   );
 }

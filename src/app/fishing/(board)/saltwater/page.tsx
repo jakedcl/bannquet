@@ -10,6 +10,7 @@ import { nearestTideStation, SHORE_SPOTS } from '@/lib/fishing/shore-spots';
 import { skyFor } from '@/lib/fishing/sky';
 import { tideStation } from '@/lib/fishing/tide-stations';
 import { loadTides, type TideSet } from '@/lib/fishing/tides';
+import { HubPage } from '@/components/hub/Page';
 
 export const dynamic = 'force-dynamic';
 
@@ -55,7 +56,7 @@ export default async function SaltwaterPage({
 
   return (
     <PageWrapper>
-      <div className="mx-auto max-w-6xl space-y-4 px-4 py-6 md:py-10">
+      <HubPage title="Saltwater" eyebrow="Fishing" width="6xl">
         <SaltwaterConditions
           station={station}
           tides={tides}
@@ -77,7 +78,7 @@ export default async function SaltwaterPage({
               headers={{ name: 'Species', detail: 'Status', extra: 'Size and bag' }}
               empty="No regulations listed."
             />
-            <p className="mt-3 text-xs">
+            <p className="mt-3 text-sm text-gray-700">
               NY Bight limits, including Staten Island.{' '}
               <a href={MARINE_REGS_SOURCE} target="_blank" rel="noopener noreferrer" className="underline">
                 Last checked {MARINE_REGS_CHECKED}
@@ -96,7 +97,7 @@ export default async function SaltwaterPage({
             headers={{ name: 'Water', detail: 'Fish', extra: 'General / sensitive' }}
             empty="No advisories listed."
           />
-          <p className="mt-3 text-xs">
+          <p className="mt-3 text-sm text-gray-700">
             Do not eat crab or lobster tomalley.{' '}
             <a href={ADVISORIES_SOURCE} target="_blank" rel="noopener noreferrer" className="underline">
               Last checked {ADVISORIES_CHECKED}
@@ -116,7 +117,7 @@ export default async function SaltwaterPage({
             empty="No shore spots listed."
           />
         </Card>
-      </div>
+      </HubPage>
     </PageWrapper>
   );
 }

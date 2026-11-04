@@ -47,7 +47,7 @@ export function SaltwaterConditions({
   const next = tides ? nextExtreme(tides.extremes, now) : null;
 
   return (
-    <Card title={`Saltwater · ${station.label}`}>
+    <Card title={station.label}>
       <div className="space-y-4">
         <div className="flex gap-2 max-md:flex-nowrap max-md:overflow-x-auto md:flex-wrap" role="group" aria-label="Tide station">
           {TIDE_STATIONS.map((item) => {
