@@ -52,7 +52,7 @@ export default async function RootLayout({
   const pending = viewer?.role === 'pending';
 
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={pending ? 'has-pending' : undefined}>
         <Providers account={account}>
           <div className="min-h-screen flex flex-col">
