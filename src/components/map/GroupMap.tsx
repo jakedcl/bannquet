@@ -298,10 +298,10 @@ export default function GroupMap({
         source: 'places',
         filter: ['has', 'point_count'],
         paint: {
-          'circle-color': '#2d5016',
+          'circle-color': '#1a1a1a',
           'circle-radius': ['step', ['get', 'point_count'], 16, 8, 20, 20, 26],
-          'circle-stroke-width': 2.5,
-          'circle-stroke-color': '#ffffff',
+          'circle-stroke-width': 2,
+          'circle-stroke-color': '#f4f1ea',
         },
       });
       map.addLayer({
@@ -478,7 +478,7 @@ export default function GroupMap({
         </p>
       ) : null}
       {preview ? null : (
-      <div ref={controlsRef} className="map-controls hub-bar absolute right-2.5 top-[7.25rem] z-10 flex flex-col items-end gap-2">
+      <div ref={controlsRef} className="map-controls hub-bar absolute right-2.5 top-[7.5rem] z-10 flex flex-col items-end gap-2">
         <div className="relative">
           <button
             type="button"
@@ -486,12 +486,12 @@ export default function GroupMap({
             aria-expanded={layersOpen}
             aria-haspopup="menu"
             onClick={() => setLayersOpen((open) => !open)}
-            className={`ui-glass ui-press flex h-[29px] w-[29px] items-center justify-center rounded-lg shadow-[var(--ui-shadow)] ${layersOpen ? 'text-ui-accent' : 'text-ui-label'}`}
+            className={`retro-button ui-press flex h-8 w-8 items-center justify-center rounded-none !p-0 text-gray-800 ${layersOpen ? 'retro-button-yellow' : ''}`}
           >
             <LayersIcon className="h-[18px] w-[18px]" />
           </button>
           {layersOpen ? (
-            <div role="menu" aria-label="Map layers" className="ui-glass ui-sheet-in absolute right-full top-0 z-20 mr-2 flex min-w-40 flex-col rounded-2xl p-1.5 shadow-[var(--ui-shadow-lg)]">
+            <div role="menu" aria-label="Map layers" className="ui-panel ui-sheet-in absolute right-full top-0 z-20 mr-2 flex min-w-36 flex-col gap-1 p-1">
               {BASEMAPS.map((id) => (
                 <button
                   key={id}
@@ -502,10 +502,9 @@ export default function GroupMap({
                     setBasemap(id);
                     setLayersOpen(false);
                   }}
-                  className="ui-row-press flex items-center justify-between gap-3 rounded-xl px-3 py-2 text-left text-[0.9375rem] text-ui-label"
+                  className={`retro-button rounded-none !px-3 !py-1 text-left text-xs font-bold uppercase ${basemap === id ? 'retro-button-yellow' : 'text-gray-800'}`}
                 >
                   {BASEMAP_LABELS[id]}
-                  {basemap === id ? <span aria-hidden="true" className="text-ui-accent">✓</span> : null}
                 </button>
               ))}
             </div>
@@ -518,19 +517,19 @@ export default function GroupMap({
             setLayersOpen(false);
             setTerrain((value) => !value);
           }}
-          className={`ui-press flex h-[29px] w-[29px] items-center justify-center rounded-lg text-[0.75rem] font-bold shadow-[var(--ui-shadow)] ${terrain ? 'bg-ui-accent text-ui-on-accent' : 'ui-glass text-ui-label'}`}
+          className={`retro-button ui-press flex h-8 w-8 items-center justify-center rounded-none !p-0 text-xs font-bold ${terrain ? 'retro-button-orange' : 'text-gray-800'}`}
         >
           3D
         </button>
       </div>
       )}
       {preview ? null : (
-        <p className={`hub-bar pointer-events-none absolute z-10 max-w-[min(70%,28rem)] truncate rounded-md bg-[var(--ui-glass)] px-1.5 py-0.5 text-[10px] text-ui-label-2 ${creditClassName}`}>
+        <p className={`hub-bar pointer-events-none absolute z-10 max-w-[min(70%,28rem)] truncate bg-white/85 px-1.5 py-0.5 text-[10px] text-gray-800 ${creditClassName}`}>
           {attribution}
         </p>
       )}
       {picking ? (
-        <p className="hub-bar ui-glass pointer-events-none absolute left-1/2 top-3 z-10 -translate-x-1/2 rounded-full px-3 py-1.5 text-[0.8125rem] font-semibold text-ui-label shadow-[var(--ui-shadow)]">
+        <p className="hub-bar retro-button-yellow pointer-events-none absolute left-1/2 top-3 z-10 -translate-x-1/2 px-3 py-1 text-xs font-bold uppercase">
           Tap the map to drop a pin
         </p>
       ) : null}

@@ -14,18 +14,14 @@ const GroupMap = dynamic(() => import('@/components/map/GroupMap'), {
   loading: () => <div className="h-full w-full animate-pulse bg-ui-fill" />,
 });
 
+/** The same color swatch the old map popup used. */
 function KindDot({ leaf }: { leaf: MapLeaf }) {
-  const shape = leaf.kind === 'pin' ? 'rounded-[4px] rotate-45 scale-75' : leaf.kind === 'route' ? 'rounded-full ring-2 ring-inset ring-white/70' : 'rounded-full';
-  return (
-    <span className="flex h-8 w-8 items-center justify-center rounded-full bg-ui-fill">
-      <span className={`block h-3.5 w-3.5 ${shape}`} style={{ background: leaf.color }} />
-    </span>
-  );
+  return <span aria-hidden="true" className="block h-3 w-3 border border-black/40" style={{ background: leaf.color }} />;
 }
 
 function LeafRows({ leaves }: { leaves: MapLeaf[] }) {
   return (
-    <ListGroup inset="3.75rem">
+    <ListGroup>
       {leaves.map((leaf) => (
         <ListRow
           key={`${leaf.kind}-${leaf.href}`}
@@ -43,7 +39,7 @@ function plural(count: number, one: string): string {
   return `${count} ${count === 1 ? one : `${one}s`}`;
 }
 
-/** The home screen: the whole crew's map with an Apple Maps style card. */
+/** The home screen: the whole crew's map with a panel for what was tapped. */
 export function MapHome({
   points,
   lines,
@@ -89,14 +85,14 @@ export function MapHome({
   const header = selected ? (
     <div className="flex items-start gap-3">
       <div className="min-w-0 flex-1">
-        <h2 className="t-title3 truncate">{single ? single.title : clusterHeading(selected.map((leaf) => leaf.kind))}</h2>
+        <h2 className="t-title2 truncate">{single ? single.title : clusterHeading(selected.map((leaf) => leaf.kind))}</h2>
         {single ? <p className="t-footnote mt-0.5 truncate text-ui-label-2">{leafMeta(single)}</p> : null}
       </div>
       <button
         type="button"
         onClick={() => onSelect(null)}
         aria-label="Close"
-        className="ui-press mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-ui-fill text-ui-label-2"
+        className="retro-button ui-press flex h-8 w-8 shrink-0 items-center justify-center rounded-none !p-0 text-gray-800"
       >
         <CloseIcon className="h-3.5 w-3.5" />
       </button>
@@ -122,11 +118,11 @@ export function MapHome({
           <LeafRows leaves={selected} />
         ) : recent.length > 0 ? (
           <div className="space-y-2">
-            <p className="t-eyebrow px-2 pt-1">Recent</p>
+            <p className="t-eyebrow px-1">Recent</p>
             <LeafRows leaves={recent} />
           </div>
         ) : (
-          <p className="t-subhead px-2 py-3 text-ui-label-2">Nothing on the map yet.</p>
+          <p className="t-subhead px-1 py-2 text-ui-label-2">Nothing on the map yet.</p>
         )}
       </Sheet>
     </div>
