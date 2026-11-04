@@ -2,16 +2,15 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import PageWrapper from '@/components/ui/PageWrapper';
 import { Window } from '@/components/retro/Window';
-import { CountControl } from '@/components/ui/CountControl';
-import { logClimbAction, removeLatestClimbAction } from '@/app/peaks/actions';
+import { PeakCheck } from '@/components/peaks/PeakCheck';
 import { getViewer } from '@/app/sign-in/actions';
 import { allPeaks } from '@/lib/challenges';
-import { canContribute } from '@/lib/membership';
-import { listPeakClimbs, type ClimbRow } from '@/lib/summits';
+import { viewerCanContribute } from '@/lib/membership';
+import { listPeakVisitors, type PeakRow } from '@/lib/summits';
 import { isDatabaseConfigured } from '@/db';
 import { loadFailed } from '@/lib/load-error';
 
-// Dynamic because it reads the viewer's cookie; the climbs list itself is cached (listPeakClimbs).
+// Dynamic because it reads the viewer's cookie; the visitor list itself is cached (listPeakVisitors).
 export const dynamic = 'force-dynamic';
 
 const AREAS: Record<string, string> = {
@@ -41,19 +40,19 @@ export default async function PeakPage({ params }: { params: Promise<{ slug: str
 
   const viewer = await getViewer();
   const ready = isDatabaseConfigured();
-  let error: string | null = ready ? null : 'Postgres is not connected, so climbs cannot be loaded.';
-  let climbs: ClimbRow[] = [];
+  let error: string | null = ready ? null : 'Postgres is not connected, so who has been here cannot be loaded.';
+  let people: PeakRow[] = [];
   if (ready) {
     try {
-      climbs = await listPeakClimbs(peak.slug);
+      people = await listPeakVisitors(peak.slug);
     } catch (err) {
-      error = loadFailed('peak page', err, 'The climbs did not load. Try again in a minute.');
+      error = loadFailed('peak page', err, 'Who has been here did not load. Try again in a minute.');
     }
   }
 
-  const canMark = Boolean(!error && (!viewer || canContribute(viewer.role)));
-  const own = viewer ? climbs.filter((climb) => climb.userId === viewer.id) : [];
-  const people = climberSummary(climbs);
+  const canMark = Boolean(!error && viewerCanContribute(viewer));
+  const mine = Boolean(viewer && people.some((person) => person.userId === viewer.id));
+  const visitors = [...people].sort((a, b) => a.name.localeCompare(b.name));
 
   return (
     <PageWrapper>
@@ -73,52 +72,27 @@ export default async function PeakPage({ params }: { params: Promise<{ slug: str
           {error ? <p className="mt-3 text-sm font-bold">{error}</p> : null}
         </Window>
 
-        <Window title="Who climbed it">
-          {people.length === 0 ? (
-            <p className="text-sm text-gray-700">No climbs logged.</p>
+        <Window title="Who has been here">
+          {visitors.length === 0 ? (
+            <p className="text-sm text-gray-700">Nobody yet.</p>
           ) : (
             <ul className="space-y-2 text-sm">
-              {people.map((person) => (
+              {visitors.map((person) => (
                 <li key={person.userId}>
                   {person.handle ? <Link href={`/user/${person.handle}`} className="underline">{person.name}</Link> : person.name}
-                  {person.times > 1 ? ` ×${person.times}` : ''}
                 </li>
               ))}
             </ul>
           )}
           {canMark ? (
             <div className="mt-4">
-              <CountControl
-                count={own.length}
-                zeroLabel="I climbed this"
-                addLabel="Log another climb"
-                removeLabel="Remove a climb"
-                add={{ action: logClimbAction, fields: { peakSlug: peak.slug } }}
-                remove={{ action: removeLatestClimbAction, fields: { peakSlug: peak.slug } }}
-              >
-                You&apos;ve climbed this {own.length}×
-              </CountControl>
+              <PeakCheck peakSlug={peak.slug} added={mine} />
             </div>
-          ) : own.length > 0 ? (
-            <p className="mt-4 text-sm font-bold">You&apos;ve climbed this {own.length}×</p>
+          ) : mine ? (
+            <p className="mt-4 text-sm font-bold">✓ In your peaks</p>
           ) : null}
         </Window>
       </div>
     </PageWrapper>
   );
-}
-
-function climberSummary(climbs: ClimbRow[]) {
-  const map = new Map<string, { userId: string; name: string; handle: string | null; times: number }>();
-  for (const climb of climbs) {
-    const current = map.get(climb.userId) ?? {
-      userId: climb.userId,
-      name: climb.name,
-      handle: climb.handle,
-      times: 0,
-    };
-    current.times += 1;
-    map.set(climb.userId, current);
-  }
-  return [...map.values()].sort((a, b) => b.times - a.times || a.name.localeCompare(b.name));
 }

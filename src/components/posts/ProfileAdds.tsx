@@ -192,11 +192,11 @@ export function PhotoUpload({
       <PhotoFields key={fieldsKey} photos={photos} onChange={setPhotos} />
       {state?.error ? <p className="text-sm font-bold text-red-700">{state.error}</p> : null}
       {state?.saved && photos.length === 0 ? <p className="text-sm">Photos saved.</p> : null}
-      <SubmitButton pendingLabel="Saving…" disabled={photos.length === 0 || photos.some((photo) => photo.lat == null)}>
+      <SubmitButton pendingLabel="Saving…" disabled={photos.length === 0}>
         Save photos
       </SubmitButton>
       {inline ? null : (
-        <SaveThenTrip disabled={pending || photos.length === 0 || photos.some((photo) => photo.lat == null)} />
+        <SaveThenTrip disabled={pending || photos.length === 0} />
       )}
     </form>
   );

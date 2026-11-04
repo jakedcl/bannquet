@@ -465,92 +465,7 @@ Complete breakdown of all API endpoints called, their responses, and which attri
 
 ## 7. Sanity CMS API (removed)
 
-Trip reports no longer call Sanity at runtime. Published reports are read from Postgres (`/api/trip-reports`). The notes below describe the old CMS shape, which the one-off import script still understands.
-
-## 7b. Historical Sanity query shape
-
-**Base URL:** `https://{projectId}.api.sanity.io/v{apiVersion}/data/query/{dataset}`
-
-**Called from:** Multiple files in `src/app/api/trip-reports/`
-
-**Endpoints Used:**
-
-### 7a. Query Trip Reports
-**GROQ Query:** `*[_type == "tripReport" && published == true] | order(publishedAt desc)`
-**Called from:** `src/app/api/trip-reports/route.ts:85`
-
-**Returns:**
-```json
-[
-  {
-    "_id": "trip-report-123",              // ✅ USED
-    "_type": "tripReport",
-    "_createdAt": "2026-03-01T10:00:00Z",  // ✅ USED
-    "_updatedAt": "2026-03-01T10:00:00Z",  // ✅ USED
-    "title": "Mount Marcy Winter Ascent",  // ✅ USED
-    "authorName": "Jake",                   // ✅ USED
-    "authorEmail": "jake@example.com",    // ✅ USED
-    "tripDate": "2026-02-15",              // ✅ USED
-    "locationPin": {                        // ✅ USED
-      "_type": "geopoint",
-      "lat": 44.1128,
-      "lng": -73.9237,
-      "alt": 5344
-    },
-    "body": [...],                         // ✅ USED (Portable Text)
-    "tags": ["hiking", "winter"],          // ✅ USED
-    "published": true,                      // ✅ USED
-    "publishedAt": "2026-03-01T10:00:00Z"  // ✅ USED
-  }
-]
-```
-
-**All attributes are used** - full trip report data structure.
-
-### 7b. Query Single Trip Report
-**GROQ Query:** `*[_type == "tripReport" && _id == $id && published == true][0]`
-**Called from:** `src/app/api/trip-reports/[id]/route.ts:49`
-
-**Returns:** Same structure as above, single object.
-
-### 7c. Query by Author
-**GROQ Query:** `*[_type == "tripReport" && authorName == $author && published == true]`
-**Called from:** `src/app/api/trip-reports/route.ts:27`
-
-**Returns:** Array of trip reports filtered by author.
-
-### 7d. Query by Tag
-**GROQ Query:** `*[_type == "tripReport" && $tag in tags && published == true]`
-**Called from:** `src/app/api/trip-reports/route.ts:46`
-
-**Returns:** Array of trip reports filtered by tag.
-
-### 7e. Query Verification Record
-**GROQ Query:** `*[_type == "tripReportVerification" && token == $token][0]`
-**Called from:** `src/app/api/trip-reports/verify/route.ts:27`
-
-**Returns:**
-```json
-{
-  "_id": "verification-123",
-  "_type": "tripReportVerification",
-  "token": "abc123...",                    // ✅ USED
-  "tripReportId": "trip-report-123",      // ✅ USED
-  "expiresAt": "2026-03-12T10:00:00Z",   // ✅ USED
-  "createdAt": "2026-03-11T10:00:00Z"
-}
-```
-
-### 7f. Create/Update Trip Report (Write)
-**Method:** `POST` or `PATCH` to Sanity API
-**Called from:** `src/app/api/trip-reports/submit/route.ts` and `edit/route.ts`
-
-**Writes:**
-- New trip report documents
-- Verification records
-- Updates to existing trip reports
-
-**All Sanity attributes are used** - full document structure is stored and retrieved.
+Trip reports and the Sanity CMS are gone. Trips live in Postgres, and the old `/api/trip-reports` routes were deleted.
 
 ---
 
@@ -558,7 +473,7 @@ Trip reports no longer call Sanity at runtime. Published reports are read from P
 
 **Base URL:** `https://api.resend.com`
 
-**Called from:** `src/app/api/trip-reports/submit/route.ts:149`
+**Called from:** `src/lib/auth/resend.ts` (password reset mail)
 
 **Endpoint:** `POST https://api.resend.com/emails`
 
@@ -567,7 +482,7 @@ Trip reports no longer call Sanity at runtime. Published reports are read from P
 {
   "from": "onboarding@resend.dev" or "{EMAIL_FROM}",
   "to": ["user@example.com"],
-  "subject": "Your Trip Report: {title}",
+  "subject": "{subject}",
   "html": "<html>...</html>"
 }
 ```
@@ -596,7 +511,7 @@ Trip reports no longer call Sanity at runtime. Published reports are read from P
 - ✅ `id` - Logged for success tracking
 - ✅ `error` - Logged for error handling
 
-**Purpose:** Sends verification emails with publish/edit links when trip reports are submitted.
+**Purpose:** Sends account emails such as password resets.
 
 ---
 
@@ -640,13 +555,7 @@ Trip reports no longer call Sanity at runtime. Published reports are read from P
 | 4 | NWS Gridpoint | `/gridpoints/{id}/{x},{y}` | GET | Detailed weather metrics (wind, snow, etc.) |
 | 5 | NWS Alerts | `/alerts/active?point={lat},{lon}` | GET | Weather warnings/hazards |
 | 6 | Internal | `/api/weather/extremes` | GET | Banner ticker stats |
-| 7a | Sanity | Query trip reports | GET | List all published reports |
-| 7b | Sanity | Query single report | GET | Get one trip report |
-| 7c | Sanity | Query by author/tag | GET | Filtered trip reports |
-| 7d | Sanity | Query verification | GET | Email verification tokens |
-| 7e | Sanity | Create/update | POST/PATCH | Submit/edit trip reports |
-| 7f | Sanity | Upload asset | POST | Image uploads |
-| 8 | Resend | `/emails` | POST | Send verification emails |
+| 8 | Resend | `/emails` | POST | Send account emails |
 
 ---
 

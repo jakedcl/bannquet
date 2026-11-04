@@ -186,7 +186,7 @@ export function PinForm({
           ))}
         </fieldset>
       ) : null}
-      <PhotoFields photos={photos} onChange={onPhotos} onBusy={setPhotoBusy} requireLocation={false} />
+      <PhotoFields photos={photos} onChange={onPhotos} onBusy={setPhotoBusy} />
       {state?.error ? <p className="text-sm font-bold text-red-700">{state.error}</p> : null}
       <SubmitButton tone="green" pendingLabel="Saving…" disabled={photoBusy}>
         {photoBusy ? 'Preparing photo…' : initial ? 'Save pin' : 'Drop pin'}

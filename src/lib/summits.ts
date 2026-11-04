@@ -11,6 +11,10 @@ function asRows(result: unknown): Record<string, unknown>[] {
   return (result as QueryRows).rows ?? [];
 }
 
+/**
+ * Copies config/challenges/*.json into the `peaks` table. That table only exists
+ * so `summits.peak_slug` has a foreign key; the JSON stays the source of truth.
+ */
 export async function ensurePeaks(): Promise<void> {
   const peaks = allPeaks();
   if (peaks.length === 0) return;
@@ -36,75 +40,57 @@ export async function ensurePeaks(): Promise<void> {
   `);
 }
 
-export async function logClimb(userId: string, peakSlug: string, climbedOn: string | null): Promise<'added' | 'missing'> {
+/**
+ * Add a peak to a member's peaks. A member has at most one row per peak, so a
+ * second tap (or a peak already on the list) changes nothing.
+ */
+export async function addPeak(userId: string, peakSlug: string): Promise<'added' | 'missing'> {
   const known = allPeaks().some((peak) => peak.slug === peakSlug);
   if (!known) return 'missing';
-  // A second tap within a few seconds is the same climb, not a new one.
-  await oneAtATime('climb', userId, async (tx) => {
-    const recent = await tx.execute(sql`
-      select 1 from summits
-      where user_id = ${userId} and peak_slug = ${peakSlug}
-        and created_at > now() - interval '10 seconds'
-      limit 1
-    `);
-    if (asRows(recent).length > 0) return;
+  return oneAtATime('peak', userId, async (tx) => {
     await tx.execute(sql`
-      insert into summits (user_id, peak_slug, summited_at, verified)
-      values (${userId}, ${peakSlug}, ${climbedOn}::date, false)
+      insert into summits (user_id, peak_slug, verified)
+      select ${userId}, ${peakSlug}, false
+      where not exists (
+        select 1 from summits where user_id = ${userId} and peak_slug = ${peakSlug}
+      )
     `);
+    return 'added' as const;
   });
-  return 'added';
 }
 
-export async function deleteLatestClimb(userId: string, peakSlug: string): Promise<boolean> {
+/** Take a peak off a member's peaks. */
+export async function removePeak(userId: string, peakSlug: string): Promise<boolean> {
   const result = await getDb().execute(sql`
     delete from summits
-    where id = (
-      select id from summits
-      where user_id = ${userId} and peak_slug = ${peakSlug}
-      order by created_at desc
-      limit 1
-    )
+    where user_id = ${userId} and peak_slug = ${peakSlug}
     returning id::text as id
   `);
   return asRows(result).length > 0;
 }
 
-/** The climber or an admin may change the date. `user_id` never changes. */
-export async function updateClimbDate(
-  id: string,
-  climbedOn: string | null,
-  actor: { id: string; admin: boolean },
-): Promise<boolean> {
+/** The member or an admin may take a peak off that member's peaks. */
+export async function deletePeakRow(id: string, actor: { id: string; admin: boolean }): Promise<boolean> {
   const result = await getDb().execute(sql`
-    update summits
-    set summited_at = ${climbedOn}::date
-    where id = ${id}::uuid and (${actor.admin} or user_id = ${actor.id})
-    returning id::text as id
+    delete from summits s
+    using summits picked
+    where picked.id = ${id}::uuid
+      and s.user_id = picked.user_id and s.peak_slug = picked.peak_slug
+      and (${actor.admin} or picked.user_id = ${actor.id})
+    returning s.id::text as id
   `);
   return asRows(result).length > 0;
 }
 
-export async function deleteClimb(id: string, actor: { id: string; admin: boolean }): Promise<boolean> {
-  const result = await getDb().execute(sql`
-    delete from summits
-    where id = ${id}::uuid
-      and (${actor.admin} or user_id = ${actor.id})
-    returning id::text as id
-  `);
-  return asRows(result).length > 0;
-}
-
-export type ClimbRow = {
+export type PeakRow = {
   id: string;
   userId: string;
   peakSlug: string;
-  climbedOn: string | null;
   name: string;
   handle: string | null;
 };
 
-export async function climbedPeakSlugs(userId: string): Promise<Set<string>> {
+export async function memberPeakSlugs(userId: string): Promise<Set<string>> {
   const result = await getDb().execute(sql`
     select distinct peak_slug
     from summits
@@ -116,47 +102,49 @@ export async function climbedPeakSlugs(userId: string): Promise<Set<string>> {
   }));
 }
 
-/** Climbs are read by many pages; writes call updateTag(CLIMBS_TAG) so cached reads refresh right away. */
-export const CLIMBS_TAG = 'climbs';
+/** Peaks are read by many pages; writes call updateTag(PEAKS_TAG) so cached reads refresh right away. */
+export const PEAKS_TAG = 'peaks';
 
-async function selectClimbs(filter?: SQL): Promise<ClimbRow[]> {
+/** One row per member per peak, oldest first, even if older data still has repeats. */
+async function selectPeakRows(filter?: SQL): Promise<PeakRow[]> {
   const result = await getDb().execute(sql`
-    select s.id::text as id, s.user_id, s.peak_slug,
-      case when s.summited_at is null then null else s.summited_at::date::text end as climbed_on,
-      coalesce(nullif(u.display_name, ''), nullif(u.handle, ''), 'Friend') as name,
-      u.handle
-    from summits s
-    join users u on u.id = s.user_id
-    where u.role <> 'pending'${filter ? sql` and ${filter}` : sql``}
-    order by s.created_at asc
+    select * from (
+      select distinct on (s.user_id, s.peak_slug)
+        s.id::text as id, s.user_id, s.peak_slug, s.created_at,
+        coalesce(nullif(u.display_name, ''), nullif(u.handle, ''), 'Friend') as name,
+        u.handle
+      from summits s
+      join users u on u.id = s.user_id
+      where u.role <> 'pending'${filter ? sql` and ${filter}` : sql``}
+      order by s.user_id, s.peak_slug, s.created_at asc
+    ) as rows
+    order by created_at asc
   `);
   return asRows(result).flatMap((row) => {
     const id = row.id == null ? '' : String(row.id);
     const userId = row.user_id == null ? '' : String(row.user_id);
     const peakSlug = row.peak_slug == null ? '' : String(row.peak_slug);
     if (!id || !userId || !peakSlug) return [];
-    const climbedOn = row.climbed_on == null || String(row.climbed_on).length === 0 ? null : String(row.climbed_on).slice(0, 10);
     return [{
       id,
       userId,
       peakSlug,
-      climbedOn,
       name: row.name == null ? 'Friend' : String(row.name),
       handle: row.handle == null || String(row.handle).length === 0 ? null : String(row.handle),
     }];
   });
 }
 
-export async function listClimbs(): Promise<ClimbRow[]> {
-  return selectClimbs();
+export async function listPeakRows(): Promise<PeakRow[]> {
+  return selectPeakRows();
 }
 
-/** Only one peak's climbs, cached for an hour or until a climb or profile changes. */
-export async function listPeakClimbs(peakSlug: string): Promise<ClimbRow[]> {
+/** Who has been to one peak, cached for an hour or until someone's peaks or profile change. */
+export async function listPeakVisitors(peakSlug: string): Promise<PeakRow[]> {
   return unstable_cache(
-    () => selectClimbs(sql`s.peak_slug = ${peakSlug}`),
-    ['peak-climbs-v1', peakSlug],
-    { revalidate: 3600, tags: [CLIMBS_TAG] },
+    () => selectPeakRows(sql`s.peak_slug = ${peakSlug}`),
+    ['peak-visitors-v1', peakSlug],
+    { revalidate: 3600, tags: [PEAKS_TAG] },
   )();
 }
 
@@ -173,21 +161,5 @@ export async function summitCountsByUser(): Promise<Array<{ userId: string; list
     const count = Number(row.n);
     if (!userId || !listId || !Number.isFinite(count)) return [];
     return [{ userId, listId, count }];
-  });
-}
-
-export async function summitCountsByActivity(): Promise<Array<{ userId: string; activity: string; count: number }>> {
-  const result = await getDb().execute(sql`
-    select s.user_id, coalesce(t.activity::text, 'hike') as activity, count(distinct s.peak_slug)::int as n
-    from summits s
-    left join tracks t on t.id = s.track_id
-    group by s.user_id, coalesce(t.activity::text, 'hike')
-  `);
-  return asRows(result).flatMap((row) => {
-    const userId = row.user_id == null ? '' : String(row.user_id);
-    const activity = row.activity == null ? '' : String(row.activity);
-    const count = Number(row.n);
-    if (!userId || !activity || !Number.isFinite(count)) return [];
-    return [{ userId, activity, count }];
   });
 }

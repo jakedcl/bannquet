@@ -3,7 +3,7 @@ import PageWrapper from '@/components/ui/PageWrapper';
 import { Button } from '@/components/retro/Button';
 import { Window } from '@/components/retro/Window';
 import { getViewer } from '@/app/sign-in/actions';
-import { canContribute } from '@/lib/membership';
+import { viewerCanContribute } from '@/lib/membership';
 import { listTrips, type TripSummary } from '@/lib/trips';
 import { formatTripDate } from '@/lib/utils';
 import { isDatabaseConfigured } from '@/db';
@@ -30,14 +30,14 @@ export default async function TripsPage() {
       error = loadFailed('trips list', err, 'Trips did not load. Try again in a minute.');
     }
   }
-  const canAdd = !viewer || canContribute(viewer.role);
+  const canAdd = viewerCanContribute(viewer);
   const upcoming = trips.filter((trip) => isUpcoming(trip.tripDate));
   const past = trips.filter((trip) => !isUpcoming(trip.tripDate));
 
   return (
     <PageWrapper>
       <div className="mx-auto max-w-3xl space-y-4 px-4 py-10">
-        <Window title="Trips" action={canAdd ? <Button href="/trips/new" tone="yellow">+ New trip</Button> : null}>
+        <Window title="Trips" action={canAdd ? <Button href="/upload?kind=trip" tone="yellow">+ New trip</Button> : null}>
           {error ? <p className="text-sm font-bold">{error}</p> : trips.length === 0 ? <p className="text-sm">No trips yet.</p> : (
             <div className="space-y-4">
               <TripGroup label="Upcoming" trips={upcoming} empty="Nothing coming up." />

@@ -4,7 +4,6 @@ import PageWrapper from '@/components/ui/PageWrapper';
 import { MapCanvas } from '@/components/map/MapCanvas';
 import { ConfirmDelete } from '@/components/delete/ConfirmDelete';
 import { RouteTitleForm } from '@/components/routes/RouteTitleForm';
-import { SeeMore } from '@/components/library/AttachReport';
 import { AddToTrip } from '@/components/library/AddToTrip';
 import { Window } from '@/components/retro/Window';
 import { deleteRouteAction } from '@/app/library/actions';
@@ -16,7 +15,7 @@ import { formatFeetGain, formatMiles } from '@/lib/gpx';
 import { loadRoute } from '@/lib/library';
 import { seesWholeRoute } from '@/lib/route-privacy';
 import { canEditOwned } from '@/lib/membership';
-import { loadMapData } from '@/lib/posts';
+import { loadMapDataNear } from '@/lib/posts';
 import { listTripChoices, tripsForItem } from '@/lib/trips';
 import { loadFailed } from '@/lib/load-error';
 import { formatTripDate } from '@/lib/utils';
@@ -79,7 +78,7 @@ export default async function RoutePage({
       tripsForItem('route', route.id).catch(() => []),
     ])
     : [[], []];
-  const map = route.lat != null && route.lng != null ? await loadMapData(viewer?.id ?? null).catch(() => null) : null;
+  const map = route.lat != null && route.lng != null ? await loadMapDataNear(viewer?.id ?? null, { routeId: route.id }).catch(() => null) : null;
 
   return (
     <PageWrapper leaf={route.name}>
@@ -109,9 +108,6 @@ export default async function RoutePage({
             {route.handle ? <Link href={`/user/${route.handle}`} className="underline">{route.who}</Link> : route.who}
           </p>
           {route.notes ? <div className="mt-3"><LinkedText text={route.notes} /></div> : null}
-          <div className="mt-3">
-            <SeeMore post={route.post} />
-          </div>
           {manage ? (
             <RouteTitleForm
               key={`${route.title ?? ''}\n${route.notes ?? ''}\n${route.hideEnds}`}

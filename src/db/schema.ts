@@ -35,7 +35,6 @@ const createdAt = timestamp('created_at', { withTimezone: true }).defaultNow().n
 
 export const userRoleEnum = pgEnum('user_role', ['member', 'admin', 'pending']);
 export const activityEnum = pgEnum('activity', ACTIVITIES);
-export const tripStatusEnum = pgEnum('trip_status', ['planned', 'done', 'cancelled']);
 export const rsvpEnum = pgEnum('rsvp', ['going', 'maybe', 'no']);
 export const tripMemberRoleEnum = pgEnum('trip_member_role', ['organizer', 'member']);
 export const pinKindEnum = pgEnum('pin_kind', [
@@ -117,17 +116,13 @@ export const trips = pgTable(
     activity: activityEnum('activity').notNull(),
     startAt: timestamp('start_at', { withTimezone: true }),
     endAt: timestamp('end_at', { withTimezone: true }),
-    routePlan: text('route_plan'),
     notes: text('notes'),
     tripDate: date('trip_date'),
-    legacyReportId: uuid('legacy_report_id'),
-    status: tripStatusEnum('status').notNull().default('planned'),
     createdBy: text('created_by').references(() => users.id, { onDelete: 'set null' }),
     createdAt,
   },
   (table) => [
     index('trips_created_by_idx').on(table.createdBy),
-    uniqueIndex('trips_legacy_report_id_unique').on(table.legacyReportId),
   ],
 );
 
@@ -174,7 +169,6 @@ export const tracks = pgTable(
     id: uuid('id').primaryKey().defaultRandom(),
     userId: text('user_id').references(() => users.id, { onDelete: 'set null' }),
     source: trackSourceEnum('source').notNull(),
-    externalId: text('external_id'),
     name: text('name').notNull(),
     title: text('title'),
     notes: text('notes'),
@@ -191,7 +185,6 @@ export const tracks = pgTable(
   (table) => [
     index('tracks_line_idx').using('gist', table.line),
     index('tracks_user_idx').on(table.userId),
-    uniqueIndex('tracks_source_external_unique').on(table.source, table.externalId),
   ],
 );
 
@@ -296,6 +289,10 @@ export const communityGearHolds = pgTable(
   (table) => [primaryKey({ columns: [table.gearId, table.userId] })],
 );
 
+/**
+ * Mirror of the peak lists in config/challenges/*.json, kept only so `summits`
+ * has a foreign key. The JSON is the source of truth; ensurePeaks() copies it in.
+ */
 export const peaks = pgTable(
   'peaks',
   {
@@ -319,14 +316,12 @@ export const summits = pgTable(
     peakSlug: text('peak_slug')
       .notNull()
       .references(() => peaks.slug, { onDelete: 'cascade' }),
-    summitedAt: timestamp('summited_at', { withTimezone: true }),
-    trackId: uuid('track_id').references(() => tracks.id, { onDelete: 'set null' }),
-    photoId: uuid('photo_id').references(() => photos.id, { onDelete: 'set null' }),
     verified: boolean('verified').notNull().default(false),
     createdAt,
   },
   (table) => [
-    index('summits_user_peak_idx').on(table.userId, table.peakSlug),
+    // One row per member per peak: peaks are an "I've been here" list.
+    uniqueIndex('summits_user_peak_unique').on(table.userId, table.peakSlug),
   ],
 );
 

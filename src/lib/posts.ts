@@ -29,11 +29,8 @@ export type PreparedPhoto = {
   source: 'exif' | 'manual' | null;
 };
 
-export function parseUploadedPhotos(
-  raw: string,
-  options: { requireLocation?: boolean } = {},
-): { photos: PreparedPhoto[]; error: string | null } {
-  const requireLocation = options.requireLocation !== false;
+/** A photo's location is optional. Photos without one stay off the maps. */
+export function parseUploadedPhotos(raw: string): { photos: PreparedPhoto[]; error: string | null } {
   let parsed: unknown;
   try {
     parsed = raw ? JSON.parse(raw) : [];
@@ -52,9 +49,6 @@ export function parseUploadedPhotos(
     const lat = typeof record.lat === 'number' ? record.lat : null;
     const lng = typeof record.lng === 'number' ? record.lng : null;
     const located = lat != null && lng != null && isLatLng(lat, lng);
-    if (requireLocation && !located) {
-      return { photos: [], error: 'A photo has no location. Drop a pin on the map, or remove it.' };
-    }
     const source = record.source === 'exif' || record.source === 'manual' ? record.source : 'manual';
     const thumbRaw = typeof record.thumbUrl === 'string' ? record.thumbUrl : '';
     const thumbUrl = thumbRaw && isPublicBlobUrl(thumbRaw) ? thumbRaw : null;
@@ -125,9 +119,43 @@ function whoSql(aliasUser: string) {
   );
 }
 
+export type MapData = { points: MapFeatureCollection; lines: MapFeatureCollection };
+
+/** How far around one item a small map reaches. */
+export const NEAR_MAP_METERS = 25_000;
+
+/** What a small map is centred on: a point (photo, pin) or a whole route. */
+export type MapAnchor = { lng: number; lat: number } | { routeId: string };
+
+function anchorSql(anchor: MapAnchor) {
+  return 'routeId' in anchor
+    ? sql`(select line from tracks where id = ${anchor.routeId}::uuid)`
+    : sql`ST_SetSRID(ST_MakePoint(${anchor.lng}, ${anchor.lat}), 4326)::geography`;
+}
+
 /** `viewerId` decides who gets a hidden-ends route in full: only its owner. */
-export async function loadMapData(viewerId: string | null): Promise<{ points: MapFeatureCollection; lines: MapFeatureCollection }> {
+export async function loadMapData(viewerId: string | null): Promise<MapData> {
+  return selectMapData(viewerId, null);
+}
+
+/** Only what sits within `radiusM` of the anchor, for the small map on an item page. */
+export async function loadMapDataNear(
+  viewerId: string | null,
+  anchor: MapAnchor,
+  radiusM = NEAR_MAP_METERS,
+): Promise<MapData> {
+  return selectMapData(viewerId, { anchor, radiusM });
+}
+
+async function selectMapData(
+  viewerId: string | null,
+  near: { anchor: MapAnchor; radiusM: number } | null,
+): Promise<MapData> {
   const db = getDb();
+  // Routes test both the stored line (uses the index) and the part this viewer may see.
+  const within = (column: string) => near
+    ? sql` and ST_DWithin(${sql.raw(column)}, ${anchorSql(near.anchor)}, ${near.radiusM})`
+    : sql``;
   const [trackResult, photoResult, pinResult] = await Promise.all([
     db.execute(sql`
       select t.id::text as id, t.title, t.activity::text as activity,
@@ -142,6 +170,7 @@ export async function loadMapData(viewerId: string | null): Promise<{ points: Ma
       left join users u on u.id = t.user_id
       cross join lateral (${routeCutSql()}) cut
       cross join lateral (select ${shownLineSql(viewerId)} as line) shown
+      where true${within('t.line')}${within('shown.line::geography')}
     `),
     db.execute(sql`
       select p.id::text as id, coalesce(p.caption, p.alt, 'Photo') as title,
@@ -151,7 +180,7 @@ export async function loadMapData(viewerId: string | null): Promise<{ points: Ma
         ST_Y(p.point::geometry) as lat, ST_X(p.point::geometry) as lng
       from photos p
       left join users u on u.id = p.user_id
-      where p.point is not null and p.pin_id is null
+      where p.point is not null and p.pin_id is null${within('p.point')}
     `),
     db.execute(sql`
       select p.id::text as id, p.title, p.activity::text as activity, p.kind::text as kind,
@@ -160,6 +189,7 @@ export async function loadMapData(viewerId: string | null): Promise<{ points: Ma
         ST_Y(p.point::geometry) as lat, ST_X(p.point::geometry) as lng
       from pins p
       left join users u on u.id = p.created_by
+      where true${within('p.point')}
     `),
   ]);
 
@@ -313,9 +343,8 @@ export async function addProfilePhotos(
   const db = getDb();
   const saved: Array<{ id: string; url: string; thumbUrl: string | null }> = [];
   for (const [index, photo] of input.photos.entries()) {
-    if (!isPublicBlobUrl(photo.url) || photo.lat == null || photo.lng == null || !isLatLng(photo.lat, photo.lng)) {
-      continue;
-    }
+    if (!isPublicBlobUrl(photo.url)) continue;
+    const located = photo.lat != null && photo.lng != null && isLatLng(photo.lat, photo.lng);
     // A repeat submit of the same upload returns the row that already exists.
     const existing = await db.execute(sql`
       select id::text as id, thumb_url from photos
@@ -335,8 +364,8 @@ export async function addProfilePhotos(
         ${photo.thumbUrl},
         ${photo.width || null},
         ${photo.height || null},
-        ST_SetSRID(ST_MakePoint(${photo.lng}, ${photo.lat}), 4326)::geography,
-        ${photo.source},
+        ${located ? sql`ST_SetSRID(ST_MakePoint(${photo.lng}, ${photo.lat}), 4326)::geography` : null},
+        ${located ? photo.source : null},
         ${index},
         'Photo'
       )
@@ -349,8 +378,8 @@ export async function addProfilePhotos(
 }
 
 export type ProfileLibrary = {
-  routes: Array<{ id: string; name: string; activity: string; distanceM: number | null; elevGainM: number | null; date: string | null; postId: string | null }>;
-  photos: Array<{ id: string; url: string; thumbUrl: string | null; caption: string | null; postId: string | null; pinId: string | null }>;
+  routes: Array<{ id: string; name: string; activity: string; distanceM: number | null; elevGainM: number | null; date: string | null}>;
+  photos: Array<{ id: string; url: string; thumbUrl: string | null; caption: string | null; pinId: string | null }>;
 };
 
 export async function loadProfileLibrary(userId: string): Promise<ProfileLibrary> {
@@ -383,7 +412,6 @@ export async function loadProfileLibrary(userId: string): Promise<ProfileLibrary
         distanceM: num(row.distance_m),
         elevGainM: num(row.elev_gain_m),
         date: text(row.route_date),
-        postId: null,
       }];
     }),
     photos: asRows(photos).flatMap((row) => {
@@ -395,7 +423,6 @@ export async function loadProfileLibrary(userId: string): Promise<ProfileLibrary
         url,
         thumbUrl: text(row.thumb_url),
         caption: text(row.caption),
-        postId: null,
         pinId: text(row.pin_id),
       }];
     }),

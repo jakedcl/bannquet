@@ -38,7 +38,7 @@ export function AddToTrip({
           >
             <div className="mb-3 flex items-start justify-between gap-3">
               <p className="text-sm font-bold uppercase">Trips</p>
-              <Link href="/trips/new" className="shrink-0 text-xs font-bold uppercase underline">+ New trip</Link>
+              <Link href="/upload?kind=trip" className="shrink-0 text-xs font-bold uppercase underline">+ New trip</Link>
             </div>
             {trips.length === 0 ? <p className="text-sm">No trips yet.</p> : (
               <ul className="max-h-64 space-y-1 overflow-y-auto">

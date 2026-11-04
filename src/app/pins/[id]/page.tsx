@@ -4,7 +4,6 @@ import { notFound } from 'next/navigation';
 import PageWrapper from '@/components/ui/PageWrapper';
 import { MapCanvas } from '@/components/map/MapCanvas';
 import { DeletePinButton, PinForm } from '@/components/pins/PinForm';
-import { SeeMore } from '@/components/library/AttachReport';
 import { AddToTrip } from '@/components/library/AddToTrip';
 import { Badge } from '@/components/retro/Badge';
 import { Button } from '@/components/retro/Button';
@@ -15,7 +14,7 @@ import { isDatabaseConfigured } from '@/db';
 import { canEditOwned } from '@/lib/membership';
 import { loadPin } from '@/lib/pins';
 import { PIN_KIND_LABELS, isPinKind } from '@/lib/pin-kinds';
-import { loadMapData } from '@/lib/posts';
+import { loadMapDataNear } from '@/lib/posts';
 import { listTripChoices, tripsForItem } from '@/lib/trips';
 import { formatTripDate } from '@/lib/utils';
 
@@ -48,7 +47,7 @@ export default async function PinPage({
       tripsForItem('pin', pin.id).catch(() => []),
     ])
     : [[], []];
-  const data = await loadMapData(viewer?.id ?? null);
+  const data = await loadMapDataNear(viewer?.id ?? null, { lng: pin.lng, lat: pin.lat });
   const activity = pin.activity && isActivity(pin.activity) ? ACTIVITY_META[pin.activity].label : null;
   const category = isPinKind(pin.kind) ? PIN_KIND_LABELS[pin.kind] : 'Other';
 
@@ -65,9 +64,6 @@ export default async function PinPage({
             {' · '}
             {pin.handle ? <Link href={`/user/${pin.handle}`} className="underline">{pin.who}</Link> : pin.who}
           </p>
-          <div className="mt-3">
-            <SeeMore post={pin.post} />
-          </div>
           {pin.note ? <p className="mt-4 whitespace-pre-wrap text-sm">{pin.note}</p> : null}
           {pin.photos.length > 0 ? (
             <div className="mt-4 grid grid-cols-3 gap-2">

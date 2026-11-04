@@ -121,10 +121,6 @@ export function groupPeaks(group: ChallengeGroup): Array<ChallengePeak & { listI
   return allPeaks().filter((peak) => wanted.has(peak.listId));
 }
 
-export function climbButtonLabel(times: number): string {
-  return times > 0 ? 'I climbed this again' : 'I climbed this';
-}
-
 export function allPeaks(): Array<ChallengePeak & { listId: string }> {
   return loadChallenges().flatMap((challenge) =>
     challenge.peaks.map((peak) => ({ ...peak, listId: challenge.id })),

@@ -3,7 +3,6 @@ import { notFound } from 'next/navigation';
 import PageWrapper from '@/components/ui/PageWrapper';
 import { MapCanvas } from '@/components/map/MapCanvas';
 import { ConfirmDelete } from '@/components/delete/ConfirmDelete';
-import { SeeMore } from '@/components/library/AttachReport';
 import { AddToTrip } from '@/components/library/AddToTrip';
 import { Window } from '@/components/retro/Window';
 import { PhotoTags } from '@/components/photos/PhotoTags';
@@ -13,7 +12,7 @@ import { getViewer } from '@/app/sign-in/actions';
 import { isDatabaseConfigured } from '@/db';
 import { loadPhoto } from '@/lib/library';
 import { canEditOwned } from '@/lib/membership';
-import { loadMapData } from '@/lib/posts';
+import { loadMapDataNear } from '@/lib/posts';
 import { listTripChoices, tripsForItem } from '@/lib/trips';
 import { loadFailed } from '@/lib/load-error';
 
@@ -75,7 +74,7 @@ export default async function PhotoPage({
       tripsForItem('photo', photo.id).catch(() => []),
     ])
     : [[], []];
-  const map = photo.lat != null && photo.lng != null ? await loadMapData(viewer?.id ?? null).catch(() => null) : null;
+  const map = photo.lat != null && photo.lng != null ? await loadMapDataNear(viewer?.id ?? null, { lng: photo.lng, lat: photo.lat }).catch(() => null) : null;
 
   return (
     <PageWrapper leaf={photo.caption || 'Photo'}>
@@ -91,9 +90,6 @@ export default async function PhotoPage({
             className="h-auto w-full bg-white object-contain retro-box"
           />
           <PhotoTags photo={photo} />
-          <div className="mt-3">
-            <SeeMore post={photo.post} />
-          </div>
           {manage ? (
             <EditDetails>
               <EditForm

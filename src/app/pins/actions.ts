@@ -34,7 +34,7 @@ function pinFields(formData: FormData): { error: string } | { fields: PinFields 
   const kind = String(formData.get('kind') ?? '');
   if (title.length < 1 || title.length > 120) return { error: 'Add a title. Keep it under 120 characters.' };
   if (!isPinKind(kind)) return { error: 'Pick a category.' };
-  const photos = parseUploadedPhotos(String(formData.get('photos') ?? ''), { requireLocation: false });
+  const photos = parseUploadedPhotos(String(formData.get('photos') ?? ''));
   if (photos.error) return { error: photos.error };
   const point = placedPoint(formData, photos.photos);
   if (!point) return { error: 'Drop the pin on the map, use your location, or add a photo that has one.' };

@@ -7,7 +7,7 @@ import { listChatMessages } from '@/lib/chat';
 import { listGear } from '@/lib/gear';
 import { listApprovedMembers } from '@/lib/members-directory';
 import { loadMapData, type MapFeatureCollection } from '@/lib/posts';
-import { listClimbs } from '@/lib/summits';
+import { listPeakRows } from '@/lib/summits';
 import { listTrips } from '@/lib/trips';
 import { formatTripDate } from '@/lib/utils';
 
@@ -27,17 +27,17 @@ function emptyPeek(): CommunityPeek {
 }
 
 async function loadPeek(viewerId: string | null): Promise<CommunityPeek> {
-  const [messages, climbs, trips, members, gear, map] = await Promise.all([
+  const [messages, visits, trips, members, gear, map] = await Promise.all([
     listChatMessages(),
-    listClimbs(),
+    listPeakRows(),
     listTrips(),
     listApprovedMembers(),
     listGear(),
     loadMapData(viewerId),
   ]);
   const counts = new Map<string, number>();
-  for (const climb of climbs) {
-    counts.set(climb.peakSlug, (counts.get(climb.peakSlug) ?? 0) + 1);
+  for (const row of visits) {
+    counts.set(row.peakSlug, (counts.get(row.peakSlug) ?? 0) + 1);
   }
   const peakRows = allPeaks()
     .flatMap((peak) => {
@@ -46,7 +46,7 @@ async function loadPeek(viewerId: string | null): Promise<CommunityPeek> {
       return [{
         slug: peak.slug,
         name: peak.name,
-        detail: total === 1 ? '1 climb' : `${total} climbs`,
+        detail: total === 1 ? '1 friend' : `${total} friends`,
         total,
       }];
     })
@@ -68,13 +68,13 @@ async function loadPeek(viewerId: string | null): Promise<CommunityPeek> {
       when: trip.tripDate ? formatTripDate(trip.tripDate) : null,
     })),
     members: [...members]
-      .sort((a, b) => b.climbs - a.climbs || a.name.localeCompare(b.name))
+      .sort((a, b) => b.peaks - a.peaks || a.name.localeCompare(b.name))
       .slice(0, PEEK)
       .map((member) => ({
         id: member.id,
         name: member.name,
         handle: member.handle,
-        detail: member.climbs > 0 ? `${member.climbs} climbs` : null,
+        detail: member.peaks > 0 ? `${member.peaks} ${member.peaks === 1 ? 'peak' : 'peaks'}` : null,
       })),
     gear: [...gear]
       .sort((a, b) => {

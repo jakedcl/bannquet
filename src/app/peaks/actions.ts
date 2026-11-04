@@ -4,72 +4,53 @@ import { revalidatePath, updateTag } from 'next/cache';
 import { getViewer } from '@/app/sign-in/actions';
 import { APPROVAL_WAIT, canContribute } from '@/lib/membership';
 import { redirectToSignIn } from '@/lib/sign-in-redirect';
-import { CLIMBS_TAG, deleteClimb, deleteLatestClimb, ensurePeaks, logClimb, updateClimbDate } from '@/lib/summits';
+import { addPeak, deletePeakRow, ensurePeaks, PEAKS_TAG, removePeak } from '@/lib/summits';
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 function refresh(handle: string | null, peakSlug: string) {
-  updateTag(CLIMBS_TAG);
+  updateTag(PEAKS_TAG);
   revalidatePath('/peaks');
   if (peakSlug) revalidatePath(`/peaks/${peakSlug}`);
   if (handle) {
     revalidatePath(`/user/${handle}`);
-    revalidatePath(`/user/${handle}/climbs`);
+    revalidatePath(`/user/${handle}/peaks`);
   }
 }
 
-export async function logClimbAction(formData: FormData): Promise<void> {
-  await recordClimb(formData);
+export async function addPeakAction(formData: FormData): Promise<void> {
+  await recordPeak(formData);
 }
 
-/** One climb, only after the person confirms. The form stays pending until this returns. */
-export async function confirmSummitAction(formData: FormData): Promise<{ ok: true } | { ok: false }> {
-  return recordClimb(formData);
+/** Add one suggested peak, only after the person taps Add. The form stays pending until this returns. */
+export async function confirmPeakAction(formData: FormData): Promise<{ ok: true } | { ok: false }> {
+  return recordPeak(formData);
 }
 
-async function recordClimb(formData: FormData): Promise<{ ok: true } | { ok: false }> {
+async function recordPeak(formData: FormData): Promise<{ ok: true } | { ok: false }> {
   const viewer = await getViewer();
   if (!viewer) return redirectToSignIn();
   if (!canContribute(viewer.role)) return { ok: false };
   const peakSlug = String(formData.get('peakSlug') ?? '').trim();
   if (!peakSlug) return { ok: false };
   await ensurePeaks();
-  const result = await logClimb(viewer.id, peakSlug, null);
+  const result = await addPeak(viewer.id, peakSlug);
   if (result === 'missing') return { ok: false };
   refresh(viewer.handle, peakSlug);
   return { ok: true };
 }
 
-export async function removeLatestClimbAction(formData: FormData): Promise<void> {
+export async function removePeakAction(formData: FormData): Promise<void> {
   const viewer = await getViewer();
   if (!viewer) return redirectToSignIn();
   if (!canContribute(viewer.role)) return;
   const peakSlug = String(formData.get('peakSlug') ?? '').trim();
   if (!peakSlug) return;
-  await deleteLatestClimb(viewer.id, peakSlug);
+  await removePeak(viewer.id, peakSlug);
   refresh(viewer.handle, peakSlug);
 }
 
-export async function updateClimbDateAction(
-  _prev: { error?: string; saved?: true } | null,
-  formData: FormData,
-): Promise<{ error?: string; saved?: true }> {
-  const viewer = await getViewer();
-  if (!viewer) return redirectToSignIn();
-  if (!canContribute(viewer.role)) return { error: APPROVAL_WAIT };
-  const id = String(formData.get('id') ?? '');
-  const peakSlug = String(formData.get('peakSlug') ?? '').trim();
-  const raw = String(formData.get('climbedOn') ?? '').trim();
-  if (!UUID.test(id)) return { error: 'That climb is missing.' };
-  if (raw && (!/^\d{4}-\d{2}-\d{2}$/.test(raw) || Number.isNaN(Date.parse(`${raw}T00:00:00Z`)))) return { error: 'Pick a date.' };
-  const ok = await updateClimbDate(id, raw || null, { id: viewer.id, admin: viewer.role === 'admin' });
-  if (!ok) return { error: 'You can only edit your own climbs.' };
-  refresh(null, peakSlug);
-  revalidatePath('/user', 'layout');
-  return { saved: true };
-}
-
-export async function deleteClimbAction(
+export async function deletePeakRowAction(
   _prev: { error?: string } | null,
   formData: FormData,
 ): Promise<{ error?: string }> {
@@ -78,9 +59,10 @@ export async function deleteClimbAction(
   if (!canContribute(viewer.role)) return { error: APPROVAL_WAIT };
   const id = String(formData.get('id') ?? '');
   const peakSlug = String(formData.get('peakSlug') ?? '').trim();
-  if (!UUID.test(id)) return { error: 'That climb is missing.' };
-  const ok = await deleteClimb(id, { id: viewer.id, admin: viewer.role === 'admin' });
-  if (!ok) return { error: 'You can only delete your own climbs.' };
+  if (!UUID.test(id)) return { error: 'That peak is missing.' };
+  const ok = await deletePeakRow(id, { id: viewer.id, admin: viewer.role === 'admin' });
+  if (!ok) return { error: 'You can only remove your own peaks.' };
   refresh(viewer.handle, peakSlug);
+  revalidatePath('/user', 'layout');
   return {};
 }

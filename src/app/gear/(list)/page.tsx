@@ -4,7 +4,7 @@ import { GearAddButton } from '@/components/gear/GearAddForm';
 import { GearTable } from '@/components/gear/GearTable';
 import { getViewer } from '@/app/sign-in/actions';
 import { listGear } from '@/lib/gear';
-import { APPROVAL_WAIT, canContribute } from '@/lib/membership';
+import { APPROVAL_WAIT, canContribute, viewerCanContribute } from '@/lib/membership';
 import { isDatabaseConfigured } from '@/db';
 import { loadFailed } from '@/lib/load-error';
 
@@ -22,7 +22,7 @@ export default async function GearPage() {
       error = loadFailed('gear list', err, 'The gear list did not load. Try again in a minute.');
     }
   }
-  const canEdit = Boolean(!error && (!viewer || canContribute(viewer.role)));
+  const canEdit = Boolean(!error && viewerCanContribute(viewer));
 
   return (
     <PageWrapper>

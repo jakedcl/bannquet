@@ -1,7 +1,7 @@
 import { AvatarImage } from '@/components/ui/AvatarImage';
 import { notFound, redirect } from 'next/navigation';
 import PageWrapper from '@/components/ui/PageWrapper';
-import { ClimbRows, GearRows, PhotoGrid, PinRows, RouteRows, SeeAll, TripRows } from '@/components/profile/ProfileLists';
+import { PeakRows, GearRows, PhotoGrid, PinRows, RouteRows, SeeAll, TripRows } from '@/components/profile/ProfileLists';
 import { ChallengeBadge } from '@/components/stats/ChallengeBadge';
 import { Badge } from '@/components/retro/Badge';
 import { Button } from '@/components/retro/Button';
@@ -16,7 +16,7 @@ import { homeStateLabel } from '@/lib/us-states';
 import { allPeaks, challengeProgress, loadChallenges } from '@/lib/challenges';
 import { canDeleteOwned } from '@/lib/membership';
 import { PROFILE_PREVIEW } from '@/lib/list-page';
-import { ensurePeaks, listClimbs, summitCountsByUser } from '@/lib/summits';
+import { ensurePeaks, listPeakRows, summitCountsByUser } from '@/lib/summits';
 import { listGear } from '@/lib/gear';
 import { listTripsByOwner } from '@/lib/trips';
 import { loadFailed } from '@/lib/load-error';
@@ -37,18 +37,18 @@ export default async function UserPage({ params }: { params: Promise<{ username:
   let activities: Awaited<ReturnType<typeof loadLoggedActivities>> = [];
   let pins: Awaited<ReturnType<typeof loadProfilePins>> = [];
   let summitCounts: Awaited<ReturnType<typeof summitCountsByUser>> = [];
-  let climbs: Awaited<ReturnType<typeof listClimbs>> = [];
+  let peakRows: Awaited<ReturnType<typeof listPeakRows>> = [];
   let trips: Awaited<ReturnType<typeof listTripsByOwner>> = [];
   let gear: Awaited<ReturnType<typeof listGear>> = [];
   let error: string | null = null;
   try {
     await ensurePeaks();
-    [library, activities, pins, summitCounts, climbs, trips, gear] = await Promise.all([
+    [library, activities, pins, summitCounts, peakRows, trips, gear] = await Promise.all([
       loadProfileLibrary(member.id),
       loadLoggedActivities(member.id),
       loadProfilePins(member.id),
       summitCountsByUser(),
-      listClimbs(),
+      listPeakRows(),
       listTripsByOwner(member.id),
       listGear().catch(() => []),
     ]);
@@ -66,7 +66,7 @@ export default async function UserPage({ params }: { params: Promise<{ username:
     if (climbed < 1) return [];
     return [{ challenge, progress: challengeProgress(challenge.peaks.length, climbed) }];
   });
-  const ownClimbs = climbs.filter((climb) => climb.userId === member.id).reverse();
+  const ownPeaks = peakRows.filter((row) => row.userId === member.id).reverse();
   const heldGear = gear.flatMap((item) => {
     const hold = item.holds.find((row) => row.userId === member.id);
     if (!hold) return [];
@@ -122,7 +122,7 @@ export default async function UserPage({ params }: { params: Promise<{ username:
               {startedChallenges.map(({ challenge, progress }) => (
                 <div key={challenge.id} className="space-y-1">
                   <p className="text-sm font-bold">{challenge.short}</p>
-                  <p className="text-sm">{progress.climbed} / {progress.total}</p>
+                  <p className="text-sm">{progress.climbed} of {progress.total} peaks</p>
                   {progress.complete ? <ChallengeBadge short={challenge.short} /> : null}
                 </div>
               ))}
@@ -150,9 +150,9 @@ export default async function UserPage({ params }: { params: Promise<{ username:
             <TripRows trips={trips} manage={manage} collapsed />
           </Window>
         ) : null}
-        {ownClimbs.length > 0 ? (
-          <Window title="Climbs">
-            <ClimbRows climbs={ownClimbs} names={Object.fromEntries(peakNames)} manage={manage} collapsed />
+        {ownPeaks.length > 0 ? (
+          <Window title={`Peaks (${ownPeaks.length})`}>
+            <PeakRows peaks={ownPeaks} names={Object.fromEntries(peakNames)} manage={manage} collapsed />
           </Window>
         ) : null}
         {heldGear.length > 0 ? (

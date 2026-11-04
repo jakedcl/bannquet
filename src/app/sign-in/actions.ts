@@ -19,7 +19,7 @@ import {
   updateMemberProfile,
 } from '@/lib/auth/members';
 import { clientIp } from '@/lib/auth/client-ip';
-import { CLIMBS_TAG } from '@/lib/summits';
+import { PEAKS_TAG } from '@/lib/summits';
 import {
   deliverPasswordResetEmail,
   sendPasswordResetEmailAtUrl,
@@ -441,8 +441,8 @@ export async function saveProfile(
     avatarUrl,
   });
   if (saved.error || !saved.member) return { error: saved.error ?? 'Could not save that profile.' };
-  // Names and handles show on the cached peak climber lists.
-  updateTag(CLIMBS_TAG);
+  // Names and handles show on the cached peak visitor lists.
+  updateTag(PEAKS_TAG);
   redirect(nextStopForMember(saved.member));
 }
 
