@@ -32,7 +32,7 @@ export function MountainWeather({ state }: { state?: string }) {
   return (
     <div className="container mx-auto min-w-0 space-y-8 px-4 py-10">
       <header>
-        <h1 className="text-sm font-bold uppercase">
+        <h1 className="border-b-2 border-black pb-2 text-2xl font-bold uppercase tracking-wide">
           {stateName} Mountain Weather
         </h1>
       </header>
