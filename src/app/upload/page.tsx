@@ -28,6 +28,17 @@ function isKind(value: string | undefined): value is UploadKind {
   return KINDS.some((item) => item.id === value);
 }
 
+/** The same upload link, attachments included, to come back to after sign-in. */
+function uploadPath(kind: UploadKind | null, params: Record<string, string | string[] | undefined>): string {
+  if (!kind) return '/upload';
+  const query = new URLSearchParams({ kind });
+  for (const key of ['pin', 'route', 'photo'] as const) {
+    const value = params[key];
+    for (const item of Array.isArray(value) ? value : value ? [value] : []) query.append(key, item);
+  }
+  return `/upload?${query.toString()}`;
+}
+
 export default async function UploadPage({
   searchParams,
 }: {
@@ -37,7 +48,7 @@ export default async function UploadPage({
   if (params.kind === 'post') redirect('/upload?kind=trip');
   const kind = isKind(params.kind) ? params.kind : null;
   const viewer = await getViewer();
-  if (!viewer) redirect(signInPath(kind ? `/upload?kind=${kind}` : '/upload'));
+  if (!viewer) redirect(signInPath(uploadPath(kind, params)));
   const catalog = kind === 'trip' && isDatabaseConfigured() ? await listChatCatalog().catch(() => []) : [];
   const preset = presetFromCatalog(catalog, params);
 

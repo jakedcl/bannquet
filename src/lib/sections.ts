@@ -200,13 +200,6 @@ export function pageTrail(pathname: string, search: string, account: NavAccount,
     return { parentHref: profileHref, crumbs };
   }
 
-  if (pathname === '/trips/new') {
-    return {
-      parentHref: '/trips',
-      crumbs: communityTrail('/trips', 'Trips', { href: pathname, label: 'New trip' }),
-    };
-  }
-
   if (/^\/trips\/[^/]+$/.test(pathname)) {
     return {
       parentHref: '/trips',
