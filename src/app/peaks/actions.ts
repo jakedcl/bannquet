@@ -42,8 +42,11 @@ async function recordClimb(formData: FormData): Promise<{ ok: true } | { ok: fal
   if (!canContribute(viewer.role)) return { ok: false };
   const peakSlug = String(formData.get('peakSlug') ?? '').trim();
   if (!peakSlug) return { ok: false };
+  const rawRoute = String(formData.get('routeId') ?? '').trim();
+  if (rawRoute && !UUID.test(rawRoute)) return { ok: false };
   await ensurePeaks();
-  const result = await logClimb(viewer.id, peakSlug, null);
+  // A climb confirmed from a route upload takes that route's date and link.
+  const result = await logClimb(viewer.id, peakSlug, null, rawRoute || null);
   if (result === 'missing') return { ok: false };
   await linkRoutes({ userId: viewer.id, peakSlug });
   refresh(viewer.handle, peakSlug);

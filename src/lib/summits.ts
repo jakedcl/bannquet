@@ -40,24 +40,46 @@ export async function ensurePeaks(): Promise<void> {
   `);
 }
 
-export async function logClimb(userId: string, peakSlug: string, climbedOn: string | null): Promise<'added' | 'missing'> {
+/**
+ * Log one climb. With `routeId`, the climb comes from that route: it takes the
+ * route's day (America/New_York, as linkClimbsToRoutes compares) and links to it.
+ * The route must belong to the climber, or nothing is saved.
+ */
+export async function logClimb(
+  userId: string,
+  peakSlug: string,
+  climbedOn: string | null,
+  routeId: string | null = null,
+): Promise<'added' | 'missing'> {
   const known = allPeaks().some((peak) => peak.slug === peakSlug);
   if (!known) return 'missing';
   // A second tap within a few seconds is the same climb, not a new one.
-  await oneAtATime('climb', userId, async (tx) => {
+  return oneAtATime('climb', userId, async (tx) => {
     const recent = await tx.execute(sql`
       select 1 from summits
       where user_id = ${userId} and peak_slug = ${peakSlug}
         and created_at > now() - interval '10 seconds'
       limit 1
     `);
-    if (asRows(recent).length > 0) return;
+    if (asRows(recent).length > 0) return 'added' as const;
+    if (routeId) {
+      const inserted = await tx.execute(sql`
+        insert into summits (user_id, peak_slug, summited_at, track_id, verified)
+        select ${userId}, ${peakSlug},
+          (coalesce(t.started_at, t.created_at) at time zone 'America/New_York')::date,
+          t.id, false
+        from tracks t
+        where t.id = ${routeId}::uuid and t.user_id = ${userId}
+        returning id::text as id
+      `);
+      return asRows(inserted).length > 0 ? 'added' as const : 'missing' as const;
+    }
     await tx.execute(sql`
       insert into summits (user_id, peak_slug, summited_at, verified)
       values (${userId}, ${peakSlug}, ${climbedOn}::date, false)
     `);
+    return 'added' as const;
   });
-  return 'added';
 }
 
 /** A climb links to a route when the same member's route passes this close to the summit. */

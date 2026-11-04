@@ -11,9 +11,12 @@ export type SummitSuggestion = {
 
 export function SummitPrompts({
   peaks,
+  routeId,
   onClear,
 }: {
   peaks: SummitSuggestion[];
+  /** The route that suggested these peaks; a confirmed climb takes its date and links to it. */
+  routeId?: string;
   onClear?: () => void;
 }) {
   const [left, setLeft] = useState(peaks);
@@ -45,6 +48,7 @@ export function SummitPrompts({
               }}
             >
               <input type="hidden" name="peakSlug" value={peak.slug} />
+              {routeId ? <input type="hidden" name="routeId" value={routeId} /> : null}
               <SubmitButton tone="yellow" pendingLabel="Logging…" className="px-3 py-1 text-xs">
                 Log
               </SubmitButton>
