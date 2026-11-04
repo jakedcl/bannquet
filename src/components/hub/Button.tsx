@@ -37,20 +37,6 @@ export function HubButton({
   );
 }
 
-export function HubLinkButton({
-  href,
-  variant = 'filled',
-  size = 'md',
-  className = '',
-  children,
-}: { href: string; variant?: HubButtonVariant; size?: HubButtonSize; className?: string; children: ReactNode }) {
-  return (
-    <Link href={href} className={hubButtonClass(variant, size, className)}>
-      {children}
-    </Link>
-  );
-}
-
 /** Small label tag, like the old badges. */
 export function Pill({
   children,

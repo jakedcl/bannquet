@@ -7,15 +7,6 @@ export function navButtonClass(active = false, extra = '', size: 'md' | 'lg' = '
   return `nav-button rounded-none font-bold uppercase tracking-wide retro-button-blue ${scale} ${mark} ${extra}`.trim();
 }
 
-export function menuItemClass(stacked: boolean, size: 'md' | 'lg' = 'md'): string {
-  if (size === 'lg') {
-    return 'retro-button-yellow block w-full rounded-none px-4 py-3 text-center text-lg font-bold uppercase';
-  }
-  return stacked
-    ? 'retro-button-yellow block w-full rounded-none px-3 py-2 text-center text-sm font-bold uppercase'
-    : 'retro-button-yellow block w-full rounded-none px-3 py-1 text-left text-xs font-bold uppercase';
-}
-
 export function NavButton({
   href,
   active = false,

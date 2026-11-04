@@ -17,14 +17,6 @@ export function ChevronIcon({ className = 'h-4 w-4' }: IconProps) {
   );
 }
 
-export function BackIcon({ className = 'h-4 w-4' }: IconProps) {
-  return (
-    <svg viewBox="0 0 10 16" className={className} {...base} strokeWidth={2.4}>
-      <path d="M8 2L2 8l6 6" />
-    </svg>
-  );
-}
-
 export function MapIcon({ className = 'h-6 w-6' }: IconProps) {
   return (
     <svg viewBox="0 0 24 24" className={className} {...base}>
@@ -65,16 +57,6 @@ export function ProfileIcon({ className = 'h-6 w-6' }: IconProps) {
     <svg viewBox="0 0 24 24" className={className} {...base}>
       <circle cx="12" cy="8.5" r="3.8" />
       <path d="M4.5 20c1.3-3.6 4.2-5.5 7.5-5.5s6.2 1.9 7.5 5.5" />
-    </svg>
-  );
-}
-
-export function MoreIcon({ className = 'h-6 w-6' }: IconProps) {
-  return (
-    <svg viewBox="0 0 24 24" className={className} aria-hidden="true" fill="currentColor">
-      <circle cx="5.5" cy="12" r="1.7" />
-      <circle cx="12" cy="12" r="1.7" />
-      <circle cx="18.5" cy="12" r="1.7" />
     </svg>
   );
 }
