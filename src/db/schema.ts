@@ -10,7 +10,6 @@ import {
   primaryKey,
   text,
   timestamp,
-  uniqueIndex,
   uuid,
 } from 'drizzle-orm/pg-core';
 import { ACTIVITIES } from '../lib/activities';
@@ -320,8 +319,8 @@ export const summits = pgTable(
     createdAt,
   },
   (table) => [
-    // One row per member per peak: peaks are an "I've been here" list.
-    uniqueIndex('summits_user_peak_unique').on(table.userId, table.peakSlug),
+    // One row per visit, so a member can log the same peak more than once.
+    index('summits_user_peak_idx').on(table.userId, table.peakSlug),
   ],
 );
 
