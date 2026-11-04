@@ -1,4 +1,5 @@
 import { REGION_LABELS, REGION_WEATHER_SECTIONS } from '@/lib/regions';
+import { feelsLikeF, gridValueAt, windMphFromText } from '@/lib/feels-like';
 
 export type ExtremeStat = {
   label: string;
@@ -112,10 +113,10 @@ export async function loadWeatherExtremes(): Promise<ExtremeReport> {
       const settled = await Promise.allSettled(
         batch.map(async (mountain) => {
           const weather = await getExtremeWeatherSnapshot(mountain.lat, mountain.lon);
-          const windSpeedNum = parseWindNumber(weather.windSpeed);
-          const windGustNum = parseWindNumber(weather.windGust);
+          const windSpeedNum = windMphFromText(weather.windSpeed);
+          const windGustNum = windMphFromText(weather.windGust);
           const currentTemp = weather.temperature || 0;
-          const windChill = computeWindChill(currentTemp, windSpeedNum);
+          const windChill = feelsLikeF({ tempF: currentTemp, windMph: windSpeedNum });
           const hourlyTemps = weather.hourlyTemps;
           const minTemp = hourlyTemps.length > 0
             ? Math.min(...hourlyTemps, currentTemp)
@@ -188,14 +189,6 @@ export async function loadWeatherExtremes(): Promise<ExtremeReport> {
   }
 }
 
-function parseWindNumber(value: unknown): number {
-  if (typeof value === 'number' && Number.isFinite(value)) return Math.round(value);
-  if (typeof value === 'string') {
-    const n = parseInt(value.replace(/[^0-9]/g, ''), 10);
-    return Number.isFinite(n) ? n : 0;
-  }
-  return 0;
-}
 
 type NwsPointResponse = {
   properties?: {
@@ -286,23 +279,8 @@ async function getExtremeWeatherSnapshot(lat: number, lon: number) {
 // Gridpoint values are ISO intervals ("2026-11-04T00:00:00+00:00/PT2H") in km/h.
 function currentGustMph(grid: NwsGridResponse, now = Date.now()): number {
   const gust = grid.properties?.windGust;
-  const values = gust?.values ?? [];
-  const match = values.find((entry) => {
-    const [start, duration] = (entry.validTime ?? '').split('/');
-    const startMs = Date.parse(start);
-    const hours = /PT?(?:(\d+)D)?T?(?:(\d+)H)?/.exec(duration ?? '');
-    const spanMs = ((Number(hours?.[1] ?? 0) * 24) + Number(hours?.[2] ?? 0)) * 3_600_000;
-    return Number.isFinite(startMs) && now >= startMs && now < startMs + spanMs;
-  }) ?? values[0];
-  const value = match?.value;
-  if (typeof value !== 'number' || !Number.isFinite(value)) return 0;
+  const value = gridValueAt(gust?.values, now);
+  if (value === null) return 0;
   const mph = gust?.uom?.includes('km_h') ? value * 0.621371 : value;
   return Math.round(mph);
-}
-
-function computeWindChill(tempF: number, windMph: number): number {
-  if (tempF > 50 || windMph <= 3) {
-    return tempF;
-  }
-  return 35.74 + (0.6215 * tempF) - (35.75 * Math.pow(windMph, 0.16)) + (0.4275 * tempF * Math.pow(windMph, 0.16));
 }

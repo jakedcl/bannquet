@@ -1,6 +1,7 @@
 import { ForecastPeriod, ForecastSnippet, WeatherData, WeatherHazard } from '@/types/weather';
 import { DEFAULT_REGION, REGION_WEATHER_SECTIONS, RegionCode } from '@/lib/regions';
 import { outsideFetch } from '@/lib/outside-fetch';
+import { feelsLikeF, gridValueAt, windMphFromText } from '@/lib/feels-like';
 
 const USER_AGENT = 'Bannquet-Weather-App (admin@bannquet.com)';
 
@@ -43,13 +44,13 @@ const UNIT_CONVERSIONS: Record<string, (value: number) => number> = {
   'wmoUnit:km': (value) => value * 0.621371,
 };
 
-function normalizeValue(series?: GridSeries): number | null {
-  if (!series?.values?.length) return null;
-  const entry = series.values.find((v) => v.value !== null);
-  if (!entry || entry.value === null) return null;
-  if (!series.uom) return entry.value;
+/** The grid value valid right now, in US units. */
+function normalizeValue(series?: GridSeries, now = Date.now()): number | null {
+  const value = gridValueAt(series?.values, now);
+  if (value === null) return null;
+  if (!series?.uom) return value;
   const converter = UNIT_CONVERSIONS[series.uom];
-  return converter ? converter(entry.value) : entry.value;
+  return converter ? converter(value) : value;
 }
 
 type AlertFeature = {
@@ -144,6 +145,12 @@ export async function getWeather(lat: number, lon: number): Promise<WeatherData>
   const visibility = normalizeValue(gridProps.visibility);
   const ceilingHeight = normalizeValue(gridProps.ceilingHeight);
 
+  const feelsLike = feelsLikeF({
+    tempF: temperatureF,
+    windMph: windMphFromText(currentPeriod.windSpeed),
+    heatIndexF: heatIndex,
+  });
+
   const hourlyForecast = mapForecastSlice(hourlyPeriods.slice(0, 8));
   const dailyForecast = buildDailyHighLow(dailyPeriods, 7);
   const forecastPeriods = mapForecastSlice(dailyPeriods.slice(0, 8));
@@ -153,6 +160,7 @@ export async function getWeather(lat: number, lon: number): Promise<WeatherData>
     apparentTemperature,
     windChill,
     heatIndex,
+    feelsLike,
     relativeHumidity,
     conditions: [currentPeriod.shortForecast],
     windSpeed: currentPeriod.windSpeed,

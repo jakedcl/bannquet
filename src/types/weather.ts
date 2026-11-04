@@ -31,6 +31,8 @@ export interface WeatherData {
   apparentTemperature?: number | null;
   windChill?: number | null;
   heatIndex?: number | null;
+  /** Shared rule in `src/lib/feels-like.ts`, same as the live banner. */
+  feelsLike: number;
   relativeHumidity?: number | null;
   conditions: string[];
   windSpeed: string;

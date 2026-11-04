@@ -67,7 +67,7 @@ export default function WeatherDashboard({ spot }: WeatherDashboardProps) {
     );
   }
 
-  const feelsLike = weather.heatIndex ?? weather.windChill ?? weather.apparentTemperature ?? weather.temperature;
+  const feelsLike = weather.feelsLike;
   const visibilityMiles = weather.visibility ? weather.visibility / 5280 : null;
   const summitWind = weather.summitWind ? `${Math.round(weather.summitWind)} mph` : weather.windSpeed;
   const windGust = weather.windGust ? `${Math.round(weather.windGust)} mph` : null;
