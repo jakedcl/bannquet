@@ -6,7 +6,7 @@ import { PhotoMemberFilter } from '@/components/photos/PhotoMemberFilter';
 import { getViewer } from '@/app/sign-in/actions';
 import { isDatabaseConfigured } from '@/db';
 import { cleanHandle, listGalleryPhotos, listPhotoMembers, parseCursor, type GalleryPhoto } from '@/lib/gallery';
-import { canContribute } from '@/lib/membership';
+import { viewerCanContribute } from '@/lib/membership';
 import { loadFailed } from '@/lib/load-error';
 
 export const dynamic = 'force-dynamic';
@@ -36,7 +36,7 @@ export default async function PhotosPage({
       error = loadFailed('photo gallery', err, 'Photos did not load. Try again in a minute.');
     }
   }
-  const canAdd = !viewer || canContribute(viewer.role);
+  const canAdd = viewerCanContribute(viewer);
   const query = (extra: Record<string, string>) => {
     const search = new URLSearchParams({ ...(who ? { who } : {}), ...extra }).toString();
     return search ? `/photos?${search}` : '/photos';

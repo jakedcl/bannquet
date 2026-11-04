@@ -140,7 +140,7 @@ export default function Header({ account = null }: { account?: HeaderAccount }) 
 }
 
 function SiteNav({ account, pathname, home }: { account: HeaderAccount; pathname: string; home: boolean }) {
-  const canUpload = account == null || account.role !== 'pending';
+  const canUpload = account != null && account.role !== 'pending';
   const settingsOn = settingsSection(pathname, account);
 
   return (
@@ -206,7 +206,7 @@ function SiteNav({ account, pathname, home }: { account: HeaderAccount; pathname
 }
 
 function MobileNav({ account, pathname }: { account: HeaderAccount; pathname: string }) {
-  const canUpload = account == null || account.role !== 'pending';
+  const canUpload = account != null && account.role !== 'pending';
   const settingsOn = settingsSection(pathname, account);
   const [openMenu, setOpenMenu] = useState<string | null>(null);
 

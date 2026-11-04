@@ -6,7 +6,7 @@ import { CountControl } from '@/components/ui/CountControl';
 import { logClimbAction, removeLatestClimbAction } from '@/app/peaks/actions';
 import { getViewer } from '@/app/sign-in/actions';
 import { allPeaks } from '@/lib/challenges';
-import { canContribute } from '@/lib/membership';
+import { viewerCanContribute } from '@/lib/membership';
 import { listPeakClimbs, type ClimbRow } from '@/lib/summits';
 import { isDatabaseConfigured } from '@/db';
 import { loadFailed } from '@/lib/load-error';
@@ -51,7 +51,7 @@ export default async function PeakPage({ params }: { params: Promise<{ slug: str
     }
   }
 
-  const canMark = Boolean(!error && (!viewer || canContribute(viewer.role)));
+  const canMark = Boolean(!error && viewerCanContribute(viewer));
   const own = viewer ? climbs.filter((climb) => climb.userId === viewer.id) : [];
   const people = climberSummary(climbs);
 

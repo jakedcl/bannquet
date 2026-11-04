@@ -3,7 +3,7 @@ import PageWrapper from '@/components/ui/PageWrapper';
 import { Button } from '@/components/retro/Button';
 import { Window } from '@/components/retro/Window';
 import { getViewer } from '@/app/sign-in/actions';
-import { canContribute } from '@/lib/membership';
+import { viewerCanContribute } from '@/lib/membership';
 import { listTrips, type TripSummary } from '@/lib/trips';
 import { formatTripDate } from '@/lib/utils';
 import { isDatabaseConfigured } from '@/db';
@@ -30,7 +30,7 @@ export default async function TripsPage() {
       error = loadFailed('trips list', err, 'Trips did not load. Try again in a minute.');
     }
   }
-  const canAdd = !viewer || canContribute(viewer.role);
+  const canAdd = viewerCanContribute(viewer);
   const upcoming = trips.filter((trip) => isUpcoming(trip.tripDate));
   const past = trips.filter((trip) => !isUpcoming(trip.tripDate));
 

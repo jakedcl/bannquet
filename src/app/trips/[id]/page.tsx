@@ -9,7 +9,7 @@ import { EditDetails, EditForm } from '@/components/edit/EditForm';
 import { getViewer } from '@/app/sign-in/actions';
 import { LinkedText } from '@/components/ui/LinkedText';
 import { draftPhotoSources, SmallPhotoImage } from '@/components/ui/SmallPhotoImage';
-import { canContribute, canDeleteOwned, canEditOwned } from '@/lib/membership';
+import { canDeleteOwned, canEditOwned, viewerCanContribute } from '@/lib/membership';
 import { getTrip } from '@/lib/trips';
 import { formatTripDate } from '@/lib/utils';
 import { isDatabaseConfigured } from '@/db';
@@ -24,7 +24,7 @@ export default async function TripPage({ params }: { params: Promise<{ id: strin
   const trip = await getTrip(id);
   if (!trip) notFound();
   const viewer = await getViewer();
-  const canRsvp = !viewer || canContribute(viewer.role);
+  const canRsvp = viewerCanContribute(viewer);
   const canDeleteTrip = Boolean(viewer && canDeleteOwned({
     actorRole: viewer.role,
     actorId: viewer.id,
