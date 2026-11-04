@@ -15,7 +15,7 @@ The framework repo is private. Cloud agents open it with `git clone --depth 1 ht
 - Vercel. CI (`.github/workflows/ci.yml`) runs `npm ci`, lint, typecheck, test, build.
 
 ## Layout
-- `src/app/` routes incl. `posts/`, `peaks/`, `trips/`, `map/`, `weather/`, `conditions/`, `fishing/`, `community/`, `admin/`, `user/[username]`, `api/`.
+- `src/app/` routes incl. `posts/`, `peaks/`, `trips/`, `map/`, `mountain-weather/`, `conditions/`, `fishing/`, `community/`, `admin/`, `user/[username]`, `api/`.
 - `src/db/schema.ts` (Drizzle schema) and `drizzle/` (SQL migrations). `src/lib/` domain logic with `*.test.ts` beside it. `src/proxy.ts`.
 - `config/weather-regions.json` (adding a spot is a data change), `config/challenges/` (peak lists), `config/packing-templates.json`.
 - `API_DOCUMENTATION.md` covers weather endpoints.

@@ -40,6 +40,8 @@ const nextConfig: NextConfig = {
       { source: "/studio", destination: "/admin", permanent: false },
       { source: "/studio/:path*", destination: "/admin", permanent: false },
       { source: "/hikers/:username", destination: "/user/:username", permanent: false },
+      { source: "/weather", destination: "/mountain-weather", permanent: false },
+      { source: "/weather/:path*", destination: "/mountain-weather", permanent: false },
       { source: "/trip-reports/new", destination: "/posts/new", permanent: false },
       { source: "/trip-reports/submit", destination: "/posts", permanent: false },
       { source: "/trip-reports/edit", destination: "/posts", permanent: false },

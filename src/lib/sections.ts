@@ -295,16 +295,6 @@ export function pageTrail(pathname: string, search: string, account: NavAccount,
     };
   }
 
-  if (pathOn(pathname, '/weather')) {
-    return {
-      parentHref: '/mountain-weather',
-      crumbs: [
-        { href: '/mountain-weather', label: 'Mountain Weather' },
-        { href: pathname, label: 'Weather' },
-      ],
-    };
-  }
-
   if (pathname === '/community') {
     return { parentHref: '/', crumbs: [{ href: '/community', label: 'Community' }] };
   }
@@ -411,7 +401,7 @@ export function matchSection(pathname: string, search: string, account: NavAccou
     };
   }
 
-  if (pathOn(pathname, '/mountain-weather') || pathname === '/conditions' || pathOn(pathname, '/weather')) {
+  if (pathOn(pathname, '/mountain-weather') || pathname === '/conditions') {
     return {
       id: 'weather',
       href: '/mountain-weather',
