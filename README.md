@@ -11,7 +11,7 @@ Live at [bannquet.com](https://www.bannquet.com).
 - Hourly and daily forecasts, wind, precipitation and alerts for each mountain. Regions live in `config/weather-regions.json`, so adding a spot is a data change.
 - A ticker at the top of the homepage showing the current extremes across those regions. The banner links to `/conditions`, which lists the same extremes and the spots behind them.
 - `/fishing` has saltwater conditions (tides, water, wind, what's in season), freshwater rivers from USGS water data, stocking and guides.
-- `/peaks` lists the Catskill 35, Adirondack 46, New Hampshire 48, Vermont 4000-footers, Maine 4000-footers, and the New England 67 as those three New England lists together. A summit counts only when someone logs "I climbed this." The lists live in `config/challenges`. A finished list shows a small 88x31 badge on that person's profile.
+- `/peaks` lists the Catskill 35, Adirondack 46, New Hampshire 48, Vermont 4000-footers, Maine 4000-footers, and the New England 67 as those three New England lists together. Each member keeps a simple "I've been here" list of peaks (no dates); a route upload that passes a peak not on their list asks "Add it to your peaks?" The lists live in `config/challenges`. A finished list shows a small 88x31 badge on that person's profile.
 - `/trips` is a light planner: a title, a date, notes, an I'm-in toggle, attached pins, routes and photos, and a shared packing list. Templates for day hike, overnight, winter, bike, and ski live in `config/packing-templates.json`. Trips replaced posts, so `/posts` links redirect to `/trips`.
 - `/community` links to chat, peaks, trips, members, gear and the map.
 - `/chat` is one group chat. Messages can link a pin, route or photo.
