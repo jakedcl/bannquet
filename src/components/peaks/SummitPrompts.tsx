@@ -47,7 +47,7 @@ export function SummitPrompts({
               }}
             >
               <input type="hidden" name="peakSlug" value={peak.slug} />
-              <SubmitButton tone="yellow" pendingLabel="Adding…" className="px-3 py-1 text-xs">
+              <SubmitButton tone="yellow" pendingLabel="Adding…" className="px-3">
                 Add
               </SubmitButton>
             </form>

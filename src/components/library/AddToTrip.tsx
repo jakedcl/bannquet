@@ -49,7 +49,7 @@ export function AddToTrip({
                         <input type="hidden" name="kind" value={kind} />
                         <input type="hidden" name="entityId" value={entityId} />
                         <input type="hidden" name="tripId" value={trip.id} />
-                        <SubmitButton unstyled pendingLabel="Removing…" className="w-full justify-start py-1 text-left text-sm underline">
+                        <SubmitButton unstyled pendingLabel="Removing…" className="min-h-11 w-full justify-start text-left text-sm underline">
                           {trip.title} · remove
                         </SubmitButton>
                       </form>
@@ -58,7 +58,7 @@ export function AddToTrip({
                         <input type="hidden" name="kind" value={kind} />
                         <input type="hidden" name="entityId" value={entityId} />
                         <input type="hidden" name="tripId" value={trip.id} />
-                        <SubmitButton unstyled pendingLabel="Adding…" className="w-full justify-start py-1 text-left text-sm underline">
+                        <SubmitButton unstyled pendingLabel="Adding…" className="min-h-11 w-full justify-start text-left text-sm underline">
                           {trip.title}
                         </SubmitButton>
                       </form>

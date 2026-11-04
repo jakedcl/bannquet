@@ -12,7 +12,7 @@ export function PeakCheck({ peakSlug, count }: { peakSlug: string; count: number
     return (
       <form action={addPeakAction} onClick={stop} onKeyDown={stop}>
         <input type="hidden" name="peakSlug" value={peakSlug} />
-        <SubmitButton tone="yellow" pendingLabel="Saving…" className="px-3 py-2 text-xs">
+        <SubmitButton tone="yellow" pendingLabel="Saving…" className="px-3">
           Add to my peaks
         </SubmitButton>
       </form>

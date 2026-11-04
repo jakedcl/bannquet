@@ -29,7 +29,7 @@ export function CountControl({
     return (
       <form action={add.action} onClick={stop} onKeyDown={stop}>
         <Fields fields={add.fields} />
-        <SubmitButton tone="yellow" pendingLabel="Saving…" className="px-3 py-2 text-xs">
+        <SubmitButton tone="yellow" pendingLabel="Saving…" className="px-3">
           {zeroLabel}
         </SubmitButton>
       </form>

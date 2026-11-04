@@ -25,7 +25,7 @@ export function GearAddForm({
         <span className="sr-only">Category</span>
         <input name="category" maxLength={40} placeholder="Category (optional)" className="w-full retro-box-inset bg-white px-3 py-2 text-sm" />
       </label>
-      <SubmitButton tone="yellow" pendingLabel="Adding…" className="px-3 py-2 text-xs">
+      <SubmitButton tone="yellow" pendingLabel="Adding…" className="px-3">
         Add
       </SubmitButton>
       {state?.error ? <p className="w-full text-sm font-bold text-red-700">{state.error}</p> : null}

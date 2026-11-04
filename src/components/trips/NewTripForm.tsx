@@ -146,7 +146,7 @@ export function NewTripForm({
                   <span className="min-w-0 flex-1 truncate font-bold">{item.label}</span>
                   <button
                     type="button"
-                    className="text-xs underline"
+                    className="min-h-11 text-sm underline"
                     onClick={() => setAttached((current) => current.filter((row) => row.id !== item.id || row.kind !== item.kind))}
                   >
                     Remove

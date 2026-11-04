@@ -162,7 +162,7 @@ export function ChatRoom({
                 missing: false,
               }}
             />
-            <button type="button" className="text-xs underline" onClick={() => setAttached(null)}>Remove</button>
+            <button type="button" className="min-h-11 text-sm underline" onClick={() => setAttached(null)}>Remove</button>
           </p>
         ) : null}
         <div className="composer-row">
@@ -186,7 +186,7 @@ export function ChatRoom({
               className="composer-field w-full bg-white px-3 text-sm retro-box-inset"
             />
           </label>
-          <SubmitButton tone="yellow" pendingLabel="Sending…" disabled={!canSend} className="composer-control shrink-0 px-3 py-0 text-xs">
+          <SubmitButton tone="yellow" pendingLabel="Sending…" disabled={!canSend} className="composer-control shrink-0 px-3">
             Send
           </SubmitButton>
         </div>
@@ -371,7 +371,7 @@ function ChatLine({
               }}
             >
               <input type="hidden" name="id" value={message.id} />
-              <SubmitButton tone="yellow" pendingLabel="Deleting…" className="px-3 py-1 text-xs">
+              <SubmitButton tone="yellow" pendingLabel="Deleting…" className="px-3">
                 Delete
               </SubmitButton>
             </form>
