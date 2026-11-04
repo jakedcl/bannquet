@@ -15,8 +15,8 @@ export function SectionChrome() {
   if (!showNav || !section) return null;
 
   return (
-    <nav aria-label={`${section.label} sections`} className="section-nav hub-bar ui-bar ui-hairline-b w-full">
-      <div className="ui-scroll-x mx-auto flex w-full max-w-6xl flex-nowrap items-center justify-start gap-1.5 overflow-x-auto px-3 py-2 md:px-5">
+    <nav aria-label={`${section.label} sections`} className="section-nav w-full border-b-2 border-[#3d2412] bg-[#5c3a1e]">
+      <div className="flex w-full flex-nowrap items-center justify-start gap-1 overflow-x-auto py-1.5 pl-1.5 pr-1.5 sm:gap-2 sm:py-2 sm:pl-2 sm:pr-2">
         {section.links.map((item) => {
           const active = linkOn(pathname, query, item.href);
           return (
@@ -24,7 +24,7 @@ export function SectionChrome() {
               key={item.href}
               href={item.href}
               aria-current={active ? 'page' : undefined}
-              className="section-nav-link ui-press"
+              className={`section-nav-link ${active ? 'retro-button-yellow' : 'retro-button-blue'}`}
             >
               {item.label}
             </Link>

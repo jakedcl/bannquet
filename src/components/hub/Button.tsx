@@ -4,22 +4,23 @@ import type { ComponentProps, ReactNode } from 'react';
 export type HubButtonVariant = 'filled' | 'tinted' | 'gray' | 'plain' | 'destructive';
 export type HubButtonSize = 'sm' | 'md' | 'lg';
 
+/** Retro bevel buttons. `filled` is the yellow call to action. */
 const VARIANT: Record<HubButtonVariant, string> = {
-  filled: 'bg-ui-accent text-ui-on-accent hover:brightness-110',
-  tinted: 'bg-ui-accent-soft text-ui-accent hover:bg-ui-fill-2',
-  gray: 'bg-ui-fill text-ui-label hover:bg-ui-fill-2',
-  plain: 'bg-transparent text-ui-accent hover:bg-ui-fill',
-  destructive: 'bg-ui-fill text-ui-danger hover:bg-ui-fill-2',
+  filled: 'retro-button retro-button-yellow',
+  tinted: 'retro-button retro-button-green',
+  gray: 'retro-button text-gray-800',
+  plain: 'text-ui-accent underline',
+  destructive: 'retro-button text-red-700',
 };
 
 const SIZE: Record<HubButtonSize, string> = {
-  sm: 'min-h-8 px-3 text-[0.9375rem] rounded-full',
-  md: 'min-h-11 px-4 text-[1.0625rem] rounded-xl',
-  lg: 'min-h-[3.25rem] px-5 text-[1.0625rem] rounded-2xl w-full',
+  sm: '!px-3 !py-1 text-xs',
+  md: 'text-sm',
+  lg: 'w-full !py-3 text-base',
 };
 
 export function hubButtonClass(variant: HubButtonVariant = 'filled', size: HubButtonSize = 'md', extra = ''): string {
-  return `ui-press inline-flex select-none items-center justify-center gap-1.5 font-semibold tracking-[-0.01em] no-underline disabled:opacity-50 ${VARIANT[variant]} ${SIZE[size]} ${extra}`;
+  return `ui-press inline-flex select-none items-center justify-center gap-2 rounded-none font-bold uppercase tracking-wide no-underline disabled:opacity-60 ${VARIANT[variant]} ${SIZE[size]} ${extra}`;
 }
 
 export function HubButton({
@@ -50,6 +51,7 @@ export function HubLinkButton({
   );
 }
 
+/** Small label tag, like the old badges. */
 export function Pill({
   children,
   tone = 'gray',
@@ -60,12 +62,12 @@ export function Pill({
   className?: string;
 }) {
   const look = tone === 'accent'
-    ? 'bg-ui-accent-soft text-ui-accent'
+    ? 'bg-brand-green text-white'
     : tone === 'warn'
-      ? 'bg-ui-warn-bg text-ui-warn'
-      : 'bg-ui-fill text-ui-label-2';
+      ? 'bg-[#5c3a1e] text-white'
+      : 'border border-[#999999] bg-gray-100 text-gray-800';
   return (
-    <span className={`inline-flex max-w-full items-center truncate rounded-full px-2.5 py-0.5 text-[0.8125rem] font-semibold ${look} ${className}`}>
+    <span className={`inline-flex max-w-full items-center truncate px-2 py-0.5 text-[0.6875rem] font-bold uppercase tracking-wide ${look} ${className}`}>
       {children}
     </span>
   );

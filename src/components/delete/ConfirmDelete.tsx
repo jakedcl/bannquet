@@ -22,7 +22,7 @@ export function TrashButton({
   name?: string;
   value?: string;
   onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
-  /** `hub` is the rounded Apple-style control used on redesigned pages. */
+  /** `hub` is the plain bevel button used by the shared hub pages. */
   look?: 'retro' | 'hub';
   /** Hub only: a labeled button instead of the trash icon. */
   text?: string;
@@ -39,8 +39,8 @@ export function TrashButton({
         disabled={pending}
         onClick={onClick}
         className={text
-          ? 'ui-press min-h-11 w-full rounded-xl bg-ui-fill px-4 text-[1.0625rem] font-semibold text-ui-danger hover:bg-ui-fill-2'
-          : 'ui-press h-8 w-8 shrink-0 rounded-full bg-ui-fill text-ui-danger hover:bg-ui-fill-2'}
+          ? 'retro-button ui-press w-full rounded-none text-sm font-bold uppercase tracking-wide text-red-700'
+          : 'retro-button ui-press h-8 w-8 shrink-0 rounded-none !p-0 text-red-700'}
       >
         {text ?? <TrashIcon />}
       </SubmitButton>

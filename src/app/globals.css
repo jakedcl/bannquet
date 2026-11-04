@@ -396,23 +396,20 @@ td.cell-primary :is(img, .avatar-frame, svg) {
   min-height: 2rem;
 }
 
-/* Slim back bar under the section chips: back on the left, the trail on the right. */
+/* Own bar under the brown section nav. Cream, with dark type.
+   The trail uses flex-basis:auto so it cannot collapse to 0 the way flex:1 (basis 0%) does. */
 .back-bar {
   display: flex;
   width: 100%;
-  min-height: 44px;
   align-items: center;
   gap: 0.75rem;
   box-sizing: border-box;
-  background: var(--ui-bar);
-  -webkit-backdrop-filter: saturate(180%) blur(20px);
-  backdrop-filter: saturate(180%) blur(20px);
-  color: var(--ui-label);
-  box-shadow: inset 0 -0.5px 0 var(--ui-separator);
-  padding: 0.25rem 0.75rem 0.25rem 0.375rem;
-  padding-left: max(0.375rem, calc((100% - 72rem) / 2 + 0.75rem));
-  padding-right: max(0.75rem, calc((100% - 72rem) / 2 + 1.25rem));
-  font-family: var(--font-system);
+  background: #faf6ee;
+  color: #1a1a1a;
+  border-bottom: 1px solid #e4dccb;
+  padding: 0.375rem 0.75rem;
+  padding-left: max(0.75rem, calc((100% - 72rem) / 2 + 0.75rem));
+  padding-right: max(0.75rem, calc((100% - 72rem) / 2 + 0.75rem));
 }
 
 .back-bar-button {
@@ -420,21 +417,15 @@ td.cell-primary :is(img, .avatar-frame, svg) {
   flex-shrink: 0;
   align-items: center;
   gap: 0.25rem;
-  min-height: 36px;
-  padding: 0 0.5rem;
-  border-radius: 999px;
-  font-size: 1.0625rem;
+  padding: 4px 8px;
+  border-radius: 0;
+  font-size: 0.75rem;
   line-height: 1;
-  font-weight: 400;
-  color: var(--ui-accent);
-  background: transparent;
+  color: #1a1a1a;
 }
 
-.back-bar-button:hover { background: var(--ui-fill); }
-
 .back-bar a {
-  color: var(--ui-accent);
-  text-decoration: none;
+  color: #1a1a1a;
 }
 
 .crumb-trail {
@@ -445,9 +436,11 @@ td.cell-primary :is(img, .avatar-frame, svg) {
   text-overflow: ellipsis;
   white-space: nowrap;
   text-align: right;
-  color: var(--ui-label-2);
-  font-size: 0.8125rem;
-  font-weight: 500;
+  color: #1a1a1a;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 
 .crumb-wide { display: none; }
@@ -458,31 +451,35 @@ td.cell-primary :is(img, .avatar-frame, svg) {
   .crumb-narrow { display: none; }
 }
 
-/* Section chips: one row that scrolls sideways if it overflows. */
+/* Brown section bar: one row. Shrink on a phone; scroll sideways if it still overflows. */
 .section-nav-link {
   display: inline-flex;
   flex-shrink: 0;
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
-  height: 2rem;
-  padding: 0 0.875rem;
-  border-radius: 999px;
-  font-size: 0.875rem;
+  height: 1.75rem;
+  padding: 0 0.35rem;
+  font-size: 0.625rem;
   line-height: 1;
-  font-weight: 600;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
   white-space: nowrap;
-  text-decoration: none;
-  color: var(--ui-label);
-  background: var(--ui-fill);
-  transition: background-color 160ms ease, color 160ms ease;
 }
 
-.section-nav-link:hover { background: var(--ui-fill-2); }
+@media (min-width: 380px) {
+  .section-nav-link {
+    height: 2rem;
+    padding: 0 0.5rem;
+    font-size: 0.75rem;
+  }
+}
 
-.section-nav-link[aria-current="page"] {
-  color: var(--ui-on-accent);
-  background: var(--ui-accent);
+@media (min-width: 640px) {
+  .section-nav-link {
+    padding: 0 0.75rem;
+  }
 }
 
 .retro-banner {
@@ -827,67 +824,36 @@ dialog[open]::backdrop {
 }
 
 /* ------------------------------------------------------------------
-   Hub design system (Apple-style). Tokens follow the phone's light or
-   dark setting. Pages opt in with the `hub` class; the bars use it too.
+   Hub kit: the original retro Bannquet look, made consistent so the
+   shared components in src/components/hub can be used on every page.
+   Light only, same palette, fonts, bevels and green banner as before.
    ------------------------------------------------------------------ */
 :root {
-  --bar-h: 52px;
-  --tab-h: calc(56px + env(safe-area-inset-bottom, 0px));
-  --font-system: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --bar-h: 64px;
+  --tab-h: calc(60px + env(safe-area-inset-bottom, 0px));
 
-  --ui-bg: #f2f2f7;
+  --ui-bg: #f0f0f0;
   --ui-surface: #ffffff;
-  --ui-surface-2: #f6f6f8;
-  --ui-label: #1c1c1e;
-  --ui-label-2: rgba(60, 60, 67, 0.66);
-  --ui-label-3: rgba(60, 60, 67, 0.38);
-  --ui-separator: rgba(60, 60, 67, 0.16);
-  --ui-fill: rgba(118, 118, 128, 0.12);
-  --ui-fill-2: rgba(118, 118, 128, 0.2);
-  --ui-accent: #3f6f22;
-  --ui-accent-strong: #2d5016;
-  --ui-accent-soft: rgba(74, 124, 42, 0.14);
+  --ui-surface-2: #f6f4ef;
+  --ui-label: #1a1a1a;
+  --ui-label-2: #4b4b4b;
+  --ui-label-3: #8a8a8a;
+  --ui-separator: #d9d5cc;
+  --ui-fill: #e8e6e1;
+  --ui-fill-2: #dcd8cf;
+  --ui-accent: #2d5016;
+  --ui-accent-strong: #1a3009;
+  --ui-accent-soft: #e4ecdb;
   --ui-on-accent: #ffffff;
-  --ui-danger: #d70015;
-  --ui-warn-bg: rgba(255, 149, 0, 0.16);
-  --ui-warn: #a05a00;
-  --ui-bar: rgba(249, 249, 251, 0.78);
-  --ui-glass: rgba(255, 255, 255, 0.82);
-  --ui-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 4px 16px rgba(0, 0, 0, 0.06);
-  --ui-shadow-lg: 0 8px 40px rgba(0, 0, 0, 0.16);
-  --ui-radius: 14px;
-  --ui-radius-sm: 10px;
+  --ui-danger: #b3261e;
+  --ui-warn-bg: #fff4c2;
+  --ui-warn: #5c3a1e;
 }
 
 @media (min-width: 768px) {
   :root {
-    --bar-h: 56px;
+    --bar-h: 72px;
     --tab-h: 0px;
-  }
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --ui-bg: #000000;
-    --ui-surface: #1c1c1e;
-    --ui-surface-2: #2c2c2e;
-    --ui-label: #f5f5f7;
-    --ui-label-2: rgba(235, 235, 245, 0.62);
-    --ui-label-3: rgba(235, 235, 245, 0.32);
-    --ui-separator: rgba(84, 84, 88, 0.6);
-    --ui-fill: rgba(118, 118, 128, 0.24);
-    --ui-fill-2: rgba(118, 118, 128, 0.36);
-    --ui-accent: #8cc56a;
-    --ui-accent-strong: #a6d886;
-    --ui-accent-soft: rgba(140, 197, 106, 0.18);
-    --ui-on-accent: #0b1a03;
-    --ui-danger: #ff6961;
-    --ui-warn-bg: rgba(255, 159, 10, 0.2);
-    --ui-warn: #ffb340;
-    --ui-bar: rgba(22, 22, 24, 0.74);
-    --ui-glass: rgba(30, 30, 32, 0.8);
-    --ui-shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 4px 16px rgba(0, 0, 0, 0.3);
-    --ui-shadow-lg: 0 8px 40px rgba(0, 0, 0, 0.6);
   }
 }
 
@@ -912,103 +878,88 @@ dialog[open]::backdrop {
 
 .hub,
 .hub-bar {
-  font-family: var(--font-system);
+  font-family: var(--font-sans);
   color: var(--ui-label);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  letter-spacing: -0.01em;
 }
 
-.hub {
-  background: var(--ui-bg);
-}
-
-.hub :is(h1, h2, h3, h4, h5, h6) {
-  font-family: var(--font-system);
-}
-
-main.route-stage:has(> .hub),
-main.route-stage:has(> .map-bleed) {
-  background: var(--ui-bg);
-}
-
-/* Type scale, after iOS Dynamic Type (default size). */
-.t-large-title { font-size: 2.125rem; line-height: 1.2; font-weight: 700; letter-spacing: -0.022em; }
-.t-title { font-size: 1.75rem; line-height: 1.22; font-weight: 700; letter-spacing: -0.02em; }
-.t-title2 { font-size: 1.375rem; line-height: 1.27; font-weight: 700; letter-spacing: -0.018em; }
-.t-title3 { font-size: 1.25rem; line-height: 1.25; font-weight: 600; letter-spacing: -0.016em; }
-.t-headline { font-size: 1.0625rem; line-height: 1.3; font-weight: 600; letter-spacing: -0.014em; }
-.t-body { font-size: 1.0625rem; line-height: 1.4; font-weight: 400; letter-spacing: -0.014em; }
-.t-callout { font-size: 1rem; line-height: 1.35; font-weight: 400; letter-spacing: -0.012em; }
-.t-subhead { font-size: 0.9375rem; line-height: 1.33; font-weight: 400; letter-spacing: -0.01em; }
-.t-footnote { font-size: 0.8125rem; line-height: 1.38; font-weight: 400; letter-spacing: -0.004em; }
-.t-caption { font-size: 0.75rem; line-height: 1.33; font-weight: 400; letter-spacing: 0; }
-.t-eyebrow { font-size: 0.8125rem; line-height: 1.3; font-weight: 600; letter-spacing: 0.02em; text-transform: uppercase; color: var(--ui-label-2); }
+/* Type scale. Headings use the heading font, uppercase like the old windows. */
+.t-large-title { font-family: var(--font-heading); font-size: 1.75rem; line-height: 1.15; font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em; }
+.t-title { font-family: var(--font-heading); font-size: 1.5rem; line-height: 1.2; font-weight: 700; }
+.t-title2 { font-family: var(--font-heading); font-size: 1.125rem; line-height: 1.25; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; }
+.t-title3 { font-family: var(--font-heading); font-size: 1rem; line-height: 1.3; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; }
+.t-headline { font-size: 0.875rem; line-height: 1.35; font-weight: 700; }
+.t-body { font-size: 0.875rem; line-height: 1.45; }
+.t-callout { font-size: 0.875rem; line-height: 1.4; }
+.t-subhead { font-size: 0.8125rem; line-height: 1.4; }
+.t-footnote { font-size: 0.75rem; line-height: 1.4; }
+.t-caption { font-size: 0.6875rem; line-height: 1.35; }
+.t-eyebrow { font-size: 0.6875rem; line-height: 1.3; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ui-label-2); }
 
 @media (min-width: 768px) {
-  .t-large-title { font-size: 2.5rem; }
+  .t-large-title { font-size: 2.125rem; }
 }
 
+/* Page title: big uppercase with the green rule under it. */
+.ui-page-title {
+  border-bottom: 4px solid var(--brand-green);
+  padding-bottom: 0.5rem;
+}
+
+/* Section heading: one black rule, like the old page headers. */
+.ui-section-title {
+  border-bottom: 2px solid #1a1a1a;
+  padding-bottom: 0.25rem;
+}
+
+/* Window: white box, one outset bevel, optional green title bar. */
 .ui-card {
   background: var(--ui-surface);
-  border-radius: var(--ui-radius);
-  box-shadow: var(--ui-shadow);
+  border: 2px outset #cccccc;
+  box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.18);
 }
 
-.ui-glass {
-  background: var(--ui-glass);
-  -webkit-backdrop-filter: saturate(180%) blur(20px);
-  backdrop-filter: saturate(180%) blur(20px);
+/* Inset panel inside a window, for numbers and lists. */
+.ui-inset {
+  background: var(--ui-surface);
+  border: 2px inset #cccccc;
 }
 
-.ui-bar {
-  background: var(--ui-bar);
-  -webkit-backdrop-filter: saturate(180%) blur(20px);
-  backdrop-filter: saturate(180%) blur(20px);
+.ui-tile {
+  background: var(--ui-surface-2);
+  border: 1px solid var(--ui-separator);
 }
 
-.ui-hairline-b { box-shadow: inset 0 -0.5px 0 var(--ui-separator); }
-.ui-hairline-t { box-shadow: inset 0 0.5px 0 var(--ui-separator); }
+/* Beige panel that floats over the map (sheet, menus). */
+.ui-panel {
+  background: var(--background-beige);
+  border: 3px outset #cccccc;
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.3);
+}
 
-/* Inset grouped list: rows separated by a hairline that starts after the leading icon. */
 .ui-list > * + * {
-  position: relative;
-}
-
-.ui-list > * + *::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  right: 0;
-  left: var(--row-inset, 1rem);
-  height: 0.5px;
-  background: var(--ui-separator);
-  pointer-events: none;
+  border-top: 1px solid var(--ui-separator);
 }
 
 .ui-press {
-  transition: transform 160ms var(--motion-ease, ease), background-color 160ms ease, opacity 160ms ease;
+  transition: transform 120ms ease-out, filter 120ms ease-out;
   -webkit-tap-highlight-color: transparent;
 }
 
-.ui-press:active {
-  transform: scale(0.97);
-}
+.ui-press:active { transform: translate(1px, 1px); }
 
 .ui-row-press {
   transition: background-color 120ms ease;
   -webkit-tap-highlight-color: transparent;
 }
 
-.ui-row-press:hover { background: var(--ui-fill); }
-.ui-row-press:active { background: var(--ui-fill-2); }
+.ui-row-press:hover { background: #faf6ee; }
+.ui-row-press:active { background: var(--ui-fill); }
 
-.ui-focus:focus-visible,
 .hub a:focus-visible,
 .hub button:focus-visible,
 .hub-bar a:focus-visible,
 .hub-bar button:focus-visible {
-  outline: 2px solid var(--ui-accent);
+  outline: 2px solid #ffd700;
   outline-offset: 2px;
 }
 
@@ -1020,7 +971,7 @@ main.route-stage:has(> .map-bleed) {
 .ui-scroll-x::-webkit-scrollbar { display: none; }
 
 @keyframes ui-sheet-in {
-  from { transform: translateY(16px); opacity: 0; }
+  from { transform: translateY(12px); opacity: 0; }
   to { transform: translateY(0); opacity: 1; }
 }
 
@@ -1029,8 +980,8 @@ main.route-stage:has(> .map-bleed) {
   to { opacity: 1; }
 }
 
-.ui-sheet-in { animation: ui-sheet-in 240ms cubic-bezier(0.2, 0.8, 0.2, 1) both; }
-.ui-fade-in { animation: ui-fade-in 200ms ease both; }
+.ui-sheet-in { animation: ui-sheet-in 200ms cubic-bezier(0.2, 0, 0, 1) both; }
+.ui-fade-in { animation: ui-fade-in 160ms ease both; }
 
 @media (prefers-reduced-motion: reduce) {
   .ui-sheet-in,
@@ -1038,31 +989,46 @@ main.route-stage:has(> .map-bleed) {
   .ui-press:active { transform: none; }
 }
 
-/* MapLibre zoom/compass, restyled to match the hub glass buttons. */
-.maplibregl-ctrl-top-right {
-  top: 0.625rem;
-  right: 0.625rem;
+/* Bottom tab bar on phones: the green banner, flipped. */
+.tab-bar {
+  background: linear-gradient(to top, var(--brand-green-dark) 0%, var(--brand-green) 55%, var(--brand-green-light) 100%);
+  border-top: 4px solid var(--brand-green-dark);
+  box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.25);
 }
 
-.maplibregl-ctrl-top-right .maplibregl-ctrl {
-  margin: 0;
-}
-
+/* MapLibre zoom/compass in the old bevel. */
 .maplibregl-ctrl-group:not(:empty) {
-  overflow: hidden;
-  border-radius: 10px;
-  background: var(--ui-glass);
-  -webkit-backdrop-filter: saturate(180%) blur(20px);
-  backdrop-filter: saturate(180%) blur(20px);
-  box-shadow: var(--ui-shadow);
+  border: 2px outset #cccccc;
+  border-radius: 0;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
 }
 
-.maplibregl-ctrl-group button + button {
-  border-top: 0.5px solid var(--ui-separator);
+/* Green title bar on a window, slimmer than the page banner. */
+.ui-card-bar {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.75rem;
+  background: linear-gradient(to bottom, var(--brand-green-light) 0%, var(--brand-green) 50%, var(--brand-green-dark) 100%);
+  border-bottom: 2px solid var(--brand-green-dark);
+  color: #ffffff;
+  font-family: var(--font-heading);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
 }
 
-@media (prefers-color-scheme: dark) {
-  .maplibregl-ctrl-group button .maplibregl-ctrl-icon {
-    filter: invert(1);
-  }
+.ui-card-bar a {
+  color: #ffffff;
+  text-decoration: none;
+}
+
+/* Current section in the top bar: a yellow ring inside the brown sign.
+   The bevel's own box-shadow would hide a utility shadow, so it lives here. */
+.nav-button.nav-button-on {
+  box-shadow:
+    inset 0 0 0 3px #ffd700,
+    4px 4px 8px rgba(0, 0, 0, 0.3);
 }

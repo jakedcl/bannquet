@@ -83,7 +83,7 @@ export function EditDetails({ children, look = 'retro' }: { children: React.Reac
   if (look === 'hub') {
     return (
       <details className="group">
-        <summary className="ui-press flex min-h-11 cursor-pointer list-none items-center justify-center rounded-xl bg-ui-fill px-4 text-[1.0625rem] font-semibold text-ui-accent hover:bg-ui-fill-2 [&::-webkit-details-marker]:hidden">
+        <summary className="retro-button ui-press flex cursor-pointer list-none items-center justify-center rounded-none text-sm font-bold uppercase tracking-wide text-gray-800 [&::-webkit-details-marker]:hidden">
           Edit
         </summary>
         <div className="mt-3">{children}</div>

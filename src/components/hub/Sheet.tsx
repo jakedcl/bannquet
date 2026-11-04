@@ -3,7 +3,7 @@
 import { useRef, type ReactNode, type PointerEvent } from 'react';
 
 /**
- * Apple Maps style card over a full-screen map. On a phone it is a bottom sheet
+ * Panel over the full-screen map. On a phone it is a bottom sheet
  * with two heights (peek and open); drag or tap the grabber to switch. From
  * md up it is a floating side panel that is always open.
  */
@@ -47,11 +47,11 @@ export function Sheet({
       aria-label={label}
       data-expanded={expanded ? 'true' : 'false'}
       className={[
-        'hub-bar ui-glass pointer-events-auto absolute z-20 flex flex-col overflow-hidden',
-        'inset-x-2 bottom-2 rounded-[22px] shadow-[var(--ui-shadow-lg)]',
-        'transition-[max-height] duration-300 ease-[cubic-bezier(0.2,0.8,0.2,1)] motion-reduce:transition-none',
-        expanded ? 'max-h-[min(72%,560px)]' : 'max-h-[5.75rem]',
-        'md:inset-x-auto md:bottom-auto md:left-4 md:top-4 md:max-h-[calc(100%-2rem)] md:w-[360px] md:rounded-[18px]',
+        'hub-bar ui-panel pointer-events-auto absolute z-20 flex flex-col overflow-hidden',
+        'inset-x-2 bottom-2',
+        'transition-[max-height] duration-300 ease-[cubic-bezier(0.2,0,0,1)] motion-reduce:transition-none',
+        expanded ? 'max-h-[min(72%,560px)]' : 'max-h-[5.5rem]',
+        'md:inset-x-auto md:bottom-auto md:left-3 md:top-3 md:max-h-[calc(100%-1.5rem)] md:w-[360px]',
       ].join(' ')}
     >
       <div
@@ -71,10 +71,10 @@ export function Sheet({
         }}
         className="flex h-5 shrink-0 cursor-grab touch-none items-center justify-center md:hidden"
       >
-        <span className="h-[5px] w-9 rounded-full bg-ui-fill-2" />
+        <span className="h-1.5 w-10 bg-[#a39e93] shadow-[inset_1px_1px_2px_rgba(0,0,0,0.35)]" />
       </div>
-      <div className="shrink-0 px-4 pb-2 md:pt-4">{header}</div>
-      <div className={`min-h-0 flex-1 overflow-y-auto overscroll-contain px-3 pb-3 ${expanded ? '' : 'max-md:invisible'}`}>
+      <div className="shrink-0 px-3 pb-2 md:pt-3">{header}</div>
+      <div className={`min-h-0 flex-1 overflow-y-auto overscroll-contain px-2 pb-2 ${expanded ? '' : 'max-md:invisible'}`}>
         {children}
       </div>
     </section>
