@@ -105,7 +105,7 @@ function PendingDecision({ userId, onDone }: { userId: string; onDone: () => voi
           </SubmitButton>
         </form>
       </div>
-      {error ? <p className="text-xs font-bold text-red-700">{error}</p> : null}
+      {error ? <p className="text-sm font-bold text-red-700">{error}</p> : null}
     </div>
   );
 }

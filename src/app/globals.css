@@ -1057,3 +1057,14 @@ dialog[open]::backdrop {
     --text-sm: 0.9375rem;
   }
 }
+
+/* Form controls: 44px tall, 16px text on phones so iOS does not zoom. */
+:is(input:not([type="checkbox"], [type="radio"], [type="file"], [type="hidden"], [type="range"]), select) {
+  min-height: 2.75rem;
+}
+
+:is(input[type="checkbox"], input[type="radio"]) {
+  width: 1.25rem;
+  height: 1.25rem;
+  accent-color: var(--brand-green);
+}

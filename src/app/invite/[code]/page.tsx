@@ -7,6 +7,7 @@ import { getInviteByCode } from '@/lib/auth/members';
 import { inviteState } from '@/lib/membership';
 import { isDatabaseConfigured } from '@/db';
 import { issueSignupStamp } from '@/lib/signup-guard';
+import { HubPage } from '@/components/hub/Page';
 
 export const dynamic = 'force-dynamic';
 
@@ -15,11 +16,11 @@ export default async function InvitePage({ params }: { params: Promise<{ code: s
   if (!isDatabaseConfigured()) {
     return (
       <PageWrapper>
-        <div className="mx-auto max-w-lg px-4 py-10">
-          <Card title="Invite">
+        <HubPage title="Invite" width="lg">
+          <Card>
             <p>Invites are not connected yet.</p>
           </Card>
-        </div>
+        </HubPage>
       </PageWrapper>
     );
   }
@@ -34,8 +35,8 @@ export default async function InvitePage({ params }: { params: Promise<{ code: s
 
   return (
     <PageWrapper>
-      <div className="mx-auto max-w-lg px-4 py-10">
-        <Card title="You're invited">
+      <HubPage title="You're invited" width="lg">
+        <Card>
           {state === 'open' && invite.email ? (
             <CreateAccountForm email={invite.email} inviteCode={invite.code} stamp={issueSignupStamp()} />
           ) : null}
@@ -53,7 +54,7 @@ export default async function InvitePage({ params }: { params: Promise<{ code: s
             <p className="text-sm">This invite is missing an email. Ask Jake to send a new one.</p>
           ) : null}
         </Card>
-      </div>
+      </HubPage>
     </PageWrapper>
   );
 }

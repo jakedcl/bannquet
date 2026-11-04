@@ -6,6 +6,7 @@ import { getViewer } from '@/app/sign-in/actions';
 import { nextStopForMember } from '@/lib/handles';
 import { safeNextPath } from '@/lib/sign-in-next';
 import { issueSignupStamp } from '@/lib/signup-guard';
+import { HubPage } from '@/components/hub/Page';
 
 export const dynamic = 'force-dynamic';
 
@@ -16,11 +17,11 @@ export default async function SignUpPage({ searchParams }: { searchParams: Promi
 
   return (
     <PageWrapper>
-      <div className="mx-auto max-w-lg px-4 py-10">
-        <Card title="Make an account">
+      <HubPage title="Make an account" width="lg">
+        <Card>
           <SignUpForm stamp={issueSignupStamp()} next={next ?? ''} />
         </Card>
-      </div>
+      </HubPage>
     </PageWrapper>
   );
 }

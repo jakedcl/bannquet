@@ -5,6 +5,7 @@ import { Card } from '@/components/hub/Card';
 import { getViewer } from '@/app/sign-in/actions';
 import { nextStopForMember, profileNeedsNames } from '@/lib/handles';
 import { safeNextPath } from '@/lib/sign-in-next';
+import { HubPage } from '@/components/hub/Page';
 
 export const dynamic = 'force-dynamic';
 
@@ -30,12 +31,12 @@ export default async function SignInPage({
 
   return (
     <PageWrapper>
-      <div className="mx-auto max-w-lg px-4 py-10">
-        <Card title="Sign in">
+      <HubPage title="Sign in" width="lg">
+        <Card>
           {banner ? <p className="mb-4 text-sm font-bold text-red-700">{banner}</p> : null}
           <SignInForm next={next ?? ''} />
         </Card>
-      </div>
+      </HubPage>
     </PageWrapper>
   );
 }

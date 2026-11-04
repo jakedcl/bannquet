@@ -35,7 +35,7 @@ export function SearchBar({
         value={value}
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
-        className="min-w-0 flex-1 retro-box-inset bg-white px-3 py-2 text-sm max-md:px-2 max-md:py-1"
+        className="min-w-0 flex-1 retro-box-inset bg-white px-3 py-2 text-sm "
       />
       <button
         type="submit"
