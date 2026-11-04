@@ -15,6 +15,7 @@ import { canEditOwned } from '@/lib/membership';
 import { loadMapDataNear } from '@/lib/posts';
 import { listTripChoices, tripsForItem } from '@/lib/trips';
 import { loadFailed } from '@/lib/load-error';
+import { HubPage } from '@/components/hub/Page';
 
 export const dynamic = 'force-dynamic';
 
@@ -33,11 +34,11 @@ export default async function PhotoPage({
   if (!isDatabaseConfigured()) {
     return (
       <PageWrapper>
-        <div className="mx-auto max-w-3xl px-4 py-10">
-          <Card title="Photo">
+        <HubPage title="Photo" width="3xl">
+          <Card>
             <p className="text-sm font-bold">Postgres is not connected, so this photo cannot be loaded.</p>
           </Card>
-        </div>
+        </HubPage>
       </PageWrapper>
     );
   }
@@ -53,11 +54,11 @@ export default async function PhotoPage({
   if (error) {
     return (
       <PageWrapper>
-        <div className="mx-auto max-w-3xl px-4 py-10">
-          <Card title="Photo">
+        <HubPage title="Photo" width="3xl">
+          <Card>
             <p className="text-sm font-bold">{error}</p>
           </Card>
-        </div>
+        </HubPage>
       </PageWrapper>
     );
   }
@@ -78,8 +79,8 @@ export default async function PhotoPage({
 
   return (
     <PageWrapper leaf={photo.caption || 'Photo'}>
-      <div className="mx-auto max-w-3xl space-y-4 px-4 py-10">
-        <Card title={photo.caption || 'Photo'}>
+      <HubPage title={photo.caption || 'Photo'} width="3xl">
+        <Card>
           <Image
             src={photo.url}
             alt={photo.caption || ''}
@@ -107,7 +108,7 @@ export default async function PhotoPage({
           </div>
         ) : null}
         {manage && viewer ? (
-          <Card title="This photo">
+          <Card title="Manage">
             <div>
               <ConfirmDelete
                 action={deletePhotoAction}
@@ -126,7 +127,7 @@ export default async function PhotoPage({
             startOpen={addTrip === '1'}
           />
         ) : null}
-      </div>
+      </HubPage>
     </PageWrapper>
   );
 }

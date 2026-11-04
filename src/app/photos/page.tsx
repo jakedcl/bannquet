@@ -8,6 +8,7 @@ import { isDatabaseConfigured } from '@/db';
 import { cleanHandle, listGalleryPhotos, listPhotoMembers, parseCursor, type GalleryPhoto } from '@/lib/gallery';
 import { viewerCanContribute } from '@/lib/membership';
 import { loadFailed } from '@/lib/load-error';
+import { HubPage } from '@/components/hub/Page';
 
 export const dynamic = 'force-dynamic';
 
@@ -44,8 +45,8 @@ export default async function PhotosPage({
 
   return (
     <PageWrapper>
-      <div className="mx-auto max-w-5xl space-y-4 px-4 py-10">
-        <Card title="Photos" action={canAdd ? <Button href="/upload?kind=photo" tone="yellow">+ Add photos</Button> : null}>
+      <HubPage title="Photos" width="5xl" trailing={canAdd ? <Button href="/upload?kind=photo" tone="yellow">+ Add photos</Button> : null}>
+        <Card>
           {error ? <p className="text-sm font-bold">{error}</p> : (
             <div className="space-y-4">
               {members.length > 1 ? <PhotoMemberFilter value={who ?? ''} members={members} /> : null}
@@ -61,7 +62,7 @@ export default async function PhotosPage({
             </div>
           )}
         </Card>
-      </div>
+      </HubPage>
     </PageWrapper>
   );
 }
