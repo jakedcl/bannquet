@@ -23,13 +23,13 @@ export default async function PeaksPage() {
   const ready = isDatabaseConfigured();
   let error: string | null = ready ? null : 'Postgres is not connected, so peak counts stay at zero.';
   const counts = new Map<string, number>();
-  const mine = new Set<string>();
+  const mine = new Map<string, number>();
 
   if (ready) {
     try {
       for (const row of await listPeakRows()) {
         counts.set(row.peakSlug, (counts.get(row.peakSlug) ?? 0) + 1);
-        if (viewer && row.userId === viewer.id) mine.add(row.peakSlug);
+        if (viewer && row.userId === viewer.id) mine.set(row.peakSlug, row.count);
       }
     } catch (err) {
       error = loadFailed('peaks list', err, 'The peak counts did not load. Try again in a minute.');
@@ -42,7 +42,7 @@ export default async function PeaksPage() {
     elevationFt: peak.elevationFt,
     state: STATES[peak.listId] ?? '—',
     visitors: counts.get(peak.slug) ?? 0,
-    mine: mine.has(peak.slug),
+    mine: mine.get(peak.slug) ?? 0,
   }));
 
   return (

@@ -286,7 +286,7 @@ export function PeakRows({
   manage,
   collapsed = false,
 }: {
-  peaks: Array<{ id: string; peakSlug: string }>;
+  peaks: Array<{ id: string; peakSlug: string; count: number }>;
   names: Record<string, string>;
   manage: boolean;
   collapsed?: boolean;
@@ -301,6 +301,13 @@ export function PeakRows({
         <Link href={`/peaks/${row.peakSlug}`} className="font-bold underline">{names[row.peakSlug] ?? 'Peak'}</Link>
       ),
     },
+    {
+      id: 'times',
+      header: 'Times',
+      align: 'right',
+      sortValue: (row) => row.count,
+      cell: (row) => `×${row.count}`,
+    },
   ];
   if (manage) {
     columns.push({
@@ -311,7 +318,7 @@ export function PeakRows({
         <Trash>
           <ConfirmDelete
             action={deletePeakRowAction}
-            confirm="Take this off the peaks list?"
+            confirm={row.count > 1 ? 'Take one visit off this peak?' : 'Take this off the peaks list?'}
             fields={{ id: row.id, peakSlug: row.peakSlug }}
           />
         </Trash>

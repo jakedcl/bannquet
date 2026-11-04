@@ -51,7 +51,7 @@ export default async function PeakPage({ params }: { params: Promise<{ slug: str
   }
 
   const canMark = Boolean(!error && viewerCanContribute(viewer));
-  const mine = Boolean(viewer && people.some((person) => person.userId === viewer.id));
+  const mine = (viewer && people.find((person) => person.userId === viewer.id)?.count) || 0;
   const visitors = [...people].sort((a, b) => a.name.localeCompare(b.name));
 
   return (
@@ -80,16 +80,17 @@ export default async function PeakPage({ params }: { params: Promise<{ slug: str
               {visitors.map((person) => (
                 <li key={person.userId}>
                   {person.handle ? <Link href={`/user/${person.handle}`} className="underline">{person.name}</Link> : person.name}
+                  {person.count > 1 ? <span className="ml-2 font-bold">×{person.count}</span> : null}
                 </li>
               ))}
             </ul>
           )}
           {canMark ? (
             <div className="mt-4">
-              <PeakCheck peakSlug={peak.slug} added={mine} />
+              <PeakCheck peakSlug={peak.slug} count={mine} />
             </div>
           ) : mine ? (
-            <p className="mt-4 text-sm font-bold">✓ In your peaks</p>
+            <p className="mt-4 text-sm font-bold">✓ In your peaks{mine > 1 ? ` ×${mine}` : ''}</p>
           ) : null}
         </Window>
       </div>

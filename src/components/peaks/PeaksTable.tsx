@@ -14,7 +14,8 @@ export type PeakTableRow = {
   state: string;
   /** How many members have this peak on their peaks. */
   visitors: number;
-  mine: boolean;
+  /** How many times the viewer has been up (0 = not yet). */
+  mine: number;
 };
 
 const STATE_ORDER = ['NY', 'NH', 'VT', 'ME'];
@@ -39,8 +40,8 @@ export function PeaksTable({
     return rows.filter((row) => {
       if (needle && !row.name.toLowerCase().includes(needle)) return false;
       if (state !== 'all' && row.state !== state) return false;
-      if (been === 'yes' && !row.mine) return false;
-      if (been === 'no' && row.mine) return false;
+      if (been === 'yes' && row.mine < 1) return false;
+      if (been === 'no' && row.mine > 0) return false;
       return true;
     });
   }, [rows, query, state, been]);
@@ -82,11 +83,11 @@ export function PeaksTable({
     {
       id: 'you',
       header: 'You',
-      sortValue: (row) => (row.mine ? 1 : 0),
+      sortValue: (row) => row.mine,
       cell: (row) => canMark ? (
-        <PeakCheck peakSlug={row.slug} added={row.mine} />
+        <PeakCheck peakSlug={row.slug} count={row.mine} />
       ) : (
-        <span>{row.mine ? '✓' : '—'}</span>
+        <span>{row.mine > 1 ? `✓ ×${row.mine}` : row.mine ? '✓' : '—'}</span>
       ),
     },
   ];
