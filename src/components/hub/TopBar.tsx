@@ -54,7 +54,7 @@ export function TopBar({ account }: { account: BarAccount }) {
           <Image src="/logo.png" alt="BANNQUET" width={398} height={114} priority unoptimized className="header-logo !h-9 md:!h-10" />
         </Link>
 
-        <nav aria-label="Main" className="hidden min-w-0 flex-1 items-center gap-2 md:flex">
+        <nav aria-label="Main" className="hidden min-w-0 flex-1 items-center gap-2 lg:flex">
           <Link href="/" className={barLinkClass(tab === 'map')}>Map</Link>
           <Link href="/trips" className={barLinkClass(tab === 'trips')}>Trips</Link>
           <Link href="/mountain-weather" className={barLinkClass(tab === 'weather')}>Weather</Link>
@@ -66,7 +66,7 @@ export function TopBar({ account }: { account: BarAccount }) {
           </Menu>
         </nav>
 
-        <div className="ml-auto hidden items-center gap-2 md:flex">
+        <div className="ml-auto hidden shrink-0 items-center gap-2 lg:flex">
           {canUpload ? (
             <Menu label="Upload" active={tab === 'upload'} align="right">
               <MenuLinks links={UPLOAD_LINKS} />
@@ -90,7 +90,7 @@ export function TopBar({ account }: { account: BarAccount }) {
           onClick={() => setMoreOn(pathname)}
           aria-label="Menu"
           aria-expanded={moreOpen}
-          className="ui-press relative ml-auto flex h-11 w-11 items-center justify-center focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white md:hidden"
+          className="ui-press relative ml-auto flex h-11 w-11 items-center justify-center focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white lg:hidden"
         >
           <span className="flex w-6 flex-col items-end justify-center gap-1.5" aria-hidden="true">
             <span className="block h-0.5 w-6 bg-white" />
@@ -147,7 +147,7 @@ function MoreSheet({ account, onClose }: { account: BarAccount; onClose: () => v
 
   if (!ready) return null;
   return createPortal(
-    <div className="hub-bar fixed inset-0 z-[100] md:hidden" role="dialog" aria-modal="true" aria-label="Menu">
+    <div className="hub-bar fixed inset-0 z-[100] lg:hidden" role="dialog" aria-modal="true" aria-label="Menu">
       <button type="button" aria-label="Close" onClick={onClose} className="ui-fade-in absolute inset-0 bg-black/40" />
       <div className="ui-panel ui-sheet-in absolute inset-x-0 bottom-0 max-h-[85dvh] overflow-y-auto pb-[calc(1rem+env(safe-area-inset-bottom,0px))]">
         <div className="ui-card-bar sticky top-0 z-10 !py-2">

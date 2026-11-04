@@ -789,6 +789,13 @@ dialog[open]::backdrop {
 @media (min-width: 768px) {
   :root {
     --bar-h: 72px;
+  }
+}
+
+/* The full banner links only fit from lg up; below that the phone layout
+   (three-line menu and bottom tab bar) is used. Keep in step with TopBar/TabBar. */
+@media (min-width: 1024px) {
+  :root {
     --tab-h: 0px;
   }
 }

@@ -26,7 +26,7 @@ export function TabBar({ account }: { account: NavAccount }) {
   return (
     <nav
       aria-label="Tabs"
-      className="hub-bar tab-bar fixed inset-x-0 bottom-0 z-50 md:hidden"
+      className="hub-bar tab-bar fixed inset-x-0 bottom-0 z-50 lg:hidden"
       style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}
     >
       <ul className="mx-auto flex h-16 max-w-lg items-stretch">
