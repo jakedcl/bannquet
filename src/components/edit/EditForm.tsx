@@ -79,7 +79,17 @@ export function EditForm({
 }
 
 /** A quiet "Edit" link that opens the form. */
-export function EditDetails({ children }: { children: React.ReactNode }) {
+export function EditDetails({ children, look = 'retro' }: { children: React.ReactNode; look?: 'retro' | 'hub' }) {
+  if (look === 'hub') {
+    return (
+      <details className="group">
+        <summary className="ui-press flex min-h-11 cursor-pointer list-none items-center justify-center rounded-xl bg-ui-fill px-4 text-[1.0625rem] font-semibold text-ui-accent hover:bg-ui-fill-2 [&::-webkit-details-marker]:hidden">
+          Edit
+        </summary>
+        <div className="mt-3">{children}</div>
+      </details>
+    );
+  }
   return (
     <details className="mt-4">
       <summary className="cursor-pointer text-sm font-bold underline">Edit</summary>

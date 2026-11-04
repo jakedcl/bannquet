@@ -14,13 +14,38 @@ export function TrashButton({
   name,
   value,
   onClick,
+  look = 'retro',
+  text,
 }: {
   pending?: boolean;
   label?: string;
   name?: string;
   value?: string;
   onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  /** `hub` is the rounded Apple-style control used on redesigned pages. */
+  look?: 'retro' | 'hub';
+  /** Hub only: a labeled button instead of the trash icon. */
+  text?: string;
 }) {
+  if (look === 'hub') {
+    return (
+      <SubmitButton
+        unstyled
+        pendingLabel="Deleting…"
+        ariaLabel={text ? undefined : label}
+        title={label}
+        name={name}
+        value={value}
+        disabled={pending}
+        onClick={onClick}
+        className={text
+          ? 'ui-press min-h-11 w-full rounded-xl bg-ui-fill px-4 text-[1.0625rem] font-semibold text-ui-danger hover:bg-ui-fill-2'
+          : 'ui-press h-8 w-8 shrink-0 rounded-full bg-ui-fill text-ui-danger hover:bg-ui-fill-2'}
+      >
+        {text ?? <TrashIcon />}
+      </SubmitButton>
+    );
+  }
   return (
     <SubmitButton
       icon
@@ -44,18 +69,22 @@ export function ConfirmDelete({
   confirm,
   fields,
   label,
+  look = 'retro',
+  text,
 }: {
   action: Action;
   confirm: string;
   fields: Record<string, string>;
   /** Screen-reader name. Defaults to the confirm question, e.g. "Delete this route". */
   label?: string;
+  look?: 'retro' | 'hub';
+  text?: string;
 }) {
   const [state, formAction, pending] = useActionState(action, null);
   return (
     <form
       action={formAction}
-      className="relative shrink-0"
+      className={text ? 'relative w-full' : 'relative shrink-0'}
       onSubmit={(event) => {
         if (!window.confirm(confirm)) event.preventDefault();
       }}
@@ -66,7 +95,7 @@ export function ConfirmDelete({
       {state?.error ? (
         <p className="absolute right-0 top-full z-10 mt-1 w-44 text-right text-xs font-bold text-red-700">{state.error}</p>
       ) : null}
-      <TrashButton pending={pending} label={label ?? confirm.replace(/\?$/, '')} />
+      <TrashButton pending={pending} label={label ?? confirm.replace(/\?$/, '')} look={look} text={text} />
     </form>
   );
 }
