@@ -850,3 +850,215 @@ dialog[open]::backdrop {
     animation-duration: 0s !important;
   }
 }
+
+/* ------------------------------------------------------------------
+   Hub design system (Apple-style). Tokens follow the phone's light or
+   dark setting. Pages opt in with the `hub` class; the bars use it too.
+   ------------------------------------------------------------------ */
+:root {
+  --bar-h: 52px;
+  --tab-h: calc(56px + env(safe-area-inset-bottom, 0px));
+  --font-system: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+
+  --ui-bg: #f2f2f7;
+  --ui-surface: #ffffff;
+  --ui-surface-2: #f6f6f8;
+  --ui-label: #1c1c1e;
+  --ui-label-2: rgba(60, 60, 67, 0.66);
+  --ui-label-3: rgba(60, 60, 67, 0.38);
+  --ui-separator: rgba(60, 60, 67, 0.16);
+  --ui-fill: rgba(118, 118, 128, 0.12);
+  --ui-fill-2: rgba(118, 118, 128, 0.2);
+  --ui-accent: #3f6f22;
+  --ui-accent-strong: #2d5016;
+  --ui-accent-soft: rgba(74, 124, 42, 0.14);
+  --ui-on-accent: #ffffff;
+  --ui-danger: #d70015;
+  --ui-warn-bg: rgba(255, 149, 0, 0.16);
+  --ui-warn: #a05a00;
+  --ui-bar: rgba(249, 249, 251, 0.78);
+  --ui-glass: rgba(255, 255, 255, 0.82);
+  --ui-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 4px 16px rgba(0, 0, 0, 0.06);
+  --ui-shadow-lg: 0 8px 40px rgba(0, 0, 0, 0.16);
+  --ui-radius: 14px;
+  --ui-radius-sm: 10px;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --bar-h: 56px;
+    --tab-h: 0px;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ui-bg: #000000;
+    --ui-surface: #1c1c1e;
+    --ui-surface-2: #2c2c2e;
+    --ui-label: #f5f5f7;
+    --ui-label-2: rgba(235, 235, 245, 0.62);
+    --ui-label-3: rgba(235, 235, 245, 0.32);
+    --ui-separator: rgba(84, 84, 88, 0.6);
+    --ui-fill: rgba(118, 118, 128, 0.24);
+    --ui-fill-2: rgba(118, 118, 128, 0.36);
+    --ui-accent: #8cc56a;
+    --ui-accent-strong: #a6d886;
+    --ui-accent-soft: rgba(140, 197, 106, 0.18);
+    --ui-on-accent: #0b1a03;
+    --ui-danger: #ff6961;
+    --ui-warn-bg: rgba(255, 159, 10, 0.2);
+    --ui-warn: #ffb340;
+    --ui-bar: rgba(22, 22, 24, 0.74);
+    --ui-glass: rgba(30, 30, 32, 0.8);
+    --ui-shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 4px 16px rgba(0, 0, 0, 0.3);
+    --ui-shadow-lg: 0 8px 40px rgba(0, 0, 0, 0.6);
+  }
+}
+
+@theme inline {
+  --color-ui-bg: var(--ui-bg);
+  --color-ui-surface: var(--ui-surface);
+  --color-ui-surface-2: var(--ui-surface-2);
+  --color-ui-label: var(--ui-label);
+  --color-ui-label-2: var(--ui-label-2);
+  --color-ui-label-3: var(--ui-label-3);
+  --color-ui-separator: var(--ui-separator);
+  --color-ui-fill: var(--ui-fill);
+  --color-ui-fill-2: var(--ui-fill-2);
+  --color-ui-accent: var(--ui-accent);
+  --color-ui-accent-strong: var(--ui-accent-strong);
+  --color-ui-accent-soft: var(--ui-accent-soft);
+  --color-ui-on-accent: var(--ui-on-accent);
+  --color-ui-danger: var(--ui-danger);
+  --color-ui-warn: var(--ui-warn);
+  --color-ui-warn-bg: var(--ui-warn-bg);
+}
+
+.hub,
+.hub-bar {
+  font-family: var(--font-system);
+  color: var(--ui-label);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  letter-spacing: -0.01em;
+}
+
+.hub {
+  background: var(--ui-bg);
+}
+
+.hub :is(h1, h2, h3, h4, h5, h6) {
+  font-family: var(--font-system);
+}
+
+main.route-stage:has(> .hub),
+main.route-stage:has(> .map-bleed) {
+  background: var(--ui-bg);
+}
+
+/* Type scale, after iOS Dynamic Type (default size). */
+.t-large-title { font-size: 2.125rem; line-height: 1.2; font-weight: 700; letter-spacing: -0.022em; }
+.t-title { font-size: 1.75rem; line-height: 1.22; font-weight: 700; letter-spacing: -0.02em; }
+.t-title2 { font-size: 1.375rem; line-height: 1.27; font-weight: 700; letter-spacing: -0.018em; }
+.t-title3 { font-size: 1.25rem; line-height: 1.25; font-weight: 600; letter-spacing: -0.016em; }
+.t-headline { font-size: 1.0625rem; line-height: 1.3; font-weight: 600; letter-spacing: -0.014em; }
+.t-body { font-size: 1.0625rem; line-height: 1.4; font-weight: 400; letter-spacing: -0.014em; }
+.t-callout { font-size: 1rem; line-height: 1.35; font-weight: 400; letter-spacing: -0.012em; }
+.t-subhead { font-size: 0.9375rem; line-height: 1.33; font-weight: 400; letter-spacing: -0.01em; }
+.t-footnote { font-size: 0.8125rem; line-height: 1.38; font-weight: 400; letter-spacing: -0.004em; }
+.t-caption { font-size: 0.75rem; line-height: 1.33; font-weight: 400; letter-spacing: 0; }
+.t-eyebrow { font-size: 0.8125rem; line-height: 1.3; font-weight: 600; letter-spacing: 0.02em; text-transform: uppercase; color: var(--ui-label-2); }
+
+@media (min-width: 768px) {
+  .t-large-title { font-size: 2.5rem; }
+}
+
+.ui-card {
+  background: var(--ui-surface);
+  border-radius: var(--ui-radius);
+  box-shadow: var(--ui-shadow);
+}
+
+.ui-glass {
+  background: var(--ui-glass);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  backdrop-filter: saturate(180%) blur(20px);
+}
+
+.ui-bar {
+  background: var(--ui-bar);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  backdrop-filter: saturate(180%) blur(20px);
+}
+
+.ui-hairline-b { box-shadow: inset 0 -0.5px 0 var(--ui-separator); }
+.ui-hairline-t { box-shadow: inset 0 0.5px 0 var(--ui-separator); }
+
+/* Inset grouped list: rows separated by a hairline that starts after the leading icon. */
+.ui-list > * + * {
+  position: relative;
+}
+
+.ui-list > * + *::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: var(--row-inset, 1rem);
+  height: 0.5px;
+  background: var(--ui-separator);
+  pointer-events: none;
+}
+
+.ui-press {
+  transition: transform 160ms var(--motion-ease, ease), background-color 160ms ease, opacity 160ms ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.ui-press:active {
+  transform: scale(0.97);
+}
+
+.ui-row-press {
+  transition: background-color 120ms ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.ui-row-press:hover { background: var(--ui-fill); }
+.ui-row-press:active { background: var(--ui-fill-2); }
+
+.ui-focus:focus-visible,
+.hub a:focus-visible,
+.hub button:focus-visible,
+.hub-bar a:focus-visible,
+.hub-bar button:focus-visible {
+  outline: 2px solid var(--ui-accent);
+  outline-offset: 2px;
+}
+
+.ui-scroll-x {
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.ui-scroll-x::-webkit-scrollbar { display: none; }
+
+@keyframes ui-sheet-in {
+  from { transform: translateY(16px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes ui-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.ui-sheet-in { animation: ui-sheet-in 240ms cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+.ui-fade-in { animation: ui-fade-in 200ms ease both; }
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-sheet-in,
+  .ui-fade-in { animation: none; }
+  .ui-press:active { transform: none; }
+}
