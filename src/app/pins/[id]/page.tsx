@@ -17,6 +17,7 @@ import { PIN_KIND_LABELS, isPinKind } from '@/lib/pin-kinds';
 import { loadMapDataNear } from '@/lib/posts';
 import { listTripChoices, tripsForItem } from '@/lib/trips';
 import { formatTripDate } from '@/lib/utils';
+import { HubPage } from '@/components/hub/Page';
 
 export const dynamic = 'force-dynamic';
 
@@ -53,20 +54,25 @@ export default async function PinPage({
 
   return (
     <PageWrapper leaf={pin.title}>
-      <div className="mx-auto max-w-3xl space-y-4 px-4 py-10">
-        <Card title={pin.title}>
-          <div className="mb-3 flex flex-wrap items-center gap-2">
-            {activity ? <Pill>{activity}</Pill> : null}
-            <Pill>{category}</Pill>
-          </div>
-          <p className="text-sm text-gray-700">
+      <HubPage
+        title={pin.title}
+        width="3xl"
+        subtitle={
+          <>
             {formatTripDate(pin.visitedOn)}
             {' · '}
-            {pin.handle ? <Link href={`/user/${pin.handle}`} className="underline">{pin.who}</Link> : pin.who}
-          </p>
-          {pin.note ? <p className="mt-4 whitespace-pre-wrap text-sm">{pin.note}</p> : null}
+            {pin.handle ? <Link href={`/user/${pin.handle}`} className="font-bold underline">{pin.who}</Link> : pin.who}
+          </>
+        }
+      >
+        <div className="flex flex-wrap items-center gap-2">
+          {activity ? <Pill>{activity}</Pill> : null}
+          <Pill>{category}</Pill>
+        </div>
+        <Card>
+          {pin.note ? <p className="mb-4 whitespace-pre-wrap t-body">{pin.note}</p> : null}
           {pin.photos.length > 0 ? (
-            <div className="mt-4 grid grid-cols-3 gap-2">
+            <div className="mb-4 grid grid-cols-3 gap-2">
               {pin.photos.map((photo) => (
                 <Link key={photo.id} href={`/photos/${photo.id}`}>
                   <SmallPhotoImage
@@ -81,7 +87,7 @@ export default async function PinPage({
               ))}
             </div>
           ) : null}
-          <div className="mt-4">
+          <div>
             <Button href={`/map?pin=${pin.id}`} tone="blue">Open on the map</Button>
           </div>
         </Card>
@@ -93,7 +99,7 @@ export default async function PinPage({
           />
         </div>
         {manage && viewer ? (
-          <Card title="Edit this pin">
+          <Card title="Edit">
             <PinForm
               initial={{
                 id: pin.id,
@@ -119,7 +125,7 @@ export default async function PinPage({
             startOpen={addTrip === '1'}
           />
         ) : null}
-      </div>
+      </HubPage>
     </PageWrapper>
   );
 }
