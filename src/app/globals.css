@@ -419,6 +419,8 @@ td.cell-primary :is(img, .avatar-frame, svg) {
   color: var(--ui-label);
   box-shadow: inset 0 -0.5px 0 var(--ui-separator);
   padding: 0.25rem 0.75rem 0.25rem 0.375rem;
+  padding-left: max(0.375rem, calc((100% - 72rem) / 2 + 0.75rem));
+  padding-right: max(0.75rem, calc((100% - 72rem) / 2 + 1.25rem));
   font-family: var(--font-system);
 }
 
