@@ -83,7 +83,7 @@ export function DataTable<T>({
                         ? { id: column.id, dir: 'desc' }
                         : { id: column.id, dir: 'asc' }
                     ))}
-                    className={`flex w-full items-center gap-1 whitespace-nowrap px-1.5 py-1 font-bold uppercase md:px-3 md:py-2 ${column.align === 'right' ? 'justify-end' : 'justify-start'}`}
+                    className={`flex min-h-11 w-full items-center gap-1 whitespace-nowrap px-2 font-bold uppercase md:px-3 ${column.align === 'right' ? 'justify-end' : 'justify-start'}`}
                   >
                     {column.shortHeader ? (
                       <>
@@ -123,7 +123,7 @@ export function DataTable<T>({
       <p className="mt-3 text-sm">
         <button
           type="button"
-          className="font-bold underline"
+          className="inline-flex min-h-11 items-center font-bold underline"
           aria-expanded={open}
           onClick={() => setOpen((current) => !current)}
         >
@@ -163,7 +163,7 @@ function Row<T>({
         {columns.map((column) => (
           <td
             key={column.id}
-            className={`border border-border-gray px-3 py-2 align-middle max-md:border-[#e6e6e6] max-md:px-1.5 max-md:leading-5 ${column.align === 'right' ? 'text-right' : ''} ${
+            className={`border border-border-gray px-3 py-2.5 align-middle max-md:border-[#e6e6e6] max-md:px-2 max-md:leading-5 ${column.align === 'right' ? 'text-right' : ''} ${
               column.sticky || column === columns[0]
                 ? 'cell-primary sticky left-0 z-10 bg-white group-hover:bg-beige max-md:shadow-[1px_0_0_#e6e6e6]'
                 : 'group-hover:bg-beige/70 max-md:whitespace-nowrap'
