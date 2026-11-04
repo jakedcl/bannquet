@@ -445,7 +445,14 @@ td.cell-primary :is(img, .avatar-frame, svg) {
   .crumb-narrow { display: none; }
 }
 
-/* Brown section bar: one row. Shrink on a phone; scroll sideways if it still overflows. */
+/* Brown section bar: pinned under the green banner; buttons wrap, never clip. */
+.section-nav { top: var(--bar-h); }
+.has-pending .section-nav { top: calc(var(--bar-h) + 3.5rem); }
+
+/* Anchors and Next's scroll-into-view land below the fixed bars. */
+html { scroll-padding-top: var(--bar-h); }
+html:has(.section-nav) { scroll-padding-top: calc(var(--bar-h) + var(--sub-h, 3.75rem)); }
+
 .section-nav-link {
   display: inline-flex;
   flex-shrink: 0;
