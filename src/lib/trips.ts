@@ -195,7 +195,7 @@ export async function createTrip(input: {
     const existingId = text(asRows(existing)[0]?.id);
     if (existingId) return existingId;
     const inserted = await tx.execute(sql`
-      insert into trips (title, slug, activity, start_at, trip_date, notes, status, created_by)
+      insert into trips (title, slug, activity, start_at, trip_date, notes, created_by)
       values (
         ${input.title},
         ${tripSlug(input.title)},
@@ -203,7 +203,6 @@ export async function createTrip(input: {
         ${input.tripDate}::date,
         ${input.tripDate}::date,
         ${input.notes || null},
-        'planned',
         ${input.userId}
       )
       returning id::text as id

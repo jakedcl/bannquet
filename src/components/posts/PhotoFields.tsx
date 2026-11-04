@@ -13,19 +13,16 @@ export function PhotoFields({
   photos,
   onChange,
   onBusy,
-  requireLocation = true,
   showLocation = true,
 }: {
   photos: UploadedPhoto[];
   onChange: (photos: UploadedPhoto[]) => void;
   onBusy?: (busy: boolean) => void;
-  requireLocation?: boolean;
   showLocation?: boolean;
 }) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [pinning, setPinning] = useState<number | null>(null);
-  const missing = showLocation && requireLocation && photos.some((photo) => photo.lat == null || photo.lng == null);
 
   function setWorking(next: boolean) {
     setBusy(next);
@@ -90,11 +87,6 @@ export function PhotoFields({
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={photo.previewUrl} alt="" className="h-16 w-16 object-cover" />
               <div className="min-w-0 flex-1 space-y-1">
-                {showLocation && requireLocation && !located ? (
-                  <p className="text-xs font-bold text-red-700">
-                    This photo has no location. Drop a pin on the map, or remove it.
-                  </p>
-                ) : null}
                 <div className="flex gap-2">
                   {showLocation ? (
                     <button type="button" className="text-xs font-bold uppercase underline" onClick={() => setPinning(index)}>
@@ -114,24 +106,14 @@ export function PhotoFields({
           );
         })}
       </div>
-      {showLocation && (missing || pinning != null) ? (
+      {showLocation && pinning != null ? (
         <div className="h-64 overflow-hidden retro-box">
           <GroupMap
             points={EMPTY}
             lines={EMPTY}
             picking
             onPick={(lng, lat) => {
-              if (pinning == null) {
-                const index = photos.findIndex((photo) => photo.lat == null);
-                if (index < 0) return;
-                const next = photos.slice();
-                const current = next[index];
-                if (!current) return;
-                next[index] = { ...current, lng, lat, source: 'manual' };
-                onChange(next);
-                setPinning(null);
-                return;
-              }
+              if (pinning == null) return;
               const next = photos.slice();
               const current = next[pinning];
               if (!current) return;

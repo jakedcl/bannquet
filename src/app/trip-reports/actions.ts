@@ -7,9 +7,9 @@ import { suggestSummits } from '@/lib/challenges';
 import { packTrack, unpackTrack, type PackedTrack } from '@/lib/gpx';
 import { APPROVAL_WAIT, canContribute } from '@/lib/membership';
 import { redirectToSignIn } from '@/lib/sign-in-redirect';
-import { addProfilePhotos, addProfileTrack, parseUploadedPhotos, type PreparedPhoto } from '@/lib/posts';
+import { addProfilePhotos, addProfileTrack, parseUploadedPhotos } from '@/lib/posts';
 import { cleanRouteNotes, cleanRouteTitle, routeTitle } from '@/lib/route-title';
-import { climbedPeakSlugs } from '@/lib/summits';
+import { climbedPeakSlugs, linkClimbsToRoutes } from '@/lib/summits';
 import type { DraftItem } from '@/lib/trip-draft';
 
 type SummitSuggestion = { slug: string; name: string };
@@ -22,10 +22,6 @@ async function summitsOnTrack(userId: string, track: PackedTrack): Promise<Summi
     console.error('Summit suggestions did not load', err);
     return [];
   }
-}
-
-function cleanPhotos(raw: string, skipLocation = false): { photos: PreparedPhoto[]; error: string | null } {
-  return parseUploadedPhotos(raw, { requireLocation: !skipLocation });
 }
 
 function readTrack(formData: FormData): { track: PackedTrack | null; error: string | null } {
@@ -58,6 +54,12 @@ export async function publishProfileTrack(
   } catch {
     return { error: 'Could not save that route. Try again in a minute.' };
   }
+  try {
+    // Climbs logged for this day near this route now point at it.
+    await linkClimbsToRoutes({ trackId: id });
+  } catch (err) {
+    console.error('Climb route link did not save', err);
+  }
   const created: DraftItem[] = [{ kind: 'route', id, label: routeTitle(title), thumb: null }];
   const suggestions = await summitsOnTrack(viewer.id, track.track);
   const next = String(formData.get('next') ?? '');
@@ -78,7 +80,7 @@ export async function publishProfilePhotos(
   const viewer = await getViewer();
   if (!viewer) return redirectToSignIn();
   if (!canContribute(viewer.role)) return { error: APPROVAL_WAIT };
-  const photos = cleanPhotos(String(formData.get('photos') ?? ''));
+  const photos = parseUploadedPhotos(String(formData.get('photos') ?? ''));
   if (photos.error) return { error: photos.error };
   if (photos.photos.length === 0) return { error: 'Choose a photo.' };
   let saved: Array<{ id: string; url: string; thumbUrl: string | null }> = [];

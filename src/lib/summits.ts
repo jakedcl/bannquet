@@ -11,6 +11,10 @@ function asRows(result: unknown): Record<string, unknown>[] {
   return (result as QueryRows).rows ?? [];
 }
 
+/**
+ * Copies config/challenges/*.json into the `peaks` table. That table only exists
+ * so `summits.peak_slug` has a foreign key; the JSON stays the source of truth.
+ */
 export async function ensurePeaks(): Promise<void> {
   const peaks = allPeaks();
   if (peaks.length === 0) return;
@@ -54,6 +58,42 @@ export async function logClimb(userId: string, peakSlug: string, climbedOn: stri
     `);
   });
   return 'added';
+}
+
+/** A climb links to a route when the same member's route passes this close to the summit. */
+export const CLIMB_ROUTE_METERS = 300;
+
+/**
+ * Fill in `summits.track_id` where the same member has a route on the climb's
+ * date that passes within CLIMB_ROUTE_METERS of the peak, closest route first.
+ * Climbs without a date and climbs already linked are left alone.
+ * Pass the climb or route that just changed; returns how many climbs it linked.
+ */
+export async function linkClimbsToRoutes(
+  scope: { summitId: string } | { trackId: string } | { userId: string; peakSlug: string },
+): Promise<number> {
+  const filter = 'summitId' in scope
+    ? sql`s.id = ${scope.summitId}::uuid`
+    : 'trackId' in scope
+      ? sql`t.id = ${scope.trackId}::uuid`
+      : sql`s.user_id = ${scope.userId} and s.peak_slug = ${scope.peakSlug}`;
+  const result = await getDb().execute(sql`
+    update summits as target
+    set track_id = match.track_id
+    from (
+      select distinct on (s.id) s.id as summit_id, t.id as track_id
+      from summits s
+      join peaks p on p.slug = s.peak_slug
+      join tracks t on t.user_id = s.user_id
+        and (coalesce(t.started_at, t.created_at) at time zone 'America/New_York')::date = s.summited_at::date
+        and ST_DWithin(t.line, p.point, ${CLIMB_ROUTE_METERS})
+      where s.track_id is null and s.summited_at is not null and ${filter}
+      order by s.id, ST_Distance(t.line, p.point), t.id
+    ) as match
+    where target.id = match.summit_id and target.track_id is null
+    returning target.id::text as id
+  `);
+  return asRows(result).length;
 }
 
 export async function deleteLatestClimb(userId: string, peakSlug: string): Promise<boolean> {
