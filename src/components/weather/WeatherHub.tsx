@@ -1,38 +1,37 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { DashboardGrid } from '@/components/ui/DashboardGrid';
-import { DashboardWindow } from '@/components/ui/DashboardWindow';
+import { ChevronIcon } from '@/components/hub/Icons';
+import { Pill } from '@/components/hub/Button';
 import type { RegionGlance, StateGlance } from '@/lib/weather-hub';
 
 function degrees(high: number | null, low: number | null): string {
   if (high == null && low == null) return '—';
   const hi = high == null ? '—' : `${Math.round(high)}°`;
   const lo = low == null ? '—' : `${Math.round(low)}°`;
-  return `${hi}/${lo}`;
+  return `${hi} / ${lo}`;
 }
 
 function RegionRow({ region }: { region: RegionGlance }) {
+  const extras = [
+    region.precip == null ? null : `${Math.round(region.precip)}% precip`,
+    region.wind ?? null,
+  ].filter(Boolean).join(' · ');
   return (
     <li>
-      <Link href={region.href} className="block min-w-0 py-1 text-xs no-underline">
-        <span className="flex min-w-0 items-center gap-2">
-          {region.icon ? (
-            <Image src={region.icon} alt="" width={20} height={20} unoptimized className="h-5 w-5 shrink-0 object-contain" />
-          ) : (
-            <span className="h-5 w-5 shrink-0" aria-hidden="true" />
-          )}
-          <span className="min-w-0 flex-1 truncate font-bold text-black">{region.title}</span>
-          <span className="shrink-0 tabular-nums">{degrees(region.high, region.low)}</span>
-          <span className="shrink-0 tabular-nums">{region.precip == null ? '—' : `${Math.round(region.precip)}%`}</span>
-          <span className="shrink-0">{region.wind ?? '—'}</span>
+      <Link href={region.href} className="ui-row-press flex min-w-0 items-center gap-3 px-4 py-3 no-underline">
+        {region.icon ? (
+          <Image src={region.icon} alt="" width={36} height={36} unoptimized className="h-9 w-9 shrink-0 rounded-lg object-cover" />
+        ) : (
+          <span className="h-9 w-9 shrink-0 rounded-lg bg-ui-fill" aria-hidden="true" />
+        )}
+        <span className="min-w-0 flex-1">
+          <span className="t-headline block truncate text-ui-label">{region.title}</span>
+          <span className="t-footnote block truncate text-ui-label-2">{region.phrase}</span>
+          {region.alert ? <Pill tone="warn" className="mt-1">{region.alert}</Pill> : null}
         </span>
-        <span className="mt-0.5 flex min-w-0 items-center gap-2 pl-7">
-          <span className="min-w-0 flex-1 truncate">{region.phrase}</span>
-          {region.alert ? (
-            <span className="max-w-[9rem] shrink-0 truncate bg-[#5c3a1e] px-1 py-0.5 text-[10px] font-bold uppercase text-white">
-              {region.alert}
-            </span>
-          ) : null}
+        <span className="shrink-0 text-right">
+          <span className="t-headline block tabular-nums text-ui-label">{degrees(region.high, region.low)}</span>
+          {extras ? <span className="t-caption block text-ui-label-2">{extras}</span> : null}
         </span>
       </Link>
     </li>
@@ -41,20 +40,27 @@ function RegionRow({ region }: { region: RegionGlance }) {
 
 export function WeatherHub({ states }: { states: StateGlance[] }) {
   return (
-    <DashboardGrid>
+    <div className="grid min-w-0 gap-4 md:grid-cols-2">
       {states.map((state) => (
-        <DashboardWindow key={state.code} title={state.name} href={state.href}>
+        <section key={state.code} aria-labelledby={`state-${state.code}`} className="ui-card min-w-0 overflow-hidden">
+          <Link href={state.href} className="ui-row-press flex items-center justify-between gap-3 px-4 pb-2 pt-4 no-underline">
+            <h2 id={`state-${state.code}`} className="t-title3 text-ui-label">{state.name}</h2>
+            <span className="t-subhead inline-flex items-center gap-1 text-ui-accent">
+              Forecasts
+              <ChevronIcon className="h-3 w-2" />
+            </span>
+          </Link>
           {state.regions.length === 0 ? (
-            <p className="text-sm">No regions.</p>
+            <p className="t-subhead px-4 pb-4 text-ui-label-2">No regions.</p>
           ) : (
-            <ul>
+            <ul className="ui-list pb-1" style={{ ['--row-inset' as string]: '4.25rem' }}>
               {state.regions.map((region) => (
                 <RegionRow key={region.id} region={region} />
               ))}
             </ul>
           )}
-        </DashboardWindow>
+        </section>
       ))}
-    </DashboardGrid>
+    </div>
   );
 }

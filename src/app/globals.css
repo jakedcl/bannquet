@@ -315,15 +315,6 @@ button, .retro-button {
   transform: scale(1.05);
 }
 
-.weather-ticker-scroll {
-  animation: scroll-ticker linear infinite;
-}
-
-@keyframes scroll-ticker {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
-}
-
 .retro-box {
   background: white;
   border: 3px outset #cccccc;
