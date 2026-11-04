@@ -4,6 +4,7 @@ import { Card } from '@/components/hub/Card';
 import { isDatabaseConfigured } from '@/db';
 import { listApprovedMembers } from '@/lib/members-directory';
 import { loadFailed } from '@/lib/load-error';
+import { HubPage } from '@/components/hub/Page';
 
 export const dynamic = 'force-dynamic';
 
@@ -22,8 +23,8 @@ export default async function MembersPage() {
 
   return (
     <PageWrapper>
-      <div className="mx-auto max-w-5xl space-y-4 px-4 py-10">
-        <Card title="Members">
+      <HubPage title="Members" width="5xl">
+        <Card>
           {error ? (
             <p className="text-sm font-bold">{error}</p>
           ) : rows.length === 0 ? (
@@ -32,7 +33,7 @@ export default async function MembersPage() {
             <MembersTable rows={rows} />
           )}
         </Card>
-      </div>
+      </HubPage>
     </PageWrapper>
   );
 }

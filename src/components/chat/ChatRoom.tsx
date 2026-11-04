@@ -133,9 +133,9 @@ export function ChatRoom({
         ))}
       </div>
       {refreshNote ? (
-        <p className="text-xs font-bold">
+        <p className="text-sm font-bold">
           {refreshNote}{' '}
-          <button type="button" className="underline" onClick={() => void pull()}>Try again</button>
+          <button type="button" className="min-h-11 underline" onClick={() => void pull()}>Try again</button>
         </p>
       ) : null}
       {notice ? (
@@ -237,7 +237,7 @@ export function ChatRoom({
                     <li key={`${item.kind}-${item.id}`}>
                       <button
                         type="button"
-                        className="flex w-full items-center gap-2 py-1 text-left text-sm"
+                        className="flex min-h-11 w-full items-center gap-2 py-1 text-left text-sm"
                         onClick={() => {
                           setAttached(item);
                           dialogRef.current?.close();
@@ -312,7 +312,7 @@ function ChatLine({
 
   return (
     <article
-      className={`group relative text-sm ${canManage ? 'pr-8' : ''}`}
+      className={`group relative text-sm ${canManage ? 'pr-12' : ''}`}
       onContextMenu={(event) => {
         if (!canManage) return;
         event.preventDefault();
@@ -342,7 +342,7 @@ function ChatLine({
       </p>
       {message.body ? <p className="mt-1 whitespace-pre-wrap">{message.body}</p> : null}
       {message.ref ? <Chip refItem={message.ref} /> : null}
-      {error ? <p className="text-xs font-bold text-red-700">{error}</p> : null}
+      {error ? <p className="text-sm font-bold text-red-700">{error}</p> : null}
       {canManage ? (
         <div data-chat-menu className="absolute right-0 top-0">
           <button
@@ -350,13 +350,13 @@ function ChatLine({
             aria-label="Message actions"
             aria-expanded={open}
             onClick={() => setOpen((value) => !value)}
-            className="flex h-7 w-7 items-center justify-center text-lg font-bold leading-none text-[#5c3a1e] opacity-0 group-hover:opacity-100 focus:opacity-100"
+            className="flex h-11 w-11 items-center justify-center text-xl font-bold leading-none text-[#5c3a1e] opacity-0 group-hover:opacity-100 focus:opacity-100 [@media(hover:none)]:opacity-100"
           >
             ⋯
           </button>
           {open ? (
             <form
-              className="absolute right-0 top-7 z-20 bg-[#5c3a1e] p-1"
+              className="absolute right-0 top-11 z-20 bg-[#5c3a1e] p-1"
               action={async (formData) => {
                 const result = await deleteChatAction(null, formData);
                 if (result?.error) {
@@ -400,7 +400,7 @@ function Chip({
   }
   const photo = draftPhotoSources(refItem);
   return (
-    <Link href={refItem.href} className="mt-1 inline-flex items-center gap-2 border border-gray-400 bg-white px-2 py-1 text-xs font-bold">
+    <Link href={refItem.href} className="mt-1 inline-flex min-h-11 items-center gap-2 border border-gray-400 bg-white px-3 py-1 text-sm font-bold">
       {photo ? (
         <SmallPhotoImage
           url={photo.url}

@@ -76,15 +76,15 @@
 .composer-control,
 .composer-field {
   box-sizing: border-box;
-  height: 2.5rem;
-  min-height: 2.5rem;
-  max-height: 2.5rem;
+  height: 2.75rem;
+  min-height: 2.75rem;
+  max-height: 2.75rem;
 }
 
 .composer-field {
   padding-top: 0;
   padding-bottom: 0;
-  line-height: calc(2.5rem - 6px);
+  line-height: calc(2.75rem - 6px);
   resize: none;
 }
 

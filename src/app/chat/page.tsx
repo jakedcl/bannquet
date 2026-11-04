@@ -6,6 +6,7 @@ import { listChatCatalog, listChatMessages, type ChatCatalogItem } from '@/lib/c
 import { APPROVAL_WAIT, canContribute, viewerCanContribute } from '@/lib/membership';
 import { isDatabaseConfigured } from '@/db';
 import { loadFailed } from '@/lib/load-error';
+import { HubPage } from '@/components/hub/Page';
 
 export const dynamic = 'force-dynamic';
 
@@ -32,8 +33,8 @@ export default async function ChatPage() {
 
   return (
     <PageWrapper>
-      <div className="mx-auto max-w-3xl px-4 py-10">
-        <Card title="Chat">
+      <HubPage title="Chat" width="3xl">
+        <Card>
           <ChatRoom
             key={error ? 'failed' : 'ready'}
             failed={Boolean(error && ready)}
@@ -45,7 +46,7 @@ export default async function ChatPage() {
             moderator={viewer?.role === 'admin'}
           />
         </Card>
-      </div>
+      </HubPage>
     </PageWrapper>
   );
 }
