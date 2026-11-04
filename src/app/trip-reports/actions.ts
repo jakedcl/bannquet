@@ -9,7 +9,7 @@ import { APPROVAL_WAIT, canContribute } from '@/lib/membership';
 import { redirectToSignIn } from '@/lib/sign-in-redirect';
 import { addProfilePhotos, addProfileTrack, parseUploadedPhotos } from '@/lib/posts';
 import { cleanRouteNotes, cleanRouteTitle, routeTitle } from '@/lib/route-title';
-import { climbedPeakSlugs } from '@/lib/summits';
+import { climbedPeakSlugs, linkClimbsToRoutes } from '@/lib/summits';
 import type { DraftItem } from '@/lib/trip-draft';
 
 type SummitSuggestion = { slug: string; name: string };
@@ -53,6 +53,12 @@ export async function publishProfileTrack(
     id = await addProfileTrack({ userId: viewer.id, activity, track: track.track, title, notes, hideEnds });
   } catch {
     return { error: 'Could not save that route. Try again in a minute.' };
+  }
+  try {
+    // Climbs logged for this day near this route now point at it.
+    await linkClimbsToRoutes({ trackId: id });
+  } catch (err) {
+    console.error('Climb route link did not save', err);
   }
   const created: DraftItem[] = [{ kind: 'route', id, label: routeTitle(title), thumb: null }];
   const suggestions = await summitsOnTrack(viewer.id, track.track);

@@ -4,7 +4,7 @@ import { revalidatePath, updateTag } from 'next/cache';
 import { getViewer } from '@/app/sign-in/actions';
 import { APPROVAL_WAIT, canContribute } from '@/lib/membership';
 import { redirectToSignIn } from '@/lib/sign-in-redirect';
-import { CLIMBS_TAG, deleteClimb, deleteLatestClimb, ensurePeaks, logClimb, updateClimbDate } from '@/lib/summits';
+import { CLIMBS_TAG, deleteClimb, deleteLatestClimb, ensurePeaks, linkClimbsToRoutes, logClimb, updateClimbDate } from '@/lib/summits';
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
@@ -15,6 +15,15 @@ function refresh(handle: string | null, peakSlug: string) {
   if (handle) {
     revalidatePath(`/user/${handle}`);
     revalidatePath(`/user/${handle}/climbs`);
+  }
+}
+
+/** Linking a climb to its route is a bonus; a failure never blocks the climb itself. */
+async function linkRoutes(scope: Parameters<typeof linkClimbsToRoutes>[0]): Promise<void> {
+  try {
+    await linkClimbsToRoutes(scope);
+  } catch (err) {
+    console.error('Climb route link did not save', err);
   }
 }
 
@@ -36,6 +45,7 @@ async function recordClimb(formData: FormData): Promise<{ ok: true } | { ok: fal
   await ensurePeaks();
   const result = await logClimb(viewer.id, peakSlug, null);
   if (result === 'missing') return { ok: false };
+  await linkRoutes({ userId: viewer.id, peakSlug });
   refresh(viewer.handle, peakSlug);
   return { ok: true };
 }
@@ -64,6 +74,7 @@ export async function updateClimbDateAction(
   if (raw && (!/^\d{4}-\d{2}-\d{2}$/.test(raw) || Number.isNaN(Date.parse(`${raw}T00:00:00Z`)))) return { error: 'Pick a date.' };
   const ok = await updateClimbDate(id, raw || null, { id: viewer.id, admin: viewer.role === 'admin' });
   if (!ok) return { error: 'You can only edit your own climbs.' };
+  if (raw) await linkRoutes({ summitId: id });
   refresh(null, peakSlug);
   revalidatePath('/user', 'layout');
   return { saved: true };
