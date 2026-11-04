@@ -8,7 +8,7 @@ import { EditDetails, EditForm } from '@/components/edit/EditForm';
 import { getViewer } from '@/app/sign-in/actions';
 import { isDatabaseConfigured } from '@/db';
 import { listGear } from '@/lib/gear';
-import { APPROVAL_WAIT, canContribute, canEditOwned } from '@/lib/membership';
+import { APPROVAL_WAIT, canContribute, canEditOwned, viewerCanContribute } from '@/lib/membership';
 import { loadFailed } from '@/lib/load-error';
 
 export const dynamic = 'force-dynamic';
@@ -40,7 +40,7 @@ export default async function GearItemPage({ params }: { params: Promise<{ id: s
   if (!item) notFound();
 
   const viewer = await getViewer();
-  const canEdit = !viewer || canContribute(viewer.role);
+  const canEdit = viewerCanContribute(viewer);
   const mine = viewer ? item.holds.find((hold) => hold.userId === viewer.id)?.qty ?? 0 : 0;
   const total = item.holds.reduce((sum, hold) => sum + hold.qty, 0);
 

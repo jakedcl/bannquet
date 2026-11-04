@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef, useSyncExternalStore } from 'react';
+import { useState, useEffect, useSyncExternalStore } from 'react';
 import { createPortal } from 'react-dom';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -8,8 +8,6 @@ import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { MOTION_TWEEN } from '@/lib/motion';
 import { signOutAction } from '@/app/sign-in/actions';
-import { useRegion } from '@/contexts/RegionContext';
-import { REGION_OPTIONS } from '@/lib/regions';
 import { COMMUNITY_LINKS, FISHING_LINKS, UPLOAD_LINKS, WEATHER_LINKS, communitySection, pathOn, settingsHref, settingsLinks, settingsSection, visibleLinks } from '@/lib/sections';
 import { menuItemClass, NavButton } from './NavButton';
 import { SubmitButton } from '@/components/ui/SubmitButton';
@@ -42,7 +40,6 @@ export default function Header({ account = null }: { account?: HeaderAccount }) 
   const [scrolled, setScrolled] = useState(false);
   const menuReady = useSyncExternalStore(subscribeClient, clientReady, serverReady);
   const isHomepage = pathname === '/';
-  const onWeather = pathname === '/weather' || pathname.startsWith('/weather/');
 
   useEffect(() => {
     const handleScroll = () => {
@@ -93,19 +90,9 @@ export default function Header({ account = null }: { account?: HeaderAccount }) 
 
         <nav className={`ml-auto hidden items-center gap-2 md:flex ${isHomepage ? 'pr-3' : ''}`}>
           <SiteNav account={account} pathname={pathname} home={isHomepage} />
-          {onWeather ? (
-            <div className="relative flex items-center gap-2 rounded-full border border-white/30 bg-brand-green-light/40 px-2 py-1">
-              <RegionSelector alignment="left" size="desktop" embedded />
-            </div>
-          ) : null}
         </nav>
 
         <div className={`ml-auto flex items-center gap-2 md:hidden ${isHomepage ? 'pr-3' : ''}`}>
-          {onWeather ? (
-            <div className="relative">
-              <RegionSelector alignment="right" size="mobile" embedded />
-            </div>
-          ) : null}
           <button
             onClick={() => setOpenPath(mobileMenuOpen ? null : pathname)}
             className="relative z-[110] p-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
@@ -153,7 +140,7 @@ export default function Header({ account = null }: { account?: HeaderAccount }) 
 }
 
 function SiteNav({ account, pathname, home }: { account: HeaderAccount; pathname: string; home: boolean }) {
-  const canUpload = account == null || account.role !== 'pending';
+  const canUpload = account != null && account.role !== 'pending';
   const settingsOn = settingsSection(pathname, account);
 
   return (
@@ -219,7 +206,7 @@ function SiteNav({ account, pathname, home }: { account: HeaderAccount; pathname
 }
 
 function MobileNav({ account, pathname }: { account: HeaderAccount; pathname: string }) {
-  const canUpload = account == null || account.role !== 'pending';
+  const canUpload = account != null && account.role !== 'pending';
   const settingsOn = settingsSection(pathname, account);
   const [openMenu, setOpenMenu] = useState<string | null>(null);
 
@@ -313,96 +300,5 @@ function MobileNav({ account, pathname }: { account: HeaderAccount; pathname: st
         <NavButton href="/sign-in" className="w-full">Log in</NavButton>
       )}
     </>
-  );
-}
-
-type RegionSelectorProps = {
-  className?: string;
-  alignment?: 'left' | 'right';
-  size?: 'desktop' | 'mobile';
-  fullWidth?: boolean;
-  embedded?: boolean;
-};
-
-function RegionSelector({ className = '', alignment = 'right', size = 'desktop', fullWidth = false, embedded = false }: RegionSelectorProps) {
-  const { region, setRegion } = useRegion();
-  const [open, setOpen] = useState(false);
-  const reduce = useReducedMotion();
-  const tween = reduce ? { duration: 0 } : MOTION_TWEEN;
-  const containerRef = useRef<HTMLDivElement | null>(null);
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
-        setOpen(false);
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
-
-  let buttonClasses: string;
-  if (embedded) {
-    buttonClasses = size === 'mobile'
-      ? 'rounded-full px-2.5 py-1.5 text-sm font-bold tracking-wide'
-      : 'rounded-full px-3 py-1.5 text-lg font-bold tracking-wide';
-  } else if (size === 'desktop') {
-    buttonClasses = 'rounded-full border px-4 py-1.5 text-sm font-bold tracking-wide';
-  } else {
-    buttonClasses = `rounded-xl border px-4 py-3 text-base font-semibold ${fullWidth ? 'w-full' : ''}`;
-  }
-
-  return (
-    <div ref={containerRef} className={`relative ${fullWidth ? 'w-full' : ''} ${className}`}>
-      <button
-        onClick={() => setOpen((prev) => !prev)}
-        className={`${buttonClasses} flex items-center ${fullWidth ? 'justify-center' : ''} gap-1 transition-colors ${
-          embedded
-            ? 'text-white hover:bg-white/10'
-            : open
-              ? 'border-white bg-white text-brand-green'
-              : 'border-white/30 text-white hover:border-white hover:bg-white/10'
-        }`}
-        aria-haspopup="listbox"
-        aria-expanded={open}
-      >
-        {region.toUpperCase()}
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className={`motion-swap h-4 w-4 ${open ? 'rotate-180' : ''}`}>
-          <path fillRule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.24a.75.75 0 01-1.06 0L5.21 8.29a.75.75 0 01.02-1.08z" clipRule="evenodd" />
-        </svg>
-      </button>
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            initial={{ opacity: 0, y: -6 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -6 }}
-            transition={tween}
-            className={`absolute ${alignment === 'left' ? 'left-0' : 'right-0'} top-full z-30 mt-2 ${fullWidth ? 'w-full' : 'w-40'} overflow-hidden rounded-2xl border border-white/20 bg-brand-green/95 shadow-2xl backdrop-blur-xl`}
-            role="listbox"
-          >
-            {REGION_OPTIONS.map((option) => {
-              const isActive = option.code === region;
-              return (
-                <button
-                  key={option.code}
-                  onClick={() => {
-                    setRegion(option.code);
-                    setOpen(false);
-                  }}
-                  className={`w-full px-4 py-2 text-left text-sm font-semibold transition-colors ${
-                    isActive ? 'bg-white text-brand-green' : 'text-white/80 hover:bg-white/10'
-                  }`}
-                  role="option"
-                  aria-selected={isActive}
-                >
-                  {option.label}
-                </button>
-              );
-            })}
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
   );
 }

@@ -200,13 +200,6 @@ export function pageTrail(pathname: string, search: string, account: NavAccount,
     return { parentHref: profileHref, crumbs };
   }
 
-  if (pathname === '/trips/new') {
-    return {
-      parentHref: '/trips',
-      crumbs: communityTrail('/trips', 'Trips', { href: pathname, label: 'New trip' }),
-    };
-  }
-
   if (/^\/trips\/[^/]+$/.test(pathname)) {
     return {
       parentHref: '/trips',
@@ -291,16 +284,6 @@ export function pageTrail(pathname: string, search: string, account: NavAccount,
       crumbs: [
         { href: '/mountain-weather', label: 'Mountain Weather' },
         { href: '/conditions', label: 'Conditions' },
-      ],
-    };
-  }
-
-  if (pathOn(pathname, '/weather')) {
-    return {
-      parentHref: '/mountain-weather',
-      crumbs: [
-        { href: '/mountain-weather', label: 'Mountain Weather' },
-        { href: pathname, label: 'Weather' },
       ],
     };
   }
@@ -411,7 +394,7 @@ export function matchSection(pathname: string, search: string, account: NavAccou
     };
   }
 
-  if (pathOn(pathname, '/mountain-weather') || pathname === '/conditions' || pathOn(pathname, '/weather')) {
+  if (pathOn(pathname, '/mountain-weather') || pathname === '/conditions') {
     return {
       id: 'weather',
       href: '/mountain-weather',

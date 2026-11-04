@@ -92,6 +92,11 @@ export function canContribute(role: MemberRole): boolean {
   return role === 'member' || role === 'admin';
 }
 
+/** Add and log buttons: signed-out visitors and pending sign-ups don't get them. */
+export function viewerCanContribute(viewer: { role: MemberRole } | null | undefined): boolean {
+  return viewer != null && canContribute(viewer.role);
+}
+
 export function canDeleteOwned(input: { actorRole: MemberRole; actorId: string; ownerId: string | null }): boolean {
   if (!canContribute(input.actorRole)) return false;
   if (input.actorRole === 'admin') return true;

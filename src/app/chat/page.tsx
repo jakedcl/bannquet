@@ -3,7 +3,7 @@ import { ChatRoom } from '@/components/chat/ChatRoom';
 import { Window } from '@/components/retro/Window';
 import { getViewer } from '@/app/sign-in/actions';
 import { listChatCatalog, listChatMessages, type ChatCatalogItem } from '@/lib/chat';
-import { APPROVAL_WAIT, canContribute } from '@/lib/membership';
+import { APPROVAL_WAIT, canContribute, viewerCanContribute } from '@/lib/membership';
 import { isDatabaseConfigured } from '@/db';
 import { loadFailed } from '@/lib/load-error';
 
@@ -19,7 +19,7 @@ export default async function ChatPage() {
   if (ready) {
     try {
       messages = await listChatMessages();
-      if (!viewer || canContribute(viewer.role)) {
+      if (viewerCanContribute(viewer)) {
         catalog = await listChatCatalog();
       }
     } catch (err) {
@@ -27,8 +27,8 @@ export default async function ChatPage() {
     }
   }
 
-  const canSend = Boolean(!error && (!viewer || canContribute(viewer.role)));
-  const notice = error ?? (viewer && !canContribute(viewer.role) ? APPROVAL_WAIT : null);
+  const canSend = Boolean(!error && viewerCanContribute(viewer));
+  const notice = error ?? (!viewer ? 'Log in to chat.' : canContribute(viewer.role) ? null : APPROVAL_WAIT);
 
   return (
     <PageWrapper>
