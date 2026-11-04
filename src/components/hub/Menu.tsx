@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { usePathname } from 'next/navigation';
+import { navButtonClass } from '@/components/ui/NavButton';
 
 /** A small popover menu for the desktop bar. Closes on outside click, Escape, or navigation. */
 export function Menu({
@@ -43,10 +44,10 @@ export function Menu({
         aria-haspopup="menu"
         aria-expanded={open}
         onClick={() => setOpenOn(open ? null : pathname)}
-        className={barLinkClass(active || open)}
+        className={navButtonClass(active || open, 'gap-1.5')}
       >
         {label}
-        <svg viewBox="0 0 12 8" className="ml-1 h-2 w-2.5" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
+        <svg viewBox="0 0 12 8" className="h-2 w-2.5" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="2">
           <path d="M1.5 1.5L6 6l4.5-4.5" />
         </svg>
       </button>
@@ -54,7 +55,7 @@ export function Menu({
         <div
           role="menu"
           onClick={() => setOpenOn(null)}
-          className={`ui-glass ui-sheet-in absolute top-full z-50 mt-2 min-w-48 overflow-hidden rounded-2xl p-1.5 shadow-[var(--ui-shadow-lg)] ${align === 'right' ? 'right-0' : 'left-0'}`}
+          className={`ui-sheet-in absolute top-full z-50 flex w-max min-w-full flex-col gap-1 bg-[#5c3a1e] p-1 shadow-[4px_4px_8px_rgba(0,0,0,0.3)] ${align === 'right' ? 'right-0' : 'left-0'}`}
         >
           {children}
         </div>
@@ -63,11 +64,10 @@ export function Menu({
   );
 }
 
+/** Top bar link: the brown trail-sign button from the old header. */
 export function barLinkClass(active: boolean): string {
-  return `ui-press inline-flex h-9 items-center rounded-full px-3.5 text-[0.9375rem] font-medium no-underline ${
-    active ? 'bg-ui-fill text-ui-label' : 'text-ui-label-2 hover:text-ui-label'
-  }`;
+  return navButtonClass(active);
 }
 
 export const menuRowClass =
-  'flex w-full items-center justify-between gap-3 rounded-xl px-3 py-2 text-left text-[0.9375rem] text-ui-label no-underline ui-row-press';
+  'retro-button-yellow flex w-full items-center justify-between gap-3 rounded-none px-3 py-1.5 text-left text-xs font-bold uppercase no-underline';

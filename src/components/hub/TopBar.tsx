@@ -33,13 +33,13 @@ function subscribe() {
 function PendingBadge({ count }: { count?: number }) {
   if (!count) return null;
   return (
-    <span className="min-w-5 rounded-full bg-ui-accent px-1.5 text-center text-xs font-semibold text-ui-on-accent">
+    <span className="inline-block min-w-5 bg-brand-green px-1 text-center text-xs font-bold text-white">
       {count}
     </span>
   );
 }
 
-/** Slim translucent bar. Full links from md up; on a phone the tab bar carries the main sections and More holds the rest. */
+/** The green banner header. Full links from md up; on a phone the tab bar carries the main sections and More holds the rest. */
 export function TopBar({ account }: { account: BarAccount }) {
   const pathname = usePathname();
   const tab = activeTab(pathname, account);
@@ -48,13 +48,13 @@ export function TopBar({ account }: { account: BarAccount }) {
   const moreOpen = moreOn === pathname;
 
   return (
-    <header className="site-header hub-bar ui-bar ui-hairline-b fixed inset-x-0 top-0 z-50" style={{ height: 'var(--bar-h)' }}>
-      <div className="mx-auto flex h-full max-w-6xl items-center gap-2 px-3 md:px-5">
-        <Link href="/" aria-label="Bannquet home" className="ui-press mr-2 flex shrink-0 items-center">
-          <Image src="/logo.png" alt="BANNQUET" width={398} height={114} priority unoptimized className="h-7 w-auto md:h-8" />
+    <header className="site-header hub-bar retro-banner fixed inset-x-0 top-0 z-50 !px-0 !py-0 text-white" style={{ height: 'var(--bar-h)' }}>
+      <div className="mx-auto flex h-full max-w-6xl items-center gap-2 px-3">
+        <Link href="/" aria-label="Bannquet home" className="ui-press mr-3 flex shrink-0 items-center">
+          <Image src="/logo.png" alt="BANNQUET" width={398} height={114} priority unoptimized className="header-logo !h-9 md:!h-10" />
         </Link>
 
-        <nav aria-label="Main" className="hidden min-w-0 flex-1 items-center gap-0.5 md:flex">
+        <nav aria-label="Main" className="hidden min-w-0 flex-1 items-center gap-2 md:flex">
           <Link href="/" className={barLinkClass(tab === 'map')}>Map</Link>
           <Link href="/trips" className={barLinkClass(tab === 'trips')}>Trips</Link>
           <Link href="/mountain-weather" className={barLinkClass(tab === 'weather')}>Weather</Link>
@@ -66,7 +66,7 @@ export function TopBar({ account }: { account: BarAccount }) {
           </Menu>
         </nav>
 
-        <div className="ml-auto hidden items-center gap-1.5 md:flex">
+        <div className="ml-auto hidden items-center gap-2 md:flex">
           {canUpload ? (
             <Menu label="Upload" active={tab === 'upload'} align="right">
               <MenuLinks links={UPLOAD_LINKS} />
@@ -76,14 +76,12 @@ export function TopBar({ account }: { account: BarAccount }) {
             <Menu
               align="right"
               active={tab === 'profile'}
-              label={<span className="flex items-center gap-2">{account.displayName || account.handle || 'Account'}<PendingBadge count={account.pendingCount} /></span>}
+              label={<span className="flex items-center gap-2">Settings<PendingBadge count={account.pendingCount} /></span>}
             >
               <AccountRows account={account} rowClass={menuRowClass} />
             </Menu>
           ) : (
-            <Link href="/sign-in" className="ui-press inline-flex h-9 items-center rounded-full bg-ui-accent px-4 text-[0.9375rem] font-semibold text-ui-on-accent no-underline">
-              Log in
-            </Link>
+            <Link href="/sign-in" className={barLinkClass(tab === 'profile')}>Log in</Link>
           )}
         </div>
 
@@ -92,9 +90,10 @@ export function TopBar({ account }: { account: BarAccount }) {
           onClick={() => setMoreOn(pathname)}
           aria-label="More"
           aria-expanded={moreOpen}
-          className="ui-press ml-auto flex h-9 w-9 items-center justify-center rounded-full bg-ui-fill text-ui-label md:hidden"
+          className={`${barLinkClass(moreOpen)} ui-press ml-auto gap-1.5 md:!hidden`}
         >
-          <MoreIcon className="h-5 w-5" />
+          <MoreIcon className="h-4 w-4" />
+          More
         </button>
       </div>
       {moreOpen ? <MoreSheet account={account} onClose={() => setMoreOn(null)} /> : null}
@@ -120,7 +119,7 @@ function AccountRows({ account, rowClass }: { account: NonNullable<BarAccount>; 
         </Link>
       ))}
       <form action={signOutAction}>
-        <SubmitButton unstyled pendingLabel="Signing out…" className={`${rowClass} !justify-start text-ui-danger`}>Log out</SubmitButton>
+        <SubmitButton unstyled pendingLabel="Signing out…" className={`${rowClass} !justify-start`}>Log out</SubmitButton>
       </form>
     </>
   );
@@ -146,18 +145,17 @@ function MoreSheet({ account, onClose }: { account: BarAccount; onClose: () => v
   if (!ready) return null;
   return createPortal(
     <div className="hub-bar fixed inset-0 z-[100] md:hidden" role="dialog" aria-modal="true" aria-label="More">
-      <button type="button" aria-label="Close" onClick={onClose} className="ui-fade-in absolute inset-0 bg-black/30" />
-      <div className="ui-sheet-in absolute inset-x-0 bottom-0 max-h-[85dvh] overflow-y-auto rounded-t-[22px] bg-ui-bg px-4 pb-[calc(1.5rem+env(safe-area-inset-bottom,0px))] pt-2">
-        <div className="mx-auto mb-2 h-[5px] w-9 rounded-full bg-ui-fill-2" />
-        <div className="mb-3 flex items-center justify-between px-1">
-          <h2 className="t-title2">More</h2>
-          <button type="button" onClick={onClose} aria-label="Close" className="ui-press flex h-8 w-8 items-center justify-center rounded-full bg-ui-fill text-ui-label-2">
+      <button type="button" aria-label="Close" onClick={onClose} className="ui-fade-in absolute inset-0 bg-black/40" />
+      <div className="ui-panel ui-sheet-in absolute inset-x-0 bottom-0 max-h-[85dvh] overflow-y-auto pb-[calc(1rem+env(safe-area-inset-bottom,0px))]">
+        <div className="ui-card-bar sticky top-0 z-10 !py-2">
+          <h2 className="min-w-0 flex-1">More</h2>
+          <button type="button" onClick={onClose} aria-label="Close" className="retro-button ui-press flex h-8 w-8 items-center justify-center !p-0 text-gray-800">
             <CloseIcon className="h-3.5 w-3.5" />
           </button>
         </div>
-        <div onClick={onClose} className="space-y-5">
+        <div onClick={onClose} className="space-y-4 px-3 pt-3">
           <div>
-            <p className="t-eyebrow mb-1.5 px-4">Community</p>
+            <p className="t-eyebrow mb-1">Community</p>
             <ListGroup>
               {COMMUNITY_LINKS.filter((item) => item.href !== '/trips').map((item) => (
                 <ListRow key={item.href} href={item.href} title={item.label} />
@@ -165,7 +163,7 @@ function MoreSheet({ account, onClose }: { account: BarAccount; onClose: () => v
             </ListGroup>
           </div>
           <div>
-            <p className="t-eyebrow mb-1.5 px-4">Fishing</p>
+            <p className="t-eyebrow mb-1">Fishing</p>
             <ListGroup>
               {FISHING_LINKS.map((item) => (
                 <ListRow key={item.href} href={item.href} title={item.label} />
@@ -174,7 +172,7 @@ function MoreSheet({ account, onClose }: { account: BarAccount; onClose: () => v
           </div>
           {account ? (
             <div>
-              <p className="t-eyebrow mb-1.5 px-4">You</p>
+              <p className="t-eyebrow mb-1">You</p>
               <ListGroup>
                 <ListRow href={profileHref(account)} title="Profile" />
                 {account.role === 'admin' ? (
@@ -182,7 +180,7 @@ function MoreSheet({ account, onClose }: { account: BarAccount; onClose: () => v
                 ) : null}
                 <li>
                   <form action={signOutAction}>
-                    <SubmitButton unstyled pendingLabel="Signing out…" className="ui-row-press min-h-11 w-full !justify-start px-4 py-2.5 text-left text-[1.0625rem] text-ui-danger">
+                    <SubmitButton unstyled pendingLabel="Signing out…" className="ui-row-press t-headline min-h-11 w-full !justify-start px-3 py-2 text-left text-red-700">
                       Log out
                     </SubmitButton>
                   </form>

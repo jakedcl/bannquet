@@ -19,7 +19,7 @@ export const metadata = {
   appleWebApp: {
     capable: true,
     title: 'BANNQUET',
-    statusBarStyle: 'default',
+    statusBarStyle: 'black',
   },
   icons: {
     apple: [{ url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' }],
@@ -27,10 +27,7 @@ export const metadata = {
 };
 
 export const viewport = {
-  themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#f9f9fb' },
-    { media: '(prefers-color-scheme: dark)', color: '#161618' },
-  ],
+  themeColor: '#1e4d2b',
 };
 
 export default async function RootLayout({
@@ -59,7 +56,7 @@ export default async function RootLayout({
             <TopBar account={account} />
             <HomeScreenTip show={Boolean(viewer && !viewer.homeScreenTipSeenAt)} />
             {pending ? (
-              <p className="pending-banner hub-bar ui-glass rounded-2xl px-4 py-2 text-center text-[0.9375rem] font-semibold shadow-[var(--ui-shadow)]">
+              <p className="pending-banner retro-box bg-beige px-4 py-2 text-center text-sm font-bold text-gray-900">
                 {APPROVAL_WAIT}
               </p>
             ) : null}

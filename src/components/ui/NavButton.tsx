@@ -2,7 +2,7 @@ import Link from 'next/link';
 import type { ReactNode } from 'react';
 
 export function navButtonClass(active = false, extra = '', size: 'md' | 'lg' = 'md'): string {
-  const mark = active ? 'shadow-[inset_0_0_0_3px_#ffd700]' : '';
+  const mark = active ? 'nav-button-on' : '';
   const scale = size === 'lg' ? 'nav-button-lg' : 'px-3 text-sm lg:px-4';
   return `nav-button rounded-none font-bold uppercase tracking-wide retro-button-blue ${scale} ${mark} ${extra}`.trim();
 }

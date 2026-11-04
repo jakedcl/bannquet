@@ -9,7 +9,7 @@ import { activeTab, profileHref, type TabId } from './nav';
 
 type Tab = { id: TabId; href: string; label: string; icon: (props: { className?: string }) => React.ReactNode };
 
-/** Phone-only bottom tab bar. Upload only shows for members who can post. */
+/** Phone-only bottom tab bar in the green banner. Upload only shows for members who can post. */
 export function TabBar({ account }: { account: NavAccount }) {
   const pathname = usePathname();
   const current = activeTab(pathname, account);
@@ -26,7 +26,7 @@ export function TabBar({ account }: { account: NavAccount }) {
   return (
     <nav
       aria-label="Tabs"
-      className="hub-bar ui-bar ui-hairline-t fixed inset-x-0 bottom-0 z-50 md:hidden"
+      className="hub-bar tab-bar fixed inset-x-0 bottom-0 z-50 md:hidden"
       style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}
     >
       <ul className="mx-auto flex h-14 max-w-lg items-stretch">
@@ -38,10 +38,10 @@ export function TabBar({ account }: { account: NavAccount }) {
               <Link
                 href={tab.href}
                 aria-current={on ? 'page' : undefined}
-                className={`ui-press flex flex-1 flex-col items-center justify-center gap-0.5 no-underline ${on ? 'text-ui-accent' : 'text-ui-label-3'}`}
+                className={`ui-press flex flex-1 flex-col items-center justify-center gap-0.5 no-underline ${on ? 'text-[#ffd700]' : 'text-white/75'}`}
               >
-                <Icon className="h-[26px] w-[26px]" />
-                <span className="text-[0.625rem] font-medium tracking-[0.01em]">{tab.label}</span>
+                <Icon className="h-6 w-6" />
+                <span className="text-[0.625rem] font-bold uppercase tracking-wider">{tab.label}</span>
               </Link>
             </li>
           );
