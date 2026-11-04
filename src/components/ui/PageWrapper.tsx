@@ -15,7 +15,7 @@ interface PageWrapperProps {
 export default function PageWrapper({ children, className = '', leaf = null }: PageWrapperProps) {
   const pathname = usePathname();
   return (
-    <div className={`page-frame mt-[72px] min-h-[calc(100vh-72px)] ${className}`}>
+    <div className={`page-frame mt-[var(--bar-h)] min-h-[calc(100dvh-var(--bar-h)-var(--tab-h))] ${className}`}>
       <Suspense fallback={null}>
         <SectionChrome />
         {pathname === '/' ? null : <BackBar leaf={leaf} />}

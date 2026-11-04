@@ -7,6 +7,7 @@ import { useAccount } from '@/contexts/AccountContext';
 import { allPeaks } from '@/lib/challenges';
 import { canGoBackInApp, noteFallback } from '@/lib/nav-history';
 import { pageTrail, type Crumb } from '@/lib/sections';
+import { BackIcon } from '@/components/hub/Icons';
 
 function peakName(pathname: string): string | null {
   const match = pathname.match(/^\/peaks\/([^/]+)$/);
@@ -20,8 +21,8 @@ function CrumbList({ crumbs }: { crumbs: Crumb[] }) {
     const last = index === crumbs.length - 1;
     return (
       <span key={`${crumb.href}-${crumb.label}`}>
-        {index > 0 ? ' / ' : null}
-        {last ? crumb.label : <Link href={crumb.href} className="underline">{crumb.label}</Link>}
+        {index > 0 ? <span aria-hidden="true" className="px-1 opacity-60">›</span> : null}
+        {last ? crumb.label : <Link href={crumb.href}>{crumb.label}</Link>}
       </span>
     );
   });
@@ -45,7 +46,7 @@ export function BackBar({ leaf = null }: { leaf?: string | null }) {
     <nav aria-label="Page" className="back-bar">
       <button
         type="button"
-        className="retro-button back-bar-button"
+        className="back-bar-button ui-press"
         onClick={() => {
           if (canGoBackInApp()) {
             router.back();
@@ -55,9 +56,7 @@ export function BackBar({ leaf = null }: { leaf?: string | null }) {
           router.push(trail.parentHref);
         }}
       >
-        <svg viewBox="0 0 20 20" className="h-3 w-3" aria-hidden="true">
-          <path d="M12.5 4 L6.5 10 L12.5 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="square" />
-        </svg>
+        <BackIcon className="h-[17px] w-[11px]" />
         Back
       </button>
       {crumbs && crumbs.length > 0 ? (
@@ -66,7 +65,7 @@ export function BackBar({ leaf = null }: { leaf?: string | null }) {
             <CrumbList crumbs={crumbs} />
           </span>
           <span className="crumb-narrow">
-            {crumbs.length > 1 ? '… / ' : null}
+            {crumbs.length > 2 ? <span aria-hidden="true" className="pr-1">… ›</span> : null}
             <CrumbList crumbs={crumbs.slice(-2)} />
           </span>
         </p>
