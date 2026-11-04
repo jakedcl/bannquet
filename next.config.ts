@@ -44,10 +44,11 @@ const nextConfig: NextConfig = {
       { source: "/weather/:path*", destination: "/mountain-weather", permanent: false },
       { source: "/trips/new", destination: "/upload?kind=trip", permanent: false },
       { source: "/trip-reports/new", destination: "/upload?kind=trip", permanent: false },
-      { source: "/trip-reports/submit", destination: "/posts", permanent: false },
-      { source: "/trip-reports/edit", destination: "/posts", permanent: false },
-      { source: "/trip-reports/:id", destination: "/posts/:id", permanent: false },
-      { source: "/trip-reports", destination: "/posts", permanent: false },
+      { source: "/trip-reports/:path*", destination: "/trips", permanent: false },
+      { source: "/trip-reports", destination: "/trips", permanent: false },
+      { source: "/posts/new", destination: "/upload?kind=trip", permanent: false },
+      { source: "/posts/:path*", destination: "/trips", permanent: false },
+      { source: "/posts", destination: "/trips", permanent: false },
     ];
   },
 };
