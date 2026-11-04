@@ -35,9 +35,8 @@ export function extremeStatsFromSpots(results: ExtremeSpot[]): ExtremeStat[] {
     curr.windGust > max.windGust ? curr : max, results[0]);
   const highestTemp = results.reduce((max, curr) =>
     curr.maxTemperature > max.maxTemperature ? curr : max, results[0]);
-  const lowestTemp = results.reduce((min, curr) =>
-    curr.minTemperature < min.minTemperature ? curr : min, results[0]);
-  const lowestWindChill = results.reduce((min, curr) =>
+  // windChill already falls back to the plain temp when it isn't cold and windy.
+  const coldest = results.reduce((min, curr) =>
     curr.windChill < min.windChill ? curr : min, results[0]);
 
   const snowingLocations = results.filter((spot) => spot.isSnowing);
@@ -58,14 +57,9 @@ export function extremeStatsFromSpots(results: ExtremeSpot[]): ExtremeStat[] {
       location: `${highestTemp.mountain}, ${highestTemp.state}`,
     },
     {
-      label: 'LOWEST TEMP',
-      value: `${lowestTemp.minTemperature}°F`,
-      location: `${lowestTemp.mountain}, ${lowestTemp.state}`,
-    },
-    {
-      label: 'LOWEST WIND CHILL',
-      value: `${lowestWindChill.windChill}°F`,
-      location: `${lowestWindChill.mountain}, ${lowestWindChill.state}`,
+      label: 'COLDEST FEELS-LIKE',
+      value: `${coldest.windChill}°F`,
+      location: `${coldest.mountain}, ${coldest.state}`,
     },
     ...(snowingLocations.length > 0 ? [{
       label: 'SNOWING NOW',
