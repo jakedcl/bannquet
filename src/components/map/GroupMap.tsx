@@ -358,7 +358,14 @@ export default function GroupMap({
       }
       if (leaves.length === 0) return;
       select(leaves);
-      map.easeTo({ center: at, duration: 400 });
+      // Keep the tapped spot clear of the sheet (bottom on a phone, left panel from md up).
+      const box = map.getContainer();
+      const wide = box.clientWidth >= 768;
+      map.easeTo({
+        center: at,
+        offset: wide ? [190, 0] : [0, -Math.round(box.clientHeight * 0.25)],
+        duration: 400,
+      });
     };
 
     const onCluster = async (event: MapLayerMouseEvent) => {

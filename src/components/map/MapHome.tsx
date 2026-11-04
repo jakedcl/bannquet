@@ -90,7 +90,7 @@ export function MapHome({
     <div className="flex items-start gap-3">
       <div className="min-w-0 flex-1">
         <h2 className="t-title3 truncate">{single ? single.title : clusterHeading(selected.map((leaf) => leaf.kind))}</h2>
-        <p className="t-footnote mt-0.5 truncate text-ui-label-2">{single ? leafMeta(single) : 'Here'}</p>
+        {single ? <p className="t-footnote mt-0.5 truncate text-ui-label-2">{leafMeta(single)}</p> : null}
       </div>
       <button
         type="button"
