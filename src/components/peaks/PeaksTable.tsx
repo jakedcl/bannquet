@@ -2,19 +2,19 @@
 
 import { useMemo, useState } from 'react';
 import Link from 'next/link';
-import { logClimbAction, removeLatestClimbAction } from '@/app/peaks/actions';
 import { DataTable, type DataColumn } from '@/components/ui/DataTable';
 import { FilterPills } from '@/components/ui/FilterPills';
 import { SearchBar } from '@/components/ui/SearchBar';
-import { CountControl } from '@/components/ui/CountControl';
+import { PeakCheck } from '@/components/peaks/PeakCheck';
 
 export type PeakTableRow = {
   slug: string;
   name: string;
   elevationFt: number;
   state: string;
-  climbs: number;
-  mine: number;
+  /** How many members have this peak on their peaks. */
+  visitors: number;
+  mine: boolean;
 };
 
 const STATE_ORDER = ['NY', 'NH', 'VT', 'ME'];
@@ -28,7 +28,7 @@ export function PeaksTable({
 }) {
   const [query, setQuery] = useState('');
   const [state, setState] = useState('all');
-  const [climbed, setClimbed] = useState('all');
+  const [been, setBeen] = useState('all');
   const states = useMemo(() => {
     const found = new Set(rows.map((row) => row.state));
     return [...STATE_ORDER.filter((code) => found.has(code)), ...[...found].filter((code) => !STATE_ORDER.includes(code)).sort()];
@@ -39,11 +39,11 @@ export function PeaksTable({
     return rows.filter((row) => {
       if (needle && !row.name.toLowerCase().includes(needle)) return false;
       if (state !== 'all' && row.state !== state) return false;
-      if (climbed === 'yes' && row.mine < 1) return false;
-      if (climbed === 'no' && row.mine > 0) return false;
+      if (been === 'yes' && !row.mine) return false;
+      if (been === 'no' && row.mine) return false;
       return true;
     });
-  }, [rows, query, state, climbed]);
+  }, [rows, query, state, been]);
 
   const columns: DataColumn<PeakTableRow>[] = [
     {
@@ -73,27 +73,20 @@ export function PeaksTable({
       ),
     },
     {
-      id: 'climbs',
-      header: 'Climbs',
+      id: 'visitors',
+      header: 'Friends',
       align: 'right',
-      sortValue: (row) => row.climbs,
-      cell: (row) => String(row.climbs),
+      sortValue: (row) => row.visitors,
+      cell: (row) => String(row.visitors),
     },
     {
       id: 'you',
       header: 'You',
-      sortValue: (row) => row.mine,
+      sortValue: (row) => (row.mine ? 1 : 0),
       cell: (row) => canMark ? (
-        <CountControl
-          count={row.mine}
-          zeroLabel="I climbed this"
-          addLabel="Log another climb"
-          removeLabel="Remove a climb"
-          add={{ action: logClimbAction, fields: { peakSlug: row.slug } }}
-          remove={{ action: removeLatestClimbAction, fields: { peakSlug: row.slug } }}
-        />
+        <PeakCheck peakSlug={row.slug} added={row.mine} />
       ) : (
-        <span>{row.mine > 0 ? row.mine : '—'}</span>
+        <span>{row.mine ? '✓' : '—'}</span>
       ),
     },
   ];
@@ -108,13 +101,13 @@ export function PeaksTable({
         options={[{ id: 'all', label: 'All' }, ...states.map((code) => ({ id: code, label: code }))]}
       />
       <FilterPills
-        label="Climbed"
-        value={climbed}
-        onChange={setClimbed}
+        label="Mine"
+        value={been}
+        onChange={setBeen}
         options={[
           { id: 'all', label: 'All' },
-          { id: 'yes', label: 'Climbed' },
-          { id: 'no', label: 'Not climbed' },
+          { id: 'yes', label: 'Been' },
+          { id: 'no', label: 'Not yet' },
         ]}
       />
       <DataTable
@@ -122,7 +115,7 @@ export function PeaksTable({
         columns={columns}
         rowKey={(row) => row.slug}
         empty={rows.length === 0 ? 'No peaks yet.' : 'No peaks match.'}
-        defaultSort={{ id: 'climbs', dir: 'desc' }}
+        defaultSort={{ id: 'visitors', dir: 'desc' }}
       />
     </div>
   );

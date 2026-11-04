@@ -4,7 +4,7 @@ import { Window } from '@/components/retro/Window';
 import { getViewer } from '@/app/sign-in/actions';
 import { allPeaks } from '@/lib/challenges';
 import { viewerCanContribute } from '@/lib/membership';
-import { listClimbs } from '@/lib/summits';
+import { listPeakRows } from '@/lib/summits';
 import { isDatabaseConfigured } from '@/db';
 import { loadFailed } from '@/lib/load-error';
 
@@ -21,19 +21,18 @@ const STATES: Record<string, string> = {
 export default async function PeaksPage() {
   const viewer = await getViewer();
   const ready = isDatabaseConfigured();
-  let error: string | null = ready ? null : 'Postgres is not connected, so climb counts stay at zero.';
+  let error: string | null = ready ? null : 'Postgres is not connected, so peak counts stay at zero.';
   const counts = new Map<string, number>();
-  const mine = new Map<string, number>();
+  const mine = new Set<string>();
 
   if (ready) {
     try {
-      const climbs = await listClimbs();
-      for (const climb of climbs) {
-        counts.set(climb.peakSlug, (counts.get(climb.peakSlug) ?? 0) + 1);
-        if (viewer && climb.userId === viewer.id) mine.set(climb.peakSlug, (mine.get(climb.peakSlug) ?? 0) + 1);
+      for (const row of await listPeakRows()) {
+        counts.set(row.peakSlug, (counts.get(row.peakSlug) ?? 0) + 1);
+        if (viewer && row.userId === viewer.id) mine.add(row.peakSlug);
       }
     } catch (err) {
-      error = loadFailed('peaks list', err, 'The climb counts did not load. Try again in a minute.');
+      error = loadFailed('peaks list', err, 'The peak counts did not load. Try again in a minute.');
     }
   }
 
@@ -42,8 +41,8 @@ export default async function PeaksPage() {
     name: peak.name,
     elevationFt: peak.elevationFt,
     state: STATES[peak.listId] ?? '—',
-    climbs: counts.get(peak.slug) ?? 0,
-    mine: mine.get(peak.slug) ?? 0,
+    visitors: counts.get(peak.slug) ?? 0,
+    mine: mine.has(peak.slug),
   }));
 
   return (

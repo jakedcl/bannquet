@@ -7,7 +7,7 @@ export type DirectoryMember = {
   name: string;
   avatarUrl: string | null;
   region: string | null;
-  climbs: number;
+  peaks: number;
   routes: number;
 };
 
@@ -32,7 +32,7 @@ function num(value: unknown): number {
 export async function listApprovedMembers(): Promise<DirectoryMember[]> {
   const result = await getDb().execute(sql`
     select u.id, u.handle, u.display_name, u.avatar_url, u.home_region,
-      (select count(*)::int from summits s where s.user_id = u.id) as climbs,
+      (select count(distinct s.peak_slug)::int from summits s where s.user_id = u.id) as peaks,
       (select count(*)::int from tracks t where t.user_id = u.id) as routes
     from users u
     where u.role in ('member', 'admin')
@@ -48,7 +48,7 @@ export async function listApprovedMembers(): Promise<DirectoryMember[]> {
       name: displayName || handle || 'Friend',
       avatarUrl: text(row.avatar_url),
       region: text(row.home_region),
-      climbs: num(row.climbs),
+      peaks: num(row.peaks),
       routes: num(row.routes),
     }];
   });

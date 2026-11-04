@@ -59,7 +59,7 @@ const PROFILE_LISTS: Record<string, string> = {
   routes: 'Routes',
   pins: 'Pins',
   photos: 'Photos',
-  climbs: 'Climbs',
+  peaks: 'Peaks',
 };
 
 export type Crumb = {

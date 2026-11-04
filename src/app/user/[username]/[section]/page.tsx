@@ -1,8 +1,8 @@
 import type { ReactNode } from 'react';
 import Link from 'next/link';
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import PageWrapper from '@/components/ui/PageWrapper';
-import { ClimbRows, Pager, PhotoGrid, PinRows, RouteRows, TripRows } from '@/components/profile/ProfileLists';
+import { PeakRows, Pager, PhotoGrid, PinRows, RouteRows, TripRows } from '@/components/profile/ProfileLists';
 import { Window } from '@/components/retro/Window';
 import { getViewer } from '@/app/sign-in/actions';
 import { allPeaks } from '@/lib/challenges';
@@ -11,7 +11,7 @@ import { loadProfilePins } from '@/lib/pins';
 import { loadProfileLibrary } from '@/lib/posts';
 import { profileMember } from '@/lib/profile-member';
 import { canDeleteOwned } from '@/lib/membership';
-import { listClimbs } from '@/lib/summits';
+import { listPeakRows } from '@/lib/summits';
 import { listTripsByOwner } from '@/lib/trips';
 import { loadFailed } from '@/lib/load-error';
 
@@ -22,7 +22,7 @@ const SECTIONS = {
   routes: 'Routes',
   pins: 'Pins',
   photos: 'Photos',
-  climbs: 'Climbs',
+  peaks: 'Peaks',
 } as const;
 
 type Section = keyof typeof SECTIONS;
@@ -36,7 +36,7 @@ type ProfileSectionData =
   | { kind: 'routes'; total: number; pages: number; page: number; routes: Awaited<ReturnType<typeof loadProfileLibrary>>['routes'] }
   | { kind: 'pins'; total: number; pages: number; page: number; pins: Awaited<ReturnType<typeof loadProfilePins>> }
   | { kind: 'photos'; total: number; pages: number; page: number; photos: Awaited<ReturnType<typeof loadProfileLibrary>>['photos'] }
-  | { kind: 'climbs'; total: number; pages: number; page: number; climbs: Awaited<ReturnType<typeof listClimbs>>; names: Record<string, string> };
+  | { kind: 'peaks'; total: number; pages: number; page: number; peaks: Awaited<ReturnType<typeof listPeakRows>>; names: Record<string, string> };
 
 async function loadProfileSection(section: Section, memberId: string, page: number): Promise<ProfileSectionData> {
   if (section === 'trips') {
@@ -56,8 +56,8 @@ async function loadProfileSection(section: Section, memberId: string, page: numb
     return { kind: 'photos', photos: sliced.rows, total: sliced.total, pages: sliced.pages, page: sliced.page };
   }
   const names = Object.fromEntries(allPeaks().map((peak) => [peak.slug, peak.name]));
-  const climbs = (await listClimbs()).filter((climb) => climb.userId === memberId).reverse();
-  return { kind: 'climbs', climbs, names, total: climbs.length, pages: 1, page: 1 };
+  const peaks = (await listPeakRows()).filter((row) => row.userId === memberId).reverse();
+  return { kind: 'peaks', peaks, names, total: peaks.length, pages: 1, page: 1 };
 }
 
 function sectionBody(loaded: ProfileSectionData, manage: boolean, handle: string): ReactNode {
@@ -66,7 +66,7 @@ function sectionBody(loaded: ProfileSectionData, manage: boolean, handle: string
   if (loaded.kind === 'routes') return <RouteRows routes={loaded.routes} manage={manage} profilePath={`/user/${handle}`} />;
   if (loaded.kind === 'pins') return <PinRows pins={loaded.pins} manage={manage} />;
   if (loaded.kind === 'photos') return <PhotoGrid photos={loaded.photos} manage={manage} profilePath={`/user/${handle}`} />;
-  return <ClimbRows climbs={loaded.climbs} names={loaded.names} manage={manage} />;
+  return <PeakRows peaks={loaded.peaks} names={loaded.names} manage={manage} />;
 }
 
 export default async function ProfileSectionPage({
@@ -77,6 +77,8 @@ export default async function ProfileSectionPage({
   searchParams: Promise<{ page?: string }>;
 }) {
   const { username, section } = await params;
+  // The old address for this list, from when peaks were called climbs.
+  if (section === 'climbs') redirect(`/user/${encodeURIComponent(username)}/peaks`);
   if (!isSection(section)) notFound();
   const member = await profileMember(username, section);
   const viewer = await getViewer();

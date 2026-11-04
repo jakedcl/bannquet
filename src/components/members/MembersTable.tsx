@@ -37,11 +37,11 @@ export function MembersTable({ rows }: { rows: DirectoryMember[] }) {
       cell: (row) => (row.handle ? `@${row.handle}` : '—'),
     },
     {
-      id: 'climbs',
-      header: 'Climbs',
+      id: 'peaks',
+      header: 'Peaks',
       align: 'right',
-      sortValue: (row) => row.climbs,
-      cell: (row) => String(row.climbs),
+      sortValue: (row) => row.peaks,
+      cell: (row) => String(row.peaks),
     },
     {
       id: 'routes',

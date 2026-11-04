@@ -6,8 +6,7 @@ import { ConfirmDelete } from '@/components/delete/ConfirmDelete';
 import { BrowseTable } from '@/components/ui/BrowseTable';
 import type { DataColumn } from '@/components/ui/DataTable';
 import { deletePhotoAction, deleteRouteAction } from '@/app/library/actions';
-import { deleteClimbAction, updateClimbDateAction } from '@/app/peaks/actions';
-import { EditForm } from '@/components/edit/EditForm';
+import { deletePeakRowAction } from '@/app/peaks/actions';
 import { deletePinAction } from '@/app/pins/actions';
 import { deleteTripAction } from '@/app/trips/actions';
 import { ACTIVITY_META, isActivity } from '@/lib/activities';
@@ -281,18 +280,18 @@ export function TripRows({
   );
 }
 
-export function ClimbRows({
-  climbs,
+export function PeakRows({
+  peaks,
   names,
   manage,
   collapsed = false,
 }: {
-  climbs: Array<{ id: string; peakSlug: string; climbedOn?: string | null }>;
+  peaks: Array<{ id: string; peakSlug: string }>;
   names: Record<string, string>;
   manage: boolean;
   collapsed?: boolean;
 }) {
-  const columns: DataColumn<(typeof climbs)[number]>[] = [
+  const columns: DataColumn<(typeof peaks)[number]>[] = [
     {
       id: 'peak',
       header: 'Peak',
@@ -301,20 +300,6 @@ export function ClimbRows({
       cell: (row) => (
         <Link href={`/peaks/${row.peakSlug}`} className="font-bold underline">{names[row.peakSlug] ?? 'Peak'}</Link>
       ),
-    },
-    {
-      id: 'date',
-      header: 'Date',
-      sortValue: (row) => row.climbedOn ?? null,
-      cell: (row) => (manage ? (
-        <EditForm
-          key={row.climbedOn ?? ''}
-          inline
-          action={updateClimbDateAction}
-          hidden={{ id: row.id, peakSlug: row.peakSlug }}
-          fields={[{ name: 'climbedOn', label: 'Climb date', value: row.climbedOn ?? '', kind: 'date' }]}
-        />
-      ) : (row.climbedOn ? formatTripDate(row.climbedOn) : '—')),
     },
   ];
   if (manage) {
@@ -325,8 +310,8 @@ export function ClimbRows({
       cell: (row) => (
         <Trash>
           <ConfirmDelete
-            action={deleteClimbAction}
-            confirm="Delete this climb?"
+            action={deletePeakRowAction}
+            confirm="Take this off the peaks list?"
             fields={{ id: row.id, peakSlug: row.peakSlug }}
           />
         </Trash>
@@ -335,10 +320,10 @@ export function ClimbRows({
   }
   return (
     <BrowseTable
-      rows={climbs}
+      rows={peaks}
       columns={columns}
       rowKey={(row) => row.id}
-      empty="No climbs yet."
+      empty="No peaks yet."
       defaultSort={{ id: 'peak', dir: 'asc' }}
       placeholder="Peak name"
       searchText={(row) => names[row.peakSlug] ?? ''}

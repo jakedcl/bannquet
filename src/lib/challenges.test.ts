@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { challengeProgress, climbButtonLabel, groupPeaks, loadChallenges, loadGroups, peaksNearTrack, suggestSummits, SUMMIT_MATCH_METERS, SUMMIT_SUGGEST_METERS } from './challenges';
+import { challengeProgress, groupPeaks, loadChallenges, loadGroups, peaksNearTrack, suggestSummits, SUMMIT_MATCH_METERS, SUMMIT_SUGGEST_METERS } from './challenges';
 
 test('the starter challenges are the Adirondack 46 and the New Hampshire 48', () => {
   const challenges = loadChallenges();
@@ -20,8 +20,6 @@ test('the starter challenges are the Adirondack 46 and the New Hampshire 48', ()
   const ne = loadGroups().find((group) => group.id === 'ne67');
   if (!ne) throw new Error('missing ne67');
   assert.equal(groupPeaks(ne).length, 67);
-  assert.equal(climbButtonLabel(0), 'I climbed this');
-  assert.equal(climbButtonLabel(2), 'I climbed this again');
   const slugs = challenges.flatMap((challenge) => challenge.peaks.map((peak) => peak.slug));
   assert.equal(new Set(slugs).size, slugs.length);
   for (const peak of adk?.peaks ?? []) {
@@ -50,7 +48,7 @@ test('a route credits a summit it passes and ignores the next mountain', () => {
   assert.equal(SUMMIT_SUGGEST_METERS, 50);
 });
 
-test('a route suggests a summit within 50 m and skips one already climbed', () => {
+test('a route suggests a summit within 50 m and skips one already on your peaks', () => {
   const marcy = loadChallenges().flatMap((challenge) => challenge.peaks).find((peak) => peak.slug === 'adk46_marcy');
   const algonquin = loadChallenges().flatMap((challenge) => challenge.peaks).find((peak) => peak.slug === 'adk46_algonquin_peak');
   assert.ok(marcy && algonquin);
