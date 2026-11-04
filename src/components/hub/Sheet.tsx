@@ -50,7 +50,7 @@ export function Sheet({
         'hub-bar ui-glass pointer-events-auto absolute z-20 flex flex-col overflow-hidden',
         'inset-x-2 bottom-2 rounded-[22px] shadow-[var(--ui-shadow-lg)]',
         'transition-[max-height] duration-300 ease-[cubic-bezier(0.2,0.8,0.2,1)] motion-reduce:transition-none',
-        expanded ? 'max-h-[min(72%,560px)]' : 'max-h-[8.5rem]',
+        expanded ? 'max-h-[min(72%,560px)]' : 'max-h-[5.75rem]',
         'md:inset-x-auto md:bottom-auto md:left-4 md:top-4 md:max-h-[calc(100%-2rem)] md:w-[360px] md:rounded-[18px]',
       ].join(' ')}
     >

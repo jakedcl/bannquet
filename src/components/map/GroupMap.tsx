@@ -28,23 +28,11 @@ import {
   type BasemapId,
 } from '@/lib/map';
 import { styleForBasemap } from '@/lib/map-style';
-import { ACTIVITY_META, isActivity } from '@/lib/activities';
-import { formatTripDate } from '@/lib/utils';
+import { LayersIcon } from '@/components/hub/Icons';
+import { leafFromProps, leafMeta, type MapLeaf } from '@/lib/map-leaf';
 import type { MapFeatureCollection } from '@/lib/posts';
 
-type Leaf = {
-  title: string;
-  who: string;
-  date: string | null;
-  activity: string | null;
-  category: string;
-  kind: string;
-  color: string;
-  trackId: string;
-  href: string;
-  lng: number;
-  lat: number;
-};
+type Leaf = MapLeaf;
 
 type Props = {
   points: MapFeatureCollection;
@@ -54,6 +42,10 @@ type Props = {
   onPick?: (lng: number, lat: number) => void;
   className?: string;
   preview?: boolean;
+  /** Show what was tapped in your own panel instead of a popup. Null means the empty map was tapped. */
+  onSelect?: (leaves: MapLeaf[] | null) => void;
+  /** Where the map credit sits, as position classes. */
+  creditClassName?: string;
 };
 
 function fitPins(map: MlMap, points: MapFeatureCollection) {
@@ -70,31 +62,6 @@ function fitPins(map: MlMap, points: MapFeatureCollection) {
   }
   const bounds = coords.reduce((box, coord) => box.extend(coord), new LngLatBounds(coords[0], coords[0]));
   map.fitBounds(bounds, { padding: 24, maxZoom: 11, animate: false });
-}
-
-function activityLabel(activity: string | null): string {
-  if (activity && isActivity(activity)) return ACTIVITY_META[activity].label;
-  return 'Photo';
-}
-
-function leafFromProps(
-  props: Record<string, unknown>,
-  lng: number,
-  lat: number,
-): Leaf {
-  return {
-    title: String(props.title ?? 'Pin'),
-    who: String(props.who ?? 'Friend'),
-    date: props.date ? String(props.date) : null,
-    activity: props.activity ? String(props.activity) : null,
-    category: props.category ? String(props.category) : '',
-    kind: props.kind ? String(props.kind) : props.trackId ? 'route' : '',
-    color: String(props.color ?? '#444444'),
-    trackId: String(props.trackId ?? ''),
-    href: String(props.href ?? '/map'),
-    lng,
-    lat,
-  };
 }
 
 function popupNode(leaves: Leaf[]): HTMLElement {
@@ -116,11 +83,7 @@ function popupNode(leaves: Leaf[]): HTMLElement {
     title.append(swatch, document.createTextNode(leaf.title));
     const meta = document.createElement('span');
     meta.className = 'mt-1 block text-xs text-gray-700';
-    const bits = [leaf.who];
-    if (leaf.date) bits.push(formatTripDate(leaf.date));
-    bits.push(activityLabel(leaf.activity));
-    if (leaf.category) bits.push(leaf.category);
-    meta.textContent = bits.join(' · ');
+    meta.textContent = leafMeta(leaf);
     link.append(title, meta);
     root.append(link);
   }
@@ -163,6 +126,8 @@ export default function GroupMap({
   onPick,
   className = '',
   preview = false,
+  onSelect,
+  creditClassName = 'bottom-2 right-2',
 }: Props) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<MlMap | null>(null);
@@ -170,6 +135,7 @@ export default function GroupMap({
   const linesRef = useRef(lines);
   const pickingRef = useRef(picking);
   const onPickRef = useRef(onPick);
+  const onSelectRef = useRef(onSelect);
   const [basemap, setBasemap] = useState<BasemapId>('standard');
   const [layersOpen, setLayersOpen] = useState(false);
   const controlsRef = useRef<HTMLDivElement | null>(null);
@@ -181,7 +147,8 @@ export default function GroupMap({
     linesRef.current = lines;
     pickingRef.current = picking;
     onPickRef.current = onPick;
-  }, [lines, onPick, picking, points]);
+    onSelectRef.current = onSelect;
+  }, [lines, onPick, onSelect, picking, points]);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -212,9 +179,10 @@ export default function GroupMap({
     map.on('click', (event) => {
       if (preview) return;
       const pick = onPickRef.current;
-      if (!pickingRef.current || !pick) return;
       const layers = ['clusters', 'pins', 'pin-markers', 'routes'].filter((id) => Boolean(map.getLayer(id)));
       const hits = layers.length > 0 ? map.queryRenderedFeatures(event.point, { layers }) : [];
+      if (!pickingRef.current && hits.length === 0) onSelectRef.current?.(null);
+      if (!pickingRef.current || !pick) return;
       const blocked = hits.some((feature) => Number(feature.properties?.draft) !== 1);
       if (blocked) return;
       pick(event.lngLat.lng, event.lngLat.lat);
@@ -330,10 +298,10 @@ export default function GroupMap({
         source: 'places',
         filter: ['has', 'point_count'],
         paint: {
-          'circle-color': '#1a1a1a',
+          'circle-color': '#2d5016',
           'circle-radius': ['step', ['get', 'point_count'], 16, 8, 20, 20, 26],
-          'circle-stroke-width': 2,
-          'circle-stroke-color': '#f4f1ea',
+          'circle-stroke-width': 2.5,
+          'circle-stroke-color': '#ffffff',
         },
       });
       map.addLayer({
@@ -382,6 +350,17 @@ export default function GroupMap({
       if (preview) fitPins(map, pointsRef.current);
     };
 
+    const reveal = (at: LngLatLike, leaves: Leaf[]) => {
+      const select = onSelectRef.current;
+      if (!select) {
+        showPopup(map, popupRef, at, leaves);
+        return;
+      }
+      if (leaves.length === 0) return;
+      select(leaves);
+      map.easeTo({ center: at, duration: 400 });
+    };
+
     const onCluster = async (event: MapLayerMouseEvent) => {
       if (preview || pickingRef.current) return;
       const feature = event.features?.[0];
@@ -394,7 +373,7 @@ export default function GroupMap({
       const coords = geometry.type === 'Point' && Array.isArray(geometry.coordinates)
         ? geometry.coordinates as [number, number]
         : [event.lngLat.lng, event.lngLat.lat] as [number, number];
-      showPopup(map, popupRef, coords, leaves);
+      reveal(coords, leaves);
     };
     const onPin = (event: MapLayerMouseEvent) => {
       if (preview || pickingRef.current) return;
@@ -402,7 +381,7 @@ export default function GroupMap({
       if (!feature) return;
       const leaf = leafFromFeature(feature);
       if (!leaf) return;
-      showPopup(map, popupRef, [leaf.lng, leaf.lat], [leaf]);
+      reveal([leaf.lng, leaf.lat], [leaf]);
     };
     const onRoute = (event: MapLayerMouseEvent) => {
       if (preview || pickingRef.current) return;
@@ -410,7 +389,7 @@ export default function GroupMap({
       if (!feature) return;
       const props = (feature.properties ?? {}) as Record<string, unknown>;
       const leaf = leafFromProps(props, event.lngLat.lng, event.lngLat.lat);
-      showPopup(map, popupRef, event.lngLat, [leaf]);
+      reveal(event.lngLat, [leaf]);
     };
 
     map.on('style.load', draw);
@@ -492,19 +471,20 @@ export default function GroupMap({
         </p>
       ) : null}
       {preview ? null : (
-      <div ref={controlsRef} className="map-controls absolute left-3 top-3 z-10 flex items-start gap-2">
+      <div ref={controlsRef} className="map-controls hub-bar absolute right-2.5 top-[7.25rem] z-10 flex flex-col items-end gap-2">
         <div className="relative">
           <button
             type="button"
+            aria-label="Map layers"
             aria-expanded={layersOpen}
             aria-haspopup="menu"
             onClick={() => setLayersOpen((open) => !open)}
-            className={`retro-button rounded-none px-3 py-1 text-xs font-bold uppercase ${layersOpen ? 'retro-button-yellow' : ''}`}
+            className={`ui-glass ui-press flex h-[29px] w-[29px] items-center justify-center rounded-lg shadow-[var(--ui-shadow)] ${layersOpen ? 'text-ui-accent' : 'text-ui-label'}`}
           >
-            Layers
+            <LayersIcon className="h-[18px] w-[18px]" />
           </button>
           {layersOpen ? (
-            <div role="menu" aria-label="Map layers" className="absolute left-0 top-full z-20 mt-1 flex min-w-36 flex-col gap-1 bg-beige p-1 retro-box">
+            <div role="menu" aria-label="Map layers" className="ui-glass ui-sheet-in absolute right-full top-0 z-20 mr-2 flex min-w-40 flex-col rounded-2xl p-1.5 shadow-[var(--ui-shadow-lg)]">
               {BASEMAPS.map((id) => (
                 <button
                   key={id}
@@ -515,9 +495,10 @@ export default function GroupMap({
                     setBasemap(id);
                     setLayersOpen(false);
                   }}
-                  className={`retro-button rounded-none px-3 py-1 text-left text-xs font-bold uppercase ${basemap === id ? 'retro-button-yellow' : ''}`}
+                  className="ui-row-press flex items-center justify-between gap-3 rounded-xl px-3 py-2 text-left text-[0.9375rem] text-ui-label"
                 >
                   {BASEMAP_LABELS[id]}
+                  {basemap === id ? <span aria-hidden="true" className="text-ui-accent">✓</span> : null}
                 </button>
               ))}
             </div>
@@ -530,18 +511,22 @@ export default function GroupMap({
             setLayersOpen(false);
             setTerrain((value) => !value);
           }}
-          className={`retro-button rounded-none px-3 py-1 text-xs font-bold uppercase ${terrain ? 'retro-button-orange' : ''}`}
+          className={`ui-press flex h-[29px] w-[29px] items-center justify-center rounded-lg text-[0.75rem] font-bold shadow-[var(--ui-shadow)] ${terrain ? 'bg-ui-accent text-ui-on-accent' : 'ui-glass text-ui-label'}`}
         >
           3D
         </button>
       </div>
       )}
       {preview ? null : (
-        <p className="absolute bottom-2 left-3 right-3 z-10 bg-white/90 px-2 py-1 text-[11px] leading-snug text-gray-800 retro-box-inset">
+        <p className={`hub-bar pointer-events-none absolute z-10 max-w-[min(70%,28rem)] truncate rounded-md bg-[var(--ui-glass)] px-1.5 py-0.5 text-[10px] text-ui-label-2 ${creditClassName}`}>
           {attribution}
-          {picking ? ' Click the map to drop a pin.' : ' Drag to move. Right-drag turns the map when 3D is on.'}
         </p>
       )}
+      {picking ? (
+        <p className="hub-bar ui-glass pointer-events-none absolute left-1/2 top-3 z-10 -translate-x-1/2 rounded-full px-3 py-1.5 text-[0.8125rem] font-semibold text-ui-label shadow-[var(--ui-shadow)]">
+          Tap the map to drop a pin
+        </p>
+      ) : null}
     </div>
   );
 }

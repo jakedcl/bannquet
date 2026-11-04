@@ -589,20 +589,6 @@ html.load-enter-fade .map-bleed {
   animation: load-fade 280ms var(--motion-ease) both;
 }
 
-.home-hero-actions a:focus-visible,
-.home-hero-actions button:focus-visible {
-  outline: 3px solid #fff;
-  outline-offset: 3px;
-}
-
-html.home-enter .home-hero-logo {
-  animation: home-rise 280ms var(--motion-ease) both;
-}
-
-html.home-enter .home-hero-actions {
-  animation: home-rise 300ms var(--motion-ease) 200ms both;
-}
-
 .nav-drop {
   display: flex;
   transform-origin: top center;
@@ -744,11 +730,6 @@ dialog[open]::backdrop {
   to { opacity: 1; }
 }
 
-@keyframes home-rise {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: none; }
-}
-
 @keyframes load-rise {
   from { opacity: 0; transform: translateY(8px); }
   to { opacity: 1; transform: none; }
@@ -788,8 +769,6 @@ dialog[open]::backdrop {
   .route-fade,
   html.load-enter main.route-stage,
   html.load-enter-fade .map-bleed,
-  html.home-enter .home-hero-logo,
-  html.home-enter .home-hero-actions,
   .nav-drop,
   .motion-swap,
   .motion-sheet,
@@ -1064,4 +1043,33 @@ main.route-stage:has(> .map-bleed) {
   .ui-sheet-in,
   .ui-fade-in { animation: none; }
   .ui-press:active { transform: none; }
+}
+
+/* MapLibre zoom/compass, restyled to match the hub glass buttons. */
+.maplibregl-ctrl-top-right {
+  top: 0.625rem;
+  right: 0.625rem;
+}
+
+.maplibregl-ctrl-top-right .maplibregl-ctrl {
+  margin: 0;
+}
+
+.maplibregl-ctrl-group:not(:empty) {
+  overflow: hidden;
+  border-radius: 10px;
+  background: var(--ui-glass);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  backdrop-filter: saturate(180%) blur(20px);
+  box-shadow: var(--ui-shadow);
+}
+
+.maplibregl-ctrl-group button + button {
+  border-top: 0.5px solid var(--ui-separator);
+}
+
+@media (prefers-color-scheme: dark) {
+  .maplibregl-ctrl-group button .maplibregl-ctrl-icon {
+    filter: invert(1);
+  }
 }
