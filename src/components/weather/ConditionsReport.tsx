@@ -13,7 +13,7 @@ export function ConditionsReport({
   const spots = [...report.spots].sort((a, b) => a.mountain.localeCompare(b.mountain));
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-5">
       <Card title="Live conditions">
         {!report.success || report.stats.length === 0 ? (
           <p className="text-sm font-bold">The live conditions did not load.</p>
@@ -29,7 +29,7 @@ export function ConditionsReport({
         )}
         {showForecastLink ? (
           <p className="mt-4 text-sm">
-            <Link href="/mountain-weather" className="underline">Mountain weather</Link>
+            <Link href="/mountain-weather" className="font-bold underline">Mountain weather</Link>
             {' '}has the forecast for each region.
           </p>
         ) : null}
