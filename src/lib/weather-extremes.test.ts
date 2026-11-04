@@ -30,7 +30,7 @@ const spots: ExtremeSpot[] = [
 test('live conditions pick the same extremes the banner scrolls', () => {
   const stats = extremeStatsFromSpots(spots);
   const byLabel = Object.fromEntries(stats.map((stat) => [stat.label, stat]));
-  assert.equal(byLabel['HIGHEST WIND'].value, '55mph');
+  assert.equal(byLabel['HIGHEST WIND'].value, '40mph, gusts 55');
   assert.equal(byLabel['HIGHEST WIND'].location, 'Washington, White Mountains');
   assert.equal(byLabel['HIGHEST TEMP'].value, '30°F');
   assert.equal(byLabel['COLDEST FEELS-LIKE'].value, '-2°F');
