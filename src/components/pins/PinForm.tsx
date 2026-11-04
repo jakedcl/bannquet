@@ -156,9 +156,9 @@ export function PinForm({
           ) : null}
         </div>
         {point ? (
-          <p className="text-xs text-gray-700">Pin at {point.lat.toFixed(5)}, {point.lng.toFixed(5)}</p>
+          <p className="text-sm text-gray-700">Pin at {point.lat.toFixed(5)}, {point.lng.toFixed(5)}</p>
         ) : (
-          <p className="text-xs text-gray-700">No spot chosen yet.</p>
+          <p className="text-sm text-gray-700">No spot chosen yet.</p>
         )}
         {locateError ? <p className="text-sm font-bold text-red-700">{locateError}</p> : null}
         {/* Bound to state: React puts an uncontrolled hidden input back to its default on every render. */}
@@ -209,7 +209,7 @@ export function DeletePinButton({ id }: { id: string }) {
     >
       <input type="hidden" name="id" value={id} />
       {state?.error ? (
-        <p className="absolute right-0 top-full z-10 mt-1 w-44 text-right text-xs font-bold text-red-700">{state.error}</p>
+        <p className="absolute right-0 top-full z-10 mt-1 w-56 text-right text-sm font-bold text-red-700">{state.error}</p>
       ) : null}
       <TrashButton pending={pending} />
     </form>
