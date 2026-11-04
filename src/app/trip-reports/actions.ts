@@ -9,17 +9,18 @@ import { APPROVAL_WAIT, canContribute } from '@/lib/membership';
 import { redirectToSignIn } from '@/lib/sign-in-redirect';
 import { addProfilePhotos, addProfileTrack, parseUploadedPhotos } from '@/lib/posts';
 import { cleanRouteNotes, cleanRouteTitle, routeTitle } from '@/lib/route-title';
-import { climbedPeakSlugs, linkClimbsToRoutes } from '@/lib/summits';
+import { memberPeakSlugs } from '@/lib/summits';
 import type { DraftItem } from '@/lib/trip-draft';
 
 type SummitSuggestion = { slug: string; name: string };
 
 async function summitsOnTrack(userId: string, track: PackedTrack): Promise<SummitSuggestion[]> {
   try {
-    const climbed = await climbedPeakSlugs(userId);
-    return suggestSummits(track.points, climbed);
+    // Only peaks the member has not added yet.
+    const added = await memberPeakSlugs(userId);
+    return suggestSummits(track.points, added);
   } catch (err) {
-    console.error('Summit suggestions did not load', err);
+    console.error('Peak suggestions did not load', err);
     return [];
   }
 }
@@ -53,12 +54,6 @@ export async function publishProfileTrack(
     id = await addProfileTrack({ userId: viewer.id, activity, track: track.track, title, notes, hideEnds });
   } catch {
     return { error: 'Could not save that route. Try again in a minute.' };
-  }
-  try {
-    // Climbs logged for this day near this route now point at it.
-    await linkClimbsToRoutes({ trackId: id });
-  } catch (err) {
-    console.error('Climb route link did not save', err);
   }
   const created: DraftItem[] = [{ kind: 'route', id, label: routeTitle(title), thumb: null }];
   const suggestions = await summitsOnTrack(viewer.id, track.track);

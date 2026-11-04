@@ -151,7 +151,7 @@ export function RouteUpload({
       {inline ? null : <SaveThenTrip disabled={pending || !trackJson} />}
     </form>
     {suggestions.length > 0 ? (
-      <SummitPrompts key={saveId || 'summits'} peaks={suggestions} routeId={saveId || undefined} onClear={finishSuggestions} />
+      <SummitPrompts key={saveId || 'summits'} peaks={suggestions} onClear={finishSuggestions} />
     ) : null}
     </div>
   );

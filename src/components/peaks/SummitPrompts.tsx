@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { confirmSummitAction } from '@/app/peaks/actions';
+import { confirmPeakAction } from '@/app/peaks/actions';
 import { SubmitButton } from '@/components/ui/SubmitButton';
 
 export type SummitSuggestion = {
@@ -11,12 +11,10 @@ export type SummitSuggestion = {
 
 export function SummitPrompts({
   peaks,
-  routeId,
   onClear,
 }: {
+  /** Peaks the new route passes that are not on the member's peaks yet. */
   peaks: SummitSuggestion[];
-  /** The route that suggested these peaks; a confirmed climb takes its date and links to it. */
-  routeId?: string;
   onClear?: () => void;
 }) {
   const [left, setLeft] = useState(peaks);
@@ -34,23 +32,22 @@ export function SummitPrompts({
     <ul className="space-y-2">
       {left.map((peak) => (
         <li key={peak.slug} className="retro-box-inset flex flex-wrap items-center justify-between gap-2 bg-white px-3 py-2">
-          <p className="min-w-0 text-sm">Looks like you summited {peak.name}, but you&apos;ve never logged a climb there.</p>
+          <p className="min-w-0 text-sm">Your route went over {peak.name}. Add it to your peaks?</p>
           <div className="flex shrink-0 flex-wrap items-center gap-2">
             <form
               action={async (formData) => {
                 try {
-                  const result = await confirmSummitAction(formData);
+                  const result = await confirmPeakAction(formData);
                   if (!result.ok) return;
                   setLeft((current) => current.filter((item) => item.slug !== peak.slug));
                 } catch {
-                  // The climb did not confirm. Leave the prompt so it can be tried again.
+                  // The peak did not save. Leave the prompt so it can be tried again.
                 }
               }}
             >
               <input type="hidden" name="peakSlug" value={peak.slug} />
-              {routeId ? <input type="hidden" name="routeId" value={routeId} /> : null}
-              <SubmitButton tone="yellow" pendingLabel="Logging…" className="px-3 py-1 text-xs">
-                Log
+              <SubmitButton tone="yellow" pendingLabel="Adding…" className="px-3 py-1 text-xs">
+                Add
               </SubmitButton>
             </form>
             <button
