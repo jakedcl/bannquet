@@ -7,6 +7,7 @@ import { viewerCanContribute } from '@/lib/membership';
 import { listPeakRows } from '@/lib/summits';
 import { isDatabaseConfigured } from '@/db';
 import { loadFailed } from '@/lib/load-error';
+import { HubPage } from '@/components/hub/Page';
 
 export const dynamic = 'force-dynamic';
 
@@ -47,12 +48,12 @@ export default async function PeaksPage() {
 
   return (
     <PageWrapper>
-      <div className="mx-auto max-w-5xl space-y-4 px-4 py-10">
-        <Card title="Peaks">
+      <HubPage title="Peaks" width="5xl">
+        <Card>
           {error ? <p className="mb-4 text-sm font-bold">{error}</p> : null}
           <PeaksTable rows={rows} canMark={Boolean(!error && viewerCanContribute(viewer))} />
         </Card>
-      </div>
+      </HubPage>
     </PageWrapper>
   );
 }

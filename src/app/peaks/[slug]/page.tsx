@@ -9,6 +9,7 @@ import { viewerCanContribute } from '@/lib/membership';
 import { listPeakVisitors, type PeakRow } from '@/lib/summits';
 import { isDatabaseConfigured } from '@/db';
 import { loadFailed } from '@/lib/load-error';
+import { HubPage } from '@/components/hub/Page';
 
 // Dynamic because it reads the viewer's cookie; the visitor list itself is cached (listPeakVisitors).
 export const dynamic = 'force-dynamic';
@@ -56,21 +57,13 @@ export default async function PeakPage({ params }: { params: Promise<{ slug: str
 
   return (
     <PageWrapper>
-      <div className="mx-auto max-w-3xl space-y-4 px-4 py-10">
-        <Card title={peak.name}>
-          <p className="text-sm text-gray-700">
-            {[
-              `${peak.elevationFt.toLocaleString('en-US')} ft`,
-              area,
-              list,
-            ].filter(Boolean).join(' · ')}
-          </p>
-          {peak.note ? <p className="mt-2 text-sm">{peak.note}</p> : null}
-          <p className="mt-3 text-sm">
-            <Link href="/peaks" className="underline">All peaks</Link>
-          </p>
-          {error ? <p className="mt-3 text-sm font-bold">{error}</p> : null}
-        </Card>
+      <HubPage
+        title={peak.name}
+        width="3xl"
+        subtitle={[`${peak.elevationFt.toLocaleString('en-US')} ft`, area, list].filter(Boolean).join(' · ')}
+      >
+        {peak.note ? <p className="t-body">{peak.note}</p> : null}
+        {error ? <p className="t-body font-bold">{error}</p> : null}
 
         <Card title="Who has been here">
           {visitors.length === 0 ? (
@@ -93,7 +86,7 @@ export default async function PeakPage({ params }: { params: Promise<{ slug: str
             <p className="mt-4 text-sm font-bold">✓ In your peaks{mine > 1 ? ` ×${mine}` : ''}</p>
           ) : null}
         </Card>
-      </div>
+      </HubPage>
     </PageWrapper>
   );
 }
