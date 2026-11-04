@@ -3,7 +3,6 @@
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { Card } from '@/components/hub/Card';
-import { Pill } from '@/components/hub/Button';
 import { getWeather } from '@/lib/weather';
 import type { WeatherSpot } from '@/lib/regions';
 import type { ForecastSnippet, WeatherData } from '@/types/weather';
@@ -47,12 +46,12 @@ export default function WeatherDashboard({ spot }: WeatherDashboardProps) {
 
   if (loading) {
     return (
-      <Card aria-label={spot.name}>
-        <SpotHeading spot={spot} />
-        <div className="mt-4 space-y-3" aria-busy="true">
-          <div className="h-12 w-32 animate-pulse rounded-xl bg-ui-fill" />
-          <div className="h-16 animate-pulse rounded-xl bg-ui-fill" />
-          <div className="h-24 animate-pulse rounded-xl bg-ui-fill" />
+      <Card title={spot.name} aria-label={spot.name}>
+        <p className="t-footnote text-ui-label-2">{elevation(spot)}</p>
+        <div className="mt-3 space-y-2" aria-busy="true">
+          <div className="skeleton-bar w-1/3" />
+          <div className="skeleton-bar w-2/3" />
+          <div className="skeleton-bar w-1/2" />
         </div>
       </Card>
     );
@@ -60,9 +59,8 @@ export default function WeatherDashboard({ spot }: WeatherDashboardProps) {
 
   if (error || !weather) {
     return (
-      <Card aria-label={spot.name}>
-        <SpotHeading spot={spot} />
-        <p className="t-subhead mt-3 text-ui-label-2">{error ?? 'The forecast did not load.'}</p>
+      <Card title={spot.name} aria-label={spot.name}>
+        <p className="t-subhead font-bold">{error ?? 'The forecast did not load.'}</p>
       </Card>
     );
   }
@@ -80,29 +78,30 @@ export default function WeatherDashboard({ spot }: WeatherDashboardProps) {
   const updated = new Date(weather.timestamp).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
 
   return (
-    <Card aria-label={spot.name} className="space-y-4">
-      <SpotHeading
-        spot={spot}
-        icon={weather.icon ? (
-          <Image
-            src={weather.icon}
-            alt={weather.conditions[0] || spot.name}
-            width={48}
-            height={48}
-            unoptimized
-            className="h-12 w-12 rounded-xl object-cover"
-          />
-        ) : null}
-      />
-
-      <div className="flex flex-wrap items-end justify-between gap-x-6 gap-y-2">
+    <Card
+      title={spot.name}
+      aria-label={spot.name}
+      action={weather.icon ? (
+        <Image
+          src={weather.icon}
+          alt={weather.conditions[0] || spot.name}
+          width={24}
+          height={24}
+          unoptimized
+          className="h-6 w-6 border border-white/40 object-cover"
+        />
+      ) : null}
+      bodyClassName="space-y-3"
+    >
+      <div className="ui-inset flex flex-wrap items-end justify-between gap-x-6 gap-y-2 p-3">
         <div className="min-w-0">
-          <p className="text-[3.5rem] font-semibold leading-none tracking-[-0.04em] tabular-nums">{Math.round(weather.temperature)}°</p>
-          <p className="t-subhead mt-1.5 break-words text-ui-label-2">{weather.conditions[0]}</p>
+          <p className="t-eyebrow">Now · {elevation(spot)}</p>
+          <p className="mt-1 font-[family-name:var(--font-heading)] text-4xl font-bold leading-none tabular-nums">{Math.round(weather.temperature)}°F</p>
+          <p className="t-subhead mt-1 break-words">{weather.conditions[0]}</p>
         </div>
         <div className="min-w-0 text-right">
-          <p className="t-footnote text-ui-label-2">Feels like</p>
-          <p className="t-title3 tabular-nums">{Math.round(feelsLike)}°</p>
+          <p className="t-eyebrow">Feels like</p>
+          <p className="mt-1 text-xl font-bold tabular-nums">{Math.round(feelsLike)}°F</p>
           <p className="t-footnote break-words text-ui-label-2">
             {summitWind} {weather.windDirection}
             {windGust ? ` · gusts ${windGust}` : ''}
@@ -117,14 +116,14 @@ export default function WeatherDashboard({ spot }: WeatherDashboardProps) {
       </div>
 
       {hourlyForecast.length > 0 ? (
-        <div className="space-y-1.5">
-          <p className="t-eyebrow px-0.5">Hourly</p>
-          <ul className="ui-scroll-x -mx-4 flex gap-2 overflow-x-auto px-4 sm:-mx-5 sm:px-5">
+        <div className="space-y-1">
+          <p className="t-eyebrow">Next 7 hours</p>
+          <ul className="ui-scroll-x flex gap-1.5 overflow-x-auto">
             {hourlyForecast.slice(0, 7).map((period) => (
-              <li key={period.startTime} className="w-[4.5rem] shrink-0 rounded-xl bg-ui-surface-2 px-2 py-2.5 text-center">
-                <p className="t-caption text-ui-label-2">{hourLabel(period)}</p>
-                <p className="t-headline mt-1 tabular-nums">{period.temperature}°</p>
-                <p className="t-caption mt-0.5 truncate text-ui-label-2">{period.windSpeed || '—'}</p>
+              <li key={period.startTime} className="ui-tile w-[4.25rem] shrink-0 px-1.5 py-1.5 text-center">
+                <p className="t-caption font-bold text-ui-label-2">{hourLabel(period)}</p>
+                <p className="t-headline tabular-nums">{period.temperature}°</p>
+                <p className="t-caption truncate text-ui-label-2">{period.windSpeed || '—'}</p>
               </li>
             ))}
           </ul>
@@ -132,16 +131,16 @@ export default function WeatherDashboard({ spot }: WeatherDashboardProps) {
       ) : null}
 
       {dailyForecast.length > 0 ? (
-        <div className="space-y-1.5">
-          <p className="t-eyebrow px-0.5">7-day</p>
-          <ul className="ui-list overflow-hidden rounded-xl bg-ui-surface-2" style={{ ['--row-inset' as string]: '0.75rem' }}>
+        <div className="space-y-1">
+          <p className="t-eyebrow">Next 7 days</p>
+          <ul className="ui-inset ui-list">
             {dailyForecast.slice(0, 7).map((period) => (
-              <li key={period.startTime} className="flex items-center gap-3 px-3 py-2">
-                <span className="t-subhead w-[5.5rem] shrink-0 font-semibold">{period.name}</span>
+              <li key={period.startTime} className="flex items-center gap-3 px-2.5 py-1.5">
+                <span className="t-footnote w-[5.25rem] shrink-0 font-bold">{period.name}</span>
                 <span className="t-footnote min-w-0 flex-1 truncate text-ui-label-2">{period.shortForecast || '—'}</span>
-                <span className="t-subhead shrink-0 tabular-nums">
+                <span className="t-footnote shrink-0 font-bold tabular-nums">
                   {period.temperature}°
-                  {period.secondaryTemp !== undefined ? <span className="text-ui-label-2"> / {period.secondaryTemp}°</span> : null}
+                  {period.secondaryTemp !== undefined ? <span className="font-normal text-ui-label-2"> / {period.secondaryTemp}°</span> : null}
                 </span>
               </li>
             ))}
@@ -150,14 +149,16 @@ export default function WeatherDashboard({ spot }: WeatherDashboardProps) {
       ) : null}
 
       {weather.hazards.length > 0 ? (
-        <div className="space-y-2 rounded-xl bg-ui-warn-bg p-3">
-          <p className="t-eyebrow !text-ui-warn">Hazards</p>
+        <div className="ui-inset space-y-2 p-3">
+          <p className="t-eyebrow">Hazards</p>
           <ul className="space-y-2">
             {weather.hazards.map((hazard) => (
               <li key={hazard.id} className="min-w-0">
-                <p className="t-subhead flex flex-wrap items-center gap-2 font-semibold">
+                <p className="t-subhead flex flex-wrap items-center gap-2 font-bold">
                   {hazard.event}
-                  {hazard.severity ? <Pill tone="warn">{hazard.severity}</Pill> : null}
+                  {hazard.severity ? (
+                    <span className="retro-button-yellow inline-block px-2 py-0.5 text-xs uppercase">{hazard.severity}</span>
+                  ) : null}
                 </p>
                 {hazard.headline ? <p className="t-footnote mt-0.5 break-words text-ui-label-2">{hazard.headline}</p> : null}
               </li>
@@ -166,9 +167,9 @@ export default function WeatherDashboard({ spot }: WeatherDashboardProps) {
         </div>
       ) : null}
 
-      <p className="t-caption text-ui-label-2">
-        Updated {updated} ·{' '}
-        <a href={nws} target="_blank" rel="noopener noreferrer" className="text-ui-accent no-underline hover:underline">
+      <p className="t-footnote text-ui-label-2">
+        Updated {updated}.{' '}
+        <a href={nws} target="_blank" rel="noopener noreferrer" className="font-bold text-brand-green underline">
           weather.gov
         </a>
       </p>
@@ -176,26 +177,18 @@ export default function WeatherDashboard({ spot }: WeatherDashboardProps) {
   );
 }
 
+function elevation(spot: WeatherSpot): string {
+  return `${Number(spot.elevation).toLocaleString('en-US')} ft`;
+}
+
 function hourLabel(period: ForecastSnippet): string {
   return new Date(period.startTime).toLocaleTimeString([], { hour: 'numeric' });
 }
 
-function SpotHeading({ spot, icon = null }: { spot: WeatherSpot; icon?: React.ReactNode }) {
-  return (
-    <div className="flex items-start justify-between gap-3">
-      <div className="min-w-0">
-        <h3 className="t-headline text-ui-label">{spot.name}</h3>
-        <p className="t-footnote text-ui-label-2">{Number(spot.elevation).toLocaleString('en-US')} ft</p>
-      </div>
-      {icon}
-    </div>
-  );
-}
-
 function Metric({ label, value }: { label: string; value: string }) {
   return (
-    <div className="min-w-0 rounded-xl bg-ui-surface-2 px-3 py-2.5">
-      <p className="t-caption break-words text-ui-label-2">{label}</p>
+    <div className="ui-tile min-w-0 px-2.5 py-2">
+      <p className="t-eyebrow break-words">{label}</p>
       <p className="t-headline break-words tabular-nums">{value}</p>
     </div>
   );

@@ -2,19 +2,12 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { ChevronIcon } from '@/components/hub/Icons';
 
 type WeatherStat = {
   label: string;
   value: string;
   location: string;
 };
-
-/** "HIGHEST WIND" -> "Highest wind" */
-function sentence(label: string): string {
-  const lower = label.toLowerCase();
-  return lower.charAt(0).toUpperCase() + lower.slice(1);
-}
 
 /** Live Northeast extremes for the mountain weather hub. Refreshes every 5 minutes. */
 export default function WeatherTicker() {
@@ -53,41 +46,33 @@ export default function WeatherTicker() {
   }, []);
 
   return (
-    <section aria-label="Live conditions" className="ui-card overflow-hidden">
-      <div className="flex items-center justify-between gap-3 px-4 pb-1 pt-3.5">
-        <p className="t-eyebrow flex items-center gap-2">
-          <span className="relative flex h-2 w-2">
-            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-500 opacity-60 motion-reduce:animate-none" />
-            <span className="relative inline-flex h-2 w-2 rounded-full bg-red-500" />
-          </span>
+    <section aria-label="Live conditions" className="retro-banner !p-0 text-white">
+      <div className="flex items-center justify-between gap-3 px-3 pt-2.5">
+        <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#ffd700]">
+          <span className="animate-pulse motion-reduce:animate-none" aria-hidden="true">●</span>
           Live across the Northeast
         </p>
-        <Link href="/conditions" className="t-subhead inline-flex items-center gap-1 text-ui-accent no-underline">
-          All
-          <ChevronIcon className="h-3 w-2" />
+        <Link href="/conditions" className="text-xs font-bold uppercase tracking-wider text-white no-underline hover:underline">
+          All ›
         </Link>
       </div>
       {loading ? (
-        <div className="grid gap-2 px-4 pb-4 pt-2 sm:grid-cols-3" aria-busy="true">
-          {[0, 1, 2].map((key) => (
-            <div key={key} className="h-14 animate-pulse rounded-xl bg-ui-fill sm:h-[5.5rem]" />
-          ))}
-        </div>
+        <p className="animate-pulse px-3 pb-3 pt-2 text-xs font-bold uppercase tracking-wider text-white/80">Loading conditions…</p>
       ) : error || stats.length === 0 ? (
-        <p className="t-subhead px-4 pb-4 pt-1 text-ui-label-2">{error ?? 'No stats yet.'}</p>
+        <p className="px-3 pb-3 pt-2 text-xs font-bold uppercase tracking-wider text-white/80">{error ?? 'No stats yet.'}</p>
       ) : (
-        <ul className="grid gap-2 px-4 pb-4 pt-2 sm:grid-cols-3">
+        <ul className="grid gap-px px-3 pb-3 pt-2 sm:grid-cols-3 sm:gap-3">
           {stats.map((stat) => (
             <li
               key={`${stat.label}-${stat.location}`}
-              className="flex min-w-0 items-center justify-between gap-3 rounded-xl bg-ui-surface-2 px-3.5 py-2.5 sm:block sm:py-3"
+              className="flex min-w-0 items-baseline justify-between gap-3 border-t border-white/15 py-1.5 first:border-t-0 sm:block sm:border-t-0 sm:border-l sm:py-0 sm:pl-3 sm:first:border-l-0 sm:first:pl-0"
             >
               <span className="min-w-0">
-                <span className="t-footnote block text-ui-label-2">{sentence(stat.label)}</span>
-                <span className="t-caption block truncate text-ui-label-2 sm:hidden">{stat.location}</span>
+                <span className="block text-[0.6875rem] font-bold uppercase tracking-wider text-white/85">{stat.label}</span>
+                <span className="block truncate text-[0.6875rem] text-white/70 sm:hidden">{stat.location}</span>
               </span>
-              <span className="t-title3 shrink-0 tabular-nums sm:mt-0.5 sm:block">{stat.value}</span>
-              <span className="t-caption mt-0.5 hidden truncate text-ui-label-2 sm:block">{stat.location}</span>
+              <span className="shrink-0 text-base font-bold tabular-nums text-[#ffd700] sm:mt-0.5 sm:block sm:text-lg">{stat.value}</span>
+              <span className="hidden truncate text-[0.6875rem] text-white/70 sm:block">@ {stat.location}</span>
             </li>
           ))}
         </ul>

@@ -18,7 +18,7 @@ export default async function MountainWeatherPage({
     const states = await loadWeatherHub();
     return (
       <PageWrapper className="hub">
-        <div className="mx-auto max-w-5xl space-y-6 px-4 pb-12 pt-6 md:pt-10">
+        <div className="mx-auto max-w-5xl space-y-5 px-4 pb-12 pt-6 md:pt-8">
           <LargeTitle title="Mountain Weather" />
           <WeatherTicker />
           <WeatherHub states={states} />

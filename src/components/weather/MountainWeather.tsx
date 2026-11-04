@@ -31,7 +31,7 @@ export function MountainWeather({ state }: { state?: string }) {
   }, [region]);
 
   return (
-    <div className="mx-auto min-w-0 max-w-6xl space-y-8 px-4 pb-12 pt-6 md:pt-10">
+    <div className="mx-auto min-w-0 max-w-6xl space-y-8 px-4 pb-12 pt-6 md:pt-8">
       <LargeTitle eyebrow="Mountain Weather" title={stateName} />
 
       <section className="space-y-10" aria-label={`${regionLabel} forecast`}>
@@ -55,7 +55,7 @@ function RegionSection({ section }: { section: WeatherSection }) {
             href={section.banner.href}
             target="_blank"
             rel="noopener noreferrer"
-            className="break-words text-ui-accent no-underline hover:underline"
+            className="break-words font-bold text-brand-green underline"
           >
             {section.banner.label}
           </a>
