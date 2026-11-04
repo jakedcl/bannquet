@@ -9,6 +9,7 @@ import { SubmitButton } from '@/components/ui/SubmitButton';
 import { AttachPicker, type AttachPickerHandle } from '@/components/trips/AttachPicker';
 import type { ChatCatalogItem } from '@/lib/chat-view';
 import type { DraftItem } from '@/lib/trip-draft';
+import { smallButtonClass } from '@/components/hub/Button';
 
 const CREATE_LABEL = { pin: 'New pin', route: 'New route', photo: 'New photo' } as const;
 
@@ -145,7 +146,7 @@ export function NewTripForm({
                   <span className="min-w-0 flex-1 truncate font-bold">{item.label}</span>
                   <button
                     type="button"
-                    className="text-xs underline"
+                    className="min-h-11 text-sm underline"
                     onClick={() => setAttached((current) => current.filter((row) => row.id !== item.id || row.kind !== item.kind))}
                   >
                     Remove
@@ -155,16 +156,16 @@ export function NewTripForm({
             </ul>
           )}
           <div className="flex flex-wrap gap-2">
-            <button type="button" className="retro-button rounded-none px-3 py-1 text-xs font-bold uppercase" onClick={() => pickerRef.current?.open()}>
+            <button type="button" className={smallButtonClass} onClick={() => pickerRef.current?.open()}>
               Attach existing
             </button>
-            <button type="button" className="retro-button rounded-none px-3 py-1 text-xs font-bold uppercase" onClick={() => openCreate('pin')}>
+            <button type="button" className={smallButtonClass} onClick={() => openCreate('pin')}>
               + New pin
             </button>
-            <button type="button" className="retro-button rounded-none px-3 py-1 text-xs font-bold uppercase" onClick={() => openCreate('route')}>
+            <button type="button" className={smallButtonClass} onClick={() => openCreate('route')}>
               + New route
             </button>
-            <button type="button" className="retro-button rounded-none px-3 py-1 text-xs font-bold uppercase" onClick={() => openCreate('photo')}>
+            <button type="button" className={smallButtonClass} onClick={() => openCreate('photo')}>
               + New photo
             </button>
           </div>
@@ -196,7 +197,7 @@ export function NewTripForm({
       >
         <div className="mb-3 flex items-center justify-between gap-3">
           <p className="text-sm font-bold uppercase">{createKind ? CREATE_LABEL[createKind] : 'New'}</p>
-          <button type="button" aria-label="Close" className="text-lg font-bold leading-none" onClick={() => createRef.current?.close()}>
+          <button type="button" aria-label="Close" className="flex h-11 w-11 items-center justify-center text-xl font-bold leading-none" onClick={() => createRef.current?.close()}>
             ×
           </button>
         </div>

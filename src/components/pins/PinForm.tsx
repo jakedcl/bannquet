@@ -13,6 +13,7 @@ import { NEUTRAL_PIN_COLOR } from '@/lib/map';
 import { PIN_KINDS, PIN_KIND_LABELS, type PinKind } from '@/lib/pin-kinds';
 import type { MapFeatureCollection } from '@/lib/posts';
 import dynamic from 'next/dynamic';
+import { smallButtonClass } from '@/components/hub/Button';
 
 const GroupMap = dynamic(() => import('@/components/map/GroupMap'), { ssr: false });
 
@@ -129,7 +130,7 @@ export function PinForm({
         <div className="flex flex-wrap gap-2">
           <button
             type="button"
-            className="retro-button rounded-none px-3 py-1 text-xs font-bold uppercase"
+            className={smallButtonClass}
             onClick={() => {
               if (!navigator.geolocation) {
                 setLocateError('This browser cannot read your location.');
@@ -147,7 +148,7 @@ export function PinForm({
           {photoPoint?.lat != null && photoPoint.lng != null ? (
             <button
               type="button"
-              className="retro-button rounded-none px-3 py-1 text-xs font-bold uppercase"
+              className={smallButtonClass}
               onClick={() => place(photoPoint.lng as number, photoPoint.lat as number)}
             >
               Use the photo&apos;s location
@@ -155,9 +156,9 @@ export function PinForm({
           ) : null}
         </div>
         {point ? (
-          <p className="text-xs text-gray-700">Pin at {point.lat.toFixed(5)}, {point.lng.toFixed(5)}</p>
+          <p className="text-sm text-gray-700">Pin at {point.lat.toFixed(5)}, {point.lng.toFixed(5)}</p>
         ) : (
-          <p className="text-xs text-gray-700">No spot chosen yet.</p>
+          <p className="text-sm text-gray-700">No spot chosen yet.</p>
         )}
         {locateError ? <p className="text-sm font-bold text-red-700">{locateError}</p> : null}
         {/* Bound to state: React puts an uncontrolled hidden input back to its default on every render. */}
@@ -208,7 +209,7 @@ export function DeletePinButton({ id }: { id: string }) {
     >
       <input type="hidden" name="id" value={id} />
       {state?.error ? (
-        <p className="absolute right-0 top-full z-10 mt-1 w-44 text-right text-xs font-bold text-red-700">{state.error}</p>
+        <p className="absolute right-0 top-full z-10 mt-1 w-56 text-right text-sm font-bold text-red-700">{state.error}</p>
       ) : null}
       <TrashButton pending={pending} />
     </form>

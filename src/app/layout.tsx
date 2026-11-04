@@ -1,5 +1,6 @@
 import { Suspense } from 'react';
-import Header from '@/components/ui/Header';
+import { TabBar } from '@/components/hub/TabBar';
+import { TopBar } from '@/components/hub/TopBar';
 import { HomeScreenTip } from '@/components/ui/HomeScreenTip';
 import { LoadEntrance } from '@/components/ui/LoadEntrance';
 import { RouteMotion } from '@/components/ui/RouteMotion';
@@ -48,11 +49,11 @@ export default async function RootLayout({
   const pending = viewer?.role === 'pending';
 
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={pending ? 'has-pending' : undefined}>
         <Providers account={account}>
           <div className="min-h-screen flex flex-col">
-            <Header account={account} />
+            <TopBar account={account} />
             <HomeScreenTip show={Boolean(viewer && !viewer.homeScreenTipSeenAt)} />
             {pending ? (
               <p className="pending-banner retro-box bg-beige px-4 py-2 text-center text-sm font-bold text-gray-900">
@@ -63,9 +64,10 @@ export default async function RootLayout({
               <RouteMotion />
             </Suspense>
             <LoadEntrance />
-            <main className="route-stage flex-1 bg-gray-50">
+            <main className="route-stage flex-1 bg-gray-50 pb-[var(--tab-h)]">
               {children}
             </main>
+            <TabBar account={account} />
           </div>
         </Providers>
       </body>

@@ -5,7 +5,7 @@ import { MapCanvas } from '@/components/map/MapCanvas';
 import { ConfirmDelete } from '@/components/delete/ConfirmDelete';
 import { RouteTitleForm } from '@/components/routes/RouteTitleForm';
 import { AddToTrip } from '@/components/library/AddToTrip';
-import { Window } from '@/components/retro/Window';
+import { Card } from '@/components/hub/Card';
 import { deleteRouteAction } from '@/app/library/actions';
 import { getViewer } from '@/app/sign-in/actions';
 import { isDatabaseConfigured } from '@/db';
@@ -19,6 +19,7 @@ import { loadMapDataNear } from '@/lib/posts';
 import { listTripChoices, tripsForItem } from '@/lib/trips';
 import { loadFailed } from '@/lib/load-error';
 import { formatTripDate } from '@/lib/utils';
+import { HubPage } from '@/components/hub/Page';
 
 export const dynamic = 'force-dynamic';
 
@@ -37,11 +38,11 @@ export default async function RoutePage({
   if (!isDatabaseConfigured()) {
     return (
       <PageWrapper>
-        <div className="mx-auto max-w-3xl px-4 py-10">
-          <Window title="Route">
+        <HubPage title="Route" width="3xl">
+          <Card>
             <p className="text-sm font-bold">Postgres is not connected, so this route cannot be loaded.</p>
-          </Window>
-        </div>
+          </Card>
+        </HubPage>
       </PageWrapper>
     );
   }
@@ -57,11 +58,11 @@ export default async function RoutePage({
   if (error) {
     return (
       <PageWrapper>
-        <div className="mx-auto max-w-3xl px-4 py-10">
-          <Window title="Route">
+        <HubPage title="Route" width="3xl">
+          <Card>
             <p className="text-sm font-bold">{error}</p>
-          </Window>
-        </div>
+          </Card>
+        </HubPage>
       </PageWrapper>
     );
   }
@@ -82,30 +83,26 @@ export default async function RoutePage({
 
   return (
     <PageWrapper leaf={route.name}>
-      <div className="mx-auto max-w-3xl space-y-4 px-4 py-10">
-        <Window
-          title={route.name}
-          action={manage && viewer ? (
-            <ConfirmDelete
-              action={deleteRouteAction}
-              confirm="Delete this route?"
-              fields={{ id: route.id, returnTo: viewer.handle ? `/user/${viewer.handle}` : '/' }}
-            />
-          ) : null}
-        >
-          <p className="text-sm text-gray-700">
+      <HubPage
+        title={route.name}
+        width="3xl"
+        subtitle={
+          <>
             {route.date ? `${formatTripDate(route.date, 'long')} · ` : ''}
             {isActivity(route.activity) ? ACTIVITY_META[route.activity].label : route.activity}
             {route.distanceM != null ? ` · ${formatMiles(route.distanceM)}` : ''}
             {route.elevGainM != null ? ` · ${formatFeetGain(route.elevGainM)}` : ''}
+          </>
+        }
+      >
+        <Card>
+          <p className="t-body">
+            {route.handle ? <Link href={`/user/${route.handle}`} className="font-bold underline">{route.who}</Link> : route.who}
             {route.hideEnds
               ? seesWholeRoute({ hideEnds: true, ownerId: route.userId }, viewer?.id ?? null)
                 ? ' · Start and end hidden from others'
                 : ' · Start and end hidden'
               : ''}
-          </p>
-          <p className="mt-2 text-sm">
-            {route.handle ? <Link href={`/user/${route.handle}`} className="underline">{route.who}</Link> : route.who}
           </p>
           {route.notes ? <div className="mt-3"><LinkedText text={route.notes} /></div> : null}
           {manage ? (
@@ -117,7 +114,7 @@ export default async function RoutePage({
               hideEnds={route.hideEnds}
             />
           ) : null}
-        </Window>
+        </Card>
         {map && route.lat != null && route.lng != null ? (
           <div className="h-80 min-h-[420px] overflow-hidden bg-white retro-box">
             <MapCanvas points={map.points} lines={map.lines} focus={{ lng: route.lng, lat: route.lat, zoom: 12 }} />
@@ -132,7 +129,16 @@ export default async function RoutePage({
             startOpen={addTrip === '1'}
           />
         ) : null}
-      </div>
+        {manage && viewer ? (
+          <Card title="Manage">
+            <ConfirmDelete
+              action={deleteRouteAction}
+              confirm="Delete this route?"
+              fields={{ id: route.id, returnTo: viewer.handle ? `/user/${viewer.handle}` : '/' }}
+            />
+          </Card>
+        ) : null}
+      </HubPage>
     </PageWrapper>
   );
 }

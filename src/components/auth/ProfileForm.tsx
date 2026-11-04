@@ -147,7 +147,7 @@ function PhotoField({
             // eslint-disable-next-line @next/next/no-img-element
             <img src={preview} alt="" className="h-full w-full object-cover" />
           ) : (
-            <span className="text-xs text-gray-500">None</span>
+            <span className="text-xs text-gray-700">None</span>
           )}
         </div>
         <div>

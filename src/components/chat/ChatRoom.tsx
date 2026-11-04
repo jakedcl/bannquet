@@ -8,6 +8,7 @@ import { deleteChatAction, sendChatAction } from '@/app/chat/actions';
 import { SearchBar } from '@/components/ui/SearchBar';
 import { SubmitButton } from '@/components/ui/SubmitButton';
 import { formatChatTime, type ChatCatalogItem, type ChatMessage, type ChatRefKind } from '@/lib/chat-view';
+import { chipClass } from '@/components/hub/Button';
 
 const GROUPS: Array<{ id: ChatRefKind; label: string }> = [
   { id: 'pin', label: 'Pins' },
@@ -132,15 +133,15 @@ export function ChatRoom({
         ))}
       </div>
       {refreshNote ? (
-        <p className="text-xs font-bold">
+        <p className="text-sm font-bold">
           {refreshNote}{' '}
-          <button type="button" className="underline" onClick={() => void pull()}>Try again</button>
+          <button type="button" className="min-h-11 underline" onClick={() => void pull()}>Try again</button>
         </p>
       ) : null}
       {notice ? (
         <p className="text-sm font-bold">
           {notice}{' '}
-          {failed ? <button type="button" className="underline" onClick={() => router.refresh()}>Try again</button> : null}
+          {failed ? <button type="button" className="min-h-11 underline" onClick={() => router.refresh()}>Try again</button> : null}
         </p>
       ) : null}
       <form ref={formRef} action={action} className="space-y-2">
@@ -161,7 +162,7 @@ export function ChatRoom({
                 missing: false,
               }}
             />
-            <button type="button" className="text-xs underline" onClick={() => setAttached(null)}>Remove</button>
+            <button type="button" className="min-h-11 text-sm underline" onClick={() => setAttached(null)}>Remove</button>
           </p>
         ) : null}
         <div className="composer-row">
@@ -170,7 +171,7 @@ export function ChatRoom({
             aria-label="Attach a pin, route, or photo"
             disabled={!canSend}
             onClick={openPicker}
-            className="composer-control retro-button-blue w-10 shrink-0 rounded-none p-0 text-lg leading-none"
+            className="composer-control retro-button-blue min-h-11 w-11 shrink-0 rounded-none p-0 text-lg leading-none"
           >
             @
           </button>
@@ -185,7 +186,7 @@ export function ChatRoom({
               className="composer-field w-full bg-white px-3 text-sm retro-box-inset"
             />
           </label>
-          <SubmitButton tone="yellow" pendingLabel="Sending…" disabled={!canSend} className="composer-control shrink-0 px-3 py-0 text-xs">
+          <SubmitButton tone="yellow" pendingLabel="Sending…" disabled={!canSend} className="composer-control shrink-0 px-3">
             Send
           </SubmitButton>
         </div>
@@ -201,21 +202,21 @@ export function ChatRoom({
       >
         <div className="mb-3 flex items-center justify-between gap-3">
           <p className="text-sm font-bold uppercase">Attach</p>
-          <button type="button" aria-label="Close" className="text-lg font-bold leading-none" onClick={() => dialogRef.current?.close()}>
+          <button type="button" aria-label="Close" className="flex h-11 w-11 items-center justify-center text-xl font-bold leading-none" onClick={() => dialogRef.current?.close()}>
             ×
           </button>
         </div>
         <div className="mb-3 flex gap-2">
           <button
             type="button"
-            className={`${tab === 'mine' ? 'retro-button-yellow' : 'retro-button'} rounded-none px-3 py-1 text-xs font-bold uppercase`}
+            className={`${chipClass(tab === 'mine')}`}
             onClick={() => setTab('mine')}
           >
             Mine
           </button>
           <button
             type="button"
-            className={`${tab === 'everyone' ? 'retro-button-yellow' : 'retro-button'} rounded-none px-3 py-1 text-xs font-bold uppercase`}
+            className={`${chipClass(tab === 'everyone')}`}
             onClick={() => setTab('everyone')}
           >
             Everyone
@@ -236,7 +237,7 @@ export function ChatRoom({
                     <li key={`${item.kind}-${item.id}`}>
                       <button
                         type="button"
-                        className="flex w-full items-center gap-2 py-1 text-left text-sm"
+                        className="flex min-h-11 w-full items-center gap-2 py-1 text-left text-sm"
                         onClick={() => {
                           setAttached(item);
                           dialogRef.current?.close();
@@ -311,7 +312,7 @@ function ChatLine({
 
   return (
     <article
-      className={`group relative text-sm ${canManage ? 'pr-8' : ''}`}
+      className={`group relative text-sm ${canManage ? 'pr-12' : ''}`}
       onContextMenu={(event) => {
         if (!canManage) return;
         event.preventDefault();
@@ -337,11 +338,11 @@ function ChatLine({
         ) : (
           <span className="font-bold">{message.name}</span>
         )}
-        <span className="ml-2 text-xs text-gray-500">{formatChatTime(message.createdAt)}</span>
+        <span className="ml-2 text-xs text-gray-700">{formatChatTime(message.createdAt)}</span>
       </p>
       {message.body ? <p className="mt-1 whitespace-pre-wrap">{message.body}</p> : null}
       {message.ref ? <Chip refItem={message.ref} /> : null}
-      {error ? <p className="text-xs font-bold text-red-700">{error}</p> : null}
+      {error ? <p className="text-sm font-bold text-red-700">{error}</p> : null}
       {canManage ? (
         <div data-chat-menu className="absolute right-0 top-0">
           <button
@@ -349,13 +350,13 @@ function ChatLine({
             aria-label="Message actions"
             aria-expanded={open}
             onClick={() => setOpen((value) => !value)}
-            className="flex h-7 w-7 items-center justify-center text-lg font-bold leading-none text-[#5c3a1e] opacity-0 group-hover:opacity-100 focus:opacity-100"
+            className="flex h-11 w-11 items-center justify-center text-xl font-bold leading-none text-[#5c3a1e] opacity-0 group-hover:opacity-100 focus:opacity-100 [@media(hover:none)]:opacity-100"
           >
             ⋯
           </button>
           {open ? (
             <form
-              className="absolute right-0 top-7 z-20 bg-[#5c3a1e] p-1"
+              className="absolute right-0 top-11 z-20 bg-[#5c3a1e] p-1"
               action={async (formData) => {
                 const result = await deleteChatAction(null, formData);
                 if (result?.error) {
@@ -370,7 +371,7 @@ function ChatLine({
               }}
             >
               <input type="hidden" name="id" value={message.id} />
-              <SubmitButton tone="yellow" pendingLabel="Deleting…" className="px-3 py-1 text-xs">
+              <SubmitButton tone="yellow" pendingLabel="Deleting…" className="px-3">
                 Delete
               </SubmitButton>
             </form>
@@ -395,11 +396,11 @@ function Chip({
   };
 }) {
   if (refItem.missing) {
-    return <span className="mt-1 inline-block text-xs text-gray-500">That {refItem.kind} is gone.</span>;
+    return <span className="mt-1 inline-block text-xs text-gray-700">That {refItem.kind} is gone.</span>;
   }
   const photo = draftPhotoSources(refItem);
   return (
-    <Link href={refItem.href} className="mt-1 inline-flex items-center gap-2 border border-gray-400 bg-white px-2 py-1 text-xs font-bold">
+    <Link href={refItem.href} className="mt-1 inline-flex min-h-11 items-center gap-2 border border-gray-400 bg-white px-3 py-1 text-sm font-bold">
       {photo ? (
         <SmallPhotoImage
           url={photo.url}

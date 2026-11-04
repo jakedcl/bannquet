@@ -89,13 +89,13 @@ export function PhotoFields({
               <div className="min-w-0 flex-1 space-y-1">
                 <div className="flex gap-2">
                   {showLocation ? (
-                    <button type="button" className="text-xs font-bold uppercase underline" onClick={() => setPinning(index)}>
+                    <button type="button" className="inline-flex min-h-11 items-center text-sm font-bold uppercase underline" onClick={() => setPinning(index)}>
                       {located ? 'Move pin' : 'Drop a pin'}
                     </button>
                   ) : null}
                   <button
                     type="button"
-                    className="text-xs font-bold uppercase underline"
+                    className="inline-flex min-h-11 items-center text-sm font-bold uppercase underline"
                     onClick={() => onChange(photos.filter((_, item) => item !== index))}
                   >
                     Remove

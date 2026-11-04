@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { confirmPeakAction } from '@/app/peaks/actions';
 import { SubmitButton } from '@/components/ui/SubmitButton';
+import { smallButtonClass } from '@/components/hub/Button';
 
 export type SummitSuggestion = {
   slug: string;
@@ -46,13 +47,13 @@ export function SummitPrompts({
               }}
             >
               <input type="hidden" name="peakSlug" value={peak.slug} />
-              <SubmitButton tone="yellow" pendingLabel="Adding…" className="px-3 py-1 text-xs">
+              <SubmitButton tone="yellow" pendingLabel="Adding…" className="px-3">
                 Add
               </SubmitButton>
             </form>
             <button
               type="button"
-              className="retro-button rounded-none px-3 py-1 text-xs font-bold uppercase tracking-wide"
+              className={smallButtonClass}
               onClick={() => setLeft((current) => current.filter((item) => item.slug !== peak.slug))}
             >
               Dismiss

@@ -1,4 +1,5 @@
 import { REGION_LABELS, REGION_WEATHER_SECTIONS } from '@/lib/regions';
+import { feelsLikeF, gridValueAt, windMphFromText } from '@/lib/feels-like';
 
 export type ExtremeStat = {
   label: string;
@@ -31,13 +32,13 @@ export type ExtremeReport = {
 export function extremeStatsFromSpots(results: ExtremeSpot[]): ExtremeStat[] {
   if (results.length === 0) return [];
 
+  // Sustained speed from the NWS hourly forecast; gusts come from the gridpoint data.
   const highestWind = results.reduce((max, curr) =>
-    curr.windGust > max.windGust ? curr : max, results[0]);
+    curr.windSpeed > max.windSpeed ? curr : max, results[0]);
   const highestTemp = results.reduce((max, curr) =>
     curr.maxTemperature > max.maxTemperature ? curr : max, results[0]);
-  const lowestTemp = results.reduce((min, curr) =>
-    curr.minTemperature < min.minTemperature ? curr : min, results[0]);
-  const lowestWindChill = results.reduce((min, curr) =>
+  // windChill already falls back to the plain temp when it isn't cold and windy.
+  const coldest = results.reduce((min, curr) =>
     curr.windChill < min.windChill ? curr : min, results[0]);
 
   const snowingLocations = results.filter((spot) => spot.isSnowing);
@@ -49,7 +50,9 @@ export function extremeStatsFromSpots(results: ExtremeSpot[]): ExtremeStat[] {
   return [
     {
       label: 'HIGHEST WIND',
-      value: `${highestWind.windGust}mph`,
+      value: highestWind.windGust > highestWind.windSpeed
+        ? `${highestWind.windSpeed}mph, gusts ${highestWind.windGust}`
+        : `${highestWind.windSpeed}mph`,
       location: `${highestWind.mountain}, ${highestWind.state}`,
     },
     {
@@ -58,14 +61,9 @@ export function extremeStatsFromSpots(results: ExtremeSpot[]): ExtremeStat[] {
       location: `${highestTemp.mountain}, ${highestTemp.state}`,
     },
     {
-      label: 'LOWEST TEMP',
-      value: `${lowestTemp.minTemperature}°F`,
-      location: `${lowestTemp.mountain}, ${lowestTemp.state}`,
-    },
-    {
-      label: 'LOWEST WIND CHILL',
-      value: `${lowestWindChill.windChill}°F`,
-      location: `${lowestWindChill.mountain}, ${lowestWindChill.state}`,
+      label: 'COLDEST FEELS-LIKE',
+      value: `${coldest.windChill}°F`,
+      location: `${coldest.mountain}, ${coldest.state}`,
     },
     ...(snowingLocations.length > 0 ? [{
       label: 'SNOWING NOW',
@@ -115,10 +113,10 @@ export async function loadWeatherExtremes(): Promise<ExtremeReport> {
       const settled = await Promise.allSettled(
         batch.map(async (mountain) => {
           const weather = await getExtremeWeatherSnapshot(mountain.lat, mountain.lon);
-          const windSpeedNum = parseWindNumber(weather.windSpeed);
-          const windGustNum = parseWindNumber(weather.windGust);
+          const windSpeedNum = windMphFromText(weather.windSpeed);
+          const windGustNum = windMphFromText(weather.windGust);
           const currentTemp = weather.temperature || 0;
-          const windChill = computeWindChill(currentTemp, windSpeedNum);
+          const windChill = feelsLikeF({ tempF: currentTemp, windMph: windSpeedNum });
           const hourlyTemps = weather.hourlyTemps;
           const minTemp = hourlyTemps.length > 0
             ? Math.min(...hourlyTemps, currentTemp)
@@ -191,18 +189,20 @@ export async function loadWeatherExtremes(): Promise<ExtremeReport> {
   }
 }
 
-function parseWindNumber(value: unknown): number {
-  if (typeof value === 'number' && Number.isFinite(value)) return Math.round(value);
-  if (typeof value === 'string') {
-    const n = parseInt(value.replace(/[^0-9]/g, ''), 10);
-    return Number.isFinite(n) ? n : 0;
-  }
-  return 0;
-}
 
 type NwsPointResponse = {
   properties?: {
     forecastHourly?: string;
+    forecastGridData?: string;
+  };
+};
+
+type NwsGridResponse = {
+  properties?: {
+    windGust?: {
+      uom?: string;
+      values?: Array<{ validTime?: string; value?: number | null }>;
+    };
   };
 };
 
@@ -248,7 +248,14 @@ async function getExtremeWeatherSnapshot(lat: number, lon: number) {
     throw new Error('NWS points missing forecastHourly');
   }
 
-  const hourlyData = await fetchNwsJson<NwsHourlyResponse>(forecastHourly);
+  const [hourlyData, gustMph] = await Promise.all([
+    fetchNwsJson<NwsHourlyResponse>(forecastHourly),
+    pointData.properties?.forecastGridData
+      ? fetchNwsJson<NwsGridResponse>(pointData.properties.forecastGridData)
+        .then(currentGustMph)
+        .catch(() => 0)
+      : Promise.resolve(0),
+  ]);
   const periods = Array.isArray(hourlyData.properties?.periods) ? hourlyData.properties?.periods : [];
   const currentPeriod = periods[0];
   if (!currentPeriod) {
@@ -263,15 +270,17 @@ async function getExtremeWeatherSnapshot(lat: number, lon: number) {
   return {
     temperature: typeof currentPeriod.temperature === 'number' ? currentPeriod.temperature : 0,
     windSpeed: currentPeriod.windSpeed ?? '0 mph',
-    windGust: currentPeriod.windSpeed ?? '0 mph',
+    windGust: gustMph,
     precipitation: currentPeriod.probabilityOfPrecipitation?.value ?? 0,
     hourlyTemps,
   };
 }
 
-function computeWindChill(tempF: number, windMph: number): number {
-  if (tempF > 50 || windMph <= 3) {
-    return tempF;
-  }
-  return 35.74 + (0.6215 * tempF) - (35.75 * Math.pow(windMph, 0.16)) + (0.4275 * tempF * Math.pow(windMph, 0.16));
+// Gridpoint values are ISO intervals ("2026-11-04T00:00:00+00:00/PT2H") in km/h.
+function currentGustMph(grid: NwsGridResponse, now = Date.now()): number {
+  const gust = grid.properties?.windGust;
+  const value = gridValueAt(gust?.values, now);
+  if (value === null) return 0;
+  const mph = gust?.uom?.includes('km_h') ? value * 0.621371 : value;
+  return Math.round(mph);
 }

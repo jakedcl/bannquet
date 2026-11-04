@@ -52,7 +52,7 @@ export function EditForm({
           value: values[field.name] ?? '',
           maxLength: field.maxLength,
           className: inline
-            ? 'retro-box-inset bg-white px-2 py-1 text-sm'
+            ? 'retro-box-inset bg-white px-3 py-2 text-sm'
             : 'w-full retro-box-inset bg-white px-3 py-2 text-base',
           'aria-label': inline ? field.label : undefined,
           onChange: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -79,10 +79,20 @@ export function EditForm({
 }
 
 /** A quiet "Edit" link that opens the form. */
-export function EditDetails({ children }: { children: React.ReactNode }) {
+export function EditDetails({ children, look = 'retro' }: { children: React.ReactNode; look?: 'retro' | 'hub' }) {
+  if (look === 'hub') {
+    return (
+      <details className="group">
+        <summary className="retro-button ui-press flex min-h-11 cursor-pointer list-none items-center justify-center rounded-none text-sm font-bold uppercase tracking-wide text-gray-800 [&::-webkit-details-marker]:hidden">
+          Edit
+        </summary>
+        <div className="mt-3">{children}</div>
+      </details>
+    );
+  }
   return (
     <details className="mt-4">
-      <summary className="cursor-pointer text-sm font-bold underline">Edit</summary>
+      <summary className="flex min-h-11 cursor-pointer items-center text-sm font-bold underline">Edit</summary>
       {children}
     </details>
   );

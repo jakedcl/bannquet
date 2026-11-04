@@ -1,11 +1,12 @@
 import PageWrapper from '@/components/ui/PageWrapper';
 import { ChatRoom } from '@/components/chat/ChatRoom';
-import { Window } from '@/components/retro/Window';
+import { Card } from '@/components/hub/Card';
 import { getViewer } from '@/app/sign-in/actions';
 import { listChatCatalog, listChatMessages, type ChatCatalogItem } from '@/lib/chat';
 import { APPROVAL_WAIT, canContribute, viewerCanContribute } from '@/lib/membership';
 import { isDatabaseConfigured } from '@/db';
 import { loadFailed } from '@/lib/load-error';
+import { HubPage } from '@/components/hub/Page';
 
 export const dynamic = 'force-dynamic';
 
@@ -32,8 +33,8 @@ export default async function ChatPage() {
 
   return (
     <PageWrapper>
-      <div className="mx-auto max-w-3xl px-4 py-10">
-        <Window title="Chat">
+      <HubPage title="Chat" width="3xl">
+        <Card>
           <ChatRoom
             key={error ? 'failed' : 'ready'}
             failed={Boolean(error && ready)}
@@ -44,8 +45,8 @@ export default async function ChatPage() {
             viewerId={viewer?.id ?? null}
             moderator={viewer?.role === 'admin'}
           />
-        </Window>
-      </div>
+        </Card>
+      </HubPage>
     </PageWrapper>
   );
 }

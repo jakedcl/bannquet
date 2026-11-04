@@ -1,14 +1,15 @@
 import PageWrapper from '@/components/ui/PageWrapper';
-import { Window } from '@/components/retro/Window';
+import { Card } from '@/components/hub/Card';
+import { HubPage } from '@/components/hub/Page';
 
 export default function ChatLoading() {
   return (
     <PageWrapper>
-      <div className="mx-auto max-w-3xl px-4 py-10">
-        <Window title="Chat">
+      <HubPage title="Chat" width="3xl">
+        <Card>
           <p className="text-sm">Loading chat.</p>
-        </Window>
-      </div>
+        </Card>
+      </HubPage>
     </PageWrapper>
   );
 }

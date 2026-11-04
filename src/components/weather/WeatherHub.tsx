@@ -1,38 +1,37 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { DashboardGrid } from '@/components/ui/DashboardGrid';
-import { DashboardWindow } from '@/components/ui/DashboardWindow';
+import { Card } from '@/components/hub/Card';
+import { Pill } from '@/components/hub/Button';
 import type { RegionGlance, StateGlance } from '@/lib/weather-hub';
 
 function degrees(high: number | null, low: number | null): string {
   if (high == null && low == null) return '—';
   const hi = high == null ? '—' : `${Math.round(high)}°`;
   const lo = low == null ? '—' : `${Math.round(low)}°`;
-  return `${hi}/${lo}`;
+  return `${hi} / ${lo}`;
 }
 
 function RegionRow({ region }: { region: RegionGlance }) {
+  const extras = [
+    region.precip == null ? null : `${Math.round(region.precip)}% precip`,
+    region.wind ?? null,
+  ].filter(Boolean).join(' · ');
   return (
     <li>
-      <Link href={region.href} className="block min-w-0 py-1 text-xs no-underline">
-        <span className="flex min-w-0 items-center gap-2">
-          {region.icon ? (
-            <Image src={region.icon} alt="" width={20} height={20} unoptimized className="h-5 w-5 shrink-0 object-contain" />
-          ) : (
-            <span className="h-5 w-5 shrink-0" aria-hidden="true" />
-          )}
-          <span className="min-w-0 flex-1 truncate font-bold text-black">{region.title}</span>
-          <span className="shrink-0 tabular-nums">{degrees(region.high, region.low)}</span>
-          <span className="shrink-0 tabular-nums">{region.precip == null ? '—' : `${Math.round(region.precip)}%`}</span>
-          <span className="shrink-0">{region.wind ?? '—'}</span>
+      <Link href={region.href} className="ui-row-press flex min-w-0 items-center gap-3 px-3 py-2 no-underline">
+        {region.icon ? (
+          <Image src={region.icon} alt="" width={36} height={36} unoptimized className="h-8 w-8 shrink-0 border border-ui-separator object-cover" />
+        ) : (
+          <span className="h-8 w-8 shrink-0 bg-ui-fill" aria-hidden="true" />
+        )}
+        <span className="min-w-0 flex-1">
+          <span className="t-headline block truncate text-ui-label">{region.title}</span>
+          <span className="t-footnote block truncate text-ui-label-2">{region.phrase}</span>
+          {region.alert ? <Pill tone="warn" className="mt-1">{region.alert}</Pill> : null}
         </span>
-        <span className="mt-0.5 flex min-w-0 items-center gap-2 pl-7">
-          <span className="min-w-0 flex-1 truncate">{region.phrase}</span>
-          {region.alert ? (
-            <span className="max-w-[9rem] shrink-0 truncate bg-[#5c3a1e] px-1 py-0.5 text-[10px] font-bold uppercase text-white">
-              {region.alert}
-            </span>
-          ) : null}
+        <span className="shrink-0 text-right">
+          <span className="t-headline block tabular-nums text-ui-label">{degrees(region.high, region.low)}</span>
+          {extras ? <span className="t-caption block text-ui-label-2">{extras}</span> : null}
         </span>
       </Link>
     </li>
@@ -41,20 +40,26 @@ function RegionRow({ region }: { region: RegionGlance }) {
 
 export function WeatherHub({ states }: { states: StateGlance[] }) {
   return (
-    <DashboardGrid>
+    <div className="grid min-w-0 gap-4 md:grid-cols-2">
       {states.map((state) => (
-        <DashboardWindow key={state.code} title={state.name} href={state.href}>
+        <Card
+          key={state.code}
+          title={state.name}
+          titleHref={state.href}
+          action={<Link href={state.href} className="-my-2 inline-flex min-h-11 items-center text-sm text-[#ffd700] no-underline">Forecasts ›</Link>}
+          padded={false}
+        >
           {state.regions.length === 0 ? (
-            <p className="text-sm">No regions.</p>
+            <p className="t-subhead p-3 text-ui-label-2">No regions.</p>
           ) : (
-            <ul>
+            <ul className="ui-list">
               {state.regions.map((region) => (
                 <RegionRow key={region.id} region={region} />
               ))}
             </ul>
           )}
-        </DashboardWindow>
+        </Card>
       ))}
-    </DashboardGrid>
+    </div>
   );
 }

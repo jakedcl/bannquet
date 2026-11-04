@@ -3,11 +3,12 @@ import PageWrapper from '@/components/ui/PageWrapper';
 import { AdminMemberTable, InviteTable } from '@/components/admin/AdminTables';
 import { InviteForm } from '@/components/auth/InviteForm';
 import { PendingQueue } from '@/components/auth/PendingDecision';
-import { Window } from '@/components/retro/Window';
+import { Card } from '@/components/hub/Card';
 import { getViewer } from '@/app/sign-in/actions';
 import { listInvites, listMembers } from '@/lib/auth/members';
 import { inviteState } from '@/lib/membership';
 import { signInPath } from '@/lib/sign-in-next';
+import { HubPage } from '@/components/hub/Page';
 
 export const dynamic = 'force-dynamic';
 
@@ -31,12 +32,12 @@ export default async function AdminPage() {
 
   return (
     <PageWrapper>
-      <div className="mx-auto max-w-3xl space-y-6 px-4 py-10">
-        <Window title="Invites">
+      <HubPage title="Admin" width="3xl">
+        <Card title="Invites">
           <InviteForm />
-        </Window>
+        </Card>
 
-        <Window title="Invite list">
+        <Card title="Invite list">
           {invites.length === 0 ? (
             <p className="text-sm">No invites yet.</p>
           ) : (
@@ -52,7 +53,7 @@ export default async function AdminPage() {
               }))}
             />
           )}
-        </Window>
+        </Card>
 
         <PendingQueue
           members={pending.map((member) => ({
@@ -63,7 +64,7 @@ export default async function AdminPage() {
           }))}
         />
 
-        <Window title="Members">
+        <Card title="Members">
           {approved.length === 0 ? (
             <p className="text-sm">Nobody has signed in yet.</p>
           ) : (
@@ -79,8 +80,8 @@ export default async function AdminPage() {
               }))}
             />
           )}
-        </Window>
-      </div>
+        </Card>
+      </HubPage>
     </PageWrapper>
   );
 }

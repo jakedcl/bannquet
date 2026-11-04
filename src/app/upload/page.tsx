@@ -2,8 +2,8 @@ import { redirect } from 'next/navigation';
 import PageWrapper from '@/components/ui/PageWrapper';
 import { PinForm } from '@/components/pins/PinForm';
 import { PhotoUpload, RouteUpload } from '@/components/posts/ProfileAdds';
-import { Window } from '@/components/retro/Window';
-import { SectionList } from '@/components/ui/SectionList';
+import { Card } from '@/components/hub/Card';
+import { ListGroup, ListRow } from '@/components/hub/ListRow';
 import { NewTripForm } from '@/components/trips/NewTripForm';
 import { getViewer } from '@/app/sign-in/actions';
 import { isDatabaseConfigured } from '@/db';
@@ -12,17 +12,20 @@ import { APPROVAL_WAIT, canContribute } from '@/lib/membership';
 import { UPLOAD_LINKS } from '@/lib/sections';
 import { signInPath } from '@/lib/sign-in-next';
 import { presetFromCatalog } from '@/lib/trip-draft';
+import { HubPage } from '@/components/hub/Page';
 
 export const dynamic = 'force-dynamic';
 
 const KINDS = [
-  { id: 'trip', label: 'Trip' },
+  { id: 'trip', label: 'New trip' },
   { id: 'route', label: 'Route (GPX)' },
   { id: 'pin', label: 'Pin' },
   { id: 'photo', label: 'Photo' },
 ] as const;
 
 type UploadKind = (typeof KINDS)[number]['id'];
+
+const KIND_TITLE = Object.fromEntries(KINDS.map((item) => [item.id, item.label])) as Record<UploadKind, string>;
 
 function isKind(value: string | undefined): value is UploadKind {
   return KINDS.some((item) => item.id === value);
@@ -55,44 +58,48 @@ export default async function UploadPage({
   if (!canContribute(viewer.role)) {
     return (
       <PageWrapper>
-        <div className="mx-auto max-w-2xl px-4 py-10">
-          <Window title="Upload">
+        <HubPage title="Upload" width="2xl">
+          <Card>
             <p className="text-sm font-bold">{APPROVAL_WAIT}</p>
-          </Window>
-        </div>
+          </Card>
+        </HubPage>
       </PageWrapper>
     );
   }
 
   return (
     <PageWrapper>
-      <div className="mx-auto max-w-2xl space-y-4 px-4 py-10">
+      <HubPage title={kind ? KIND_TITLE[kind] : 'Upload'} eyebrow={kind ? 'Upload' : undefined} width="2xl">
         {kind ? null : (
-          <Window title="Upload">
-            <SectionList links={UPLOAD_LINKS} label="Upload" />
-          </Window>
+          <Card padded={false}>
+            <ListGroup bare>
+              {UPLOAD_LINKS.map((item) => (
+                <ListRow key={item.href} href={item.href} title={item.label} />
+              ))}
+            </ListGroup>
+          </Card>
         )}
         {kind === 'trip' ? (
-          <Window title="New trip">
+          <Card>
             <NewTripForm viewerId={viewer.id} catalog={catalog} preset={preset} />
-          </Window>
+          </Card>
         ) : null}
         {kind === 'route' ? (
-          <Window title="Route (GPX)">
+          <Card>
             <RouteUpload />
-          </Window>
+          </Card>
         ) : null}
         {kind === 'pin' ? (
-          <Window title="Pin">
+          <Card>
             <PinForm />
-          </Window>
+          </Card>
         ) : null}
         {kind === 'photo' ? (
-          <Window title="Photo">
+          <Card>
             <PhotoUpload />
-          </Window>
+          </Card>
         ) : null}
-      </div>
+      </HubPage>
     </PageWrapper>
   );
 }

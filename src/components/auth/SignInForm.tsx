@@ -31,12 +31,12 @@ export function SignInForm({ next = '' }: { next?: string }) {
       {state?.error ? <p className="text-sm font-bold text-red-700">{state.error}</p> : null}
       <SubmitButton tone="green" pendingLabel="Signing in…">Sign in</SubmitButton>
       <p className="text-sm">
-        <Link href="/forgot-password" className="underline">
+        <Link href="/forgot-password" className="inline-flex min-h-11 items-center underline">
           Forgot your password?
         </Link>
       </p>
       <p className="text-sm">
-        <Link href={next ? `/sign-up?next=${encodeURIComponent(next)}` : '/sign-up'} className="underline">
+        <Link href={next ? `/sign-up?next=${encodeURIComponent(next)}` : '/sign-up'} className="inline-flex min-h-11 items-center underline">
           New here? Make an account
         </Link>
       </p>

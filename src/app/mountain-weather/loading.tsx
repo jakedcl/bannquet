@@ -1,14 +1,15 @@
 import PageWrapper from '@/components/ui/PageWrapper';
-import { Window } from '@/components/retro/Window';
-import { LoadingLines } from '@/components/ui/LoadingLines';
 
 export default function MountainWeatherLoading() {
   return (
-    <PageWrapper className="bg-gray-50">
-      <div className="mx-auto max-w-4xl px-4 py-10">
-        <Window title="Weather">
-          <LoadingLines label="Loading the forecast." />
-        </Window>
+    <PageWrapper className="hub">
+      <div className="mx-auto max-w-5xl space-y-5 px-4 pb-12 pt-6 md:pt-8" aria-busy="true" aria-label="Loading the forecast">
+        <div className="h-10 w-64 animate-pulse bg-ui-fill" />
+        <div className="h-28 animate-pulse bg-brand-green/40" />
+        <div className="grid gap-4 md:grid-cols-2">
+          <div className="h-64 animate-pulse bg-ui-fill" />
+          <div className="h-64 animate-pulse bg-ui-fill" />
+        </div>
       </div>
     </PageWrapper>
   );

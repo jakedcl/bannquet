@@ -16,7 +16,7 @@ export type CommunityPeek = {
 
 function NameLink({ href, children }: { href: string | null; children: string }) {
   if (!href) return <span className="font-bold">{children}</span>;
-  return <Link href={href} className="font-bold underline">{children}</Link>;
+  return <Link href={href} className="inline-flex min-h-11 items-center font-bold underline">{children}</Link>;
 }
 
 function Empty() {
@@ -28,7 +28,7 @@ export function CommunityBoard({ peek }: { peek: CommunityPeek }) {
     <DashboardGrid>
       <DashboardWindow title="Chat" href="/chat">
         {peek.chat.length === 0 ? <Empty /> : (
-          <ul className="space-y-1 text-sm">
+          <ul className="divide-y divide-[#e6e6e6] text-sm">
             {peek.chat.map((message) => (
               <li key={message.id} className="min-w-0 truncate">
                 <NameLink href={message.handle ? `/user/${message.handle}` : null}>{message.name}</NameLink>
@@ -41,10 +41,10 @@ export function CommunityBoard({ peek }: { peek: CommunityPeek }) {
 
       <DashboardWindow title="Peaks" href="/peaks">
         {peek.peaks.length === 0 ? <Empty /> : (
-          <ul className="space-y-1 text-sm">
+          <ul className="divide-y divide-[#e6e6e6] text-sm">
             {peek.peaks.map((peak) => (
-              <li key={peak.slug} className="flex min-w-0 items-baseline justify-between gap-2">
-                <Link href={`/peaks/${peak.slug}`} className="min-w-0 truncate font-bold underline">{peak.name}</Link>
+              <li key={peak.slug} className="flex min-w-0 items-center justify-between gap-2">
+                <Link href={`/peaks/${peak.slug}`} className="flex min-h-11 min-w-0 items-center truncate font-bold underline">{peak.name}</Link>
                 {peak.detail ? <span className="shrink-0">{peak.detail}</span> : null}
               </li>
             ))}
@@ -54,10 +54,10 @@ export function CommunityBoard({ peek }: { peek: CommunityPeek }) {
 
       <DashboardWindow title="Trips" href="/trips">
         {peek.trips.length === 0 ? <Empty /> : (
-          <ul className="space-y-1 text-sm">
+          <ul className="divide-y divide-[#e6e6e6] text-sm">
             {peek.trips.map((trip) => (
-              <li key={trip.id} className="flex min-w-0 items-baseline justify-between gap-2">
-                <Link href={`/trips/${trip.id}`} className="min-w-0 truncate font-bold underline">{trip.title}</Link>
+              <li key={trip.id} className="flex min-w-0 items-center justify-between gap-2">
+                <Link href={`/trips/${trip.id}`} className="flex min-h-11 min-w-0 items-center truncate font-bold underline">{trip.title}</Link>
                 {trip.when ? <span className="shrink-0">{trip.when}</span> : null}
               </li>
             ))}
@@ -67,9 +67,9 @@ export function CommunityBoard({ peek }: { peek: CommunityPeek }) {
 
       <DashboardWindow title="Members" href="/members">
         {peek.members.length === 0 ? <Empty /> : (
-          <ul className="space-y-1 text-sm">
+          <ul className="divide-y divide-[#e6e6e6] text-sm">
             {peek.members.map((member) => (
-              <li key={member.id} className="flex min-w-0 items-baseline justify-between gap-2">
+              <li key={member.id} className="flex min-w-0 items-center justify-between gap-2">
                 <NameLink href={member.handle ? `/user/${member.handle}` : null}>{member.name}</NameLink>
                 {member.detail ? <span className="shrink-0">{member.detail}</span> : null}
               </li>
@@ -80,10 +80,10 @@ export function CommunityBoard({ peek }: { peek: CommunityPeek }) {
 
       <DashboardWindow title="Gear" href="/gear">
         {peek.gear.length === 0 ? <Empty /> : (
-          <ul className="space-y-1 text-sm">
+          <ul className="divide-y divide-[#e6e6e6] text-sm">
             {peek.gear.map((item) => (
-              <li key={item.id} className="flex min-w-0 items-baseline justify-between gap-2">
-                <Link href={`/gear/${item.id}`} className="min-w-0 truncate font-bold underline">{item.name}</Link>
+              <li key={item.id} className="flex min-w-0 items-center justify-between gap-2">
+                <Link href={`/gear/${item.id}`} className="flex min-h-11 min-w-0 items-center truncate font-bold underline">{item.name}</Link>
                 {item.detail ? <span className="shrink-0">{item.detail}</span> : null}
               </li>
             ))}

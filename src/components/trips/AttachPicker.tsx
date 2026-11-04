@@ -4,6 +4,7 @@ import { forwardRef, useImperativeHandle, useRef, useState } from 'react';
 import { draftPhotoSources, SmallPhotoImage } from '@/components/ui/SmallPhotoImage';
 import { SearchBar } from '@/components/ui/SearchBar';
 import type { ChatCatalogItem, ChatRefKind } from '@/lib/chat-view';
+import { chipClass } from '@/components/hub/Button';
 
 const GROUPS: Array<{ id: ChatRefKind; label: string }> = [
   { id: 'pin', label: 'Pins' },
@@ -47,21 +48,21 @@ export const AttachPicker = forwardRef<AttachPickerHandle, {
     >
       <div className="mb-3 flex items-center justify-between gap-3">
         <p className="text-sm font-bold uppercase">Attach</p>
-        <button type="button" aria-label="Close" className="text-lg font-bold leading-none" onClick={() => dialogRef.current?.close()}>
+        <button type="button" aria-label="Close" className="flex h-11 w-11 items-center justify-center text-xl font-bold leading-none" onClick={() => dialogRef.current?.close()}>
           ×
         </button>
       </div>
       <div className="mb-3 flex gap-2">
         <button
           type="button"
-          className={`${tab === 'mine' ? 'retro-button-yellow' : 'retro-button'} rounded-none px-3 py-1 text-xs font-bold uppercase`}
+          className={`${chipClass(tab === 'mine')}`}
           onClick={() => setTab('mine')}
         >
           Mine
         </button>
         <button
           type="button"
-          className={`${tab === 'everyone' ? 'retro-button-yellow' : 'retro-button'} rounded-none px-3 py-1 text-xs font-bold uppercase`}
+          className={`${chipClass(tab === 'everyone')}`}
           onClick={() => setTab('everyone')}
         >
           Everyone
@@ -82,7 +83,7 @@ export const AttachPicker = forwardRef<AttachPickerHandle, {
                   <li key={`${item.kind}-${item.id}`}>
                     <button
                       type="button"
-                      className="flex w-full items-center gap-2 py-1 text-left text-sm"
+                      className="flex min-h-11 w-full items-center gap-2 py-1 text-left text-sm"
                       onClick={() => {
                         onPick(item);
                         dialogRef.current?.close();

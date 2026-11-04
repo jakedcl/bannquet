@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 
-const SCRIPT = `(function(){try{if(window.__bannquetLoadEnter)return;window.__bannquetLoadEnter=1;if(window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;var path=location.pathname;if(path==='/')return;document.documentElement.classList.add(path==='/map'?'load-enter-fade':'load-enter');}catch(e){}})();`;
+const SCRIPT = `(function(){try{if(window.__bannquetLoadEnter)return;window.__bannquetLoadEnter=1;if(window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;var path=location.pathname;document.documentElement.classList.add(path==='/'||path==='/map'?'load-enter-fade':'load-enter');}catch(e){}})();`;
 
 export function clearLoadEntrance() {
   document.documentElement.classList.remove('load-enter', 'load-enter-fade');

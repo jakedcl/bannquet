@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { SpotsTable } from '@/components/weather/SpotsTable';
-import { Window } from '@/components/retro/Window';
+import { Card } from '@/components/hub/Card';
 import type { ExtremeReport } from '@/lib/weather-extremes';
 
 export function ConditionsReport({
@@ -13,8 +13,8 @@ export function ConditionsReport({
   const spots = [...report.spots].sort((a, b) => a.mountain.localeCompare(b.mountain));
 
   return (
-    <div className="space-y-6">
-      <Window title="Live conditions">
+    <div className="space-y-5">
+      <Card title="Live conditions">
         {!report.success || report.stats.length === 0 ? (
           <p className="text-sm font-bold">The live conditions did not load.</p>
         ) : (
@@ -29,15 +29,15 @@ export function ConditionsReport({
         )}
         {showForecastLink ? (
           <p className="mt-4 text-sm">
-            <Link href="/mountain-weather" className="underline">Mountain weather</Link>
+            <Link href="/mountain-weather" className="font-bold underline">Mountain weather</Link>
             {' '}has the forecast for each region.
           </p>
         ) : null}
-      </Window>
+      </Card>
 
-      <Window title="Spots">
+      <Card title="Spots">
         <SpotsTable spots={spots} />
-      </Window>
+      </Card>
     </div>
   );
 }

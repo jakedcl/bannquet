@@ -1,5 +1,7 @@
 import PageWrapper from '@/components/ui/PageWrapper';
+import { LargeTitle } from '@/components/hub/SectionHeader';
 import { MountainWeather } from '@/components/weather/MountainWeather';
+import WeatherTicker from '@/components/ui/WeatherTicker';
 import { WeatherHub } from '@/components/weather/WeatherHub';
 import { isRegionCode } from '@/lib/regions';
 import { loadWeatherHub } from '@/lib/weather-hub';
@@ -15,15 +17,17 @@ export default async function MountainWeatherPage({
   if (!isRegionCode(state)) {
     const states = await loadWeatherHub();
     return (
-      <PageWrapper className="bg-gray-50">
-        <div className="mx-auto max-w-5xl px-4 py-3">
+      <PageWrapper className="hub">
+        <div className="mx-auto max-w-5xl space-y-5 px-4 pb-12 pt-6 md:pt-8">
+          <LargeTitle title="Mountain Weather" />
+          <WeatherTicker />
           <WeatherHub states={states} />
         </div>
       </PageWrapper>
     );
   }
   return (
-    <PageWrapper className="bg-gray-50">
+    <PageWrapper className="hub">
       <MountainWeather state={state} />
     </PageWrapper>
   );

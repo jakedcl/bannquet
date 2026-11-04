@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import PageWrapper from '@/components/ui/PageWrapper';
 import { CountControl } from '@/components/ui/CountControl';
-import { Window } from '@/components/retro/Window';
+import { Card } from '@/components/hub/Card';
 import { changeHoldAction, updateGearItemAction } from '@/app/gear/actions';
 import { EditDetails, EditForm } from '@/components/edit/EditForm';
 import { getViewer } from '@/app/sign-in/actions';
@@ -10,6 +10,7 @@ import { isDatabaseConfigured } from '@/db';
 import { listGear } from '@/lib/gear';
 import { APPROVAL_WAIT, canContribute, canEditOwned, viewerCanContribute } from '@/lib/membership';
 import { loadFailed } from '@/lib/load-error';
+import { HubPage } from '@/components/hub/Page';
 
 export const dynamic = 'force-dynamic';
 
@@ -29,11 +30,11 @@ export default async function GearItemPage({ params }: { params: Promise<{ id: s
   if (error) {
     return (
       <PageWrapper>
-        <div className="mx-auto max-w-3xl px-4 py-10">
-          <Window title="Gear">
+        <HubPage title="Gear" width="3xl">
+          <Card>
             <p className="text-sm font-bold">{error}</p>
-          </Window>
-        </div>
+          </Card>
+        </HubPage>
       </PageWrapper>
     );
   }
@@ -46,18 +47,11 @@ export default async function GearItemPage({ params }: { params: Promise<{ id: s
 
   return (
     <PageWrapper leaf={item.name}>
-      <div className="mx-auto max-w-3xl px-4 py-10">
-        <Window title={item.name}>
-          <p className="text-sm text-gray-700">
-            <Link href="/gear" className="underline">Gear</Link>
-            {' · '}
-            {item.category || 'No category'}
-            {' · '}
-            {total} total
-          </p>
-          {viewer && !canContribute(viewer.role) ? <p className="mt-3 text-sm font-bold">{APPROVAL_WAIT}</p> : null}
+      <HubPage title={item.name} width="3xl" subtitle={`${item.category || 'No category'} · ${total} total`}>
+        <Card>
+          {viewer && !canContribute(viewer.role) ? <p className="mb-3 text-sm font-bold">{APPROVAL_WAIT}</p> : null}
           {canEdit ? (
-            <div className="mt-4">
+            <div className="mb-4">
               <CountControl
                 count={mine}
                 zeroLabel="I have this"
@@ -81,11 +75,12 @@ export default async function GearItemPage({ params }: { params: Promise<{ id: s
               />
             </EditDetails>
           ) : null}
-          <h2 className="mt-6 text-xs font-bold uppercase tracking-wide">Who has it</h2>
+        </Card>
+        <Card title="Who has it">
           {item.holds.length === 0 ? (
-            <p className="mt-1 text-sm text-gray-700">Nobody has marked this yet.</p>
+            <p className="text-sm text-gray-700">Nobody has marked this yet.</p>
           ) : (
-            <ul className="mt-2 space-y-1 text-sm">
+            <ul className="space-y-2 text-sm">
               {item.holds.map((hold) => (
                 <li key={hold.userId}>
                   {hold.handle ? <Link href={`/user/${hold.handle}`} className="underline">{hold.name}</Link> : hold.name}
@@ -94,8 +89,8 @@ export default async function GearItemPage({ params }: { params: Promise<{ id: s
               ))}
             </ul>
           )}
-        </Window>
-      </div>
+        </Card>
+      </HubPage>
     </PageWrapper>
   );
 }

@@ -1,6 +1,4 @@
-import { Suspense } from 'react';
-import { MapCanvas } from '@/components/map/MapCanvas';
-import { BackBar } from '@/components/ui/BackBar';
+import { MapHome } from '@/components/map/MapHome';
 import { getViewer } from '@/app/sign-in/actions';
 import { isDatabaseConfigured } from '@/db';
 import { MAP_CENTER } from '@/lib/map';
@@ -28,17 +26,12 @@ export default async function MapPage({
   const coordinates = focusFeature?.geometry.type === 'Point' ? focusFeature.geometry.coordinates : null;
 
   return (
-    <div className="map-bleed fixed inset-x-0 top-[72px] z-0 flex h-[calc(100dvh-72px)] flex-col overflow-hidden">
-      <Suspense fallback={null}>
-        <BackBar />
-      </Suspense>
-      <div className="relative min-h-0 flex-1">
-      <MapCanvas
+    <div className="map-bleed hub fixed inset-x-0 top-[var(--bar-h)] bottom-[var(--tab-h)] z-0 overflow-hidden">
+      <MapHome
         points={data.points}
         lines={data.lines}
         focus={coordinates ? { lng: coordinates[0], lat: coordinates[1], zoom: 12 } : { ...MAP_CENTER, zoom: 8 }}
       />
-      </div>
     </div>
   );
 }

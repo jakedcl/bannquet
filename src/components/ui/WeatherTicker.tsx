@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 
 type WeatherStat = {
@@ -9,37 +9,23 @@ type WeatherStat = {
   location: string;
 };
 
-export default function WeatherTicker({ placement = 'header' }: { placement?: 'header' | 'page' }) {
-  const quiet = placement === 'page'
-    ? 'flex h-12 w-full items-center bg-brand-green px-4 text-xs font-bold uppercase tracking-wider text-white'
-    : 'flex h-full items-center px-4 text-xs font-bold uppercase tracking-wider text-white/80';
-  const live = placement === 'page'
-    ? 'flex h-12 w-full min-w-0 items-center overflow-hidden bg-brand-green'
-    : 'flex h-full w-full min-w-0 items-center overflow-hidden border-r-2 border-white/20 bg-brand-green-dark/50';
+/** Live Northeast extremes for the mountain weather hub. Refreshes every 5 minutes. */
+export default function WeatherTicker() {
   const [stats, setStats] = useState<WeatherStat[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [duration, setDuration] = useState(16);
-  const trackRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     async function fetchStats() {
       try {
         const res = await fetch('/api/weather/extremes');
-        let data: { success?: boolean; stats?: WeatherStat[]; error?: string } | null = null;
         const contentType = res.headers.get('content-type') || '';
-
-        if (contentType.includes('application/json')) {
-          data = await res.json();
-        } else {
+        if (!contentType.includes('application/json')) {
           const bodyText = await res.text();
-          setError(
-            bodyText?.slice(0, 80) ||
-            `Weather feed unavailable (${res.status})`
-          );
+          setError(bodyText?.slice(0, 80) || `Weather feed unavailable (${res.status})`);
           return;
         }
-
+        const data = (await res.json()) as { success?: boolean; stats?: WeatherStat[]; error?: string } | null;
         if (data?.success && Array.isArray(data.stats)) {
           setStats(data.stats);
           setError(null);
@@ -55,80 +41,42 @@ export default function WeatherTicker({ placement = 'header' }: { placement?: 'h
     }
 
     fetchStats();
-    // Refresh every 5 minutes
     const interval = setInterval(fetchStats, 5 * 60 * 1000);
     return () => clearInterval(interval);
   }, []);
 
-  useEffect(() => {
-    const node = trackRef.current;
-    if (!node) return;
-    const measure = () => {
-      const width = node.scrollWidth;
-      const viewport = node.parentElement?.clientWidth ?? width;
-      const pxPerSec = viewport < 768 ? 110 : 100;
-      setDuration(Math.max(8, (width / 2) / pxPerSec));
-    };
-    measure();
-    const observer = new ResizeObserver(measure);
-    observer.observe(node);
-    if (node.parentElement) observer.observe(node.parentElement);
-    return () => observer.disconnect();
-  }, [stats]);
-
-  if (loading) {
-    return (
-      <Link href="/conditions" aria-label="Live conditions" className={quiet}>
-        <span className="animate-pulse">LOADING CONDITIONS...</span>
-      </Link>
-    );
-  }
-
-  if (error) {
-    return (
-      <Link href="/conditions" aria-label="Live conditions" className={quiet}>
-        <span className="text-yellow-400 mr-2">●</span>
-        <span className="text-white/90">WEATHER FEED:</span>
-        <span className="ml-2 text-white/70">{error}</span>
-      </Link>
-    );
-  }
-
-  if (stats.length === 0) {
-    return (
-      <Link href="/conditions" aria-label="Live conditions" className={quiet}>
-        <span className="text-yellow-400 mr-2">●</span>
-        <span className="text-white/90">WEATHER FEED:</span>
-        <span className="ml-2 text-white/70">No stats yet</span>
-      </Link>
-    );
-  }
-
-  // Duplicate stats for seamless loop
-  const displayStats = [...stats, ...stats];
-
   return (
-    <Link href="/conditions" aria-label="Live conditions" className={live}>
-      <div className="flex items-center text-yellow-400 font-bold text-xs uppercase tracking-wider px-2 sm:px-3 whitespace-nowrap">
-        <span className="animate-pulse mr-2">●</span>
-        LIVE:
+    <section aria-label="Live conditions" className="retro-banner !p-0 text-white">
+      <div className="flex items-center justify-between gap-3 px-3 pt-2.5">
+        <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#ffd700]">
+          <span className="animate-pulse motion-reduce:animate-none" aria-hidden="true">●</span>
+          Live across the Northeast
+        </p>
+        <Link href="/conditions" className="-my-2 inline-flex min-h-11 items-center px-2 text-sm font-bold uppercase tracking-wider text-white no-underline hover:underline">
+          All ›
+        </Link>
       </div>
-      <div className="flex-1 overflow-hidden">
-        <div
-          ref={trackRef}
-          className="flex w-max items-center whitespace-nowrap text-xs font-bold uppercase tracking-wider text-white weather-ticker-scroll"
-          style={{ animationDuration: `${duration}s` }}
-        >
-          {displayStats.map((stat, idx) => (
-            <div key={idx} className="flex items-center px-6">
-              <span className="text-white/90">{stat.label}:</span>
-              <span className="text-yellow-400 mx-2 font-bold">{stat.value}</span>
-              <span className="text-white/70">@ {stat.location}</span>
-              <span className="mx-4 text-white/40">•</span>
-            </div>
+      {loading ? (
+        <p className="animate-pulse px-3 pb-3 pt-2 text-xs font-bold uppercase tracking-wider text-white/80">Loading conditions…</p>
+      ) : error || stats.length === 0 ? (
+        <p className="px-3 pb-3 pt-2 text-xs font-bold uppercase tracking-wider text-white/80">{error ?? 'No stats yet.'}</p>
+      ) : (
+        <ul className="grid gap-px px-3 pb-3 pt-2 sm:grid-cols-3 sm:gap-3">
+          {stats.map((stat) => (
+            <li
+              key={`${stat.label}-${stat.location}`}
+              className="flex min-w-0 items-baseline justify-between gap-3 border-t border-white/15 py-1.5 first:border-t-0 sm:block sm:border-t-0 sm:border-l sm:py-0 sm:pl-3 sm:first:border-l-0 sm:first:pl-0"
+            >
+              <span className="min-w-0">
+                <span className="block text-xs font-bold uppercase tracking-wider text-white/85">{stat.label}</span>
+                <span className="block truncate text-xs text-white/70 sm:hidden">{stat.location}</span>
+              </span>
+              <span className="shrink-0 text-base font-bold tabular-nums text-[#ffd700] sm:mt-0.5 sm:block sm:text-lg">{stat.value}</span>
+              <span className="hidden truncate text-xs text-white/70 sm:block">@ {stat.location}</span>
+            </li>
           ))}
-        </div>
-      </div>
-    </Link>
+        </ul>
+      )}
+    </section>
   );
 }

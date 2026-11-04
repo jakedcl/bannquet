@@ -14,13 +14,38 @@ export function TrashButton({
   name,
   value,
   onClick,
+  look = 'retro',
+  text,
 }: {
   pending?: boolean;
   label?: string;
   name?: string;
   value?: string;
   onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  /** `hub` is the plain bevel button used by the shared hub pages. */
+  look?: 'retro' | 'hub';
+  /** Hub only: a labeled button instead of the trash icon. */
+  text?: string;
 }) {
+  if (look === 'hub') {
+    return (
+      <SubmitButton
+        unstyled
+        pendingLabel="Deleting…"
+        ariaLabel={text ? undefined : label}
+        title={label}
+        name={name}
+        value={value}
+        disabled={pending}
+        onClick={onClick}
+        className={text
+          ? 'retro-button ui-press min-h-11 w-full rounded-none text-sm font-bold uppercase tracking-wide text-red-700'
+          : 'retro-button ui-press inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-none !p-0 text-red-700'}
+      >
+        {text ?? <TrashIcon />}
+      </SubmitButton>
+    );
+  }
   return (
     <SubmitButton
       icon
@@ -32,7 +57,7 @@ export function TrashButton({
       value={value}
       disabled={pending}
       onClick={onClick}
-      className="h-7 w-7 text-base"
+      className="text-lg"
     >
       <TrashIcon />
     </SubmitButton>
@@ -44,18 +69,22 @@ export function ConfirmDelete({
   confirm,
   fields,
   label,
+  look = 'retro',
+  text,
 }: {
   action: Action;
   confirm: string;
   fields: Record<string, string>;
   /** Screen-reader name. Defaults to the confirm question, e.g. "Delete this route". */
   label?: string;
+  look?: 'retro' | 'hub';
+  text?: string;
 }) {
   const [state, formAction, pending] = useActionState(action, null);
   return (
     <form
       action={formAction}
-      className="relative shrink-0"
+      className={text ? 'relative w-full' : 'relative shrink-0'}
       onSubmit={(event) => {
         if (!window.confirm(confirm)) event.preventDefault();
       }}
@@ -66,7 +95,7 @@ export function ConfirmDelete({
       {state?.error ? (
         <p className="absolute right-0 top-full z-10 mt-1 w-44 text-right text-xs font-bold text-red-700">{state.error}</p>
       ) : null}
-      <TrashButton pending={pending} label={label ?? confirm.replace(/\?$/, '')} />
+      <TrashButton pending={pending} label={label ?? confirm.replace(/\?$/, '')} look={look} text={text} />
     </form>
   );
 }

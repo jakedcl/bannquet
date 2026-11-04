@@ -3,10 +3,11 @@ import { notFound, redirect } from 'next/navigation';
 import PageWrapper from '@/components/ui/PageWrapper';
 import { PeakRows, GearRows, PhotoGrid, PinRows, RouteRows, SeeAll, TripRows } from '@/components/profile/ProfileLists';
 import { ChallengeBadge } from '@/components/stats/ChallengeBadge';
-import { Badge } from '@/components/retro/Badge';
-import { Button } from '@/components/retro/Button';
+import { Pill } from '@/components/hub/Button';
+import { Button } from '@/components/hub/Button';
 import { SubmitButton } from '@/components/ui/SubmitButton';
-import { Window } from '@/components/retro/Window';
+import { Card } from '@/components/hub/Card';
+import { HubPage } from '@/components/hub/Page';
 import { getViewer, signOutAction } from '@/app/sign-in/actions';
 import { findHandleRedirect, findMemberByHandle } from '@/lib/auth/members';
 import { ACTIVITY_META } from '@/lib/activities';
@@ -79,8 +80,8 @@ export default async function UserPage({ params }: { params: Promise<{ username:
 
   return (
     <PageWrapper>
-      <div className="mx-auto max-w-3xl space-y-4 px-4 py-10">
-        <Window title={name}>
+      <HubPage title={name} subtitle={member.handle ? `@${member.handle}` : undefined} width="3xl">
+        <Card>
           <div className="flex items-start gap-4">
             {member.avatarUrl ? (
               <AvatarImage
@@ -95,11 +96,10 @@ export default async function UserPage({ params }: { params: Promise<{ username:
               </div>
             )}
             <div className="space-y-2">
-              <p className="text-sm text-gray-600">@{member.handle}</p>
               {activities.length > 0 ? (
                 <div className="flex flex-wrap gap-1">
                   {activities.map((activity) => (
-                    <Badge key={activity}>{ACTIVITY_META[activity].label}</Badge>
+                    <Pill key={activity}>{ACTIVITY_META[activity].label}</Pill>
                   ))}
                 </div>
               ) : null}
@@ -110,14 +110,12 @@ export default async function UserPage({ params }: { params: Promise<{ username:
             </div>
           </div>
           {member.bio ? <p className="mt-4 whitespace-pre-wrap text-sm">{member.bio}</p> : null}
-        </Window>
+        </Card>
         {error ? (
-          <Window title="Could not load">
-            <p className="text-sm font-bold">{error}</p>
-          </Window>
+          <p className="t-body font-bold">{error}</p>
         ) : null}
         {startedChallenges.length > 0 ? (
-          <Window title="Challenges">
+          <Card title="Challenges">
             <div className="flex flex-wrap gap-4">
               {startedChallenges.map(({ challenge, progress }) => (
                 <div key={challenge.id} className="space-y-1">
@@ -127,45 +125,45 @@ export default async function UserPage({ params }: { params: Promise<{ username:
                 </div>
               ))}
             </div>
-          </Window>
+          </Card>
         ) : null}
         {library.routes.length > 0 ? (
-          <Window title="Routes">
+          <Card title="Routes">
             <RouteRows routes={library.routes} manage={manage} profilePath={profilePath} collapsed />
-          </Window>
+          </Card>
         ) : null}
         {pins.length > 0 ? (
-          <Window title="Pins">
+          <Card title="Pins">
             <PinRows pins={pins} manage={manage} collapsed />
-          </Window>
+          </Card>
         ) : null}
         {library.photos.length > 0 ? (
-          <Window title="Photos">
+          <Card title="Photos">
             <PhotoGrid photos={library.photos.slice(0, PROFILE_PREVIEW)} manage={manage} profilePath={profilePath} />
             <SeeAll href={`${profilePath}/photos`} total={library.photos.length} />
-          </Window>
+          </Card>
         ) : null}
         {trips.length > 0 ? (
-          <Window title="Trips">
+          <Card title="Trips">
             <TripRows trips={trips} manage={manage} collapsed />
-          </Window>
+          </Card>
         ) : null}
         {ownPeaks.length > 0 ? (
-          <Window title={`Peaks (${ownPeaks.length})`}>
+          <Card title={`Peaks (${ownPeaks.length})`}>
             <PeakRows peaks={ownPeaks} names={Object.fromEntries(peakNames)} manage={manage} collapsed />
-          </Window>
+          </Card>
         ) : null}
         {heldGear.length > 0 ? (
-          <Window title="Gear">
+          <Card title="Gear">
             <GearRows items={heldGear} collapsed />
-          </Window>
+          </Card>
         ) : null}
         {viewer?.id === member.id ? (
           <form action={signOutAction}>
             <SubmitButton pendingLabel="Signing out…">Log out</SubmitButton>
           </form>
         ) : null}
-      </div>
+      </HubPage>
     </PageWrapper>
   );
 }

@@ -55,7 +55,7 @@ export function BackBar({ leaf = null }: { leaf?: string | null }) {
           router.push(trail.parentHref);
         }}
       >
-        <svg viewBox="0 0 20 20" className="h-3 w-3" aria-hidden="true">
+        <svg viewBox="0 0 20 20" className="h-4 w-4" aria-hidden="true">
           <path d="M12.5 4 L6.5 10 L12.5 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="square" />
         </svg>
         Back

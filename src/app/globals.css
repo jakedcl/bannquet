@@ -11,6 +11,12 @@
   --color-accent-yellow: #ffd700;
   --color-accent-orange: #ff8c00;
 
+  /* Readable floor: small text 13px, body 16px on phones. */
+  --text-xs: 0.8125rem;
+  --text-xs--line-height: 1.35;
+  --text-sm: 1rem;
+  --text-sm--line-height: 1.45;
+
   --font-sans: Verdana, "Trebuchet MS", Arial, Helvetica, sans-serif;
   --font-heading: "Trebuchet MS", Verdana, Arial, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
@@ -42,14 +48,6 @@
   height: 72px;
 }
 
-/* Same logo height at every width. Width follows the image. A fixed margin keeps it off the nav. */
-.header-logo-link {
-  display: flex;
-  flex-shrink: 0;
-  align-items: center;
-  margin-right: 1rem;
-}
-
 .header-logo {
   display: block;
   height: 40px;
@@ -70,15 +68,15 @@
 .composer-control,
 .composer-field {
   box-sizing: border-box;
-  height: 2.5rem;
-  min-height: 2.5rem;
-  max-height: 2.5rem;
+  height: 2.75rem;
+  min-height: 2.75rem;
+  max-height: 2.75rem;
 }
 
 .composer-field {
   padding-top: 0;
   padding-bottom: 0;
-  line-height: calc(2.5rem - 6px);
+  line-height: calc(2.75rem - 6px);
   resize: none;
 }
 
@@ -227,7 +225,7 @@ button, .retro-button {
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
-  height: 2.5rem;
+  height: 2.75rem;
   line-height: 1;
   white-space: nowrap;
   padding-top: 0;
@@ -263,9 +261,9 @@ button, .retro-button {
 }
 
 .maplibregl-popup.bnqt-popup .maplibregl-popup-close-button {
-  font-size: 20px;
-  width: 28px;
-  height: 28px;
+  font-size: 24px;
+  width: 44px;
+  height: 44px;
   color: #1a3009;
   padding: 0;
 }
@@ -305,25 +303,6 @@ button, .retro-button {
   background: linear-gradient(to bottom, #8a2be2 0%, #6a1bb2 100%);
 }
 
-.region-pick {
-  cursor: pointer;
-  transition: transform 140ms ease-out;
-  transition-delay: 0s;
-}
-
-.region-pick:hover {
-  transform: scale(1.05);
-}
-
-.weather-ticker-scroll {
-  animation: scroll-ticker linear infinite;
-}
-
-@keyframes scroll-ticker {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
-}
-
 .retro-box {
   background: white;
   border: 3px outset #cccccc;
@@ -331,10 +310,6 @@ button, .retro-button {
     4px 4px 8px rgba(0, 0, 0, 0.2),
     inset 0 1px 0 rgba(255, 255, 255, 0.9);
   padding: 16px;
-}
-
-.retro-window {
-  padding: 0;
 }
 
 .retro-box-inset {
@@ -416,17 +391,23 @@ td.cell-primary :is(img, .avatar-frame, svg) {
   background: #faf6ee;
   color: #1a1a1a;
   border-bottom: 1px solid #e4dccb;
+  min-height: 3.5rem;
   padding: 0.375rem 0.75rem;
+  padding-left: max(0.75rem, calc((100% - 72rem) / 2 + 0.75rem));
+  padding-right: max(0.75rem, calc((100% - 72rem) / 2 + 0.75rem));
 }
 
 .back-bar-button {
   display: inline-flex;
   flex-shrink: 0;
   align-items: center;
-  gap: 0.25rem;
-  padding: 4px 8px;
+  justify-content: center;
+  gap: 0.375rem;
+  min-height: 2.75rem;
+  min-width: 2.75rem;
+  padding: 0 0.875rem;
   border-radius: 0;
-  font-size: 0.75rem;
+  font-size: 0.875rem;
   line-height: 1;
   color: #1a1a1a;
 }
@@ -444,10 +425,16 @@ td.cell-primary :is(img, .avatar-frame, svg) {
   white-space: nowrap;
   text-align: right;
   color: #1a1a1a;
-  font-size: 0.75rem;
+  font-size: 0.8125rem;
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
+}
+
+.crumb-trail a {
+  display: inline-block;
+  padding: 0.75rem 0.125rem;
+  text-underline-offset: 3px;
 }
 
 .crumb-wide { display: none; }
@@ -465,9 +452,9 @@ td.cell-primary :is(img, .avatar-frame, svg) {
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
-  height: 1.75rem;
-  padding: 0 0.35rem;
-  font-size: 0.625rem;
+  height: 2.75rem;
+  padding: 0 0.75rem;
+  font-size: 0.8125rem;
   line-height: 1;
   font-weight: 700;
   letter-spacing: 0.04em;
@@ -475,17 +462,10 @@ td.cell-primary :is(img, .avatar-frame, svg) {
   white-space: nowrap;
 }
 
-@media (min-width: 380px) {
-  .section-nav-link {
-    height: 2rem;
-    padding: 0 0.5rem;
-    font-size: 0.75rem;
-  }
-}
-
 @media (min-width: 640px) {
   .section-nav-link {
-    padding: 0 0.75rem;
+    padding: 0 1rem;
+    font-size: 0.875rem;
   }
 }
 
@@ -496,22 +476,10 @@ td.cell-primary :is(img, .avatar-frame, svg) {
   padding: 12px 16px;
 }
 
-.retro-text-shadow {
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-}
-
-.retro-text-outline {
-  text-shadow:
-    -1px -1px 0 #000,
-    1px -1px 0 #000,
-    -1px 1px 0 #000,
-    1px 1px 0 #000;
-}
-
 /* The header is fixed, so a banner in normal flow sits underneath it. */
 .pending-banner {
   position: fixed;
-  top: 72px;
+  top: calc(var(--bar-h) + 0.5rem);
   left: 1rem;
   right: 1rem;
   z-index: 40;
@@ -519,13 +487,13 @@ td.cell-primary :is(img, .avatar-frame, svg) {
 }
 
 .has-pending .page-frame {
-  margin-top: 10rem;
-  min-height: calc(100vh - 10rem);
+  margin-top: calc(var(--bar-h) + 3.5rem);
+  min-height: calc(100dvh - var(--bar-h) - 3.5rem - var(--tab-h));
 }
 
 .has-pending .map-bleed {
-  top: 10rem;
-  height: calc(100dvh - 10rem);
+  top: calc(var(--bar-h) + 3.5rem);
+  height: calc(100dvh - var(--bar-h) - 3.5rem - var(--tab-h));
 }
 
 /* Shared motion. 160ms, transform and opacity. Retro colors and bevels stay. */
@@ -564,12 +532,6 @@ td.cell-primary :is(img, .avatar-frame, svg) {
   transform: translate(1px, 1px);
 }
 
-.motion-swap {
-  transition-property: transform, opacity;
-  transition-duration: var(--motion);
-  transition-timing-function: var(--motion-ease);
-}
-
 .page-frame.route-rise {
   animation: route-rise-live 220ms var(--motion-ease) both;
 }
@@ -584,45 +546,6 @@ html.load-enter main.route-stage {
 
 html.load-enter-fade .map-bleed {
   animation: load-fade 280ms var(--motion-ease) both;
-}
-
-.home-hero-actions a:focus-visible,
-.home-hero-actions button:focus-visible {
-  outline: 3px solid #fff;
-  outline-offset: 3px;
-}
-
-html.home-enter .home-hero-logo {
-  animation: home-rise 280ms var(--motion-ease) both;
-}
-
-html.home-enter .home-hero-actions {
-  animation: home-rise 300ms var(--motion-ease) 200ms both;
-}
-
-.nav-drop {
-  display: flex;
-  transform-origin: top center;
-  opacity: 0;
-  transform: translateY(-6px) scale(0.98);
-  pointer-events: none;
-  visibility: hidden;
-  transition:
-    opacity var(--motion) var(--motion-ease),
-    transform var(--motion) var(--motion-ease),
-    visibility 0s linear var(--motion);
-}
-
-.group:hover > .nav-drop,
-.group:focus-within > .nav-drop {
-  opacity: 1;
-  transform: none;
-  pointer-events: auto;
-  visibility: visible;
-  transition:
-    opacity var(--motion) var(--motion-ease),
-    transform var(--motion) var(--motion-ease),
-    visibility 0s;
 }
 
 .site-header {
@@ -741,11 +664,6 @@ dialog[open]::backdrop {
   to { opacity: 1; }
 }
 
-@keyframes home-rise {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: none; }
-}
-
 @keyframes load-rise {
   from { opacity: 0; transform: translateY(8px); }
   to { opacity: 1; transform: none; }
@@ -785,10 +703,6 @@ dialog[open]::backdrop {
   .route-fade,
   html.load-enter main.route-stage,
   html.load-enter-fade .map-bleed,
-  html.home-enter .home-hero-logo,
-  html.home-enter .home-hero-actions,
-  .nav-drop,
-  .motion-swap,
   .motion-sheet,
   .motion-panel,
   .maplibregl-popup,
@@ -839,14 +753,243 @@ dialog[open]::backdrop {
     transform: none;
   }
 
-  .nav-drop,
-  .group:hover > .nav-drop,
-  .group:focus-within > .nav-drop {
-    transform: none;
-  }
-
   ::view-transition-old(root),
   ::view-transition-new(root) {
     animation-duration: 0s !important;
   }
+}
+
+/* ------------------------------------------------------------------
+   Hub kit: the original retro Bannquet look, made consistent so the
+   shared components in src/components/hub can be used on every page.
+   Light only, same palette, fonts, bevels and green banner as before.
+   ------------------------------------------------------------------ */
+:root {
+  --bar-h: 64px;
+  --tab-h: calc(68px + env(safe-area-inset-bottom, 0px));
+
+  --ui-bg: #f0f0f0;
+  --ui-surface: #ffffff;
+  --ui-surface-2: #f6f4ef;
+  --ui-label: #1a1a1a;
+  --ui-label-2: #4b4b4b;
+  --ui-label-3: #636363;
+  --ui-separator: #d9d5cc;
+  --ui-fill: #e8e6e1;
+  --ui-fill-2: #dcd8cf;
+  --ui-accent: #2d5016;
+  --ui-accent-strong: #1a3009;
+  --ui-accent-soft: #e4ecdb;
+  --ui-on-accent: #ffffff;
+  --ui-danger: #b3261e;
+  --ui-warn-bg: #fff4c2;
+  --ui-warn: #5c3a1e;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --bar-h: 72px;
+    --tab-h: 0px;
+  }
+}
+
+@theme inline {
+  --color-ui-bg: var(--ui-bg);
+  --color-ui-surface: var(--ui-surface);
+  --color-ui-surface-2: var(--ui-surface-2);
+  --color-ui-label: var(--ui-label);
+  --color-ui-label-2: var(--ui-label-2);
+  --color-ui-label-3: var(--ui-label-3);
+  --color-ui-separator: var(--ui-separator);
+  --color-ui-fill: var(--ui-fill);
+  --color-ui-fill-2: var(--ui-fill-2);
+  --color-ui-accent: var(--ui-accent);
+  --color-ui-accent-strong: var(--ui-accent-strong);
+  --color-ui-accent-soft: var(--ui-accent-soft);
+  --color-ui-on-accent: var(--ui-on-accent);
+  --color-ui-danger: var(--ui-danger);
+  --color-ui-warn: var(--ui-warn);
+  --color-ui-warn-bg: var(--ui-warn-bg);
+}
+
+.hub,
+.hub-bar {
+  font-family: var(--font-sans);
+  color: var(--ui-label);
+}
+
+/* Type scale. Headings use the heading font, uppercase like the old windows. */
+.t-large-title { font-family: var(--font-heading); font-size: 1.75rem; line-height: 1.15; font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em; }
+.t-title { font-family: var(--font-heading); font-size: 1.5rem; line-height: 1.2; font-weight: 700; }
+.t-title2 { font-family: var(--font-heading); font-size: 1.125rem; line-height: 1.25; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; }
+.t-headline { font-size: 1rem; line-height: 1.35; font-weight: 700; }
+.t-body { font-size: 1rem; line-height: 1.45; }
+.t-subhead { font-size: 0.9375rem; line-height: 1.4; }
+.t-footnote { font-size: 0.875rem; line-height: 1.4; }
+.t-caption { font-size: 0.8125rem; line-height: 1.35; }
+.t-eyebrow { font-size: 0.8125rem; line-height: 1.3; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ui-label-2); }
+
+@media (min-width: 768px) {
+  .t-large-title { font-size: 2.125rem; }
+}
+
+/* Page title: big uppercase with the green rule under it. */
+.ui-page-title {
+  border-bottom: 4px solid var(--brand-green);
+  padding-bottom: 0.5rem;
+}
+
+/* Section heading: one black rule, like the old page headers. */
+.ui-section-title {
+  border-bottom: 2px solid #1a1a1a;
+  padding-bottom: 0.25rem;
+}
+
+/* Window: white box, one outset bevel, optional green title bar. */
+.ui-card {
+  background: var(--ui-surface);
+  border: 2px outset #cccccc;
+  box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.18);
+}
+
+/* Inset panel inside a window, for numbers and lists. */
+.ui-inset {
+  background: var(--ui-surface);
+  border: 2px inset #cccccc;
+}
+
+.ui-tile {
+  background: var(--ui-surface-2);
+  border: 1px solid var(--ui-separator);
+}
+
+/* Beige panel that floats over the map (sheet, menus). */
+.ui-panel {
+  background: var(--background-beige);
+  border: 3px outset #cccccc;
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.ui-list > * + * {
+  border-top: 1px solid var(--ui-separator);
+}
+
+.ui-press {
+  transition: transform 120ms ease-out, filter 120ms ease-out;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.ui-press:active { transform: translate(1px, 1px); }
+
+.ui-row-press {
+  transition: background-color 120ms ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.ui-row-press:hover { background: #faf6ee; }
+.ui-row-press:active { background: var(--ui-fill); }
+
+.hub a:focus-visible,
+.hub button:focus-visible,
+.hub-bar a:focus-visible,
+.hub-bar button:focus-visible {
+  outline: 2px solid #ffd700;
+  outline-offset: 2px;
+}
+
+.ui-scroll-x {
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.ui-scroll-x::-webkit-scrollbar { display: none; }
+
+@keyframes ui-sheet-in {
+  from { transform: translateY(12px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes ui-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.ui-sheet-in { animation: ui-sheet-in 200ms cubic-bezier(0.2, 0, 0, 1) both; }
+.ui-fade-in { animation: ui-fade-in 160ms ease both; }
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-sheet-in,
+  .ui-fade-in { animation: none; }
+  .ui-press:active { transform: none; }
+}
+
+/* Bottom tab bar on phones: the green banner, flipped. */
+.tab-bar {
+  background: linear-gradient(to top, var(--brand-green-dark) 0%, var(--brand-green) 55%, var(--brand-green-light) 100%);
+  border-top: 4px solid var(--brand-green-dark);
+  box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.25);
+}
+
+/* MapLibre zoom/compass in the old bevel. */
+.maplibregl-ctrl-group:not(:empty) {
+  border: 2px outset #cccccc;
+  border-radius: 0;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
+}
+
+.maplibregl-ctrl.maplibregl-ctrl-group button {
+  width: 44px;
+  height: 44px;
+}
+
+.maplibregl-ctrl.maplibregl-ctrl-group button .maplibregl-ctrl-icon {
+  background-size: 30px 30px;
+}
+
+/* Green title bar on a window, slimmer than the page banner. */
+.ui-card-bar {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.75rem;
+  background: linear-gradient(to bottom, var(--brand-green-light) 0%, var(--brand-green) 50%, var(--brand-green-dark) 100%);
+  border-bottom: 2px solid var(--brand-green-dark);
+  color: #ffffff;
+  font-family: var(--font-heading);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.ui-card-bar a {
+  color: #ffffff;
+  text-decoration: none;
+}
+
+/* Current section in the top bar: a yellow ring inside the brown sign.
+   The bevel's own box-shadow would hide a utility shadow, so it lives here. */
+.nav-button.nav-button-on {
+  box-shadow:
+    inset 0 0 0 3px #ffd700,
+    4px 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Desktop has room for slightly tighter body copy. */
+@media (min-width: 768px) {
+  :root {
+    --text-sm: 0.9375rem;
+  }
+}
+
+/* Form controls: 44px tall, 16px text on phones so iOS does not zoom. */
+:is(input:not([type="checkbox"], [type="radio"], [type="file"], [type="hidden"], [type="range"]), select) {
+  min-height: 2.75rem;
+}
+
+:is(input[type="checkbox"], input[type="radio"]) {
+  width: 1.25rem;
+  height: 1.25rem;
+  accent-color: var(--brand-green);
 }

@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 import WeatherDashboard from '@/components/WeatherDashboard';
-import WeatherTicker from '@/components/ui/WeatherTicker';
+import { LargeTitle, SectionHeader } from '@/components/hub/SectionHeader';
 import { useRegion } from '@/contexts/RegionContext';
 import { DEFAULT_REGION, REGION_LABELS, REGION_WEATHER_SECTIONS, isRegionCode, type WeatherSection } from '@/lib/regions';
 
@@ -31,17 +31,12 @@ export function MountainWeather({ state }: { state?: string }) {
   }, [region]);
 
   return (
-    <div className="container mx-auto min-w-0 space-y-8 px-4 py-10">
-      <header className="space-y-4">
-        <WeatherTicker placement="page" />
-        <h1 className="text-sm font-bold uppercase">
-          {stateName} Mountain Weather
-        </h1>
-      </header>
+    <div className="mx-auto min-w-0 max-w-6xl space-y-8 px-4 pb-12 pt-6 md:pt-8">
+      <LargeTitle eyebrow="Mountain Weather" title={stateName} />
 
-      <section className="space-y-8" aria-label={`${regionLabel} forecast`}>
+      <section className="space-y-10" aria-label={`${regionLabel} forecast`}>
         {sections.length === 0 ? (
-          <p className="text-sm">No forecast spots for this state.</p>
+          <p className="t-subhead px-1 text-ui-label-2">No forecast spots for this state.</p>
         ) : sections.map((section) => (
           <RegionSection key={section.id} section={section} />
         ))}
@@ -52,20 +47,20 @@ export function MountainWeather({ state }: { state?: string }) {
 
 function RegionSection({ section }: { section: WeatherSection }) {
   return (
-    <section id={section.id} className="scroll-mt-36 space-y-4">
-      <div className="flex min-w-0 flex-col gap-3 md:flex-row md:items-center md:justify-between">
-        <h2 className="min-w-0 text-sm font-bold uppercase">{section.title}</h2>
-        {section.banner ? (
+    <section id={section.id} className="scroll-mt-36 space-y-3">
+      <SectionHeader
+        title={section.title}
+        subtitle={section.banner ? (
           <a
             href={section.banner.href}
             target="_blank"
             rel="noopener noreferrer"
-            className="min-w-0 break-words text-sm font-bold underline"
+            className="break-words font-bold text-brand-green underline"
           >
             {section.banner.label}
           </a>
         ) : null}
-      </div>
+      />
       <div className="grid min-w-0 gap-4 lg:grid-cols-2">
         {section.spots.map((spot) => (
           <WeatherDashboard key={spot.id} spot={spot} />

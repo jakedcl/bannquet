@@ -49,7 +49,7 @@ function waterName(row: FreshwaterRow, linked: boolean) {
   return (
     <span className="inline-flex max-w-full items-baseline gap-2">
       {name}
-      <a href={row.usgsHref} target="_blank" rel="noopener noreferrer" className="shrink-0 whitespace-nowrap text-xs underline">USGS</a>
+      <a href={row.usgsHref} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 shrink-0 items-center whitespace-nowrap text-sm underline">USGS</a>
     </span>
   );
 }
@@ -221,7 +221,7 @@ export function FreshwaterBoard({
 
       {parking.length > 0 ? (
         <details className="space-y-3">
-          <summary className="cursor-pointer text-sm font-bold uppercase">Angler parking</summary>
+          <summary className="flex min-h-11 cursor-pointer items-center text-sm font-bold uppercase">Angler parking</summary>
           <SearchBar value={parkingQuery} onChange={setParkingQuery} placeholder="Water or town" label="Search parking" />
           {counties.length > 1 ? (
             <FilterPills

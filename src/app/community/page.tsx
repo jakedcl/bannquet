@@ -1,4 +1,5 @@
 import PageWrapper from '@/components/ui/PageWrapper';
+import { HubPage } from '@/components/hub/Page';
 import { getViewer } from '@/app/sign-in/actions';
 import { CommunityBoard, type CommunityPeek } from '@/components/community/CommunityBoard';
 import { isDatabaseConfigured } from '@/db';
@@ -107,10 +108,10 @@ export default async function CommunityPage() {
 
   return (
     <PageWrapper>
-      <div className="mx-auto max-w-5xl px-4 py-4">
-        {note ? <p className="mb-3 text-sm font-bold">{note}</p> : null}
+      <HubPage title="Community" width="5xl">
+        {note ? <p className="t-body font-bold">{note}</p> : null}
         <CommunityBoard peek={peek} />
-      </div>
+      </HubPage>
     </PageWrapper>
   );
 }
