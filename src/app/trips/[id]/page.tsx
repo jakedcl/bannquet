@@ -10,7 +10,7 @@ import { draftPhotoSources, SmallPhotoImage } from '@/components/ui/SmallPhotoIm
 import { Card } from '@/components/hub/Card';
 import { hubButtonClass, Pill } from '@/components/hub/Button';
 import { ListGroup, ListRow } from '@/components/hub/ListRow';
-import { LargeTitle, SectionHeader } from '@/components/hub/SectionHeader';
+import { LargeTitle } from '@/components/hub/SectionHeader';
 import { ACTIVITY_META, isActivity } from '@/lib/activities';
 import { canDeleteOwned, canEditOwned, viewerCanContribute } from '@/lib/membership';
 import { getTrip, type TripAttachment } from '@/lib/trips';
@@ -31,7 +31,7 @@ function initials(name: string): string {
 
 function Avatar({ name }: { name: string }) {
   return (
-    <span aria-hidden="true" className="flex h-9 w-9 items-center justify-center rounded-full bg-ui-accent-soft text-[0.8125rem] font-semibold text-ui-accent">
+    <span aria-hidden="true" className="avatar-frame flex h-8 w-8 items-center justify-center text-xs font-bold text-brand-green">
       {initials(name)}
     </span>
   );
@@ -44,7 +44,7 @@ function KindGlyph({ kind }: { kind: TripAttachment['kind'] }) {
       ? 'M12 20s-5.5-5-5.5-9a5.5 5.5 0 1111 0c0 4-5.5 9-5.5 9z'
       : 'M4 7h3l1.5-2h7L17 7h3v11H4zM12 15.5a3 3 0 100-6 3 3 0 000 6z';
   return (
-    <span aria-hidden="true" className="flex h-11 w-11 items-center justify-center rounded-[10px] bg-ui-fill text-ui-label-2">
+    <span aria-hidden="true" className="flex h-10 w-10 items-center justify-center border border-ui-separator bg-ui-surface-2 text-ui-label-2">
       <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
         <path d={path} />
       </svg>
@@ -79,25 +79,25 @@ export default async function TripPage({ params }: { params: Promise<{ id: strin
 
   return (
     <PageWrapper leaf={trip.title} className="hub">
-      <div className="mx-auto max-w-2xl space-y-8 px-4 pb-12 pt-6 md:pt-10">
-        <div className="space-y-4">
+      <div className="mx-auto max-w-3xl space-y-5 px-4 pb-12 pt-6 md:pt-8">
+        <div className="space-y-3">
           <LargeTitle
             title={trip.title}
             subtitle={formatTripDate(trip.tripDate, 'long')}
           />
-          <div className="flex flex-wrap gap-2 px-1">
+          <div className="flex flex-wrap gap-2">
             <Pill tone={trip.upcoming ? 'accent' : 'gray'}>{trip.upcoming ? 'Upcoming' : 'Past'}</Pill>
             {activity ? <Pill>{activity}</Pill> : null}
             <Pill>{trip.people.length === 1 ? '1 going' : `${trip.people.length} going`}</Pill>
           </div>
           {canRsvp ? (
-            <form action={toggleGoing} className="px-1">
+            <form action={toggleGoing}>
               <input type="hidden" name="tripId" value={trip.id} />
               <input type="hidden" name="going" value={going ? '0' : '1'} />
               <SubmitButton
                 unstyled
                 pendingLabel={going ? 'Leaving…' : 'Saving…'}
-                className={hubButtonClass(going ? 'gray' : 'filled', 'lg', 'md:w-auto md:min-w-48')}
+                className={hubButtonClass(going ? 'gray' : 'filled', 'md', 'w-full sm:w-auto sm:min-w-40')}
               >
                 {going ? "I'm out" : "I'm in"}
               </SubmitButton>
@@ -106,17 +106,16 @@ export default async function TripPage({ params }: { params: Promise<{ id: strin
         </div>
 
         {trip.notes ? (
-          <Card aria-label="Notes">
-            <LinkedText text={trip.notes} className="t-body text-ui-label [&_a]:text-ui-accent [&_a]:no-underline" />
+          <Card title="Notes">
+            <LinkedText text={trip.notes} className="t-body text-ui-label [&_a]:font-bold [&_a]:text-brand-green" />
           </Card>
         ) : null}
 
-        <section className="space-y-2" aria-labelledby="going-heading">
-          <SectionHeader id="going-heading" title="Who's going" level="title3" />
+        <Card title="Who's going" padded={false}>
           {trip.people.length === 0 ? (
-            <Card><p className="t-subhead text-ui-label-2">Nobody yet.</p></Card>
+            <p className="t-subhead p-3 text-ui-label-2 sm:p-4">Nobody yet.</p>
           ) : (
-            <ListGroup inset="4rem">
+            <ListGroup bare>
               {trip.people.map((person) => (
                 <ListRow
                   key={person.id}
@@ -128,14 +127,13 @@ export default async function TripPage({ params }: { params: Promise<{ id: strin
               ))}
             </ListGroup>
           )}
-        </section>
+        </Card>
 
-        <section className="space-y-2" aria-labelledby="attached-heading">
-          <SectionHeader id="attached-heading" title="Attached" level="title3" />
+        <Card title="Attached" padded={false}>
           {trip.attachments.length === 0 ? (
-            <Card><p className="t-subhead text-ui-label-2">No pins, routes, or photos yet.</p></Card>
+            <p className="t-subhead p-3 text-ui-label-2 sm:p-4">No pins, routes, or photos yet.</p>
           ) : (
-            <ListGroup inset="4.5rem">
+            <ListGroup bare>
               {trip.attachments.map((item) => {
                 const photo = draftPhotoSources(item);
                 return (
@@ -147,9 +145,9 @@ export default async function TripPage({ params }: { params: Promise<{ id: strin
                         url={photo.url}
                         thumbUrl={photo.thumbUrl}
                         alt=""
-                        width={44}
-                        height={44}
-                        className="h-11 w-11 rounded-[10px] object-cover"
+                        width={40}
+                        height={40}
+                        className="h-10 w-10 border border-ui-separator object-cover"
                       />
                     ) : <KindGlyph kind={item.kind} />}
                     title={item.label}
@@ -168,10 +166,10 @@ export default async function TripPage({ params }: { params: Promise<{ id: strin
               })}
             </ListGroup>
           )}
-        </section>
+        </Card>
 
         {canEditTrip || canDeleteTrip ? (
-          <section className="space-y-3" aria-label="Manage trip">
+          <section className="space-y-2" aria-label="Manage trip">
             {canEditTrip ? (
               <EditDetails look="hub">
                 <Card>
