@@ -1,4 +1,5 @@
 import { sql } from 'drizzle-orm';
+import { unstable_cache, updateTag } from 'next/cache';
 import { getDb } from '@/db';
 import { isActivity, mapColorForActivity, type Activity } from '@/lib/activities';
 import { lineWkt, type PackedTrack } from '@/lib/gpx';
@@ -121,6 +122,13 @@ function whoSql(aliasUser: string) {
 
 export type MapData = { points: MapFeatureCollection; lines: MapFeatureCollection };
 
+/** Full-map reads are cached; track, pin, and photo writes call bumpMapCache(). */
+export const MAP_TAG = 'map';
+
+export function bumpMapCache(): void {
+  updateTag(MAP_TAG);
+}
+
 /** How far around one item a small map reaches. */
 export const NEAR_MAP_METERS = 25_000;
 
@@ -133,9 +141,25 @@ function anchorSql(anchor: MapAnchor) {
     : sql`ST_SetSRID(ST_MakePoint(${anchor.lng}, ${anchor.lat}), 4326)::geography`;
 }
 
+async function viewerOwnsHiddenEnds(viewerId: string): Promise<boolean> {
+  const result = await getDb().execute(sql`
+    select 1 from tracks where user_id = ${viewerId} and hide_ends limit 1
+  `);
+  return asRows(result).length > 0;
+}
+
+const loadCachedPublicMapData = unstable_cache(
+  async () => selectMapData(null, null, false),
+  ['map-data-v3'],
+  { tags: [MAP_TAG] },
+);
+
 /** `viewerId` decides who gets a hidden-ends route in full: only its owner. */
 export async function loadMapData(viewerId: string | null): Promise<MapData> {
-  return selectMapData(viewerId, null);
+  if (viewerId && await viewerOwnsHiddenEnds(viewerId)) {
+    return selectMapData(viewerId, null, false);
+  }
+  return loadCachedPublicMapData();
 }
 
 /** Only what sits within `radiusM` of the anchor, for the small map on an item page. */
@@ -144,12 +168,19 @@ export async function loadMapDataNear(
   anchor: MapAnchor,
   radiusM = NEAR_MAP_METERS,
 ): Promise<MapData> {
-  return selectMapData(viewerId, { anchor, radiusM });
+  return selectMapData(viewerId, { anchor, radiusM }, false);
+}
+
+function routeLineGeoJsonSql(simplify: boolean) {
+  return simplify
+    ? sql`ST_AsGeoJSON(ST_Simplify(shown.line::geometry, 0.00005), 5)`
+    : sql`ST_AsGeoJSON(shown.line)`;
 }
 
 async function selectMapData(
   viewerId: string | null,
   near: { anchor: MapAnchor; radiusM: number } | null,
+  simplifyLines: boolean,
 ): Promise<MapData> {
   const db = getDb();
   // Routes test both the stored line (uses the index) and the part this viewer may see.
@@ -161,7 +192,7 @@ async function selectMapData(
       select t.id::text as id, t.title, t.activity::text as activity,
         (coalesce(t.started_at, t.created_at) at time zone 'America/New_York')::date::text as trip_date,
         ${whoSql('u')} as who,
-        ST_AsGeoJSON(shown.line) as geojson,
+        ${routeLineGeoJsonSql(simplifyLines)} as geojson,
         ST_Y(${markerPointSql()}) as lat,
         ST_X(${markerPointSql()}) as lng,
         ST_AsGeoJSON(ST_StartPoint(cut.line)) as zone_start,
@@ -333,6 +364,7 @@ export async function addProfileTrack(input: {
     `);
     const id = text(asRows(inserted)[0]?.id);
     if (!id) throw new Error('Could not save that route.');
+    bumpMapCache();
     return id;
   });
 }
@@ -372,7 +404,10 @@ export async function addProfilePhotos(
       returning id::text as id
     `);
     const id = text(asRows(inserted)[0]?.id);
-    if (id) saved.push({ id, url: photo.url, thumbUrl: photo.thumbUrl });
+    if (id) {
+      saved.push({ id, url: photo.url, thumbUrl: photo.thumbUrl });
+      if (located) bumpMapCache();
+    }
   }
   return saved;
 }
