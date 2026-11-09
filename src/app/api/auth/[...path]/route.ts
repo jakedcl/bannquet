@@ -6,18 +6,14 @@ async function unavailable(): Promise<Response> {
 
 type RouteContext = { params: Promise<{ path: string[] }> };
 
-async function delegate(
-  method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH',
-  request: Request,
-  context: RouteContext,
-) {
+async function delegate(method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH', request: Request) {
   if (!isAuthConfigured()) return unavailable();
   const handler = getAuth().handler();
-  return handler[method](request, context);
+  return handler[method](request);
 }
 
-export function GET(request: Request, context: RouteContext) {
-  return delegate('GET', request, context);
+export function GET(request: Request) {
+  return delegate('GET', request);
 }
 
 export async function POST(request: Request, context: RouteContext) {
@@ -28,17 +24,17 @@ export async function POST(request: Request, context: RouteContext) {
       { status: 403 },
     );
   }
-  return delegate('POST', request, context);
+  return delegate('POST', request);
 }
 
-export function PUT(request: Request, context: RouteContext) {
-  return delegate('PUT', request, context);
+export function PUT(request: Request) {
+  return delegate('PUT', request);
 }
 
-export function DELETE(request: Request, context: RouteContext) {
-  return delegate('DELETE', request, context);
+export function DELETE(request: Request) {
+  return delegate('DELETE', request);
 }
 
-export function PATCH(request: Request, context: RouteContext) {
-  return delegate('PATCH', request, context);
+export function PATCH(request: Request) {
+  return delegate('PATCH', request);
 }

@@ -10,7 +10,7 @@ The framework repo is private. Cloud agents open it with `git clone --depth 1 ht
 
 ## Stack
 - Next.js 16.3 (App Router), React 19.2, TypeScript, Tailwind CSS 4, Framer Motion, MapLibre GL 6.
-- Neon Postgres + Drizzle ORM 0.45 (PostGIS). Neon Auth (`@neondatabase/auth` beta). Vercel Blob for photos.
+- Neon Postgres + Drizzle ORM 0.45 (PostGIS). Self-hosted Better Auth (`better-auth` + `neon_auth` schema). Vercel Blob for photos.
 - Weather is the NWS API. Fishing uses USGS Water Data. Map tiles are free (OpenFreeMap, USGS, AWS Terrarium); no paid map APIs.
 - Vercel. CI (`.github/workflows/ci.yml`) runs `npm ci`, lint, typecheck, test, build.
 
@@ -26,7 +26,7 @@ The framework repo is private. Cloud agents open it with `git clone --depth 1 ht
 
 ## Gotchas
 - `DATABASE_URL` is the pooled Neon URL (`-pooler`); `DATABASE_URL_UNPOOLED` is the direct one.
-- **Read `docs/environments.md` before any DB, auth or preview work.** In short: Vercel previews and local dev use the Neon `preview` branch (its own data and Neon Auth), and only production uses `main` (its Neon Auth refuses localhost). Migrations from 0010 on are applied by hand with `IF NOT EXISTS` SQL. Cloud agents write the SQL file but don't apply it. Test with the standing `bqtester` account on preview only. Blob is still shared with live.
+- **Read `docs/environments.md` before any DB, auth or preview work.** In short: Vercel previews and local dev use the Neon `preview` branch (its own data and auth rows in `neon_auth`), and only production uses `main`. Migrations from 0010 on are applied by hand with `IF NOT EXISTS` SQL. Cloud agents write the SQL file but don't apply it. Test with the standing `bqtester` account on preview only. Blob is still shared with live.
 - New sign-ups can read but can't post until approved on `/admin`; invite links skip that. `ADMIN_EMAIL` (comma-separated) are admins.
 - **Edits and deletes:** the author or an admin. Show controls with `canEditOwned`/`canDeleteOwned`; enforce in SQL with `(admin or <owner column> = actor id)`. An edit never changes the owner column. Admins don't edit other people's accounts or settings.
 - Old `/trip-reports` and `/posts` links redirect to `/trips` (their `new` pages to `/upload?kind=trip`), `/trips/new` to `/upload?kind=trip`, `/weather` to `/mountain-weather`, and `/hikers/<u>` to `/user/<u>`, all in `next.config.ts`. Keep those redirects.

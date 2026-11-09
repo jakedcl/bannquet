@@ -6,14 +6,14 @@ Bannquet has two live environments. Each one talks to its own Neon database.
 |---|---|---|
 | Site | www.bannquet.com (Vercel production, builds from `main`) | `bannquet-git-<branch>-dcldev.vercel.app` (Vercel preview, every non-main push / PR) |
 | Neon branch | `main` (`br-icy-waterfall-b7djctpq`) | `preview` (`br-curly-snow-b73nm5ro`) |
-| Neon Auth | main's own | preview's own (separate member accounts) |
-| Vercel env vars | `DATABASE_URL`, `DATABASE_URL_UNPOOLED`, `NEON_AUTH_BASE_URL`, `NEON_AUTH_JWKS_URL` scoped to **production only** | the same four keys, pointing at the `preview` branch, scoped to **preview** and to **development** (separate entries) |
+| Auth data (`neon_auth` schema) | main branch | preview branch (separate member accounts) |
+| Vercel auth env | `DATABASE_URL`, `BETTER_AUTH_SECRET`, `BETTER_AUTH_URL` on **production** (see `docs/auth-cutover.md`) | same auth keys on **preview** and **development**, plus `DATABASE_URL` for the preview branch |
 
 Neon project: `hidden-cherry-64820503`. All PR previews share the one `preview` branch.
 
 ## Local development
 - Local dev (`npm run dev` on localhost) uses the **`preview` branch**, never `main`. `vercel env pull` gives you the development values, which point at `preview`.
-- The `main` branch's Neon Auth has **allow localhost turned off**, so a laptop can't sign in against the live site. The `preview` branch's Neon Auth allows localhost.
+- Production `BETTER_AUTH_URL` is the live site; do not point local dev at production. Local dev uses preview `DATABASE_URL` and `BETTER_AUTH_URL=http://localhost:3000`.
 - Sign in locally with the preview test account (below), not a real member account.
 
 ## What is still shared with live
@@ -33,7 +33,7 @@ Neon project: `hidden-cherry-64820503`. All PR previews share the one `preview` 
 - Cloud agents: write the migration file, but don't apply it to any database. Say in the PR exactly which SQL needs applying. Jake's assistant applies it.
 
 ## Preview sign-in
-- Neon Auth only accepts sign-ins from trusted domains. Each new PR preview host (`bannquet-git-<branch>-dcldev.vercel.app`) must be added to the **preview** branch's Neon Auth trusted domains, or sign-in on that preview is refused.
+- Self-hosted Better Auth checks `BETTER_AUTH_URL` and optional `BETTER_AUTH_TRUSTED_ORIGINS`. Add each new PR preview host (`bannquet-git-<branch>-dcldev.vercel.app`) to `BETTER_AUTH_TRUSTED_ORIGINS` on preview if sign-in is refused.
 - Preview URLs are behind Vercel login, so curl gets a 302. Test them in a signed-in browser.
 
 ## Standing test account
@@ -52,5 +52,5 @@ Neon project: `hidden-cherry-64820503`. All PR previews share the one `preview` 
 
 ## Never
 - Never point a preview or a local dev setup at `main`, and never create test accounts on `main`.
-- Never turn allow localhost back on for `main`'s Neon Auth.
+- Never point local dev or preview `DATABASE_URL` at production `main`.
 - Never run `db:migrate` on `main`.
