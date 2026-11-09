@@ -12,7 +12,7 @@ The framework repo is private. Cloud agents open it with `git clone --depth 1 ht
 - Next.js 16.3 (App Router), React 19.2, TypeScript, Tailwind CSS 4, Framer Motion, MapLibre GL 6.
 - Neon Postgres + Drizzle ORM 0.45 (PostGIS). Self-hosted Better Auth (`better-auth` + `neon_auth` schema). Vercel Blob for photos.
 - Weather is the NWS API. Fishing uses USGS Water Data. Map tiles are free (OpenFreeMap, USGS, AWS Terrarium); no paid map APIs.
-- Vercel. CI (`.github/workflows/ci.yml`) runs `npm ci`, lint, typecheck, test, build.
+- Vercel (builds on push). Local checks: `npm run lint`, `npm run typecheck`, `npm test`, `npm run build`.
 
 ## Layout
 - `src/app/` routes incl. `peaks/`, `trips/`, `map/`, `mountain-weather/`, `conditions/`, `fishing/`, `community/`, `admin/`, `user/[username]`, `api/`.
