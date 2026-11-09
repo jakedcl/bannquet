@@ -87,8 +87,37 @@ export function ChatRoom({
   }, []);
 
   useEffect(() => {
-    const timer = window.setInterval(pull, 5000);
-    return () => window.clearInterval(timer);
+    let timer: number | undefined;
+
+    function startPolling() {
+      if (timer != null) return;
+      timer = window.setInterval(() => void pull(), 5000);
+    }
+
+    function stopPolling() {
+      if (timer == null) return;
+      window.clearInterval(timer);
+      timer = undefined;
+    }
+
+    function onVisibilityChange() {
+      if (document.visibilityState === 'hidden') {
+        stopPolling();
+        return;
+      }
+      void pull();
+      startPolling();
+    }
+
+    if (document.visibilityState === 'visible') {
+      startPolling();
+    }
+
+    document.addEventListener('visibilitychange', onVisibilityChange);
+    return () => {
+      stopPolling();
+      document.removeEventListener('visibilitychange', onVisibilityChange);
+    };
   }, [pull]);
 
   if (state !== acked) {
