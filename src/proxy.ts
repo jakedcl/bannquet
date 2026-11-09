@@ -22,6 +22,12 @@ export async function proxy(request: NextRequest) {
   if (request.method !== 'GET' && request.method !== 'HEAD') return NextResponse.next();
   const { pathname, search } = request.nextUrl;
   const guarded = isProtected(pathname);
+  const headOnly = request.method === 'HEAD';
+
+  // Uptime checks and similar probes should not render pages or hit the database.
+  if (headOnly && !guarded) {
+    return new NextResponse(null, { status: 200 });
+  }
 
   if (!isAuthConfigured()) {
     if (!guarded) return NextResponse.next();
@@ -43,9 +49,11 @@ export async function proxy(request: NextRequest) {
 
   if (result.action === 'allow') {
     const cookies = result.cookies ?? [];
-    const response = NextResponse.next({
-      request: { headers: authCookiesForRequest(request, cookies) },
-    });
+    const response = headOnly
+      ? new NextResponse(null, { status: 200 })
+      : NextResponse.next({
+        request: { headers: authCookiesForRequest(request, cookies) },
+      });
     for (const cookie of cookies) response.headers.append('Set-Cookie', cookie);
     return response;
   }
