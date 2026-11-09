@@ -26,6 +26,8 @@ export function trustedOriginsFromEnv(): string[] {
   }
   add('http://localhost:3000');
   add('https://www.bannquet.com');
+  // Bannquet Vercel previews only (not all of *.vercel.app).
+  out.add('https://bannquet-*-dcldev.vercel.app');
   return [...out];
 }
 

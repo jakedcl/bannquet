@@ -10,7 +10,7 @@ Set on **preview** and **development** (and on **production** only at cutover):
 |---|---|
 | `BETTER_AUTH_SECRET` | Same value as the branch's former `NEON_AUTH_COOKIE_SECRET` so existing `__Secure-neon-auth.*` session cookies stay valid. |
 | `BETTER_AUTH_URL` | Preview: `https://bannquet-git-<branch>-dcldev.vercel.app`. Local: `http://localhost:3000`. Production: `https://www.bannquet.com`. |
-| `BETTER_AUTH_TRUSTED_ORIGINS` | Optional. Comma-separated preview hosts if sign-in is refused for origin. Localhost is always allowed for dev. |
+| `BETTER_AUTH_TRUSTED_ORIGINS` | Optional extra comma-separated origins. Built-in pattern: `https://bannquet-*-dcldev.vercel.app`. |
 
 Remove when self-hosted is live on that environment (not before Jake confirms sign-in):
 
