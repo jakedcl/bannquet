@@ -149,7 +149,7 @@ async function viewerOwnsHiddenEnds(viewerId: string): Promise<boolean> {
 }
 
 const loadCachedPublicMapData = unstable_cache(
-  async () => selectMapData(null, null, false),
+  async () => selectMapData(null, null, true),
   ['map-data-v3'],
   { tags: [MAP_TAG] },
 );
