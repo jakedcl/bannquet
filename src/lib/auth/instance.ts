@@ -51,6 +51,8 @@ export function createBetterAuth() {
       cookiePrefix: SESSION_COOKIE_PREFIX,
       database: {
         validateSchema: false,
+        // Managed Neon Auth created uuid primary keys; default nanoid ids fail inserts.
+        generateId: 'uuid',
       },
     },
     session: {
