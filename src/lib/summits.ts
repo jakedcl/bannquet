@@ -37,6 +37,11 @@ export async function ensurePeaks(): Promise<void> {
       elevation_ft = excluded.elevation_ft,
       point = excluded.point,
       info = excluded.info
+    where peaks.name is distinct from excluded.name
+      or peaks.list is distinct from excluded.list
+      or peaks.elevation_ft is distinct from excluded.elevation_ft
+      or peaks.point is distinct from excluded.point
+      or peaks.info is distinct from excluded.info
   `);
 }
 
