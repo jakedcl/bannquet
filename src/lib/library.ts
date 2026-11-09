@@ -2,6 +2,7 @@ import { sql } from 'drizzle-orm';
 import { getDb } from '@/db';
 import { removePhotoFiles } from '@/lib/blobs';
 import { cleanRouteTitle, routeTitle } from '@/lib/route-title';
+import { bumpMapCache } from '@/lib/posts';
 import { markerPointSql, routeCutSql, shownLineSql } from '@/lib/route-privacy-sql';
 import type { MemberRole } from '@/lib/membership';
 
@@ -238,7 +239,9 @@ export async function updateRouteTitle(
     where id = ${id}::uuid and (${isAdmin(actor)} or user_id = ${actor.id})
     returning id::text as id
   `);
-  return Boolean(text(asRows(result)[0]?.id));
+  const ok = Boolean(text(asRows(result)[0]?.id));
+  if (ok) bumpMapCache();
+  return ok;
 }
 
 /** The uploader or an admin may edit. `user_id` never changes. */
@@ -258,7 +261,9 @@ export async function deleteRoute(id: string, actor: Actor): Promise<boolean> {
     where id = ${id}::uuid and (${isAdmin(actor)} or user_id = ${actor.id})
     returning id::text as id
   `);
-  return Boolean(text(asRows(result)[0]?.id));
+  const ok = Boolean(text(asRows(result)[0]?.id));
+  if (ok) bumpMapCache();
+  return ok;
 }
 
 export async function deletePhoto(id: string, actor: Actor): Promise<boolean> {
@@ -271,6 +276,7 @@ export async function deletePhoto(id: string, actor: Actor): Promise<boolean> {
   if (!row) return false;
   await db.execute(sql`delete from photos where id = ${id}::uuid`);
   await removePhotoFiles([text(row.blob_url), text(row.thumb_url)]);
+  bumpMapCache();
   return true;
 }
 

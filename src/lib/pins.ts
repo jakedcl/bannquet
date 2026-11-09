@@ -5,6 +5,7 @@ import { sortLoggedActivities, type Activity } from '@/lib/activities';
 import { isLatLng } from '@/lib/photos';
 import { isPinKind, type PinKind } from '@/lib/pin-kinds';
 import type { PreparedPhoto } from '@/lib/posts';
+import { bumpMapCache } from '@/lib/posts';
 import { oneAtATime } from '@/lib/dedupe';
 
 export type { PinKind } from '@/lib/pin-kinds';
@@ -217,6 +218,7 @@ export async function createPin(input: {
     await insertPinPhotos(tx, { pinId, userId: input.userId, title: input.title, photos: input.photos, startOrder: 0 });
     return pinId;
   });
+  bumpMapCache();
   return id;
 }
 
@@ -268,7 +270,10 @@ export async function updatePin(input: {
     });
     return true;
   });
-  if (saved) await removePhotoFiles(removedUrls);
+  if (saved) {
+    await removePhotoFiles(removedUrls);
+    bumpMapCache();
+  }
   return saved;
 }
 
@@ -291,6 +296,9 @@ export async function deletePin(id: string, actor: { id: string; admin: boolean 
     await tx.execute(sql`delete from pins where id = ${id}::uuid`);
     return true;
   });
-  if (removed) await removePhotoFiles(urls);
+  if (removed) {
+    await removePhotoFiles(urls);
+    bumpMapCache();
+  }
   return removed;
 }
