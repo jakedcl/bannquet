@@ -2,9 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
-import { getViewer } from '@/app/sign-in/actions';
-import { APPROVAL_WAIT, canContribute } from '@/lib/membership';
-import { redirectToSignIn } from '@/lib/sign-in-redirect';
+import { requireContributor } from '@/lib/contributor';
 import { safeNextPath } from '@/lib/sign-in-next';
 import { cleanTripFields } from '@/lib/trip-fields';
 import {
@@ -17,10 +15,9 @@ import {
 } from '@/lib/trips';
 
 async function contributor() {
-  const viewer = await getViewer();
-  if (!viewer) return redirectToSignIn();
-  if (!canContribute(viewer.role)) return { error: APPROVAL_WAIT, viewer: null };
-  return { error: null, viewer };
+  const who = await requireContributor();
+  if (!who.ok) return { error: who.error, viewer: null };
+  return { error: null, viewer: who.viewer };
 }
 
 export async function createTripAction(
@@ -68,7 +65,7 @@ export async function updateTripAction(
 }
 
 export async function toggleGoing(formData: FormData): Promise<void> {
-  const { viewer } = await contributor();
+  const { error, viewer } = await contributor();
   if (!viewer) return;
   const tripId = String(formData.get('tripId') ?? '');
   const going = String(formData.get('going') ?? '') === '1';

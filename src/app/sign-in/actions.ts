@@ -521,6 +521,7 @@ export async function createMemberResetLink(
   const sendEmail = formData.get('emailToo') === 'yes';
   const member = await findMemberByAuthId(userId);
   if (!member?.email) return { error: 'That person does not have an email on their account.' };
+  if (member.role === 'pending') return { error: 'That person is not a full member yet.' };
 
   const token = newResetToken();
   const tokenHash = hashResetToken(token);
