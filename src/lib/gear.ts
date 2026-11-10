@@ -225,3 +225,46 @@ export async function setGearHold(gearId: string, userId: string, qty: number): 
     on conflict (gear_id, user_id) do update set qty = ${qty}
   `);
 }
+
+/** One gear row and its holds, without loading the full list. */
+export async function getGearItem(id: string): Promise<GearItem | null> {
+  const [items, holds] = await Promise.all([
+    getDb().execute(sql`
+      select id::text as id, name, category, added_by
+      from community_gear
+      where id = ${id}::uuid
+    `),
+    getDb().execute(sql`
+      select h.gear_id::text as gear_id, h.user_id, h.qty,
+        coalesce(nullif(u.display_name, ''), nullif(u.handle, ''), 'Friend') as name,
+        u.handle
+      from community_gear_holds h
+      join users u on u.id = h.user_id
+      where h.gear_id = ${id}::uuid and u.role <> 'pending' and h.qty > 0
+      order by name
+    `),
+  ]);
+  const row = asRows(items)[0];
+  const gearId = text(row?.id);
+  const name = text(row?.name);
+  if (!gearId || !name) return null;
+  const holdRows: GearHold[] = [];
+  for (const hold of asRows(holds)) {
+    const userId = text(hold.user_id);
+    const qty = Number(hold.qty);
+    if (!userId || !Number.isFinite(qty) || qty < 1) continue;
+    holdRows.push({
+      userId,
+      name: text(hold.name) ?? 'Friend',
+      handle: text(hold.handle),
+      qty,
+    });
+  }
+  return {
+    id: gearId,
+    name,
+    category: text(row.category),
+    addedBy: text(row.added_by),
+    holds: holdRows,
+  };
+}

@@ -65,7 +65,7 @@ export async function updateTripAction(
 }
 
 export async function toggleGoing(formData: FormData): Promise<void> {
-  const { error, viewer } = await contributor();
+  const { viewer } = await contributor();
   if (!viewer) return;
   const tripId = String(formData.get('tripId') ?? '');
   const going = String(formData.get('going') ?? '') === '1';
