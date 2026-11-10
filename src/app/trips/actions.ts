@@ -84,7 +84,7 @@ export async function deleteTripAction(
   const { error, viewer } = await contributor();
   if (!viewer) return { error: error ?? 'Sign in to delete a trip.' };
   const id = String(formData.get('id') ?? '');
-  if (!id) return { error: 'That trip is missing.' };
+  if (!UUID.test(id)) return { error: 'That trip is missing.' };
   const ok = await deleteTrip(id, { id: viewer.id, admin: viewer.role === 'admin' });
   if (!ok) return { error: 'You can only delete a trip you planned.' };
   revalidatePath('/trips');
@@ -156,7 +156,7 @@ export async function detachFromTripAction(
     actorId: viewer.id,
     admin: viewer.role === 'admin',
   });
-  if (!ok) return { error: 'You can only remove your own pins, routes, and photos.' };
+  if (!ok) return { error: 'Only the trip planner, an admin, or the person who attached it can remove that.' };
   revalidatePath(`/trips/${tripId}`);
   const back = safeNextPath(String(formData.get('returnTo') ?? ''));
   if (back) redirect(back);

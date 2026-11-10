@@ -69,11 +69,18 @@ export default async function TripPage({ params }: { params: Promise<{ id: strin
     actorId: viewer.id,
     ownerId: trip.createdBy,
   }));
-  const canRemove = (ownerId: string | null | undefined) => Boolean(viewer && canEditOwned({
-    actorRole: viewer.role,
-    actorId: viewer.id,
-    ownerId: ownerId ?? null,
-  }));
+  const canRemove = (ownerId: string | null | undefined) => Boolean(viewer && (
+    canEditOwned({
+      actorRole: viewer.role,
+      actorId: viewer.id,
+      ownerId: trip.createdBy,
+    })
+    || canEditOwned({
+      actorRole: viewer.role,
+      actorId: viewer.id,
+      ownerId: ownerId ?? null,
+    })
+  ));
   const going = Boolean(viewer && trip.people.some((person) => person.id === viewer.id));
   const activity = trip.activity && isActivity(trip.activity) ? ACTIVITY_META[trip.activity].label : null;
 

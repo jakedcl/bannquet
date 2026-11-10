@@ -57,6 +57,20 @@ export type TripDetail = TripSummary & {
   posts: Array<{ id: string; title: string; tripDate: string | null }>;
 };
 
+function mapTripSummaries(result: unknown): TripSummary[] {
+  return asRows(result).flatMap((row) => {
+    const id = text(row.id);
+    if (!id) return [];
+    return [{
+      id,
+      title: text(row.title) ?? 'Trip',
+      tripDate: text(row.trip_date),
+      activity: text(row.activity),
+      going: num(row.going) ?? 0,
+    }];
+  });
+}
+
 export async function listTrips(): Promise<TripSummary[]> {
   const result = await getDb().execute(sql`
     select t.id::text as id, t.title,
@@ -70,17 +84,26 @@ export async function listTrips(): Promise<TripSummary[]> {
       case when coalesce(t.trip_date, t.start_at::date) < current_date then coalesce(t.trip_date, t.start_at::date) end desc nulls last,
       t.created_at desc
   `);
-  return asRows(result).flatMap((row) => {
-    const id = text(row.id);
-    if (!id) return [];
-    return [{
-      id,
-      title: text(row.title) ?? 'Trip',
-      tripDate: text(row.trip_date),
-      activity: text(row.activity),
-      going: num(row.going) ?? 0,
-    }];
-  });
+  return mapTripSummaries(result);
+}
+
+/** Same ordering as listTrips(), capped for dashboard peeks. */
+export async function listTripsPeek(limit: number): Promise<TripSummary[]> {
+  const capped = Math.max(1, Math.min(limit, 20));
+  const result = await getDb().execute(sql`
+    select t.id::text as id, t.title,
+      coalesce(t.trip_date, t.start_at::date)::text as trip_date,
+      t.activity::text as activity,
+      (select count(*)::int from trip_members tm where tm.trip_id = t.id and tm.rsvp = 'going') as going
+    from trips t
+    order by
+      case when coalesce(t.trip_date, t.start_at::date) >= current_date then 0 else 1 end,
+      case when coalesce(t.trip_date, t.start_at::date) >= current_date then coalesce(t.trip_date, t.start_at::date) end asc nulls last,
+      case when coalesce(t.trip_date, t.start_at::date) < current_date then coalesce(t.trip_date, t.start_at::date) end desc nulls last,
+      t.created_at desc
+    limit ${capped}
+  `);
+  return mapTripSummaries(result);
 }
 
 export async function getTrip(id: string): Promise<TripDetail | null> {
@@ -345,6 +368,19 @@ export async function attachItemToTrip(input: {
   return 'ok';
 }
 
+/** Trip organizer, admin, or the item owner may remove an attachment. */
+export function canDetachTripAttachment(input: {
+  admin: boolean;
+  actorId: string;
+  tripCreatedBy: string | null;
+  itemOwnerId: string | null;
+}): boolean {
+  if (input.admin) return true;
+  if (input.tripCreatedBy && input.tripCreatedBy === input.actorId) return true;
+  if (input.itemOwnerId && input.itemOwnerId === input.actorId) return true;
+  return false;
+}
+
 export async function detachItemFromTrip(input: {
   tripId: string;
   kind: 'pin' | 'route' | 'photo';
@@ -352,8 +388,19 @@ export async function detachItemFromTrip(input: {
   actorId: string;
   admin: boolean;
 }): Promise<boolean> {
-  const owned = await itemOwned(input.kind, input.entityId, input.actorId, input.admin);
-  if (owned !== 'ok') return false;
+  const tripRow = await getDb().execute(sql`
+    select created_by::text as created_by from trips where id = ${input.tripId}::uuid
+  `);
+  if (asRows(tripRow).length === 0) return false;
+  const tripCreatedBy = text(asRows(tripRow)[0]?.created_by);
+  const ownerRow = await itemOwner(input.kind, input.entityId);
+  if (ownerRow === 'missing') return false;
+  if (!canDetachTripAttachment({
+    admin: input.admin,
+    actorId: input.actorId,
+    tripCreatedBy,
+    itemOwnerId: ownerRow,
+  })) return false;
   const table = input.kind === 'pin' ? 'trip_pins' : input.kind === 'route' ? 'trip_routes' : 'trip_photos';
   const column = input.kind === 'pin' ? 'pin_id' : input.kind === 'route' ? 'track_id' : 'photo_id';
   const result = await getDb().execute(sql`
@@ -364,14 +411,20 @@ export async function detachItemFromTrip(input: {
   return asRows(result).length > 0;
 }
 
-async function itemOwned(kind: 'pin' | 'route' | 'photo', entityId: string, actorId: string, admin: boolean): Promise<'ok' | 'missing' | 'forbidden'> {
+async function itemOwner(kind: 'pin' | 'route' | 'photo', entityId: string): Promise<string | 'missing'> {
   const result = kind === 'pin'
     ? await getDb().execute(sql`select created_by as owner from pins where id = ${entityId}::uuid`)
     : kind === 'route'
       ? await getDb().execute(sql`select user_id as owner from tracks where id = ${entityId}::uuid`)
       : await getDb().execute(sql`select user_id as owner from photos where id = ${entityId}::uuid`);
-  const owner = text(asRows(result)[0]?.owner);
   if (asRows(result).length === 0) return 'missing';
+  const owner = text(asRows(result)[0]?.owner);
+  return owner ?? 'missing';
+}
+
+async function itemOwned(kind: 'pin' | 'route' | 'photo', entityId: string, actorId: string, admin: boolean): Promise<'ok' | 'missing' | 'forbidden'> {
+  const owner = await itemOwner(kind, entityId);
+  if (owner === 'missing') return 'missing';
   if (!admin && owner !== actorId) return 'forbidden';
   return 'ok';
 }
