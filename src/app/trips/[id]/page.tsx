@@ -151,7 +151,7 @@ export default async function TripPage({ params }: { params: Promise<{ id: strin
                       <SmallPhotoImage
                         url={photo.url}
                         thumbUrl={photo.thumbUrl}
-                        alt=""
+                        alt={item.label}
                         width={40}
                         height={40}
                         className="h-10 w-10 border border-ui-separator object-cover"

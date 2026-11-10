@@ -10,7 +10,7 @@ export type ContributorResult =
   | { ok: false; error: string; viewer: null };
 
 /** Signed-in member or admin who may post. Redirects when there is no session. */
-export async function requireContributor(signInMessage = 'Sign in to do that.'): Promise<ContributorResult | never> {
+export async function requireContributor(): Promise<ContributorResult | never> {
   const viewer = await getViewer();
   if (!viewer) return redirectToSignIn();
   if (!canContribute(viewer.role)) {

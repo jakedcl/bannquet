@@ -1,7 +1,6 @@
 'use server';
 
 import { redirect } from 'next/navigation';
-import { getViewer } from '@/app/sign-in/actions';
 import { requireContributor } from '@/lib/contributor';
 import { formLatLng, isLatLng } from '@/lib/photos';
 import { createPin, deletePin, updatePin } from '@/lib/pins';
