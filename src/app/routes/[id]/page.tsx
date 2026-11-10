@@ -16,7 +16,8 @@ import { loadRoute } from '@/lib/library';
 import { seesWholeRoute } from '@/lib/route-privacy';
 import { canEditOwned } from '@/lib/membership';
 import { loadMapDataNear } from '@/lib/posts';
-import { listTripChoices, tripsForItem } from '@/lib/trips';
+import { adminPowerActing } from '@/lib/admin-ui';
+import { listTripChoices, tripAttachHintForViewer, tripsForItem } from '@/lib/trips';
 import { loadFailed } from '@/lib/load-error';
 import { formatTripDate } from '@/lib/utils';
 import { HubPage } from '@/components/hub/Page';
@@ -73,12 +74,18 @@ export default async function RoutePage({
     actorId: viewer.id,
     ownerId: route.userId,
   }));
-  const [tripChoices, attachedTrips] = viewer && manage
+  const [tripChoices, attachedTrips, attachBlocked] = viewer && manage
     ? await Promise.all([
       listTripChoices().catch(() => []),
       tripsForItem('route', route.id).catch(() => []),
+      tripAttachHintForViewer(viewer).catch(() => null),
     ])
-    : [[], []];
+    : [[], [], null];
+  const deleteAdminPower = Boolean(viewer && adminPowerActing({
+    role: viewer.role,
+    actorId: viewer.id,
+    ownerId: route.userId,
+  }));
   const map = route.lat != null && route.lng != null ? await loadMapDataNear(viewer?.id ?? null, { routeId: route.id }).catch(() => null) : null;
 
   return (
@@ -127,6 +134,7 @@ export default async function RoutePage({
             trips={tripChoices}
             attached={attachedTrips}
             startOpen={addTrip === '1'}
+            attachBlocked={attachBlocked}
           />
         ) : null}
         {manage && viewer ? (
@@ -134,6 +142,7 @@ export default async function RoutePage({
             <ConfirmDelete
               action={deleteRouteAction}
               confirm="Delete this route?"
+              adminPower={deleteAdminPower}
               fields={{ id: route.id, returnTo: viewer.handle ? `/user/${viewer.handle}` : '/' }}
             />
           </Card>

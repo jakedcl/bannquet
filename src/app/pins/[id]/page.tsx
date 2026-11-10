@@ -15,7 +15,7 @@ import { canEditOwned } from '@/lib/membership';
 import { loadPin } from '@/lib/pins';
 import { PIN_KIND_LABELS, isPinKind } from '@/lib/pin-kinds';
 import { loadMapDataNear } from '@/lib/posts';
-import { listTripChoices, tripsForItem } from '@/lib/trips';
+import { listTripChoices, tripAttachHintForViewer, tripsForItem } from '@/lib/trips';
 import { formatTripDate } from '@/lib/utils';
 import { loadFailed } from '@/lib/load-error';
 import { HubPage } from '@/components/hub/Page';
@@ -71,12 +71,13 @@ export default async function PinPage({
     actorId: viewer.id,
     ownerId: pin.createdBy,
   }));
-  const [tripChoices, attachedTrips] = viewer && manage
+  const [tripChoices, attachedTrips, attachBlocked] = viewer && manage
     ? await Promise.all([
       listTripChoices().catch(() => []),
       tripsForItem('pin', pin.id).catch(() => []),
+      tripAttachHintForViewer(viewer).catch(() => null),
     ])
-    : [[], []];
+    : [[], [], null];
   const data = await loadMapDataNear(viewer?.id ?? null, { lng: pin.lng, lat: pin.lat });
   const activity = pin.activity && isActivity(pin.activity) ? ACTIVITY_META[pin.activity].label : null;
   const category = isPinKind(pin.kind) ? PIN_KIND_LABELS[pin.kind] : 'Other';
@@ -152,6 +153,7 @@ export default async function PinPage({
             trips={tripChoices}
             attached={attachedTrips}
             startOpen={addTrip === '1'}
+            attachBlocked={attachBlocked}
           />
         ) : null}
       </HubPage>

@@ -13,7 +13,8 @@ import { isDatabaseConfigured } from '@/db';
 import { loadPhoto } from '@/lib/library';
 import { canEditOwned } from '@/lib/membership';
 import { loadMapDataNear } from '@/lib/posts';
-import { listTripChoices, tripsForItem } from '@/lib/trips';
+import { adminPowerActing } from '@/lib/admin-ui';
+import { listTripChoices, tripAttachHintForViewer, tripsForItem } from '@/lib/trips';
 import { loadFailed } from '@/lib/load-error';
 import { HubPage } from '@/components/hub/Page';
 
@@ -69,12 +70,18 @@ export default async function PhotoPage({
     actorId: viewer.id,
     ownerId: photo.userId,
   }));
-  const [tripChoices, attachedTrips] = viewer && manage
+  const [tripChoices, attachedTrips, attachBlocked] = viewer && manage
     ? await Promise.all([
       listTripChoices().catch(() => []),
       tripsForItem('photo', photo.id).catch(() => []),
+      tripAttachHintForViewer(viewer).catch(() => null),
     ])
-    : [[], []];
+    : [[], [], null];
+  const deleteAdminPower = Boolean(viewer && adminPowerActing({
+    role: viewer.role,
+    actorId: viewer.id,
+    ownerId: photo.userId,
+  }));
   const map = photo.lat != null && photo.lng != null ? await loadMapDataNear(viewer?.id ?? null, { lng: photo.lng, lat: photo.lat }).catch(() => null) : null;
 
   return (
@@ -113,6 +120,7 @@ export default async function PhotoPage({
               <ConfirmDelete
                 action={deletePhotoAction}
                 confirm="Delete this photo?"
+                adminPower={deleteAdminPower}
                 fields={{ id: photo.id, returnTo: viewer.handle ? `/user/${viewer.handle}` : '/' }}
               />
             </div>
@@ -125,6 +133,7 @@ export default async function PhotoPage({
             trips={tripChoices}
             attached={attachedTrips}
             startOpen={addTrip === '1'}
+            attachBlocked={attachBlocked}
           />
         ) : null}
       </HubPage>
