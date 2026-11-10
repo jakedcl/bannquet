@@ -3,10 +3,11 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { inflateSync } from 'node:zlib';
 import test from 'node:test';
-import { RAY_STEP_DEG } from './constants';
-import { bearingDeg, distanceM } from './geo';
+import { DEFAULT_HFOV_DEG, RAY_STEP_DEG } from './constants';
+import { labelsInView } from './declutter';
+import { bearingDeg, distanceM, wrap180 } from './geo';
 import type { Peak } from './peaks';
-import { angleBefore, castSkyline, rayAt } from './skyline';
+import { angleBefore, castSkyline, rayAt, viewProfile } from './skyline';
 import { sampleHeight, terrainTiles, terrariumHeight, terrariumUrl, type TileId } from './tiles';
 import { burialM, eyeHeightM, raiseSummit, visiblePeaks } from './visibility';
 
@@ -130,7 +131,58 @@ function report(origin: { lat: number; lng: number }, peaks: readonly ListedPeak
 }
 
 const MARCY_SUMMIT = { lat: 44.112857, lng: -73.923784 };
+const LOWER_AUSABLE = { lat: 44.112, lng: -73.852 };
 const WASHINGTON = { lat: 44.2705, lng: -71.30325 };
+const DEFAULT_WIDTH = 980;
+const DEFAULT_HEIGHT = 720;
+
+function assertFrontRidgeView(
+  origin: { lat: number; lng: number },
+  peaks: readonly ListedPeak[],
+  grids: Map<string, Float32Array>,
+  wanted: readonly string[],
+) {
+  const sample = (lat: number, lng: number, metres: number) => sampleHeight(grids, lat, lng, metres);
+  const eyeM = eyeHeightM(origin.lat, origin.lng, (lat, lng) => sample(lat, lng, 0));
+  const skyline = castSkyline(origin.lat, origin.lng, eyeM, (lat, lng, metres) => sample(lat, lng, metres) ?? 0, RAY_STEP_DEG);
+  const view = viewProfile(skyline);
+  let frontSamples = 0;
+  for (const layer of view.layers) {
+    layer.angleDeg.forEach((angle, index) => {
+      if (!Number.isFinite(angle)) return;
+      const bearing = index * skyline.stepDeg;
+      if (Math.abs(wrap180(bearing - 270)) > DEFAULT_HFOV_DEG / 2) return;
+      const distance = layer.distanceM[index];
+      if (!Number.isFinite(distance)) return;
+      const sky = skyline.rays[index].angleDeg[skyline.rays[index].skylineIndex];
+      if (sky - angle >= 0.4) frontSamples += 1;
+    });
+  }
+  assert.ok(frontSamples > 30, `front ridge samples in the west view: ${frontSamples}`);
+  const raised = peaks.flatMap((peak) => {
+    const metres = distanceM(origin.lat, origin.lng, peak.lat, peak.lng);
+    const next = raiseSummit(peak, (lat, lng) => sample(lat, lng, metres));
+    return next ? [next] : [];
+  });
+  const visible = visiblePeaks(origin.lat, origin.lng, eyeM, raised, skyline);
+  const labels = labelsInView(visible, {
+    heading: 270,
+    pitch: 0,
+    roll: 0,
+    hfov: DEFAULT_HFOV_DEG,
+  }, DEFAULT_WIDTH, DEFAULT_HEIGHT);
+  const labeled = new Set(labels.map((peak) => peak.name));
+  const inWindow = visible.filter((peak) => Math.abs(wrap180(peak.bearingDeg - 270)) <= DEFAULT_HFOV_DEG / 2);
+  const front = inWindow.filter((peak) => {
+    const ray = rayAt(skyline, peak.bearingDeg);
+    const sky = ray.angleDeg[ray.skylineIndex];
+    return sky - peak.angleDeg >= 0.35;
+  });
+  const missing = wanted.filter((name) => !labeled.has(name));
+  const frontMissing = front.filter((peak) => wanted.includes(peak.name) && !labeled.has(peak.name));
+  assert.equal(missing.length, 0, `unlabeled at default zoom: ${missing.join(', ')}; labeled ${[...labeled].join(', ')}`);
+  assert.equal(frontMissing.length, 0, `front ridge unlabeled: ${frontMissing.map((peak) => peak.name).join(', ')}`);
+}
 
 const MARCY_SEES = [
   'Algonquin Peak',
@@ -160,6 +212,14 @@ test('from Marcy, the High Peaks in view are labeled and Couchsachraga stays hid
   assert.equal(missing.length, 0, `missing ${missing.join(', ')}; eye ${eyeM.toFixed(0)}; hidden ${hiddenText}`);
   assert.equal(names.has('Couchsachraga Peak'), false, `Couchsachraga was labeled; hidden ${hiddenText}`);
   assert.ok(names.size >= 40, `only ${names.size} of 45 other High Peaks: ${[...names].sort().join(', ')}`);
+});
+
+test('front ridges are drawn and labeled at default zoom from Marcy and Lower Ausable Lake', async () => {
+  const peaks = readPeaks(new URL('../../../config/challenges/adk46.json', import.meta.url));
+  const marcy = await loadGrids(MARCY_SUMMIT.lat, MARCY_SUMMIT.lng);
+  assertFrontRidgeView(MARCY_SUMMIT, peaks.filter((peak) => peak.name !== 'Mount Marcy'), marcy, ['Gray Peak', 'Mount Colden', 'Algonquin Peak']);
+  const ausable = await loadGrids(LOWER_AUSABLE.lat, LOWER_AUSABLE.lng);
+  assertFrontRidgeView(LOWER_AUSABLE, peaks, ausable, ['Mount Haystack', 'Basin Mountain', 'Mount Marcy']);
 });
 
 test('from Mount Washington, the neighboring Presidential summits are labeled', async () => {

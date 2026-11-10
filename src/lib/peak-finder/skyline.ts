@@ -141,8 +141,12 @@ const RIDGE_PROMINENCE_DEG = 0.55;
 const SKYLINE_GAP_DEG = 0.55;
 const LAYER_GAP_DEG = 0.4;
 const MIN_RUN_DEG = 6;
-/** A line this close to the horizon is the ground, not a ridge. */
-const GROUND_ANGLE_DEG = 0.8;
+/**
+ * A line this close to flat eye-level is the ground meeting the sky, which the
+ * fill already draws. A ridge above that, or one you look down on from a summit,
+ * stays.
+ */
+const HORIZON_HUG_DEG = 0.35;
 const SKYLINE_SMOOTH_DEG = 0.35;
 const LAYER_SMOOTH_DEG = 0.8;
 
@@ -302,7 +306,8 @@ export function viewProfile(skyline: Skyline): DrawnProfile {
       const angles = layer.angleDeg.filter((angle) => Number.isFinite(angle));
       if (angles.length === 0) return false;
       const ordered = angles.slice().sort((a, b) => a - b);
-      return ordered[Math.floor(ordered.length / 2)] >= GROUND_ANGLE_DEG;
+      const median = ordered[Math.floor(ordered.length / 2)];
+      return Math.abs(median) >= HORIZON_HUG_DEG;
     }).reverse(),
   };
 }

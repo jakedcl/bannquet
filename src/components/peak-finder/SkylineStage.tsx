@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { cardinalLabel, formatDirection } from '@/lib/peak-finder/format';
 import type { SkylinePayload } from '@/lib/peak-finder/payload';
 import { projectDirection, verticalFov } from '@/lib/peak-finder/projection';
-import { declutter, labelCap, type LabelCandidate } from '@/lib/peak-finder/declutter';
+import { LABEL_BOX_HEIGHT_PX, LABEL_TICK_PX, labelsInView, type LabelCandidate } from '@/lib/peak-finder/declutter';
 import { wrap180 } from '@/lib/peak-finder/geo';
 import type { VisiblePeak } from '@/lib/peak-finder/visibility';
 
@@ -125,30 +125,49 @@ export function SkylineStage({
       ) : null}
       {labels.map((label) => {
         const onCamera = appearance === 'camera';
+        const color = onCamera ? '#e7f6c8' : '#2d5016';
         return (
-          <button
+          <div
             key={`${label.name}-${label.lat.toFixed(3)}-${label.lng.toFixed(3)}`}
-            type="button"
-            onPointerDown={(event) => event.stopPropagation()}
-            onClick={() => onPick(label, { x: label.x, y: label.y })}
-            className="absolute z-10 flex min-h-11 min-w-11 -translate-x-1/2 flex-col items-center justify-end"
-            style={{ left: label.x, top: label.y - 48 }}
-            aria-pressed={selectedName === label.name}
+            className="pointer-events-none absolute z-10 h-0 w-0"
+            style={{ left: label.x, top: label.y }}
           >
             <span
-              className="max-w-40 truncate text-[13px] font-bold leading-none"
+              className="absolute left-0 w-px"
+              style={{ bottom: 0, height: LABEL_TICK_PX, background: color }}
+            />
+            {label.slidePx > 0 ? (
+              <span
+                className="absolute left-0 h-px"
+                style={{
+                  bottom: LABEL_TICK_PX,
+                  width: label.slidePx,
+                  background: color,
+                  transform: 'rotate(-45deg)',
+                  transformOrigin: 'left center',
+                }}
+              />
+            ) : null}
+            <button
+              type="button"
+              onPointerDown={(event) => event.stopPropagation()}
+              onClick={() => onPick(label, { x: label.x, y: label.y })}
+              className="pointer-events-auto absolute whitespace-nowrap px-0.5 text-left text-[13px] font-bold"
               style={{
-                color: onCamera ? '#e7f6c8' : '#2d5016',
+                left: label.slidePx * Math.SQRT1_2,
+                bottom: LABEL_TICK_PX + label.slidePx * Math.SQRT1_2,
+                height: LABEL_BOX_HEIGHT_PX,
+                lineHeight: `${LABEL_BOX_HEIGHT_PX}px`,
+                transform: 'rotate(-45deg)',
+                transformOrigin: 'left bottom',
+                color,
                 textShadow: onCamera ? '0 0 2px #000, 0 1px 2px #000' : 'none',
               }}
+              aria-pressed={selectedName === label.name}
             >
               {label.name}
-            </span>
-            <span
-              className="mt-0.5 h-4 w-px"
-              style={{ background: onCamera ? '#e7f6c8' : '#2d5016' }}
-            />
-          </button>
+            </button>
+          </div>
         );
       })}
     </div>
@@ -156,19 +175,8 @@ export function SkylineStage({
 }
 
 function labelsFor(payload: SkylinePayload | null, pose: ViewPose, width: number, height: number): LabelCandidate[] {
-  if (!payload || width < 2 || height < 2) return [];
-  const candidates: LabelCandidate[] = [];
-  for (const peak of payload.peaks) {
-    const point = projectDirection(peak.bearingDeg, peak.angleDeg, pose.heading, pose.pitch, pose.roll, pose.hfov, width, height);
-    if (!point.inView) continue;
-    candidates.push({
-      ...peak,
-      x: point.x,
-      y: point.y,
-      labelWidthPx: Math.max(44, peak.name.length * 7.4),
-    });
-  }
-  return declutter(candidates, labelCap(width));
+  if (!payload) return [];
+  return labelsInView(payload.peaks, pose, width, height);
 }
 
 function paint(

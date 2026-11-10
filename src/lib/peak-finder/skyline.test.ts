@@ -47,7 +47,7 @@ test('a ridge that sits on the horizon is left out', () => {
   for (const layer of viewProfile(skyline).layers) {
     const angles = layer.angleDeg.filter((angle) => Number.isFinite(angle)).sort((a, b) => a - b);
     const median = angles[Math.floor(angles.length / 2)];
-    assert.ok(median >= 0.8, String(median));
+    assert.ok(Math.abs(median) >= 0.35, String(median));
   }
 });
 
@@ -57,6 +57,23 @@ test('ground noise alone adds no ridge layer', () => {
     return 180;
   }, 5);
   assert.equal(viewProfile(skyline).layers.length, 0);
+});
+
+test('a front ridge below the horizon is still drawn from a summit', () => {
+  const skyline = castSkyline(44, -74, 1_600, (_lat, _lng, distance) => {
+    if (distance > 6_000 && distance < 12_000) return 1_400;
+    if (distance > 25_000 && distance < 35_000) return 1_500;
+    return 900;
+  }, 5);
+  const view = viewProfile(skyline);
+  const distances = view.layers.flatMap((layer) => layer.distanceM.filter((distance) => Number.isFinite(distance)));
+  assert.ok(distances.some((distance) => distance >= 6_000 && distance < 15_000), 'the ridge in front is drawn');
+  for (const layer of view.layers) {
+    const angles = layer.angleDeg.filter((angle) => Number.isFinite(angle));
+    for (let i = 1; i < angles.length; i += 1) {
+      assert.ok(Math.abs(angles[i] - angles[i - 1]) < 0.35, `${angles[i - 1]} to ${angles[i]}`);
+    }
+  }
 });
 
 test('a ridge raises the horizon in that direction only', () => {
