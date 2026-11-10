@@ -8,6 +8,7 @@ import { CountControl } from '@/components/ui/CountControl';
 import { DataTable, type DataColumn } from '@/components/ui/DataTable';
 import { FilterPills } from '@/components/ui/FilterPills';
 import { SearchBar } from '@/components/ui/SearchBar';
+import { adminPowerActing, adminPowerLabel } from '@/lib/admin-ui';
 import { canDeleteOwned, type MemberRole } from '@/lib/membership';
 
 type GearHoldRow = {
@@ -173,6 +174,10 @@ function GearDetail({
                   <ConfirmDelete
                     action={deleteGearHoldAction}
                     confirm="Remove this mark?"
+                    adminPower={adminPowerActing({ role: viewer.role, actorId: viewer.id, ownerId: hold.userId })}
+                    label={adminPowerActing({ role: viewer.role, actorId: viewer.id, ownerId: hold.userId })
+                      ? adminPowerLabel('Remove gear mark').ariaLabel
+                      : undefined}
                     fields={{ gearId: item.id, userId: hold.userId }}
                   />
                 ) : null}
@@ -185,6 +190,10 @@ function GearDetail({
         <ConfirmDelete
           action={deleteGearItemAction}
           confirm="Remove this item from the list?"
+          adminPower={adminPowerActing({ role: viewer.role, actorId: viewer.id, ownerId: item.addedBy })}
+          label={adminPowerActing({ role: viewer.role, actorId: viewer.id, ownerId: item.addedBy })
+            ? adminPowerLabel('Remove gear item').ariaLabel
+            : undefined}
           fields={{ id: item.id }}
         />
       ) : null}

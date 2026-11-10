@@ -24,7 +24,11 @@ import { ListGroup, ListRow } from './ListRow';
 import { Menu, barLinkClass, menuRowClass } from './Menu';
 import { activeTab, profileHref } from './nav';
 
-export type BarAccount = (NonNullable<NavAccount> & { displayName: string | null; pendingCount?: number }) | null;
+export type BarAccount = (NonNullable<NavAccount> & {
+  displayName: string | null;
+  pendingCount?: number;
+  notificationCount?: number;
+}) | null;
 
 function subscribe() {
   return () => {};
@@ -119,6 +123,7 @@ function AccountRows({ account, rowClass }: { account: NonNullable<BarAccount>; 
         <Link key={item.href} href={item.href} role="menuitem" className={rowClass}>
           {item.label}
           {item.href === '/admin' ? <PendingBadge count={account.pendingCount} /> : null}
+          {item.href === '/notifications' ? <PendingBadge count={account.notificationCount} /> : null}
         </Link>
       ))}
       <form action={signOutAction}>
@@ -161,7 +166,12 @@ function MoreSheet({ account, onClose }: { account: BarAccount; onClose: () => v
             <p className="t-eyebrow mb-1">Community</p>
             <ListGroup>
               {COMMUNITY_LINKS.filter((item) => item.href !== '/trips').map((item) => (
-                <ListRow key={item.href} href={item.href} title={item.label} />
+                <ListRow
+                  key={item.href}
+                  href={item.href}
+                  title={item.label}
+                  trailing={item.href === '/notifications' ? <PendingBadge count={account?.notificationCount} /> : null}
+                />
               ))}
             </ListGroup>
           </div>

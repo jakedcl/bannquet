@@ -40,7 +40,18 @@ export function SubmitButton({
     ? `inline-flex items-center justify-center gap-2 disabled:opacity-60 ${className}`
     : icon
       ? `retro-button-yellow inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-none p-0 text-lg font-bold disabled:opacity-60 ${className}`
-      : `${BUTTON_TONE_CLASS[tone]} ${BUTTON_SIZE} ${className}`;
+      : `${BUTTON_TONE_CLASS[tone]} ${BUTTON_SIZE} ${tone === 'admin' ? '!p-0' : ''} ${className}`;
+
+  const label = spinning ? (
+    <>
+      <Spinner />
+      {icon ? <span className="sr-only">{pendingLabel}</span> : pendingLabel}
+    </>
+  ) : tone === 'admin' ? (
+    <span className="retro-button-admin-label">{children}</span>
+  ) : (
+    children
+  );
 
   return (
     <button
@@ -54,12 +65,7 @@ export function SubmitButton({
       onClick={onClick}
       className={look}
     >
-      {spinning ? (
-        <>
-          <Spinner />
-          {icon ? <span className="sr-only">{pendingLabel}</span> : pendingLabel}
-        </>
-      ) : children}
+      {label}
     </button>
   );
 }

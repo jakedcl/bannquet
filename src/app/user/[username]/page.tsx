@@ -17,7 +17,7 @@ import { homeStateLabel } from '@/lib/us-states';
 import { allPeaks, challengeProgress, loadChallenges } from '@/lib/challenges';
 import { canDeleteOwned } from '@/lib/membership';
 import { PROFILE_PREVIEW } from '@/lib/list-page';
-import { ensurePeaks, listPeakRows, summitCountsByUser } from '@/lib/summits';
+import { listMemberPeakRows, summitCountsForUser } from '@/lib/summits';
 import { listGear } from '@/lib/gear';
 import { listTripsByOwner } from '@/lib/trips';
 import { loadFailed } from '@/lib/load-error';
@@ -37,19 +37,18 @@ export default async function UserPage({ params }: { params: Promise<{ username:
   let library: Awaited<ReturnType<typeof loadProfileLibrary>> = { routes: [], photos: [] };
   let activities: Awaited<ReturnType<typeof loadLoggedActivities>> = [];
   let pins: Awaited<ReturnType<typeof loadProfilePins>> = [];
-  let summitCounts: Awaited<ReturnType<typeof summitCountsByUser>> = [];
-  let peakRows: Awaited<ReturnType<typeof listPeakRows>> = [];
+  let summitCounts: Awaited<ReturnType<typeof summitCountsForUser>> = [];
+  let peakRows: Awaited<ReturnType<typeof listMemberPeakRows>> = [];
   let trips: Awaited<ReturnType<typeof listTripsByOwner>> = [];
   let gear: Awaited<ReturnType<typeof listGear>> = [];
   let error: string | null = null;
   try {
-    await ensurePeaks();
     [library, activities, pins, summitCounts, peakRows, trips, gear] = await Promise.all([
       loadProfileLibrary(member.id),
       loadLoggedActivities(member.id),
       loadProfilePins(member.id),
-      summitCountsByUser(),
-      listPeakRows(),
+      summitCountsForUser(member.id),
+      listMemberPeakRows(member.id),
       listTripsByOwner(member.id),
       listGear().catch(() => []),
     ]);
@@ -63,11 +62,11 @@ export default async function UserPage({ params }: { params: Promise<{ username:
   }));
   const peakNames = new Map(allPeaks().map((peak) => [peak.slug, peak.name]));
   const startedChallenges = challenges.flatMap((challenge) => {
-    const climbed = summitCounts.find((row) => row.userId === member.id && row.listId === challenge.id)?.count ?? 0;
+    const climbed = summitCounts.find((row) => row.listId === challenge.id)?.count ?? 0;
     if (climbed < 1) return [];
     return [{ challenge, progress: challengeProgress(challenge.peaks.length, climbed) }];
   });
-  const ownPeaks = peakRows.filter((row) => row.userId === member.id).reverse();
+  const ownPeaks = [...peakRows].reverse();
   const heldGear = gear.flatMap((item) => {
     const hold = item.holds.find((row) => row.userId === member.id);
     if (!hold) return [];
@@ -129,28 +128,28 @@ export default async function UserPage({ params }: { params: Promise<{ username:
         ) : null}
         {library.routes.length > 0 ? (
           <Card title="Routes">
-            <RouteRows routes={library.routes} manage={manage} profilePath={profilePath} collapsed />
+            <RouteRows routes={library.routes} manage={manage} profilePath={profilePath} collapsed viewer={viewer} ownerId={member.id} />
           </Card>
         ) : null}
         {pins.length > 0 ? (
           <Card title="Pins">
-            <PinRows pins={pins} manage={manage} collapsed />
+            <PinRows pins={pins} manage={manage} collapsed viewer={viewer} ownerId={member.id} />
           </Card>
         ) : null}
         {library.photos.length > 0 ? (
           <Card title="Photos">
-            <PhotoGrid photos={library.photos.slice(0, PROFILE_PREVIEW)} manage={manage} profilePath={profilePath} />
+            <PhotoGrid photos={library.photos.slice(0, PROFILE_PREVIEW)} manage={manage} profilePath={profilePath} viewer={viewer} ownerId={member.id} />
             <SeeAll href={`${profilePath}/photos`} total={library.photos.length} />
           </Card>
         ) : null}
         {trips.length > 0 ? (
           <Card title="Trips">
-            <TripRows trips={trips} manage={manage} collapsed />
+            <TripRows trips={trips} manage={manage} collapsed viewer={viewer} ownerId={member.id} />
           </Card>
         ) : null}
         {ownPeaks.length > 0 ? (
           <Card title={`Peaks (${ownPeaks.length})`}>
-            <PeakRows peaks={ownPeaks} names={Object.fromEntries(peakNames)} manage={manage} collapsed />
+            <PeakRows peaks={ownPeaks} names={Object.fromEntries(peakNames)} manage={manage} collapsed viewer={viewer} ownerId={member.id} />
           </Card>
         ) : null}
         {heldGear.length > 0 ? (

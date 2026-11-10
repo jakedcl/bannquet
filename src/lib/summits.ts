@@ -154,6 +154,33 @@ export async function listPeakRows(): Promise<PeakRow[]> {
   return selectPeakRows();
 }
 
+export async function listMemberPeakRows(userId: string): Promise<PeakRow[]> {
+  return selectPeakRows(sql`s.user_id = ${userId}`);
+}
+
+export type PopularPeak = { peakSlug: string; friends: number };
+
+/** Peaks the most members have climbed, for the community dashboard. */
+export async function popularPeaksByFriends(limit: number): Promise<PopularPeak[]> {
+  const capped = Math.max(1, Math.min(limit, 20));
+  const result = await getDb().execute(sql`
+    select s.peak_slug, count(distinct s.user_id)::int as friends
+    from summits s
+    join users u on u.id = s.user_id
+    where u.role <> 'pending'
+    group by s.peak_slug
+    having count(distinct s.user_id) > 0
+    order by friends desc, s.peak_slug asc
+    limit ${capped}
+  `);
+  return asRows(result).flatMap((row) => {
+    const peakSlug = row.peak_slug == null ? '' : String(row.peak_slug);
+    const friends = Number(row.friends);
+    if (!peakSlug || !Number.isFinite(friends) || friends < 1) return [];
+    return [{ peakSlug, friends }];
+  });
+}
+
 /** Who has been to one peak, cached for an hour or until someone's peaks or profile change. */
 export async function listPeakVisitors(peakSlug: string): Promise<PeakRow[]> {
   return unstable_cache(
@@ -161,6 +188,22 @@ export async function listPeakVisitors(peakSlug: string): Promise<PeakRow[]> {
     ['peak-visitors-v2', peakSlug],
     { revalidate: 3600, tags: [PEAKS_TAG] },
   )();
+}
+
+export async function summitCountsForUser(userId: string): Promise<Array<{ listId: string; count: number }>> {
+  const result = await getDb().execute(sql`
+    select p.list as list_id, count(distinct s.peak_slug)::int as n
+    from summits s
+    join peaks p on p.slug = s.peak_slug
+    where s.user_id = ${userId}
+    group by p.list
+  `);
+  return asRows(result).flatMap((row) => {
+    const listId = row.list_id == null ? '' : String(row.list_id);
+    const count = Number(row.n);
+    if (!listId || !Number.isFinite(count)) return [];
+    return [{ listId, count }];
+  });
 }
 
 export async function summitCountsByUser(): Promise<Array<{ userId: string; listId: string; count: number }>> {

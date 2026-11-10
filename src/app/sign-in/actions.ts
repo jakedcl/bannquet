@@ -454,6 +454,8 @@ export async function approveMember(
   if (!admin.member) return { error: admin.error ?? 'Only Jake can approve someone.' };
   const userId = String(formData.get('userId') ?? '').trim();
   if (!userId || userId === admin.member.id) return { error: 'That person is not waiting anymore.' };
+  const pending = await findMemberByAuthId(userId);
+  if (!pending || pending.role !== 'pending') return { error: 'That person is not waiting anymore.' };
   const result = await approvePendingMember(userId, admin.member.role);
   if (!result.error) {
     revalidatePath('/admin');
@@ -471,6 +473,8 @@ export async function denyMember(
   if (!admin.member) return { error: admin.error ?? 'Only Jake can turn someone away.' };
   const userId = String(formData.get('userId') ?? '').trim();
   if (!userId || userId === admin.member.id) return { error: 'That person is not waiting anymore.' };
+  const pending = await findMemberByAuthId(userId);
+  if (!pending || pending.role !== 'pending') return { error: 'That person is not waiting anymore.' };
   const result = await denyPendingMember(userId, admin.member.role);
   if (!result.error) {
     revalidatePath('/admin');
@@ -517,6 +521,7 @@ export async function createMemberResetLink(
   const sendEmail = formData.get('emailToo') === 'yes';
   const member = await findMemberByAuthId(userId);
   if (!member?.email) return { error: 'That person does not have an email on their account.' };
+  if (member.role === 'pending') return { error: 'That person is not a full member yet.' };
 
   const token = newResetToken();
   const tokenHash = hashResetToken(token);

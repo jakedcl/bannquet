@@ -1,9 +1,7 @@
 'use server';
 
 import { redirect } from 'next/navigation';
-import { getViewer } from '@/app/sign-in/actions';
-import { APPROVAL_WAIT, canContribute } from '@/lib/membership';
-import { redirectToSignIn } from '@/lib/sign-in-redirect';
+import { requireContributor } from '@/lib/contributor';
 import { formLatLng, isLatLng } from '@/lib/photos';
 import { createPin, deletePin, updatePin } from '@/lib/pins';
 import { isPinKind, type PinKind } from '@/lib/pin-kinds';
@@ -42,10 +40,9 @@ function pinFields(formData: FormData): { error: string } | { fields: PinFields 
 }
 
 async function contributor() {
-  const viewer = await getViewer();
-  if (!viewer) return redirectToSignIn();
-  if (!canContribute(viewer.role)) return { error: APPROVAL_WAIT, viewer: null };
-  return { error: null, viewer };
+  const who = await requireContributor();
+  if (!who.ok) return { error: who.error, viewer: null };
+  return { error: null, viewer: who.viewer };
 }
 
 export async function createPinAction(

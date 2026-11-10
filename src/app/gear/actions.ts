@@ -1,10 +1,9 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { getViewer } from '@/app/sign-in/actions';
+import { requireContributor } from '@/lib/contributor';
 import { addGearItem, adjustGearHold, deleteGearHold, deleteGearItem, setGearHold, updateGearItem } from '@/lib/gear';
-import { APPROVAL_WAIT, canContribute, canDeleteOwned } from '@/lib/membership';
-import { redirectToSignIn } from '@/lib/sign-in-redirect';
+import { canDeleteOwned } from '@/lib/membership';
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
@@ -17,9 +16,9 @@ export async function addGearAction(
   _prev: { error?: string } | null,
   formData: FormData,
 ): Promise<{ error?: string }> {
-  const viewer = await getViewer();
-  if (!viewer) return redirectToSignIn();
-  if (!canContribute(viewer.role)) return { error: APPROVAL_WAIT };
+  const who = await requireContributor();
+  if (!who.ok) return { error: who.error };
+  const viewer = who.viewer;
   const result = await addGearItem(
     String(formData.get('name') ?? ''),
     viewer.id,
@@ -32,9 +31,9 @@ export async function addGearAction(
 }
 
 export async function changeHoldAction(formData: FormData): Promise<void> {
-  const viewer = await getViewer();
-  if (!viewer) return redirectToSignIn();
-  if (!canContribute(viewer.role)) return;
+  const who = await requireContributor();
+  if (!who.ok) return;
+  const viewer = who.viewer;
   const gearId = String(formData.get('gearId') ?? '');
   const delta = Number(formData.get('delta'));
   if (!UUID.test(gearId) || (delta !== 1 && delta !== -1)) return;
@@ -43,9 +42,9 @@ export async function changeHoldAction(formData: FormData): Promise<void> {
 }
 
 export async function setHoldAction(formData: FormData): Promise<void> {
-  const viewer = await getViewer();
-  if (!viewer) return redirectToSignIn();
-  if (!canContribute(viewer.role)) return;
+  const who = await requireContributor();
+  if (!who.ok) return;
+  const viewer = who.viewer;
   const gearId = String(formData.get('gearId') ?? '');
   const qty = Number(formData.get('qty'));
   if (!UUID.test(gearId) || !Number.isInteger(qty) || qty < 0 || qty > 99) return;
@@ -57,9 +56,9 @@ export async function updateGearItemAction(
   _prev: { error?: string; saved?: true } | null,
   formData: FormData,
 ): Promise<{ error?: string; saved?: true }> {
-  const viewer = await getViewer();
-  if (!viewer) return redirectToSignIn();
-  if (!canContribute(viewer.role)) return { error: APPROVAL_WAIT };
+  const who = await requireContributor();
+  if (!who.ok) return { error: who.error };
+  const viewer = who.viewer;
   const id = String(formData.get('id') ?? '');
   if (!UUID.test(id)) return { error: 'That item is missing.' };
   const result = await updateGearItem(
@@ -78,9 +77,9 @@ export async function deleteGearItemAction(
   _prev: { error?: string } | null,
   formData: FormData,
 ): Promise<{ error?: string }> {
-  const viewer = await getViewer();
-  if (!viewer) return redirectToSignIn();
-  if (!canContribute(viewer.role)) return { error: APPROVAL_WAIT };
+  const who = await requireContributor();
+  if (!who.ok) return { error: who.error };
+  const viewer = who.viewer;
   const id = String(formData.get('id') ?? '');
   if (!UUID.test(id)) return { error: 'That item is missing.' };
   const ok = await deleteGearItem(id, { id: viewer.id, admin: viewer.role === 'admin' });
@@ -93,9 +92,9 @@ export async function deleteGearHoldAction(
   _prev: { error?: string } | null,
   formData: FormData,
 ): Promise<{ error?: string }> {
-  const viewer = await getViewer();
-  if (!viewer) return redirectToSignIn();
-  if (!canContribute(viewer.role)) return { error: APPROVAL_WAIT };
+  const who = await requireContributor();
+  if (!who.ok) return { error: who.error };
+  const viewer = who.viewer;
   const gearId = String(formData.get('gearId') ?? '');
   const userId = String(formData.get('userId') ?? '');
   if (!UUID.test(gearId) || !userId) return { error: 'That mark is missing.' };

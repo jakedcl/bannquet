@@ -132,7 +132,7 @@ export function NewTripForm({
                         <SmallPhotoImage
                           url={photo.url}
                           thumbUrl={photo.thumbUrl}
-                          alt=""
+                          alt={item.label}
                           width={32}
                           height={32}
                           className="h-8 w-8 shrink-0 object-cover"

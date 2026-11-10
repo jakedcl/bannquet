@@ -65,19 +65,20 @@
   gap: 0.5rem;
 }
 
-.composer-control,
-.composer-field {
+.composer-control {
   box-sizing: border-box;
   height: 2.75rem;
   min-height: 2.75rem;
-  max-height: 2.75rem;
 }
 
 .composer-field {
-  padding-top: 0;
-  padding-bottom: 0;
-  line-height: calc(2.75rem - 6px);
-  resize: none;
+  box-sizing: border-box;
+  min-height: 2.75rem;
+  max-height: 6rem;
+  padding-top: 0.375rem;
+  padding-bottom: 0.375rem;
+  line-height: 1.35;
+  resize: vertical;
 }
 
 @utility max-w-container {
@@ -174,6 +175,35 @@ button, .retro-button {
 
 .retro-button-yellow:hover {
   background: linear-gradient(to bottom, #ffb300 0%, #ff9900 100%);
+}
+
+.retro-button-admin {
+  border: 3px solid #111111;
+  background: repeating-linear-gradient(
+    -45deg,
+    #111111,
+    #111111 10px,
+    #ffd700 10px,
+    #ffd700 20px
+  );
+  color: #111111;
+  box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.35);
+  font-weight: bold;
+}
+
+.retro-button-admin-label {
+  display: inline-flex;
+  min-height: 2.5rem;
+  align-items: center;
+  justify-content: center;
+  margin: 3px;
+  padding: 0 0.75rem;
+  border: 2px solid #111111;
+  background: #ffd700;
+  color: #111111;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
 
 .retro-button-orange {
@@ -909,6 +939,13 @@ dialog[open]::backdrop {
 .hub-bar button:focus-visible {
   outline: 2px solid #ffd700;
   outline-offset: 2px;
+}
+
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 2px solid #2d5016;
+  outline-offset: 1px;
 }
 
 .ui-scroll-x {

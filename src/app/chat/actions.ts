@@ -1,10 +1,8 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { getViewer } from '@/app/sign-in/actions';
+import { requireContributor } from '@/lib/contributor';
 import { deleteChatMessage, isChatRefKind, listChatMessages, sendChatMessage, type ChatMessage } from '@/lib/chat';
-import { APPROVAL_WAIT, canContribute } from '@/lib/membership';
-import { redirectToSignIn } from '@/lib/sign-in-redirect';
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
@@ -13,9 +11,9 @@ export async function sendChatAction(
   _prev: { error?: string; messages?: ChatMessage[] } | null,
   formData: FormData,
 ): Promise<{ error?: string; messages?: ChatMessage[] }> {
-  const viewer = await getViewer();
-  if (!viewer) return redirectToSignIn();
-  if (!canContribute(viewer.role)) return { error: APPROVAL_WAIT };
+  const who = await requireContributor();
+  if (!who.ok) return { error: who.error };
+  const viewer = who.viewer;
   const body = String(formData.get('body') ?? '');
   const kindRaw = String(formData.get('refKind') ?? '').trim();
   const refId = String(formData.get('refId') ?? '').trim();
@@ -46,13 +44,13 @@ export async function deleteChatAction(
   _prev: { error?: string } | null,
   formData: FormData,
 ): Promise<{ error?: string }> {
-  const viewer = await getViewer();
-  if (!viewer) return redirectToSignIn();
-  if (!canContribute(viewer.role)) return { error: APPROVAL_WAIT };
+  const who = await requireContributor();
+  if (!who.ok) return { error: who.error };
+  const viewer = who.viewer;
   const id = String(formData.get('id') ?? '');
   if (!UUID.test(id)) return { error: 'That message is missing.' };
   const ok = await deleteChatMessage(id, { id: viewer.id, admin: viewer.role === 'admin' });
-  if (!ok) return { error: 'You can only delete your own messages.' };
+  if (!ok) return { error: 'That message is gone or you cannot delete it.' };
   revalidatePath('/chat');
   return {};
 }

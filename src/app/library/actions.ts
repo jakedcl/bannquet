@@ -2,12 +2,10 @@
 
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
-import { getViewer } from '@/app/sign-in/actions';
+import { requireContributor } from '@/lib/contributor';
 import { deletePhoto, deleteRoute, updatePhotoCaption, updateRouteTitle } from '@/lib/library';
 import { cleanRouteNotes, cleanRouteTitle } from '@/lib/route-title';
-import { APPROVAL_WAIT, canContribute } from '@/lib/membership';
 import { safeNextPath } from '@/lib/sign-in-next';
-import { redirectToSignIn } from '@/lib/sign-in-redirect';
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
@@ -16,10 +14,9 @@ function safePath(value: FormData, fallback: string): string {
 }
 
 async function actor() {
-  const viewer = await getViewer();
-  if (!viewer) return redirectToSignIn();
-  if (!canContribute(viewer.role)) return { error: APPROVAL_WAIT, viewer: null };
-  return { error: null, viewer };
+  const who = await requireContributor();
+  if (!who.ok) return { error: who.error, viewer: null };
+  return { error: null, viewer: who.viewer };
 }
 
 export async function updateRouteTitleAction(

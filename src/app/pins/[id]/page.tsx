@@ -11,12 +11,14 @@ import { Card } from '@/components/hub/Card';
 import { getViewer } from '@/app/sign-in/actions';
 import { ACTIVITY_META, isActivity } from '@/lib/activities';
 import { isDatabaseConfigured } from '@/db';
+import { adminPowerActing } from '@/lib/admin-ui';
 import { canEditOwned } from '@/lib/membership';
 import { loadPin } from '@/lib/pins';
 import { PIN_KIND_LABELS, isPinKind } from '@/lib/pin-kinds';
 import { loadMapDataNear } from '@/lib/posts';
-import { listTripChoices, tripsForItem } from '@/lib/trips';
+import { listTripChoices, tripAttachHintForViewer, tripsForItem } from '@/lib/trips';
 import { formatTripDate } from '@/lib/utils';
+import { loadFailed } from '@/lib/load-error';
 import { HubPage } from '@/components/hub/Page';
 
 export const dynamic = 'force-dynamic';
@@ -32,8 +34,36 @@ export default async function PinPage({
 }) {
   const { id } = await params;
   const { addTrip } = await searchParams;
-  if (!PIN_ID.test(id) || !isDatabaseConfigured()) notFound();
-  const pin = await loadPin(id);
+  if (!PIN_ID.test(id)) notFound();
+  if (!isDatabaseConfigured()) {
+    return (
+      <PageWrapper>
+        <HubPage title="Pin" width="3xl">
+          <Card>
+            <p className="text-sm font-bold">Postgres is not connected, so this pin cannot be loaded.</p>
+          </Card>
+        </HubPage>
+      </PageWrapper>
+    );
+  }
+  let pin: Awaited<ReturnType<typeof loadPin>> = null;
+  let error: string | null = null;
+  try {
+    pin = await loadPin(id);
+  } catch (err) {
+    error = loadFailed('pin', err, 'That pin did not load. Try again in a minute.');
+  }
+  if (error) {
+    return (
+      <PageWrapper>
+        <HubPage title="Pin" width="3xl">
+          <Card>
+            <p className="text-sm font-bold">{error}</p>
+          </Card>
+        </HubPage>
+      </PageWrapper>
+    );
+  }
   if (!pin) notFound();
 
   const viewer = await getViewer();
@@ -42,12 +72,18 @@ export default async function PinPage({
     actorId: viewer.id,
     ownerId: pin.createdBy,
   }));
-  const [tripChoices, attachedTrips] = viewer && manage
+  const editAdminPower = Boolean(viewer && adminPowerActing({
+    role: viewer.role,
+    actorId: viewer.id,
+    ownerId: pin.createdBy,
+  }));
+  const [tripChoices, attachedTrips, attachBlocked] = viewer && manage
     ? await Promise.all([
       listTripChoices().catch(() => []),
       tripsForItem('pin', pin.id).catch(() => []),
+      tripAttachHintForViewer(viewer).catch(() => null),
     ])
-    : [[], []];
+    : [[], [], null];
   const data = await loadMapDataNear(viewer?.id ?? null, { lng: pin.lng, lat: pin.lat });
   const activity = pin.activity && isActivity(pin.activity) ? ACTIVITY_META[pin.activity].label : null;
   const category = isPinKind(pin.kind) ? PIN_KIND_LABELS[pin.kind] : 'Other';
@@ -101,6 +137,7 @@ export default async function PinPage({
         {manage && viewer ? (
           <Card title="Edit">
             <PinForm
+              adminPower={editAdminPower}
               initial={{
                 id: pin.id,
                 title: pin.title,
@@ -112,7 +149,7 @@ export default async function PinPage({
               }}
             />
             <div className="mt-4">
-              <DeletePinButton id={pin.id} />
+              <DeletePinButton id={pin.id} adminPower={editAdminPower} />
             </div>
           </Card>
         ) : null}
@@ -123,6 +160,7 @@ export default async function PinPage({
             trips={tripChoices}
             attached={attachedTrips}
             startOpen={addTrip === '1'}
+            attachBlocked={attachBlocked}
           />
         ) : null}
       </HubPage>

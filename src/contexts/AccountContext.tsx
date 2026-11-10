@@ -7,6 +7,7 @@ export type AccountNav = {
   displayName: string | null;
   role: 'member' | 'admin' | 'pending';
   pendingCount?: number;
+  notificationCount?: number;
 } | null;
 
 const AccountContext = createContext<AccountNav>(null);

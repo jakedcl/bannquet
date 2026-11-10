@@ -14,6 +14,7 @@ import { PIN_KINDS, PIN_KIND_LABELS, type PinKind } from '@/lib/pin-kinds';
 import type { MapFeatureCollection } from '@/lib/posts';
 import dynamic from 'next/dynamic';
 import { smallButtonClass } from '@/components/hub/Button';
+import { adminPowerLabel } from '@/lib/admin-ui';
 
 const GroupMap = dynamic(() => import('@/components/map/GroupMap'), { ssr: false });
 
@@ -33,11 +34,14 @@ export function PinForm({
   initial,
   inline = false,
   onCreated,
+  adminPower = false,
 }: {
   initial?: InitialPin;
   inline?: boolean;
   onCreated?: (items: DraftItem[]) => void;
+  adminPower?: boolean;
 }) {
+  const saveAdmin = adminPower ? adminPowerLabel('Save pin') : null;
   const action = initial ? updatePinAction : createPinAction;
   const [state, formAction, pending] = useActionState(action, null);
   useReportCreated(inline, state?.created, onCreated);
@@ -180,7 +184,7 @@ export function PinForm({
           {initial.photos.map((photo) => (
             <label key={photo.id} className="flex items-center gap-3 text-sm">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={photo.thumbUrl ?? photo.url} alt="" className="h-12 w-12 object-cover" />
+              <img src={photo.thumbUrl ?? photo.url} alt="Photo attached to pin" className="h-12 w-12 object-cover" />
               <input type="checkbox" name="removePhoto" value={photo.id} />
               Remove
             </label>
@@ -189,7 +193,13 @@ export function PinForm({
       ) : null}
       <PhotoFields photos={photos} onChange={onPhotos} onBusy={setPhotoBusy} />
       {state?.error ? <p className="text-sm font-bold text-red-700">{state.error}</p> : null}
-      <SubmitButton tone="green" pendingLabel="Saving…" disabled={photoBusy}>
+      <SubmitButton
+        tone={adminPower ? 'admin' : 'green'}
+        pendingLabel="Saving…"
+        disabled={photoBusy}
+        title={saveAdmin?.title}
+        ariaLabel={saveAdmin?.ariaLabel}
+      >
         {photoBusy ? 'Preparing photo…' : initial ? 'Save pin' : 'Drop pin'}
       </SubmitButton>
       {!initial && !inline ? <SaveThenTrip disabled={pending || photoBusy} /> : null}
@@ -197,8 +207,9 @@ export function PinForm({
   );
 }
 
-export function DeletePinButton({ id }: { id: string }) {
+export function DeletePinButton({ id, adminPower = false }: { id: string; adminPower?: boolean }) {
   const [state, action, pending] = useActionState(deletePinAction, null);
+  const deleteAdmin = adminPower ? adminPowerLabel('Delete pin') : null;
   return (
     <form
       action={action}
@@ -211,7 +222,7 @@ export function DeletePinButton({ id }: { id: string }) {
       {state?.error ? (
         <p className="absolute right-0 top-full z-10 mt-1 w-56 text-right text-sm font-bold text-red-700">{state.error}</p>
       ) : null}
-      <TrashButton pending={pending} />
+      <TrashButton pending={pending} adminPower={adminPower} label={deleteAdmin?.ariaLabel ?? 'Delete'} />
     </form>
   );
 }

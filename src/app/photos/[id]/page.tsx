@@ -13,7 +13,8 @@ import { isDatabaseConfigured } from '@/db';
 import { loadPhoto } from '@/lib/library';
 import { canEditOwned } from '@/lib/membership';
 import { loadMapDataNear } from '@/lib/posts';
-import { listTripChoices, tripsForItem } from '@/lib/trips';
+import { adminPowerActing, adminPowerLabel } from '@/lib/admin-ui';
+import { listTripChoices, tripAttachHintForViewer, tripsForItem } from '@/lib/trips';
 import { loadFailed } from '@/lib/load-error';
 import { HubPage } from '@/components/hub/Page';
 
@@ -69,12 +70,19 @@ export default async function PhotoPage({
     actorId: viewer.id,
     ownerId: photo.userId,
   }));
-  const [tripChoices, attachedTrips] = viewer && manage
+  const [tripChoices, attachedTrips, attachBlocked] = viewer && manage
     ? await Promise.all([
       listTripChoices().catch(() => []),
       tripsForItem('photo', photo.id).catch(() => []),
+      tripAttachHintForViewer(viewer).catch(() => null),
     ])
-    : [[], []];
+    : [[], [], null];
+  const deleteAdminPower = Boolean(viewer && adminPowerActing({
+    role: viewer.role,
+    actorId: viewer.id,
+    ownerId: photo.userId,
+  }));
+  const editAdminPower = deleteAdminPower;
   const map = photo.lat != null && photo.lng != null ? await loadMapDataNear(viewer?.id ?? null, { lng: photo.lng, lat: photo.lat }).catch(() => null) : null;
 
   return (
@@ -92,11 +100,12 @@ export default async function PhotoPage({
           />
           <PhotoTags photo={photo} />
           {manage ? (
-            <EditDetails>
+            <EditDetails adminPower={editAdminPower}>
               <EditForm
                 key={photo.caption ?? ''}
                 action={updatePhotoCaptionAction}
                 hidden={{ id: photo.id }}
+                adminPower={editAdminPower}
                 fields={[{ name: 'caption', label: 'Caption', value: photo.caption ?? '', maxLength: 200 }]}
               />
             </EditDetails>
@@ -113,6 +122,8 @@ export default async function PhotoPage({
               <ConfirmDelete
                 action={deletePhotoAction}
                 confirm="Delete this photo?"
+                adminPower={deleteAdminPower}
+                label={deleteAdminPower ? adminPowerLabel('Delete photo').ariaLabel : undefined}
                 fields={{ id: photo.id, returnTo: viewer.handle ? `/user/${viewer.handle}` : '/' }}
               />
             </div>
@@ -125,6 +136,7 @@ export default async function PhotoPage({
             trips={tripChoices}
             attached={attachedTrips}
             startOpen={addTrip === '1'}
+            attachBlocked={attachBlocked}
           />
         ) : null}
       </HubPage>

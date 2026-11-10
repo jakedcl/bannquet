@@ -157,7 +157,7 @@ export default function WeatherDashboard({ spot }: WeatherDashboardProps) {
                 <p className="t-subhead flex flex-wrap items-center gap-2 font-bold">
                   {hazard.event}
                   {hazard.severity ? (
-                    <span className="retro-button-yellow inline-block px-2 py-0.5 text-xs uppercase">{hazard.severity}</span>
+                    <span className="retro-button-yellow inline-block px-2 py-1 text-xs uppercase">{hazard.severity}</span>
                   ) : null}
                 </p>
                 {hazard.headline ? <p className="t-footnote mt-0.5 break-words text-ui-label-2">{hazard.headline}</p> : null}

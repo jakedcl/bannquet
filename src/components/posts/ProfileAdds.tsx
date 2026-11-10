@@ -34,6 +34,7 @@ export function RouteUpload({
   const [trackJson, setTrackJson] = useState('');
   const [note, setNote] = useState<string | null>(null);
   const [title, setTitle] = useState('');
+  const [notes, setNotes] = useState('');
   const [titleTouched, setTitleTouched] = useState(false);
   const [hideEnds, setHideEnds] = useState(false);
   const [formKey, setFormKey] = useState(0);
@@ -45,6 +46,7 @@ export function RouteUpload({
       setTrackJson('');
       setNote(null);
       setTitle('');
+      setNotes('');
       setTitleTouched(false);
       setHideEnds(false);
       setFormKey((key) => key + 1);
@@ -96,6 +98,8 @@ export function RouteUpload({
           name="notes"
           rows={4}
           maxLength={4000}
+          value={notes}
+          onChange={(event) => setNotes(event.target.value)}
           className="w-full retro-box-inset bg-white px-3 py-2"
         />
       </label>

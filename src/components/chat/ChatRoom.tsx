@@ -9,6 +9,7 @@ import { SearchBar } from '@/components/ui/SearchBar';
 import { SubmitButton } from '@/components/ui/SubmitButton';
 import { formatChatTime, type ChatCatalogItem, type ChatMessage, type ChatRefKind } from '@/lib/chat-view';
 import { chipClass } from '@/components/hub/Button';
+import { adminPowerLabel } from '@/lib/admin-ui';
 
 const GROUPS: Array<{ id: ChatRefKind; label: string }> = [
   { id: 'pin', label: 'Pins' },
@@ -157,6 +158,7 @@ export function ChatRoom({
             key={message.id}
             message={message}
             canManage={moderator || (viewerId != null && message.userId === viewerId)}
+            adminDelete={moderator && viewerId != null && message.userId !== viewerId}
             onRemove={() => setMessages((current) => current.filter((item) => item.id !== message.id))}
           />
         ))}
@@ -297,7 +299,7 @@ function Thumb({ item }: { item: ChatCatalogItem }) {
       <SmallPhotoImage
         url={photo.url}
         thumbUrl={photo.thumbUrl}
-        alt=""
+        alt={item.label}
         width={32}
         height={32}
         className="h-8 w-8 shrink-0 object-cover"
@@ -311,12 +313,15 @@ function Thumb({ item }: { item: ChatCatalogItem }) {
 function ChatLine({
   message,
   canManage,
+  adminDelete,
   onRemove,
 }: {
   message: ChatMessage;
   canManage: boolean;
+  adminDelete: boolean;
   onRemove: () => void;
 }) {
+  const deleteAdmin = adminDelete ? adminPowerLabel('Delete message') : null;
   const [open, setOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const hold = useRef<number | null>(null);
@@ -400,7 +405,13 @@ function ChatLine({
               }}
             >
               <input type="hidden" name="id" value={message.id} />
-              <SubmitButton tone="yellow" pendingLabel="Deleting…" className="px-3">
+              <SubmitButton
+                tone={adminDelete ? 'admin' : 'yellow'}
+                pendingLabel="Deleting…"
+                className="px-3"
+                title={deleteAdmin?.title}
+                ariaLabel={deleteAdmin?.ariaLabel}
+              >
                 Delete
               </SubmitButton>
             </form>
@@ -434,7 +445,7 @@ function Chip({
         <SmallPhotoImage
           url={photo.url}
           thumbUrl={photo.thumbUrl}
-          alt=""
+          alt={refItem.label}
           width={28}
           height={28}
           className="h-7 w-7 object-cover"

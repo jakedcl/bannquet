@@ -69,7 +69,7 @@ export function Sheet({
             onExpandedChange(!expanded);
           }
         }}
-        className="flex h-5 shrink-0 cursor-grab touch-none items-center justify-center md:hidden"
+        className="flex min-h-11 shrink-0 cursor-grab touch-none items-center justify-center md:hidden"
       >
         <span className="h-1.5 w-10 bg-[#a39e93] shadow-[inset_1px_1px_2px_rgba(0,0,0,0.35)]" />
       </div>

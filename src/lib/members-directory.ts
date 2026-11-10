@@ -29,6 +29,34 @@ function num(value: unknown): number {
   return Number.isFinite(parsed) ? parsed : 0;
 }
 
+export async function listTopMembersByPeaks(limit: number): Promise<DirectoryMember[]> {
+  const capped = Math.max(1, Math.min(limit, 20));
+  const result = await getDb().execute(sql`
+    select u.id, u.handle, u.display_name, u.avatar_url, u.home_region,
+      (select count(distinct s.peak_slug)::int from summits s where s.user_id = u.id) as peaks,
+      (select count(*)::int from tracks t where t.user_id = u.id) as routes
+    from users u
+    where u.role in ('member', 'admin')
+    order by peaks desc, routes desc, u.display_name nulls last, u.handle nulls last
+    limit ${capped}
+  `);
+  return asRows(result).flatMap((row) => {
+    const id = text(row.id);
+    if (!id) return [];
+    const handle = text(row.handle);
+    const displayName = text(row.display_name);
+    return [{
+      id,
+      handle,
+      name: displayName || handle || 'Friend',
+      avatarUrl: text(row.avatar_url),
+      region: text(row.home_region),
+      peaks: num(row.peaks),
+      routes: num(row.routes),
+    }];
+  });
+}
+
 export async function listApprovedMembers(): Promise<DirectoryMember[]> {
   const result = await getDb().execute(sql`
     select u.id, u.handle, u.display_name, u.avatar_url, u.home_region,

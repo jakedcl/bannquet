@@ -145,7 +145,7 @@ function PhotoField({
           {preview ? (
             // Native img: the preview is a blob: URL, which next/image does not accept.
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={preview} alt="" className="h-full w-full object-cover" />
+            <img src={preview} alt="Profile photo preview" className="h-full w-full object-cover" />
           ) : (
             <span className="text-xs text-gray-700">None</span>
           )}

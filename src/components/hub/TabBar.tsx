@@ -29,7 +29,7 @@ export function TabBar({ account }: { account: NavAccount }) {
       className="hub-bar tab-bar fixed inset-x-0 bottom-0 z-50 lg:hidden"
       style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}
     >
-      <ul className="mx-auto flex h-16 max-w-lg items-stretch">
+      <ul className="mx-auto flex min-h-[4.25rem] max-w-lg items-stretch">
         {tabs.map((tab) => {
           const on = current === tab.id;
           const Icon = tab.icon;
