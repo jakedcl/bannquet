@@ -297,7 +297,7 @@ function Thumb({ item }: { item: ChatCatalogItem }) {
       <SmallPhotoImage
         url={photo.url}
         thumbUrl={photo.thumbUrl}
-        alt=""
+        alt={item.label}
         width={32}
         height={32}
         className="h-8 w-8 shrink-0 object-cover"
@@ -434,7 +434,7 @@ function Chip({
         <SmallPhotoImage
           url={photo.url}
           thumbUrl={photo.thumbUrl}
-          alt=""
+          alt={refItem.label}
           width={28}
           height={28}
           className="h-7 w-7 object-cover"

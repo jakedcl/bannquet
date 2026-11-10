@@ -85,7 +85,7 @@ export function PhotoFields({
           return (
             <div key={photo.url} className="flex gap-3 bg-white p-2 retro-box-inset">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={photo.previewUrl} alt="" className="h-16 w-16 object-cover" />
+              <img src={photo.previewUrl} alt="Selected photo" className="h-16 w-16 object-cover" />
               <div className="min-w-0 flex-1 space-y-1">
                 <div className="flex gap-2">
                   {showLocation ? (
