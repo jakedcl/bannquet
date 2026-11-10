@@ -1,0 +1,522 @@
+[
+    {
+        "name": "Calamity Lean-to",
+        "coordinates": [
+            -73.9934875,
+            44.1129961
+        ],
+        "elevation": null,
+        "type": "leantos",
+        "source": "Lean-tos"
+    },
+    {
+        "name": "Flowed Lands Lean-to",
+        "coordinates": [
+            -73.9918677,
+            44.1112152
+        ],
+        "elevation": null,
+        "type": "leantos",
+        "source": "Lean-tos"
+    },
+    {
+        "name": "Herbert Brook Lean-to",
+        "coordinates": [
+            -73.9870732,
+            44.1176745
+        ],
+        "elevation": null,
+        "type": "leantos",
+        "source": "Lean-tos"
+    },
+    {
+        "name": "Cedar Point Lean-to",
+        "coordinates": [
+            -73.9803251,
+            44.1197009
+        ],
+        "elevation": null,
+        "type": "leantos",
+        "source": "Lean-tos"
+    },
+    {
+        "name": "Beaver Point Lean-to #1",
+        "coordinates": [
+            -73.9832532,
+            44.1214695
+        ],
+        "elevation": null,
+        "type": "leantos",
+        "source": "Lean-tos"
+    },
+    {
+        "name": "McMartin Lean-to",
+        "coordinates": [
+            -73.9840899,
+            44.1192448
+        ],
+        "elevation": null,
+        "type": "leantos",
+        "source": "Lean-tos"
+    },
+    {
+        "name": "Lillian Brook Lean-to",
+        "coordinates": [
+            -73.8091329,
+            44.0596927
+        ],
+        "elevation": null,
+        "type": "leantos",
+        "source": "Lean-tos"
+    },
+    {
+        "name": "Henderson Lean-to",
+        "coordinates": [
+            -74.059668,
+            44.1108339
+        ],
+        "elevation": null,
+        "type": "leantos",
+        "source": "Lean-tos"
+    },
+    {
+        "name": "Orebed Brook Lean-to",
+        "coordinates": [
+            -73.8628124,
+            44.1467207
+        ],
+        "elevation": null,
+        "type": "leantos",
+        "source": "Lean-tos"
+    },
+    {
+        "name": "Deer Brook Lean-to",
+        "coordinates": [
+            -73.8343666,
+            44.1783475
+        ],
+        "elevation": null,
+        "type": "leantos",
+        "source": "Lean-tos"
+    },
+    {
+        "name": "Uphill Lean-to",
+        "coordinates": [
+            -73.9618201,
+            44.1089937
+        ],
+        "elevation": null,
+        "type": "leantos",
+        "source": "Lean-tos"
+    },
+    {
+        "name": "Feldspar Lean-to",
+        "coordinates": [
+            -73.9557156,
+            44.1144287
+        ],
+        "elevation": null,
+        "type": "leantos",
+        "source": "Lean-tos"
+    },
+    {
+        "name": "Opalescent Lean-to",
+        "coordinates": [
+            -73.9839464,
+            44.1185252
+        ],
+        "elevation": null,
+        "type": "leantos",
+        "source": "Lean-tos"
+    },
+    {
+        "name": "Cold River Lean-to #4",
+        "coordinates": [
+            -74.255757,
+            44.0913521
+        ],
+        "elevation": null,
+        "type": "leantos",
+        "source": "Lean-tos"
+    },
+    {
+        "name": "Ouluska lean-to",
+        "coordinates": [
+            -74.1874695,
+            44.1202393
+        ],
+        "elevation": null,
+        "type": "leantos",
+        "source": "Lean-tos"
+    },
+    {
+        "name": "Boquet River Lean-to",
+        "coordinates": [
+            -73.7749352,
+            44.107803
+        ],
+        "elevation": null,
+        "type": "leantos",
+        "source": "Lean-tos"
+    },
+    {
+        "name": "Giant Mountain Lean-to",
+        "coordinates": [
+            -73.717599,
+            44.1752571
+        ],
+        "elevation": null,
+        "type": "leantos",
+        "source": "Lean-tos"
+    },
+    {
+        "name": "Ward Brook Lean-to",
+        "coordinates": [
+            -74.17053,
+            44.176846
+        ],
+        "elevation": null,
+        "type": "leantos",
+        "source": "Lean-tos"
+    },
+    {
+        "name": "Blueberry Lean-to",
+        "coordinates": [
+            -74.1847108,
+            44.182738
+        ],
+        "elevation": null,
+        "type": "leantos",
+        "source": "Lean-tos"
+    },
+    {
+        "name": "Kagel Lean-to",
+        "coordinates": [
+            -73.9555974,
+            44.1489033
+        ],
+        "elevation": null,
+        "type": "leantos",
+        "source": "Lean-tos"
+    },
+    {
+        "name": "Avalanche Camp Lean-to",
+        "coordinates": [
+            -73.9555061,
+            44.1448767
+        ],
+        "elevation": null,
+        "type": "leantos",
+        "source": "Lean-tos"
+    },
+    {
+        "name": "Howard Lean-to",
+        "coordinates": [
+            -73.8558225,
+            44.1618107
+        ],
+        "elevation": null,
+        "type": "leantos",
+        "source": "Lean-tos"
+    },
+    {
+        "name": "Bushnell Falls Lean-to #1",
+        "coordinates": [
+            -73.8843044,
+            44.1453462
+        ],
+        "elevation": null,
+        "type": "leantos",
+        "source": "Lean-tos"
+    },
+    {
+        "name": "Bushnell Falls Lean-to #2",
+        "coordinates": [
+            -73.8851767,
+            44.1417294
+        ],
+        "elevation": null,
+        "type": "leantos",
+        "source": "Lean-tos"
+    },
+    {
+        "name": "Slant Rock Lean-to",
+        "coordinates": [
+            -73.9000332,
+            44.1275511
+        ],
+        "elevation": null,
+        "type": "leantos",
+        "source": "Lean-tos"
+    },
+    {
+        "name": "Wolf Jaw Lean-to",
+        "coordinates": [
+            -73.8502356,
+            44.1544932
+        ],
+        "elevation": null,
+        "type": "leantos",
+        "source": "Lean-tos"
+    },
+    {
+        "name": "Santanoni Lean-to",
+        "coordinates": [
+            -74.1052969,
+            44.0994099
+        ],
+        "elevation": null,
+        "type": "leantos",
+        "source": "Lean-tos"
+    },
+    {
+        "name": "Henderson Lake Lean-to",
+        "coordinates": [
+            -74.0673573,
+            44.1041994
+        ],
+        "elevation": null,
+        "type": "leantos",
+        "source": "Lean-tos"
+    },
+    {
+        "name": "Marcy Dam #2 Lean-to",
+        "coordinates": [
+            -73.9510349,
+            44.1579969
+        ],
+        "elevation": null,
+        "type": "leantos",
+        "source": "Lean-tos"
+    },
+    {
+        "name": "Ed Hudowalski Lean-to",
+        "coordinates": [
+            -73.9543859,
+            44.157322
+        ],
+        "elevation": null,
+        "type": "leantos",
+        "source": "Lean-tos"
+    },
+    {
+        "name": "Marcy Dam #5 Lean-to",
+        "coordinates": [
+            -73.9523979,
+            44.1586772
+        ],
+        "elevation": null,
+        "type": "leantos",
+        "source": "Lean-tos"
+    },
+    {
+        "name": "Cooper Kiln Pond Lean-to",
+        "coordinates": [
+            -73.8485889,
+            44.4244661
+        ],
+        "elevation": null,
+        "type": "leantos",
+        "source": "Lean-tos"
+    },
+    {
+        "name": "Gulf Brook Lean-to",
+        "coordinates": [
+            -73.7156974,
+            44.2525105
+        ],
+        "elevation": null,
+        "type": "leantos",
+        "source": "Lean-tos"
+    },
+    {
+        "name": "Beisemeyer Lean-to",
+        "coordinates": [
+            -73.7119206,
+            44.2600334
+        ],
+        "elevation": null,
+        "type": "leantos",
+        "source": "Lean-tos"
+    },
+    {
+        "name": "Klondike Notch Lean-to",
+        "coordinates": [
+            -73.9046424,
+            44.1701955
+        ],
+        "elevation": null,
+        "type": "leantos",
+        "source": "Lean-tos"
+    },
+    {
+        "name": "Slide Brook Lean-to",
+        "coordinates": [
+            -73.8055408,
+            44.0447549
+        ],
+        "elevation": null,
+        "type": "leantos",
+        "source": "Lean-tos"
+    },
+    {
+        "name": "Crandall Lean-to",
+        "coordinates": [
+            -73.8611024,
+            44.1584848
+        ],
+        "elevation": null,
+        "type": "leantos",
+        "source": "Lean-tos"
+    },
+    {
+        "name": "Livingston Point Lean-To",
+        "coordinates": [
+            -73.9890057,
+            44.1131786
+        ],
+        "elevation": null,
+        "type": "leantos",
+        "source": "Lean-tos"
+    },
+    {
+        "name": "Griffin Lean-to",
+        "coordinates": [
+            -73.9917088,
+            44.1079708
+        ],
+        "elevation": null,
+        "type": "leantos",
+        "source": "Lean-tos"
+    },
+    {
+        "name": "Cold River Lean-to #3",
+        "coordinates": [
+            -74.2582789,
+            44.0911943
+        ],
+        "elevation": null,
+        "type": "leantos",
+        "source": "Lean-tos"
+    },
+    {
+        "name": "Moose Island Lean-to",
+        "coordinates": [
+            -73.9568442,
+            44.3324631
+        ],
+        "elevation": null,
+        "type": "leantos",
+        "source": "Lean-tos"
+    },
+    {
+        "name": "Whiteface Brook Lean-to",
+        "coordinates": [
+            -73.9273734,
+            44.3453766
+        ],
+        "elevation": null,
+        "type": "leantos",
+        "source": "Lean-tos"
+    },
+    {
+        "name": "Phelps Brook Lean-to",
+        "coordinates": [
+            -73.9476986,
+            44.1620181
+        ],
+        "elevation": null,
+        "type": "leantos",
+        "source": "Lean-tos"
+    },
+    {
+        "name": "Myers Lean-To",
+        "coordinates": [
+            -73.8604896,
+            44.1594701
+        ],
+        "elevation": null,
+        "type": "leantos",
+        "source": "Lean-tos"
+    },
+    {
+        "name": "Goodwin Lean-To",
+        "coordinates": [
+            -73.8600386,
+            44.1594809
+        ],
+        "elevation": null,
+        "type": "leantos",
+        "source": "Lean-tos"
+    },
+    {
+        "name": "Boreas Ponds Lean-To",
+        "coordinates": [
+            -73.9357527,
+            44.0100767
+        ],
+        "elevation": null,
+        "type": "leantos",
+        "source": "Lean-tos"
+    },
+    {
+        "name": "Moose Pond Stream Lean-to #1",
+        "coordinates": [
+            -74.2388908,
+            44.0795884
+        ],
+        "elevation": null,
+        "type": "leantos",
+        "source": "Lean-tos"
+    },
+    {
+        "name": "Moose Pond Stream Lean-to #2",
+        "coordinates": [
+            -74.2390124,
+            44.079732
+        ],
+        "elevation": null,
+        "type": "leantos",
+        "source": "Lean-tos"
+    },
+    {
+        "name": "Calkins Brook Lean-to #2",
+        "coordinates": [
+            -74.283466,
+            44.1328126
+        ],
+        "elevation": null,
+        "type": "leantos",
+        "source": "Lean-tos"
+    },
+    {
+        "name": "Calkins Brook Lean-to #1",
+        "coordinates": [
+            -74.2834941,
+            44.1327491
+        ],
+        "elevation": null,
+        "type": "leantos",
+        "source": "Lean-tos"
+    },
+    {
+        "name": "Marcy Brook Lean-to",
+        "coordinates": [
+            -73.9522931,
+            44.1435983
+        ],
+        "elevation": null,
+        "type": "leantos",
+        "source": "Lean-tos"
+    },
+    {
+        "name": "Northern Lean-tos",
+        "coordinates": [
+            -74.1537492,
+            44.1276924
+        ],
+        "elevation": null,
+        "type": "leantos",
+        "source": "Lean-tos"
+    }
+]

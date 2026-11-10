@@ -1,0 +1,671 @@
+[
+    {
+        "name": "Cloudspin Lounge and Deli",
+        "coordinates": [
+            -73.8619522,
+            44.3538598
+        ],
+        "elevation": null,
+        "type": "food",
+        "source": "Food Places"
+    },
+    {
+        "name": "Lookout Cafe",
+        "coordinates": [
+            -73.8618935,
+            44.3537584
+        ],
+        "elevation": null,
+        "type": "food",
+        "source": "Food Places"
+    },
+    {
+        "name": "Base Lodge Food Court",
+        "coordinates": [
+            -73.8618135,
+            44.3538705
+        ],
+        "elevation": null,
+        "type": "food",
+        "source": "Food Places"
+    },
+    {
+        "name": "Mr. Mike's Pizza",
+        "coordinates": [
+            -73.9815468,
+            44.2807261
+        ],
+        "elevation": null,
+        "type": "food",
+        "source": "Food Places"
+    },
+    {
+        "name": "Noon Mark Diner",
+        "coordinates": [
+            -73.7861321,
+            44.1885845
+        ],
+        "elevation": null,
+        "type": "food",
+        "source": "Food Places"
+    },
+    {
+        "name": "Little Italy",
+        "coordinates": [
+            -74.1248952,
+            44.3238348
+        ],
+        "elevation": null,
+        "type": "food",
+        "source": "Food Places"
+    },
+    {
+        "name": "King's Corner",
+        "coordinates": [
+            -73.5049341,
+            44.046032
+        ],
+        "elevation": null,
+        "type": "food",
+        "source": "Food Places"
+    },
+    {
+        "name": "KANU",
+        "coordinates": [
+            -74.0104559,
+            44.2971791
+        ],
+        "elevation": null,
+        "type": "food",
+        "source": "Food Places"
+    },
+    {
+        "name": "Cafe Rustica",
+        "coordinates": [
+            -74.0101443,
+            44.2943475
+        ],
+        "elevation": null,
+        "type": "food",
+        "source": "Food Places"
+    },
+    {
+        "name": "The Cottage",
+        "coordinates": [
+            -73.9824297,
+            44.2934591
+        ],
+        "elevation": null,
+        "type": "food",
+        "source": "Food Places"
+    },
+    {
+        "name": "The View",
+        "coordinates": [
+            -73.9826229,
+            44.2938354
+        ],
+        "elevation": null,
+        "type": "food",
+        "source": "Food Places"
+    },
+    {
+        "name": "Smoke Signals",
+        "coordinates": [
+            -73.9851059,
+            44.2884894
+        ],
+        "elevation": null,
+        "type": "food",
+        "source": "Food Places"
+    },
+    {
+        "name": "Bazzi's Pizza",
+        "coordinates": [
+            -73.9853205,
+            44.2868785
+        ],
+        "elevation": null,
+        "type": "food",
+        "source": "Food Places"
+    },
+    {
+        "name": "Players Sports Bar & Grill",
+        "coordinates": [
+            -73.984835,
+            44.2914615
+        ],
+        "elevation": null,
+        "type": "food",
+        "source": "Food Places"
+    },
+    {
+        "name": "Generations",
+        "coordinates": [
+            -73.9849852,
+            44.2866922
+        ],
+        "elevation": null,
+        "type": "food",
+        "source": "Food Places"
+    },
+    {
+        "name": "China City",
+        "coordinates": [
+            -73.9848672,
+            44.2909374
+        ],
+        "elevation": null,
+        "type": "food",
+        "source": "Food Places"
+    },
+    {
+        "name": "Emma's Lake Placid Creamery",
+        "coordinates": [
+            -73.9851247,
+            44.2877867
+        ],
+        "elevation": null,
+        "type": "food",
+        "source": "Food Places"
+    },
+    {
+        "name": "the breakfast club, etc.",
+        "coordinates": [
+            -73.984953,
+            44.2905553
+        ],
+        "elevation": null,
+        "type": "food",
+        "source": "Food Places"
+    },
+    {
+        "name": "Delta Blue",
+        "coordinates": [
+            -73.9853446,
+            44.2873796
+        ],
+        "elevation": null,
+        "type": "food",
+        "source": "Food Places"
+    },
+    {
+        "name": "Jimmy's 21 Restorante",
+        "coordinates": [
+            -73.9849101,
+            44.2907723
+        ],
+        "elevation": null,
+        "type": "food",
+        "source": "Food Places"
+    },
+    {
+        "name": "Black Bear Restaurant",
+        "coordinates": [
+            -73.9848269,
+            44.2913233
+        ],
+        "elevation": null,
+        "type": "food",
+        "source": "Food Places"
+    },
+    {
+        "name": "The Cabin Grill",
+        "coordinates": [
+            -73.9853473,
+            44.2874891
+        ],
+        "elevation": null,
+        "type": "food",
+        "source": "Food Places"
+    },
+    {
+        "name": "The Dancing Bears",
+        "coordinates": [
+            -73.9851703,
+            44.2914711
+        ],
+        "elevation": null,
+        "type": "food",
+        "source": "Food Places"
+    },
+    {
+        "name": "Soulshine Bagel",
+        "coordinates": [
+            -73.9853446,
+            44.2872587
+        ],
+        "elevation": null,
+        "type": "food",
+        "source": "Food Places"
+    },
+    {
+        "name": "Milano",
+        "coordinates": [
+            -73.985468,
+            44.2883339
+        ],
+        "elevation": null,
+        "type": "food",
+        "source": "Food Places"
+    },
+    {
+        "name": "Hunan Oshaka",
+        "coordinates": [
+            -73.9834805,
+            44.2830824
+        ],
+        "elevation": null,
+        "type": "food",
+        "source": "Food Places"
+    },
+    {
+        "name": "Aki",
+        "coordinates": [
+            -73.9820588,
+            44.2812389
+        ],
+        "elevation": null,
+        "type": "food",
+        "source": "Food Places"
+    },
+    {
+        "name": "Downtown Diner",
+        "coordinates": [
+            -73.9818926,
+            44.2810316
+        ],
+        "elevation": null,
+        "type": "food",
+        "source": "Food Places"
+    },
+    {
+        "name": "Starbucks",
+        "coordinates": [
+            -73.9853956,
+            44.2883166
+        ],
+        "elevation": null,
+        "type": "food",
+        "source": "Food Places"
+    },
+    {
+        "name": "Farmhouse Cafe",
+        "coordinates": [
+            -73.9820059,
+            44.281184
+        ],
+        "elevation": null,
+        "type": "food",
+        "source": "Food Places"
+    },
+    {
+        "name": "Guido's Pizzeria",
+        "coordinates": [
+            -74.4644358,
+            44.2236438
+        ],
+        "elevation": null,
+        "type": "food",
+        "source": "Food Places"
+    },
+    {
+        "name": "River View Cafe",
+        "coordinates": [
+            -73.876802,
+            44.3476049
+        ],
+        "elevation": null,
+        "type": "food",
+        "source": "Food Places"
+    },
+    {
+        "name": "Origin Coffee Co.",
+        "coordinates": [
+            -74.1316251,
+            44.3266939
+        ],
+        "elevation": null,
+        "type": "food",
+        "source": "Food Places"
+    },
+    {
+        "name": "Dack Shack",
+        "coordinates": [
+            -73.9979823,
+            44.2955701
+        ],
+        "elevation": null,
+        "type": "food",
+        "source": "Food Places"
+    },
+    {
+        "name": "Ere's Pizza Ristorante",
+        "coordinates": [
+            -73.984849,
+            44.2902698
+        ],
+        "elevation": null,
+        "type": "food",
+        "source": "Food Places"
+    },
+    {
+        "name": "Mountain Pass Lodge Caf\u00e9",
+        "coordinates": [
+            -73.9225753,
+            44.2185171
+        ],
+        "elevation": null,
+        "type": "food",
+        "source": "Food Places"
+    },
+    {
+        "name": "The Pickled Pig",
+        "coordinates": [
+            -73.9841239,
+            44.2836276
+        ],
+        "elevation": null,
+        "type": "food",
+        "source": "Food Places"
+    },
+    {
+        "name": "A-1 Buffet and Sushi",
+        "coordinates": [
+            -74.1181488,
+            44.3131629
+        ],
+        "elevation": null,
+        "type": "food",
+        "source": "Food Places"
+    },
+    {
+        "name": "Casa del Sol",
+        "coordinates": [
+            -74.118387,
+            44.3141675
+        ],
+        "elevation": null,
+        "type": "food",
+        "source": "Food Places"
+    },
+    {
+        "name": "Blue Line Brewery",
+        "coordinates": [
+            -74.1163135,
+            44.3132246
+        ],
+        "elevation": null,
+        "type": "food",
+        "source": "Food Places"
+    },
+    {
+        "name": "Heritage Indian Grill",
+        "coordinates": [
+            -73.9999579,
+            44.2974472
+        ],
+        "elevation": null,
+        "type": "food",
+        "source": "Food Places"
+    },
+    {
+        "name": "West Shore BBQ",
+        "coordinates": [
+            -74.0083395,
+            44.296781
+        ],
+        "elevation": null,
+        "type": "food",
+        "source": "Food Places"
+    },
+    {
+        "name": "Anne's Crepes",
+        "coordinates": [
+            -74.131852,
+            44.3281001
+        ],
+        "elevation": null,
+        "type": "food",
+        "source": "Food Places"
+    },
+    {
+        "name": "Our Plates",
+        "coordinates": [
+            -74.1314838,
+            44.3270821
+        ],
+        "elevation": null,
+        "type": "food",
+        "source": "Food Places"
+    },
+    {
+        "name": "Owl's Nest Pizza Parlor",
+        "coordinates": [
+            -74.1319828,
+            44.3258401
+        ],
+        "elevation": null,
+        "type": "food",
+        "source": "Food Places"
+    },
+    {
+        "name": "China Jade",
+        "coordinates": [
+            -74.1318641,
+            44.326173
+        ],
+        "elevation": null,
+        "type": "food",
+        "source": "Food Places"
+    },
+    {
+        "name": "Uno Mas",
+        "coordinates": [
+            -73.9971577,
+            44.2948762
+        ],
+        "elevation": null,
+        "type": "food",
+        "source": "Food Places"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -73.6718912,
+            44.4424323
+        ],
+        "elevation": null,
+        "type": "food",
+        "source": "Food Places"
+    },
+    {
+        "name": "lake placid lodge",
+        "coordinates": [
+            -74.002451,
+            44.309298
+        ],
+        "category": "food",
+        "source": "mapbox_adk_pois"
+    },
+    {
+        "name": "lake placid club boat house",
+        "coordinates": [
+            -73.979345,
+            44.287918
+        ],
+        "category": "food",
+        "source": "mapbox_adk_pois"
+    },
+    {
+        "name": "the cottage",
+        "coordinates": [
+            -73.983238,
+            44.293318
+        ],
+        "category": "food",
+        "source": "mapbox_pins_combined"
+    },
+    {
+        "name": "lisa g's",
+        "coordinates": [
+            -73.982238,
+            44.277717
+        ],
+        "category": "food",
+        "source": "mapbox_pins_combined"
+    },
+    {
+        "name": "big mountain deli and cr\u00eaperie",
+        "coordinates": [
+            -73.985198,
+            44.289032
+        ],
+        "category": "food",
+        "source": "mapbox_pins_combined"
+    },
+    {
+        "name": "liquids and solids at the handlebar",
+        "coordinates": [
+            -73.982151,
+            44.277442
+        ],
+        "category": "food",
+        "source": "mapbox_pins_combined"
+    },
+    {
+        "name": "jimmy's 21",
+        "coordinates": [
+            -73.984738,
+            44.290711
+        ],
+        "category": "food",
+        "source": "mapbox_pins_combined"
+    },
+    {
+        "name": "generations",
+        "coordinates": [
+            -73.984989,
+            44.286671
+        ],
+        "category": "food",
+        "source": "mapbox_pins_combined"
+    },
+    {
+        "name": "wiseguys sports bar & grille",
+        "coordinates": [
+            -73.98283,
+            44.281705
+        ],
+        "category": "food",
+        "source": "mapbox_pins_combined"
+    },
+    {
+        "name": "the pickled pig",
+        "coordinates": [
+            -73.984124,
+            44.283713
+        ],
+        "category": "food",
+        "source": "mapbox_pins_combined"
+    },
+    {
+        "name": "top of the park",
+        "coordinates": [
+            -73.984833,
+            44.29148
+        ],
+        "category": "food",
+        "source": "mapbox_pins_combined"
+    },
+    {
+        "name": "downtown diner",
+        "coordinates": [
+            -73.981951,
+            44.281278
+        ],
+        "category": "food",
+        "source": "mapbox_pins_combined"
+    },
+    {
+        "name": "high falls gorge",
+        "coordinates": [
+            -73.87692,
+            44.34755
+        ],
+        "category": "food",
+        "source": "mapbox_adk_pois"
+    },
+    {
+        "name": "lakeview deli",
+        "coordinates": [
+            -74.12549,
+            44.323849
+        ],
+        "category": "food",
+        "source": "mapbox_adk_pois"
+    },
+    {
+        "name": "upstairs grill",
+        "coordinates": [
+            -73.98549,
+            44.28838
+        ],
+        "category": "food",
+        "source": "mapbox_adk_pois"
+    },
+    {
+        "name": "ray brook brewhouse",
+        "coordinates": [
+            -74.076366,
+            44.298908
+        ],
+        "category": "food",
+        "source": "mapbox_adk_pois"
+    },
+    {
+        "name": "pizza hut",
+        "coordinates": [
+            -74.117352,
+            44.312903
+        ],
+        "category": "food",
+        "source": "mapbox_adk_pois"
+    },
+    {
+        "name": "cornell maple program",
+        "coordinates": [
+            -73.983065,
+            44.255205
+        ],
+        "category": "food",
+        "source": "mapbox_adk_pois"
+    },
+    {
+        "name": "subway",
+        "coordinates": [
+            -73.984051,
+            44.284521
+        ],
+        "category": "food",
+        "source": "mapbox_adk_pois"
+    },
+    {
+        "name": "quality inn on lake placid",
+        "coordinates": [
+            -73.996546,
+            44.295985
+        ],
+        "category": "food",
+        "source": "mapbox_adk_pois"
+    },
+    {
+        "name": "mcdonald's",
+        "coordinates": [
+            -74.11627,
+            44.312925
+        ],
+        "category": "food",
+        "source": "mapbox_adk_pois"
+    }
+]

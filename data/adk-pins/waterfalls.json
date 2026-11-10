@@ -1,0 +1,402 @@
+[
+    {
+        "name": "High Falls (Rainbow)",
+        "coordinates": [
+            -73.8740161,
+            44.3489283
+        ],
+        "elevation": null,
+        "type": "waterfalls",
+        "source": "Waterfalls"
+    },
+    {
+        "name": "Upper Falls",
+        "coordinates": [
+            -74.3294908,
+            44.1414137
+        ],
+        "elevation": null,
+        "type": "waterfalls",
+        "source": "Waterfalls"
+    },
+    {
+        "name": "Rocky Falls",
+        "coordinates": [
+            -73.9989754,
+            44.171929
+        ],
+        "elevation": null,
+        "type": "waterfalls",
+        "source": "Waterfalls"
+    },
+    {
+        "name": "Shoebox Falls",
+        "coordinates": [
+            -73.7189336,
+            44.1101045
+        ],
+        "elevation": null,
+        "type": "waterfalls",
+        "source": "Waterfalls"
+    },
+    {
+        "name": "Augerhole Falls",
+        "coordinates": [
+            -74.5473537,
+            44.4207177
+        ],
+        "elevation": null,
+        "type": "waterfalls",
+        "source": "Waterfalls"
+    },
+    {
+        "name": "Indian Falls",
+        "coordinates": [
+            -73.9292838,
+            44.1403995
+        ],
+        "elevation": null,
+        "type": "waterfalls",
+        "source": "Waterfalls"
+    },
+    {
+        "name": "High Falls (Main)",
+        "coordinates": [
+            -73.8747628,
+            44.3482919
+        ],
+        "elevation": null,
+        "type": "waterfalls",
+        "source": "Waterfalls"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -73.8693893,
+            44.2228762
+        ],
+        "elevation": null,
+        "type": "waterfalls",
+        "source": "Waterfalls"
+    },
+    {
+        "name": "Cascade Falls",
+        "coordinates": [
+            -73.8704273,
+            44.2234111
+        ],
+        "elevation": null,
+        "type": "waterfalls",
+        "source": "Waterfalls"
+    },
+    {
+        "name": "Roaring Brook Falls",
+        "coordinates": [
+            -73.7601842,
+            44.1505721
+        ],
+        "elevation": null,
+        "type": "waterfalls",
+        "source": "Waterfalls"
+    },
+    {
+        "name": "Beaver Meadow Falls",
+        "coordinates": [
+            -73.8166927,
+            44.1296665
+        ],
+        "elevation": null,
+        "type": "waterfalls",
+        "source": "Waterfalls"
+    },
+    {
+        "name": "Beede Brook Falls",
+        "coordinates": [
+            -73.7324286,
+            44.1387137
+        ],
+        "elevation": null,
+        "type": "waterfalls",
+        "source": "Waterfalls"
+    },
+    {
+        "name": "MacIntyre Falls",
+        "coordinates": [
+            -73.9796404,
+            44.159267
+        ],
+        "elevation": null,
+        "type": "waterfalls",
+        "source": "Waterfalls"
+    },
+    {
+        "name": "Bushnell Falls",
+        "coordinates": [
+            -73.8823652,
+            44.1453187
+        ],
+        "elevation": null,
+        "type": "waterfalls",
+        "source": "Waterfalls"
+    },
+    {
+        "name": "Rainbow Falls",
+        "coordinates": [
+            -73.8294866,
+            44.1183646
+        ],
+        "elevation": null,
+        "type": "waterfalls",
+        "source": "Waterfalls"
+    },
+    {
+        "name": "Wedge Brook Cascades",
+        "coordinates": [
+            -73.8112834,
+            44.1361435
+        ],
+        "elevation": null,
+        "type": "waterfalls",
+        "source": "Waterfalls"
+    },
+    {
+        "name": "Russell Falls",
+        "coordinates": [
+            -73.7820446,
+            44.1525671
+        ],
+        "elevation": null,
+        "type": "waterfalls",
+        "source": "Waterfalls"
+    },
+    {
+        "name": "Wanika Falls",
+        "coordinates": [
+            -74.0555247,
+            44.1980542
+        ],
+        "elevation": null,
+        "type": "waterfalls",
+        "source": "Waterfalls"
+    },
+    {
+        "name": "Hanging Spear Falls",
+        "coordinates": [
+            -73.9907254,
+            44.1019619
+        ],
+        "elevation": null,
+        "type": "waterfalls",
+        "source": "Waterfalls"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -73.8642124,
+            44.3501713
+        ],
+        "elevation": null,
+        "type": "waterfalls",
+        "source": "Waterfalls"
+    },
+    {
+        "name": "Monument Falls",
+        "coordinates": [
+            -73.9151454,
+            44.311525
+        ],
+        "elevation": null,
+        "type": "waterfalls",
+        "source": "Waterfalls"
+    },
+    {
+        "name": "High Falls (Mini)",
+        "coordinates": [
+            -73.874314,
+            44.3485952
+        ],
+        "elevation": null,
+        "type": "waterfalls",
+        "source": "Waterfalls"
+    },
+    {
+        "name": "High Falls (Climax)",
+        "coordinates": [
+            -73.8738315,
+            44.3491219
+        ],
+        "elevation": null,
+        "type": "waterfalls",
+        "source": "Waterfalls"
+    },
+    {
+        "name": "The Flume Fall",
+        "coordinates": [
+            -73.8403823,
+            44.3664723
+        ],
+        "elevation": null,
+        "type": "waterfalls",
+        "source": "Waterfalls"
+    },
+    {
+        "name": "Flume Falls",
+        "coordinates": [
+            -73.8394064,
+            44.3671742
+        ],
+        "elevation": null,
+        "type": "waterfalls",
+        "source": "Waterfalls"
+    },
+    {
+        "name": "Millers Falls",
+        "coordinates": [
+            -74.2085648,
+            44.1060343
+        ],
+        "elevation": null,
+        "type": "waterfalls",
+        "source": "Waterfalls"
+    },
+    {
+        "name": "Lower Falls",
+        "coordinates": [
+            -74.3221959,
+            44.1465202
+        ],
+        "elevation": null,
+        "type": "waterfalls",
+        "source": "Waterfalls"
+    },
+    {
+        "name": "Raquette Falls",
+        "coordinates": [
+            -74.324032,
+            44.145
+        ],
+        "elevation": null,
+        "type": "waterfalls",
+        "source": "Waterfalls"
+    },
+    {
+        "name": "Swimming hole and water fall",
+        "coordinates": [
+            -73.7503081,
+            44.0838498
+        ],
+        "elevation": null,
+        "type": "waterfalls",
+        "source": "Waterfalls"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.5449887,
+            44.128226
+        ],
+        "elevation": null,
+        "type": "waterfalls",
+        "source": "Waterfalls"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -73.7423513,
+            44.1374055
+        ],
+        "elevation": null,
+        "type": "waterfalls",
+        "source": "Waterfalls"
+    },
+    {
+        "name": "Split Rock Falls",
+        "coordinates": [
+            -73.6579652,
+            44.1239041
+        ],
+        "elevation": null,
+        "type": "waterfalls",
+        "source": "Waterfalls"
+    },
+    {
+        "name": "Upper Stag Brook Falls",
+        "coordinates": [
+            -73.8693444,
+            44.3569874
+        ],
+        "elevation": null,
+        "type": "waterfalls",
+        "source": "Waterfalls"
+    },
+    {
+        "name": "Lower Stag Brook Falls",
+        "coordinates": [
+            -73.8640891,
+            44.3551234
+        ],
+        "elevation": null,
+        "type": "waterfalls",
+        "source": "Waterfalls"
+    },
+    {
+        "name": "The Falls",
+        "coordinates": [
+            -73.8321924,
+            44.0777143
+        ],
+        "elevation": null,
+        "type": "waterfalls",
+        "source": "Waterfalls"
+    },
+    {
+        "name": "Fairy Ladder Falls",
+        "coordinates": [
+            -73.8212822,
+            44.0997302
+        ],
+        "elevation": null,
+        "type": "waterfalls",
+        "source": "Waterfalls"
+    },
+    {
+        "name": "Artists Falls",
+        "coordinates": [
+            -73.8091176,
+            44.1270163
+        ],
+        "elevation": null,
+        "type": "waterfalls",
+        "source": "Waterfalls"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -74.544932,
+            44.1287816
+        ],
+        "elevation": null,
+        "type": "waterfalls",
+        "source": "Waterfalls"
+    },
+    {
+        "name": "Hulls Falls",
+        "coordinates": [
+            -73.7947761,
+            44.2352972
+        ],
+        "elevation": null,
+        "type": "waterfalls",
+        "source": "Waterfalls"
+    },
+    {
+        "name": "No name",
+        "coordinates": [
+            -73.6134832,
+            44.2215026
+        ],
+        "elevation": null,
+        "type": "waterfalls",
+        "source": "Waterfalls"
+    }
+]

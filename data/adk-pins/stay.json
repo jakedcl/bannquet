@@ -1,0 +1,402 @@
+[
+    {
+        "name": "Deer's Head Inn",
+        "coordinates": [
+            -73.592342,
+            44.214535
+        ],
+        "elevation": null,
+        "type": "hotels",
+        "source": "Hotels_Motels_Hostels_Lodges_Inns"
+    },
+    {
+        "name": "Adirondack Trail Inn",
+        "coordinates": [
+            -73.7866325,
+            44.3094867
+        ],
+        "elevation": null,
+        "type": "hotels",
+        "source": "Hotels_Motels_Hostels_Lodges_Inns"
+    },
+    {
+        "name": "Edelweiss Motel",
+        "coordinates": [
+            -73.9791574,
+            44.2785015
+        ],
+        "elevation": null,
+        "type": "hotels",
+        "source": "Hotels_Motels_Hostels_Lodges_Inns"
+    },
+    {
+        "name": "Schulte's Family Lodge",
+        "coordinates": [
+            -73.9763304,
+            44.2702896
+        ],
+        "elevation": null,
+        "type": "hotels",
+        "source": "Hotels_Motels_Hostels_Lodges_Inns"
+    },
+    {
+        "name": "Northway Motel",
+        "coordinates": [
+            -73.9791253,
+            44.279166
+        ],
+        "elevation": null,
+        "type": "hotels",
+        "source": "Hotels_Motels_Hostels_Lodges_Inns"
+    },
+    {
+        "name": "Lake Placid Lodge",
+        "coordinates": [
+            -74.0026912,
+            44.3093264
+        ],
+        "elevation": null,
+        "type": "hotels",
+        "source": "Hotels_Motels_Hostels_Lodges_Inns"
+    },
+    {
+        "name": "Lake Placid Summit Hotel Resort & Suites",
+        "coordinates": [
+            -73.9858254,
+            44.2923187
+        ],
+        "elevation": null,
+        "type": "hotels",
+        "source": "Hotels_Motels_Hostels_Lodges_Inns"
+    },
+    {
+        "name": "Hotel North Woods",
+        "coordinates": [
+            -73.9854499,
+            44.2873575
+        ],
+        "elevation": null,
+        "type": "hotels",
+        "source": "Hotels_Motels_Hostels_Lodges_Inns"
+    },
+    {
+        "name": "Maple Leaf Inn",
+        "coordinates": [
+            -73.992606,
+            44.2934092
+        ],
+        "elevation": null,
+        "type": "hotels",
+        "source": "Hotels_Motels_Hostels_Lodges_Inns"
+    },
+    {
+        "name": "The Boha Hotel",
+        "coordinates": [
+            -73.989758,
+            44.2931723
+        ],
+        "elevation": null,
+        "type": "hotels",
+        "source": "Hotels_Motels_Hostels_Lodges_Inns"
+    },
+    {
+        "name": "High Peaks Resort",
+        "coordinates": [
+            -73.9854821,
+            44.2913357
+        ],
+        "elevation": null,
+        "type": "hotels",
+        "source": "Hotels_Motels_Hostels_Lodges_Inns"
+    },
+    {
+        "name": "Alpine Motor Inn",
+        "coordinates": [
+            -73.9766952,
+            44.2782327
+        ],
+        "elevation": null,
+        "type": "hotels",
+        "source": "Hotels_Motels_Hostels_Lodges_Inns"
+    },
+    {
+        "name": "Mountain View Inn",
+        "coordinates": [
+            -73.9854714,
+            44.2863667
+        ],
+        "elevation": null,
+        "type": "hotels",
+        "source": "Hotels_Motels_Hostels_Lodges_Inns"
+    },
+    {
+        "name": "Town & Country Motor Inn",
+        "coordinates": [
+            -73.9941939,
+            44.2935935
+        ],
+        "elevation": null,
+        "type": "hotels",
+        "source": "Hotels_Motels_Hostels_Lodges_Inns"
+    },
+    {
+        "name": "Wildwood On the Lake Motel",
+        "coordinates": [
+            -73.9962378,
+            44.2949335
+        ],
+        "elevation": null,
+        "type": "hotels",
+        "source": "Hotels_Motels_Hostels_Lodges_Inns"
+    },
+    {
+        "name": "Alpine Country Inn and Suites",
+        "coordinates": [
+            -73.8251909,
+            44.3878527
+        ],
+        "elevation": null,
+        "type": "hotels",
+        "source": "Hotels_Motels_Hostels_Lodges_Inns"
+    },
+    {
+        "name": "Birch Tree Lodge",
+        "coordinates": [
+            -73.8212427,
+            44.3894167
+        ],
+        "elevation": null,
+        "type": "hotels",
+        "source": "Hotels_Motels_Hostels_Lodges_Inns"
+    },
+    {
+        "name": "North Pole Inn",
+        "coordinates": [
+            -73.8247617,
+            44.3866413
+        ],
+        "elevation": null,
+        "type": "hotels",
+        "source": "Hotels_Motels_Hostels_Lodges_Inns"
+    },
+    {
+        "name": "Mountain Brook Lodge",
+        "coordinates": [
+            -73.8204702,
+            44.3891407
+        ],
+        "elevation": null,
+        "type": "hotels",
+        "source": "Hotels_Motels_Hostels_Lodges_Inns"
+    },
+    {
+        "name": "The Haus",
+        "coordinates": [
+            -73.9849825,
+            44.2903287
+        ],
+        "elevation": null,
+        "type": "hotels",
+        "source": "Hotels_Motels_Hostels_Lodges_Inns"
+    },
+    {
+        "name": "voco Saranac Lake NY - Waterfront",
+        "coordinates": [
+            -74.123775,
+            44.3219801
+        ],
+        "elevation": null,
+        "type": "hotels",
+        "source": "Hotels_Motels_Hostels_Lodges_Inns"
+    },
+    {
+        "name": "Adirondack Backwoods Elegance",
+        "coordinates": [
+            -74.0062984,
+            44.4428752
+        ],
+        "elevation": null,
+        "type": "hotels",
+        "source": "Hotels_Motels_Hostels_Lodges_Inns"
+    },
+    {
+        "name": "Alpine Country Inn & Suites",
+        "coordinates": [
+            -73.8251892,
+            44.387883
+        ],
+        "elevation": null,
+        "type": "hotels",
+        "source": "Hotels_Motels_Hostels_Lodges_Inns"
+    },
+    {
+        "name": "The Mountain Home",
+        "coordinates": [
+            -73.7048555,
+            44.4208696
+        ],
+        "elevation": null,
+        "type": "hotels",
+        "source": "Hotels_Motels_Hostels_Lodges_Inns"
+    },
+    {
+        "name": "Tupper Lake Motel",
+        "coordinates": [
+            -74.4550684,
+            44.2249442
+        ],
+        "elevation": null,
+        "type": "hotels",
+        "source": "Hotels_Motels_Hostels_Lodges_Inns"
+    },
+    {
+        "name": "Town House Lodge",
+        "coordinates": [
+            -73.9906763,
+            44.2936265
+        ],
+        "elevation": null,
+        "type": "hotels",
+        "source": "Hotels_Motels_Hostels_Lodges_Inns"
+    },
+    {
+        "name": "Gauthier Saranac Lake Inn",
+        "coordinates": [
+            -74.1197424,
+            44.3143754
+        ],
+        "elevation": null,
+        "type": "hotels",
+        "source": "Hotels_Motels_Hostels_Lodges_Inns"
+    },
+    {
+        "name": "Best Western",
+        "coordinates": [
+            -74.1188598,
+            44.3149229
+        ],
+        "elevation": null,
+        "type": "hotels",
+        "source": "Hotels_Motels_Hostels_Lodges_Inns"
+    },
+    {
+        "name": "Sara Placid Inn and Suites",
+        "coordinates": [
+            -74.1200451,
+            44.3159957
+        ],
+        "elevation": null,
+        "type": "hotels",
+        "source": "Hotels_Motels_Hostels_Lodges_Inns"
+    },
+    {
+        "name": "The Spruce Inn",
+        "coordinates": [
+            -74.118024,
+            44.313938
+        ],
+        "elevation": null,
+        "type": "hotels",
+        "source": "Hotels_Motels_Hostels_Lodges_Inns"
+    },
+    {
+        "name": "Lake Placid Inn: Residences",
+        "coordinates": [
+            -74.0013046,
+            44.2958098
+        ],
+        "elevation": null,
+        "type": "hotels",
+        "source": "Hotels_Motels_Hostels_Lodges_Inns"
+    },
+    {
+        "name": "mountain brook lodge",
+        "coordinates": [
+            -73.820609,
+            44.389146
+        ],
+        "category": "hotels",
+        "source": "mapbox_pins_combined"
+    },
+    {
+        "name": "hampton inn & suites",
+        "coordinates": [
+            -73.980621,
+            44.283318
+        ],
+        "category": "hotels",
+        "source": "mapbox_pins_combined"
+    },
+    {
+        "name": "northwoods inn",
+        "coordinates": [
+            -73.985549,
+            44.28731
+        ],
+        "category": "hotels",
+        "source": "mapbox_pins_combined"
+    },
+    {
+        "name": "courtyard by marriott lake placid",
+        "coordinates": [
+            -73.977827,
+            44.271115
+        ],
+        "category": "hotels",
+        "source": "mapbox_pins_combined"
+    },
+    {
+        "name": "best western adirondack inn",
+        "coordinates": [
+            -73.983835,
+            44.283921
+        ],
+        "category": "hotels",
+        "source": "mapbox_pins_combined"
+    },
+    {
+        "name": "hotel saranac",
+        "coordinates": [
+            -74.130736,
+            44.326857
+        ],
+        "category": "hotels",
+        "source": "mapbox_pins_combined"
+    },
+    {
+        "name": "best western saranac lake",
+        "coordinates": [
+            -74.118624,
+            44.314852
+        ],
+        "category": "hotels",
+        "source": "mapbox_pins_combined"
+    },
+    {
+        "name": "gauthier's saranac lake inn",
+        "coordinates": [
+            -74.119517,
+            44.314296
+        ],
+        "category": "hotels",
+        "source": "mapbox_pins_combined"
+    },
+    {
+        "name": "the haus",
+        "coordinates": [
+            -73.985029,
+            44.290251
+        ],
+        "category": "hotels",
+        "source": "mapbox_pins_combined"
+    },
+    {
+        "name": "the pines inn of lake placid",
+        "coordinates": [
+            -73.989526,
+            44.292428
+        ],
+        "category": "hotels",
+        "source": "mapbox_adk_pois"
+    }
+]
