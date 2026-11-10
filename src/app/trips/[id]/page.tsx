@@ -16,7 +16,7 @@ import { canDeleteOwned, canEditOwned, viewerCanContribute } from '@/lib/members
 import { getTrip, type TripAttachment } from '@/lib/trips';
 import { formatTripDate } from '@/lib/utils';
 import { isDatabaseConfigured } from '@/db';
-
+import { loadFailed } from '@/lib/load-error';
 export const dynamic = 'force-dynamic';
 
 const ID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -54,8 +54,36 @@ function KindGlyph({ kind }: { kind: TripAttachment['kind'] }) {
 
 export default async function TripPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  if (!ID.test(id) || !isDatabaseConfigured()) notFound();
-  const trip = await getTrip(id);
+  if (!ID.test(id)) notFound();
+  if (!isDatabaseConfigured()) {
+    return (
+      <PageWrapper>
+        <div className="mx-auto max-w-3xl space-y-5 px-4 pb-12 pt-6 md:pt-8">
+          <Card title="Trip">
+            <p className="text-sm font-bold">Postgres is not connected, so this trip cannot be loaded.</p>
+          </Card>
+        </div>
+      </PageWrapper>
+    );
+  }
+  let trip: Awaited<ReturnType<typeof getTrip>> = null;
+  let loadError: string | null = null;
+  try {
+    trip = await getTrip(id);
+  } catch (err) {
+    loadError = loadFailed('trip', err, 'That trip did not load. Try again in a minute.');
+  }
+  if (loadError) {
+    return (
+      <PageWrapper>
+        <div className="mx-auto max-w-3xl space-y-5 px-4 pb-12 pt-6 md:pt-8">
+          <Card title="Trip">
+            <p className="text-sm font-bold">{loadError}</p>
+          </Card>
+        </div>
+      </PageWrapper>
+    );
+  }
   if (!trip) notFound();
   const viewer = await getViewer();
   const canRsvp = viewerCanContribute(viewer);

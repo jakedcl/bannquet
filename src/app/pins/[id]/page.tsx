@@ -17,6 +17,7 @@ import { PIN_KIND_LABELS, isPinKind } from '@/lib/pin-kinds';
 import { loadMapDataNear } from '@/lib/posts';
 import { listTripChoices, tripsForItem } from '@/lib/trips';
 import { formatTripDate } from '@/lib/utils';
+import { loadFailed } from '@/lib/load-error';
 import { HubPage } from '@/components/hub/Page';
 
 export const dynamic = 'force-dynamic';
@@ -32,8 +33,36 @@ export default async function PinPage({
 }) {
   const { id } = await params;
   const { addTrip } = await searchParams;
-  if (!PIN_ID.test(id) || !isDatabaseConfigured()) notFound();
-  const pin = await loadPin(id);
+  if (!PIN_ID.test(id)) notFound();
+  if (!isDatabaseConfigured()) {
+    return (
+      <PageWrapper>
+        <HubPage title="Pin" width="3xl">
+          <Card>
+            <p className="text-sm font-bold">Postgres is not connected, so this pin cannot be loaded.</p>
+          </Card>
+        </HubPage>
+      </PageWrapper>
+    );
+  }
+  let pin: Awaited<ReturnType<typeof loadPin>> = null;
+  let error: string | null = null;
+  try {
+    pin = await loadPin(id);
+  } catch (err) {
+    error = loadFailed('pin', err, 'That pin did not load. Try again in a minute.');
+  }
+  if (error) {
+    return (
+      <PageWrapper>
+        <HubPage title="Pin" width="3xl">
+          <Card>
+            <p className="text-sm font-bold">{error}</p>
+          </Card>
+        </HubPage>
+      </PageWrapper>
+    );
+  }
   if (!pin) notFound();
 
   const viewer = await getViewer();
