@@ -6,6 +6,8 @@ import { LoadEntrance } from '@/components/ui/LoadEntrance';
 import { RouteMotion } from '@/components/ui/RouteMotion';
 import { getViewer } from '@/app/sign-in/actions';
 import { countPendingMembers } from '@/lib/auth/members';
+import { countUnreadNotifications } from '@/lib/notifications';
+import { viewerCanContribute } from '@/lib/membership';
 import { APPROVAL_WAIT } from '@/lib/membership';
 import './globals.css';
 import Providers from './providers';
@@ -37,12 +39,16 @@ export default async function RootLayout({
 }) {
   const viewer = await getViewer();
   const pendingCount = viewer?.role === 'admin' ? await countPendingMembers() : 0;
+  const notificationCount = viewer && viewerCanContribute(viewer)
+    ? await countUnreadNotifications(viewer.id).catch(() => 0)
+    : 0;
   const account = viewer
     ? {
         handle: viewer.handle,
         displayName: viewer.displayName,
         role: viewer.role,
         pendingCount,
+        notificationCount,
       }
     : null;
 

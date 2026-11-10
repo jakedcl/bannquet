@@ -22,6 +22,7 @@ export const COMMUNITY_LINKS: NavLink[] = [
   { href: '/gear', label: 'Gear' },
   { href: '/photos', label: 'Photos' },
   { href: '/members', label: 'Members' },
+  { href: '/notifications', label: 'Notifications' },
 ];
 
 export const WEATHER_LINKS: NavLink[] = REGION_OPTIONS.map((option) => ({
@@ -36,7 +37,7 @@ export const UPLOAD_LINKS: NavLink[] = [
   { href: '/upload?kind=photo', label: 'Photo' },
 ];
 
-const COMMUNITY_ROOTS = ['/community', '/chat', '/peaks', '/trips', '/gear', '/photos', '/members'];
+const COMMUNITY_ROOTS = ['/community', '/chat', '/peaks', '/trips', '/gear', '/photos', '/members', '/notifications'];
 
 const COMMUNITY_PAGES: Record<string, string> = {
   '/chat': 'Chat',
@@ -45,6 +46,7 @@ const COMMUNITY_PAGES: Record<string, string> = {
   '/gear': 'Gear',
   '/photos': 'Photos',
   '/members': 'Members',
+  '/notifications': 'Notifications',
 };
 
 const STATE_NAMES: Record<string, string> = {
@@ -147,6 +149,7 @@ function fishingCurrent(pathname: string): string | null {
 export function settingsLinks(account: NavAccount): NavLink[] {
   const links: NavLink[] = [];
   if (account?.handle) links.push({ href: `/user/${account.handle}`, label: 'Profile' });
+  if (account && account.role !== 'pending') links.push({ href: '/notifications', label: 'Notifications' });
   links.push({ href: '/account', label: 'Account', hidden: true });
   if (account?.role === 'admin') links.push({ href: '/admin', label: 'Admin' });
   return links;

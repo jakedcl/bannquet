@@ -60,8 +60,8 @@ test('settings opens the profile, and the owner also gets Admin', () => {
   const member = { handle: 'jkiddf', role: 'member' as const };
   const owner = { handle: 'jake', role: 'admin' as const };
   assert.equal(settingsHref(member), '/user/jkiddf');
-  assert.deepEqual(visibleLinks(settingsLinks(member)).map((link) => link.label), ['Profile']);
-  assert.deepEqual(visibleLinks(settingsLinks(owner)).map((link) => link.label), ['Profile', 'Admin']);
+  assert.deepEqual(visibleLinks(settingsLinks(member)).map((link) => link.label), ['Profile', 'Notifications']);
+  assert.deepEqual(visibleLinks(settingsLinks(owner)).map((link) => link.label), ['Profile', 'Notifications', 'Admin']);
   assert.equal(matchSection('/user/jake', '', owner), null);
   assert.equal(matchSection('/user/jkiddf', '', owner)?.id, 'community');
   assert.equal(matchSection('/community', '', owner)?.landing, false);
