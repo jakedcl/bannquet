@@ -128,28 +128,28 @@ export default async function UserPage({ params }: { params: Promise<{ username:
         ) : null}
         {library.routes.length > 0 ? (
           <Card title="Routes">
-            <RouteRows routes={library.routes} manage={manage} profilePath={profilePath} collapsed />
+            <RouteRows routes={library.routes} manage={manage} profilePath={profilePath} collapsed viewer={viewer} ownerId={member.id} />
           </Card>
         ) : null}
         {pins.length > 0 ? (
           <Card title="Pins">
-            <PinRows pins={pins} manage={manage} collapsed />
+            <PinRows pins={pins} manage={manage} collapsed viewer={viewer} ownerId={member.id} />
           </Card>
         ) : null}
         {library.photos.length > 0 ? (
           <Card title="Photos">
-            <PhotoGrid photos={library.photos.slice(0, PROFILE_PREVIEW)} manage={manage} profilePath={profilePath} />
+            <PhotoGrid photos={library.photos.slice(0, PROFILE_PREVIEW)} manage={manage} profilePath={profilePath} viewer={viewer} ownerId={member.id} />
             <SeeAll href={`${profilePath}/photos`} total={library.photos.length} />
           </Card>
         ) : null}
         {trips.length > 0 ? (
           <Card title="Trips">
-            <TripRows trips={trips} manage={manage} collapsed />
+            <TripRows trips={trips} manage={manage} collapsed viewer={viewer} ownerId={member.id} />
           </Card>
         ) : null}
         {ownPeaks.length > 0 ? (
           <Card title={`Peaks (${ownPeaks.length})`}>
-            <PeakRows peaks={ownPeaks} names={Object.fromEntries(peakNames)} manage={manage} collapsed />
+            <PeakRows peaks={ownPeaks} names={Object.fromEntries(peakNames)} manage={manage} collapsed viewer={viewer} ownerId={member.id} />
           </Card>
         ) : null}
         {heldGear.length > 0 ? (

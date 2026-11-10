@@ -7,6 +7,7 @@ import { SubmitButton } from '@/components/ui/SubmitButton';
 import { BrowseTable } from '@/components/ui/BrowseTable';
 import type { DataColumn } from '@/components/ui/DataTable';
 import { Card } from '@/components/hub/Card';
+import { adminPowerLabel } from '@/lib/admin-ui';
 
 export type PendingMember = {
   id: string;
@@ -89,18 +90,33 @@ function PendingDecision({ userId, onDone }: { userId: string; onDone: () => voi
     if (finished) onDoneRef.current();
   }, [finished]);
 
+  const approveAdmin = adminPowerLabel('Approve member');
+  const denyAdmin = adminPowerLabel('Deny member');
+
   return (
     <div className="space-y-1">
       <div className="flex flex-wrap gap-2">
         <form action={approve}>
           <input type="hidden" name="userId" value={userId} />
-          <SubmitButton tone="green" pendingLabel="Approving…" disabled={denyPending || finished}>
+          <SubmitButton
+            tone="admin"
+            pendingLabel="Approving…"
+            disabled={denyPending || finished}
+            title={approveAdmin.title}
+            ariaLabel={approveAdmin.ariaLabel}
+          >
             Approve
           </SubmitButton>
         </form>
         <form action={deny}>
           <input type="hidden" name="userId" value={userId} />
-          <SubmitButton pendingLabel="Removing…" disabled={approvePending || finished}>
+          <SubmitButton
+            tone="admin"
+            pendingLabel="Removing…"
+            disabled={approvePending || finished}
+            title={denyAdmin.title}
+            ariaLabel={denyAdmin.ariaLabel}
+          >
             Deny
           </SubmitButton>
         </form>

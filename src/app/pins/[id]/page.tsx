@@ -11,6 +11,7 @@ import { Card } from '@/components/hub/Card';
 import { getViewer } from '@/app/sign-in/actions';
 import { ACTIVITY_META, isActivity } from '@/lib/activities';
 import { isDatabaseConfigured } from '@/db';
+import { adminPowerActing } from '@/lib/admin-ui';
 import { canEditOwned } from '@/lib/membership';
 import { loadPin } from '@/lib/pins';
 import { PIN_KIND_LABELS, isPinKind } from '@/lib/pin-kinds';
@@ -68,6 +69,11 @@ export default async function PinPage({
   const viewer = await getViewer();
   const manage = Boolean(viewer && canEditOwned({
     actorRole: viewer.role,
+    actorId: viewer.id,
+    ownerId: pin.createdBy,
+  }));
+  const editAdminPower = Boolean(viewer && adminPowerActing({
+    role: viewer.role,
     actorId: viewer.id,
     ownerId: pin.createdBy,
   }));
@@ -131,6 +137,7 @@ export default async function PinPage({
         {manage && viewer ? (
           <Card title="Edit">
             <PinForm
+              adminPower={editAdminPower}
               initial={{
                 id: pin.id,
                 title: pin.title,
@@ -142,7 +149,7 @@ export default async function PinPage({
               }}
             />
             <div className="mt-4">
-              <DeletePinButton id={pin.id} />
+              <DeletePinButton id={pin.id} adminPower={editAdminPower} />
             </div>
           </Card>
         ) : null}

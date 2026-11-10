@@ -2,10 +2,12 @@
 
 import { useActionState } from 'react';
 import { inviteFriend } from '@/app/sign-in/actions';
+import { adminPowerLabel } from '@/lib/admin-ui';
 import { SubmitButton } from '@/components/ui/SubmitButton';
 
 export function InviteForm() {
   const [state, action] = useActionState(inviteFriend, null);
+  const inviteAdmin = adminPowerLabel('Send invite');
 
   return (
     <form action={action} className="space-y-3">
@@ -27,7 +29,14 @@ export function InviteForm() {
           <input readOnly value={state.url} className="w-full retro-box-inset bg-white px-3 py-2 text-sm" />
         </label>
       ) : null}
-      <SubmitButton tone="green" pendingLabel="Sending…">Invite</SubmitButton>
+      <SubmitButton
+        tone="admin"
+        pendingLabel="Sending…"
+        title={inviteAdmin.title}
+        ariaLabel={inviteAdmin.ariaLabel}
+      >
+        Invite
+      </SubmitButton>
     </form>
   );
 }

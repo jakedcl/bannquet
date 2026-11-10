@@ -15,6 +15,14 @@ import { formatFeetGain, formatMiles } from '@/lib/gpx';
 import { PROFILE_PREVIEW } from '@/lib/list-page';
 import { formatTripDate } from '@/lib/utils';
 import { chipClass } from '@/components/hub/Button';
+import { adminPowerActing, adminPowerLabel } from '@/lib/admin-ui';
+import type { MemberRole } from '@/lib/membership';
+
+export type ProfileManageViewer = { id: string; role: MemberRole };
+
+function deleteAsAdmin(viewer: ProfileManageViewer | null | undefined, ownerId: string): boolean {
+  return Boolean(viewer && adminPowerActing({ role: viewer.role, actorId: viewer.id, ownerId }));
+}
 
 export function SeeAll({ href, total }: { href: string; total: number }) {
   if (total <= PROFILE_PREVIEW) return null;
@@ -55,12 +63,17 @@ export function RouteRows({
   manage,
   profilePath,
   collapsed = false,
+  viewer,
+  ownerId,
 }: {
   routes: Array<{ id: string; name: string; activity: string; distanceM: number | null; elevGainM: number | null; date: string | null }>;
   manage: boolean;
   profilePath: string;
   collapsed?: boolean;
+  viewer?: ProfileManageViewer | null;
+  ownerId?: string;
 }) {
+  const adminDelete = manage && ownerId ? deleteAsAdmin(viewer, ownerId) : false;
   const columns: DataColumn<(typeof routes)[number]>[] = [
     {
       id: 'name',
@@ -103,7 +116,13 @@ export function RouteRows({
       sortValue: () => null,
       cell: (row) => (
         <Trash>
-          <ConfirmDelete action={deleteRouteAction} confirm="Delete this route?" fields={{ id: row.id, returnTo: profilePath }} />
+          <ConfirmDelete
+            action={deleteRouteAction}
+            confirm="Delete this route?"
+            adminPower={adminDelete}
+            label={adminDelete ? adminPowerLabel('Delete route').ariaLabel : undefined}
+            fields={{ id: row.id, returnTo: profilePath }}
+          />
         </Trash>
       ),
     });
@@ -127,11 +146,16 @@ export function PinRows({
   pins,
   manage,
   collapsed = false,
+  viewer,
+  ownerId,
 }: {
   pins: Array<{ id: string; title: string; visitedOn: string | null; activity: string | null; kind: string }>;
   manage: boolean;
   collapsed?: boolean;
+  viewer?: ProfileManageViewer | null;
+  ownerId?: string;
 }) {
+  const adminDelete = manage && ownerId ? deleteAsAdmin(viewer, ownerId) : false;
   const columns: DataColumn<(typeof pins)[number]>[] = [
     {
       id: 'title',
@@ -160,7 +184,13 @@ export function PinRows({
       sortValue: () => null,
       cell: (row) => (
         <Trash>
-          <ConfirmDelete action={deletePinAction} confirm="Delete this pin?" fields={{ id: row.id }} />
+          <ConfirmDelete
+            action={deletePinAction}
+            confirm="Delete this pin?"
+            adminPower={adminDelete}
+            label={adminDelete ? adminPowerLabel('Delete pin').ariaLabel : undefined}
+            fields={{ id: row.id }}
+          />
         </Trash>
       ),
     });
@@ -188,13 +218,18 @@ export function PhotoGrid({
   manage,
   profilePath,
   wide = false,
+  viewer,
+  ownerId,
 }: {
   photos: Array<{ id: string; url: string; thumbUrl: string | null; caption: string | null }>;
   manage: boolean;
   profilePath: string;
   /** More columns on big screens, for the full gallery. */
   wide?: boolean;
+  viewer?: ProfileManageViewer | null;
+  ownerId?: string;
 }) {
+  const adminDelete = manage && ownerId ? deleteAsAdmin(viewer, ownerId) : false;
   return (
     <div className={`grid grid-cols-3 gap-2${wide ? ' sm:grid-cols-4 lg:grid-cols-6' : ''}`}>
       {photos.map((photo) => (
@@ -214,6 +249,8 @@ export function PhotoGrid({
               <ConfirmDelete
                 action={deletePhotoAction}
                 confirm="Delete this photo?"
+                adminPower={adminDelete}
+                label={adminDelete ? adminPowerLabel('Delete photo').ariaLabel : undefined}
                 fields={{ id: photo.id, returnTo: profilePath }}
               />
             </div>
@@ -228,11 +265,16 @@ export function TripRows({
   trips,
   manage,
   collapsed = false,
+  viewer,
+  ownerId,
 }: {
   trips: Array<{ id: string; title: string; tripDate: string | null; activity?: string | null }>;
   manage: boolean;
   collapsed?: boolean;
+  viewer?: ProfileManageViewer | null;
+  ownerId?: string;
 }) {
+  const adminDelete = manage && ownerId ? deleteAsAdmin(viewer, ownerId) : false;
   const columns: DataColumn<(typeof trips)[number]>[] = [
     {
       id: 'title',
@@ -261,7 +303,13 @@ export function TripRows({
       sortValue: () => null,
       cell: (row) => (
         <Trash>
-          <ConfirmDelete action={deleteTripAction} confirm="Delete this trip?" fields={{ id: row.id }} />
+          <ConfirmDelete
+            action={deleteTripAction}
+            confirm="Delete this trip?"
+            adminPower={adminDelete}
+            label={adminDelete ? adminPowerLabel('Delete trip').ariaLabel : undefined}
+            fields={{ id: row.id }}
+          />
         </Trash>
       ),
     });
@@ -286,12 +334,17 @@ export function PeakRows({
   names,
   manage,
   collapsed = false,
+  viewer,
+  ownerId,
 }: {
   peaks: Array<{ id: string; peakSlug: string; count: number }>;
   names: Record<string, string>;
   manage: boolean;
   collapsed?: boolean;
+  viewer?: ProfileManageViewer | null;
+  ownerId?: string;
 }) {
+  const adminDelete = manage && ownerId ? deleteAsAdmin(viewer, ownerId) : false;
   const columns: DataColumn<(typeof peaks)[number]>[] = [
     {
       id: 'peak',
@@ -320,6 +373,8 @@ export function PeakRows({
           <ConfirmDelete
             action={deletePeakRowAction}
             confirm={row.count > 1 ? 'Take one visit off this peak?' : 'Take this off the peaks list?'}
+            adminPower={adminDelete}
+            label={adminDelete ? adminPowerLabel('Remove peak visit').ariaLabel : undefined}
             fields={{ id: row.id, peakSlug: row.peakSlug }}
           />
         </Trash>

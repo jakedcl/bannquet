@@ -2,6 +2,7 @@
 
 import { useActionState } from 'react';
 import type { ButtonTone } from '@/components/hub/Button';
+import { adminPowerLabel } from '@/lib/admin-ui';
 import { SubmitButton } from '@/components/ui/SubmitButton';
 
 type Action = (
@@ -33,14 +34,15 @@ export function TrashButton({
   adminPower?: boolean;
 }) {
   const resolvedTone = tone ?? (adminPower ? 'admin' : undefined);
+  const adminLabels = adminPower ? adminPowerLabel(label) : null;
   if (look === 'hub') {
     return (
       <SubmitButton
         unstyled={!resolvedTone}
         tone={resolvedTone ?? 'default'}
         pendingLabel="Deleting…"
-        ariaLabel={text ? undefined : label}
-        title={label}
+        ariaLabel={adminLabels?.ariaLabel ?? (text ? undefined : label)}
+        title={adminLabels?.title ?? label}
         name={name}
         value={value}
         disabled={pending}
@@ -55,18 +57,18 @@ export function TrashButton({
   }
   return (
     <SubmitButton
-      icon
-      tone="yellow"
+      icon={!resolvedTone}
+      tone={resolvedTone ?? 'yellow'}
       pendingLabel="Deleting…"
-      ariaLabel={label}
-      title={label}
+      ariaLabel={adminLabels?.ariaLabel ?? label}
+      title={adminLabels?.title ?? label}
       name={name}
       value={value}
       disabled={pending}
       onClick={onClick}
-      className="text-lg"
+      className={resolvedTone ? '' : 'text-lg'}
     >
-      <TrashIcon />
+      {resolvedTone ? 'Delete' : <TrashIcon />}
     </SubmitButton>
   );
 }

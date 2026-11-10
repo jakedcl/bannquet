@@ -119,6 +119,7 @@ export default async function TripPage({ params }: { params: Promise<{ id: strin
     actorId: viewer.id,
     ownerId: trip.createdBy,
   }));
+  const editTripAdminPower = deleteTripAdminPower;
   const canManageJoins = Boolean(viewer && (viewer.role === 'admin' || isOrganizer));
   const joinActionAdminPower = Boolean(viewer && viewer.role === 'admin' && !isOrganizer);
   const going = membership === 'going';
@@ -304,11 +305,12 @@ export default async function TripPage({ params }: { params: Promise<{ id: strin
         {canEditTrip || canDeleteTrip ? (
           <section className="space-y-2" aria-label="Manage trip">
             {canEditTrip ? (
-              <EditDetails look="hub">
+              <EditDetails look="hub" adminPower={editTripAdminPower}>
                 <Card>
                   <EditForm
                     key={`${trip.title}\n${trip.tripDate ?? ''}\n${trip.notes}`}
                     action={updateTripAction}
+                    adminPower={editTripAdminPower}
                     hidden={{ id: trip.id }}
                     fields={[
                       { name: 'title', label: 'Name', value: trip.title, maxLength: 80 },

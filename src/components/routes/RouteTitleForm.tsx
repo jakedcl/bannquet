@@ -5,18 +5,22 @@ import { useRouter } from 'next/navigation';
 import { updateRouteTitleAction } from '@/app/library/actions';
 import { SubmitButton } from '@/components/ui/SubmitButton';
 import { HideEndsToggle } from '@/components/routes/HideEndsToggle';
+import { adminPowerLabel } from '@/lib/admin-ui';
 
 export function RouteTitleForm({
   id,
   title,
   notes,
   hideEnds,
+  adminPower = false,
 }: {
   id: string;
   title: string;
   notes: string;
   hideEnds: boolean;
+  adminPower?: boolean;
 }) {
+  const saveAdmin = adminPower ? adminPowerLabel('Save route') : null;
   const router = useRouter();
   const [state, action] = useActionState(updateRouteTitleAction, null);
   const [hidden, setHidden] = useState(hideEnds);
@@ -51,7 +55,14 @@ export function RouteTitleForm({
       <HideEndsToggle checked={hidden} onChange={setHidden} />
       {state?.error ? <p className="text-sm font-bold text-red-700">{state.error}</p> : null}
       {state?.saved ? <p className="text-sm">Saved.</p> : null}
-      <SubmitButton pendingLabel="Saving…">Save</SubmitButton>
+      <SubmitButton
+        tone={adminPower ? 'admin' : 'default'}
+        pendingLabel="Saving…"
+        title={saveAdmin?.title}
+        ariaLabel={saveAdmin?.ariaLabel}
+      >
+        Save
+      </SubmitButton>
     </form>
   );
 }

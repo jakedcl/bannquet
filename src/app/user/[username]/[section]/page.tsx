@@ -61,13 +61,23 @@ async function loadProfileSection(section: Section, memberId: string, page: numb
   return { kind: 'peaks', peaks, names, total: peaks.length, pages: 1, page: 1 };
 }
 
-function sectionBody(loaded: ProfileSectionData, manage: boolean, handle: string): ReactNode {
+function sectionBody(
+  loaded: ProfileSectionData,
+  manage: boolean,
+  handle: string,
+  viewer: { id: string; role: 'member' | 'admin' | 'pending' } | null,
+  ownerId: string,
+): ReactNode {
   if (loaded.total === 0) return <p className="text-sm">No {loaded.kind} yet.</p>;
-  if (loaded.kind === 'trips') return <TripRows trips={loaded.trips} manage={manage} />;
-  if (loaded.kind === 'routes') return <RouteRows routes={loaded.routes} manage={manage} profilePath={`/user/${handle}`} />;
-  if (loaded.kind === 'pins') return <PinRows pins={loaded.pins} manage={manage} />;
-  if (loaded.kind === 'photos') return <PhotoGrid photos={loaded.photos} manage={manage} profilePath={`/user/${handle}`} />;
-  return <PeakRows peaks={loaded.peaks} names={loaded.names} manage={manage} />;
+  if (loaded.kind === 'trips') return <TripRows trips={loaded.trips} manage={manage} viewer={viewer} ownerId={ownerId} />;
+  if (loaded.kind === 'routes') {
+    return <RouteRows routes={loaded.routes} manage={manage} profilePath={`/user/${handle}`} viewer={viewer} ownerId={ownerId} />;
+  }
+  if (loaded.kind === 'pins') return <PinRows pins={loaded.pins} manage={manage} viewer={viewer} ownerId={ownerId} />;
+  if (loaded.kind === 'photos') {
+    return <PhotoGrid photos={loaded.photos} manage={manage} profilePath={`/user/${handle}`} viewer={viewer} ownerId={ownerId} />;
+  }
+  return <PeakRows peaks={loaded.peaks} names={loaded.names} manage={manage} viewer={viewer} ownerId={ownerId} />;
 }
 
 export default async function ProfileSectionPage({
@@ -102,7 +112,7 @@ export default async function ProfileSectionPage({
     error = loadFailed('profile list', err, 'This list did not load. Try again in a minute.');
   }
 
-  const body = loaded ? sectionBody(loaded, manage, handle) : null;
+  const body = loaded ? sectionBody(loaded, manage, handle, viewer, member.id) : null;
 
   return (
     <PageWrapper>

@@ -16,7 +16,7 @@ import { loadRoute } from '@/lib/library';
 import { seesWholeRoute } from '@/lib/route-privacy';
 import { canEditOwned } from '@/lib/membership';
 import { loadMapDataNear } from '@/lib/posts';
-import { adminPowerActing } from '@/lib/admin-ui';
+import { adminPowerActing, adminPowerLabel } from '@/lib/admin-ui';
 import { listTripChoices, tripAttachHintForViewer, tripsForItem } from '@/lib/trips';
 import { loadFailed } from '@/lib/load-error';
 import { formatTripDate } from '@/lib/utils';
@@ -86,6 +86,7 @@ export default async function RoutePage({
     actorId: viewer.id,
     ownerId: route.userId,
   }));
+  const editAdminPower = deleteAdminPower;
   const map = route.lat != null && route.lng != null ? await loadMapDataNear(viewer?.id ?? null, { routeId: route.id }).catch(() => null) : null;
 
   return (
@@ -119,6 +120,7 @@ export default async function RoutePage({
               title={route.title ?? ''}
               notes={route.notes ?? ''}
               hideEnds={route.hideEnds}
+              adminPower={editAdminPower}
             />
           ) : null}
         </Card>
@@ -143,6 +145,7 @@ export default async function RoutePage({
               action={deleteRouteAction}
               confirm="Delete this route?"
               adminPower={deleteAdminPower}
+              label={deleteAdminPower ? adminPowerLabel('Delete route').ariaLabel : undefined}
               fields={{ id: route.id, returnTo: viewer.handle ? `/user/${viewer.handle}` : '/' }}
             />
           </Card>
