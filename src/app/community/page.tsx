@@ -5,11 +5,11 @@ import { CommunityBoard, type CommunityPeek } from '@/components/community/Commu
 import { isDatabaseConfigured } from '@/db';
 import { allPeaks } from '@/lib/challenges';
 import { listChatMessages } from '@/lib/chat';
-import { listGear } from '@/lib/gear';
-import { listApprovedMembers } from '@/lib/members-directory';
+import { listTopGearByHolds } from '@/lib/gear';
+import { listTopMembersByPeaks } from '@/lib/members-directory';
 import { loadMapData, type MapFeatureCollection } from '@/lib/posts';
-import { listPeakRows } from '@/lib/summits';
-import { listTrips } from '@/lib/trips';
+import { popularPeaksByFriends } from '@/lib/summits';
+import { listTripsPeek } from '@/lib/trips';
 import { formatTripDate } from '@/lib/utils';
 
 export const dynamic = 'force-dynamic';
@@ -28,32 +28,15 @@ function emptyPeek(): CommunityPeek {
 }
 
 async function loadPeek(viewerId: string | null): Promise<CommunityPeek> {
-  const [messages, visits, trips, members, gear, map] = await Promise.all([
-    listChatMessages(),
-    listPeakRows(),
-    listTrips(),
-    listApprovedMembers(),
-    listGear(),
+  const peakNames = new Map(allPeaks().map((peak) => [peak.slug, peak.name]));
+  const [messages, popularPeaks, trips, members, gear, map] = await Promise.all([
+    listChatMessages(null, PEEK),
+    popularPeaksByFriends(PEEK),
+    listTripsPeek(PEEK),
+    listTopMembersByPeaks(PEEK),
+    listTopGearByHolds(PEEK),
     loadMapData(viewerId),
   ]);
-  const counts = new Map<string, number>();
-  for (const row of visits) {
-    counts.set(row.peakSlug, (counts.get(row.peakSlug) ?? 0) + 1);
-  }
-  const peakRows = allPeaks()
-    .flatMap((peak) => {
-      const total = counts.get(peak.slug) ?? 0;
-      if (total < 1) return [];
-      return [{
-        slug: peak.slug,
-        name: peak.name,
-        detail: total === 1 ? '1 friend' : `${total} friends`,
-        total,
-      }];
-    })
-    .sort((a, b) => b.total - a.total || a.name.localeCompare(b.name))
-    .slice(0, PEEK)
-    .map(({ slug, name, detail }) => ({ slug, name, detail }));
 
   return {
     chat: messages.slice(-PEEK).map((message) => ({
@@ -62,31 +45,26 @@ async function loadPeek(viewerId: string | null): Promise<CommunityPeek> {
       handle: message.handle,
       body: clip(message.body || message.ref?.label || ''),
     })),
-    peaks: peakRows,
-    trips: trips.slice(0, PEEK).map((trip) => ({
+    peaks: popularPeaks.map((row) => ({
+      slug: row.peakSlug,
+      name: peakNames.get(row.peakSlug) ?? row.peakSlug,
+      detail: row.friends === 1 ? '1 friend' : `${row.friends} friends`,
+    })),
+    trips: trips.map((trip) => ({
       id: trip.id,
       title: trip.title,
       when: trip.tripDate ? formatTripDate(trip.tripDate) : null,
     })),
-    members: [...members]
-      .sort((a, b) => b.peaks - a.peaks || a.name.localeCompare(b.name))
-      .slice(0, PEEK)
-      .map((member) => ({
-        id: member.id,
-        name: member.name,
-        handle: member.handle,
-        detail: member.peaks > 0 ? `${member.peaks} ${member.peaks === 1 ? 'peak' : 'peaks'}` : null,
-      })),
-    gear: [...gear]
-      .sort((a, b) => {
-        const held = (item: typeof a) => item.holds.reduce((sum, hold) => sum + hold.qty, 0);
-        return held(b) - held(a) || a.name.localeCompare(b.name);
-      })
-      .slice(0, PEEK)
-      .map((item) => {
-        const qty = item.holds.reduce((sum, hold) => sum + hold.qty, 0);
-        return { id: item.id, name: item.name, detail: qty > 0 ? String(qty) : null };
-      }),
+    members: members.map((member) => ({
+      id: member.id,
+      name: member.name,
+      handle: member.handle,
+      detail: member.peaks > 0 ? `${member.peaks} ${member.peaks === 1 ? 'peak' : 'peaks'}` : null,
+    })),
+    gear: gear.map((item) => {
+      const qty = item.holds.reduce((sum, hold) => sum + hold.qty, 0);
+      return { id: item.id, name: item.name, detail: qty > 0 ? String(qty) : null };
+    }),
     points: map.points,
     lines: map.lines,
   };

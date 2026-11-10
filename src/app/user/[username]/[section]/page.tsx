@@ -12,7 +12,7 @@ import { loadProfilePins } from '@/lib/pins';
 import { loadProfileLibrary } from '@/lib/posts';
 import { profileMember } from '@/lib/profile-member';
 import { canDeleteOwned } from '@/lib/membership';
-import { listPeakRows } from '@/lib/summits';
+import { listMemberPeakRows } from '@/lib/summits';
 import { listTripsByOwner } from '@/lib/trips';
 import { loadFailed } from '@/lib/load-error';
 
@@ -37,7 +37,7 @@ type ProfileSectionData =
   | { kind: 'routes'; total: number; pages: number; page: number; routes: Awaited<ReturnType<typeof loadProfileLibrary>>['routes'] }
   | { kind: 'pins'; total: number; pages: number; page: number; pins: Awaited<ReturnType<typeof loadProfilePins>> }
   | { kind: 'photos'; total: number; pages: number; page: number; photos: Awaited<ReturnType<typeof loadProfileLibrary>>['photos'] }
-  | { kind: 'peaks'; total: number; pages: number; page: number; peaks: Awaited<ReturnType<typeof listPeakRows>>; names: Record<string, string> };
+  | { kind: 'peaks'; total: number; pages: number; page: number; peaks: Awaited<ReturnType<typeof listMemberPeakRows>>; names: Record<string, string> };
 
 async function loadProfileSection(section: Section, memberId: string, page: number): Promise<ProfileSectionData> {
   if (section === 'trips') {
@@ -57,7 +57,7 @@ async function loadProfileSection(section: Section, memberId: string, page: numb
     return { kind: 'photos', photos: sliced.rows, total: sliced.total, pages: sliced.pages, page: sliced.page };
   }
   const names = Object.fromEntries(allPeaks().map((peak) => [peak.slug, peak.name]));
-  const peaks = (await listPeakRows()).filter((row) => row.userId === memberId).reverse();
+  const peaks = (await listMemberPeakRows(memberId)).reverse();
   return { kind: 'peaks', peaks, names, total: peaks.length, pages: 1, page: 1 };
 }
 

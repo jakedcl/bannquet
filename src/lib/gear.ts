@@ -29,6 +29,56 @@ export type GearItem = {
   holds: GearHold[];
 };
 
+export async function listTopGearByHolds(limit: number): Promise<GearItem[]> {
+  const capped = Math.max(1, Math.min(limit, 20));
+  const [items, holds] = await Promise.all([
+    getDb().execute(sql`
+      select g.id::text as id, g.name, g.category, g.added_by,
+        coalesce(sum(h.qty), 0)::int as held
+      from community_gear g
+      left join community_gear_holds h on h.gear_id = g.id
+      left join users u on u.id = h.user_id and u.role <> 'pending'
+      group by g.id
+      order by held desc, lower(g.name)
+      limit ${capped}
+    `),
+    getDb().execute(sql`
+      select h.gear_id::text as gear_id, h.user_id, h.qty,
+        coalesce(nullif(u.display_name, ''), nullif(u.handle, ''), 'Friend') as name,
+        u.handle
+      from community_gear_holds h
+      join users u on u.id = h.user_id
+      where u.role <> 'pending' and h.qty > 0
+      order by name
+    `),
+  ]);
+  const byItem = new Map<string, GearHold[]>();
+  const itemIds = new Set(asRows(items).flatMap((row) => {
+    const id = text(row.id);
+    return id ? [id] : [];
+  }));
+  for (const row of asRows(holds)) {
+    const gearId = text(row.gear_id);
+    const userId = text(row.user_id);
+    const qty = Number(row.qty);
+    if (!gearId || !userId || !itemIds.has(gearId) || !Number.isFinite(qty) || qty < 1) continue;
+    const list = byItem.get(gearId) ?? [];
+    list.push({
+      userId,
+      name: text(row.name) ?? 'Friend',
+      handle: text(row.handle),
+      qty,
+    });
+    byItem.set(gearId, list);
+  }
+  return asRows(items).flatMap((row) => {
+    const id = text(row.id);
+    const name = text(row.name);
+    if (!id || !name) return [];
+    return [{ id, name, category: text(row.category), addedBy: text(row.added_by), holds: byItem.get(id) ?? [] }];
+  });
+}
+
 export async function listGear(): Promise<GearItem[]> {
   const [items, holds] = await Promise.all([
     getDb().execute(sql`

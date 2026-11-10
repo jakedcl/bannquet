@@ -69,13 +69,14 @@ function mapMessage(row: Record<string, unknown>): ChatMessage | null {
   };
 }
 
-function messageQuery(cursor?: { after: string; afterId: string } | null) {
+function messageQuery(cursor?: { after: string; afterId: string } | null, limit?: number) {
   const where = cursor
     ? sql`where (m.created_at, m.id) > (${cursor.after}::timestamptz, ${cursor.afterId}::uuid)`
     : sql``;
+  const capped = limit != null && limit > 0 ? Math.min(limit, 80) : null;
   const order = cursor
-    ? sql`order by m.created_at asc, m.id asc limit 50`
-    : sql`order by m.created_at desc, m.id desc limit 80`;
+    ? sql`order by m.created_at asc, m.id asc limit ${capped ?? 50}`
+    : sql`order by m.created_at desc, m.id desc limit ${capped ?? 80}`;
   return sql`
     select m.id::text as id, m.user_id, m.body, m.created_at, m.ref_kind, m.ref_id::text as ref_id,
       coalesce(nullif(u.display_name, ''), nullif(u.handle, ''), 'Friend') as name,
@@ -96,8 +97,11 @@ function messageQuery(cursor?: { after: string; afterId: string } | null) {
   `;
 }
 
-export async function listChatMessages(cursor?: { after: string; afterId: string } | null): Promise<ChatMessage[]> {
-  const result = await getDb().execute(messageQuery(cursor));
+export async function listChatMessages(
+  cursor?: { after: string; afterId: string } | null,
+  limit?: number,
+): Promise<ChatMessage[]> {
+  const result = await getDb().execute(messageQuery(cursor, limit));
   const messages = asRows(result).flatMap((row) => {
     const message = mapMessage(row);
     return message ? [message] : [];
