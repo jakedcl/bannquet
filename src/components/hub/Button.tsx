@@ -59,7 +59,7 @@ export function Pill({
   );
 }
 
-export const BUTTON_TONES = ['default', 'primary', 'yellow', 'orange', 'pink', 'blue', 'green', 'purple'] as const;
+export const BUTTON_TONES = ['default', 'primary', 'yellow', 'orange', 'pink', 'blue', 'green', 'purple', 'admin'] as const;
 
 export type ButtonTone = (typeof BUTTON_TONES)[number];
 
@@ -72,6 +72,7 @@ export const BUTTON_TONE_CLASS: Record<ButtonTone, string> = {
   blue: 'retro-button retro-button-blue',
   green: 'retro-button retro-button-green',
   purple: 'retro-button retro-button-purple',
+  admin: 'retro-button retro-button-admin',
 };
 
 /** The shared size for a retro button in any tone: 44px tall, readable label. */

@@ -177,6 +177,35 @@ button, .retro-button {
   background: linear-gradient(to bottom, #ffb300 0%, #ff9900 100%);
 }
 
+.retro-button-admin {
+  border: 3px solid #111111;
+  background: repeating-linear-gradient(
+    -45deg,
+    #111111,
+    #111111 10px,
+    #ffd700 10px,
+    #ffd700 20px
+  );
+  color: #111111;
+  box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.35);
+  font-weight: bold;
+}
+
+.retro-button-admin-label {
+  display: inline-flex;
+  min-height: 2.5rem;
+  align-items: center;
+  justify-content: center;
+  margin: 3px;
+  padding: 0 0.75rem;
+  border: 2px solid #111111;
+  background: #ffd700;
+  color: #111111;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
 .retro-button-orange {
   background: linear-gradient(to bottom, #ff8c00 0%, #ff6600 100%);
   border: 3px outset #cc6600;

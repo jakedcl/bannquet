@@ -1,6 +1,7 @@
 'use client';
 
 import { useActionState } from 'react';
+import type { ButtonTone } from '@/components/hub/Button';
 import { SubmitButton } from '@/components/ui/SubmitButton';
 
 type Action = (
@@ -16,6 +17,8 @@ export function TrashButton({
   onClick,
   look = 'retro',
   text,
+  tone,
+  adminPower,
 }: {
   pending?: boolean;
   label?: string;
@@ -26,11 +29,15 @@ export function TrashButton({
   look?: 'retro' | 'hub';
   /** Hub only: a labeled button instead of the trash icon. */
   text?: string;
+  tone?: ButtonTone;
+  adminPower?: boolean;
 }) {
+  const resolvedTone = tone ?? (adminPower ? 'admin' : undefined);
   if (look === 'hub') {
     return (
       <SubmitButton
-        unstyled
+        unstyled={!resolvedTone}
+        tone={resolvedTone ?? 'default'}
         pendingLabel="Deleting…"
         ariaLabel={text ? undefined : label}
         title={label}
@@ -38,7 +45,7 @@ export function TrashButton({
         value={value}
         disabled={pending}
         onClick={onClick}
-        className={text
+        className={resolvedTone ? '' : text
           ? 'retro-button ui-press min-h-11 w-full rounded-none text-sm font-bold uppercase tracking-wide text-red-700'
           : 'retro-button ui-press inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-none !p-0 text-red-700'}
       >
@@ -71,6 +78,8 @@ export function ConfirmDelete({
   label,
   look = 'retro',
   text,
+  adminPower,
+  tone,
 }: {
   action: Action;
   confirm: string;
@@ -79,6 +88,8 @@ export function ConfirmDelete({
   label?: string;
   look?: 'retro' | 'hub';
   text?: string;
+  adminPower?: boolean;
+  tone?: ButtonTone;
 }) {
   const [state, formAction, pending] = useActionState(action, null);
   return (
@@ -95,7 +106,14 @@ export function ConfirmDelete({
       {state?.error ? (
         <p className="absolute right-0 top-full z-10 mt-1 w-44 text-right text-xs font-bold text-red-700">{state.error}</p>
       ) : null}
-      <TrashButton pending={pending} label={label ?? confirm.replace(/\?$/, '')} look={look} text={text} />
+      <TrashButton
+        pending={pending}
+        label={label ?? confirm.replace(/\?$/, '')}
+        look={look}
+        text={text}
+        adminPower={adminPower}
+        tone={tone}
+      />
     </form>
   );
 }
