@@ -1,0 +1,125 @@
+{
+  "v": 1,
+  "coverage": "northeast",
+  "states": [
+    "CT",
+    "MA",
+    "ME",
+    "NH",
+    "NJ",
+    "NY",
+    "PA",
+    "RI",
+    "VT"
+  ],
+  "cellDeg": 2,
+  "built": "2026-11-10",
+  "count": 15192,
+  "credits": "Peaks © OpenStreetMap contributors (ODbL), GeoNames (CC BY 4.0). Terrain: AWS Terrain Tiles, USGS 3DEP.",
+  "chunks": [
+    {
+      "id": "n38w076",
+      "count": 34
+    },
+    {
+      "id": "n38w078",
+      "count": 123
+    },
+    {
+      "id": "n38w080",
+      "count": 65
+    },
+    {
+      "id": "n38w082",
+      "count": 2
+    },
+    {
+      "id": "n40w070",
+      "count": 10
+    },
+    {
+      "id": "n40w072",
+      "count": 505
+    },
+    {
+      "id": "n40w074",
+      "count": 1404
+    },
+    {
+      "id": "n40w076",
+      "count": 924
+    },
+    {
+      "id": "n40w078",
+      "count": 605
+    },
+    {
+      "id": "n40w080",
+      "count": 351
+    },
+    {
+      "id": "n40w082",
+      "count": 48
+    },
+    {
+      "id": "n42w070",
+      "count": 64
+    },
+    {
+      "id": "n42w072",
+      "count": 2561
+    },
+    {
+      "id": "n42w074",
+      "count": 2564
+    },
+    {
+      "id": "n42w076",
+      "count": 1138
+    },
+    {
+      "id": "n42w078",
+      "count": 450
+    },
+    {
+      "id": "n42w080",
+      "count": 143
+    },
+    {
+      "id": "n44w068",
+      "count": 202
+    },
+    {
+      "id": "n44w070",
+      "count": 914
+    },
+    {
+      "id": "n44w072",
+      "count": 1501
+    },
+    {
+      "id": "n44w074",
+      "count": 969
+    },
+    {
+      "id": "n44w076",
+      "count": 370
+    },
+    {
+      "id": "n44w078",
+      "count": 8
+    },
+    {
+      "id": "n46w068",
+      "count": 23
+    },
+    {
+      "id": "n46w070",
+      "count": 211
+    },
+    {
+      "id": "n46w072",
+      "count": 3
+    }
+  ]
+}
