@@ -11,6 +11,7 @@ import { viewerCanContribute } from '@/lib/membership';
 import {
   COMMUNITY_LINKS,
   FISHING_LINKS,
+  PEAK_FINDER_LINK,
   UPLOAD_LINKS,
   communitySection,
   pathOn,
@@ -62,6 +63,7 @@ export function TopBar({ account }: { account: BarAccount }) {
           <Link href="/" className={barLinkClass(tab === 'map')}>Map</Link>
           <Link href="/trips" className={barLinkClass(tab === 'trips')}>Trips</Link>
           <Link href="/mountain-weather" className={barLinkClass(tab === 'weather')}>Weather</Link>
+          <Link href={PEAK_FINDER_LINK.href} className={barLinkClass(pathOn(pathname, PEAK_FINDER_LINK.href))}>Peak Finder</Link>
           <Menu label="Fishing" active={pathOn(pathname, '/fishing')}>
             <MenuLinks links={[{ href: '/fishing', label: 'All fishing' }, ...FISHING_LINKS]} />
           </Menu>
@@ -162,6 +164,11 @@ function MoreSheet({ account, onClose }: { account: BarAccount; onClose: () => v
           </button>
         </div>
         <div onClick={onClose} className="space-y-4 px-3 pt-3">
+          <div>
+            <ListGroup>
+              <ListRow href={PEAK_FINDER_LINK.href} title={PEAK_FINDER_LINK.label} />
+            </ListGroup>
+          </div>
           <div>
             <p className="t-eyebrow mb-1">Community</p>
             <ListGroup>
