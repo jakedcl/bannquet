@@ -18,36 +18,47 @@ function refresh(handle: string | null, peakSlug: string) {
   }
 }
 
-export async function addPeakAction(formData: FormData): Promise<void> {
-  await recordPeak(formData);
+type PeakActionState = { error?: string } | null;
+
+export async function addPeakAction(
+  _prev: PeakActionState,
+  formData: FormData,
+): Promise<PeakActionState> {
+  return recordPeak(formData);
 }
 
 /** Add one suggested peak, only after the person taps Add. The form stays pending until this returns. */
 export async function confirmPeakAction(formData: FormData): Promise<{ ok: true } | { ok: false }> {
-  return recordPeak(formData);
+  const result = await recordPeak(formData);
+  return result?.error ? { ok: false } : { ok: true };
 }
 
-async function recordPeak(formData: FormData): Promise<{ ok: true } | { ok: false }> {
+async function recordPeak(formData: FormData): Promise<PeakActionState> {
   const viewer = await getViewer();
   if (!viewer) return redirectToSignIn();
-  if (!canContribute(viewer.role)) return { ok: false };
+  if (!canContribute(viewer.role)) return { error: APPROVAL_WAIT };
   const peakSlug = String(formData.get('peakSlug') ?? '').trim();
-  if (!peakSlug) return { ok: false };
+  if (!peakSlug) return { error: 'That peak is missing.' };
   await ensurePeaks();
   const result = await addPeak(viewer.id, peakSlug);
-  if (result === 'missing') return { ok: false };
+  if (result === 'missing') return { error: 'That peak is missing.' };
   refresh(viewer.handle, peakSlug);
-  return { ok: true };
+  return {};
 }
 
-export async function removePeakAction(formData: FormData): Promise<void> {
+export async function removePeakAction(
+  _prev: PeakActionState,
+  formData: FormData,
+): Promise<PeakActionState> {
   const viewer = await getViewer();
   if (!viewer) return redirectToSignIn();
-  if (!canContribute(viewer.role)) return;
+  if (!canContribute(viewer.role)) return { error: APPROVAL_WAIT };
   const peakSlug = String(formData.get('peakSlug') ?? '').trim();
-  if (!peakSlug) return;
-  await removePeak(viewer.id, peakSlug);
+  if (!peakSlug) return { error: 'That peak is missing.' };
+  const removed = await removePeak(viewer.id, peakSlug);
+  if (!removed) return { error: 'That visit is already gone.' };
   refresh(viewer.handle, peakSlug);
+  return {};
 }
 
 export async function deletePeakRowAction(

@@ -73,7 +73,7 @@ export function EditForm({
       })}
       {state?.error ? <p className="text-sm font-bold text-red-700">{state.error}</p> : null}
       {state?.saved && !inline ? <p className="text-sm">Saved.</p> : null}
-      <SubmitButton pendingLabel="Saving…" className={inline ? 'px-2 py-1 text-xs' : ''}>Save</SubmitButton>
+      <SubmitButton pendingLabel="Saving…" className={inline ? 'min-h-11 px-3 py-2 text-sm' : ''}>Save</SubmitButton>
     </form>
   );
 }
