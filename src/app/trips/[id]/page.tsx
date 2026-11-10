@@ -2,7 +2,15 @@ import { notFound } from 'next/navigation';
 import PageWrapper from '@/components/ui/PageWrapper';
 import { SubmitButton } from '@/components/ui/SubmitButton';
 import { ConfirmDelete } from '@/components/delete/ConfirmDelete';
-import { deleteTripAction, detachFromTripAction, toggleGoing, updateTripAction } from '@/app/trips/actions';
+import {
+  approveTripJoinAction,
+  declineTripJoinAction,
+  deleteTripAction,
+  detachFromTripAction,
+  leaveTripAction,
+  requestTripJoinAction,
+  updateTripAction,
+} from '@/app/trips/actions';
 import { EditDetails, EditForm } from '@/components/edit/EditForm';
 import { getViewer } from '@/app/sign-in/actions';
 import { LinkedText } from '@/components/ui/LinkedText';
@@ -12,8 +20,15 @@ import { hubButtonClass, Pill } from '@/components/hub/Button';
 import { ListGroup, ListRow } from '@/components/hub/ListRow';
 import { LargeTitle } from '@/components/hub/SectionHeader';
 import { ACTIVITY_META, isActivity } from '@/lib/activities';
+import { adminPowerActing, adminPowerLabel } from '@/lib/admin-ui';
 import { canDeleteOwned, canEditOwned, viewerCanContribute } from '@/lib/membership';
-import { getTrip, type TripAttachment } from '@/lib/trips';
+import { attachToTripBlockedMessage } from '@/lib/trip-join';
+import {
+  canDetachTripAttachment,
+  getTrip,
+  getTripMemberRsvp,
+  type TripAttachment,
+} from '@/lib/trips';
 import { formatTripDate } from '@/lib/utils';
 import { isDatabaseConfigured } from '@/db';
 import { loadFailed } from '@/lib/load-error';
@@ -86,7 +101,9 @@ export default async function TripPage({ params }: { params: Promise<{ id: strin
   }
   if (!trip) notFound();
   const viewer = await getViewer();
-  const canRsvp = viewerCanContribute(viewer);
+  const membership = viewer ? await getTripMemberRsvp(id, viewer.id) : null;
+  const isOrganizer = Boolean(viewer && trip.createdBy && viewer.id === trip.createdBy);
+  const canRsvp = viewerCanContribute(viewer) && !isOrganizer;
   const canDeleteTrip = Boolean(viewer && canDeleteOwned({
     actorRole: viewer.role,
     actorId: viewer.id,
@@ -97,20 +114,29 @@ export default async function TripPage({ params }: { params: Promise<{ id: strin
     actorId: viewer.id,
     ownerId: trip.createdBy,
   }));
-  const canRemove = (ownerId: string | null | undefined) => Boolean(viewer && (
-    canEditOwned({
-      actorRole: viewer.role,
-      actorId: viewer.id,
-      ownerId: trip.createdBy,
-    })
-    || canEditOwned({
-      actorRole: viewer.role,
-      actorId: viewer.id,
-      ownerId: ownerId ?? null,
-    })
-  ));
-  const going = Boolean(viewer && trip.people.some((person) => person.id === viewer.id));
+  const deleteTripAdminPower = Boolean(viewer && adminPowerActing({
+    role: viewer.role,
+    actorId: viewer.id,
+    ownerId: trip.createdBy,
+  }));
+  const canManageJoins = Boolean(viewer && (viewer.role === 'admin' || isOrganizer));
+  const joinActionAdminPower = Boolean(viewer && viewer.role === 'admin' && !isOrganizer);
+  const going = membership === 'going';
+  const requested = membership === 'requested';
+  const canRemove = (ownerId: string | null | undefined) => Boolean(viewer && canDetachTripAttachment({
+    admin: viewer.role === 'admin',
+    actorId: viewer.id,
+    itemOwnerId: ownerId ?? null,
+  }));
+  const detachAdminPower = (ownerId: string | null | undefined) => Boolean(viewer && adminPowerActing({
+    role: viewer.role,
+    actorId: viewer.id,
+    ownerId,
+  }));
   const activity = trip.activity && isActivity(trip.activity) ? ACTIVITY_META[trip.activity].label : null;
+  const attachHint = viewer && viewerCanContribute(viewer) && !going && !isOrganizer && viewer.role !== 'admin'
+    ? attachToTripBlockedMessage(membership)
+    : null;
 
   return (
     <PageWrapper leaf={trip.title} className="hub">
@@ -124,25 +150,93 @@ export default async function TripPage({ params }: { params: Promise<{ id: strin
             <Pill tone={trip.upcoming ? 'accent' : 'gray'}>{trip.upcoming ? 'Upcoming' : 'Past'}</Pill>
             {activity ? <Pill>{activity}</Pill> : null}
             <Pill>{trip.people.length === 1 ? '1 going' : `${trip.people.length} going`}</Pill>
+            {requested ? <Pill tone="warn">Request pending</Pill> : null}
           </div>
           {canRsvp ? (
-            <form action={toggleGoing}>
-              <input type="hidden" name="tripId" value={trip.id} />
-              <input type="hidden" name="going" value={going ? '0' : '1'} />
-              <SubmitButton
-                unstyled
-                pendingLabel={going ? 'Leaving…' : 'Saving…'}
-                className={hubButtonClass(going ? 'gray' : 'filled', 'md', 'w-full sm:w-auto sm:min-w-40')}
-              >
-                {going ? "I'm out" : "I'm in"}
-              </SubmitButton>
-            </form>
+            <div className="flex flex-wrap gap-2">
+              {going || requested ? (
+                <form action={leaveTripAction}>
+                  <input type="hidden" name="tripId" value={trip.id} />
+                  <SubmitButton
+                    unstyled
+                    pendingLabel="Leaving…"
+                    className={hubButtonClass('gray', 'md', 'w-full sm:w-auto sm:min-w-40')}
+                  >
+                    {requested ? 'Cancel request' : 'Leave trip'}
+                  </SubmitButton>
+                </form>
+              ) : (
+                <form action={requestTripJoinAction}>
+                  <input type="hidden" name="tripId" value={trip.id} />
+                  <SubmitButton
+                    unstyled
+                    pendingLabel="Sending…"
+                    className={hubButtonClass('filled', 'md', 'w-full sm:w-auto sm:min-w-48')}
+                  >
+                    Request to join
+                  </SubmitButton>
+                </form>
+              )}
+            </div>
+          ) : null}
+          {attachHint ? (
+            <p className="text-sm font-bold text-gray-900">{attachHint}</p>
           ) : null}
         </div>
 
         {trip.notes ? (
           <Card title="Notes">
             <LinkedText text={trip.notes} className="t-body text-ui-label [&_a]:font-bold [&_a]:text-brand-green" />
+          </Card>
+        ) : null}
+
+        {canManageJoins && trip.joinRequests.length > 0 ? (
+          <Card title="Join requests" padded={false}>
+            <ListGroup bare>
+              {trip.joinRequests.map((person) => {
+                const declineAdmin = adminPowerLabel('Decline join request');
+                const approveAdmin = adminPowerLabel('Approve join request');
+                return (
+                  <ListRow
+                    key={person.id}
+                    href={person.handle ? `/user/${person.handle}` : undefined}
+                    leading={<Avatar name={person.name} />}
+                    title={person.name}
+                    subtitle={person.handle ? `@${person.handle}` : 'Requested to join'}
+                    accessory={(
+                      <div className="flex flex-col gap-2 sm:flex-row">
+                        <form action={approveTripJoinAction}>
+                          <input type="hidden" name="tripId" value={trip.id} />
+                          <input type="hidden" name="requesterId" value={person.id} />
+                          <SubmitButton
+                            tone={joinActionAdminPower ? 'admin' : 'green'}
+                            pendingLabel="Approving…"
+                            className="w-full sm:min-w-28"
+                            title={joinActionAdminPower ? approveAdmin.title : undefined}
+                            ariaLabel={joinActionAdminPower ? approveAdmin.ariaLabel : 'Approve join request'}
+                          >
+                            Approve
+                          </SubmitButton>
+                        </form>
+                        <form action={declineTripJoinAction}>
+                          <input type="hidden" name="tripId" value={trip.id} />
+                          <input type="hidden" name="requesterId" value={person.id} />
+                          <SubmitButton
+                            tone={joinActionAdminPower ? 'admin' : 'default'}
+                            pendingLabel="Declining…"
+                            className="w-full sm:min-w-28"
+                            title={joinActionAdminPower ? declineAdmin.title : undefined}
+                            ariaLabel={joinActionAdminPower ? declineAdmin.ariaLabel : 'Decline join request'}
+                          >
+                            Decline
+                          </SubmitButton>
+                        </form>
+                      </div>
+                    )}
+                  />
+                );
+              })}
+            </ListGroup>
           </Card>
         ) : null}
 
@@ -171,6 +265,8 @@ export default async function TripPage({ params }: { params: Promise<{ id: strin
             <ListGroup bare>
               {trip.attachments.map((item) => {
                 const photo = draftPhotoSources(item);
+                const removeAdmin = detachAdminPower(item.ownerId);
+                const removeLabel = adminPowerLabel(`Remove ${item.label} from trip`);
                 return (
                   <ListRow
                     key={`${item.kind}-${item.id}`}
@@ -192,7 +288,9 @@ export default async function TripPage({ params }: { params: Promise<{ id: strin
                         look="hub"
                         action={detachFromTripAction}
                         confirm="Remove this from the trip?"
-                        label={`Remove ${item.label} from this trip`}
+                        label={removeAdmin ? removeLabel.ariaLabel : `Remove ${item.label} from this trip`}
+                        adminPower={removeAdmin}
+                        text="Remove"
                         fields={{ tripId: trip.id, kind: item.kind, entityId: item.id, returnTo: `/trips/${trip.id}` }}
                       />
                     ) : null}
@@ -227,6 +325,7 @@ export default async function TripPage({ params }: { params: Promise<{ id: strin
                 text="Delete trip"
                 action={deleteTripAction}
                 confirm="Delete this trip?"
+                adminPower={deleteTripAdminPower}
                 fields={{ id: trip.id }}
               />
             ) : null}
