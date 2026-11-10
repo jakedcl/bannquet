@@ -4,8 +4,12 @@ import { TERRARIUM_TILES } from '@/lib/map';
 
 export type TileId = { z: number; x: number; y: number };
 
-/** Near ground uses finer tiles. Each ring is a disk out to that distance, not a hole in the middle. */
+/**
+ * Near ground uses finer tiles. Each ring is a disk out to that distance, not a hole in the middle.
+ * Zoom 12 inside 8 km is what keeps a nearby summit from looking like a stack of flat steps.
+ */
 export const TERRAIN_RINGS: readonly { zoom: number; radiusM: number }[] = [
+  { zoom: 12, radiusM: 8_000 },
   { zoom: 11, radiusM: 10_000 },
   { zoom: 10, radiusM: 50_000 },
   { zoom: 9, radiusM: 100_000 },
@@ -86,13 +90,53 @@ export function terrainTiles(lat: number, lng: number): TileId[] {
 }
 
 export function zoomForDistance(distanceM: number): number {
+  if (distanceM <= 8_000) return 12;
   if (distanceM <= 10_000) return 11;
   if (distanceM <= 50_000) return 10;
   if (distanceM <= 100_000) return 9;
   return 8;
 }
 
-/** Pixel inside a decoded 256² tile. Returns null when the tile is missing. */
+function pixelAt(
+  grids: ReadonlyMap<string, Float32Array>,
+  zoom: number,
+  tileX: number,
+  tileY: number,
+  px: number,
+  py: number,
+): number | null {
+  let x = tileX;
+  let y = tileY;
+  let sx = px;
+  let sy = py;
+  if (sx < 0) {
+    x -= 1;
+    sx += 256;
+  } else if (sx > 255) {
+    x += 1;
+    sx -= 256;
+  }
+  if (sy < 0) {
+    y -= 1;
+    sy += 256;
+  } else if (sy > 255) {
+    y += 1;
+    sy -= 256;
+  }
+  if (sx < 0 || sx > 255 || sy < 0 || sy > 255) return null;
+  const n = 2 ** zoom;
+  x = ((x % n) + n) % n;
+  if (y < 0 || y >= n) return null;
+  const grid = grids.get(`${zoom}/${x}/${y}`);
+  if (!grid) return null;
+  return grid[sy * 256 + sx] ?? null;
+}
+
+/**
+ * Height at a lat/lng. Blends the four surrounding pixels so a ridge slopes
+ * instead of stepping every time the sample crosses into the next pixel.
+ * Returns null when the tile under the point is missing.
+ */
 export function sampleTile(
   grids: ReadonlyMap<string, Float32Array>,
   lat: number,
@@ -100,16 +144,29 @@ export function sampleTile(
   zoom: number,
 ): number | null {
   const tile = lngLatToTile(lng, lat, zoom);
-  const grid = grids.get(`${tile.z}/${tile.x}/${tile.y}`);
-  if (!grid) return null;
+  if (!grids.has(`${tile.z}/${tile.x}/${tile.y}`)) return null;
   const n = 2 ** zoom;
   const fx = ((lng + 180) / 360) * n;
   const clamped = Math.min(85.05112878, Math.max(-85.05112878, lat));
   const latRad = (clamped * Math.PI) / 180;
   const fy = (1 - Math.log(Math.tan(latRad) + 1 / Math.cos(latRad)) / Math.PI) / 2 * n;
-  const px = Math.min(255, Math.max(0, Math.floor((fx - tile.x) * 256)));
-  const py = Math.min(255, Math.max(0, Math.floor((fy - tile.y) * 256)));
-  return grid[py * 256 + px] ?? null;
+  const x = (fx - tile.x) * 256 - 0.5;
+  const y = (fy - tile.y) * 256 - 0.5;
+  const x0 = Math.floor(x);
+  const y0 = Math.floor(y);
+  const tx = x - x0;
+  const ty = y - y0;
+  const h00 = pixelAt(grids, zoom, tile.x, tile.y, x0, y0);
+  const h10 = pixelAt(grids, zoom, tile.x, tile.y, x0 + 1, y0);
+  const h01 = pixelAt(grids, zoom, tile.x, tile.y, x0, y0 + 1);
+  const h11 = pixelAt(grids, zoom, tile.x, tile.y, x0 + 1, y0 + 1);
+  const nearest = h00 ?? h10 ?? h01 ?? h11;
+  if (nearest == null) return null;
+  const a = h00 ?? nearest;
+  const b = h10 ?? nearest;
+  const c = h01 ?? nearest;
+  const d = h11 ?? nearest;
+  return a * (1 - tx) * (1 - ty) + b * tx * (1 - ty) + c * (1 - tx) * ty + d * tx * ty;
 }
 
 export function sampleHeight(grids: ReadonlyMap<string, Float32Array>, lat: number, lng: number, distance: number): number | null {

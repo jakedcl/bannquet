@@ -199,13 +199,13 @@ function paint(
   if (!payload) return;
   const step = payload.stepDeg;
   for (const layer of payload.layers) {
-    strokeAngles(ctx, layer.angleDeg, layer.distanceM, step, pose, width, height, appearance === 'camera' ? 'rgba(255,255,255,0.55)' : 'rgba(92,58,30,0.45)', 1);
+    strokeAngles(ctx, layer.angleDeg, step, pose, width, height, appearance === 'camera' ? 'rgba(255,255,255,0.7)' : 'rgba(92,58,30,0.55)', 1.25);
   }
   if (appearance === 'camera') {
-    strokeAngles(ctx, payload.angleDeg, payload.distanceM, step, pose, width, height, 'rgba(0,0,0,0.75)', 3.5);
-    strokeAngles(ctx, payload.angleDeg, payload.distanceM, step, pose, width, height, '#ffffff', 1.5);
+    strokeAngles(ctx, payload.angleDeg, step, pose, width, height, 'rgba(0,0,0,0.75)', 3.5);
+    strokeAngles(ctx, payload.angleDeg, step, pose, width, height, '#ffffff', 1.5);
   } else {
-    strokeAngles(ctx, payload.angleDeg, payload.distanceM, step, pose, width, height, '#5c3a1e', 1.5);
+    strokeAngles(ctx, payload.angleDeg, step, pose, width, height, '#5c3a1e', 1.75);
   }
 }
 
@@ -226,7 +226,6 @@ function paintTicks(ctx: CanvasRenderingContext2D, pose: ViewPose, width: number
 function strokeAngles(
   ctx: CanvasRenderingContext2D,
   angles: readonly number[],
-  distances: readonly number[],
   step: number,
   pose: ViewPose,
   width: number,
@@ -237,25 +236,21 @@ function strokeAngles(
   ctx.beginPath();
   ctx.strokeStyle = color;
   ctx.lineWidth = lineWidth;
+  ctx.lineJoin = 'round';
+  ctx.lineCap = 'round';
   let drawing = false;
-  let previous = 0;
   for (let i = 0; i < angles.length; i += 1) {
     const angle = angles[i];
-    const distance = distances[i] ?? 0;
     if (!Number.isFinite(angle)) {
       drawing = false;
       continue;
     }
     const bearing = i * step;
     const point = projectDirection(bearing, angle, pose.heading, pose.pitch, pose.roll, pose.hfov, width, height);
-    const jump = previous > 0 && (distance > previous * 1.65 || distance < previous / 1.65);
-    if (!drawing || jump || point.x < -40 || point.x > width + 40) {
-      ctx.moveTo(point.x, point.y);
-    } else {
-      ctx.lineTo(point.x, point.y);
-    }
-    drawing = point.x >= -40 && point.x <= width + 40;
-    previous = distance;
+    const onScreen = point.x >= -40 && point.x <= width + 40;
+    if (!drawing || !onScreen) ctx.moveTo(point.x, point.y);
+    else ctx.lineTo(point.x, point.y);
+    drawing = onScreen;
   }
   ctx.stroke();
 }

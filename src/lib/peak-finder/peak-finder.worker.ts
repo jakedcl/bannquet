@@ -1,6 +1,6 @@
 import { EYE_ABOVE_TERRAIN_M, RAY_STEP_DEG } from './constants';
 import type { WorkerIn, WorkerOut } from './payload';
-import { ridgesOnRay, castSkyline, skylineAngle, skylineDistance, type Skyline } from './skyline';
+import { castSkyline, viewProfile, type Skyline } from './skyline';
 import { loadTerrariumTile } from './tile-cache';
 import { sampleHeight, terrainTiles } from './tiles';
 import { visiblePeaks, withTerrainHeights } from './visibility';
@@ -11,23 +11,15 @@ const scope = self as unknown as {
 };
 
 function pack(skyline: Skyline, eyeM: number, peaks: ReturnType<typeof visiblePeaks>) {
-  const angleDeg = skyline.rays.map((ray) => skylineAngle(ray));
-  const distanceM = skyline.rays.map((ray) => skylineDistance(ray));
-  const layers = [0, 1, 2].map(() => ({
-    angleDeg: Array<number>(skyline.rays.length).fill(Number.NaN),
-    distanceM: Array<number>(skyline.rays.length).fill(Number.NaN),
-  }));
-  skyline.rays.forEach((ray, index) => {
-    const skyDistance = skylineDistance(ray);
-    const extras = ridgesOnRay(ray)
-      .filter((hit) => Math.abs(hit.distanceM - skyDistance) > 800)
-      .sort((a, b) => a.distanceM - b.distanceM);
-    extras.slice(0, 3).forEach((hit, layer) => {
-      layers[layer].angleDeg[index] = hit.angleDeg;
-      layers[layer].distanceM[index] = hit.distanceM;
-    });
-  });
-  return { eyeM, stepDeg: skyline.stepDeg, angleDeg, distanceM, layers, peaks };
+  const drawn = viewProfile(skyline);
+  return {
+    eyeM,
+    stepDeg: skyline.stepDeg,
+    angleDeg: drawn.angleDeg,
+    distanceM: drawn.distanceM,
+    layers: drawn.layers,
+    peaks,
+  };
 }
 
 async function mapPool<T>(items: readonly T[], size: number, run: (item: T, index: number) => Promise<void>): Promise<void> {
