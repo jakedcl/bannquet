@@ -7,16 +7,6 @@ describe('canDetachTripAttachment', () => {
     assert.equal(canDetachTripAttachment({
       admin: true,
       actorId: 'admin',
-      tripCreatedBy: 'planner',
-      itemOwnerId: 'other',
-    }), true);
-  });
-
-  it('lets the trip planner detach any attachment', () => {
-    assert.equal(canDetachTripAttachment({
-      admin: false,
-      actorId: 'planner',
-      tripCreatedBy: 'planner',
       itemOwnerId: 'other',
     }), true);
   });
@@ -25,16 +15,22 @@ describe('canDetachTripAttachment', () => {
     assert.equal(canDetachTripAttachment({
       admin: false,
       actorId: 'owner',
-      tripCreatedBy: 'planner',
       itemOwnerId: 'owner',
     }), true);
+  });
+
+  it('blocks the trip organizer from removing someone else\'s attachment', () => {
+    assert.equal(canDetachTripAttachment({
+      admin: false,
+      actorId: 'planner',
+      itemOwnerId: 'other',
+    }), false);
   });
 
   it('blocks everyone else', () => {
     assert.equal(canDetachTripAttachment({
       admin: false,
       actorId: 'stranger',
-      tripCreatedBy: 'planner',
       itemOwnerId: 'owner',
     }), false);
   });

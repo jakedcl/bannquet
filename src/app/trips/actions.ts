@@ -3,14 +3,27 @@
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { requireContributor } from '@/lib/contributor';
+import { findMemberByAuthId } from '@/lib/auth/members';
 import { safeNextPath } from '@/lib/sign-in-next';
+import { insertNotification } from '@/lib/notifications';
+import { attachToTripBlockedMessage } from '@/lib/trip-join';
+import {
+  emailTripJoinApproved,
+  emailTripJoinDeclined,
+  emailTripJoinRequested,
+} from '@/lib/trip-join-mail';
 import { cleanTripFields } from '@/lib/trip-fields';
 import {
+  approveTripJoinRequest,
   attachItemToTrip,
   createTrip,
+  declineTripJoinRequest,
   deleteTrip,
   detachItemFromTrip,
-  setTripGoing,
+  getTripBrief,
+  getTripMemberRsvp,
+  leaveTrip,
+  requestToJoinTrip,
   updateTrip,
 } from '@/lib/trips';
 
@@ -64,13 +77,104 @@ export async function updateTripAction(
   return { saved: true };
 }
 
-export async function toggleGoing(formData: FormData): Promise<void> {
+export async function requestTripJoinAction(formData: FormData): Promise<void> {
   const { viewer } = await contributor();
   if (!viewer) return;
   const tripId = String(formData.get('tripId') ?? '');
-  const going = String(formData.get('going') ?? '') === '1';
   if (!UUID.test(tripId)) return;
-  await setTripGoing(tripId, viewer.id, going);
+  const result = await requestToJoinTrip(tripId, viewer.id);
+  if (result !== 'ok') {
+    revalidatePath(`/trips/${tripId}`);
+    return;
+  }
+  const brief = await getTripBrief(tripId);
+  const requester = await findMemberByAuthId(viewer.id);
+  const requesterName = requester?.displayName || requester?.handle || 'Someone';
+  if (brief?.createdBy) {
+    void insertNotification({
+      userId: brief.createdBy,
+      kind: 'trip_join_request',
+      title: 'Trip join request',
+      body: `${requesterName} requested to join ${brief.title}.`,
+      href: `/trips/${tripId}`,
+      tripId,
+    }).catch(() => {});
+    void emailTripJoinRequested({
+      organizerId: brief.createdBy,
+      requesterName,
+      tripTitle: brief.title,
+      tripId,
+    }).catch(() => {});
+  }
+  revalidatePath(`/trips/${tripId}`);
+}
+
+export async function leaveTripAction(formData: FormData): Promise<void> {
+  const { viewer } = await contributor();
+  if (!viewer) return;
+  const tripId = String(formData.get('tripId') ?? '');
+  if (!UUID.test(tripId)) return;
+  await leaveTrip(tripId, viewer.id);
+  revalidatePath(`/trips/${tripId}`);
+}
+
+export async function approveTripJoinAction(formData: FormData): Promise<void> {
+  const { viewer } = await contributor();
+  if (!viewer) return;
+  const tripId = String(formData.get('tripId') ?? '');
+  const requesterId = String(formData.get('requesterId') ?? '');
+  if (!UUID.test(tripId) || !requesterId) return;
+  const result = await approveTripJoinRequest({
+    tripId,
+    requesterId,
+    actor: { id: viewer.id, admin: viewer.role === 'admin' },
+  });
+  if (result !== 'ok') {
+    revalidatePath(`/trips/${tripId}`);
+    return;
+  }
+  const brief = await getTripBrief(tripId);
+  if (brief) {
+    void insertNotification({
+      userId: requesterId,
+      kind: 'trip_join_approved',
+      title: 'Request approved',
+      body: `You are going on ${brief.title}.`,
+      href: `/trips/${tripId}`,
+      tripId,
+    }).catch(() => {});
+    void emailTripJoinApproved({ requesterId, tripTitle: brief.title, tripId }).catch(() => {});
+  }
+  revalidatePath(`/trips/${tripId}`);
+}
+
+export async function declineTripJoinAction(formData: FormData): Promise<void> {
+  const { viewer } = await contributor();
+  if (!viewer) return;
+  const tripId = String(formData.get('tripId') ?? '');
+  const requesterId = String(formData.get('requesterId') ?? '');
+  if (!UUID.test(tripId) || !requesterId) return;
+  const result = await declineTripJoinRequest({
+    tripId,
+    requesterId,
+    actor: { id: viewer.id, admin: viewer.role === 'admin' },
+  });
+  if (result !== 'ok') {
+    revalidatePath(`/trips/${tripId}`);
+    return;
+  }
+  const brief = await getTripBrief(tripId);
+  if (brief) {
+    void insertNotification({
+      userId: requesterId,
+      kind: 'trip_join_declined',
+      title: 'Request declined',
+      body: `Your request to join ${brief.title} was declined.`,
+      href: `/trips/${tripId}`,
+      tripId,
+    }).catch(() => {});
+    void emailTripJoinDeclined({ requesterId, tripTitle: brief.title, tripId }).catch(() => {});
+  }
   revalidatePath(`/trips/${tripId}`);
 }
 
@@ -130,6 +234,10 @@ export async function attachToTripAction(
     admin: viewer.role === 'admin',
   });
   if (result === 'forbidden') return { error: 'You can only attach your own pins, routes, and photos.' };
+  if (result === 'not_member') {
+    const membership = await getTripMemberRsvp(tripId, viewer.id);
+    return { error: attachToTripBlockedMessage(membership) };
+  }
   if (result === 'missing') return { error: 'That item is missing.' };
   revalidatePath(`/trips/${tripId}`);
   revalidatePath('/map');
@@ -153,7 +261,7 @@ export async function detachFromTripAction(
     actorId: viewer.id,
     admin: viewer.role === 'admin',
   });
-  if (!ok) return { error: 'Only the trip planner, an admin, or the person who attached it can remove that.' };
+  if (!ok) return { error: 'Only an admin or the person who attached it can remove that.' };
   revalidatePath(`/trips/${tripId}`);
   const back = safeNextPath(String(formData.get('returnTo') ?? ''));
   if (back) redirect(back);

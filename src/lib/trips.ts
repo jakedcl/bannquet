@@ -2,6 +2,12 @@ import { sql } from 'drizzle-orm';
 import { routeTitle } from '@/lib/route-title';
 import { getDb } from '@/db';
 import { oneAtATime } from '@/lib/dedupe';
+import {
+  attachToTripBlockedMessage,
+  canAttachToTripMembership,
+  canManageTripJoinRequests,
+  type TripMemberRsvp,
+} from '@/lib/trip-join';
 
 type QueryRows = { rows?: Record<string, unknown>[] };
 
@@ -53,6 +59,7 @@ export type TripDetail = TripSummary & {
   notes: string;
   upcoming: boolean;
   people: TripPerson[];
+  joinRequests: TripPerson[];
   attachments: TripAttachment[];
   posts: Array<{ id: string; title: string; tripDate: string | null }>;
 };
@@ -108,7 +115,7 @@ export async function listTripsPeek(limit: number): Promise<TripSummary[]> {
 
 export async function getTrip(id: string): Promise<TripDetail | null> {
   const db = getDb();
-  const [tripResult, peopleResult, attachmentResult] = await Promise.all([
+  const [tripResult, peopleResult, requestsResult, attachmentResult] = await Promise.all([
     db.execute(sql`
       select t.id::text as id, t.title,
         coalesce(t.trip_date, t.start_at::date)::text as trip_date,
@@ -123,6 +130,13 @@ export async function getTrip(id: string): Promise<TripDetail | null> {
       join users u on u.id = tm.user_id
       where tm.trip_id = ${id}::uuid and tm.rsvp = 'going'
       order by tm.role desc, name
+    `),
+    db.execute(sql`
+      select u.id, coalesce(nullif(u.display_name, ''), nullif(u.handle, ''), 'Friend') as name, u.handle
+      from trip_members tm
+      join users u on u.id = tm.user_id
+      where tm.trip_id = ${id}::uuid and tm.rsvp = 'requested'
+      order by name
     `),
     db.execute(sql`
       select 'pin' as kind, p.id::text as id, p.title as label, null::text as thumb, null::text as thumb_url, p.created_by as owner_id
@@ -153,11 +167,8 @@ export async function getTrip(id: string): Promise<TripDetail | null> {
     createdBy: text(row.created_by),
     notes: text(row.notes) ?? '',
     upcoming: row.upcoming === true || row.upcoming === 't' || row.upcoming === 'true',
-    people: asRows(peopleResult).flatMap((person) => {
-      const personId = text(person.id);
-      if (!personId) return [];
-      return [{ id: personId, name: text(person.name) ?? 'Friend', handle: text(person.handle) }];
-    }),
+    people: mapTripPeople(peopleResult),
+    joinRequests: mapTripPeople(requestsResult),
     attachments: asRows(attachmentResult).flatMap((item) => {
       const itemId = text(item.id);
       const kind = text(item.kind);
@@ -270,20 +281,107 @@ export async function updateTrip(input: {
   return asRows(result).length > 0;
 }
 
-export async function setTripGoing(tripId: string, userId: string, going: boolean): Promise<void> {
-  const db = getDb();
-  if (!going) {
-    await db.execute(sql`
-      delete from trip_members where trip_id = ${tripId}::uuid and user_id = ${userId}
-    `);
-    return;
-  }
-  // A trip deleted in the meantime adds nothing instead of a foreign-key error.
-  await db.execute(sql`
-    insert into trip_members (trip_id, user_id, rsvp, role)
-    select id, ${userId}, 'going', 'member' from trips where id = ${tripId}::uuid
-    on conflict (trip_id, user_id) do update set rsvp = 'going'
+function mapTripPeople(result: unknown): TripPerson[] {
+  return asRows(result).flatMap((person) => {
+    const personId = text(person.id);
+    if (!personId) return [];
+    return [{ id: personId, name: text(person.name) ?? 'Friend', handle: text(person.handle) }];
+  });
+}
+
+export async function getTripMemberRsvp(tripId: string, userId: string): Promise<TripMemberRsvp | null> {
+  const result = await getDb().execute(sql`
+    select rsvp::text as rsvp from trip_members
+    where trip_id = ${tripId}::uuid and user_id = ${userId}
   `);
+  const rsvp = text(asRows(result)[0]?.rsvp);
+  if (rsvp === 'going' || rsvp === 'requested' || rsvp === 'maybe' || rsvp === 'no') return rsvp;
+  return null;
+}
+
+export async function getTripBrief(tripId: string): Promise<{ id: string; title: string; createdBy: string | null } | null> {
+  const result = await getDb().execute(sql`
+    select id::text as id, title, created_by from trips where id = ${tripId}::uuid
+  `);
+  const row = asRows(result)[0];
+  const id = text(row?.id);
+  if (!id) return null;
+  return { id, title: text(row.title) ?? 'Trip', createdBy: text(row.created_by) };
+}
+
+export async function actorMayAttachToTrip(tripId: string, actorId: string, admin: boolean): Promise<boolean> {
+  const brief = await getTripBrief(tripId);
+  if (!brief) return false;
+  const membership = await getTripMemberRsvp(tripId, actorId);
+  return canAttachToTripMembership({
+    actorId,
+    admin,
+    tripCreatedBy: brief.createdBy,
+    membership,
+  });
+}
+
+export async function requestToJoinTrip(tripId: string, userId: string): Promise<'ok' | 'already' | 'missing' | 'organizer'> {
+  const brief = await getTripBrief(tripId);
+  if (!brief) return 'missing';
+  if (brief.createdBy === userId) return 'organizer';
+  const existing = await getTripMemberRsvp(tripId, userId);
+  if (existing === 'going' || existing === 'requested') return 'already';
+  await getDb().execute(sql`
+    insert into trip_members (trip_id, user_id, rsvp, role)
+    values (${tripId}::uuid, ${userId}, 'requested', 'member')
+    on conflict (trip_id, user_id) do update
+      set rsvp = 'requested'
+      where trip_members.rsvp is distinct from 'going'
+  `);
+  return 'ok';
+}
+
+export async function leaveTrip(tripId: string, userId: string): Promise<void> {
+  await getDb().execute(sql`
+    delete from trip_members where trip_id = ${tripId}::uuid and user_id = ${userId}
+  `);
+}
+
+export async function approveTripJoinRequest(input: {
+  tripId: string;
+  requesterId: string;
+  actor: { id: string; admin: boolean };
+}): Promise<'ok' | 'forbidden' | 'missing'> {
+  const brief = await getTripBrief(input.tripId);
+  if (!brief) return 'missing';
+  if (!canManageTripJoinRequests({
+    actorId: input.actor.id,
+    admin: input.actor.admin,
+    tripCreatedBy: brief.createdBy,
+  })) return 'forbidden';
+  const result = await getDb().execute(sql`
+    update trip_members
+    set rsvp = 'going'
+    where trip_id = ${input.tripId}::uuid and user_id = ${input.requesterId} and rsvp = 'requested'
+    returning user_id
+  `);
+  return asRows(result).length > 0 ? 'ok' : 'missing';
+}
+
+export async function declineTripJoinRequest(input: {
+  tripId: string;
+  requesterId: string;
+  actor: { id: string; admin: boolean };
+}): Promise<'ok' | 'forbidden' | 'missing'> {
+  const brief = await getTripBrief(input.tripId);
+  if (!brief) return 'missing';
+  if (!canManageTripJoinRequests({
+    actorId: input.actor.id,
+    admin: input.actor.admin,
+    tripCreatedBy: brief.createdBy,
+  })) return 'forbidden';
+  const result = await getDb().execute(sql`
+    delete from trip_members
+    where trip_id = ${input.tripId}::uuid and user_id = ${input.requesterId} and rsvp = 'requested'
+    returning user_id
+  `);
+  return asRows(result).length > 0 ? 'ok' : 'missing';
 }
 
 export async function deleteTrip(id: string, actor: { id: string; admin: boolean }): Promise<boolean> {
@@ -314,6 +412,27 @@ export async function listTripsByOwner(userId: string): Promise<TripSummary[]> {
       going: num(row.going) ?? 0,
     }];
   });
+}
+
+export async function tripAttachHintForViewer(viewer: { id: string; role: string } | null): Promise<string | null> {
+  if (!viewer || viewer.role === 'admin') return null;
+  const ok = await userCanAttachSomewhere(viewer.id, false);
+  if (ok) return null;
+  return attachToTripBlockedMessage(null);
+}
+
+export async function userCanAttachSomewhere(userId: string, admin: boolean): Promise<boolean> {
+  if (admin) return true;
+  const result = await getDb().execute(sql`
+    select 1 as ok from trips t
+    where t.created_by = ${userId}
+       or exists (
+         select 1 from trip_members tm
+         where tm.trip_id = t.id and tm.user_id = ${userId} and tm.rsvp = 'going'
+       )
+    limit 1
+  `);
+  return asRows(result).length > 0;
 }
 
 export async function listTripChoices(): Promise<Array<{ id: string; title: string }>> {
@@ -352,12 +471,14 @@ export async function attachItemToTrip(input: {
   entityId: string;
   actorId: string;
   admin: boolean;
-}): Promise<'ok' | 'missing' | 'forbidden'> {
+}): Promise<'ok' | 'missing' | 'forbidden' | 'not_member'> {
   const owned = await itemOwned(input.kind, input.entityId, input.actorId, input.admin);
   if (owned === 'missing') return 'missing';
   if (owned === 'forbidden') return 'forbidden';
   const trip = await getDb().execute(sql`select id::text as id from trips where id = ${input.tripId}::uuid`);
   if (asRows(trip).length === 0) return 'missing';
+  const mayAttach = await actorMayAttachToTrip(input.tripId, input.actorId, input.admin);
+  if (!mayAttach) return 'not_member';
   const table = input.kind === 'pin' ? 'trip_pins' : input.kind === 'route' ? 'trip_routes' : 'trip_photos';
   const column = input.kind === 'pin' ? 'pin_id' : input.kind === 'route' ? 'track_id' : 'photo_id';
   await getDb().execute(sql`
@@ -368,15 +489,13 @@ export async function attachItemToTrip(input: {
   return 'ok';
 }
 
-/** Trip organizer, admin, or the item owner may remove an attachment. */
+/** Only the person who attached the item, or an admin, may remove it. */
 export function canDetachTripAttachment(input: {
   admin: boolean;
   actorId: string;
-  tripCreatedBy: string | null;
   itemOwnerId: string | null;
 }): boolean {
   if (input.admin) return true;
-  if (input.tripCreatedBy && input.tripCreatedBy === input.actorId) return true;
   if (input.itemOwnerId && input.itemOwnerId === input.actorId) return true;
   return false;
 }
@@ -392,13 +511,11 @@ export async function detachItemFromTrip(input: {
     select created_by::text as created_by from trips where id = ${input.tripId}::uuid
   `);
   if (asRows(tripRow).length === 0) return false;
-  const tripCreatedBy = text(asRows(tripRow)[0]?.created_by);
   const ownerRow = await itemOwner(input.kind, input.entityId);
   if (ownerRow === 'missing') return false;
   if (!canDetachTripAttachment({
     admin: input.admin,
     actorId: input.actorId,
-    tripCreatedBy,
     itemOwnerId: ownerRow,
   })) return false;
   const table = input.kind === 'pin' ? 'trip_pins' : input.kind === 'route' ? 'trip_routes' : 'trip_photos';
