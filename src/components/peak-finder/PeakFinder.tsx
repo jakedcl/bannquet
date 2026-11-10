@@ -10,6 +10,7 @@ import {
   PEAK_CREDITS,
 } from '@/lib/peak-finder/constants';
 import { declinationAt, loadDeclination, type DeclinationTable } from '@/lib/peak-finder/declination';
+import { formatFeet } from '@/lib/peak-finder/format';
 import { wrap360 } from '@/lib/peak-finder/geo';
 import { acceptMove, noteSample, type FinderMode, type LockState, type Spot } from '@/lib/peak-finder/location';
 import { MAP_CENTER } from '@/lib/map';
@@ -455,6 +456,7 @@ export function PeakFinder() {
             } : null}
             onChangeSpot={phone && mode === 'spot' && phase === 'view' ? () => setPhase('map') : null}
             coverageNote={coverage === 'partial' ? 'Some surrounding peak lists are not in this build, so a few names may be missing.' : null}
+            onSummit={payload?.onSummit ?? null}
           />
         </div>
       ) : null}
@@ -510,6 +512,7 @@ function Controls({
   onCompass,
   onChangeSpot,
   coverageNote,
+  onSummit,
 }: {
   mode: FinderMode;
   phone: boolean;
@@ -520,6 +523,7 @@ function Controls({
   onCompass: (() => void) | null;
   onChangeSpot: (() => void) | null;
   coverageNote: string | null;
+  onSummit: { name: string; elevationM: number } | null;
 }) {
   const onCamera = mode === 'live';
   return (
@@ -546,6 +550,11 @@ function Controls({
             <button type="button" className="retro-button min-h-11 px-3 text-xs" onClick={onChangeSpot}>Change spot</button>
           ) : null}
         </div>
+        {onSummit ? (
+          <p className={`text-sm font-bold leading-snug ${onCamera ? 'bg-black/55 px-1' : ''}`}>
+            You&apos;re on: {onSummit.name}, {formatFeet(onSummit.elevationM)}
+          </p>
+        ) : null}
         {coverageNote ? <p className={`text-[11px] leading-snug ${onCamera ? 'bg-black/55 px-1' : ''}`}>{coverageNote}</p> : null}
         <p className={`text-[11px] leading-snug ${onCamera ? 'bg-black/55 px-1' : ''}`}>{PEAK_CREDITS}</p>
         <p className={`text-[11px] leading-snug ${onCamera ? 'bg-black/55 px-1' : ''}`}>{BARE_EARTH_NOTE}</p>

@@ -171,8 +171,8 @@ export function sampleTile(
 
 export function sampleHeight(grids: ReadonlyMap<string, Float32Array>, lat: number, lng: number, distance: number): number | null {
   const preferred = zoomForDistance(distance);
-  for (const zoom of [preferred, preferred - 1, preferred + 1, 8, 9, 10, 11]) {
-    if (zoom < 8 || zoom > 11) continue;
+  for (const zoom of [preferred, preferred + 1, preferred - 1, 12, 11, 10, 9, 8]) {
+    if (zoom < 8 || zoom > 12) continue;
     const height = sampleTile(grids, lat, lng, zoom);
     if (height != null) return height;
   }

@@ -1,16 +1,22 @@
-import { EYE_ABOVE_TERRAIN_M, RAY_STEP_DEG } from './constants';
+import { RAY_STEP_DEG } from './constants';
+import { distanceM } from './geo';
 import type { WorkerIn, WorkerOut } from './payload';
 import { castSkyline, viewProfile, type Skyline } from './skyline';
 import { loadTerrariumTile } from './tile-cache';
 import { sampleHeight, terrainTiles } from './tiles';
-import { visiblePeaks, withTerrainHeights } from './visibility';
+import { eyeHeightM, ON_SUMMIT_M, peakUnderfoot, raiseSummit, visiblePeaks } from './visibility';
 
 const scope = self as unknown as {
   onmessage: ((event: MessageEvent<WorkerIn>) => void) | null;
   postMessage: (message: WorkerOut) => void;
 };
 
-function pack(skyline: Skyline, eyeM: number, peaks: ReturnType<typeof visiblePeaks>) {
+function pack(
+  skyline: Skyline,
+  eyeM: number,
+  peaks: ReturnType<typeof visiblePeaks>,
+  onSummit: { name: string; elevationM: number } | null,
+) {
   const drawn = viewProfile(skyline);
   return {
     eyeM,
@@ -19,6 +25,7 @@ function pack(skyline: Skyline, eyeM: number, peaks: ReturnType<typeof visiblePe
     distanceM: drawn.distanceM,
     layers: drawn.layers,
     peaks,
+    onSummit,
   };
 }
 
@@ -72,8 +79,21 @@ async function build(message: WorkerIn): Promise<void> {
   }
   scope.postMessage({ type: 'progress', loaded: tiles.length, total: tiles.length, stage: 'Drawing the skyline' });
   const heightAt = (lat: number, lng: number, distance: number) => sampleHeight(grids, lat, lng, distance) ?? 0;
-  const eyeM = (sampleHeight(grids, message.lat, message.lng, 0) ?? 0) + EYE_ABOVE_TERRAIN_M;
+  const eyeM = eyeHeightM(message.lat, message.lng, (lat, lng) => sampleHeight(grids, lat, lng, 0));
   const skyline = castSkyline(message.lat, message.lng, eyeM, heightAt, RAY_STEP_DEG);
-  const peaks = visiblePeaks(message.lat, message.lng, eyeM, withTerrainHeights(message.peaks, heightAt), skyline);
-  scope.postMessage({ type: 'result', payload: pack(skyline, eyeM, peaks) });
+  const raised = message.peaks.flatMap((peak) => {
+    const metres = distanceM(message.lat, message.lng, peak.lat, peak.lng);
+    const next = raiseSummit(peak, (lat, lng) => sampleHeight(grids, lat, lng, metres));
+    return next ? [next] : [];
+  });
+  const underfoot = peakUnderfoot(message.lat, message.lng, message.peaks);
+  const raisedHere = underfoot
+    ? raiseSummit(underfoot, (lat, lng) => sampleHeight(grids, lat, lng, 0))
+    : null;
+  const onSummit = raisedHere ? { name: raisedHere.name, elevationM: raisedHere.elevationM } : null;
+  const peaks = visiblePeaks(message.lat, message.lng, eyeM, raised, skyline).filter((peak) => {
+    if (!onSummit || peak.name !== onSummit.name) return true;
+    return peak.distanceM > ON_SUMMIT_M + 40;
+  });
+  scope.postMessage({ type: 'result', payload: pack(skyline, eyeM, peaks, onSummit) });
 }

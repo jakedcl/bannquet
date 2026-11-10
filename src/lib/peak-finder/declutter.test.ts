@@ -24,6 +24,14 @@ test('overlapping labels keep the taller one', () => {
   assert.deepEqual(kept.map((item) => item.name), ['High']);
 });
 
+test('a peak on a nearer ridge keeps a label under a higher one', () => {
+  const kept = declutter([
+    label({ name: 'Skyline', x: 100, y: 80, angleDeg: 4 }),
+    label({ name: 'Front', x: 108, y: 180, angleDeg: 1 }),
+  ], 25);
+  assert.deepEqual(kept.map((item) => item.name).sort(), ['Front', 'Skyline']);
+});
+
 test('never more than the cap', () => {
   const peaks = Array.from({ length: 10 }, (_, index) => label({
     name: `P${index}`,

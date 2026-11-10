@@ -7,6 +7,7 @@ export type SkylinePayload = {
   distanceM: number[];
   layers: { angleDeg: number[]; distanceM: number[] }[];
   peaks: VisiblePeak[];
+  onSummit: { name: string; elevationM: number } | null;
 };
 
 export type WorkerIn = {

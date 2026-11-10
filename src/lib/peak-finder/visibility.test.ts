@@ -1,9 +1,9 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { ALGONQUIN, EYE_ABOVE_TERRAIN_M, MARCY } from './constants';
-import { angularDistance, bearingDeg, destination } from './geo';
+import { angularDistance, apparentElevationDeg, bearingDeg, destination } from './geo';
 import { castSkyline } from './skyline';
-import { assessPeak } from './visibility';
+import { assessPeak, peakUnderfoot, summitInView } from './visibility';
 
 test('from Keene Valley, a peak behind a nearer ridge is hidden', () => {
   const keene = { lat: 44.188, lng: -73.788 };
@@ -29,6 +29,44 @@ test('from Keene Valley, a peak behind a nearer ridge is hidden', () => {
   }, skyline);
   assert.equal(behind, null);
   assert.ok(clear);
+});
+
+test('a nearer peak still shows when a taller mountain stands behind it', () => {
+  const origin = { lat: 44, lng: -74 };
+  const eye = 1_000;
+  const skyline = castSkyline(origin.lat, origin.lng, eye, (_lat, _lng, distance) => {
+    if (distance > 18_000 && distance < 22_000) return 1_800;
+    return 800;
+  }, 2);
+  const front = destination(origin.lat, origin.lng, 20, 8_000);
+  const seen = assessPeak(origin.lat, origin.lng, eye, {
+    name: 'Front ridge',
+    lat: front.lat,
+    lng: front.lng,
+    elevationM: 1_400,
+  }, skyline);
+  assert.ok(seen, 'the front ridge is in view even though it is not the skyline');
+});
+
+test('the top 50 m of a summit may sit behind the ridge', () => {
+  const eye = 500;
+  const distance = 10_000;
+  const peakElev = 1_500;
+  const peakAngle = apparentElevationDeg(peakElev, eye, distance);
+  const justBehind = apparentElevationDeg(peakElev + 40, eye, distance);
+  const buried = apparentElevationDeg(peakElev + 200, eye, distance);
+  assert.equal(summitInView(peakAngle, justBehind, distance, eye, peakElev), true);
+  assert.equal(summitInView(peakAngle, buried, distance, eye, peakElev), false);
+});
+
+test('standing within 0.2 miles is on that peak', () => {
+  const peaks = [
+    { name: 'Mount Marcy', lat: MARCY.lat, lng: MARCY.lng, elevationM: MARCY.elevationM },
+    { name: 'Gray Peak', lat: MARCY.lat, lng: MARCY.lng - 0.02, elevationM: 1_400 },
+  ];
+  assert.equal(peakUnderfoot(MARCY.lat, MARCY.lng, peaks)?.name, 'Mount Marcy');
+  assert.equal(peakUnderfoot(MARCY.lat + 0.002, MARCY.lng, peaks)?.name, 'Mount Marcy');
+  assert.equal(peakUnderfoot(MARCY.lat + 0.01, MARCY.lng, peaks), null);
 });
 
 test('from Marcy\'s summit, Algonquin is visible', () => {

@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { MARCY } from './constants';
-import { lngLatToTile, sampleTile, terrainTiles, terrariumHeight, zoomForDistance } from './tiles';
+import { lngLatToTile, sampleHeight, sampleTile, terrainTiles, terrariumHeight, zoomForDistance } from './tiles';
 
 test('Terrarium decode on known pixel values', () => {
   assert.equal(terrariumHeight(128, 0, 0), 0);
@@ -23,6 +23,18 @@ test('closer ground uses a finer zoom', () => {
   assert.equal(zoomForDistance(40_000), 10);
   assert.equal(zoomForDistance(80_000), 9);
   assert.equal(zoomForDistance(150_000), 8);
+});
+
+test('close samples prefer the zoom 12 tile', () => {
+  const fine = lngLatToTile(MARCY.lng, MARCY.lat, 12);
+  const coarse = lngLatToTile(MARCY.lng, MARCY.lat, 11);
+  const fineGrid = new Float32Array(256 * 256).fill(1_600);
+  const coarseGrid = new Float32Array(256 * 256).fill(100);
+  const grids = new Map([
+    [`${fine.z}/${fine.x}/${fine.y}`, fineGrid],
+    [`${coarse.z}/${coarse.x}/${coarse.y}`, coarseGrid],
+  ]);
+  assert.equal(sampleHeight(grids, MARCY.lat, MARCY.lng, 0), 1_600);
 });
 
 test('a sample between two pixels lands between their heights', () => {

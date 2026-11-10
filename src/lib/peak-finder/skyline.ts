@@ -90,6 +90,23 @@ export function skylineDistance(ray: RayProfile): number {
   return ray.distanceM[ray.skylineIndex] ?? 0;
 }
 
+/**
+ * Highest apparent angle of terrain in front of a summit.
+ * The summit's own slopes, inside `selfM` of the peak, are not an occluder.
+ */
+export function angleBefore(ray: RayProfile, distance: number, selfM = 300): number {
+  const far = distance - selfM;
+  let best = -90;
+  let found = false;
+  for (let i = 0; i < ray.count; i += 1) {
+    const sample = ray.distanceM[i];
+    if (sample < 60 || sample > far) continue;
+    found = true;
+    if (ray.angleDeg[i] > best) best = ray.angleDeg[i];
+  }
+  return found ? best : -90;
+}
+
 /** Highest apparent angle of terrain strictly past `distanceM`. */
 export function angleBeyond(ray: RayProfile, distance: number): number {
   let best = -90;

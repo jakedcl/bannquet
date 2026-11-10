@@ -23,7 +23,9 @@ export function declutter(peaks: readonly LabelCandidate[], cap: number, minGapP
     const gap = Math.max(minGapPx, peak.labelWidthPx);
     const crowded = placed.some((other) => {
       const need = Math.max(gap, other.labelWidthPx);
-      return Math.abs(other.x - peak.x) < need;
+      const sameColumn = Math.abs(other.x - peak.x) < need * 0.65;
+      const sameHeight = Math.abs(other.y - peak.y) < 40;
+      return sameColumn && sameHeight;
     });
     if (!crowded) placed.push(peak);
   }
