@@ -115,7 +115,7 @@ Centered at the top of `SkylineStage` with safe-area inset. Shown on drawn and c
 
 **Bottom bar** (skyline, all phone widths): one compact strip at the bottom — **Cam**, **Gyro**, **Reset** (line-up only), **Line up** / **Done**, **Change spot** (pick-view stacked layout only), **⋯** info. Semi-opaque bar, black/dark text readable on camera. Credits and disclaimers live **only** in the overlay opened by ⋯ (`PEAK_CREDITS`, `BARE_EARTH_NOTE`, partial-coverage note). Collapsed: **zero layout space** (popover is `absolute` above the bar). **You're on:** sits in a single line above the bar when applicable.
 
-**Status** (top center): loading, errors, gyro unsure, coverage none, etc. — separate from the info popover.
+**Status** (top center): loading, errors, gyro unsure, coverage none, etc. — separate from the info popover. Hidden while line-up is active so the line-up caption is the only top message.
 
 ## Offline mode
 

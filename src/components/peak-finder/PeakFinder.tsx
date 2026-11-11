@@ -951,17 +951,19 @@ export function PeakFinder() {
               <LineUpCaption />
             </div>
           ) : null}
-          <Status
-            progress={progress}
-            error={error}
-            banner={banner}
-            cameraNote={screen === 'explore' && sensors ? cameraNote : null}
-            coverage={coverage}
-            payload={payload}
-            unsure={unsure && gyroOn}
-            declinationNote={declinationNote}
-            onRetry={() => setAttempt((value) => value + 1)}
-          />
+          {!liningUp ? (
+            <Status
+              progress={progress}
+              error={error}
+              banner={banner}
+              cameraNote={screen === 'explore' && sensors ? cameraNote : null}
+              coverage={coverage}
+              payload={payload}
+              unsure={unsure && gyroOn}
+              declinationNote={declinationNote}
+              onRetry={() => setAttempt((value) => value + 1)}
+            />
+          ) : null}
           {showMoved ? (
             <button
               type="button"
@@ -1188,10 +1190,17 @@ function Controls({
             aria-label={infoOpen ? 'Hide map credits and info' : 'Map credits and info'}
             onClick={() => setInfoOpen((open) => !open)}
           >
-            <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" className="block">
-              <circle cx="3" cy="8" r="1.35" fill="currentColor" />
-              <circle cx="8" cy="8" r="1.35" fill="currentColor" />
-              <circle cx="13" cy="8" r="1.35" fill="currentColor" />
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 16 16"
+              aria-hidden="true"
+              className="block h-4 w-4 shrink-0"
+              style={{ color: '#1a1a1a' }}
+            >
+              <circle cx="3.25" cy="8" r="1.5" fill="#1a1a1a" />
+              <circle cx="8" cy="8" r="1.5" fill="#1a1a1a" />
+              <circle cx="12.75" cy="8" r="1.5" fill="#1a1a1a" />
             </svg>
           </button>
         </div>
