@@ -1,7 +1,8 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useLayoutEffect, useRef } from 'react';
 import type { SkylinePayload } from '@/lib/peak-finder/payload';
+import { attachVideoStream } from '@/lib/peak-finder/video-playback';
 import type { VisiblePeak } from '@/lib/peak-finder/visibility';
 import { SkylineStage, type ViewPose } from './SkylineStage';
 
@@ -22,23 +23,30 @@ export function CameraView({
 }) {
   const videoRef = useRef<HTMLVideoElement | null>(null);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const video = videoRef.current;
     if (!video) return;
-    video.srcObject = stream;
+    attachVideoStream(video, stream);
     if (!stream) return;
-    void video.play().catch(() => {
-      // iOS may want another tap. The Start button is already gone; a play()
-      // from the gesture usually works, and the skyline still draws if it doesn't.
-    });
+    const onReady = () => {
+      void video.play().catch(() => {});
+    };
+    video.addEventListener('loadedmetadata', onReady);
     return () => {
+      video.removeEventListener('loadedmetadata', onReady);
       video.srcObject = null;
     };
   }, [stream]);
 
   return (
     <div className="relative h-full w-full bg-black">
-      <video ref={videoRef} className="absolute inset-0 h-full w-full object-cover" playsInline muted autoPlay />
+      <video
+        ref={videoRef}
+        className="absolute inset-0 z-0 h-full w-full object-cover"
+        playsInline
+        muted
+        autoPlay
+      />
       <SkylineStage
         payload={payload}
         appearance="camera"

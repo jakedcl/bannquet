@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { compassUnsure, magneticHeading, viewHeading, viewPitch } from './orientation';
+import { compassUnsure, magneticHeading, motionAllowed, viewHeading, viewPitch } from './orientation';
 
 test('iPhone heading plus declination gives true north', () => {
   const magnetic = magneticHeading({ alpha: null, beta: 90, gamma: 0, webkitCompassHeading: 0 });
@@ -25,6 +25,13 @@ test('landscape rotation subtracts the screen angle', () => {
 test('upright portrait looks at the horizon', () => {
   assert.equal(viewPitch(90, 0, 0), 0);
   assert.equal(viewPitch(60, 0, 0), 30);
+});
+
+test('motion is allowed when granted or not applicable', () => {
+  assert.equal(motionAllowed('granted'), true);
+  assert.equal(motionAllowed('unsupported'), true);
+  assert.equal(motionAllowed('denied'), false);
+  assert.equal(motionAllowed('unavailable'), false);
 });
 
 test('a poor iPhone accuracy reading is unsure', () => {

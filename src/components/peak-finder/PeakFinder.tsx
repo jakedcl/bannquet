@@ -20,12 +20,14 @@ import {
   headingJump,
   magneticHeading,
   pushSample,
+  motionAllowed,
   requestMotionPermission,
   viewHeading,
   viewPitch,
   viewRoll,
   circularMean,
 } from '@/lib/peak-finder/orientation';
+import { primeVideoPlayback } from '@/lib/peak-finder/video-playback';
 import type { SkylinePayload, WorkerOut } from '@/lib/peak-finder/payload';
 import { loadPeaksAround } from '@/lib/peak-finder/peaks';
 import { initialFov, readCalibration, writeCalibration } from '@/lib/peak-finder/storage';
@@ -264,6 +266,7 @@ export function PeakFinder() {
         audio: false,
       });
       streamRef.current = nextStream;
+      await primeVideoPlayback(nextStream);
       setStream(nextStream);
       setCameraNote(null);
       return true;
@@ -278,26 +281,43 @@ export function PeakFinder() {
     setStartNote(null);
     setBanner(null);
     setError(null);
-    const here = await readLocation();
-    if (!here) {
-      setStartNote(LOCATION_DENIED);
-      return;
-    }
-    setLock({ locked: here, pending: null });
     setShowDragHint(true);
     if (sensors) {
+      if (typeof OffscreenCanvas === 'undefined') {
+        setError('This browser cannot draw the skyline. Use a current Safari or Chrome.');
+        return;
+      }
       viewRef.current.pitch = 0;
       viewRef.current.roll = 0;
-      setGyroOn(true);
-      setCameraOn(true);
-      setScreen('explore');
       const motion = await requestMotionPermission();
       if (motion === 'denied') {
         setGyroOn(false);
         setBanner('Gyro is blocked. Allow motion access, or drag the skyline.');
+      } else if (motionAllowed(motion)) {
+        setGyroOn(true);
+      } else {
+        setGyroOn(false);
       }
-      await tryStartCamera();
+      const cameraOk = await tryStartCamera();
+      setCameraOn(cameraOk);
+      const here = await readLocation();
+      if (!here) {
+        setStartNote(LOCATION_DENIED);
+        if (cameraOk) {
+          stopCamera();
+          setCameraOn(false);
+        }
+        return;
+      }
+      setLock({ locked: here, pending: null });
+      setScreen('explore');
     } else {
+      const here = await readLocation();
+      if (!here) {
+        setStartNote(LOCATION_DENIED);
+        return;
+      }
+      setLock({ locked: here, pending: null });
       viewRef.current.heading = 0;
       viewRef.current.pitch = 0;
       viewRef.current.roll = 0;
@@ -344,6 +364,7 @@ export function PeakFinder() {
       setBanner('Gyro is blocked. Allow motion access, or drag the skyline.');
       return;
     }
+    if (!motionAllowed(motion)) return;
     setGyroOn(true);
     setBanner(null);
   }
@@ -383,8 +404,6 @@ export function PeakFinder() {
   const mapFillsWidth = stacked || screen === 'pick-map';
   const showCamera = screen === 'explore' && sensors && cameraOn && stream != null;
   const showDrawn = showSkyline && !showCamera;
-  const gyroLocked = screen === 'explore' && sensors && cameraOn && stream != null;
-
   if (!booted) {
     return <p className="p-4 text-sm font-bold text-[#1a1a1a]">Loading Peak Finder</p>;
   }
@@ -506,7 +525,6 @@ export function PeakFinder() {
             screen={screen}
             cameraOn={cameraOn}
             gyroOn={gyroOn}
-            gyroLocked={gyroLocked}
             hasCamera={showCamera}
             onCamera={() => void toggleCamera()}
             onGyro={() => void toggleGyro()}
@@ -585,7 +603,6 @@ function Controls({
   screen,
   cameraOn,
   gyroOn,
-  gyroLocked,
   hasCamera,
   onCamera,
   onGyro,
@@ -598,7 +615,6 @@ function Controls({
   screen: Screen;
   cameraOn: boolean;
   gyroOn: boolean;
-  gyroLocked: boolean;
   hasCamera: boolean;
   onCamera: () => void;
   onGyro: () => void;
@@ -611,13 +627,13 @@ function Controls({
   const showCameraToggle = sensors && screen === 'explore';
   const showGyro = sensors && (screen === 'explore' || screen === 'pick-view');
   return (
-    <div className={`pointer-events-none absolute inset-x-0 bottom-0 z-20 px-2 pb-2 ${onCameraUi ? 'text-white' : 'text-[#1a1a1a]'}`}>
+    <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 px-2 pb-2 text-[#1a1a1a]">
       <div className="pointer-events-auto mx-auto flex max-w-3xl flex-col gap-1">
         <div className="flex flex-wrap gap-1.5">
           {showCameraToggle ? (
             <button
               type="button"
-              className="retro-button min-h-11 px-3 text-xs"
+              className="retro-button min-h-11 px-3 text-xs text-[#1a1a1a]"
               aria-pressed={cameraOn}
               onClick={onCamera}
             >
@@ -627,29 +643,28 @@ function Controls({
           {showGyro ? (
             <button
               type="button"
-              className="retro-button min-h-11 px-3 text-xs"
+              className="retro-button min-h-11 px-3 text-xs text-[#1a1a1a]"
               aria-pressed={gyroOn}
-              disabled={gyroLocked}
               onClick={onGyro}
             >
               Gyro
             </button>
           ) : null}
           {onLineUp ? (
-            <button type="button" className="retro-button min-h-11 px-3 text-xs" onClick={onLineUp}>Line up</button>
+            <button type="button" className="retro-button min-h-11 px-3 text-xs text-[#1a1a1a]" onClick={onLineUp}>Line up</button>
           ) : null}
           {onChangeSpot ? (
-            <button type="button" className="retro-button min-h-11 px-3 text-xs" onClick={onChangeSpot}>Change spot</button>
+            <button type="button" className="retro-button min-h-11 px-3 text-xs text-[#1a1a1a]" onClick={onChangeSpot}>Change spot</button>
           ) : null}
         </div>
         {onSummit ? (
-          <p className={`text-sm font-bold leading-snug ${onCameraUi ? 'bg-black/55 px-1' : ''}`}>
+          <p className={`text-sm font-bold leading-snug ${onCameraUi ? 'bg-black/55 px-1 text-white' : ''}`}>
             You&apos;re on: {onSummit.name}, {formatFeet(onSummit.elevationM)}
           </p>
         ) : null}
-        {coverageNote ? <p className={`text-[11px] leading-snug ${onCameraUi ? 'bg-black/55 px-1' : ''}`}>{coverageNote}</p> : null}
-        <p className={`text-[11px] leading-snug ${onCameraUi ? 'bg-black/55 px-1' : ''}`}>{PEAK_CREDITS}</p>
-        <p className={`text-[11px] leading-snug ${onCameraUi ? 'bg-black/55 px-1' : ''}`}>{BARE_EARTH_NOTE}</p>
+        {coverageNote ? <p className={`text-[11px] leading-snug ${onCameraUi ? 'bg-black/55 px-1 text-white' : ''}`}>{coverageNote}</p> : null}
+        <p className={`text-[11px] leading-snug ${onCameraUi ? 'bg-black/55 px-1 text-white' : ''}`}>{PEAK_CREDITS}</p>
+        <p className={`text-[11px] leading-snug ${onCameraUi ? 'bg-black/55 px-1 text-white' : ''}`}>{BARE_EARTH_NOTE}</p>
       </div>
     </div>
   );

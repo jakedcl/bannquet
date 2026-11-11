@@ -66,7 +66,14 @@ export function compassUnsure(accuracyDeg: number | null | undefined, jumpDeg: n
   return jumpDeg > 25;
 }
 
-export async function requestMotionPermission(): Promise<'granted' | 'denied' | 'unsupported'> {
+export type MotionPermission = 'granted' | 'denied' | 'unsupported' | 'unavailable';
+
+export function motionAllowed(result: MotionPermission): boolean {
+  return result === 'granted' || result === 'unsupported';
+}
+
+/** iOS 13+ needs a user gesture; a failed call is not the same as the user denying access. */
+export async function requestMotionPermission(): Promise<MotionPermission> {
   if (typeof window === 'undefined' || typeof DeviceOrientationEvent === 'undefined') return 'unsupported';
   const ctor = DeviceOrientationEvent as typeof DeviceOrientationEvent & {
     requestPermission?: () => Promise<'granted' | 'denied'>;
@@ -76,7 +83,7 @@ export async function requestMotionPermission(): Promise<'granted' | 'denied' | 
     const result = await ctor.requestPermission();
     return result === 'granted' ? 'granted' : 'denied';
   } catch {
-    return 'denied';
+    return 'unavailable';
   }
 }
 
