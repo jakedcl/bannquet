@@ -841,7 +841,7 @@ export function PeakFinder() {
           ) : null}
           {startUi.showSaveOffline ? (
             <button type="button" className="retro-button retro-button-yellow min-h-11 px-4 text-sm font-bold" onClick={beginOffline}>
-              Offline mode / Save area for offline
+              Download offline map
             </button>
           ) : null}
         </div>
