@@ -10,9 +10,10 @@ import {
   PEAK_CREDITS,
 } from '@/lib/peak-finder/constants';
 import { declinationAt, loadDeclination, type DeclinationTable } from '@/lib/peak-finder/declination';
+import { readSensorCapable, stackLayout } from '@/lib/peak-finder/device-capabilities';
 import { formatFeet } from '@/lib/peak-finder/format';
 import { wrap360 } from '@/lib/peak-finder/geo';
-import { acceptMove, noteSample, type FinderMode, type LockState, type Spot } from '@/lib/peak-finder/location';
+import { acceptMove, noteSample, type LockState, type Spot } from '@/lib/peak-finder/location';
 import { MAP_CENTER } from '@/lib/map';
 import {
   compassUnsure,
@@ -27,9 +28,10 @@ import {
 } from '@/lib/peak-finder/orientation';
 import type { SkylinePayload, WorkerOut } from '@/lib/peak-finder/payload';
 import { loadPeaksAround } from '@/lib/peak-finder/peaks';
-import { initialFov, readCalibration, readLast, writeCalibration, writeLast } from '@/lib/peak-finder/storage';
+import { initialFov, readCalibration, writeCalibration } from '@/lib/peak-finder/storage';
 import type { VisiblePeak } from '@/lib/peak-finder/visibility';
 import { CameraView } from './CameraView';
+import { DesktopPan } from './DesktopPan';
 import { DrawnView } from './DrawnView';
 import { LineUp } from './LineUp';
 import { PeakCard } from './PeakCard';
@@ -37,20 +39,26 @@ import { SpotPicker } from './SpotPicker';
 import type { ViewPose } from './SkylineStage';
 
 const DEFAULT_PIN: Spot = { lat: MAP_CENTER.lat, lng: MAP_CENTER.lng };
+const LOCATION_DENIED = 'Location is blocked. Allow it in your browser settings and try again.';
+const CAMERA_DENIED = 'Camera is blocked. Allow it in your browser settings, then turn the camera on to try again.';
 
+type Screen = 'start' | 'explore' | 'pick-map' | 'pick-view';
 type Coverage = 'full' | 'partial' | 'none';
-
 type ProgressState = { kind: 'loading'; fraction: number } | null;
 
 export function PeakFinder() {
   const [booted, setBooted] = useState(false);
-  const [phone, setPhone] = useState(false);
-  const [mode, setMode] = useState<FinderMode>('spot');
-  const [phase, setPhase] = useState<'map' | 'view'>('view');
+  const [stacked, setStacked] = useState(false);
+  const [sensors, setSensors] = useState(false);
+  const [screen, setScreen] = useState<Screen>('start');
+  const [startNote, setStartNote] = useState<string | null>(null);
   const [pin, setPin] = useState<Spot>(DEFAULT_PIN);
   const [lock, setLock] = useState<LockState>({ locked: null, pending: null });
   const [stream, setStream] = useState<MediaStream | null>(null);
-  const [liveMessage, setLiveMessage] = useState<string | null>(null);
+  const [cameraOn, setCameraOn] = useState(false);
+  const [cameraNote, setCameraNote] = useState<string | null>(null);
+  const [gyroOn, setGyroOn] = useState(false);
+  const [banner, setBanner] = useState<string | null>(null);
   const [payload, setPayload] = useState<SkylinePayload | null>(null);
   const [progress, setProgress] = useState<ProgressState>(null);
   const [error, setError] = useState<string | null>(null);
@@ -58,42 +66,34 @@ export function PeakFinder() {
   const [attempt, setAttempt] = useState(0);
   const [selected, setSelected] = useState<{ peak: VisiblePeak; anchor: { x: number; y: number } } | null>(null);
   const [liningUp, setLiningUp] = useState(false);
-  const [useCompass, setUseCompass] = useState(false);
   const [unsure, setUnsure] = useState(false);
   const [declinationNote, setDeclinationNote] = useState<string | null>(null);
   const [table, setTable] = useState<DeclinationTable | null>(null);
+  const [showDragHint, setShowDragHint] = useState(true);
 
   const viewRef = useRef<ViewPose>({ heading: 0, pitch: 0, roll: 0, hfov: DEFAULT_HFOV_DEG });
   const offsetRef = useRef(0);
   const baseRef = useRef(0);
   const followRef = useRef(false);
-  const modeRef = useRef<FinderMode>('spot');
   const streamRef = useRef<MediaStream | null>(null);
 
   const getView = useCallback(() => viewRef.current, []);
 
   useEffect(() => {
-    // localStorage and matchMedia differ from the server render, so this runs after hydration.
-    const saved = readLast();
     const calibration = readCalibration();
-    const narrow = window.matchMedia('(max-width: 1023px)').matches;
-    const nextMode: FinderMode = narrow ? (saved?.mode ?? 'live') : 'spot';
-    modeRef.current = nextMode;
     offsetRef.current = calibration.headingOffset;
     viewRef.current = {
-      heading: saved?.heading ?? 0,
+      heading: 0,
       pitch: 0,
       roll: 0,
-      hfov: initialFov(calibration, saved),
+      hfov: initialFov(calibration, null),
     };
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- one client read after hydration
-    setPhone(narrow);
-    setMode(nextMode);
-    if (saved) setPin({ lat: saved.lat, lng: saved.lng });
-    setPhase(narrow && nextMode === 'spot' ? 'map' : 'view');
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- client layout and sensors after hydration
+    setSensors(readSensorCapable());
+    setStacked(stackLayout());
     setBooted(true);
     const media = window.matchMedia('(max-width: 1023px)');
-    const onMedia = () => setPhone(media.matches);
+    const onMedia = () => setStacked(media.matches);
     media.addEventListener('change', onMedia);
     return () => media.removeEventListener('change', onMedia);
   }, []);
@@ -102,11 +102,11 @@ export function PeakFinder() {
     loadDeclination().then(setTable).catch(() => setDeclinationNote('The true-north fix did not load. Line up if the labels sit off to one side.'));
   }, []);
 
-  const spot: Spot | null = mode === 'live'
+  const spot: Spot | null = screen === 'explore'
     ? lock.locked
-    : phone && phase === 'map'
-      ? null
-      : pin;
+    : screen === 'pick-view'
+      ? pin
+      : null;
   const spotLat = spot?.lat ?? null;
   const spotLng = spot?.lng ?? null;
 
@@ -122,8 +122,8 @@ export function PeakFinder() {
   }
 
   useEffect(() => {
-    followRef.current = mode === 'live' || useCompass;
-  }, [mode, useCompass]);
+    followRef.current = gyroOn;
+  }, [gyroOn]);
 
   useEffect(() => {
     if (!booted || spotLat == null || spotLng == null) return;
@@ -166,8 +166,7 @@ export function PeakFinder() {
   }, [booted, spotLat, spotLng, attempt]);
 
   useEffect(() => {
-    if (!followRef.current) return;
-    if (mode !== 'live' && !useCompass) return;
+    if (!followRef.current || !gyroOn) return;
     let buffer: number[] = [];
     let previous: number | null = null;
     const onReading = (event: DeviceOrientationEvent) => {
@@ -196,36 +195,25 @@ export function PeakFinder() {
       window.removeEventListener('deviceorientationabsolute', onReading);
       window.removeEventListener('deviceorientation', onReading);
     };
-  }, [mode, useCompass, declination]);
+  }, [gyroOn, declination]);
 
   useEffect(() => {
-    if (mode !== 'live' || !lock.locked) return;
+    if (screen !== 'explore' || !lock.locked) return;
     const timer = window.setInterval(() => {
       if (!navigator.geolocation) return;
       navigator.geolocation.getCurrentPosition((position) => {
-        setLock((state) => noteSample(state, 'live', {
+        setLock((state) => noteSample(state, 'explore', {
           lat: position.coords.latitude,
           lng: position.coords.longitude,
         }).state);
       }, () => {}, { enableHighAccuracy: true, maximumAge: 15_000, timeout: 10_000 });
     }, MOVE_CHECK_MS);
     return () => window.clearInterval(timer);
-  }, [mode, lock.locked]);
+  }, [screen, lock.locked]);
 
   useEffect(() => () => {
     streamRef.current?.getTracks().forEach((track) => track.stop());
   }, []);
-
-  function remember(at: Spot = pin) {
-    const pose = viewRef.current;
-    writeLast({
-      lat: at.lat,
-      lng: at.lng,
-      heading: pose.heading,
-      hfov: pose.hfov,
-      mode: modeRef.current,
-    });
-  }
 
   function stopCamera() {
     streamRef.current?.getTracks().forEach((track) => track.stop());
@@ -234,34 +222,26 @@ export function PeakFinder() {
     setLiningUp(false);
   }
 
-  function chooseMode(next: FinderMode, options?: { phase?: 'map' | 'view'; at?: Spot }) {
-    modeRef.current = next;
-    setMode(next);
-    setLiveMessage(null);
+  function goStart() {
+    stopCamera();
+    setScreen('start');
+    setLock({ locked: null, pending: null });
+    setCameraOn(false);
+    setCameraNote(null);
+    setGyroOn(false);
+    setBanner(null);
     setSelected(null);
-    if (options?.at) setPin(options.at);
-    if (next === 'spot') {
-      stopCamera();
-      setLock({ locked: null, pending: null });
-      setUseCompass(false);
-      setPhase(options?.phase ?? (phone ? 'map' : 'view'));
-    } else {
-      setPhase('view');
-    }
-    remember(options?.at);
+    setPayload(null);
+    setProgress(null);
+    setError(null);
+    setLiningUp(false);
+    setShowDragHint(true);
   }
 
-  async function startLive() {
-    setLiveMessage(null);
-    if (typeof OffscreenCanvas === 'undefined') {
-      setError('This browser cannot draw the skyline. Use a current Safari or Chrome.');
-      chooseMode('spot');
-      return;
-    }
-    const motion = await requestMotionPermission();
-    let here: Spot | null = null;
+  async function readLocation(): Promise<Spot | null> {
+    if (!navigator.geolocation) return null;
     try {
-      here = await new Promise<Spot>((resolve, reject) => {
+      return await new Promise<Spot>((resolve, reject) => {
         navigator.geolocation.getCurrentPosition(
           (position) => resolve({ lat: position.coords.latitude, lng: position.coords.longitude }),
           () => reject(new Error('location')),
@@ -269,41 +249,119 @@ export function PeakFinder() {
         );
       });
     } catch {
-      here = null;
+      return null;
     }
-    let nextStream: MediaStream | null = null;
+  }
+
+  async function tryStartCamera(): Promise<boolean> {
+    if (typeof OffscreenCanvas === 'undefined') {
+      setError('This browser cannot draw the skyline. Use a current Safari or Chrome.');
+      return false;
+    }
     try {
-      nextStream = await navigator.mediaDevices.getUserMedia({
+      const nextStream = await navigator.mediaDevices.getUserMedia({
         video: { facingMode: { ideal: 'environment' } },
         audio: false,
       });
+      streamRef.current = nextStream;
+      setStream(nextStream);
+      setCameraNote(null);
+      return true;
     } catch {
-      nextStream = null;
+      setCameraNote(CAMERA_DENIED);
+      stopCamera();
+      return false;
     }
-    if (!nextStream || !here || motion === 'denied') {
-      nextStream?.getTracks().forEach((track) => track.stop());
-      chooseMode('spot', here ? { phase: 'view', at: here } : undefined);
-      setLiveMessage('The camera, compass, or location was blocked. Drop a pin and drag the skyline.');
+  }
+
+  async function beginExplore() {
+    setStartNote(null);
+    setBanner(null);
+    setError(null);
+    const here = await readLocation();
+    if (!here) {
+      setStartNote(LOCATION_DENIED);
       return;
     }
-    streamRef.current = nextStream;
-    setStream(nextStream);
     setLock({ locked: here, pending: null });
-    setMode('live');
-    modeRef.current = 'live';
+    setShowDragHint(true);
+    if (sensors) {
+      viewRef.current.pitch = 0;
+      viewRef.current.roll = 0;
+      setGyroOn(true);
+      setCameraOn(true);
+      setScreen('explore');
+      const motion = await requestMotionPermission();
+      if (motion === 'denied') {
+        setGyroOn(false);
+        setBanner('Gyro is blocked. Allow motion access, or drag the skyline.');
+      }
+      await tryStartCamera();
+    } else {
+      viewRef.current.heading = 0;
+      viewRef.current.pitch = 0;
+      viewRef.current.roll = 0;
+      setScreen('explore');
+    }
+  }
+
+  function beginPick() {
+    setStartNote(null);
+    setBanner(null);
+    setError(null);
+    setLock({ locked: null, pending: null });
+    stopCamera();
+    setCameraOn(false);
+    setCameraNote(null);
+    setGyroOn(false);
+    setScreen('pick-map');
+    setShowDragHint(true);
+  }
+
+  function confirmPick() {
+    setScreen('pick-view');
+  }
+
+  async function toggleCamera() {
+    if (!cameraOn) {
+      setCameraOn(true);
+      setGyroOn(true);
+      await tryStartCamera();
+      return;
+    }
+    setCameraOn(false);
+    stopCamera();
+  }
+
+  async function toggleGyro() {
+    if (cameraOn && stream) return;
+    if (gyroOn) {
+      setGyroOn(false);
+      return;
+    }
+    const motion = await requestMotionPermission();
+    if (motion === 'denied') {
+      setBanner('Gyro is blocked. Allow motion access, or drag the skyline.');
+      return;
+    }
+    setGyroOn(true);
+    setBanner(null);
   }
 
   function onLook(headingDelta: number, pitchDelta: number, fovScale: number) {
-    if (liningUp && mode === 'live') {
+    const panOnly = !followRef.current && !liningUp;
+    const pitch = panOnly ? 0 : pitchDelta;
+    if (liningUp && screen === 'explore' && stream) {
       offsetRef.current += headingDelta;
       viewRef.current.heading = wrap360(baseRef.current + offsetRef.current);
     } else if (!followRef.current) {
       viewRef.current.heading = wrap360(viewRef.current.heading + headingDelta);
     }
-    viewRef.current.pitch = Math.min(35, Math.max(-20, viewRef.current.pitch + pitchDelta));
+    viewRef.current.pitch = Math.min(35, Math.max(-20, viewRef.current.pitch + pitch));
     if (fovScale !== 1) {
       viewRef.current.hfov = Math.min(MAX_HFOV_DEG, Math.max(MIN_HFOV_DEG, viewRef.current.hfov / fovScale));
     }
+    if (headingDelta !== 0 || pitch !== 0) setShowDragHint(false);
   }
 
   const lookRef = useRef(onLook);
@@ -317,71 +375,68 @@ export function PeakFinder() {
   function finishLineUp() {
     setLiningUp(false);
     writeCalibration({ headingOffset: offsetRef.current, hfov: viewRef.current.hfov });
-    remember();
   }
 
-  const showMoved = mode === 'live' && lock.pending != null;
+  const showMoved = screen === 'explore' && lock.pending != null;
+  const showMap = screen === 'pick-map' || (screen === 'pick-view' && !stacked);
+  const showSkyline = screen === 'explore' || screen === 'pick-view';
+  const showCamera = screen === 'explore' && sensors && cameraOn && stream != null;
+  const showDrawn = showSkyline && !showCamera;
+  const gyroLocked = screen === 'explore' && sensors && cameraOn && stream != null;
 
   if (!booted) {
     return <p className="p-4 text-sm font-bold text-[#1a1a1a]">Loading Peak Finder</p>;
   }
 
-  const showMap = mode === 'spot' && (phone ? phase === 'map' : true);
-  const showDrawing = mode === 'spot' && (!phone || phase === 'view');
-  const showCamera = mode === 'live' && stream != null;
+  if (screen === 'start') {
+    return (
+      <div className="flex h-full flex-col items-center justify-center gap-4 bg-[#e7e1d4] px-6 text-center text-[#1a1a1a]">
+        <h1 className="text-xl font-bold text-[#2d5016]">Peak Finder</h1>
+        <p className="max-w-sm text-sm leading-snug">See which peaks are in view from where you stand, or from a pin on the map.</p>
+        <div className="flex w-full max-w-sm flex-col gap-2">
+          <button type="button" className="retro-button min-h-11 px-4 text-sm" onClick={() => void beginExplore()}>
+            Explore my current location
+          </button>
+          <button type="button" className="retro-button min-h-11 px-4 text-sm" onClick={beginPick}>
+            Pick a spot on the map
+          </button>
+        </div>
+        {startNote ? <p className="max-w-sm text-sm font-bold leading-snug text-red-900">{startNote}</p> : null}
+      </div>
+    );
+  }
 
   return (
     <div className="relative flex h-full min-h-0 bg-[#e7e1d4] text-[#1a1a1a]">
+      <button
+        type="button"
+        className="retro-button absolute left-2 top-2 z-30 min-h-11 px-3 text-xs"
+        onClick={goStart}
+      >
+        Back
+      </button>
+
       {showMap ? (
-        <div className={phone ? 'relative h-full w-full' : 'relative h-full w-[min(42%,28rem)] shrink-0 border-r-2 border-[#5c3a1e]'}>
+        <div className={stacked ? 'relative h-full w-full' : 'relative h-full w-[min(42%,28rem)] shrink-0 border-r-2 border-[#5c3a1e]'}>
           <SpotPicker
             lat={pin.lat}
             lng={pin.lng}
             onChange={(next) => {
               setPin(next);
               setSelected(null);
-              if (!phone) writeLast({ ...next, heading: viewRef.current.heading, hfov: viewRef.current.hfov, mode: 'spot' });
             }}
           />
-          {phone ? (
+          {screen === 'pick-map' ? (
             <div className="absolute inset-x-3 bottom-3 z-10 flex flex-col gap-2">
-              <p className="bg-[#e7e1d4]/90 px-1 text-[11px] leading-snug text-[#1a1a1a]">{PEAK_CREDITS}</p>
-              <div className="flex gap-2">
-                <button type="button" className="retro-button min-h-11 px-3 text-xs" onClick={() => void startLive()}>
-                  Live
-                </button>
-                <button
-                  type="button"
-                  className="retro-button min-h-11 flex-1 px-3 text-xs"
-                  onClick={() => {
-                    setPhase('view');
-                    writeLast({ lat: pin.lat, lng: pin.lng, heading: viewRef.current.heading, hfov: viewRef.current.hfov, mode: 'spot' });
-                  }}
-                >
-                  View from here
-                </button>
-              </div>
+              <button type="button" className="retro-button retro-button-yellow min-h-11 w-full px-3 text-sm" onClick={confirmPick}>
+                Confirm
+              </button>
             </div>
           ) : null}
         </div>
       ) : null}
 
-      {mode === 'live' && !stream ? (
-        <div className="flex h-full w-full flex-col items-center justify-center gap-4 px-6 text-center">
-          <h1 className="text-xl font-bold text-[#2d5016]">Peak Finder</h1>
-          <p className="max-w-sm text-sm leading-snug">
-            Hold your phone up and the peaks you can see get their names.
-          </p>
-          <button type="button" className="retro-button min-h-11 px-6" onClick={() => void startLive()}>
-            Start
-          </button>
-          <button type="button" className="retro-button min-h-11 px-6 text-xs" onClick={() => chooseMode('spot')}>
-            Pick a spot
-          </button>
-        </div>
-      ) : null}
-
-      {showCamera || showDrawing ? (
+      {showSkyline ? (
         <div className="relative min-w-0 flex-1">
           {showCamera ? (
             <CameraView
@@ -392,22 +447,29 @@ export function PeakFinder() {
               onLook={liningUp ? look : null}
               onPick={(peak, anchor) => setSelected({ peak, anchor })}
             />
-          ) : (
+          ) : null}
+          {showDrawn ? (
             <DrawnView
               payload={payload}
               getView={getView}
               selectedName={selected?.peak.name ?? null}
               onLook={look}
-              onSettle={() => remember()}
-              listenKeys={!phone}
+              listenKeys={!sensors}
               onPick={(peak, anchor) => setSelected({ peak, anchor })}
             />
-          )}
-          {liningUp ? <div className="absolute inset-x-0 top-0 z-20"><LineUp onDone={finishLineUp} /></div> : null}
+          ) : null}
+          {!sensors && showDrawn ? (
+            <DesktopPan
+              showHint={showDragHint}
+              onDismissHint={() => setShowDragHint(false)}
+              onPan={(delta) => look(delta, 0, 1)}
+            />
+          ) : null}
+          {liningUp ? <div className="absolute inset-x-0 top-12 z-20"><LineUp onDone={finishLineUp} /></div> : null}
           {selected ? (
             <PeakCard
               peak={selected.peak}
-              dock={phone ? 'bottom' : 'float'}
+              dock={stacked ? 'bottom' : 'float'}
               anchor={selected.anchor}
               onClose={() => setSelected(null)}
             />
@@ -415,10 +477,11 @@ export function PeakFinder() {
           <Status
             progress={progress}
             error={error}
+            banner={banner}
+            cameraNote={screen === 'explore' && sensors ? cameraNote : null}
             coverage={coverage}
             payload={payload}
-            liveMessage={liveMessage}
-            unsure={unsure && (mode === 'live' || useCompass)}
+            unsure={unsure && gyroOn}
             declinationNote={declinationNote}
             onRetry={() => setAttempt((value) => value + 1)}
           />
@@ -429,40 +492,28 @@ export function PeakFinder() {
               onClick={() => {
                 const next = acceptMove(lock);
                 setLock(next.state);
+                if (next.recompute) setAttempt((value) => value + 1);
               }}
             >
               You&apos;ve moved. Update view
             </button>
           ) : null}
           <Controls
-            mode={mode}
-            phone={phone}
-            useCompass={useCompass}
-            onLive={() => {
-              if (!stream) void startLive();
-            }}
-            onSpot={() => chooseMode('spot')}
-            onLineUp={mode === 'live' && stream ? () => setLiningUp(true) : null}
-            onCompass={phone && mode === 'spot' && phase === 'view' ? () => {
-              if (useCompass) {
-                setUseCompass(false);
-                return;
-              }
-              void requestMotionPermission().then((result) => {
-                if (result === 'denied') {
-                  setLiveMessage('Compass permission was blocked. Drag the skyline instead.');
-                  return;
-                }
-                setUseCompass(true);
-              });
-            } : null}
-            onChangeSpot={phone && mode === 'spot' && phase === 'view' ? () => setPhase('map') : null}
+            sensors={sensors}
+            screen={screen}
+            cameraOn={cameraOn}
+            gyroOn={gyroOn}
+            gyroLocked={gyroLocked}
+            hasCamera={showCamera}
+            onCamera={() => void toggleCamera()}
+            onGyro={() => void toggleGyro()}
+            onLineUp={showCamera ? () => setLiningUp(true) : null}
+            onChangeSpot={screen === 'pick-view' && stacked ? () => setScreen('pick-map') : null}
             coverageNote={coverage === 'partial' ? 'Some surrounding peak lists are not in this build, so a few names may be missing.' : null}
             onSummit={payload?.onSummit ?? null}
           />
         </div>
       ) : null}
-
     </div>
   );
 }
@@ -470,18 +521,20 @@ export function PeakFinder() {
 function Status({
   progress,
   error,
+  banner,
+  cameraNote,
   coverage,
   payload,
-  liveMessage,
   unsure,
   declinationNote,
   onRetry,
 }: {
   progress: ProgressState;
   error: string | null;
+  banner: string | null;
+  cameraNote: string | null;
   coverage: Coverage;
   payload: SkylinePayload | null;
-  liveMessage: string | null;
   unsure: boolean;
   declinationNote: string | null;
   onRetry: () => void;
@@ -489,8 +542,9 @@ function Status({
   const loading = progress?.kind === 'loading';
   const text = error
     ?? (loading ? 'Loading…' : null)
-    ?? liveMessage
-    ?? (unsure ? 'Compass unsure. Line up.' : null)
+    ?? banner
+    ?? cameraNote
+    ?? (unsure ? 'Gyro unsure. Line up.' : null)
     ?? declinationNote
     ?? (coverage === 'none' ? 'Peak names for this spot are not in this build. The Northeast is loaded: NY, NJ, PA, CT, RI, MA, VT, NH, ME.' : null)
     ?? (payload && payload.peaks.length === 0 ? 'No named peaks are visible from here.' : null);
@@ -498,7 +552,7 @@ function Status({
   const fillPct = loading ? Math.min(progress.fraction, 0.85) * 100 : 0;
   if (!text) return null;
   return (
-    <div className="absolute left-1/2 top-2 z-20 w-[min(28rem,calc(100%-1rem))] -translate-x-1/2 bg-[#1a1a1a]/80 px-3 py-2 text-center text-sm font-bold leading-snug text-white" role="status">
+    <div className="absolute left-1/2 top-12 z-20 w-[min(28rem,calc(100%-1rem))] -translate-x-1/2 bg-[#1a1a1a]/80 px-3 py-2 text-center text-sm font-bold leading-snug text-white" role="status">
       <p>{text}</p>
       {loading ? (
         <div
@@ -524,61 +578,75 @@ function Status({
 }
 
 function Controls({
-  mode,
-  phone,
-  useCompass,
-  onLive,
-  onSpot,
+  sensors,
+  screen,
+  cameraOn,
+  gyroOn,
+  gyroLocked,
+  hasCamera,
+  onCamera,
+  onGyro,
   onLineUp,
-  onCompass,
   onChangeSpot,
   coverageNote,
   onSummit,
 }: {
-  mode: FinderMode;
-  phone: boolean;
-  useCompass: boolean;
-  onLive: () => void;
-  onSpot: () => void;
+  sensors: boolean;
+  screen: Screen;
+  cameraOn: boolean;
+  gyroOn: boolean;
+  gyroLocked: boolean;
+  hasCamera: boolean;
+  onCamera: () => void;
+  onGyro: () => void;
   onLineUp: (() => void) | null;
-  onCompass: (() => void) | null;
   onChangeSpot: (() => void) | null;
   coverageNote: string | null;
   onSummit: { name: string; elevationM: number } | null;
 }) {
-  const onCamera = mode === 'live';
+  const onCameraUi = hasCamera;
+  const showCameraToggle = sensors && screen === 'explore';
+  const showGyro = sensors && (screen === 'explore' || screen === 'pick-view');
   return (
-    <div className={`pointer-events-none absolute inset-x-0 bottom-0 z-20 px-2 pb-2 ${onCamera ? 'text-white' : 'text-[#1a1a1a]'}`}>
+    <div className={`pointer-events-none absolute inset-x-0 bottom-0 z-20 px-2 pb-2 ${onCameraUi ? 'text-white' : 'text-[#1a1a1a]'}`}>
       <div className="pointer-events-auto mx-auto flex max-w-3xl flex-col gap-1">
         <div className="flex flex-wrap gap-1.5">
-          {phone ? (
-            <button type="button" className="retro-button min-h-11 px-3 text-xs" aria-pressed={mode === 'live'} onClick={onLive}>
-              Live
+          {showCameraToggle ? (
+            <button
+              type="button"
+              className="retro-button min-h-11 px-3 text-xs"
+              aria-pressed={cameraOn}
+              onClick={onCamera}
+            >
+              Camera
             </button>
           ) : null}
-          <button type="button" className="retro-button min-h-11 px-3 text-xs" aria-pressed={mode === 'spot'} onClick={onSpot}>
-            Pick a spot
-          </button>
+          {showGyro ? (
+            <button
+              type="button"
+              className="retro-button min-h-11 px-3 text-xs"
+              aria-pressed={gyroOn}
+              disabled={gyroLocked}
+              onClick={onGyro}
+            >
+              Gyro
+            </button>
+          ) : null}
           {onLineUp ? (
             <button type="button" className="retro-button min-h-11 px-3 text-xs" onClick={onLineUp}>Line up</button>
-          ) : null}
-          {onCompass ? (
-            <button type="button" className="retro-button min-h-11 px-3 text-xs" aria-pressed={useCompass} onClick={onCompass}>
-              Use compass
-            </button>
           ) : null}
           {onChangeSpot ? (
             <button type="button" className="retro-button min-h-11 px-3 text-xs" onClick={onChangeSpot}>Change spot</button>
           ) : null}
         </div>
         {onSummit ? (
-          <p className={`text-sm font-bold leading-snug ${onCamera ? 'bg-black/55 px-1' : ''}`}>
+          <p className={`text-sm font-bold leading-snug ${onCameraUi ? 'bg-black/55 px-1' : ''}`}>
             You&apos;re on: {onSummit.name}, {formatFeet(onSummit.elevationM)}
           </p>
         ) : null}
-        {coverageNote ? <p className={`text-[11px] leading-snug ${onCamera ? 'bg-black/55 px-1' : ''}`}>{coverageNote}</p> : null}
-        <p className={`text-[11px] leading-snug ${onCamera ? 'bg-black/55 px-1' : ''}`}>{PEAK_CREDITS}</p>
-        <p className={`text-[11px] leading-snug ${onCamera ? 'bg-black/55 px-1' : ''}`}>{BARE_EARTH_NOTE}</p>
+        {coverageNote ? <p className={`text-[11px] leading-snug ${onCameraUi ? 'bg-black/55 px-1' : ''}`}>{coverageNote}</p> : null}
+        <p className={`text-[11px] leading-snug ${onCameraUi ? 'bg-black/55 px-1' : ''}`}>{PEAK_CREDITS}</p>
+        <p className={`text-[11px] leading-snug ${onCameraUi ? 'bg-black/55 px-1' : ''}`}>{BARE_EARTH_NOTE}</p>
       </div>
     </div>
   );
