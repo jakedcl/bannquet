@@ -6,10 +6,10 @@ import type { MapFeatureCollection } from '@/lib/posts';
 
 export type CommunityPeek = {
   chat: { id: string; name: string; handle: string | null; body: string }[];
-  peaks: { slug: string; name: string; detail: string | null }[];
   posts: { id: string; title: string; when: string | null }[];
+  peaks: { slug: string; name: string; detail: string | null }[];
   members: { id: string; name: string; handle: string | null; detail: string | null }[];
-  gear: { id: string; name: string; detail: string | null }[];
+  library: { id: string; href: string; label: string }[];
   points: MapFeatureCollection;
   lines: MapFeatureCollection;
 };
@@ -39,19 +39,6 @@ export function CommunityBoard({ peek }: { peek: CommunityPeek }) {
         )}
       </DashboardWindow>
 
-      <DashboardWindow title="Peaks" href="/peaks">
-        {peek.peaks.length === 0 ? <Empty /> : (
-          <ul className="divide-y divide-[#e6e6e6] text-sm">
-            {peek.peaks.map((peak) => (
-              <li key={peak.slug} className="flex min-w-0 items-center justify-between gap-2">
-                <Link href={`/peaks/${peak.slug}`} className="flex min-h-11 min-w-0 items-center truncate font-bold underline">{peak.name}</Link>
-                {peak.detail ? <span className="shrink-0">{peak.detail}</span> : null}
-              </li>
-            ))}
-          </ul>
-        )}
-      </DashboardWindow>
-
       <DashboardWindow title="Posts" href="/posts">
         {peek.posts.length === 0 ? <Empty /> : (
           <ul className="divide-y divide-[#e6e6e6] text-sm">
@@ -59,6 +46,19 @@ export function CommunityBoard({ peek }: { peek: CommunityPeek }) {
               <li key={post.id} className="flex min-w-0 items-center justify-between gap-2">
                 <Link href={`/posts/${post.id}`} className="flex min-h-11 min-w-0 items-center truncate font-bold underline">{post.title}</Link>
                 {post.when ? <span className="shrink-0">{post.when}</span> : null}
+              </li>
+            ))}
+          </ul>
+        )}
+      </DashboardWindow>
+
+      <DashboardWindow title="Peaks" href="/peaks">
+        {peek.peaks.length === 0 ? <Empty /> : (
+          <ul className="divide-y divide-[#e6e6e6] text-sm">
+            {peek.peaks.map((peak) => (
+              <li key={peak.slug} className="flex min-w-0 items-center justify-between gap-2">
+                <Link href={`/peaks/${peak.slug}`} className="flex min-h-11 min-w-0 items-center truncate font-bold underline">{peak.name}</Link>
+                {peak.detail ? <span className="shrink-0">{peak.detail}</span> : null}
               </li>
             ))}
           </ul>
@@ -78,17 +78,14 @@ export function CommunityBoard({ peek }: { peek: CommunityPeek }) {
         )}
       </DashboardWindow>
 
-      <DashboardWindow title="Gear" href="/gear">
-        {peek.gear.length === 0 ? <Empty /> : (
-          <ul className="divide-y divide-[#e6e6e6] text-sm">
-            {peek.gear.map((item) => (
-              <li key={item.id} className="flex min-w-0 items-center justify-between gap-2">
-                <Link href={`/gear/${item.id}`} className="flex min-h-11 min-w-0 items-center truncate font-bold underline">{item.name}</Link>
-                {item.detail ? <span className="shrink-0">{item.detail}</span> : null}
-              </li>
-            ))}
-          </ul>
-        )}
+      <DashboardWindow title="Library" href="/photos">
+        <ul className="divide-y divide-[#e6e6e6] text-sm">
+          {peek.library.map((item) => (
+            <li key={item.id}>
+              <Link href={item.href} className="flex min-h-11 items-center font-bold underline">{item.label}</Link>
+            </li>
+          ))}
+        </ul>
       </DashboardWindow>
 
       <DashboardWindow title="Map" href="/map">

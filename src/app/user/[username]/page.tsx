@@ -1,13 +1,14 @@
 import { AvatarImage } from '@/components/ui/AvatarImage';
 import { notFound, redirect } from 'next/navigation';
 import PageWrapper from '@/components/ui/PageWrapper';
-import { PeakRows, GearRows, PhotoGrid, PinRows, PostRows, RouteRows, SeeAll } from '@/components/profile/ProfileLists';
+import { PeakRows, PhotoGrid, PinRows, PostRows, RouteRows, SeeAll } from '@/components/profile/ProfileLists';
 import { ChallengeBadge } from '@/components/stats/ChallengeBadge';
 import { Pill } from '@/components/hub/Button';
 import { Button } from '@/components/hub/Button';
 import { SubmitButton } from '@/components/ui/SubmitButton';
 import { Card } from '@/components/hub/Card';
 import { HubPage } from '@/components/hub/Page';
+import { ProfileTabs } from '@/components/profile/ProfileTabs';
 import { getViewer, signOutAction } from '@/app/sign-in/actions';
 import { findHandleRedirect, findMemberByHandle } from '@/lib/auth/members';
 import { ACTIVITY_META } from '@/lib/activities';
@@ -18,7 +19,6 @@ import { allPeaks, challengeProgress, loadChallenges } from '@/lib/challenges';
 import { canDeleteOwned } from '@/lib/membership';
 import { PROFILE_PREVIEW } from '@/lib/list-page';
 import { listMemberPeakRows, summitCountsForUser } from '@/lib/summits';
-import { listGear } from '@/lib/gear';
 import { listPostsByOwner } from '@/lib/feed-posts';
 import { loadFailed } from '@/lib/load-error';
 
@@ -40,17 +40,15 @@ export default async function UserPage({ params }: { params: Promise<{ username:
   let summitCounts: Awaited<ReturnType<typeof summitCountsForUser>> = [];
   let peakRows: Awaited<ReturnType<typeof listMemberPeakRows>> = [];
   let posts: Awaited<ReturnType<typeof listPostsByOwner>> = [];
-  let gear: Awaited<ReturnType<typeof listGear>> = [];
   let error: string | null = null;
   try {
-    [library, activities, pins, summitCounts, peakRows, posts, gear] = await Promise.all([
+    [library, activities, pins, summitCounts, peakRows, posts] = await Promise.all([
       loadProfileLibrary(member.id),
       loadLoggedActivities(member.id),
       loadProfilePins(member.id),
       summitCountsForUser(member.id),
       listMemberPeakRows(member.id),
       listPostsByOwner(member.id),
-      listGear().catch(() => []),
     ]);
   } catch (err) {
     error = loadFailed('profile', err, 'This page did not load. Try again in a minute.');
@@ -67,11 +65,6 @@ export default async function UserPage({ params }: { params: Promise<{ username:
     return [{ challenge, progress: challengeProgress(challenge.peaks.length, climbed) }];
   });
   const ownPeaks = [...peakRows].reverse();
-  const heldGear = gear.flatMap((item) => {
-    const hold = item.holds.find((row) => row.userId === member.id);
-    if (!hold) return [];
-    return [{ id: item.id, name: item.name, qty: hold.qty }];
-  });
   const profilePath = `/user/${member.handle ?? username}`;
 
   const name = member.displayName || member.handle || 'Friend';
@@ -113,51 +106,82 @@ export default async function UserPage({ params }: { params: Promise<{ username:
         {error ? (
           <p className="t-body font-bold">{error}</p>
         ) : null}
-        {startedChallenges.length > 0 ? (
-          <Card title="Challenges">
-            <div className="flex flex-wrap gap-4">
-              {startedChallenges.map(({ challenge, progress }) => (
-                <div key={challenge.id} className="space-y-1">
-                  <p className="text-sm font-bold">{challenge.short}</p>
-                  <p className="text-sm">{progress.climbed} of {progress.total} peaks</p>
-                  {progress.complete ? <ChallengeBadge short={challenge.short} /> : null}
+        <ProfileTabs
+          tabs={[
+            {
+              id: 'peaks',
+              label: 'Peaks',
+              show: startedChallenges.length > 0 || ownPeaks.length > 0,
+              content: (
+                <div className="space-y-4">
+                  {startedChallenges.length > 0 ? (
+                    <Card title="Challenges">
+                      <div className="flex flex-wrap gap-4">
+                        {startedChallenges.map(({ challenge, progress }) => (
+                          <div key={challenge.id} className="space-y-1">
+                            <p className="text-sm font-bold">{challenge.short}</p>
+                            <p className="text-sm">{progress.climbed} of {progress.total} peaks</p>
+                            {progress.complete ? <ChallengeBadge short={challenge.short} /> : null}
+                          </div>
+                        ))}
+                      </div>
+                    </Card>
+                  ) : null}
+                  {ownPeaks.length > 0 ? (
+                    <Card title={`Peaks (${ownPeaks.length})`}>
+                      <PeakRows peaks={ownPeaks} names={Object.fromEntries(peakNames)} manage={manage} collapsed viewer={viewer} ownerId={member.id} />
+                      <SeeAll href={`${profilePath}/peaks`} total={ownPeaks.length} />
+                    </Card>
+                  ) : null}
                 </div>
-              ))}
-            </div>
-          </Card>
-        ) : null}
-        {library.routes.length > 0 ? (
-          <Card title="Routes">
-            <RouteRows routes={library.routes} manage={manage} profilePath={profilePath} collapsed viewer={viewer} ownerId={member.id} />
-          </Card>
-        ) : null}
-        {pins.length > 0 ? (
-          <Card title="Pins">
-            <PinRows pins={pins} manage={manage} collapsed viewer={viewer} ownerId={member.id} />
-          </Card>
-        ) : null}
-        {library.photos.length > 0 ? (
-          <Card title="Photos">
-            <PhotoGrid photos={library.photos.slice(0, PROFILE_PREVIEW)} manage={manage} profilePath={profilePath} viewer={viewer} ownerId={member.id} />
-            <SeeAll href={`${profilePath}/photos`} total={library.photos.length} />
-          </Card>
-        ) : null}
-        {posts.length > 0 ? (
-          <Card title="Posts">
-            <PostRows posts={posts} manage={manage} collapsed viewer={viewer} ownerId={member.id} />
-            <SeeAll href={`${profilePath}/posts`} total={posts.length} />
-          </Card>
-        ) : null}
-        {ownPeaks.length > 0 ? (
-          <Card title={`Peaks (${ownPeaks.length})`}>
-            <PeakRows peaks={ownPeaks} names={Object.fromEntries(peakNames)} manage={manage} collapsed viewer={viewer} ownerId={member.id} />
-          </Card>
-        ) : null}
-        {heldGear.length > 0 ? (
-          <Card title="Gear">
-            <GearRows items={heldGear} collapsed />
-          </Card>
-        ) : null}
+              ),
+            },
+            {
+              id: 'posts',
+              label: 'Posts',
+              show: posts.length > 0,
+              content: (
+                <Card title="Posts">
+                  <PostRows posts={posts} manage={manage} collapsed viewer={viewer} ownerId={member.id} />
+                  <SeeAll href={`${profilePath}/posts`} total={posts.length} />
+                </Card>
+              ),
+            },
+            {
+              id: 'routes',
+              label: 'Routes',
+              show: library.routes.length > 0,
+              content: (
+                <Card title="Routes">
+                  <RouteRows routes={library.routes} manage={manage} profilePath={profilePath} collapsed viewer={viewer} ownerId={member.id} />
+                  <SeeAll href={`${profilePath}/routes`} total={library.routes.length} />
+                </Card>
+              ),
+            },
+            {
+              id: 'pins',
+              label: 'Pins',
+              show: pins.length > 0,
+              content: (
+                <Card title="Pins">
+                  <PinRows pins={pins} manage={manage} collapsed viewer={viewer} ownerId={member.id} />
+                  <SeeAll href={`${profilePath}/pins`} total={pins.length} />
+                </Card>
+              ),
+            },
+            {
+              id: 'photos',
+              label: 'Photos',
+              show: library.photos.length > 0,
+              content: (
+                <Card title="Photos">
+                  <PhotoGrid photos={library.photos.slice(0, PROFILE_PREVIEW)} manage={manage} profilePath={profilePath} viewer={viewer} ownerId={member.id} />
+                  <SeeAll href={`${profilePath}/photos`} total={library.photos.length} />
+                </Card>
+              ),
+            },
+          ]}
+        />
         {viewer?.id === member.id ? (
           <form action={signOutAction}>
             <SubmitButton pendingLabel="Signing out…">Log out</SubmitButton>

@@ -388,39 +388,3 @@ export function PeakRows({
   );
 }
 
-export function GearRows({
-  items,
-  collapsed = false,
-}: {
-  items: Array<{ id: string; name: string; qty: number }>;
-  collapsed?: boolean;
-}) {
-  const columns: DataColumn<(typeof items)[number]>[] = [
-    {
-      id: 'name',
-      header: 'Item',
-      sticky: true,
-      sortValue: (row) => row.name,
-      cell: (row) => <Link href={`/gear/${row.id}`} className="font-bold underline">{row.name}</Link>,
-    },
-    {
-      id: 'qty',
-      header: 'Qty',
-      align: 'right',
-      sortValue: (row) => row.qty,
-      cell: (row) => String(row.qty),
-    },
-  ];
-  return (
-    <BrowseTable
-      rows={items}
-      columns={columns}
-      rowKey={(row) => row.id}
-      empty="No gear yet."
-      defaultSort={{ id: 'name', dir: 'asc' }}
-      placeholder="Gear name"
-      searchText={(row) => row.name}
-      collapsed={collapsed}
-    />
-  );
-}

@@ -7,7 +7,6 @@ import {
   integer,
   pgEnum,
   pgTable,
-  primaryKey,
   text,
   timestamp,
   uuid,
@@ -199,31 +198,6 @@ export const chatMessages = pgTable(
     createdAt,
   },
   (table) => [index('chat_messages_created_idx').on(table.createdAt, table.id)],
-);
-
-export const communityGear = pgTable(
-  'community_gear',
-  {
-    id: uuid('id').primaryKey().defaultRandom(),
-    name: text('name').notNull(),
-    category: text('category'),
-    addedBy: text('added_by').references(() => users.id, { onDelete: 'set null' }),
-    createdAt,
-  },
-);
-
-export const communityGearHolds = pgTable(
-  'community_gear_holds',
-  {
-    gearId: uuid('gear_id')
-      .notNull()
-      .references(() => communityGear.id, { onDelete: 'cascade' }),
-    userId: text('user_id')
-      .notNull()
-      .references(() => users.id, { onDelete: 'cascade' }),
-    qty: integer('qty').notNull(),
-  },
-  (table) => [primaryKey({ columns: [table.gearId, table.userId] })],
 );
 
 /**
