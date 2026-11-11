@@ -6,6 +6,7 @@ import type { SkylinePayload } from '@/lib/peak-finder/payload';
 import { projectDirection, verticalFov } from '@/lib/peak-finder/projection';
 import { LABEL_BOX_HEIGHT_PX, LABEL_TICK_PX, labelsInView, type LabelCandidate } from '@/lib/peak-finder/declutter';
 import { wrap180 } from '@/lib/peak-finder/geo';
+import type { GestureMode } from '@/lib/peak-finder/explore-gestures';
 import type { VisiblePeak } from '@/lib/peak-finder/visibility';
 
 export type ViewPose = { heading: number; pitch: number; roll: number; hfov: number };
@@ -17,6 +18,7 @@ export function SkylineStage({
   onPick,
   selectedName,
   onLook,
+  gestureMode,
   onSettle,
   showReadout,
 }: {
@@ -26,6 +28,7 @@ export function SkylineStage({
   onPick: (peak: VisiblePeak, anchor: { x: number; y: number }) => void;
   selectedName: string | null;
   onLook: ((headingDelta: number, pitchDelta: number, fovScale: number) => void) | null;
+  gestureMode: GestureMode;
   onSettle?: () => void;
   showReadout: boolean;
 }) {
@@ -39,6 +42,7 @@ export function SkylineStage({
   const [pose, setPose] = useState<ViewPose>(() => ({ ...getView() }));
   const pointers = useRef(new Map<number, { x: number; y: number }>());
   const last = useRef<{ x: number; y: number; dist: number | null } | null>(null);
+  const gesturesActive = gestureMode !== 'off' && onLook != null;
 
   useEffect(() => {
     const wrap = wrapRef.current;
@@ -74,6 +78,25 @@ export function SkylineStage({
 
   const labels = labelsFor(payload, pose, size.width, size.height);
 
+  useEffect(() => {
+    const wrap = wrapRef.current;
+    if (!wrap || gestureMode !== 'adjust') return;
+    const block = (event: Event) => event.preventDefault();
+    wrap.addEventListener('gesturestart', block, { passive: false });
+    wrap.addEventListener('gesturechange', block, { passive: false });
+    wrap.addEventListener('gestureend', block);
+    const onTouchMove = (event: TouchEvent) => {
+      if (event.touches.length > 1) event.preventDefault();
+    };
+    wrap.addEventListener('touchmove', onTouchMove, { passive: false });
+    return () => {
+      wrap.removeEventListener('gesturestart', block);
+      wrap.removeEventListener('gesturechange', block);
+      wrap.removeEventListener('gestureend', block);
+      wrap.removeEventListener('touchmove', onTouchMove);
+    };
+  }, [gestureMode]);
+
   function pinchDistance(): number | null {
     const points = [...pointers.current.values()];
     if (points.length < 2) return null;
@@ -83,41 +106,44 @@ export function SkylineStage({
   return (
     <div
       ref={wrapRef}
-      className={`absolute inset-0 ${onLook ? 'touch-none' : ''}`}
-      onPointerDown={onLook ? (event) => {
+      className={`absolute inset-0 ${gestureMode === 'adjust' ? 'touch-none' : gestureMode === 'pan' ? 'touch-none' : ''}`}
+      style={gestureMode === 'adjust' ? { touchAction: 'none' } : gestureMode === 'pan' ? { touchAction: 'none' } : undefined}
+      onPointerDown={gesturesActive ? (event) => {
+        if (event.pointerType === 'mouse' && event.button !== 0) return;
         pointers.current.set(event.pointerId, { x: event.clientX, y: event.clientY });
         last.current = { x: event.clientX, y: event.clientY, dist: pinchDistance() };
       } : undefined}
-      onPointerMove={onLook ? (event) => {
-        if (!pointers.current.has(event.pointerId) || size.width < 2) return;
+      onPointerMove={gesturesActive ? (event) => {
+        if (!pointers.current.has(event.pointerId) || size.width < 2 || !onLook) return;
         pointers.current.set(event.pointerId, { x: event.clientX, y: event.clientY });
         const dist = pinchDistance();
         const prev = last.current;
         if (!prev) return;
-        if (dist && prev.dist) {
+        if (gestureMode === 'adjust' && dist && prev.dist) {
           onLook(0, 0, dist / prev.dist);
           last.current = { x: event.clientX, y: event.clientY, dist };
           return;
         }
+        if (gestureMode === 'pan' && pointers.current.size > 1) return;
         const dx = event.clientX - prev.x;
         const dy = event.clientY - prev.y;
         const vfov = verticalFov(pose.hfov, size.width, size.height);
         onLook(-(dx / size.width) * pose.hfov, (dy / size.height) * vfov, 1);
-        last.current = { x: event.clientX, y: event.clientY, dist };
+        last.current = { x: event.clientX, y: event.clientY, dist: gestureMode === 'adjust' ? dist : null };
       } : undefined}
-      onPointerUp={onLook ? (event) => {
+      onPointerUp={gesturesActive ? (event) => {
         pointers.current.delete(event.pointerId);
         if (pointers.current.size === 0) {
           last.current = null;
           onSettle?.();
         }
       } : undefined}
-      onPointerCancel={onLook ? (event) => {
+      onPointerCancel={gesturesActive ? (event) => {
         pointers.current.delete(event.pointerId);
         if (pointers.current.size === 0) last.current = null;
       } : undefined}
     >
-      <canvas ref={canvasRef} className="absolute inset-0 h-full w-full" />
+      <canvas ref={canvasRef} className="absolute inset-0 h-full w-full touch-none" />
       {showReadout ? (
         <p className="pointer-events-none absolute left-2 top-2 bg-[#e7e1d4]/90 px-2 py-1 text-xs font-bold text-[#5c3a1e]">
           Looking {formatDirection(pose.heading)}

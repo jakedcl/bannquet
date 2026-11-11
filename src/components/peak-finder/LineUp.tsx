@@ -1,14 +1,14 @@
 'use client';
 
-export function LineUp({ onDone }: { onDone: () => void }) {
+export function LineUpCaption() {
   return (
-    <div className="pointer-events-auto mx-2 mt-2 flex items-center gap-2 bg-black/75 px-3 py-2 text-white">
-      <p className="min-w-0 flex-1 text-sm leading-snug">
-        Drag the skyline onto a peak you know. Pinch to match its size.
+    <div
+      className="pointer-events-none mx-2 mt-2 bg-black/75 px-3 py-2 text-white"
+      role="status"
+    >
+      <p className="text-sm leading-snug">
+        Drag the skyline to line it up with the real ridges. Pinch to zoom.
       </p>
-      <button type="button" onClick={onDone} className="retro-button min-h-11 shrink-0 px-3 text-xs">
-        Done
-      </button>
     </div>
   );
 }

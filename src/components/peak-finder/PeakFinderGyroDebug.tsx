@@ -50,7 +50,7 @@ export function PeakFinderGyroDebug({
   }
 
   return (
-    <div className="peak-finder-gyro-debug" aria-live="polite">
+    <div className="peak-finder-gyro-debug" aria-live="polite" onPointerDown={(event) => event.stopPropagation()}>
       <p className="peak-finder-gyro-debug-title">Gyro debug (?debug=1)</p>
       {live ? (
         <dl className="peak-finder-gyro-debug-grid">
@@ -70,7 +70,8 @@ export function PeakFinderGyroDebug({
       <div className="peak-finder-gyro-debug-actions">
         <button
           type="button"
-          className="retro-button px-2 py-1 text-[10px] text-[#1a1a1a]"
+          className="peak-finder-control retro-button px-2 py-1 text-[10px] text-[#1a1a1a]"
+          data-pf-control
           onClick={() => {
             if (recorder.isRecording()) recorder.stopRecording();
             else recorder.startRecording();
@@ -80,14 +81,16 @@ export function PeakFinderGyroDebug({
         </button>
         <button
           type="button"
-          className="retro-button px-2 py-1 text-[10px] text-[#1a1a1a]"
+          className="peak-finder-control retro-button px-2 py-1 text-[10px] text-[#1a1a1a]"
+          data-pf-control
           onClick={() => void copyText(recorder.exportJson(), 'Copied JSON to clipboard.')}
         >
           Copy JSON
         </button>
         <button
           type="button"
-          className="retro-button px-2 py-1 text-[10px] text-[#1a1a1a]"
+          className="peak-finder-control retro-button px-2 py-1 text-[10px] text-[#1a1a1a]"
+          data-pf-control
           onClick={() => void copyText(recorder.exportCsv(), 'Copied CSV to clipboard.')}
         >
           Copy CSV
@@ -98,7 +101,8 @@ export function PeakFinderGyroDebug({
           <button
             key={label}
             type="button"
-            className={`retro-button px-1.5 py-0.5 text-[9px] text-[#1a1a1a] ${activeStep === label && recording ? 'retro-button-yellow' : ''}`}
+            className={`peak-finder-control retro-button px-1.5 py-0.5 text-[9px] text-[#1a1a1a] ${activeStep === label && recording ? 'retro-button-yellow' : ''}`}
+            data-pf-control
             onClick={() => recorder.setStep(activeStep === label ? null : label)}
             disabled={!recording}
           >

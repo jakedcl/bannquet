@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 import type { SkylinePayload } from '@/lib/peak-finder/payload';
+import type { GestureMode } from '@/lib/peak-finder/explore-gestures';
 import type { VisiblePeak } from '@/lib/peak-finder/visibility';
 import { SkylineStage, type ViewPose } from './SkylineStage';
 
@@ -11,6 +12,7 @@ export function DrawnView({
   onPick,
   selectedName,
   onLook,
+  gestureMode,
   onSettle,
   listenKeys,
 }: {
@@ -18,13 +20,14 @@ export function DrawnView({
   getView: () => ViewPose;
   onPick: (peak: VisiblePeak, anchor: { x: number; y: number }) => void;
   selectedName: string | null;
-  onLook: (headingDelta: number, pitchDelta: number, fovScale: number) => void;
+  onLook: ((headingDelta: number, pitchDelta: number, fovScale: number) => void) | null;
+  gestureMode: GestureMode;
   onSettle?: () => void;
   listenKeys: boolean;
 }) {
   const boxRef = useRef<HTMLDivElement | null>(null);
   useEffect(() => {
-    if (!listenKeys) return;
+    if (!listenKeys || !onLook) return;
     const onKey = (event: KeyboardEvent) => {
       if (event.key === 'ArrowLeft') onLook(-8, 0, 1);
       else if (event.key === 'ArrowRight') onLook(8, 0, 1);
@@ -42,7 +45,7 @@ export function DrawnView({
 
   useEffect(() => {
     const node = boxRef.current;
-    if (!node) return;
+    if (!node || !onLook) return;
     let settleTimer = 0;
     const onWheel = (event: WheelEvent) => {
       event.preventDefault();
@@ -67,6 +70,7 @@ export function DrawnView({
         onPick={onPick}
         selectedName={selectedName}
         onLook={onLook}
+        gestureMode={gestureMode}
         onSettle={onSettle}
         showReadout
       />

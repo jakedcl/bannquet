@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 import type { SkylinePayload } from '@/lib/peak-finder/payload';
+import type { GestureMode } from '@/lib/peak-finder/explore-gestures';
 import type { VisiblePeak } from '@/lib/peak-finder/visibility';
 import { SkylineStage, type ViewPose } from './SkylineStage';
 
@@ -12,6 +13,7 @@ export function CameraView({
   onPick,
   selectedName,
   onLook,
+  gestureMode,
 }: {
   stream: MediaStream | null;
   payload: SkylinePayload | null;
@@ -19,6 +21,7 @@ export function CameraView({
   onPick: (peak: VisiblePeak, anchor: { x: number; y: number }) => void;
   selectedName: string | null;
   onLook: ((headingDelta: number, pitchDelta: number, fovScale: number) => void) | null;
+  gestureMode: GestureMode;
 }) {
   const videoRef = useRef<HTMLVideoElement | null>(null);
 
@@ -38,7 +41,13 @@ export function CameraView({
 
   return (
     <div className="relative h-full w-full bg-black">
-      <video ref={videoRef} className="absolute inset-0 h-full w-full object-cover" playsInline muted autoPlay />
+      <video
+        ref={videoRef}
+        className="pointer-events-none absolute inset-0 h-full w-full object-cover"
+        playsInline
+        muted
+        autoPlay
+      />
       <SkylineStage
         payload={payload}
         appearance="camera"
@@ -46,6 +55,7 @@ export function CameraView({
         onPick={onPick}
         selectedName={selectedName}
         onLook={onLook}
+        gestureMode={gestureMode}
         showReadout={false}
       />
     </div>

@@ -24,7 +24,8 @@ export function RetroSwitch({
         aria-disabled={disabled || undefined}
         disabled={disabled}
         onClick={() => onChange(!checked)}
-        className={`retro-switch ${checked ? 'retro-switch-on' : ''} ${disabled ? 'retro-switch-locked' : ''}`}
+        data-pf-control
+        className={`peak-finder-control retro-switch ${checked ? 'retro-switch-on' : ''} ${disabled ? 'retro-switch-locked' : ''}`}
       >
         <span className="retro-switch-track" aria-hidden="true">
           <span className="retro-switch-thumb" />

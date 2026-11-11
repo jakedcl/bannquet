@@ -35,10 +35,11 @@ import type { VisiblePeak } from '@/lib/peak-finder/visibility';
 import { CameraView } from './CameraView';
 import { DesktopPan } from './DesktopPan';
 import { DrawnView } from './DrawnView';
-import { LineUp } from './LineUp';
 import { PeakCard } from './PeakCard';
 import { createGyroRecorder, eventRateHz, type GyroDiagLive } from '@/lib/peak-finder/gyro-diagnostics';
+import { gestureModeFor } from '@/lib/peak-finder/explore-gestures';
 import { PeakFinderGyroDebug } from './PeakFinderGyroDebug';
+import { LineUpCaption } from './LineUp';
 import { RetroSwitch } from './RetroSwitch';
 import { SpotPicker } from './SpotPicker';
 import type { ViewPose } from './SkylineStage';
@@ -476,12 +477,25 @@ export function PeakFinder() {
     writeCalibration({ headingOffset: offsetRef.current, hfov: viewRef.current.hfov });
   }
 
+  function toggleLineUp() {
+    if (liningUp) finishLineUp();
+    else setLiningUp(true);
+  }
+
   const showMoved = screen === 'explore' && lock.pending != null;
   const showMap = screen === 'pick-map' || (screen === 'pick-view' && !stacked);
   const showSkyline = screen === 'explore' || screen === 'pick-view';
   const mapFillsWidth = stacked || screen === 'pick-map';
   const showCamera = screen === 'explore' && sensors && cameraOn && stream != null;
   const showDrawn = showSkyline && !showCamera;
+
+  const gestureMode = gestureModeFor({
+    showSkyline,
+    liningUp,
+    gyroOn,
+    screen,
+  });
+  const skylineGestures = gestureMode !== 'off';
   if (!booted) {
     return <p className="p-4 text-sm font-bold text-[#1a1a1a]">Loading Peak Finder</p>;
   }
@@ -547,7 +561,8 @@ export function PeakFinder() {
               payload={payload}
               getView={getView}
               selectedName={selected?.peak.name ?? null}
-              onLook={liningUp ? look : null}
+              onLook={skylineGestures ? look : null}
+              gestureMode={gestureMode}
               onPick={(peak, anchor) => setSelected({ peak, anchor })}
             />
           ) : null}
@@ -556,7 +571,8 @@ export function PeakFinder() {
               payload={payload}
               getView={getView}
               selectedName={selected?.peak.name ?? null}
-              onLook={look}
+              onLook={skylineGestures ? look : null}
+              gestureMode={gestureMode}
               listenKeys={!sensors}
               onPick={(peak, anchor) => setSelected({ peak, anchor })}
             />
@@ -568,7 +584,11 @@ export function PeakFinder() {
               onPan={(delta) => look(delta, 0, 1)}
             />
           ) : null}
-          {liningUp ? <div className="absolute inset-x-0 top-12 z-20"><LineUp onDone={finishLineUp} /></div> : null}
+          {liningUp ? (
+            <div className="absolute inset-x-0 top-12 z-30">
+              <LineUpCaption />
+            </div>
+          ) : null}
           {selected ? (
             <PeakCard
               peak={selected.peak}
@@ -610,7 +630,8 @@ export function PeakFinder() {
             hasCamera={showCamera}
             onCamera={() => void toggleCamera()}
             onGyro={() => void toggleGyro()}
-            onLineUp={showCamera ? () => setLiningUp(true) : null}
+            liningUp={liningUp}
+            onLineUp={showCamera ? toggleLineUp : null}
             onChangeSpot={screen === 'pick-view' && stacked ? () => setScreen('pick-map') : null}
             coverageNote={coverage === 'partial' ? 'Some surrounding peak lists are not in this build, so a few names may be missing.' : null}
             onSummit={payload?.onSummit ?? null}
@@ -689,6 +710,7 @@ function Controls({
   hasCamera,
   onCamera,
   onGyro,
+  liningUp,
   onLineUp,
   onChangeSpot,
   coverageNote,
@@ -702,6 +724,7 @@ function Controls({
   hasCamera: boolean;
   onCamera: () => void;
   onGyro: () => void;
+  liningUp: boolean;
   onLineUp: (() => void) | null;
   onChangeSpot: (() => void) | null;
   coverageNote: string | null;
@@ -711,8 +734,11 @@ function Controls({
   const showCameraToggle = sensors && screen === 'explore';
   const showGyro = sensors && (screen === 'explore' || screen === 'pick-view');
   return (
-    <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 px-2 pb-2 text-[#1a1a1a]">
-      <div className="pointer-events-auto mx-auto flex max-w-3xl flex-col gap-1">
+    <div className="peak-finder-controls pointer-events-none absolute inset-x-0 bottom-0 z-40 px-2 pb-2 text-[#1a1a1a]">
+      <div
+        className="pointer-events-auto mx-auto flex max-w-3xl flex-col gap-1"
+        onPointerDown={(event) => event.stopPropagation()}
+      >
         <div className="flex flex-wrap items-center gap-3">
           {showCameraToggle ? (
             <RetroSwitch
@@ -734,10 +760,24 @@ function Controls({
             />
           ) : null}
           {onLineUp ? (
-            <button type="button" className="retro-button min-h-11 px-3 text-xs text-[#1a1a1a]" onClick={onLineUp}>Line up</button>
+            <button
+              type="button"
+              data-pf-control
+              className="peak-finder-control retro-button min-h-11 px-3 text-xs text-[#1a1a1a]"
+              onClick={onLineUp}
+            >
+              {liningUp ? 'Done' : 'Line up'}
+            </button>
           ) : null}
           {onChangeSpot ? (
-            <button type="button" className="retro-button min-h-11 px-3 text-xs text-[#1a1a1a]" onClick={onChangeSpot}>Change spot</button>
+            <button
+              type="button"
+              data-pf-control
+              className="peak-finder-control retro-button min-h-11 px-3 text-xs text-[#1a1a1a]"
+              onClick={onChangeSpot}
+            >
+              Change spot
+            </button>
           ) : null}
         </div>
         {onSummit ? (
