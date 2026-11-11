@@ -1117,6 +1117,12 @@ select:focus-visible {
   background-size: 30px 30px;
 }
 
+/* Offline save picker: dim sits on the canvas; native controls stay bright and tappable. */
+.offline-area-picker-map .maplibregl-ctrl-top-right,
+.offline-area-picker-map .maplibregl-ctrl-bottom-right {
+  z-index: 5;
+}
+
 /* Green title bar on a window, slimmer than the page banner. */
 .ui-card-bar {
   display: flex;

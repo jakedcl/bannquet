@@ -11,4 +11,9 @@ test('OfflineAreaPicker map shell uses flex-1 basis-0 and h-full map container',
   assert.match(src, /ref=\{containerRef\} className="h-full w-full"/);
   assert.doesNotMatch(src, /ref=\{containerRef\} className="absolute inset-0"/);
   assert.match(src, /requestAnimationFrame\(\(\) => {\s*\n\s*map\.resize\(\)/);
+  assert.match(src, /overflow-hidden/);
+  assert.doesNotMatch(src, /9999px/);
+  assert.match(src, /scheduleFitWhenReady/);
+  assert.match(src, /mountDimOverlayHost/);
+  assert.match(src, /createPortal/);
 });

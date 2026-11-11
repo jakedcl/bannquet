@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import {
   AttributionControl,
   LngLatBounds,
@@ -61,21 +62,61 @@ function squareSidePx(map: MlMap, lat: number, lng: number, radiusM: number): { 
 function fitBoxInView(map: MlMap, lat: number, lng: number, radiusM: number, animated = false, onDone?: () => void) {
   const { west, south, east, north } = offlineSaveBounds(lat, lng, radiusM);
   const bounds = new LngLatBounds([west, south], [east, north]);
+  map.resize();
   map.fitBounds(bounds, {
     padding: BOX_VIEW_PADDING_PX,
     duration: animated ? 350 : 0,
     maxZoom: 13,
   });
-  if (onDone) {
-    if (animated) map.once('moveend', onDone);
-    else onDone();
-  }
+  if (onDone) map.once('moveend', onDone);
 }
 
 function boxVisibleInView(map: MlMap, lat: number, lng: number, radiusM: number): boolean {
   const { width, height } = squareSidePx(map, lat, lng, radiusM);
   const el = map.getContainer();
   return boxFitsViewport(width, height, el.clientWidth, el.clientHeight, BOX_VIEW_PADDING_PX);
+}
+
+function BoxSelectionOverlay({ box }: { box: { width: number; height: number } }) {
+  const halfW = box.width / 2;
+  const halfH = box.height / 2;
+  return (
+    <>
+      <div className="absolute inset-x-0 top-0 bg-[#1a1a1a]/28" style={{ height: `calc(50% - ${halfH}px)` }} />
+      <div className="absolute inset-x-0 bottom-0 bg-[#1a1a1a]/28" style={{ height: `calc(50% - ${halfH}px)` }} />
+      <div
+        className="absolute left-0 bg-[#1a1a1a]/28"
+        style={{
+          top: `calc(50% - ${halfH}px)`,
+          width: `calc(50% - ${halfW}px)`,
+          height: box.height,
+        }}
+      />
+      <div
+        className="absolute right-0 bg-[#1a1a1a]/28"
+        style={{
+          top: `calc(50% - ${halfH}px)`,
+          width: `calc(50% - ${halfW}px)`,
+          height: box.height,
+        }}
+      />
+      <div
+        className="absolute left-1/2 top-1/2 box-border -translate-x-1/2 -translate-y-1/2 border-[3px] border-[#ffc94d] bg-[#2d5016]/12"
+        style={{ width: box.width, height: box.height }}
+      />
+    </>
+  );
+}
+
+function mountDimOverlayHost(map: MlMap): HTMLDivElement {
+  const mapEl = map.getContainer();
+  const host = document.createElement('div');
+  host.setAttribute('data-offline-picker-dim', '');
+  host.className = 'absolute inset-0 z-[1] overflow-hidden pointer-events-none';
+  const controls = mapEl.querySelector('.maplibregl-ctrl-top-right, .maplibregl-ctrl-bottom-right');
+  if (controls?.parentElement === mapEl) mapEl.insertBefore(host, controls);
+  else mapEl.appendChild(host);
+  return host;
 }
 
 export function OfflineAreaPicker({
@@ -108,7 +149,35 @@ export function OfflineAreaPicker({
   const radiusRef = useRef(radiusM);
   const userPannedRef = useRef(false);
   const programmaticMoveRef = useRef(false);
+  const fitWhenReadyRef = useRef<((map: MlMap) => void) | null>(null);
+  const dimHostRef = useRef<HTMLDivElement | null>(null);
+  const [dimPortal, setDimPortal] = useState<HTMLElement | null>(null);
   const [error, setError] = useState<string | null>(null);
+
+  function scheduleFitWhenReady(
+    map: MlMap,
+    lat: number,
+    lng: number,
+    radius: number,
+    animated = false,
+    onDone?: () => void,
+  ) {
+    programmaticMoveRef.current = true;
+    fitWhenReadyRef.current = (target) => {
+      fitWhenReadyRef.current = null;
+      target.resize();
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          fitBoxInView(target, lat, lng, radius, animated, () => {
+            programmaticMoveRef.current = false;
+            onDone?.();
+          });
+        });
+      });
+    };
+    if (map.loaded()) fitWhenReadyRef.current(map);
+    else map.once('load', () => fitWhenReadyRef.current?.(map));
+  }
 
   useEffect(() => {
     radiusRef.current = radiusM;
@@ -137,7 +206,12 @@ export function OfflineAreaPicker({
     map.addControl(new NavigationControl({ visualizePitch: false }), 'top-right');
     map.addControl(new AttributionControl({ compact: true }), 'bottom-right');
     const syncAttribution = () => collapseAttribution(map);
-    map.on('load', syncAttribution);
+    map.on('load', () => {
+      syncAttribution();
+      const host = mountDimOverlayHost(map);
+      dimHostRef.current = host;
+      setDimPortal(host);
+    });
     map.on('resize', syncAttribution);
     const updateBox = () => {
       const c = map.getCenter();
@@ -156,13 +230,9 @@ export function OfflineAreaPicker({
       refreshEstimate();
     });
     mapRef.current = map;
-    map.once('idle', () => {
-      programmaticMoveRef.current = true;
-      fitBoxInView(map, centerRef.current.lat, centerRef.current.lng, radiusRef.current, false, () => {
-        programmaticMoveRef.current = false;
-        updateBox();
-        refreshEstimate();
-      });
+    scheduleFitWhenReady(map, centerRef.current.lat, centerRef.current.lng, radiusRef.current, false, () => {
+      updateBox();
+      refreshEstimate();
     });
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -171,10 +241,8 @@ export function OfflineAreaPicker({
           const lat = position.coords.latitude;
           const lng = position.coords.longitude;
           centerRef.current = { lat, lng };
-          programmaticMoveRef.current = true;
           map.jumpTo({ center: [lng, lat] });
-          fitBoxInView(map, lat, lng, radiusRef.current, false, () => {
-            programmaticMoveRef.current = false;
+          scheduleFitWhenReady(map, lat, lng, radiusRef.current, false, () => {
             updateBox();
             refreshEstimate();
             onCenterRef.current(centerRef.current);
@@ -186,15 +254,22 @@ export function OfflineAreaPicker({
         { enableHighAccuracy: false, maximumAge: 600_000, timeout: 12_000 },
       );
     }
-    const observer = new ResizeObserver(() => map.resize());
+    const observer = new ResizeObserver(() => {
+      map.resize();
+      if (fitWhenReadyRef.current) fitWhenReadyRef.current(map);
+    });
     observer.observe(container);
     const frame = requestAnimationFrame(() => {
       map.resize();
-      updateBox();
+      if (fitWhenReadyRef.current) fitWhenReadyRef.current(map);
+      else updateBox();
     });
     return () => {
       cancelAnimationFrame(frame);
       observer.disconnect();
+      dimHostRef.current?.remove();
+      dimHostRef.current = null;
+      setDimPortal(null);
       map.remove();
       mapRef.current = null;
     };
@@ -248,10 +323,7 @@ export function OfflineAreaPicker({
       if (!map) return;
       centerRef.current = { lat, lng };
       onCenterRef.current(centerRef.current);
-      programmaticMoveRef.current = true;
-      fitBoxInView(map, lat, lng, radiusM, true, () => {
-        programmaticMoveRef.current = false;
-      });
+      scheduleFitWhenReady(map, lat, lng, radiusM, true);
     } catch {
       setError('Location blocked.');
     }
@@ -261,13 +333,9 @@ export function OfflineAreaPicker({
 
   return (
     <div className="relative flex h-full min-h-0 w-full flex-col bg-[#e7e1d4] text-[#1a1a1a]">
-      <div className="relative min-h-0 w-full flex-1 basis-0">
+      <div className="offline-area-picker-map relative min-h-0 w-full flex-1 basis-0 overflow-hidden">
         <div ref={containerRef} className="h-full w-full" />
-        <div
-          className="pointer-events-none absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2 border-[3px] border-[#ffc94d] bg-[#2d5016]/12 shadow-[0_0_0_9999px_rgba(26,26,26,0.28)]"
-          style={{ width: box.width, height: box.height }}
-          aria-hidden
-        />
+        {dimPortal ? createPortal(<BoxSelectionOverlay box={box} />, dimPortal) : null}
         <button type="button" className="retro-button absolute left-2 top-2 z-30 min-h-9 px-2 text-[11px]" onClick={onBack}>
           Back
         </button>
