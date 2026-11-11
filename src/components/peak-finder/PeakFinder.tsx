@@ -34,10 +34,12 @@ import { loadPeaksAround } from '@/lib/peak-finder/peaks';
 import { applyLineUpPitchOffset, clampLineUpPitchOffset } from '@/lib/peak-finder/line-up-offset';
 import {
   applyMotionPermission,
+  GYRO_UNSURE_STATUS,
   GYRO_VERIFY_MS,
+  MOTION_BLOCKED_STATUS,
   shouldAutoEnableMotion,
-  type MotionHint,
 } from '@/lib/peak-finder/motion-enable';
+import { FRESH_YAW_CALIBRATION } from '@/lib/peak-finder/compass-resync';
 import { initialFov, readCalibration, writeCalibration } from '@/lib/peak-finder/storage';
 import { CameraView } from './CameraView';
 import { DesktopPan } from './DesktopPan';
@@ -53,6 +55,13 @@ import { PeakFinderBackButton } from './PeakFinderBackButton';
 import { registerPeakFinderServiceWorker } from '@/lib/peak-finder/register-sw';
 import { findAreaCovering, listOfflineAreas } from '@/lib/peak-finder/offline-areas-idb';
 import type { OfflineAreaRecord } from '@/lib/peak-finder/offline';
+import {
+  hasUnrecognizedPeakFinderSearch,
+  parsePeakFinderSearch,
+  peakFinderHref,
+  roundPeakFinderCoord,
+  type PeakFinderUrlState,
+} from '@/lib/peak-finder/peak-finder-url';
 import {
   effectivelyOffline,
   OFFLINE_GEO_TIMEOUT_MS,
@@ -70,7 +79,7 @@ const OFFLINE_SAVED_TOAST_TEXT =
   "Saved! When you're in this area with no signal, open Peak Finder and tap Explore my current location — it'll use your offline map automatically.";
 
 type Screen = 'start' | 'explore' | 'pick-map' | 'pick-view' | 'offline';
-type Coverage = 'full' | 'partial' | 'none';
+type Coverage = 'full' | 'none';
 type ProgressState = { kind: 'loading'; fraction: number } | null;
 
 export function PeakFinder() {
@@ -87,7 +96,6 @@ export function PeakFinder() {
   const [cameraNote, setCameraNote] = useState<string | null>(null);
   const [gyroOn, setGyroOn] = useState(false);
   const [motionArmed, setMotionArmed] = useState(false);
-  const [motionHint, setMotionHint] = useState<MotionHint>(null);
   const [banner, setBanner] = useState<string | null>(null);
   const [payload, setPayload] = useState<SkylinePayload | null>(null);
   const [progress, setProgress] = useState<ProgressState>(null);
@@ -121,14 +129,46 @@ export function PeakFinder() {
   const debugModeRef = useRef(false);
   const gyroLiveRef = useRef<GyroDiagLive | null>(null);
   const gyroEventTimesRef = useRef<number[]>([]);
+  const gyroSmootherRef = useRef<ReturnType<typeof createGyroSmoother> | null>(null);
+  const gyroYawCalRef = useRef<YawCalibration>(FRESH_YAW_CALIBRATION);
+  const gyroPreviousRawRef = useRef<number | null>(null);
+  const gyroLastJumpRef = useRef(0);
+  const gyroLastAccuracyRef = useRef<number | null | undefined>(undefined);
+  const gyroLastPitchRef = useRef(0);
+  const liningUpRef = useRef(false);
+  const suppressExploreAutoMotionRef = useRef(false);
+  const urlHydratedRef = useRef(false);
   const gyroRecorder = useMemo(() => createGyroRecorder(), []);
 
   const getView = useCallback(() => viewRef.current, []);
 
+  const resyncCompassToDevice = useCallback(() => {
+    offsetRef.current = 0;
+    pitchOffsetRef.current = 0;
+    gyroSmootherRef.current?.reset();
+    gyroYawCalRef.current = FRESH_YAW_CALIBRATION;
+    gyroPreviousRawRef.current = null;
+    gyroLastJumpRef.current = 0;
+    gyroLastAccuracyRef.current = undefined;
+    unsureRef.current = false;
+    setUnsure(false);
+    if (followRef.current || liningUpRef.current) {
+      viewRef.current.heading = wrap360(baseRef.current);
+      viewRef.current.pitch = applyLineUpPitchOffset(
+        clampGyroViewPitch(gyroLastPitchRef.current),
+        0,
+      );
+    }
+  }, []);
+
+  useEffect(() => {
+    liningUpRef.current = liningUp;
+  }, [liningUp]);
+
   useEffect(() => {
     const calibration = readCalibration();
-    offsetRef.current = calibration.headingOffset;
-    pitchOffsetRef.current = calibration.pitchOffset ?? 0;
+    offsetRef.current = 0;
+    pitchOffsetRef.current = 0;
     viewRef.current = {
       heading: 0,
       pitch: 0,
@@ -209,7 +249,7 @@ export function PeakFinder() {
   }
 
   function completeOfflineSave() {
-    goStart();
+    goToStart('replace');
     setOfflineSavedToast(true);
   }
 
@@ -238,7 +278,7 @@ export function PeakFinder() {
   const spotLng = spot?.lng ?? null;
 
   const declination = spotLat != null && spotLng != null && table ? declinationAt(table, spotLat, spotLng) ?? 0 : 0;
-  const spotKey = !booted || spotLat == null || spotLng == null ? '' : `${spotLat.toFixed(5)},${spotLng},${attempt}`;
+  const spotKey = !booted || spotLat == null || spotLng == null ? '' : `${spotLat.toFixed(5)},${spotLng.toFixed(5)},${attempt}`;
   const [trackedSpot, setTrackedSpot] = useState('');
   if (spotKey !== trackedSpot) {
     setTrackedSpot(spotKey);
@@ -272,7 +312,6 @@ export function PeakFinder() {
     loadPeaksAround(spotLat, spotLng).then((loaded) => {
       if (cancelled) return;
       if (loaded.loaded.length === 0) setCoverage('none');
-      else if (loaded.loaded.length < loaded.wanted.length) setCoverage('partial');
       else setCoverage('full');
       worker.postMessage({
         type: 'build',
@@ -309,8 +348,8 @@ export function PeakFinder() {
     gyroVerifiedRef.current = true;
     setGyroOn(true);
     motionSessionGrantedRef.current = true;
-    setMotionHint(null);
     setBanner(null);
+    resyncCompassToDevice();
     gyroVerifyResolveRef.current?.(true);
     gyroVerifyResolveRef.current = null;
   }
@@ -321,7 +360,6 @@ export function PeakFinder() {
     gyroVerifiedRef.current = false;
     setMotionArmed(false);
     setGyroOn(false);
-    setMotionHint('tap');
     gyroVerifyResolveRef.current?.(false);
     gyroVerifyResolveRef.current = null;
   }
@@ -340,21 +378,19 @@ export function PeakFinder() {
     stopGyroListening();
     setGyroOn(false);
     if (!fromGesture && !shouldAutoEnableMotion(iosMotion, motionSessionGrantedRef.current)) {
-      setMotionHint('tap');
       return false;
     }
     const motion = await requestMotionPermission();
     const next = applyMotionPermission(iosMotion, motion, motionSessionGrantedRef.current);
     motionSessionGrantedRef.current = next.sessionGranted;
     if (!next.mayListen) {
-      setMotionHint(next.hint);
-      if (motion === 'denied') {
-        setBanner('Gyro is blocked. Allow motion access, or drag the skyline.');
+      if (next.motionBlocked) {
+        setBanner(MOTION_BLOCKED_STATUS);
       }
       return false;
     }
     setMotionArmed(true);
-    setMotionHint(null);
+    setBanner(null);
     return waitForGyroVerify();
   }
 
@@ -364,14 +400,15 @@ export function PeakFinder() {
   useEffect(() => {
     if (!motionArmed) return;
     const smoother = createGyroSmoother();
+    gyroSmootherRef.current = smoother;
+    gyroYawCalRef.current = FRESH_YAW_CALIBRATION;
+    gyroPreviousRawRef.current = null;
+    gyroLastJumpRef.current = 0;
+    gyroLastAccuracyRef.current = undefined;
     const useAbsolute = typeof window !== 'undefined' && 'ondeviceorientationabsolute' in window;
     const eventName = useAbsolute ? 'deviceorientationabsolute' : 'deviceorientation';
     let frame = 0;
     let queued = false;
-    let previousRaw: number | null = null;
-    let lastJump = 0;
-    let lastAccuracy: number | null | undefined;
-    let calibration: YawCalibration = { offset: 0, ready: false };
     const pushDiag = (
       event: DeviceOrientationEvent,
       extra: DeviceOrientationEvent & { webkitCompassHeading?: number; webkitCompassAccuracy?: number },
@@ -399,8 +436,8 @@ export function PeakFinder() {
         rawPitch: pose?.pitch ?? null,
         smoothHeading: filtered.magnetic,
         smoothPitch: filtered.pitch,
-        yawOffset: calibration.offset,
-        yawReady: calibration.ready,
+        yawOffset: gyroYawCalRef.current.offset,
+        yawReady: gyroYawCalRef.current.ready,
         guardHeld: filtered.guardHeld,
       };
       gyroLiveRef.current = { ...sample, eventHz: eventRateHz(gyroEventTimesRef.current, now) };
@@ -417,12 +454,12 @@ export function PeakFinder() {
         absolute: useAbsolute || event.absolute,
         webkitCompassHeading: extra.webkitCompassHeading,
       };
-      calibration = updateYawCalibration(calibration, reading, screenAngle);
+      gyroYawCalRef.current = updateYawCalibration(gyroYawCalRef.current, reading, screenAngle);
       if (motionArmed && !gyroVerifiedRef.current && orientationEventHasData(event)) {
-        const poseProbe = deviceCameraPose(reading, screenAngle, calibration);
+        const poseProbe = deviceCameraPose(reading, screenAngle, gyroYawCalRef.current);
         if (poseProbe != null) confirmGyroLive();
       }
-      const pose = deviceCameraPose(reading, screenAngle, calibration);
+      const pose = deviceCameraPose(reading, screenAngle, gyroYawCalRef.current);
       if (pose == null) return;
       const filtered = followRef.current
         ? smoother.smooth(pose.magneticHeading, pose.pitch, pose.roll, performance.now())
@@ -434,9 +471,10 @@ export function PeakFinder() {
         };
       pushDiag(event, extra, pose, filtered, screenAngle);
       if (!followRef.current) return;
-      lastJump = headingJump(previousRaw, pose.magneticHeading);
-      previousRaw = pose.magneticHeading;
-      lastAccuracy = extra.webkitCompassAccuracy;
+      gyroLastJumpRef.current = headingJump(gyroPreviousRawRef.current, pose.magneticHeading);
+      gyroPreviousRawRef.current = pose.magneticHeading;
+      gyroLastAccuracyRef.current = extra.webkitCompassAccuracy;
+      gyroLastPitchRef.current = filtered.pitch;
       if (queued) return;
       queued = true;
       frame = requestAnimationFrame(() => {
@@ -449,7 +487,7 @@ export function PeakFinder() {
           pitchOffsetRef.current,
         );
         viewRef.current.roll = filtered.roll;
-        const unsure = compassUnsure(lastAccuracy, lastJump);
+        const unsure = compassUnsure(gyroLastAccuracyRef.current, gyroLastJumpRef.current);
         if (unsure !== unsureRef.current) {
           unsureRef.current = unsure;
           setUnsure(unsure);
@@ -461,9 +499,12 @@ export function PeakFinder() {
       window.removeEventListener(eventName, onReading);
       cancelAnimationFrame(frame);
       smoother.reset();
+      gyroSmootherRef.current = null;
       gyroLiveRef.current = null;
       gyroEventTimesRef.current = [];
     };
+    // confirmGyroLive is intentionally excluded — listener should stay stable across renders.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [motionArmed, declination, gyroRecorder]);
 
   useEffect(() => {
@@ -491,7 +532,41 @@ export function PeakFinder() {
     setLiningUp(false);
   }
 
-  function openSavedSkyline(spot: Spot) {
+  function writePeakFinderUrl(state: PeakFinderUrlState, mode: 'push' | 'replace') {
+    const href = peakFinderHref(state);
+    if (mode === 'replace') window.history.replaceState(null, '', href);
+    else window.history.pushState(null, '', href);
+  }
+
+  function resetToStartState() {
+    stopCamera();
+    setScreen('start');
+    setLock({ locked: null, pending: null });
+    setCameraOn(false);
+    setCameraNote(null);
+    stopGyroListening();
+    setGyroOn(false);
+    setBanner(null);
+    setPayload(null);
+    setProgress(null);
+    setError(null);
+    setLiningUp(false);
+    setShowDragHint(true);
+    setStartFindingLocation(false);
+    setStartOutsideSaved(false);
+    suppressExploreAutoMotionRef.current = false;
+  }
+
+  function peakFinderBack() {
+    window.history.back();
+  }
+
+  function goToStart(history: 'push' | 'replace' = 'replace') {
+    resetToStartState();
+    writePeakFinderUrl({ kind: 'start' }, history);
+  }
+
+  function enterPickView(spot: Spot, url: PeakFinderUrlState, history: 'push' | 'replace') {
     stopCamera();
     setStartNote(null);
     setBanner(null);
@@ -508,25 +583,23 @@ export function PeakFinder() {
     setShowDragHint(true);
     setScreen('pick-view');
     setAttempt((value) => value + 1);
+    writePeakFinderUrl(url, history);
   }
 
-  function goStart() {
-    stopCamera();
-    setScreen('start');
-    setLock({ locked: null, pending: null });
-    setCameraOn(false);
-    setCameraNote(null);
-    stopGyroListening();
-    setGyroOn(false);
-    setMotionHint(null);
-    setBanner(null);
-    setPayload(null);
-    setProgress(null);
-    setError(null);
-    setLiningUp(false);
-    setShowDragHint(true);
-    setStartFindingLocation(false);
-    setStartOutsideSaved(false);
+  function openSavedSkyline(spot: Spot) {
+    enterPickView(
+      spot,
+      { kind: 'pick-view', lat: roundPeakFinderCoord(spot.lat), lng: roundPeakFinderCoord(spot.lng) },
+      'push',
+    );
+  }
+
+  function openOfflineAreaSkyline(area: OfflineAreaRecord) {
+    enterPickView(
+      { lat: area.lat, lng: area.lng },
+      { kind: 'area', areaId: area.id },
+      'push',
+    );
   }
 
   async function readLocation(timeoutMs: number, maximumAge = 0): Promise<Spot | null> {
@@ -536,13 +609,125 @@ export function PeakFinder() {
         navigator.geolocation.getCurrentPosition(
           (position) => resolve({ lat: position.coords.latitude, lng: position.coords.longitude }),
           () => reject(new Error('location')),
-          { enableHighAccuracy: true, maximumAge, timeout: timeoutMs },
+          { enableHighAccuracy: true, maximumAge: maximumAge, timeout: timeoutMs },
         );
       });
     } catch {
       return null;
     }
   }
+
+  async function resolveExploreLocation(): Promise<Spot | null> {
+    const timeoutMs = offlineMode ? OFFLINE_GEO_TIMEOUT_MS : ONLINE_GEO_TIMEOUT_MS;
+    const maxAge = offlineMode ? 120_000 : 0;
+    return readLocation(timeoutMs, maxAge);
+  }
+
+  async function applyUrlState(state: PeakFinderUrlState, opts?: { allowExploreAutoMotion?: boolean }) {
+    switch (state.kind) {
+      case 'start':
+        resetToStartState();
+        return;
+      case 'offline':
+        setStartNote(null);
+        setBanner(null);
+        setScreen('offline');
+        return;
+      case 'pick-map': {
+        setStartNote(null);
+        setBanner(null);
+        setError(null);
+        setLock({ locked: null, pending: null });
+        stopCamera();
+        setCameraOn(false);
+        setCameraNote(null);
+        stopGyroListening();
+        setGyroOn(false);
+        setScreen('pick-map');
+        setShowDragHint(true);
+        return;
+      }
+      case 'pick-view':
+        enterPickView(
+          { lat: state.lat, lng: state.lng },
+          { kind: 'pick-view', lat: state.lat, lng: state.lng },
+          'replace',
+        );
+        return;
+      case 'area': {
+        const areas = await listOfflineAreas();
+        const hit = areas.find((area) => area.id === state.areaId);
+        if (!hit) {
+          goToStart('replace');
+          return;
+        }
+        enterPickView(
+          { lat: hit.lat, lng: hit.lng },
+          { kind: 'area', areaId: state.areaId },
+          'replace',
+        );
+        return;
+      }
+      case 'explore': {
+        suppressExploreAutoMotionRef.current = !opts?.allowExploreAutoMotion;
+        setStartNote(null);
+        setBanner(null);
+        setError(null);
+        setShowDragHint(true);
+        setScreen('explore');
+        if (sensors) {
+          viewRef.current.pitch = 0;
+          viewRef.current.roll = 0;
+        }
+        const here = await resolveExploreLocation();
+        if (!here) {
+          goToStart('replace');
+          setStartNote(LOCATION_DENIED);
+          return;
+        }
+        const areas = await listOfflineAreas();
+        if (offlineExploreCheck(areas, here.lat, here.lng, offlineMode) === 'outside') {
+          goToStart('replace');
+          setStartOutsideSaved(true);
+          return;
+        }
+        setLock({ locked: here, pending: null });
+        return;
+      }
+    }
+  }
+
+  useEffect(() => {
+    if (!booted) return;
+    if (urlHydratedRef.current) return;
+    urlHydratedRef.current = true;
+    const search = window.location.search;
+    if (hasUnrecognizedPeakFinderSearch(search)) {
+      goToStart('replace');
+      return;
+    }
+    const parsed = parsePeakFinderSearch(search);
+    if (parsed.kind === 'start' && !search) return;
+    const frame = requestAnimationFrame(() => {
+      void applyUrlState(parsed);
+    });
+    return () => cancelAnimationFrame(frame);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- one-shot hydrate from URL
+  }, [booted]);
+
+  useEffect(() => {
+    const onPop = () => {
+      const search = window.location.search;
+      if (hasUnrecognizedPeakFinderSearch(search)) {
+        goToStart('replace');
+        return;
+      }
+      void applyUrlState(parsePeakFinderSearch(search));
+    };
+    window.addEventListener('popstate', onPop);
+    return () => window.removeEventListener('popstate', onPop);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- popstate applies latest navigation helpers
+  }, []);
 
   async function tryStartCamera(): Promise<boolean> {
     if (typeof OffscreenCanvas === 'undefined') {
@@ -566,6 +751,7 @@ export function PeakFinder() {
   }
 
   async function proceedExploreFrom(here: Spot) {
+    suppressExploreAutoMotionRef.current = false;
     if (sensors) {
       if (typeof OffscreenCanvas === 'undefined') {
         setError('This browser cannot draw the skyline. Use a current Safari or Chrome.');
@@ -577,17 +763,20 @@ export function PeakFinder() {
       const cameraOk = gyroOk ? await tryStartCamera() : false;
       setCameraOn(cameraOk);
       setLock({ locked: here, pending: null });
+      writePeakFinderUrl({ kind: 'explore' }, 'push');
       setScreen('explore');
     } else {
       setLock({ locked: here, pending: null });
       viewRef.current.heading = 0;
       viewRef.current.pitch = 0;
       viewRef.current.roll = 0;
+      writePeakFinderUrl({ kind: 'explore' }, 'push');
       setScreen('explore');
     }
   }
 
   async function beginExplore() {
+    suppressExploreAutoMotionRef.current = false;
     setStartNote(null);
     setStartOutsideSaved(false);
     setBanner(null);
@@ -616,6 +805,7 @@ export function PeakFinder() {
   function beginOffline() {
     setStartNote(null);
     setBanner(null);
+    writePeakFinderUrl({ kind: 'offline' }, 'push');
     setScreen('offline');
   }
 
@@ -633,16 +823,22 @@ export function PeakFinder() {
     setCameraNote(null);
     stopGyroListening();
     setGyroOn(false);
+    writePeakFinderUrl({ kind: 'pick-map' }, 'push');
     setScreen('pick-map');
     setShowDragHint(true);
   }
 
   function confirmPick() {
+    writePeakFinderUrl(
+      { kind: 'pick-view', lat: roundPeakFinderCoord(pin.lat), lng: roundPeakFinderCoord(pin.lng) },
+      'push',
+    );
     setScreen('pick-view');
   }
 
   async function toggleCamera() {
     if (!cameraOn) {
+      suppressExploreAutoMotionRef.current = false;
       const gyroOk = await enableGyroFromGesture();
       if (!gyroOk) {
         setCameraOn(false);
@@ -660,9 +856,9 @@ export function PeakFinder() {
     if (gyroOn || motionArmed) {
       stopGyroListening();
       setGyroOn(false);
-      if (!motionSessionGrantedRef.current && iosMotion) setMotionHint('tap');
       return;
     }
+    suppressExploreAutoMotionRef.current = false;
     await enableGyroFromGesture();
   }
 
@@ -698,6 +894,7 @@ export function PeakFinder() {
 
   useEffect(() => {
     if (screen !== 'explore' || !sensors) return;
+    if (suppressExploreAutoMotionRef.current) return;
     const frame = requestAnimationFrame(() => {
       void tryAutoEnableGyro();
     });
@@ -706,18 +903,44 @@ export function PeakFinder() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [screen, sensors, iosMotion]);
 
-  function finishLineUp() {
-    setLiningUp(false);
-    writeCalibration({
-      headingOffset: offsetRef.current,
-      pitchOffset: pitchOffsetRef.current,
-      hfov: viewRef.current.hfov,
-    });
+  const screenRef = useRef<Screen>('start');
+
+  useEffect(() => {
+    screenRef.current = screen;
+  }, [screen]);
+
+  useEffect(() => {
+    const activeScreen = () => {
+      const s = screenRef.current;
+      return s === 'explore' || s === 'pick-view';
+    };
+    const onVisibility = () => {
+      if (!activeScreen() || document.visibilityState !== 'visible') return;
+      resyncCompassToDevice();
+    };
+    const onPageShow = () => {
+      if (!activeScreen()) return;
+      resyncCompassToDevice();
+    };
+    document.addEventListener('visibilitychange', onVisibility);
+    window.addEventListener('pageshow', onPageShow);
+    return () => {
+      document.removeEventListener('visibilitychange', onVisibility);
+      window.removeEventListener('pageshow', onPageShow);
+    };
+  }, [resyncCompassToDevice]);
+
+  function resetLineUp() {
+    resyncCompassToDevice();
   }
 
-  function toggleLineUp() {
-    if (liningUp) finishLineUp();
-    else setLiningUp(true);
+  function finishLineUp() {
+    setLiningUp(false);
+    writeCalibration({ headingOffset: 0, pitchOffset: 0, hfov: viewRef.current.hfov });
+  }
+
+  function startLineUp() {
+    setLiningUp(true);
   }
 
   if (!booted) {
@@ -728,7 +951,7 @@ export function PeakFinder() {
     return (
       <div className="h-full min-h-0 w-full">
         <PeakFinderOffline
-          onBack={goStart}
+          onBack={peakFinderBack}
           onSaved={() => void listOfflineAreas().then(setOfflineAreas)}
           onOpenSkyline={openSavedSkyline}
           onSaveComplete={completeOfflineSave}
@@ -785,7 +1008,7 @@ export function PeakFinder() {
           ) : null}
           {startUi.showSaveOffline ? (
             <button type="button" className="retro-button retro-button-yellow min-h-11 px-4 text-sm font-bold" onClick={beginOffline}>
-              Offline mode / Save area for offline
+              Download offline map
             </button>
           ) : null}
         </div>
@@ -808,7 +1031,7 @@ export function PeakFinder() {
                 <button
                   type="button"
                   className="retro-button retro-button-yellow min-h-9 self-start px-3 text-xs"
-                  onClick={() => openSavedSkyline({ lat: area.lat, lng: area.lng })}
+                  onClick={() => openOfflineAreaSkyline(area)}
                 >
                   Open skyline
                 </button>
@@ -838,7 +1061,7 @@ export function PeakFinder() {
           <SpotPicker
             lat={pin.lat}
             lng={pin.lng}
-            onBack={goStart}
+            onBack={peakFinderBack}
             onChange={(next) => setPin(next)}
           />
           {screen === 'pick-map' ? (
@@ -856,7 +1079,7 @@ export function PeakFinder() {
           {debugMode ? (
             <PeakFinderGyroDebug liveRef={gyroLiveRef} recorder={gyroRecorder} />
           ) : null}
-          {!showMap ? <PeakFinderBackButton onClick={goStart} /> : null}
+          {!showMap ? <PeakFinderBackButton onClick={peakFinderBack} /> : null}
           {showCamera ? (
             <CameraView
               stream={stream}
@@ -887,17 +1110,19 @@ export function PeakFinder() {
               <LineUpCaption />
             </div>
           ) : null}
-          <Status
-            progress={progress}
-            error={error}
-            banner={banner}
-            cameraNote={screen === 'explore' && sensors ? cameraNote : null}
-            coverage={coverage}
-            payload={payload}
-            unsure={unsure && gyroOn}
-            declinationNote={declinationNote}
-            onRetry={() => setAttempt((value) => value + 1)}
-          />
+          {!liningUp ? (
+            <Status
+              progress={progress}
+              error={error}
+              banner={banner}
+              cameraNote={screen === 'explore' && sensors ? cameraNote : null}
+              coverage={coverage}
+              payload={payload}
+              unsure={unsure && gyroOn}
+              declinationNote={declinationNote}
+              onRetry={() => setAttempt((value) => value + 1)}
+            />
+          ) : null}
           {showMoved ? (
             <button
               type="button"
@@ -916,14 +1141,20 @@ export function PeakFinder() {
             screen={screen}
             cameraOn={cameraOn}
             gyroOn={gyroOn}
-            motionHint={screen === 'explore' ? motionHint : null}
             onCamera={() => void toggleCamera()}
             onGyro={() => void toggleGyro()}
-            onEnableMotion={() => void enableGyroFromGesture()}
             liningUp={liningUp}
-            onLineUp={showCamera ? toggleLineUp : null}
-            onChangeSpot={screen === 'pick-view' && stacked ? () => setScreen('pick-map') : null}
-            coverageNote={coverage === 'partial' ? 'Some surrounding peak lists are not in this build, so a few names may be missing.' : null}
+            onStartLineUp={showCamera && !liningUp ? startLineUp : null}
+            onLineUpDone={showCamera && liningUp ? finishLineUp : null}
+            onLineUpReset={showCamera && liningUp ? resetLineUp : null}
+            onChangeSpot={
+              screen === 'pick-view' && stacked
+                ? () => {
+                  writePeakFinderUrl({ kind: 'pick-map' }, 'push');
+                  setScreen('pick-map');
+                }
+                : null
+            }
             onSummit={payload?.onSummit ?? null}
           />
         </div>
@@ -958,15 +1189,21 @@ function Status({
     ?? (loading ? 'Loading…' : null)
     ?? banner
     ?? cameraNote
-    ?? (unsure ? 'Gyro unsure. Line up.' : null)
+    ?? (unsure ? GYRO_UNSURE_STATUS : null)
     ?? declinationNote
     ?? (coverage === 'none' ? 'Peak names for this spot are not in this build. The Northeast is loaded: NY, NJ, PA, CT, RI, MA, VT, NH, ME.' : null)
     ?? (payload && payload.peaks.length === 0 ? 'No named peaks are visible from here.' : null);
   const drawPulse = loading && progress.fraction >= 0.85;
   const fillPct = loading ? Math.min(progress.fraction, 0.85) * 100 : 0;
   if (!text) return null;
+  const unsureOnly = unsure && text === GYRO_UNSURE_STATUS;
   return (
-    <div className="absolute left-1/2 top-12 z-20 w-[min(28rem,calc(100%-1rem))] -translate-x-1/2 bg-[#1a1a1a]/80 px-3 py-2 text-center text-sm font-bold leading-snug text-white" role="status">
+    <div
+      className={`absolute left-1/2 top-12 z-20 w-[min(28rem,calc(100%-1rem))] -translate-x-1/2 bg-[#1a1a1a]/80 px-3 py-2 text-center font-bold leading-snug text-white ${
+        unsureOnly ? 'text-xs' : 'text-sm'
+      }`}
+      role="status"
+    >
       <p>{text}</p>
       {loading ? (
         <div
@@ -996,33 +1233,32 @@ function Controls({
   screen,
   cameraOn,
   gyroOn,
-  motionHint,
   onCamera,
   onGyro,
-  onEnableMotion,
   liningUp,
-  onLineUp,
+  onStartLineUp,
+  onLineUpDone,
+  onLineUpReset,
   onChangeSpot,
-  coverageNote,
   onSummit,
 }: {
   sensors: boolean;
   screen: Screen;
   cameraOn: boolean;
   gyroOn: boolean;
-  motionHint: MotionHint;
   onCamera: () => void;
   onGyro: () => void;
-  onEnableMotion: () => void;
   liningUp: boolean;
-  onLineUp: (() => void) | null;
+  onStartLineUp: (() => void) | null;
+  onLineUpDone: (() => void) | null;
+  onLineUpReset: (() => void) | null;
   onChangeSpot: (() => void) | null;
-  coverageNote: string | null;
   onSummit: { name: string; elevationM: number } | null;
 }) {
   const [infoOpen, setInfoOpen] = useState(false);
   const showCameraToggle = sensors && screen === 'explore';
   const showGyro = sensors && (screen === 'explore' || screen === 'pick-view');
+  const lineUpAboveBar = liningUp && onLineUpDone && onLineUpReset;
   return (
     <div className="peak-finder-controls pointer-events-none absolute inset-x-0 bottom-0 z-40 px-2 pb-1.5 text-[#1a1a1a]">
       <div
@@ -1030,20 +1266,30 @@ function Controls({
         style={{ touchAction: 'manipulation' }}
         onPointerDown={(event) => event.stopPropagation()}
       >
-        {motionHint === 'tap' && !gyroOn ? (
-          <button
-            type="button"
-            data-pf-control
-            className="peak-finder-control absolute inset-x-0 bottom-full mb-0.5 truncate rounded border border-[#5c3a1e]/35 bg-[#ffc94d]/95 px-2 py-0.5 text-center text-[10px] font-bold text-[#1a1a1a]"
-            onClick={onEnableMotion}
-          >
-            Tap to turn on motion
-          </button>
+        {lineUpAboveBar ? (
+          <div className="absolute inset-x-0 bottom-full mb-1 flex items-center justify-center gap-1.5">
+            <button
+              type="button"
+              data-pf-control
+              className="peak-finder-control retro-button min-h-8 shrink-0 px-2 py-0 text-[10px] font-bold text-[#1a1a1a]"
+              onClick={onLineUpReset}
+            >
+              Reset
+            </button>
+            <button
+              type="button"
+              data-pf-control
+              className="peak-finder-control retro-button min-h-8 shrink-0 px-2 py-0 text-[10px] font-bold text-[#1a1a1a]"
+              onClick={onLineUpDone}
+            >
+              Done
+            </button>
+          </div>
         ) : null}
         {onSummit ? (
           <p
             className={`pointer-events-none absolute inset-x-0 truncate px-0.5 text-[10px] font-bold leading-tight text-[#1a1a1a] drop-shadow-[0_0_2px_rgba(231,225,212,0.9)] ${
-              motionHint === 'tap' && !gyroOn ? 'bottom-[calc(100%+1.5rem)]' : 'bottom-full mb-0.5'
+              lineUpAboveBar ? 'bottom-[calc(100%+2.25rem)]' : 'bottom-full mb-0.5'
             }`}
           >
             You&apos;re on: {onSummit.name}, {formatFeet(onSummit.elevationM)}
@@ -1055,8 +1301,7 @@ function Controls({
             role="dialog"
             aria-label="Peak finder notes"
           >
-            {coverageNote ? <p className="mb-1">{coverageNote}</p> : null}
-            <p className={coverageNote ? 'mb-1' : ''}>{PEAK_CREDITS}</p>
+            <p className="mb-1">{PEAK_CREDITS}</p>
             <p>{BARE_EARTH_NOTE}</p>
           </div>
         ) : null}
@@ -1082,14 +1327,14 @@ function Controls({
                 }}
               />
             ) : null}
-            {onLineUp ? (
+            {onStartLineUp ? (
               <button
                 type="button"
                 data-pf-control
                 className="peak-finder-control retro-button min-h-8 shrink-0 px-2 py-0 text-[10px] font-bold text-[#1a1a1a]"
-                onClick={onLineUp}
+                onClick={onStartLineUp}
               >
-                {liningUp ? 'Done' : 'Line up'}
+                Line up
               </button>
             ) : null}
             {onChangeSpot ? (
@@ -1111,10 +1356,17 @@ function Controls({
             aria-label={infoOpen ? 'Hide map credits and info' : 'Map credits and info'}
             onClick={() => setInfoOpen((open) => !open)}
           >
-            <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" className="block">
-              <circle cx="3" cy="8" r="1.35" fill="currentColor" />
-              <circle cx="8" cy="8" r="1.35" fill="currentColor" />
-              <circle cx="13" cy="8" r="1.35" fill="currentColor" />
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 16 16"
+              aria-hidden="true"
+              className="block h-4 w-4 shrink-0"
+              style={{ color: '#1a1a1a' }}
+            >
+              <circle cx="3.25" cy="8" r="1.5" fill="#1a1a1a" />
+              <circle cx="8" cy="8" r="1.5" fill="#1a1a1a" />
+              <circle cx="12.75" cy="8" r="1.5" fill="#1a1a1a" />
             </svg>
           </button>
         </div>

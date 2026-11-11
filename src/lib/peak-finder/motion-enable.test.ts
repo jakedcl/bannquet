@@ -1,7 +1,12 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { orientationEventHasData } from './orientation';
-import { applyMotionPermission, shouldAutoEnableMotion } from './motion-enable';
+import {
+  applyMotionPermission,
+  GYRO_UNSURE_STATUS,
+  MOTION_BLOCKED_STATUS,
+  shouldAutoEnableMotion,
+} from './motion-enable';
 
 test('auto enable skips iOS permission API until the session has a grant', () => {
   assert.equal(shouldAutoEnableMotion(true, false), false);
@@ -12,20 +17,25 @@ test('auto enable skips iOS permission API until the session has a grant', () =>
 test('applyMotionPermission allows listening without marking gyro active', () => {
   const out = applyMotionPermission(true, 'granted', false);
   assert.equal(out.mayListen, true);
-  assert.equal(out.hint, null);
+  assert.equal(out.motionBlocked, false);
   assert.equal(out.sessionGranted, true);
 });
 
-test('applyMotionPermission shows tap hint when iOS permission is still needed', () => {
-  const out = applyMotionPermission(true, 'unavailable', false);
+test('applyMotionPermission reports motion blocked when permission is denied', () => {
+  const out = applyMotionPermission(true, 'denied', false);
   assert.equal(out.mayListen, false);
-  assert.equal(out.hint, 'tap');
+  assert.equal(out.motionBlocked, true);
 });
 
-test('applyMotionPermission supports unsupported platforms without a tap hint', () => {
+test('applyMotionPermission supports unsupported platforms', () => {
   const out = applyMotionPermission(false, 'unsupported', false);
   assert.equal(out.mayListen, true);
-  assert.equal(out.hint, null);
+  assert.equal(out.motionBlocked, false);
+});
+
+test('status copy strings are fixed for the UI', () => {
+  assert.match(GYRO_UNSURE_STATUS, /Line up button/);
+  assert.match(MOTION_BLOCKED_STATUS, /Safari settings/);
 });
 
 test('orientationEventHasData requires a non-null axis reading', () => {

@@ -1,3 +1,4 @@
+import { calibrationForPersistence, calibrationFromStorage } from './compass-resync';
 import { CALIBRATION_KEY, DEFAULT_HFOV_DEG, LAST_KEY } from './constants';
 import type { FinderMode } from './location';
 
@@ -40,21 +41,13 @@ export function writeLast(spot: SavedSpot): void {
 }
 
 export function readCalibration(): Calibration {
-  const saved = readJson<Calibration>(CALIBRATION_KEY);
-  if (!saved || !Number.isFinite(saved.headingOffset)) {
-    return { headingOffset: 0, pitchOffset: 0, hfov: null };
-  }
-  const pitchOffset = saved.pitchOffset != null && Number.isFinite(saved.pitchOffset) ? saved.pitchOffset : 0;
-  return {
-    headingOffset: saved.headingOffset,
-    pitchOffset,
-    hfov: saved.hfov != null && Number.isFinite(saved.hfov) ? saved.hfov : null,
-  };
+  return calibrationFromStorage(readJson<Calibration>(CALIBRATION_KEY));
 }
 
 export function writeCalibration(calibration: Calibration): void {
   try {
-    localStorage.setItem(CALIBRATION_KEY, JSON.stringify(calibration));
+    const hfov = calibration.hfov != null && Number.isFinite(calibration.hfov) ? calibration.hfov : null;
+    localStorage.setItem(CALIBRATION_KEY, JSON.stringify(calibrationForPersistence(hfov)));
   } catch {
     // Same as the spot: keep it for this visit if storage is blocked.
   }
