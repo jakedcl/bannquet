@@ -22,7 +22,8 @@ import {
   createGyroSmoother,
   deviceCameraPose,
   headingJump,
-  motionAllowed,
+  iosMotionPermissionRequired,
+  orientationEventHasData,
   requestMotionPermission,
   updateYawCalibration,
   viewHeading,
@@ -31,6 +32,12 @@ import {
 import type { SkylinePayload, WorkerOut } from '@/lib/peak-finder/payload';
 import { loadPeaksAround } from '@/lib/peak-finder/peaks';
 import { applyLineUpPitchOffset, clampLineUpPitchOffset } from '@/lib/peak-finder/line-up-offset';
+import {
+  applyMotionPermission,
+  GYRO_VERIFY_MS,
+  shouldAutoEnableMotion,
+  type MotionHint,
+} from '@/lib/peak-finder/motion-enable';
 import { initialFov, readCalibration, writeCalibration } from '@/lib/peak-finder/storage';
 import { CameraView } from './CameraView';
 import { DesktopPan } from './DesktopPan';
@@ -70,6 +77,7 @@ export function PeakFinder() {
   const [booted, setBooted] = useState(false);
   const [stacked, setStacked] = useState(false);
   const [sensors, setSensors] = useState(false);
+  const [iosMotion, setIosMotion] = useState(false);
   const [screen, setScreen] = useState<Screen>('start');
   const [startNote, setStartNote] = useState<string | null>(null);
   const [pin, setPin] = useState<Spot>(DEFAULT_PIN);
@@ -78,6 +86,8 @@ export function PeakFinder() {
   const [cameraOn, setCameraOn] = useState(false);
   const [cameraNote, setCameraNote] = useState<string | null>(null);
   const [gyroOn, setGyroOn] = useState(false);
+  const [motionArmed, setMotionArmed] = useState(false);
+  const [motionHint, setMotionHint] = useState<MotionHint>(null);
   const [banner, setBanner] = useState<string | null>(null);
   const [payload, setPayload] = useState<SkylinePayload | null>(null);
   const [progress, setProgress] = useState<ProgressState>(null);
@@ -102,6 +112,10 @@ export function PeakFinder() {
   const pitchOffsetRef = useRef(0);
   const baseRef = useRef(0);
   const followRef = useRef(false);
+  const motionSessionGrantedRef = useRef(false);
+  const gyroVerifiedRef = useRef(false);
+  const gyroVerifyTimerRef = useRef(0);
+  const gyroVerifyResolveRef = useRef<((ok: boolean) => void) | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const unsureRef = useRef(false);
   const debugModeRef = useRef(false);
@@ -123,6 +137,7 @@ export function PeakFinder() {
     };
     // eslint-disable-next-line react-hooks/set-state-in-effect -- client layout and sensors after hydration
     setSensors(readSensorCapable());
+    setIosMotion(iosMotionPermissionRequired());
     setStacked(stackLayout());
     const debug = new URLSearchParams(window.location.search).get('debug') === '1';
     debugModeRef.current = debug;
@@ -277,8 +292,77 @@ export function PeakFinder() {
     };
   }, [booted, spotLat, spotLng, attempt]);
 
+  function stopGyroListening() {
+    window.clearTimeout(gyroVerifyTimerRef.current);
+    gyroVerifyTimerRef.current = 0;
+    if (gyroVerifyResolveRef.current) {
+      gyroVerifyResolveRef.current(false);
+      gyroVerifyResolveRef.current = null;
+    }
+    gyroVerifiedRef.current = false;
+    setMotionArmed(false);
+  }
+
+  function confirmGyroLive() {
+    window.clearTimeout(gyroVerifyTimerRef.current);
+    gyroVerifyTimerRef.current = 0;
+    gyroVerifiedRef.current = true;
+    setGyroOn(true);
+    motionSessionGrantedRef.current = true;
+    setMotionHint(null);
+    setBanner(null);
+    gyroVerifyResolveRef.current?.(true);
+    gyroVerifyResolveRef.current = null;
+  }
+
+  function failGyroVerify() {
+    window.clearTimeout(gyroVerifyTimerRef.current);
+    gyroVerifyTimerRef.current = 0;
+    gyroVerifiedRef.current = false;
+    setMotionArmed(false);
+    setGyroOn(false);
+    setMotionHint('tap');
+    gyroVerifyResolveRef.current?.(false);
+    gyroVerifyResolveRef.current = null;
+  }
+
+  function waitForGyroVerify(): Promise<boolean> {
+    return new Promise((resolve) => {
+      gyroVerifyResolveRef.current = resolve;
+      gyroVerifyTimerRef.current = window.setTimeout(() => {
+        if (!gyroVerifiedRef.current) failGyroVerify();
+      }, GYRO_VERIFY_MS);
+    });
+  }
+
+  async function requestListenAndVerify(fromGesture: boolean): Promise<boolean> {
+    if (!sensors) return false;
+    stopGyroListening();
+    setGyroOn(false);
+    if (!fromGesture && !shouldAutoEnableMotion(iosMotion, motionSessionGrantedRef.current)) {
+      setMotionHint('tap');
+      return false;
+    }
+    const motion = await requestMotionPermission();
+    const next = applyMotionPermission(iosMotion, motion, motionSessionGrantedRef.current);
+    motionSessionGrantedRef.current = next.sessionGranted;
+    if (!next.mayListen) {
+      setMotionHint(next.hint);
+      if (motion === 'denied') {
+        setBanner('Gyro is blocked. Allow motion access, or drag the skyline.');
+      }
+      return false;
+    }
+    setMotionArmed(true);
+    setMotionHint(null);
+    return waitForGyroVerify();
+  }
+
+  const enableGyroFromGesture = () => requestListenAndVerify(true);
+  const tryAutoEnableGyro = () => requestListenAndVerify(false);
+
   useEffect(() => {
-    if (!gyroOn) return;
+    if (!motionArmed) return;
     const smoother = createGyroSmoother();
     const useAbsolute = typeof window !== 'undefined' && 'ondeviceorientationabsolute' in window;
     const eventName = useAbsolute ? 'deviceorientationabsolute' : 'deviceorientation';
@@ -334,6 +418,10 @@ export function PeakFinder() {
         webkitCompassHeading: extra.webkitCompassHeading,
       };
       calibration = updateYawCalibration(calibration, reading, screenAngle);
+      if (motionArmed && !gyroVerifiedRef.current && orientationEventHasData(event)) {
+        const poseProbe = deviceCameraPose(reading, screenAngle, calibration);
+        if (poseProbe != null) confirmGyroLive();
+      }
       const pose = deviceCameraPose(reading, screenAngle, calibration);
       if (pose == null) return;
       const filtered = followRef.current
@@ -376,7 +464,7 @@ export function PeakFinder() {
       gyroLiveRef.current = null;
       gyroEventTimesRef.current = [];
     };
-  }, [gyroOn, declination, gyroRecorder]);
+  }, [motionArmed, declination, gyroRecorder]);
 
   useEffect(() => {
     if (screen !== 'explore' || !lock.locked) return;
@@ -412,6 +500,7 @@ export function PeakFinder() {
     setLock({ locked: null, pending: null });
     setCameraOn(false);
     setCameraNote(null);
+    stopGyroListening();
     setGyroOn(false);
     setPayload(null);
     setProgress(null);
@@ -427,7 +516,9 @@ export function PeakFinder() {
     setLock({ locked: null, pending: null });
     setCameraOn(false);
     setCameraNote(null);
+    stopGyroListening();
     setGyroOn(false);
+    setMotionHint(null);
     setBanner(null);
     setPayload(null);
     setProgress(null);
@@ -482,16 +573,8 @@ export function PeakFinder() {
       }
       viewRef.current.pitch = 0;
       viewRef.current.roll = 0;
-      const motion = await requestMotionPermission();
-      if (motion === 'denied') {
-        setGyroOn(false);
-        setBanner('Gyro is blocked. Allow motion access, or drag the skyline.');
-      } else if (motionAllowed(motion)) {
-        setGyroOn(true);
-      } else {
-        setGyroOn(false);
-      }
-      const cameraOk = await tryStartCamera();
+      const gyroOk = await tryAutoEnableGyro();
+      const cameraOk = gyroOk ? await tryStartCamera() : false;
       setCameraOn(cameraOk);
       setLock({ locked: here, pending: null });
       setScreen('explore');
@@ -548,6 +631,7 @@ export function PeakFinder() {
     stopCamera();
     setCameraOn(false);
     setCameraNote(null);
+    stopGyroListening();
     setGyroOn(false);
     setScreen('pick-map');
     setShowDragHint(true);
@@ -559,9 +643,13 @@ export function PeakFinder() {
 
   async function toggleCamera() {
     if (!cameraOn) {
-      setCameraOn(true);
-      setGyroOn(true);
-      await tryStartCamera();
+      const gyroOk = await enableGyroFromGesture();
+      if (!gyroOk) {
+        setCameraOn(false);
+        return;
+      }
+      const cameraOk = await tryStartCamera();
+      setCameraOn(cameraOk);
       return;
     }
     setCameraOn(false);
@@ -569,19 +657,13 @@ export function PeakFinder() {
   }
 
   async function toggleGyro() {
-    if (cameraOn && stream) return;
-    if (gyroOn) {
+    if (gyroOn || motionArmed) {
+      stopGyroListening();
       setGyroOn(false);
+      if (!motionSessionGrantedRef.current && iosMotion) setMotionHint('tap');
       return;
     }
-    const motion = await requestMotionPermission();
-    if (motion === 'denied') {
-      setBanner('Gyro is blocked. Allow motion access, or drag the skyline.');
-      return;
-    }
-    if (!motionAllowed(motion)) return;
-    setGyroOn(true);
-    setBanner(null);
+    await enableGyroFromGesture();
   }
 
   function onLook(headingDelta: number, pitchDelta: number, fovScale: number) {
@@ -613,6 +695,16 @@ export function PeakFinder() {
   const look = useCallback((headingDelta: number, pitchDelta: number, fovScale: number) => {
     lookRef.current(headingDelta, pitchDelta, fovScale);
   }, []);
+
+  useEffect(() => {
+    if (screen !== 'explore' || !sensors) return;
+    const frame = requestAnimationFrame(() => {
+      void tryAutoEnableGyro();
+    });
+    return () => cancelAnimationFrame(frame);
+    // Intentionally only when entering explore; helpers read refs and iosMotion state.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [screen, sensors, iosMotion]);
 
   function finishLineUp() {
     setLiningUp(false);
@@ -824,9 +916,10 @@ export function PeakFinder() {
             screen={screen}
             cameraOn={cameraOn}
             gyroOn={gyroOn}
-            gyroLocked={screen === 'explore' && cameraOn}
+            motionHint={screen === 'explore' ? motionHint : null}
             onCamera={() => void toggleCamera()}
             onGyro={() => void toggleGyro()}
+            onEnableMotion={() => void enableGyroFromGesture()}
             liningUp={liningUp}
             onLineUp={showCamera ? toggleLineUp : null}
             onChangeSpot={screen === 'pick-view' && stacked ? () => setScreen('pick-map') : null}
@@ -903,9 +996,10 @@ function Controls({
   screen,
   cameraOn,
   gyroOn,
-  gyroLocked,
+  motionHint,
   onCamera,
   onGyro,
+  onEnableMotion,
   liningUp,
   onLineUp,
   onChangeSpot,
@@ -916,9 +1010,10 @@ function Controls({
   screen: Screen;
   cameraOn: boolean;
   gyroOn: boolean;
-  gyroLocked: boolean;
+  motionHint: MotionHint;
   onCamera: () => void;
   onGyro: () => void;
+  onEnableMotion: () => void;
   liningUp: boolean;
   onLineUp: (() => void) | null;
   onChangeSpot: (() => void) | null;
@@ -935,8 +1030,22 @@ function Controls({
         style={{ touchAction: 'manipulation' }}
         onPointerDown={(event) => event.stopPropagation()}
       >
+        {motionHint === 'tap' && !gyroOn ? (
+          <button
+            type="button"
+            data-pf-control
+            className="peak-finder-control absolute inset-x-0 bottom-full mb-0.5 truncate rounded border border-[#5c3a1e]/35 bg-[#ffc94d]/95 px-2 py-0.5 text-center text-[10px] font-bold text-[#1a1a1a]"
+            onClick={onEnableMotion}
+          >
+            Tap to turn on motion
+          </button>
+        ) : null}
         {onSummit ? (
-          <p className="pointer-events-none absolute inset-x-0 bottom-full mb-0.5 truncate px-0.5 text-[10px] font-bold leading-tight text-[#1a1a1a] drop-shadow-[0_0_2px_rgba(231,225,212,0.9)]">
+          <p
+            className={`pointer-events-none absolute inset-x-0 truncate px-0.5 text-[10px] font-bold leading-tight text-[#1a1a1a] drop-shadow-[0_0_2px_rgba(231,225,212,0.9)] ${
+              motionHint === 'tap' && !gyroOn ? 'bottom-[calc(100%+1.5rem)]' : 'bottom-full mb-0.5'
+            }`}
+          >
             You&apos;re on: {onSummit.name}, {formatFeet(onSummit.elevationM)}
           </p>
         ) : null}
@@ -967,8 +1076,7 @@ function Controls({
               <RetroSwitch
                 compact
                 label="Gyro"
-                checked={gyroOn || gyroLocked}
-                disabled={gyroLocked}
+                checked={gyroOn}
                 onChange={(next) => {
                   if (next !== gyroOn) onGyro();
                 }}

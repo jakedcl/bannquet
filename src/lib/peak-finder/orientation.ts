@@ -237,6 +237,19 @@ export function motionAllowed(result: MotionPermission): boolean {
   return result === 'granted' || result === 'unsupported';
 }
 
+/** iOS Safari: `requestPermission()` must run inside a user gesture. */
+export function iosMotionPermissionRequired(): boolean {
+  if (typeof DeviceOrientationEvent === 'undefined') return false;
+  const ctor = DeviceOrientationEvent as typeof DeviceOrientationEvent & {
+    requestPermission?: () => Promise<'granted' | 'denied'>;
+  };
+  return typeof ctor.requestPermission === 'function';
+}
+
+export function orientationEventHasData(event: Pick<DeviceOrientationEvent, 'alpha' | 'beta' | 'gamma'>): boolean {
+  return event.alpha != null || event.beta != null || event.gamma != null;
+}
+
 export async function requestMotionPermission(): Promise<MotionPermission> {
   if (typeof window === 'undefined' || typeof DeviceOrientationEvent === 'undefined') return 'unsupported';
   const ctor = DeviceOrientationEvent as typeof DeviceOrientationEvent & {

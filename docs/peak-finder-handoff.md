@@ -86,6 +86,14 @@ Client-side only; no extra downloads.
 
 Gyro path is unchanged in `orientation.ts`: magnetic heading + declination + screen angle + yaw calibration. Stored **`headingOffset`** (`pf:calibration:v1`) is added on top of the live compass heading when following.
 
+**Gyro on explore** (`motion-enable.ts`, `orientation.ts`):
+
+- **Gyro on** in the UI means live sensor data, not permission or session memory. After permission allows listening, the app arms `deviceorientation` and waits up to **~1.5 s** (`GYRO_VERIFY_MS`) for events with non-null alpha/beta/gamma and a usable pose (`orientationEventHasData`). Only then is gyro marked on.
+- If nothing arrives in that window, gyro stays off and **Tap to turn on motion** shows (iOS `requestPermission` runs in that tap handler).
+- Entering explore re-runs auto arm + verify when the platform can call the permission API without a gesture, or when this tab already got **granted** once this session (`motionSessionGrantedRef` — in-memory only, never drives the Gyro toggle). Nothing is persisted in `localStorage`.
+- **Cam** (user gesture) requests motion when required, waits for live verification, then starts the camera — camera mode does not run with gyro off.
+- **Gyro** toggle turns follow on/off; the tap chip is the same path as tapping Gyro/Cam when motion is not active.
+
 **Line-up** (camera on, explore): single bottom-bar control toggles Done/Line up. Drag in any direction:
 
 - **Horizontal**: updates `headingOffset` against the current compass base heading.
@@ -144,7 +152,7 @@ New test files must be listed in the `test` script in `package.json`.
 | --- | --- |
 | Summit integration | `summit-view.test.ts` — Marcy/Washington visibility, front-ridge labels, Colden declutter counts, Keene Valley sparsity |
 | Labels | `label-ranking.test.ts`, `label-placement.test.ts`, `declutter.test.ts` |
-| Line-up | `line-up-offset.test.ts`, `explore-gestures.test.ts` |
+| Line-up / motion | `line-up-offset.test.ts`, `motion-enable.test.ts`, `explore-gestures.test.ts` |
 | Offline | `offline.test.ts`, `start-screen-offline.test.ts`, `offline-area-picker-map.test.ts`, `offline-area-picker-layout.test.ts` |
 | SW | `sw-routing.test.ts` |
 | Core lib | `visibility`, `skyline`, `tiles`, `peaks`, `orientation`, `geo`, `location`, `gyro-*` |
