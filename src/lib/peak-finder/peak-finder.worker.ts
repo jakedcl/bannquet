@@ -11,6 +11,13 @@ const scope = self as unknown as {
   postMessage: (message: WorkerOut) => void;
 };
 
+const TERRAIN_LOAD_FRACTION = 0.85;
+
+function progressFraction(loaded: number, total: number): number {
+  if (total <= 0) return TERRAIN_LOAD_FRACTION;
+  return (loaded / total) * TERRAIN_LOAD_FRACTION;
+}
+
 function pack(
   skyline: Skyline,
   eyeM: number,
@@ -55,7 +62,7 @@ async function build(message: WorkerIn): Promise<void> {
   const grids = new Map<string, Float32Array>();
   let loaded = 0;
   let failed = 0;
-  scope.postMessage({ type: 'progress', loaded: 0, total: tiles.length, stage: 'Loading terrain' });
+  scope.postMessage({ type: 'progress', fraction: 0 });
   await mapPool(tiles, 6, async (tile) => {
     try {
       const heights = await loadTerrariumTile(tile);
@@ -65,7 +72,7 @@ async function build(message: WorkerIn): Promise<void> {
     } finally {
       loaded += 1;
       if (loaded % 2 === 0 || loaded === tiles.length) {
-        scope.postMessage({ type: 'progress', loaded, total: tiles.length, stage: 'Loading terrain' });
+        scope.postMessage({ type: 'progress', fraction: progressFraction(loaded, tiles.length) });
       }
     }
   });
@@ -77,7 +84,7 @@ async function build(message: WorkerIn): Promise<void> {
     scope.postMessage({ type: 'error', message: 'Too many terrain tiles failed. Check the connection and try again.' });
     return;
   }
-  scope.postMessage({ type: 'progress', loaded: 0, total: 0, stage: 'Drawing the skyline…' });
+  scope.postMessage({ type: 'progress', fraction: TERRAIN_LOAD_FRACTION });
   const heightAt = (lat: number, lng: number, distance: number) => sampleHeight(grids, lat, lng, distance) ?? 0;
   const eyeM = eyeHeightM(message.lat, message.lng, (lat, lng) => sampleHeight(grids, lat, lng, 0));
   const skyline = castSkyline(message.lat, message.lng, eyeM, heightAt, RAY_STEP_DEG);

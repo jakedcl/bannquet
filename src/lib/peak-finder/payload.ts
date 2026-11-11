@@ -18,6 +18,7 @@ export type WorkerIn = {
 };
 
 export type WorkerOut =
-  | { type: 'progress'; loaded: number; total: number; stage: string }
+  /** 0–1. Terrain tiles fill ~0–0.85; skyline work holds at 0.85 until the result. */
+  | { type: 'progress'; fraction: number }
   | { type: 'result'; payload: SkylinePayload }
   | { type: 'error'; message: string };
