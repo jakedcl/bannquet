@@ -7,7 +7,7 @@ import { DEFAULT_HFOV_DEG, RAY_STEP_DEG } from './constants';
 import { labelsInView } from './declutter';
 import { bearingDeg, distanceM, wrap180 } from './geo';
 import type { Peak } from './peaks';
-import { angleBefore, castSkyline, rayAt, viewProfile } from './skyline';
+import { angleBefore, castSkyline, rayAt, skylineAngle, skylineDistance, viewProfile } from './skyline';
 import { sampleHeight, terrainTiles, terrariumHeight, terrariumUrl, type TileId } from './tiles';
 import { burialM, eyeHeightM, raiseSummit, visiblePeaks } from './visibility';
 
@@ -131,6 +131,7 @@ function report(origin: { lat: number; lng: number }, peaks: readonly ListedPeak
 }
 
 const MARCY_SUMMIT = { lat: 44.112857, lng: -73.923784 };
+const COLDEN_SUMMIT = { lat: 44.126996, lng: -73.960092 };
 const LOWER_AUSABLE = { lat: 44.112, lng: -73.852 };
 const WASHINGTON = { lat: 44.2705, lng: -71.30325 };
 const DEFAULT_WIDTH = 980;
@@ -212,6 +213,28 @@ test('from Marcy, the High Peaks in view are labeled and Couchsachraga stays hid
   assert.equal(missing.length, 0, `missing ${missing.join(', ')}; eye ${eyeM.toFixed(0)}; hidden ${hiddenText}`);
   assert.equal(names.has('Couchsachraga Peak'), false, `Couchsachraga was labeled; hidden ${hiddenText}`);
   assert.ok(names.size >= 40, `only ${names.size} of 45 other High Peaks: ${[...names].sort().join(', ')}`);
+});
+
+test('from Mount Colden, Marcy\'s ridgeline shapes the skyline toward Marcy', async () => {
+  const grids = await loadGrids(COLDEN_SUMMIT.lat, COLDEN_SUMMIT.lng);
+  const sample = (lat: number, lng: number, metres: number) => sampleHeight(grids, lat, lng, metres);
+  const eyeM = eyeHeightM(COLDEN_SUMMIT.lat, COLDEN_SUMMIT.lng, (lat, lng) => sample(lat, lng, 0));
+  const skyline = castSkyline(
+    COLDEN_SUMMIT.lat,
+    COLDEN_SUMMIT.lng,
+    eyeM,
+    (lat, lng, metres) => sample(lat, lng, metres) ?? 0,
+    RAY_STEP_DEG,
+  );
+  const marcyBearing = bearingDeg(COLDEN_SUMMIT.lat, COLDEN_SUMMIT.lng, MARCY_SUMMIT.lat, MARCY_SUMMIT.lng);
+  const ray = rayAt(skyline, marcyBearing);
+  const horizon = skylineAngle(ray);
+  const metres = skylineDistance(ray);
+  const view = viewProfile(skyline);
+  const index = Math.round((marcyBearing % 360 + 360) % 360 / skyline.stepDeg) % skyline.rays.length;
+  assert.ok(horizon > 2, `horizon toward Marcy ${horizon.toFixed(2)}°`);
+  assert.ok(metres >= 1_500 && metres < 5_000, `defining distance ${Math.round(metres)} m`);
+  assert.ok(view.angleDeg[index] > 1.5, `drawn toward Marcy ${view.angleDeg[index].toFixed(2)}°`);
 });
 
 test('front ridges are drawn and labeled at default zoom from Marcy and Lower Ausable Lake', async () => {

@@ -82,33 +82,98 @@ export function rayAt(skyline: Skyline, bearing: number): RayProfile {
   return skyline.rays[index];
 }
 
-/** Horizon bearing: highest angle at or beyond `HORIZON_MIN_DISTANCE_M` (not underfoot DEM noise). */
-export function skylineAngle(ray: RayProfile, minDistanceM = HORIZON_MIN_DISTANCE_M): number {
-  let best = -90;
-  let found = false;
-  for (let i = 0; i < ray.count; i += 1) {
-    if (ray.distanceM[i] < minDistanceM) continue;
-    found = true;
-    if (ray.angleDeg[i] > best) best = ray.angleDeg[i];
-  }
-  if (!found) return ray.angleDeg[ray.skylineIndex] ?? -90;
-  return best;
+const DESPIKE_NEAR_M = 120;
+const DESPIKE_FAR_M = 1_000;
+const HORIZON_ISOLATION_DEG = 2.5;
+const HORIZON_SUPPORT_DEG = 1.25;
+
+export function medianFinite(values: readonly number[]): number {
+  const sorted = values.filter((value) => Number.isFinite(value)).sort((a, b) => a - b);
+  if (sorted.length === 0) return 0;
+  const mid = Math.floor(sorted.length / 2);
+  return sorted.length % 2 === 1 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2;
 }
 
-export function skylineDistance(ray: RayProfile, minDistanceM = HORIZON_MIN_DISTANCE_M): number {
+function despikeStrength(distanceM: number): number {
+  if (distanceM >= DESPIKE_FAR_M) return 0;
+  if (distanceM <= DESPIKE_NEAR_M) return 1;
+  return 1 - (distanceM - DESPIKE_NEAR_M) / (DESPIKE_FAR_M - DESPIKE_NEAR_M);
+}
+
+/** Tapered along-ray filter: keep sustained slopes, drop lone near-field DEM spikes. */
+const UNDERFOOT_HORIZON_M = 60;
+
+export function despikeRay(ray: RayProfile): Float32Array {
+  const out = new Float32Array(ray.count);
+  for (let i = 0; i < ray.count; i += 1) {
+    const strength = despikeStrength(ray.distanceM[i]);
+    const angle = ray.angleDeg[i];
+    if (strength <= 0) {
+      out[i] = angle;
+      continue;
+    }
+    const prev = i > 0 ? ray.angleDeg[i - 1] : ray.angleDeg[Math.min(i + 1, ray.count - 1)];
+    const next = i < ray.count - 1 ? ray.angleDeg[i + 1] : ray.angleDeg[Math.max(i - 1, 0)];
+    const window: number[] = [];
+    for (let j = Math.max(0, i - 5); j <= Math.min(ray.count - 1, i + 5); j += 1) {
+      if (j !== i) window.push(ray.angleDeg[j]);
+    }
+    const local = medianFinite([prev, next, medianFinite(window)]);
+    const excess = angle - local;
+    const threshold = 1.5 + (1 - strength) * 10;
+    out[i] = excess > threshold ? Math.max(local, Math.max(prev, next) + 0.1) : angle;
+  }
+  return out;
+}
+
+export function horizonFromRay(ray: RayProfile): { angle: number; distance: number } {
+  const angles = despikeRay(ray);
   let best = -90;
   let bestDistance = 0;
-  let found = false;
   for (let i = 0; i < ray.count; i += 1) {
-    if (ray.distanceM[i] < minDistanceM) continue;
-    found = true;
-    if (ray.angleDeg[i] > best) {
-      best = ray.angleDeg[i];
+    if (ray.distanceM[i] < UNDERFOOT_HORIZON_M) continue;
+    if (angles[i] > best) {
+      best = angles[i];
       bestDistance = ray.distanceM[i];
     }
   }
-  if (!found) return ray.distanceM[ray.skylineIndex] ?? 0;
-  return bestDistance;
+  if (best <= -89) {
+    return {
+      angle: ray.angleDeg[ray.skylineIndex] ?? -90,
+      distance: ray.distanceM[ray.skylineIndex] ?? 0,
+    };
+  }
+  return { angle: best, distance: bestDistance };
+}
+
+/** Drop horizon needles that stand alone on one bearing. */
+export function cullIsolatedHorizonSpikes(values: readonly number[], stepDeg: number): number[] {
+  const count = values.length;
+  const reach = Math.max(1, Math.round(0.35 / stepDeg));
+  return values.map((value, index) => {
+    if (!Number.isFinite(value)) return value;
+    let support = 0;
+    const neighbors: number[] = [];
+    for (let offset = -reach * 3; offset <= reach * 3; offset += 1) {
+      if (offset === 0) continue;
+      const at = (index + offset + count) % count;
+      const sample = values[at];
+      if (!Number.isFinite(sample)) continue;
+      neighbors.push(sample);
+      if (sample >= value - HORIZON_SUPPORT_DEG) support += 1;
+    }
+    if (support >= 1) return value;
+    const med = medianFinite(neighbors);
+    return value - med > HORIZON_ISOLATION_DEG ? med + 0.15 : value;
+  });
+}
+
+export function skylineAngle(ray: RayProfile): number {
+  return horizonFromRay(ray).angle;
+}
+
+export function skylineDistance(ray: RayProfile): number {
+  return horizonFromRay(ray).distance;
 }
 
 /**
@@ -150,8 +215,6 @@ export type DrawnProfile = {
 
 /** Closer than this is the ground underfoot. Its bumps are the scribbly hatching, so they are not drawn. */
 export const RIDGE_START_M = 4_000;
-
-const HORIZON_MIN_DISTANCE_M = RIDGE_START_M;
 
 /** One line per band: the highest ground in that range, not every bump along the ray. */
 const RIDGE_BANDS: readonly [number, number][] = [
@@ -298,7 +361,11 @@ function bandLayer(skyline: Skyline, min: number, max: number): DrawnLayer {
  */
 export function viewProfile(skyline: Skyline): DrawnProfile {
   const smoothRadius = Math.max(1, Math.round(SKYLINE_SMOOTH_DEG / skyline.stepDeg));
-  const angleDeg = smoothAngles(skyline.rays.map((ray) => skylineAngle(ray)), smoothRadius, true);
+  const horizons = cullIsolatedHorizonSpikes(
+    skyline.rays.map((ray) => skylineAngle(ray)),
+    skyline.stepDeg,
+  );
+  const angleDeg = smoothAngles(horizons, smoothRadius, true);
   const distanceM = skyline.rays.map((ray) => skylineDistance(ray));
   const layerRadius = Math.max(1, Math.round(LAYER_SMOOTH_DEG / skyline.stepDeg));
   const layers = RIDGE_BANDS.map(([min, max]) => bandLayer(skyline, min, max));
