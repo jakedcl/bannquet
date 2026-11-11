@@ -31,11 +31,9 @@ import {
 import type { SkylinePayload, WorkerOut } from '@/lib/peak-finder/payload';
 import { loadPeaksAround } from '@/lib/peak-finder/peaks';
 import { initialFov, readCalibration, writeCalibration } from '@/lib/peak-finder/storage';
-import type { VisiblePeak } from '@/lib/peak-finder/visibility';
 import { CameraView } from './CameraView';
 import { DesktopPan } from './DesktopPan';
 import { DrawnView } from './DrawnView';
-import { PeakCard } from './PeakCard';
 import { createGyroRecorder, eventRateHz, type GyroDiagLive } from '@/lib/peak-finder/gyro-diagnostics';
 import { gestureModeFor } from '@/lib/peak-finder/explore-gestures';
 import { PeakFinderGyroDebug } from './PeakFinderGyroDebug';
@@ -85,7 +83,6 @@ export function PeakFinder() {
   const [error, setError] = useState<string | null>(null);
   const [coverage, setCoverage] = useState<Coverage>('full');
   const [attempt, setAttempt] = useState(0);
-  const [selected, setSelected] = useState<{ peak: VisiblePeak; anchor: { x: number; y: number } } | null>(null);
   const [liningUp, setLiningUp] = useState(false);
   const [unsure, setUnsure] = useState(false);
   const [declinationNote, setDeclinationNote] = useState<string | null>(null);
@@ -228,7 +225,6 @@ export function PeakFinder() {
   if (spotKey !== trackedSpot) {
     setTrackedSpot(spotKey);
     setPayload(null);
-    setSelected(null);
     setError(null);
     setProgress(spotKey ? { kind: 'loading', fraction: 0 } : null);
   }
@@ -411,7 +407,6 @@ export function PeakFinder() {
     setCameraOn(false);
     setCameraNote(null);
     setGyroOn(false);
-    setSelected(null);
     setPayload(null);
     setProgress(null);
     setLiningUp(false);
@@ -428,7 +423,6 @@ export function PeakFinder() {
     setCameraNote(null);
     setGyroOn(false);
     setBanner(null);
-    setSelected(null);
     setPayload(null);
     setProgress(null);
     setError(null);
@@ -737,10 +731,7 @@ export function PeakFinder() {
             lat={pin.lat}
             lng={pin.lng}
             onBack={goStart}
-            onChange={(next) => {
-              setPin(next);
-              setSelected(null);
-            }}
+            onChange={(next) => setPin(next)}
           />
           {screen === 'pick-map' ? (
             <div className="absolute inset-x-3 bottom-3 z-10 flex flex-col gap-2">
@@ -763,21 +754,17 @@ export function PeakFinder() {
               stream={stream}
               payload={payload}
               getView={getView}
-              selectedName={selected?.peak.name ?? null}
               onLook={skylineGestures ? look : null}
               gestureMode={gestureMode}
-              onPick={(peak, anchor) => setSelected({ peak, anchor })}
             />
           ) : null}
           {showDrawn ? (
             <DrawnView
               payload={payload}
               getView={getView}
-              selectedName={selected?.peak.name ?? null}
               onLook={skylineGestures ? look : null}
               gestureMode={gestureMode}
               listenKeys={!sensors}
-              onPick={(peak, anchor) => setSelected({ peak, anchor })}
             />
           ) : null}
           {!sensors && showDrawn ? (
@@ -791,14 +778,6 @@ export function PeakFinder() {
             <div className="absolute inset-x-0 top-12 z-30">
               <LineUpCaption />
             </div>
-          ) : null}
-          {selected ? (
-            <PeakCard
-              peak={selected.peak}
-              dock={stacked ? 'bottom' : 'float'}
-              anchor={selected.anchor}
-              onClose={() => setSelected(null)}
-            />
           ) : null}
           <Status
             progress={progress}

@@ -9,7 +9,6 @@ import { labelFontWeight, labelOpacity } from '@/lib/peak-finder/label-ranking';
 import { placeLabels } from '@/lib/peak-finder/label-placement';
 import { wrap180 } from '@/lib/peak-finder/geo';
 import type { GestureMode } from '@/lib/peak-finder/explore-gestures';
-import type { VisiblePeak } from '@/lib/peak-finder/visibility';
 
 export type ViewPose = { heading: number; pitch: number; roll: number; hfov: number };
 
@@ -17,8 +16,6 @@ export function SkylineStage({
   payload,
   appearance,
   getView,
-  onPick,
-  selectedName,
   onLook,
   gestureMode,
   onSettle,
@@ -28,8 +25,6 @@ export function SkylineStage({
   payload: SkylinePayload | null;
   appearance: 'camera' | 'drawn';
   getView: () => ViewPose;
-  onPick: (peak: VisiblePeak, anchor: { x: number; y: number }) => void;
-  selectedName: string | null;
   onLook: ((headingDelta: number, pitchDelta: number, fovScale: number) => void) | null;
   gestureMode: GestureMode;
   onSettle?: () => void;
@@ -175,13 +170,12 @@ export function SkylineStage({
         const tickColor = onCamera ? 'rgba(231,246,200,0.85)' : 'rgba(45,80,22,0.72)';
         if (!label) {
           return (
-            <UnlabeledPeakTick
-              key={key}
-              marker={marker}
-              selected={selectedName === marker.name}
-              tickColor={tickColor}
-              onPick={onPick}
-            />
+            <div key={key} className="pointer-events-none absolute z-[9] h-0 w-0" style={{ left: marker.x, top: marker.y }}>
+              <span
+                className="absolute left-0 w-px"
+                style={{ bottom: 0, height: 9, background: tickColor }}
+              />
+            </div>
           );
         }
         const fontSize = label.fontSizePx ?? 13;
@@ -210,11 +204,8 @@ export function SkylineStage({
                 }}
               />
             ) : null}
-            <button
-              type="button"
-              onPointerDown={(event) => event.stopPropagation()}
-              onClick={() => onPick(label, { x: label.x, y: label.y })}
-              className="pointer-events-auto absolute whitespace-nowrap px-0.5 text-left"
+            <span
+              className="pointer-events-none absolute whitespace-nowrap px-0.5 text-left"
               style={{
                 left: label.slidePx * Math.SQRT1_2,
                 bottom: LABEL_TICK_PX + label.slidePx * Math.SQRT1_2,
@@ -228,42 +219,12 @@ export function SkylineStage({
                 fontWeight: weight,
                 textShadow: onCamera ? '0 0 2px #000, 0 1px 2px #000' : 'none',
               }}
-              aria-pressed={selectedName === label.name}
             >
               {label.name}
-            </button>
+            </span>
           </div>
         );
       })}
-    </div>
-  );
-}
-
-function UnlabeledPeakTick({
-  marker,
-  selected,
-  tickColor,
-  onPick,
-}: {
-  marker: VisiblePeak & { x: number; y: number };
-  selected: boolean;
-  tickColor: string;
-  onPick: (peak: VisiblePeak, anchor: { x: number; y: number }) => void;
-}) {
-  return (
-    <div className="absolute z-[9] h-0 w-0" style={{ left: marker.x, top: marker.y }}>
-      <span
-        className="pointer-events-none absolute left-0 w-px"
-        style={{ bottom: 0, height: 9, background: tickColor }}
-      />
-      <button
-        type="button"
-        onPointerDown={(event) => event.stopPropagation()}
-        onClick={() => onPick(marker, { x: marker.x, y: marker.y })}
-        className="pointer-events-auto absolute -left-3 -top-4 h-8 w-8 bg-transparent"
-        aria-label={marker.name}
-        aria-pressed={selected}
-      />
     </div>
   );
 }
