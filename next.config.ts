@@ -39,6 +39,7 @@ const nextConfig: NextConfig = {
       { source: "/posts/new", destination: "/upload?kind=trip", permanent: false },
       { source: "/posts/:path*", destination: "/trips", permanent: false },
       { source: "/posts", destination: "/trips", permanent: false },
+      { source: "/peak-finder/sw.js", destination: "/sw-peak-finder.js", permanent: false },
     ];
   },
 };

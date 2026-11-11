@@ -5,6 +5,7 @@ import { OFFLINE_RADIUS_M, PEAKS_CACHE, TERRAIN_CACHE } from '@/lib/peak-finder/
 import {
   defaultAreaName,
   downloadOfflineData,
+  suggestAreaName,
   type OfflineAreaRecord,
 } from '@/lib/peak-finder/offline';
 import {
@@ -16,12 +17,13 @@ import { MAP_CENTER } from '@/lib/map';
 import type { Spot } from '@/lib/peak-finder/location';
 import { OfflineAreaPicker } from './OfflineAreaPicker';
 
-type OfflineStep = 'hub' | 'map' | 'downloading' | 'done';
+type OfflineStep = 'hub' | 'map' | 'downloading';
 
 type Props = {
   onBack: () => void;
   onSaved: () => void;
   onOpenSkyline: (spot: Spot) => void;
+  onSaveComplete: () => void;
 };
 
 function newId(): string {
@@ -31,15 +33,12 @@ function newId(): string {
 const OFFLINE_USE_HINT =
   'With no signal, open Peak Finder and tap Explore my current location while you are inside this saved area.';
 
-export function PeakFinderOffline({ onBack, onSaved, onOpenSkyline }: Props) {
+export function PeakFinderOffline({ onBack, onSaved, onOpenSkyline, onSaveComplete }: Props) {
   const [step, setStep] = useState<OfflineStep>('hub');
   const [areas, setAreas] = useState<OfflineAreaRecord[]>([]);
   const [spot, setSpot] = useState<Spot>(MAP_CENTER);
   const [radiusM, setRadiusM] = useState(OFFLINE_RADIUS_M);
-  const [name, setName] = useState('');
   const [error, setError] = useState<string | null>(null);
-  const [progress, setProgress] = useState<{ done: number; total: number } | null>(null);
-  const [savedArea, setSavedArea] = useState<OfflineAreaRecord | null>(null);
 
   const refresh = useCallback(() => {
     void listOfflineAreas().then(setAreas);
@@ -52,12 +51,17 @@ export function PeakFinderOffline({ onBack, onSaved, onOpenSkyline }: Props) {
   async function runDownload() {
     setStep('downloading');
     setError(null);
-    setProgress({ done: 0, total: 1 });
     try {
-      const { terrainUrls, peakUrls } = await downloadOfflineData(spot.lat, spot.lng, setProgress, radiusM);
+      const label = await suggestAreaName(spot.lat, spot.lng);
+      const { terrainUrls, peakUrls } = await downloadOfflineData(
+        spot.lat,
+        spot.lng,
+        () => {},
+        radiusM,
+      );
       const record: OfflineAreaRecord = {
         id: newId(),
-        name: name.trim() || defaultAreaName(spot.lat, spot.lng),
+        name: label.trim() || defaultAreaName(spot.lat, spot.lng),
         lat: spot.lat,
         lng: spot.lng,
         radiusM,
@@ -66,10 +70,9 @@ export function PeakFinderOffline({ onBack, onSaved, onOpenSkyline }: Props) {
         peakUrls,
       };
       await saveOfflineArea(record);
-      setSavedArea(record);
-      setStep('done');
       refresh();
       onSaved();
+      onSaveComplete();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Download failed.');
       setStep('map');
@@ -97,76 +100,26 @@ export function PeakFinderOffline({ onBack, onSaved, onOpenSkyline }: Props) {
   function startNewSave() {
     setError(null);
     setRadiusM(OFFLINE_RADIUS_M);
-    setName('');
     setSpot(MAP_CENTER);
     setStep('map');
   }
 
   if (step === 'map' || step === 'downloading') {
     return (
-      <div className="flex h-full min-h-0 flex-col">
+      <div className="h-full min-h-0">
         <OfflineAreaPicker
           initialLat={spot.lat}
           initialLng={spot.lng}
           radiusM={radiusM}
           onRadiusM={setRadiusM}
-          name={name}
-          onName={setName}
           onCenter={setSpot}
           onBack={() => setStep('hub')}
           downloading={step === 'downloading'}
+          onDownload={() => void runDownload()}
         />
-        <div className="border-t-2 border-[#5c3a1e] bg-[#e7e1d4] p-3">
-          {step === 'downloading' && progress ? (
-            <div>
-              <div className="retro-inset h-4 overflow-hidden">
-                <div
-                  className="h-full bg-[#2d5016] transition-all"
-                  style={{ width: `${Math.round((100 * progress.done) / Math.max(1, progress.total))}%` }}
-                />
-              </div>
-              <p className="mt-1 text-center text-xs">
-                {progress.done} / {progress.total}
-              </p>
-            </div>
-          ) : (
-            <button type="button" className="retro-button retro-button-yellow min-h-11 w-full text-sm" onClick={() => void runDownload()}>
-              Download
-            </button>
-          )}
-          {error ? <p className="mt-2 text-sm font-bold text-red-900">{error}</p> : null}
-        </div>
-      </div>
-    );
-  }
-
-  if (step === 'done' && savedArea) {
-    return (
-      <div className="flex h-full flex-col items-center justify-center gap-4 bg-[#e7e1d4] px-6 text-center text-[#1a1a1a]">
-        <h2 className="text-lg font-bold text-[#2d5016]">Saved — ready offline</h2>
-        <p className="max-w-sm text-sm leading-snug">
-          <span className="font-bold">{savedArea.name}</span>
-          <br />
-          {savedArea.lat.toFixed(3)}°, {savedArea.lng.toFixed(3)}°
-          <br />
-          {new Date(savedArea.savedAt).toLocaleString()}
-        </p>
-        <p className="max-w-sm text-sm leading-snug">{OFFLINE_USE_HINT}</p>
-        <p className="max-w-sm text-xs leading-snug text-[#3d3d3d]">
-          On iPhone, Add to Home Screen helps Safari keep this data longer.
-        </p>
-        <div className="flex w-full max-w-sm flex-col gap-2">
-          <button
-            type="button"
-            className="retro-button retro-button-yellow min-h-11 px-4 text-sm"
-            onClick={() => onOpenSkyline({ lat: savedArea.lat, lng: savedArea.lng })}
-          >
-            Open skyline here
-          </button>
-          <button type="button" className="retro-button min-h-11 px-4 text-sm" onClick={onBack}>
-            Done
-          </button>
-        </div>
+        {error ? (
+          <p className="absolute inset-x-0 bottom-24 z-40 px-3 text-center text-[10px] font-bold text-red-900">{error}</p>
+        ) : null}
       </div>
     );
   }

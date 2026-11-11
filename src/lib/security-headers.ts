@@ -25,6 +25,15 @@ export type HeaderRule = {
 export function securityHeaderRules(): HeaderRule[] {
   return [
     {
+      source: '/sw-peak-finder.js',
+      headers: [
+        ...BASE_HEADERS,
+        { key: 'Permissions-Policy', value: SITE_PERMISSIONS_POLICY },
+        { key: 'Service-Worker-Allowed', value: '/' },
+        { key: 'Cache-Control', value: 'public, max-age=0, must-revalidate' },
+      ],
+    },
+    {
       source: '/peak-finder',
       headers: [...BASE_HEADERS, { key: 'Permissions-Policy', value: PEAK_FINDER_PERMISSIONS_POLICY }],
     },

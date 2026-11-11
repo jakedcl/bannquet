@@ -1,10 +1,19 @@
-const SW_URL = '/peak-finder/sw.js';
+import { PEAK_FINDER_SW_SCOPE, PEAK_FINDER_SW_URL } from './sw-routing';
+
+const LEGACY_SW = '/peak-finder/sw.js';
 
 export function registerPeakFinderServiceWorker(): void {
   if (typeof window === 'undefined' || !('serviceWorker' in navigator)) return;
-  const secure = window.isSecureContext;
-  if (!secure) return;
-  void navigator.serviceWorker.register(SW_URL, { scope: '/peak-finder/', updateViaCache: 'none' }).catch(() => {
-    /* Optional — offline still works from Cache Storage without SW shell */
+  if (!window.isSecureContext) return;
+  void navigator.serviceWorker.getRegistrations().then((registrations) => {
+    for (const registration of registrations) {
+      const script = registration.active?.scriptURL ?? registration.installing?.scriptURL ?? '';
+      if (script.includes(LEGACY_SW)) void registration.unregister();
+    }
   });
+  void navigator.serviceWorker
+    .register(PEAK_FINDER_SW_URL, { scope: PEAK_FINDER_SW_SCOPE, updateViaCache: 'none' })
+    .catch(() => {
+      /* Offline peak data still works from Cache Storage if SW install fails */
+    });
 }

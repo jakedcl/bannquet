@@ -15,7 +15,7 @@ import {
   USGS_TOPO_TILES,
 } from '@/lib/map';
 import { OFFLINE_MAX_RADIUS_M, OFFLINE_MIN_RADIUS_M } from '@/lib/peak-finder/constants';
-import { formatOfflineSize, offlineManifestResolved, suggestAreaName } from '@/lib/peak-finder/offline';
+import { formatOfflineSize, offlineManifestResolved } from '@/lib/peak-finder/offline';
 
 setWorkerUrl('/maplibre-gl-worker.mjs');
 
@@ -61,21 +61,19 @@ export function OfflineAreaPicker({
   initialLng,
   radiusM,
   onRadiusM,
-  name,
-  onName,
   onCenter,
   onBack,
   downloading,
+  onDownload,
 }: {
   initialLat: number;
   initialLng: number;
   radiusM: number;
   onRadiusM: (radius: number) => void;
-  name: string;
-  onName: (name: string) => void;
   onCenter: (spot: { lat: number; lng: number }) => void;
   onBack: () => void;
   downloading: boolean;
+  onDownload: () => void;
 }) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<MlMap | null>(null);
@@ -84,9 +82,7 @@ export function OfflineAreaPicker({
   const basemapRef = useRef(basemap);
   const [box, setBox] = useState({ width: 120, height: 120 });
   const [estimate, setEstimate] = useState<string | null>(null);
-  const [detail, setDetail] = useState<string | null>(null);
   const centerRef = useRef({ lat: initialLat, lng: initialLng });
-  const nameSuggested = useRef(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -104,7 +100,7 @@ export function OfflineAreaPicker({
       attributionControl: false,
     });
     map.addControl(new NavigationControl({ visualizePitch: false }), 'top-right');
-    map.addControl(new AttributionControl({ compact: true }), 'top-right');
+    map.addControl(new AttributionControl({ compact: true }), 'bottom-right');
     const syncAttribution = () => collapseAttribution(map);
     map.on('load', syncAttribution);
     map.on('resize', syncAttribution);
@@ -115,21 +111,19 @@ export function OfflineAreaPicker({
       onCenterRef.current(centerRef.current);
     };
     map.on('move', updateBox);
-    map.on('moveend', () => {
-      updateBox();
+    const refreshEstimate = () => {
       void offlineManifestResolved(centerRef.current.lat, centerRef.current.lng, radiusM).then((manifest) => {
         setEstimate(formatOfflineSize(manifest.estimatedBytes));
-        setDetail(`${manifest.tileCount} terrain tiles, ${manifest.chunkCount} peak lists`);
       });
-      if (!nameSuggested.current) {
-        nameSuggested.current = true;
-        void suggestAreaName(centerRef.current.lat, centerRef.current.lng).then(onName);
-      }
+    };
+    map.on('moveend', () => {
+      updateBox();
+      refreshEstimate();
     });
     mapRef.current = map;
     map.once('idle', () => {
       updateBox();
-      map.fire('moveend');
+      refreshEstimate();
     });
     const observer = new ResizeObserver(() => map.resize());
     observer.observe(container);
@@ -156,7 +150,6 @@ export function OfflineAreaPicker({
     setBox(squareSidePx(map, c.lat, c.lng, radiusM));
     void offlineManifestResolved(c.lat, c.lng, radiusM).then((manifest) => {
       setEstimate(formatOfflineSize(manifest.estimatedBytes));
-      setDetail(`${manifest.tileCount} terrain tiles, ${manifest.chunkCount} peak lists`);
     });
   }, [radiusM]);
 
@@ -174,10 +167,8 @@ export function OfflineAreaPicker({
       const lat = position.coords.latitude;
       const lng = position.coords.longitude;
       mapRef.current?.flyTo({ center: [lng, lat], duration: 800 });
-      nameSuggested.current = false;
-      void suggestAreaName(lat, lng).then(onName);
     } catch {
-      setError('Could not read your location.');
+      setError('Location blocked.');
     }
   }
 
@@ -186,67 +177,72 @@ export function OfflineAreaPicker({
   return (
     <div className="relative flex h-full min-h-0 flex-col bg-[#e7e1d4] text-[#1a1a1a]">
       <div className="relative min-h-0 flex-1">
-        <div ref={containerRef} className="h-full w-full" />
+        <div ref={containerRef} className="absolute inset-0" />
         <div
-          className="pointer-events-none absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2 border-4 border-[#ffc94d] bg-[#2d5016]/15 shadow-[0_0_0_9999px_rgba(26,26,26,0.35)]"
+          className="pointer-events-none absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2 border-[3px] border-[#ffc94d] bg-[#2d5016]/12 shadow-[0_0_0_9999px_rgba(26,26,26,0.28)]"
           style={{ width: box.width, height: box.height }}
           aria-hidden
         />
-        <button type="button" className="retro-button absolute left-2 top-2 z-30 min-h-11 px-3 text-xs" onClick={onBack}>
+        <button type="button" className="retro-button absolute left-2 top-2 z-30 min-h-9 px-2 text-[11px]" onClick={onBack}>
           Back
         </button>
-        <p className="pointer-events-none absolute left-1/2 top-14 z-20 w-[min(20rem,calc(100%-1rem))] -translate-x-1/2 bg-[#1a1a1a]/75 px-2 py-1 text-center text-xs font-bold text-white">
-          Pan and zoom so the box covers what you want offline ({radiusKm} km from center).
+        <p className="pointer-events-none absolute inset-x-8 bottom-2 z-20 text-center text-[10px] font-bold leading-tight text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)]">
+          Pan the map — box = {radiusKm} km offline area
         </p>
       </div>
-      <div className="flex flex-col gap-2 border-t-2 border-[#5c3a1e] p-3">
-        <div className="flex flex-wrap gap-2">
-          <button type="button" className="retro-button min-h-11 flex-1 px-3 text-xs" onClick={() => void centerOnUser()}>
-            Use my current location
-          </button>
+      <div className="shrink-0 space-y-1.5 border-t-2 border-[#5c3a1e] bg-[#e7e1d4]/95 px-2 py-1.5 pb-[max(0.375rem,env(safe-area-inset-bottom))]">
+        <p className="text-center text-[10px] text-[#3d3d3d]">
+          Download ~<span className="font-bold text-[#1a1a1a]">{estimate ?? '…'}</span>
+        </p>
+        <div className="flex items-center gap-1.5">
           <button
             type="button"
-            className={`retro-button min-h-11 px-3 text-xs ${basemap === 'satellite' ? 'retro-button-yellow' : ''}`}
-            onClick={() => setBasemap('satellite')}
+            className="retro-button min-h-9 shrink-0 px-2 text-[10px]"
+            title="Use my current location"
+            onClick={() => void centerOnUser()}
           >
-            Satellite
+            Here
           </button>
+          <div className="flex min-h-9 flex-1 overflow-hidden rounded border-2 border-[#5c3a1e]">
+            <button
+              type="button"
+              className={`min-h-9 flex-1 px-1 text-[10px] ${basemap === 'satellite' ? 'bg-[#ffc94d] font-bold' : 'bg-[#e7e1d4]'}`}
+              onClick={() => setBasemap('satellite')}
+            >
+              Sat
+            </button>
+            <button
+              type="button"
+              className={`min-h-9 flex-1 border-l-2 border-[#5c3a1e] px-1 text-[10px] ${basemap === 'map' ? 'bg-[#ffc94d] font-bold' : 'bg-[#e7e1d4]'}`}
+              onClick={() => setBasemap('map')}
+            >
+              Topo
+            </button>
+          </div>
           <button
             type="button"
-            className={`retro-button min-h-11 px-3 text-xs ${basemap === 'map' ? 'retro-button-yellow' : ''}`}
-            onClick={() => setBasemap('map')}
+            className="retro-button retro-button-yellow min-h-9 shrink-0 px-2 text-[10px] font-bold"
+            disabled={downloading}
+            onClick={onDownload}
           >
-            Topo
+            Download
           </button>
         </div>
-        <label className="flex flex-col gap-1 text-xs font-bold">
-          Area size (km from center)
-          <input
-            type="range"
-            min={OFFLINE_MIN_RADIUS_M / 1000}
-            max={OFFLINE_MAX_RADIUS_M / 1000}
-            step={5}
-            value={radiusKm}
-            disabled={downloading}
-            onChange={(e) => onRadiusM(Number(e.target.value) * 1000)}
-          />
-          <span className="font-normal">{radiusKm} km — box is about {radiusKm * 2} km wide</span>
-        </label>
-        <label className="flex flex-col gap-1 text-xs font-bold">
-          Name
-          <input
-            type="text"
-            className="retro-inset min-h-10 px-2 text-sm font-normal"
-            value={name}
-            disabled={downloading}
-            onChange={(e) => onName(e.target.value)}
-          />
-        </label>
-        <p className="text-center text-sm">
-          Estimated download: <span className="font-bold">{estimate ?? '…'}</span>
-          {detail ? <span className="block text-xs font-normal">{detail}</span> : null}
-        </p>
-        {error ? <p className="text-sm font-bold text-red-900">{error}</p> : null}
+        <input
+          type="range"
+          className="h-4 w-full"
+          min={OFFLINE_MIN_RADIUS_M / 1000}
+          max={OFFLINE_MAX_RADIUS_M / 1000}
+          step={5}
+          value={radiusKm}
+          disabled={downloading}
+          aria-label="Area radius in km"
+          onChange={(e) => onRadiusM(Number(e.target.value) * 1000)}
+        />
+        {downloading ? (
+          <p className="text-center text-[10px] font-bold text-[#2d5016]">Downloading…</p>
+        ) : null}
+        {error ? <p className="text-center text-[10px] font-bold text-red-900">{error}</p> : null}
       </div>
     </div>
   );

@@ -51,6 +51,9 @@ import type { ViewPose } from './SkylineStage';
 const DEFAULT_PIN: Spot = { lat: MAP_CENTER.lat, lng: MAP_CENTER.lng };
 const LOCATION_DENIED = 'Location is blocked. Allow it in your browser settings and try again.';
 const CAMERA_DENIED = 'Camera is blocked. Allow it in your browser settings, then turn the camera on to try again.';
+const OFFLINE_SAVED_TOAST_MS = 5000;
+const OFFLINE_SAVED_TOAST_TEXT =
+  "Saved! When you're in this area with no signal, open Peak Finder and tap Explore my current location — it'll use your offline map automatically.";
 
 type Screen = 'start' | 'explore' | 'pick-map' | 'pick-view' | 'offline';
 type Coverage = 'full' | 'partial' | 'none';
@@ -83,6 +86,7 @@ export function PeakFinder() {
   const [debugMode, setDebugMode] = useState(false);
   const [networkOnline, setNetworkOnline] = useState(true);
   const [offlineAreas, setOfflineAreas] = useState<OfflineAreaRecord[]>([]);
+  const [offlineSavedToast, setOfflineSavedToast] = useState(false);
 
   const viewRef = useRef<ViewPose>({ heading: 0, pitch: 0, roll: 0, hfov: DEFAULT_HFOV_DEG });
   const offsetRef = useRef(0);
@@ -140,6 +144,21 @@ export function PeakFinder() {
     if (screen !== 'start' && screen !== 'offline') return;
     void listOfflineAreas().then(setOfflineAreas);
   }, [screen]);
+
+  useEffect(() => {
+    if (!offlineSavedToast) return;
+    const timer = window.setTimeout(() => setOfflineSavedToast(false), OFFLINE_SAVED_TOAST_MS);
+    return () => window.clearTimeout(timer);
+  }, [offlineSavedToast]);
+
+  function dismissOfflineSavedToast() {
+    setOfflineSavedToast(false);
+  }
+
+  function completeOfflineSave() {
+    goStart();
+    setOfflineSavedToast(true);
+  }
 
   useEffect(() => {
     loadDeclination().then(setTable).catch(() => setDeclinationNote('The true-north fix did not load. Line up if the labels sit off to one side.'));
@@ -561,6 +580,7 @@ export function PeakFinder() {
         onBack={goStart}
         onSaved={() => void listOfflineAreas().then(setOfflineAreas)}
         onOpenSkyline={openSavedSkyline}
+        onSaveComplete={completeOfflineSave}
       />
     );
   }
@@ -582,7 +602,7 @@ export function PeakFinder() {
 
   if (screen === 'start') {
     return (
-      <div className="flex h-full flex-col items-center justify-center gap-4 bg-[#e7e1d4] px-6 text-center text-[#1a1a1a]">
+      <div className="relative flex h-full flex-col items-center justify-center gap-4 bg-[#e7e1d4] px-6 text-center text-[#1a1a1a]">
         <h1 className="text-xl font-bold text-[#2d5016]">Peak Finder</h1>
         <p className="max-w-sm text-sm leading-snug">See which peaks are in view from where you stand, or from a pin on the map.</p>
         <div className="flex w-full max-w-sm flex-col gap-2">
@@ -600,6 +620,16 @@ export function PeakFinder() {
           <p className="max-w-sm text-xs leading-snug text-[#3d3d3d]">You are offline. Explore works inside saved areas.</p>
         ) : null}
         {startNote ? <p className="max-w-sm text-sm font-bold leading-snug text-red-900">{startNote}</p> : null}
+        {offlineSavedToast ? (
+          <button
+            type="button"
+            className="retro-box absolute inset-x-4 top-4 z-50 border-[#2d5016] bg-[#ffc94d] px-4 py-3 text-left text-sm leading-snug text-[#1a1a1a] shadow-lg"
+            onClick={dismissOfflineSavedToast}
+          >
+            <p className="font-bold">{OFFLINE_SAVED_TOAST_TEXT}</p>
+            <p className="mt-1 text-xs font-normal text-[#3d3d3d]">Tap to dismiss</p>
+          </button>
+        ) : null}
       </div>
     );
   }
