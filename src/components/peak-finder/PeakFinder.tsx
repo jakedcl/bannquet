@@ -998,12 +998,16 @@ function Controls({
           <button
             type="button"
             data-pf-control
-            className="peak-finder-control retro-button min-h-8 w-8 shrink-0 px-0 text-[11px] font-bold text-[#1a1a1a]"
+            className="peak-finder-control retro-button flex min-h-8 w-8 shrink-0 items-center justify-center px-0 text-[#1a1a1a]"
             aria-expanded={infoOpen}
-            aria-label={infoOpen ? 'Hide peak finder notes' : 'Show peak finder notes'}
+            aria-label={infoOpen ? 'Hide map credits and info' : 'Map credits and info'}
             onClick={() => setInfoOpen((open) => !open)}
           >
-            i
+            <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" className="block">
+              <circle cx="3" cy="8" r="1.35" fill="currentColor" />
+              <circle cx="8" cy="8" r="1.35" fill="currentColor" />
+              <circle cx="13" cy="8" r="1.35" fill="currentColor" />
+            </svg>
           </button>
         </div>
       </div>

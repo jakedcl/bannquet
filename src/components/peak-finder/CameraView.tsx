@@ -49,7 +49,7 @@ export function CameraView({
         getView={getView}
         onLook={onLook}
         gestureMode={gestureMode}
-        showReadout={false}
+        showReadout
         reserveSummitName={payload?.onSummit?.name ?? null}
       />
     </div>
