@@ -25,8 +25,8 @@ test('a profile list adds the section and backs up to the profile', () => {
 test('every section page has a breadcrumb, including the parent', () => {
   assert.deepEqual(pageTrail('/community', '', nobody).crumbs?.map((crumb) => crumb.label), ['Community']);
   assert.equal(pageTrail('/community', '', nobody).parentHref, '/');
-  assert.deepEqual(pageTrail('/trips', '', nobody).crumbs?.map((crumb) => crumb.label), ['Community', 'Trips']);
-  assert.equal(pageTrail('/trips', '', nobody).parentHref, '/community');
+  assert.deepEqual(pageTrail('/posts', '', nobody).crumbs?.map((crumb) => crumb.label), ['Community', 'Posts']);
+  assert.equal(pageTrail('/posts', '', nobody).parentHref, '/community');
   assert.deepEqual(pageTrail('/peaks', '', nobody).crumbs?.map((crumb) => crumb.label), ['Community', 'Peaks']);
   assert.deepEqual(pageTrail('/chat', '', nobody).crumbs?.map((crumb) => crumb.label), ['Community', 'Chat']);
   assert.deepEqual(pageTrail('/gear', '', nobody).crumbs?.map((crumb) => crumb.label), ['Community', 'Gear']);
@@ -60,8 +60,8 @@ test('settings opens the profile, and the owner also gets Admin', () => {
   const member = { handle: 'jkiddf', role: 'member' as const };
   const owner = { handle: 'jake', role: 'admin' as const };
   assert.equal(settingsHref(member), '/user/jkiddf');
-  assert.deepEqual(visibleLinks(settingsLinks(member)).map((link) => link.label), ['Profile', 'Notifications']);
-  assert.deepEqual(visibleLinks(settingsLinks(owner)).map((link) => link.label), ['Profile', 'Notifications', 'Admin']);
+  assert.deepEqual(visibleLinks(settingsLinks(member)).map((link) => link.label), ['Profile']);
+  assert.deepEqual(visibleLinks(settingsLinks(owner)).map((link) => link.label), ['Profile', 'Admin']);
   assert.equal(matchSection('/user/jake', '', owner), null);
   assert.equal(matchSection('/user/jkiddf', '', owner)?.id, 'community');
   assert.equal(matchSection('/community', '', owner)?.landing, false);
@@ -75,8 +75,8 @@ test('an upload form sits under Upload', () => {
   assert.deepEqual(trail.crumbs?.map((crumb) => crumb.label), ['Upload', 'Pin']);
 });
 
-test('a trip, pin, route, photo, and gear item name the record', () => {
-  assert.equal(pageTrail('/trips/abc', '', nobody, 'Weekend').crumbs?.at(-1)?.label, 'Weekend');
+test('a post, pin, route, photo, and gear item name the record', () => {
+  assert.equal(pageTrail('/posts/abc', '', nobody, 'Greasefest').crumbs?.at(-1)?.label, 'Greasefest');
   assert.equal(pageTrail('/pins/abc', '', nobody, 'Lookout').parentHref, '/map');
   assert.equal(pageTrail('/routes/abc', '', nobody, 'Ridge').crumbs?.at(-1)?.label, 'Ridge');
   assert.equal(pageTrail('/photos/abc', '', nobody).crumbs?.at(-1)?.label, 'Photo');

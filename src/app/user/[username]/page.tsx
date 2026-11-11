@@ -1,7 +1,7 @@
 import { AvatarImage } from '@/components/ui/AvatarImage';
 import { notFound, redirect } from 'next/navigation';
 import PageWrapper from '@/components/ui/PageWrapper';
-import { PeakRows, GearRows, PhotoGrid, PinRows, PostRows, RouteRows, SeeAll, TripRows } from '@/components/profile/ProfileLists';
+import { PeakRows, GearRows, PhotoGrid, PinRows, PostRows, RouteRows, SeeAll } from '@/components/profile/ProfileLists';
 import { ChallengeBadge } from '@/components/stats/ChallengeBadge';
 import { Pill } from '@/components/hub/Button';
 import { Button } from '@/components/hub/Button';
@@ -20,7 +20,6 @@ import { PROFILE_PREVIEW } from '@/lib/list-page';
 import { listMemberPeakRows, summitCountsForUser } from '@/lib/summits';
 import { listGear } from '@/lib/gear';
 import { listPostsByOwner } from '@/lib/feed-posts';
-import { listTripsByOwner } from '@/lib/trips';
 import { loadFailed } from '@/lib/load-error';
 
 export const dynamic = 'force-dynamic';
@@ -41,18 +40,16 @@ export default async function UserPage({ params }: { params: Promise<{ username:
   let summitCounts: Awaited<ReturnType<typeof summitCountsForUser>> = [];
   let peakRows: Awaited<ReturnType<typeof listMemberPeakRows>> = [];
   let posts: Awaited<ReturnType<typeof listPostsByOwner>> = [];
-  let trips: Awaited<ReturnType<typeof listTripsByOwner>> = [];
   let gear: Awaited<ReturnType<typeof listGear>> = [];
   let error: string | null = null;
   try {
-    [library, activities, pins, summitCounts, peakRows, posts, trips, gear] = await Promise.all([
+    [library, activities, pins, summitCounts, peakRows, posts, gear] = await Promise.all([
       loadProfileLibrary(member.id),
       loadLoggedActivities(member.id),
       loadProfilePins(member.id),
       summitCountsForUser(member.id),
       listMemberPeakRows(member.id),
       listPostsByOwner(member.id),
-      listTripsByOwner(member.id),
       listGear().catch(() => []),
     ]);
   } catch (err) {

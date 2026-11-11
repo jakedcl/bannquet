@@ -28,7 +28,6 @@ import { activeTab, profileHref } from './nav';
 export type BarAccount = (NonNullable<NavAccount> & {
   displayName: string | null;
   pendingCount?: number;
-  notificationCount?: number;
 }) | null;
 
 function subscribe() {
@@ -62,7 +61,7 @@ export function TopBar({ account }: { account: BarAccount }) {
         <div className="ml-auto hidden items-center gap-2 lg:flex">
           <nav aria-label="Main" className="flex items-center gap-2">
             <Link href="/" className={barLinkClass(tab === 'map')}>Map</Link>
-            <Link href="/trips" className={barLinkClass(tab === 'trips')}>Trips</Link>
+            <Link href="/community" className={barLinkClass(tab === 'trips')}>Community</Link>
             <Link href="/mountain-weather" className={barLinkClass(tab === 'weather')}>Weather</Link>
             <Link href={PEAK_FINDER_LINK.href} className={barLinkClass(pathOn(pathname, PEAK_FINDER_LINK.href))}>Peak Finder</Link>
             <Menu label="Fishing" active={pathOn(pathname, '/fishing')}>
@@ -124,7 +123,6 @@ function AccountRows({ account, rowClass }: { account: NonNullable<BarAccount>; 
         <Link key={item.href} href={item.href} role="menuitem" className={rowClass}>
           {item.label}
           {item.href === '/admin' ? <PendingBadge count={account.pendingCount} /> : null}
-          {item.href === '/notifications' ? <PendingBadge count={account.notificationCount} /> : null}
         </Link>
       ))}
       <form action={signOutAction}>
@@ -171,12 +169,11 @@ function MoreSheet({ account, onClose }: { account: BarAccount; onClose: () => v
           <div>
             <p className="t-eyebrow mb-1">Community</p>
             <ListGroup>
-              {COMMUNITY_LINKS.filter((item) => item.href !== '/trips').map((item) => (
+              {COMMUNITY_LINKS.map((item) => (
                 <ListRow
                   key={item.href}
                   href={item.href}
                   title={item.label}
-                  trailing={item.href === '/notifications' ? <PendingBadge count={account?.notificationCount} /> : null}
                 />
               ))}
             </ListGroup>

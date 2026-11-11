@@ -36,9 +36,9 @@ function readTrack(formData: FormData): { track: PackedTrack | null; error: stri
 }
 
 export async function publishProfileTrack(
-  _prev: { error?: string; saved?: true; created?: DraftItem[]; suggestions?: SummitSuggestion[]; continueTo?: string } | null,
+  _prev: { error?: string; saved?: true; created?: DraftItem[]; suggestions?: SummitSuggestion[] } | null,
   formData: FormData,
-): Promise<{ error?: string; saved?: true; created?: DraftItem[]; suggestions?: SummitSuggestion[]; continueTo?: string }> {
+): Promise<{ error?: string; saved?: true; created?: DraftItem[]; suggestions?: SummitSuggestion[] }> {
   const viewer = await getViewer();
   if (!viewer) return redirectToSignIn();
   if (!canContribute(viewer.role)) return { error: APPROVAL_WAIT };
@@ -57,15 +57,8 @@ export async function publishProfileTrack(
   }
   const created: DraftItem[] = [{ kind: 'route', id, label: routeTitle(title), thumb: null }];
   const suggestions = await summitsOnTrack(viewer.id, track.track);
-  const next = String(formData.get('next') ?? '');
-  const continueTo = next === 'existing'
-    ? `/routes/${id}?addTrip=1`
-    : next === 'new'
-      ? `/upload?kind=trip&route=${id}`
-      : undefined;
   if (formData.get('inline') === '1') return { created, suggestions };
-  if (continueTo && suggestions.length === 0) redirect(continueTo);
-  return { saved: true, created, suggestions, continueTo };
+  redirect(`/routes/${id}`);
 }
 
 export async function publishProfilePhotos(
@@ -94,13 +87,5 @@ export async function publishProfilePhotos(
     photoThumbUrl: photo.thumbUrl,
   }));
   if (formData.get('inline') === '1') return { created };
-  const next = String(formData.get('next') ?? '');
-  const first = saved[0];
-  if (next === 'existing' && first) redirect(`/photos/${first.id}?addTrip=1`);
-  if (next === 'new') {
-    const params = new URLSearchParams({ kind: 'trip' });
-    for (const photo of saved) params.append('photo', photo.id);
-    redirect(`/upload?${params.toString()}`);
-  }
-  return { saved: true };
+  redirect(`/photos/${saved[0].id}`);
 }

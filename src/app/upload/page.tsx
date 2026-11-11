@@ -5,21 +5,16 @@ import { PhotoUpload, RouteUpload } from '@/components/posts/ProfileAdds';
 import { Card } from '@/components/hub/Card';
 import { ListGroup, ListRow } from '@/components/hub/ListRow';
 import { NewPostForm } from '@/components/feed/NewPostForm';
-import { NewTripForm } from '@/components/trips/NewTripForm';
 import { getViewer } from '@/app/sign-in/actions';
-import { isDatabaseConfigured } from '@/db';
-import { listChatCatalog } from '@/lib/chat';
 import { APPROVAL_WAIT, canContribute } from '@/lib/membership';
 import { UPLOAD_LINKS } from '@/lib/sections';
 import { signInPath } from '@/lib/sign-in-next';
-import { presetFromCatalog } from '@/lib/trip-draft';
 import { HubPage } from '@/components/hub/Page';
 
 export const dynamic = 'force-dynamic';
 
 const KINDS = [
   { id: 'post', label: 'New post' },
-  { id: 'trip', label: 'New trip' },
   { id: 'route', label: 'Route (GPX)' },
   { id: 'pin', label: 'Pin' },
   { id: 'photo', label: 'Photo' },
@@ -33,28 +28,20 @@ function isKind(value: string | undefined): value is UploadKind {
   return KINDS.some((item) => item.id === value);
 }
 
-/** The same upload link, attachments included, to come back to after sign-in. */
-function uploadPath(kind: UploadKind | null, params: Record<string, string | string[] | undefined>): string {
+function uploadPath(kind: UploadKind | null): string {
   if (!kind) return '/upload';
-  const query = new URLSearchParams({ kind });
-  for (const key of ['pin', 'route', 'photo'] as const) {
-    const value = params[key];
-    for (const item of Array.isArray(value) ? value : value ? [value] : []) query.append(key, item);
-  }
-  return `/upload?${query.toString()}`;
+  return `/upload?kind=${kind}`;
 }
 
 export default async function UploadPage({
   searchParams,
 }: {
-  searchParams: Promise<{ kind?: string; pin?: string | string[]; route?: string | string[]; photo?: string | string[] }>;
+  searchParams: Promise<{ kind?: string }>;
 }) {
   const params = await searchParams;
   const kind = isKind(params.kind) ? params.kind : null;
   const viewer = await getViewer();
-  if (!viewer) redirect(signInPath(uploadPath(kind, params)));
-  const catalog = kind === 'trip' && isDatabaseConfigured() ? await listChatCatalog().catch(() => []) : [];
-  const preset = presetFromCatalog(catalog, params);
+  if (!viewer) redirect(signInPath(uploadPath(kind)));
 
   if (!canContribute(viewer.role)) {
     return (
@@ -83,11 +70,6 @@ export default async function UploadPage({
         {kind === 'post' ? (
           <Card>
             <NewPostForm />
-          </Card>
-        ) : null}
-        {kind === 'trip' ? (
-          <Card>
-            <NewTripForm viewerId={viewer.id} catalog={catalog} preset={preset} />
           </Card>
         ) : null}
         {kind === 'route' ? (

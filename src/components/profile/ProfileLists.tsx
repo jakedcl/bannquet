@@ -9,7 +9,6 @@ import { deletePhotoAction, deleteRouteAction } from '@/app/library/actions';
 import { deletePeakRowAction } from '@/app/peaks/actions';
 import { deletePinAction } from '@/app/pins/actions';
 import { deletePostAction } from '@/app/posts/actions';
-import { deleteTripAction } from '@/app/trips/actions';
 import { ACTIVITY_META, isActivity } from '@/lib/activities';
 import { PIN_KIND_LABELS, isPinKind } from '@/lib/pin-kinds';
 import { formatFeetGain, formatMiles } from '@/lib/gpx';
@@ -318,74 +317,6 @@ export function PostRows({
       defaultSort={{ id: 'date', dir: 'desc' }}
       placeholder="Post title"
       searchText={(row) => row.title}
-      collapsed={collapsed}
-    />
-  );
-}
-
-export function TripRows({
-  trips,
-  manage,
-  collapsed = false,
-  viewer,
-  ownerId,
-}: {
-  trips: Array<{ id: string; title: string; tripDate: string | null; activity?: string | null }>;
-  manage: boolean;
-  collapsed?: boolean;
-  viewer?: ProfileManageViewer | null;
-  ownerId?: string;
-}) {
-  const adminDelete = manage && ownerId ? deleteAsAdmin(viewer, ownerId) : false;
-  const columns: DataColumn<(typeof trips)[number]>[] = [
-    {
-      id: 'title',
-      header: 'Trip',
-      sticky: true,
-      sortValue: (row) => row.title,
-      cell: (row) => <Link href={`/trips/${row.id}`} className="font-bold underline">{row.title}</Link>,
-    },
-    {
-      id: 'date',
-      header: 'Date',
-      sortValue: (row) => row.tripDate,
-      cell: (row) => formatTripDate(row.tripDate),
-    },
-    {
-      id: 'activity',
-      header: 'Activity',
-      sortValue: (row) => activityLabel(row.activity),
-      cell: (row) => activityLabel(row.activity) ?? '—',
-    },
-  ];
-  if (manage) {
-    columns.push({
-      id: 'delete',
-      header: '',
-      sortValue: () => null,
-      cell: (row) => (
-        <Trash>
-          <ConfirmDelete
-            action={deleteTripAction}
-            confirm="Delete this trip?"
-            adminPower={adminDelete}
-            label={adminDelete ? adminPowerLabel('Delete trip').ariaLabel : undefined}
-            fields={{ id: row.id }}
-          />
-        </Trash>
-      ),
-    });
-  }
-  return (
-    <BrowseTable
-      rows={trips}
-      columns={columns}
-      rowKey={(row) => row.id}
-      empty="No trips yet."
-      defaultSort={{ id: 'date', dir: 'desc' }}
-      placeholder="Trip name"
-      searchText={(row) => `${row.title} ${activityLabel(row.activity) ?? ''}`}
-      facets={[{ id: 'activity', label: 'Activity', value: (row) => activityLabel(row.activity) }]}
       collapsed={collapsed}
     />
   );

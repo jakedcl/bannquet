@@ -34,8 +34,6 @@ const createdAt = timestamp('created_at', { withTimezone: true }).defaultNow().n
 
 export const userRoleEnum = pgEnum('user_role', ['member', 'admin', 'pending']);
 export const activityEnum = pgEnum('activity', ACTIVITIES);
-export const rsvpEnum = pgEnum('rsvp', ['going', 'maybe', 'no', 'requested']);
-export const tripMemberRoleEnum = pgEnum('trip_member_role', ['organizer', 'member']);
 export const pinKindEnum = pgEnum('pin_kind', [
   'summit',
   'trailhead',
@@ -122,43 +120,6 @@ export const feedPosts = pgTable(
   ],
 );
 
-export const trips = pgTable(
-  'trips',
-  {
-    id: uuid('id').primaryKey().defaultRandom(),
-    title: text('title').notNull(),
-    slug: text('slug').notNull().unique(),
-    activity: activityEnum('activity').notNull(),
-    startAt: timestamp('start_at', { withTimezone: true }),
-    endAt: timestamp('end_at', { withTimezone: true }),
-    notes: text('notes'),
-    tripDate: date('trip_date'),
-    createdBy: text('created_by').references(() => users.id, { onDelete: 'set null' }),
-    createdAt,
-  },
-  (table) => [
-    index('trips_created_by_idx').on(table.createdBy),
-  ],
-);
-
-export const tripMembers = pgTable(
-  'trip_members',
-  {
-    tripId: uuid('trip_id')
-      .notNull()
-      .references(() => trips.id, { onDelete: 'cascade' }),
-    userId: text('user_id')
-      .notNull()
-      .references(() => users.id, { onDelete: 'cascade' }),
-    rsvp: rsvpEnum('rsvp').notNull().default('maybe'),
-    role: tripMemberRoleEnum('role').notNull().default('member'),
-  },
-  (table) => [
-    primaryKey({ columns: [table.tripId, table.userId] }),
-    index('trip_members_trip_idx').on(table.tripId),
-  ],
-);
-
 export const pins = pgTable(
   'pins',
   {
@@ -225,45 +186,6 @@ export const photos = pgTable(
   (table) => [
     index('photos_point_idx').using('gist', table.point),
   ],
-);
-
-export const tripPins = pgTable(
-  'trip_pins',
-  {
-    tripId: uuid('trip_id')
-      .notNull()
-      .references(() => trips.id, { onDelete: 'cascade' }),
-    pinId: uuid('pin_id')
-      .notNull()
-      .references(() => pins.id, { onDelete: 'cascade' }),
-  },
-  (table) => [primaryKey({ columns: [table.tripId, table.pinId] })],
-);
-
-export const tripRoutes = pgTable(
-  'trip_routes',
-  {
-    tripId: uuid('trip_id')
-      .notNull()
-      .references(() => trips.id, { onDelete: 'cascade' }),
-    trackId: uuid('track_id')
-      .notNull()
-      .references(() => tracks.id, { onDelete: 'cascade' }),
-  },
-  (table) => [primaryKey({ columns: [table.tripId, table.trackId] })],
-);
-
-export const tripPhotos = pgTable(
-  'trip_photos',
-  {
-    tripId: uuid('trip_id')
-      .notNull()
-      .references(() => trips.id, { onDelete: 'cascade' }),
-    photoId: uuid('photo_id')
-      .notNull()
-      .references(() => photos.id, { onDelete: 'cascade' }),
-  },
-  (table) => [primaryKey({ columns: [table.tripId, table.photoId] })],
 );
 
 export const chatMessages = pgTable(
@@ -337,27 +259,6 @@ export const summits = pgTable(
   (table) => [
     // One row per visit, so a member can log the same peak more than once.
     index('summits_user_peak_idx').on(table.userId, table.peakSlug),
-  ],
-);
-
-export const notifications = pgTable(
-  'notifications',
-  {
-    id: uuid('id').primaryKey().defaultRandom(),
-    userId: text('user_id')
-      .notNull()
-      .references(() => users.id, { onDelete: 'cascade' }),
-    kind: text('kind').notNull(),
-    title: text('title').notNull(),
-    body: text('body').notNull(),
-    href: text('href'),
-    tripId: uuid('trip_id').references(() => trips.id, { onDelete: 'cascade' }),
-    readAt: timestamp('read_at', { withTimezone: true }),
-    createdAt,
-  },
-  (table) => [
-    index('notifications_user_created_idx').on(table.userId, table.createdAt),
-    index('notifications_user_unread_idx').on(table.userId),
   ],
 );
 
