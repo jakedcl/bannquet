@@ -1,6 +1,6 @@
 # Peak Finder handoff
 
-Live at `/peak-finder` ([bannquet.com](https://www.bannquet.com/peak-finder)). This document describes **main** as of the current Peak Finder stack: offline saves, label declutter, explore UI, and no tap-to-open peak cards.
+Live at `/peak-finder` ([bannquet.com](https://www.bannquet.com/peak-finder)). Screen state lives in query params on that single route (see **URL state**). The offline service worker caches `/peak-finder` with `ignoreSearch: true` so any query works offline.
 
 Do not treat `prominenceDeg` on a visible peak as topographic prominence. It is only how far the summit rises above the terrain behind it along the skyline (a declutter signal, not stored chunk metadata).
 
@@ -108,6 +108,19 @@ Pinch still changes `hfov` (22°–110°). Finishing line-up keeps offsets in me
 
 Centered at the top of `SkylineStage` with safe-area inset. Shown on drawn and camera explore views (`Looking N`, `ENE`, etc.). Does not overlap the top-left Back button.
 
+## URL state (`peak-finder-url.ts`)
+
+| URL | Screen |
+| --- | --- |
+| `/peak-finder` | Start |
+| `?mode=pick` | Pick on map |
+| `?lat=&lng=` (5 dp) | Skyline for pinned spot (shareable) |
+| `?mode=explore` | Explore at live GPS (coords not in URL) |
+| `?area=<id>` | Skyline for saved offline area center |
+| `?mode=offline` | Offline download hub |
+
+In-app navigation uses `history.pushState`; **Back** (in-app or browser) uses `popstate`. Invalid params quietly fall back to start. Deep-linked explore does not auto-request motion — user uses **Gyro** (or **Cam**). Line-up, credits popover, etc. are not in the URL.
+
 ## Explore and pick UI
 
 **Start**: Explore current location, pick on map, offline hub (when online). Offline start adapts (`start-screen-offline.ts`): offline badge, hide map pick when offline, list saved areas, geolocation gate, outside-saved-area messaging.
@@ -155,7 +168,7 @@ New test files must be listed in the `test` script in `package.json`.
 | --- | --- |
 | Summit integration | `summit-view.test.ts` — Marcy/Washington visibility, front-ridge labels, Colden declutter counts, Keene Valley sparsity |
 | Labels | `label-ranking.test.ts`, `label-placement.test.ts`, `declutter.test.ts` |
-| Line-up / motion | `line-up-offset.test.ts`, `compass-resync.test.ts`, `motion-enable.test.ts`, `explore-gestures.test.ts` |
+| Line-up / motion / URL | `line-up-offset.test.ts`, `compass-resync.test.ts`, `motion-enable.test.ts`, `peak-finder-url.test.ts`, `explore-gestures.test.ts` |
 | Offline | `offline.test.ts`, `start-screen-offline.test.ts`, `offline-area-picker-map.test.ts`, `offline-area-picker-layout.test.ts` |
 | SW | `sw-routing.test.ts` |
 | Core lib | `visibility`, `skyline`, `tiles`, `peaks`, `orientation`, `geo`, `location`, `gyro-*` |

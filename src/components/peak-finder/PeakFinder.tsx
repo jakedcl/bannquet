@@ -56,6 +56,13 @@ import { registerPeakFinderServiceWorker } from '@/lib/peak-finder/register-sw';
 import { findAreaCovering, listOfflineAreas } from '@/lib/peak-finder/offline-areas-idb';
 import type { OfflineAreaRecord } from '@/lib/peak-finder/offline';
 import {
+  hasUnrecognizedPeakFinderSearch,
+  parsePeakFinderSearch,
+  peakFinderHref,
+  roundPeakFinderCoord,
+  type PeakFinderUrlState,
+} from '@/lib/peak-finder/peak-finder-url';
+import {
   effectivelyOffline,
   OFFLINE_GEO_TIMEOUT_MS,
   offlineExploreCheck,
@@ -129,6 +136,8 @@ export function PeakFinder() {
   const gyroLastAccuracyRef = useRef<number | null | undefined>(undefined);
   const gyroLastPitchRef = useRef(0);
   const liningUpRef = useRef(false);
+  const suppressExploreAutoMotionRef = useRef(false);
+  const urlHydratedRef = useRef(false);
   const gyroRecorder = useMemo(() => createGyroRecorder(), []);
 
   const getView = useCallback(() => viewRef.current, []);
@@ -240,7 +249,7 @@ export function PeakFinder() {
   }
 
   function completeOfflineSave() {
-    goStart();
+    goToStart('replace');
     setOfflineSavedToast(true);
   }
 
@@ -269,7 +278,7 @@ export function PeakFinder() {
   const spotLng = spot?.lng ?? null;
 
   const declination = spotLat != null && spotLng != null && table ? declinationAt(table, spotLat, spotLng) ?? 0 : 0;
-  const spotKey = !booted || spotLat == null || spotLng == null ? '' : `${spotLat.toFixed(5)},${spotLng},${attempt}`;
+  const spotKey = !booted || spotLat == null || spotLng == null ? '' : `${spotLat.toFixed(5)},${spotLng.toFixed(5)},${attempt}`;
   const [trackedSpot, setTrackedSpot] = useState('');
   if (spotKey !== trackedSpot) {
     setTrackedSpot(spotKey);
@@ -523,7 +532,41 @@ export function PeakFinder() {
     setLiningUp(false);
   }
 
-  function openSavedSkyline(spot: Spot) {
+  function writePeakFinderUrl(state: PeakFinderUrlState, mode: 'push' | 'replace') {
+    const href = peakFinderHref(state);
+    if (mode === 'replace') window.history.replaceState(null, '', href);
+    else window.history.pushState(null, '', href);
+  }
+
+  function resetToStartState() {
+    stopCamera();
+    setScreen('start');
+    setLock({ locked: null, pending: null });
+    setCameraOn(false);
+    setCameraNote(null);
+    stopGyroListening();
+    setGyroOn(false);
+    setBanner(null);
+    setPayload(null);
+    setProgress(null);
+    setError(null);
+    setLiningUp(false);
+    setShowDragHint(true);
+    setStartFindingLocation(false);
+    setStartOutsideSaved(false);
+    suppressExploreAutoMotionRef.current = false;
+  }
+
+  function peakFinderBack() {
+    window.history.back();
+  }
+
+  function goToStart(history: 'push' | 'replace' = 'replace') {
+    resetToStartState();
+    writePeakFinderUrl({ kind: 'start' }, history);
+  }
+
+  function enterPickView(spot: Spot, url: PeakFinderUrlState, history: 'push' | 'replace') {
     stopCamera();
     setStartNote(null);
     setBanner(null);
@@ -540,24 +583,23 @@ export function PeakFinder() {
     setShowDragHint(true);
     setScreen('pick-view');
     setAttempt((value) => value + 1);
+    writePeakFinderUrl(url, history);
   }
 
-  function goStart() {
-    stopCamera();
-    setScreen('start');
-    setLock({ locked: null, pending: null });
-    setCameraOn(false);
-    setCameraNote(null);
-    stopGyroListening();
-    setGyroOn(false);
-    setBanner(null);
-    setPayload(null);
-    setProgress(null);
-    setError(null);
-    setLiningUp(false);
-    setShowDragHint(true);
-    setStartFindingLocation(false);
-    setStartOutsideSaved(false);
+  function openSavedSkyline(spot: Spot) {
+    enterPickView(
+      spot,
+      { kind: 'pick-view', lat: roundPeakFinderCoord(spot.lat), lng: roundPeakFinderCoord(spot.lng) },
+      'push',
+    );
+  }
+
+  function openOfflineAreaSkyline(area: OfflineAreaRecord) {
+    enterPickView(
+      { lat: area.lat, lng: area.lng },
+      { kind: 'area', areaId: area.id },
+      'push',
+    );
   }
 
   async function readLocation(timeoutMs: number, maximumAge = 0): Promise<Spot | null> {
@@ -567,13 +609,125 @@ export function PeakFinder() {
         navigator.geolocation.getCurrentPosition(
           (position) => resolve({ lat: position.coords.latitude, lng: position.coords.longitude }),
           () => reject(new Error('location')),
-          { enableHighAccuracy: true, maximumAge, timeout: timeoutMs },
+          { enableHighAccuracy: true, maximumAge: maximumAge, timeout: timeoutMs },
         );
       });
     } catch {
       return null;
     }
   }
+
+  async function resolveExploreLocation(): Promise<Spot | null> {
+    const timeoutMs = offlineMode ? OFFLINE_GEO_TIMEOUT_MS : ONLINE_GEO_TIMEOUT_MS;
+    const maxAge = offlineMode ? 120_000 : 0;
+    return readLocation(timeoutMs, maxAge);
+  }
+
+  async function applyUrlState(state: PeakFinderUrlState, opts?: { allowExploreAutoMotion?: boolean }) {
+    switch (state.kind) {
+      case 'start':
+        resetToStartState();
+        return;
+      case 'offline':
+        setStartNote(null);
+        setBanner(null);
+        setScreen('offline');
+        return;
+      case 'pick-map': {
+        setStartNote(null);
+        setBanner(null);
+        setError(null);
+        setLock({ locked: null, pending: null });
+        stopCamera();
+        setCameraOn(false);
+        setCameraNote(null);
+        stopGyroListening();
+        setGyroOn(false);
+        setScreen('pick-map');
+        setShowDragHint(true);
+        return;
+      }
+      case 'pick-view':
+        enterPickView(
+          { lat: state.lat, lng: state.lng },
+          { kind: 'pick-view', lat: state.lat, lng: state.lng },
+          'replace',
+        );
+        return;
+      case 'area': {
+        const areas = await listOfflineAreas();
+        const hit = areas.find((area) => area.id === state.areaId);
+        if (!hit) {
+          goToStart('replace');
+          return;
+        }
+        enterPickView(
+          { lat: hit.lat, lng: hit.lng },
+          { kind: 'area', areaId: state.areaId },
+          'replace',
+        );
+        return;
+      }
+      case 'explore': {
+        suppressExploreAutoMotionRef.current = !opts?.allowExploreAutoMotion;
+        setStartNote(null);
+        setBanner(null);
+        setError(null);
+        setShowDragHint(true);
+        setScreen('explore');
+        if (sensors) {
+          viewRef.current.pitch = 0;
+          viewRef.current.roll = 0;
+        }
+        const here = await resolveExploreLocation();
+        if (!here) {
+          goToStart('replace');
+          setStartNote(LOCATION_DENIED);
+          return;
+        }
+        const areas = await listOfflineAreas();
+        if (offlineExploreCheck(areas, here.lat, here.lng, offlineMode) === 'outside') {
+          goToStart('replace');
+          setStartOutsideSaved(true);
+          return;
+        }
+        setLock({ locked: here, pending: null });
+        return;
+      }
+    }
+  }
+
+  useEffect(() => {
+    if (!booted) return;
+    if (urlHydratedRef.current) return;
+    urlHydratedRef.current = true;
+    const search = window.location.search;
+    if (hasUnrecognizedPeakFinderSearch(search)) {
+      goToStart('replace');
+      return;
+    }
+    const parsed = parsePeakFinderSearch(search);
+    if (parsed.kind === 'start' && !search) return;
+    const frame = requestAnimationFrame(() => {
+      void applyUrlState(parsed);
+    });
+    return () => cancelAnimationFrame(frame);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- one-shot hydrate from URL
+  }, [booted]);
+
+  useEffect(() => {
+    const onPop = () => {
+      const search = window.location.search;
+      if (hasUnrecognizedPeakFinderSearch(search)) {
+        goToStart('replace');
+        return;
+      }
+      void applyUrlState(parsePeakFinderSearch(search));
+    };
+    window.addEventListener('popstate', onPop);
+    return () => window.removeEventListener('popstate', onPop);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- popstate applies latest navigation helpers
+  }, []);
 
   async function tryStartCamera(): Promise<boolean> {
     if (typeof OffscreenCanvas === 'undefined') {
@@ -597,6 +751,7 @@ export function PeakFinder() {
   }
 
   async function proceedExploreFrom(here: Spot) {
+    suppressExploreAutoMotionRef.current = false;
     if (sensors) {
       if (typeof OffscreenCanvas === 'undefined') {
         setError('This browser cannot draw the skyline. Use a current Safari or Chrome.');
@@ -608,17 +763,20 @@ export function PeakFinder() {
       const cameraOk = gyroOk ? await tryStartCamera() : false;
       setCameraOn(cameraOk);
       setLock({ locked: here, pending: null });
+      writePeakFinderUrl({ kind: 'explore' }, 'push');
       setScreen('explore');
     } else {
       setLock({ locked: here, pending: null });
       viewRef.current.heading = 0;
       viewRef.current.pitch = 0;
       viewRef.current.roll = 0;
+      writePeakFinderUrl({ kind: 'explore' }, 'push');
       setScreen('explore');
     }
   }
 
   async function beginExplore() {
+    suppressExploreAutoMotionRef.current = false;
     setStartNote(null);
     setStartOutsideSaved(false);
     setBanner(null);
@@ -647,6 +805,7 @@ export function PeakFinder() {
   function beginOffline() {
     setStartNote(null);
     setBanner(null);
+    writePeakFinderUrl({ kind: 'offline' }, 'push');
     setScreen('offline');
   }
 
@@ -664,16 +823,22 @@ export function PeakFinder() {
     setCameraNote(null);
     stopGyroListening();
     setGyroOn(false);
+    writePeakFinderUrl({ kind: 'pick-map' }, 'push');
     setScreen('pick-map');
     setShowDragHint(true);
   }
 
   function confirmPick() {
+    writePeakFinderUrl(
+      { kind: 'pick-view', lat: roundPeakFinderCoord(pin.lat), lng: roundPeakFinderCoord(pin.lng) },
+      'push',
+    );
     setScreen('pick-view');
   }
 
   async function toggleCamera() {
     if (!cameraOn) {
+      suppressExploreAutoMotionRef.current = false;
       const gyroOk = await enableGyroFromGesture();
       if (!gyroOk) {
         setCameraOn(false);
@@ -693,6 +858,7 @@ export function PeakFinder() {
       setGyroOn(false);
       return;
     }
+    suppressExploreAutoMotionRef.current = false;
     await enableGyroFromGesture();
   }
 
@@ -728,6 +894,7 @@ export function PeakFinder() {
 
   useEffect(() => {
     if (screen !== 'explore' || !sensors) return;
+    if (suppressExploreAutoMotionRef.current) return;
     const frame = requestAnimationFrame(() => {
       void tryAutoEnableGyro();
     });
@@ -784,7 +951,7 @@ export function PeakFinder() {
     return (
       <div className="h-full min-h-0 w-full">
         <PeakFinderOffline
-          onBack={goStart}
+          onBack={peakFinderBack}
           onSaved={() => void listOfflineAreas().then(setOfflineAreas)}
           onOpenSkyline={openSavedSkyline}
           onSaveComplete={completeOfflineSave}
@@ -864,7 +1031,7 @@ export function PeakFinder() {
                 <button
                   type="button"
                   className="retro-button retro-button-yellow min-h-9 self-start px-3 text-xs"
-                  onClick={() => openSavedSkyline({ lat: area.lat, lng: area.lng })}
+                  onClick={() => openOfflineAreaSkyline(area)}
                 >
                   Open skyline
                 </button>
@@ -894,7 +1061,7 @@ export function PeakFinder() {
           <SpotPicker
             lat={pin.lat}
             lng={pin.lng}
-            onBack={goStart}
+            onBack={peakFinderBack}
             onChange={(next) => setPin(next)}
           />
           {screen === 'pick-map' ? (
@@ -912,7 +1079,7 @@ export function PeakFinder() {
           {debugMode ? (
             <PeakFinderGyroDebug liveRef={gyroLiveRef} recorder={gyroRecorder} />
           ) : null}
-          {!showMap ? <PeakFinderBackButton onClick={goStart} /> : null}
+          {!showMap ? <PeakFinderBackButton onClick={peakFinderBack} /> : null}
           {showCamera ? (
             <CameraView
               stream={stream}
@@ -980,7 +1147,14 @@ export function PeakFinder() {
             onStartLineUp={showCamera && !liningUp ? startLineUp : null}
             onLineUpDone={showCamera && liningUp ? finishLineUp : null}
             onLineUpReset={showCamera && liningUp ? resetLineUp : null}
-            onChangeSpot={screen === 'pick-view' && stacked ? () => setScreen('pick-map') : null}
+            onChangeSpot={
+              screen === 'pick-view' && stacked
+                ? () => {
+                  writePeakFinderUrl({ kind: 'pick-map' }, 'push');
+                  setScreen('pick-map');
+                }
+                : null
+            }
             onSummit={payload?.onSummit ?? null}
           />
         </div>
