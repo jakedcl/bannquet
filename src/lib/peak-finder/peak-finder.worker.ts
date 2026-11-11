@@ -77,7 +77,7 @@ async function build(message: WorkerIn): Promise<void> {
     scope.postMessage({ type: 'error', message: 'Too many terrain tiles failed. Check the connection and try again.' });
     return;
   }
-  scope.postMessage({ type: 'progress', loaded: tiles.length, total: tiles.length, stage: 'Drawing the skyline' });
+  scope.postMessage({ type: 'progress', loaded: 0, total: 0, stage: 'Drawing the skyline…' });
   const heightAt = (lat: number, lng: number, distance: number) => sampleHeight(grids, lat, lng, distance) ?? 0;
   const eyeM = eyeHeightM(message.lat, message.lng, (lat, lng) => sampleHeight(grids, lat, lng, 0));
   const skyline = castSkyline(message.lat, message.lng, eyeM, heightAt, RAY_STEP_DEG);

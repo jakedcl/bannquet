@@ -40,6 +40,11 @@ const DEFAULT_PIN: Spot = { lat: MAP_CENTER.lat, lng: MAP_CENTER.lng };
 
 type Coverage = 'full' | 'partial' | 'none';
 
+type ProgressState =
+  | string
+  | { kind: 'terrain'; stage: string; loaded: number; total: number }
+  | { kind: 'skyline'; stage: string };
+
 export function PeakFinder() {
   const [booted, setBooted] = useState(false);
   const [phone, setPhone] = useState(false);
@@ -50,7 +55,7 @@ export function PeakFinder() {
   const [stream, setStream] = useState<MediaStream | null>(null);
   const [liveMessage, setLiveMessage] = useState<string | null>(null);
   const [payload, setPayload] = useState<SkylinePayload | null>(null);
-  const [progress, setProgress] = useState<string | null>(null);
+  const [progress, setProgress] = useState<ProgressState | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [coverage, setCoverage] = useState<Coverage>('full');
   const [attempt, setAttempt] = useState(0);
@@ -131,7 +136,11 @@ export function PeakFinder() {
       if (cancelled) return;
       const message = event.data;
       if (message.type === 'progress') {
-        setProgress(message.total > 0 ? `${message.stage} ${message.loaded} of ${message.total}` : message.stage);
+        if (message.total > 0) {
+          setProgress({ kind: 'terrain', stage: message.stage, loaded: message.loaded, total: message.total });
+        } else {
+          setProgress({ kind: 'skyline', stage: message.stage });
+        }
       } else if (message.type === 'result') {
         setPayload(message.payload);
         setProgress(null);
@@ -465,6 +474,13 @@ export function PeakFinder() {
   );
 }
 
+function progressLabel(progress: ProgressState | null): string | null {
+  if (!progress) return null;
+  if (typeof progress === 'string') return progress;
+  if (progress.kind === 'terrain') return `${progress.stage} ${progress.loaded} of ${progress.total}`;
+  return progress.stage;
+}
+
 function Status({
   progress,
   error,
@@ -475,7 +491,7 @@ function Status({
   declinationNote,
   onRetry,
 }: {
-  progress: string | null;
+  progress: ProgressState | null;
   error: string | null;
   coverage: Coverage;
   payload: SkylinePayload | null;
@@ -485,16 +501,25 @@ function Status({
   onRetry: () => void;
 }) {
   const text = error
-    ?? progress
+    ?? progressLabel(progress)
     ?? liveMessage
     ?? (unsure ? 'Compass unsure. Line up.' : null)
     ?? declinationNote
     ?? (coverage === 'none' ? 'Peak names for this spot are not in this build. The Northeast is loaded: NY, NJ, PA, CT, RI, MA, VT, NH, ME.' : null)
     ?? (payload && payload.peaks.length === 0 ? 'No named peaks are visible from here.' : null);
+  const skyline = !error && typeof progress === 'object' && progress?.kind === 'skyline';
   if (!text) return null;
   return (
     <div className="absolute left-1/2 top-2 z-20 w-[min(28rem,calc(100%-1rem))] -translate-x-1/2 bg-[#1a1a1a]/80 px-3 py-2 text-center text-sm font-bold leading-snug text-white" role="status">
       <p>{text}</p>
+      {skyline ? (
+        <div
+          className="relative mx-auto mt-2 h-2.5 w-full max-w-xs overflow-hidden border-2 border-[#ffc94d] bg-[#3d3d3d]"
+          aria-hidden="true"
+        >
+          <div className="h-full w-2/5 bg-[#ffc94d] motion-safe:animate-peak-finder-bar" />
+        </div>
+      ) : null}
       {error ? (
         <button type="button" className="retro-button mt-2 min-h-11 px-3 text-xs" onClick={onRetry}>Try again</button>
       ) : null}
