@@ -43,6 +43,7 @@ import { LineUpCaption } from './LineUp';
 import { RetroSwitch } from './RetroSwitch';
 import { SpotPicker } from './SpotPicker';
 import { PeakFinderOffline } from './PeakFinderOffline';
+import { PeakFinderBackButton } from './PeakFinderBackButton';
 import { registerPeakFinderServiceWorker } from '@/lib/peak-finder/register-sw';
 import { findAreaCovering, listOfflineAreas } from '@/lib/peak-finder/offline-areas-idb';
 import type { OfflineAreaRecord } from '@/lib/peak-finder/offline';
@@ -664,15 +665,7 @@ export function PeakFinder() {
           {debugMode ? (
             <PeakFinderGyroDebug liveRef={gyroLiveRef} recorder={gyroRecorder} />
           ) : null}
-          {!showMap ? (
-            <button
-              type="button"
-              className="retro-button absolute left-2 top-2 z-30 min-h-11 px-3 text-xs"
-              onClick={goStart}
-            >
-              Back
-            </button>
-          ) : null}
+          {!showMap ? <PeakFinderBackButton onClick={goStart} /> : null}
           {showCamera ? (
             <CameraView
               stream={stream}

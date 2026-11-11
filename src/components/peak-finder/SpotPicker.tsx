@@ -10,6 +10,7 @@ import {
   type StyleSpecification,
 } from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
+import { PEAK_FINDER_BACK_BUTTON_CLASS } from './PeakFinderBackButton';
 import {
   BASEMAP_ATTRIBUTION,
   USGS_IMAGERY_TOPO_TILES,
@@ -156,7 +157,7 @@ export function SpotPicker({
       <div ref={containerRef} className="h-full w-full" />
       <div className="pointer-events-none absolute left-2 right-14 top-2 z-20 flex flex-wrap items-center gap-2">
         {onBack ? (
-          <button type="button" className="retro-button pointer-events-auto min-h-11 shrink-0 px-3 text-xs" onClick={onBack}>
+          <button type="button" className={`${PEAK_FINDER_BACK_BUTTON_CLASS} pointer-events-auto shrink-0`} onClick={onBack}>
             Back
           </button>
         ) : null}

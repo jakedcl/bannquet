@@ -16,6 +16,7 @@ import {
 import { MAP_CENTER } from '@/lib/map';
 import type { Spot } from '@/lib/peak-finder/location';
 import { OfflineAreaPicker } from './OfflineAreaPicker';
+import { PeakFinderBackButton } from './PeakFinderBackButton';
 
 type OfflineStep = 'hub' | 'map' | 'downloading';
 
@@ -125,7 +126,9 @@ export function PeakFinderOffline({ onBack, onSaved, onOpenSkyline, onSaveComple
   }
 
   return (
-    <div className="flex h-full flex-col gap-4 overflow-y-auto bg-[#e7e1d4] px-6 py-6 text-[#1a1a1a]">
+    <div className="relative flex h-full min-h-0 flex-col bg-[#e7e1d4] text-[#1a1a1a]">
+      <PeakFinderBackButton onClick={onBack} />
+      <div className="flex flex-1 flex-col gap-4 overflow-y-auto px-6 pb-6 pt-12">
       <div className="text-center">
         <h2 className="text-lg font-bold text-[#2d5016]">Offline mode</h2>
         <p className="mt-2 text-sm leading-snug">
@@ -168,10 +171,8 @@ export function PeakFinderOffline({ onBack, onSaved, onOpenSkyline, onSaveComple
       ) : (
         <p className="text-center text-sm text-[#3d3d3d]">No saved areas yet.</p>
       )}
-      <button type="button" className="retro-button min-h-11 w-full text-sm" onClick={onBack}>
-        Back to start
-      </button>
       {error ? <p className="text-sm font-bold text-red-900">{error}</p> : null}
+      </div>
     </div>
   );
 }

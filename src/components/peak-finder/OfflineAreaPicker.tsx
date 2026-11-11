@@ -19,6 +19,7 @@ import {
 import { OFFLINE_MAX_RADIUS_M, OFFLINE_MIN_RADIUS_M } from '@/lib/peak-finder/constants';
 import { formatOfflineSize, offlineManifestResolved } from '@/lib/peak-finder/offline';
 import { boxFitsViewport, offlineSaveBounds } from '@/lib/peak-finder/offline-area-picker-map';
+import { PeakFinderBackButton } from './PeakFinderBackButton';
 
 setWorkerUrl('/maplibre-gl-worker.mjs');
 
@@ -336,9 +337,7 @@ export function OfflineAreaPicker({
       <div className="offline-area-picker-map relative min-h-0 w-full flex-1 basis-0 overflow-hidden">
         <div ref={containerRef} className="h-full w-full" />
         {dimPortal ? createPortal(<BoxSelectionOverlay box={box} />, dimPortal) : null}
-        <button type="button" className="retro-button absolute left-2 top-2 z-30 min-h-9 px-2 text-[11px]" onClick={onBack}>
-          Back
-        </button>
+        <PeakFinderBackButton onClick={onBack} />
         <p className="pointer-events-none absolute inset-x-8 bottom-2 z-20 text-center text-[10px] font-bold leading-tight text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)]">
           Pan the map — box = {radiusKm} km offline area
         </p>

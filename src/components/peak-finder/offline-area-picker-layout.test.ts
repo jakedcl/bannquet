@@ -16,4 +16,5 @@ test('OfflineAreaPicker map shell uses flex-1 basis-0 and h-full map container',
   assert.match(src, /scheduleFitWhenReady/);
   assert.match(src, /mountDimOverlayHost/);
   assert.match(src, /createPortal/);
+  assert.match(src, /PeakFinderBackButton/);
 });
