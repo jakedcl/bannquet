@@ -204,6 +204,19 @@ button, .retro-button {
   transform: translateX(1.35rem);
 }
 
+.retro-switch-compact .retro-switch-track {
+  width: 2.15rem;
+  height: 1.05rem;
+}
+
+.retro-switch-compact .retro-switch-thumb {
+  width: 0.8rem;
+}
+
+.retro-switch-compact.retro-switch-on .retro-switch-thumb {
+  transform: translateX(1.05rem);
+}
+
 .peak-finder-control,
 button[data-pf-control],
 [data-pf-control] {

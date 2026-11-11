@@ -11,6 +11,7 @@ export type SavedSpot = {
 
 export type Calibration = {
   headingOffset: number;
+  pitchOffset?: number;
   hfov: number | null;
 };
 
@@ -40,9 +41,13 @@ export function writeLast(spot: SavedSpot): void {
 
 export function readCalibration(): Calibration {
   const saved = readJson<Calibration>(CALIBRATION_KEY);
-  if (!saved || !Number.isFinite(saved.headingOffset)) return { headingOffset: 0, hfov: null };
+  if (!saved || !Number.isFinite(saved.headingOffset)) {
+    return { headingOffset: 0, pitchOffset: 0, hfov: null };
+  }
+  const pitchOffset = saved.pitchOffset != null && Number.isFinite(saved.pitchOffset) ? saved.pitchOffset : 0;
   return {
     headingOffset: saved.headingOffset,
+    pitchOffset,
     hfov: saved.hfov != null && Number.isFinite(saved.hfov) ? saved.hfov : null,
   };
 }

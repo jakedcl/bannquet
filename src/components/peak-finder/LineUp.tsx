@@ -7,7 +7,7 @@ export function LineUpCaption() {
       role="status"
     >
       <p className="text-sm leading-snug">
-        Drag the skyline to line it up with the real ridges. Pinch to zoom.
+        Drag in any direction to line up the skyline with the real ridges. Pinch to zoom.
       </p>
     </div>
   );

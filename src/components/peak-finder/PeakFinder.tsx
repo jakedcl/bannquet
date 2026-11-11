@@ -30,6 +30,7 @@ import {
 } from '@/lib/peak-finder/orientation';
 import type { SkylinePayload, WorkerOut } from '@/lib/peak-finder/payload';
 import { loadPeaksAround } from '@/lib/peak-finder/peaks';
+import { applyLineUpPitchOffset, clampLineUpPitchOffset } from '@/lib/peak-finder/line-up-offset';
 import { initialFov, readCalibration, writeCalibration } from '@/lib/peak-finder/storage';
 import { CameraView } from './CameraView';
 import { DesktopPan } from './DesktopPan';
@@ -98,6 +99,7 @@ export function PeakFinder() {
 
   const viewRef = useRef<ViewPose>({ heading: 0, pitch: 0, roll: 0, hfov: DEFAULT_HFOV_DEG });
   const offsetRef = useRef(0);
+  const pitchOffsetRef = useRef(0);
   const baseRef = useRef(0);
   const followRef = useRef(false);
   const streamRef = useRef<MediaStream | null>(null);
@@ -112,6 +114,7 @@ export function PeakFinder() {
   useEffect(() => {
     const calibration = readCalibration();
     offsetRef.current = calibration.headingOffset;
+    pitchOffsetRef.current = calibration.pitchOffset ?? 0;
     viewRef.current = {
       heading: 0,
       pitch: 0,
@@ -353,7 +356,10 @@ export function PeakFinder() {
         if (!followRef.current) return;
         baseRef.current = viewHeading(filtered.magnetic, declination, 0, 0);
         viewRef.current.heading = wrap360(baseRef.current + offsetRef.current);
-        viewRef.current.pitch = clampGyroViewPitch(filtered.pitch);
+        viewRef.current.pitch = applyLineUpPitchOffset(
+          clampGyroViewPitch(filtered.pitch),
+          pitchOffsetRef.current,
+        );
         viewRef.current.roll = filtered.roll;
         const unsure = compassUnsure(lastAccuracy, lastJump);
         if (unsure !== unsureRef.current) {
@@ -580,18 +586,24 @@ export function PeakFinder() {
 
   function onLook(headingDelta: number, pitchDelta: number, fovScale: number) {
     const panOnly = !followRef.current && !liningUp;
-    const pitch = panOnly ? 0 : pitchDelta;
     if (liningUp && screen === 'explore' && stream) {
       offsetRef.current += headingDelta;
       viewRef.current.heading = wrap360(baseRef.current + offsetRef.current);
-    } else if (!followRef.current) {
-      viewRef.current.heading = wrap360(viewRef.current.heading + headingDelta);
+      pitchOffsetRef.current = clampLineUpPitchOffset(pitchOffsetRef.current + pitchDelta);
+      if (!followRef.current) {
+        viewRef.current.pitch = applyLineUpPitchOffset(0, pitchOffsetRef.current);
+      }
+    } else {
+      const pitch = panOnly ? 0 : pitchDelta;
+      if (!followRef.current) {
+        viewRef.current.heading = wrap360(viewRef.current.heading + headingDelta);
+      }
+      viewRef.current.pitch = Math.min(35, Math.max(-20, viewRef.current.pitch + pitch));
     }
-    viewRef.current.pitch = Math.min(35, Math.max(-20, viewRef.current.pitch + pitch));
     if (fovScale !== 1) {
       viewRef.current.hfov = Math.min(MAX_HFOV_DEG, Math.max(MIN_HFOV_DEG, viewRef.current.hfov / fovScale));
     }
-    if (headingDelta !== 0 || pitch !== 0) setShowDragHint(false);
+    if (headingDelta !== 0 || pitchDelta !== 0) setShowDragHint(false);
   }
 
   const lookRef = useRef(onLook);
@@ -604,7 +616,11 @@ export function PeakFinder() {
 
   function finishLineUp() {
     setLiningUp(false);
-    writeCalibration({ headingOffset: offsetRef.current, hfov: viewRef.current.hfov });
+    writeCalibration({
+      headingOffset: offsetRef.current,
+      pitchOffset: pitchOffsetRef.current,
+      hfov: viewRef.current.hfov,
+    });
   }
 
   function toggleLineUp() {
@@ -809,7 +825,6 @@ export function PeakFinder() {
             cameraOn={cameraOn}
             gyroOn={gyroOn}
             gyroLocked={screen === 'explore' && cameraOn}
-            hasCamera={showCamera}
             onCamera={() => void toggleCamera()}
             onGyro={() => void toggleGyro()}
             liningUp={liningUp}
@@ -889,7 +904,6 @@ function Controls({
   cameraOn,
   gyroOn,
   gyroLocked,
-  hasCamera,
   onCamera,
   onGyro,
   liningUp,
@@ -903,7 +917,6 @@ function Controls({
   cameraOn: boolean;
   gyroOn: boolean;
   gyroLocked: boolean;
-  hasCamera: boolean;
   onCamera: () => void;
   onGyro: () => void;
   liningUp: boolean;
@@ -912,64 +925,87 @@ function Controls({
   coverageNote: string | null;
   onSummit: { name: string; elevationM: number } | null;
 }) {
-  const onCameraUi = hasCamera;
+  const [infoOpen, setInfoOpen] = useState(false);
   const showCameraToggle = sensors && screen === 'explore';
   const showGyro = sensors && (screen === 'explore' || screen === 'pick-view');
   return (
-    <div className="peak-finder-controls pointer-events-none absolute inset-x-0 bottom-0 z-40 px-2 pb-2 text-[#1a1a1a]">
+    <div className="peak-finder-controls pointer-events-none absolute inset-x-0 bottom-0 z-40 px-2 pb-1.5 text-[#1a1a1a]">
       <div
-        className="pointer-events-auto mx-auto flex max-w-3xl flex-col gap-1"
+        className="pointer-events-auto relative mx-auto w-full max-w-3xl"
+        style={{ touchAction: 'manipulation' }}
         onPointerDown={(event) => event.stopPropagation()}
       >
-        <div className="flex flex-wrap items-center gap-3">
-          {showCameraToggle ? (
-            <RetroSwitch
-              label="Camera"
-              checked={cameraOn}
-              onChange={(next) => {
-                if (next !== cameraOn) onCamera();
-              }}
-            />
-          ) : null}
-          {showGyro ? (
-            <RetroSwitch
-              label="Gyro"
-              checked={gyroOn || gyroLocked}
-              disabled={gyroLocked}
-              onChange={(next) => {
-                if (next !== gyroOn) onGyro();
-              }}
-            />
-          ) : null}
-          {onLineUp ? (
-            <button
-              type="button"
-              data-pf-control
-              className="peak-finder-control retro-button min-h-11 px-3 text-xs text-[#1a1a1a]"
-              onClick={onLineUp}
-            >
-              {liningUp ? 'Done' : 'Line up'}
-            </button>
-          ) : null}
-          {onChangeSpot ? (
-            <button
-              type="button"
-              data-pf-control
-              className="peak-finder-control retro-button min-h-11 px-3 text-xs text-[#1a1a1a]"
-              onClick={onChangeSpot}
-            >
-              Change spot
-            </button>
-          ) : null}
-        </div>
         {onSummit ? (
-          <p className={`text-sm font-bold leading-snug ${onCameraUi ? 'bg-black/55 px-1 text-white' : ''}`}>
+          <p className="pointer-events-none absolute inset-x-0 bottom-full mb-0.5 truncate px-0.5 text-[10px] font-bold leading-tight text-[#1a1a1a] drop-shadow-[0_0_2px_rgba(231,225,212,0.9)]">
             You&apos;re on: {onSummit.name}, {formatFeet(onSummit.elevationM)}
           </p>
         ) : null}
-        {coverageNote ? <p className={`text-[11px] leading-snug ${onCameraUi ? 'bg-black/55 px-1 text-white' : ''}`}>{coverageNote}</p> : null}
-        <p className={`text-[11px] leading-snug ${onCameraUi ? 'bg-black/55 px-1 text-white' : ''}`}>{PEAK_CREDITS}</p>
-        <p className={`text-[11px] leading-snug ${onCameraUi ? 'bg-black/55 px-1 text-white' : ''}`}>{BARE_EARTH_NOTE}</p>
+        {infoOpen ? (
+          <div
+            className="absolute inset-x-0 bottom-full z-50 mb-1 max-h-32 overflow-y-auto rounded border border-[#5c3a1e]/40 bg-[#e7e1d4]/97 px-2 py-1.5 text-[10px] leading-snug text-[#1a1a1a] shadow-[0_2px_10px_rgba(0,0,0,0.25)]"
+            role="dialog"
+            aria-label="Peak finder notes"
+          >
+            {coverageNote ? <p className="mb-1">{coverageNote}</p> : null}
+            <p className={coverageNote ? 'mb-1' : ''}>{PEAK_CREDITS}</p>
+            <p>{BARE_EARTH_NOTE}</p>
+          </div>
+        ) : null}
+        <div className="flex items-stretch gap-1.5 rounded border border-[#5c3a1e]/45 bg-[#e7e1d4]/90 px-1.5 py-1 shadow-[0_2px_8px_rgba(0,0,0,0.22)] backdrop-blur-[2px]">
+          <div className="flex min-w-0 flex-1 flex-nowrap items-center gap-1.5 overflow-x-auto">
+            {showCameraToggle ? (
+              <RetroSwitch
+                compact
+                label="Cam"
+                checked={cameraOn}
+                onChange={(next) => {
+                  if (next !== cameraOn) onCamera();
+                }}
+              />
+            ) : null}
+            {showGyro ? (
+              <RetroSwitch
+                compact
+                label="Gyro"
+                checked={gyroOn || gyroLocked}
+                disabled={gyroLocked}
+                onChange={(next) => {
+                  if (next !== gyroOn) onGyro();
+                }}
+              />
+            ) : null}
+            {onLineUp ? (
+              <button
+                type="button"
+                data-pf-control
+                className="peak-finder-control retro-button min-h-8 shrink-0 px-2 py-0 text-[10px] font-bold text-[#1a1a1a]"
+                onClick={onLineUp}
+              >
+                {liningUp ? 'Done' : 'Line up'}
+              </button>
+            ) : null}
+            {onChangeSpot ? (
+              <button
+                type="button"
+                data-pf-control
+                className="peak-finder-control retro-button min-h-8 shrink-0 px-2 py-0 text-[10px] font-bold text-[#1a1a1a]"
+                onClick={onChangeSpot}
+              >
+                Change spot
+              </button>
+            ) : null}
+          </div>
+          <button
+            type="button"
+            data-pf-control
+            className="peak-finder-control retro-button min-h-8 w-8 shrink-0 px-0 text-[11px] font-bold text-[#1a1a1a]"
+            aria-expanded={infoOpen}
+            aria-label={infoOpen ? 'Hide peak finder notes' : 'Show peak finder notes'}
+            onClick={() => setInfoOpen((open) => !open)}
+          >
+            i
+          </button>
+        </div>
       </div>
     </div>
   );
