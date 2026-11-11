@@ -207,13 +207,16 @@ function paint(
   if (!payload) return;
   const step = payload.stepDeg;
   for (const layer of payload.layers) {
-    strokeAngles(ctx, layer.angleDeg, step, pose, width, height, appearance === 'camera' ? 'rgba(255,255,255,0.7)' : 'rgba(92,58,30,0.55)', 1.25);
+    const ridge = appearance === 'camera' ? 'rgba(255,255,255,0.7)' : 'rgba(92,58,30,0.55)';
+    const ridgeHidden = appearance === 'camera' ? 'rgba(255,255,255,0.45)' : 'rgba(92,58,30,0.32)';
+    strokeAngles(ctx, layer.angleDeg, step, pose, width, height, ridge, 1.25, false);
+    strokeAngles(ctx, layer.hiddenAngleDeg, step, pose, width, height, ridgeHidden, 1.1, true);
   }
   if (appearance === 'camera') {
-    strokeAngles(ctx, payload.angleDeg, step, pose, width, height, 'rgba(0,0,0,0.75)', 3.5);
-    strokeAngles(ctx, payload.angleDeg, step, pose, width, height, '#ffffff', 1.5);
+    strokeAngles(ctx, payload.angleDeg, step, pose, width, height, 'rgba(0,0,0,0.75)', 3.5, false);
+    strokeAngles(ctx, payload.angleDeg, step, pose, width, height, '#ffffff', 1.5, false);
   } else {
-    strokeAngles(ctx, payload.angleDeg, step, pose, width, height, '#5c3a1e', 1.75);
+    strokeAngles(ctx, payload.angleDeg, step, pose, width, height, '#5c3a1e', 1.75, false);
   }
 }
 
@@ -240,16 +243,24 @@ function strokeAngles(
   height: number,
   color: string,
   lineWidth: number,
+  dashed: boolean,
 ) {
   ctx.beginPath();
   ctx.strokeStyle = color;
   ctx.lineWidth = lineWidth;
   ctx.lineJoin = 'round';
   ctx.lineCap = 'round';
+  ctx.setLineDash(dashed ? [5, 5] : []);
   let drawing = false;
+  let started = false;
   for (let i = 0; i < angles.length; i += 1) {
     const angle = angles[i];
     if (!Number.isFinite(angle)) {
+      if (started) {
+        ctx.stroke();
+        ctx.beginPath();
+        started = false;
+      }
       drawing = false;
       continue;
     }
@@ -259,6 +270,8 @@ function strokeAngles(
     if (!drawing || !onScreen) ctx.moveTo(point.x, point.y);
     else ctx.lineTo(point.x, point.y);
     drawing = onScreen;
+    started = true;
   }
-  ctx.stroke();
+  if (started) ctx.stroke();
+  ctx.setLineDash([]);
 }

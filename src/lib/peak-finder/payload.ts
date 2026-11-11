@@ -5,7 +5,12 @@ export type SkylinePayload = {
   stepDeg: number;
   angleDeg: number[];
   distanceM: number[];
-  layers: { angleDeg: number[]; distanceM: number[] }[];
+  layers: {
+    angleDeg: number[];
+    distanceM: number[];
+    hiddenAngleDeg: number[];
+    hiddenDistanceM: number[];
+  }[];
   peaks: VisiblePeak[];
   onSummit: { name: string; elevationM: number } | null;
 };

@@ -148,16 +148,16 @@ function assertFrontRidgeView(
   const skyline = castSkyline(origin.lat, origin.lng, eyeM, (lat, lng, metres) => sample(lat, lng, metres) ?? 0, RAY_STEP_DEG);
   const view = viewProfile(skyline);
   let frontSamples = 0;
+  const countBandPoint = (angle: number, distance: number, index: number) => {
+    if (!Number.isFinite(angle) || !Number.isFinite(distance)) return;
+    const bearing = index * skyline.stepDeg;
+    if (Math.abs(wrap180(bearing - 270)) > DEFAULT_HFOV_DEG / 2) return;
+    const sky = skyline.rays[index].angleDeg[skyline.rays[index].skylineIndex];
+    if (sky - angle >= 0.4) frontSamples += 1;
+  };
   for (const layer of view.layers) {
-    layer.angleDeg.forEach((angle, index) => {
-      if (!Number.isFinite(angle)) return;
-      const bearing = index * skyline.stepDeg;
-      if (Math.abs(wrap180(bearing - 270)) > DEFAULT_HFOV_DEG / 2) return;
-      const distance = layer.distanceM[index];
-      if (!Number.isFinite(distance)) return;
-      const sky = skyline.rays[index].angleDeg[skyline.rays[index].skylineIndex];
-      if (sky - angle >= 0.4) frontSamples += 1;
-    });
+    layer.angleDeg.forEach((angle, index) => countBandPoint(angle, layer.distanceM[index], index));
+    layer.hiddenAngleDeg.forEach((angle, index) => countBandPoint(angle, layer.hiddenDistanceM[index], index));
   }
   assert.ok(frontSamples > 30, `front ridge samples in the west view: ${frontSamples}`);
   const raised = peaks.flatMap((peak) => {
@@ -235,6 +235,12 @@ test('from Mount Colden, Marcy\'s ridgeline shapes the skyline toward Marcy', as
   assert.ok(horizon > 2, `horizon toward Marcy ${horizon.toFixed(2)}°`);
   assert.ok(metres >= 1_500 && metres < 5_000, `defining distance ${Math.round(metres)} m`);
   assert.ok(view.angleDeg[index] > 1.5, `drawn toward Marcy ${view.angleDeg[index].toFixed(2)}°`);
+  for (const layer of view.layers) {
+    if (Number.isFinite(layer.angleDeg[index])) {
+      assert.ok(!Number.isFinite(layer.hiddenAngleDeg[index]), 'visible band toward Marcy stays solid');
+      assert.ok(layer.angleDeg[index] > 0.5, `solid layer toward Marcy ${layer.angleDeg[index].toFixed(2)}°`);
+    }
+  }
 });
 
 test('front ridges are drawn and labeled at default zoom from Marcy and Lower Ausable Lake', async () => {

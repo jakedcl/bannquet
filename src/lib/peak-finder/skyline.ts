@@ -1,5 +1,5 @@
 import { apparentElevationDeg, destination } from './geo';
-import { MAX_DISTANCE_M, RAY_STEP_DEG } from './constants';
+import { MAX_DISTANCE_M, RAY_STEP_DEG, VISIBLE_TOLERANCE_DEG } from './constants';
 
 export type HeightAt = (lat: number, lng: number, distanceM: number) => number;
 
@@ -180,6 +180,29 @@ export function skylineDistance(ray: RayProfile): number {
  * Highest apparent angle of terrain in front of a summit.
  * The summit's own slopes, inside `selfM` of the peak, are not an occluder.
  */
+/** Highest apparent angle on the ray strictly closer than `beforeDistanceM`. */
+export function maxAngleBeforeDistance(ray: RayProfile, beforeDistanceM: number, ignoreUnderM = 60): number {
+  let best = -90;
+  let found = false;
+  for (let i = 0; i < ray.count; i += 1) {
+    const sample = ray.distanceM[i];
+    if (sample < ignoreUnderM || sample >= beforeDistanceM) continue;
+    found = true;
+    if (ray.angleDeg[i] > best) best = ray.angleDeg[i];
+  }
+  return found ? best : -90;
+}
+
+export function ridgePointVisible(
+  ray: RayProfile,
+  sampleDistanceM: number,
+  sampleAngleDeg: number,
+  toleranceDeg = VISIBLE_TOLERANCE_DEG,
+): boolean {
+  const occluder = maxAngleBeforeDistance(ray, sampleDistanceM);
+  return sampleAngleDeg >= occluder - toleranceDeg;
+}
+
 export function angleBefore(ray: RayProfile, distance: number, selfM = 300): number {
   const far = distance - selfM;
   let best = -90;
@@ -205,7 +228,12 @@ export function angleBeyond(ray: RayProfile, distance: number): number {
   return found ? best : -89;
 }
 
-export type DrawnLayer = { angleDeg: number[]; distanceM: number[] };
+export type DrawnLayer = {
+  angleDeg: number[];
+  distanceM: number[];
+  hiddenAngleDeg: number[];
+  hiddenDistanceM: number[];
+};
 
 export type DrawnProfile = {
   angleDeg: number[];
@@ -227,6 +255,8 @@ const RIDGE_PROMINENCE_DEG = 0.55;
 const SKYLINE_GAP_DEG = 0.55;
 const LAYER_GAP_DEG = 0.4;
 const MIN_RUN_DEG = 6;
+const HIDDEN_MIN_RUN_DEG = 8;
+export const RIDGE_OCCLUSION_TOLERANCE_DEG = VISIBLE_TOLERANCE_DEG;
 /**
  * A line this close to flat eye-level is the ground meeting the sky, which the
  * fill already draws. A ridge above that, or one you look down on from a summit,
@@ -286,6 +316,7 @@ function fillShortGaps(angleDeg: number[], distanceM: number[], stepDeg: number)
       && Math.abs(left - right) < 1
       && Number.isFinite(leftDistance)
       && Number.isFinite(rightDistance)
+      && Math.abs(leftDistance - rightDistance) < Math.max(leftDistance, rightDistance) * 0.35
     ) {
       for (let step = 0; step < gap; step += 1) {
         const t = (step + 1) / (gap + 1);
@@ -298,8 +329,8 @@ function fillShortGaps(angleDeg: number[], distanceM: number[], stepDeg: number)
   }
 }
 
-function dropShortRuns(angleDeg: number[], distanceM: number[], stepDeg: number) {
-  const minRun = Math.max(3, Math.round(MIN_RUN_DEG / stepDeg));
+function dropShortRuns(angleDeg: number[], distanceM: number[], stepDeg: number, minRunDeg = MIN_RUN_DEG) {
+  const minRun = Math.max(3, Math.round(minRunDeg / stepDeg));
   const count = angleDeg.length;
   if (angleDeg.every((value) => Number.isFinite(value))) return;
   const clear = (start: number, length: number) => {
@@ -351,7 +382,36 @@ function bandLayer(skyline: Skyline, min: number, max: number): DrawnLayer {
     angleDeg[index] = best;
     distanceM[index] = bestDistance;
   });
-  return { angleDeg, distanceM };
+  return {
+    angleDeg,
+    distanceM,
+    hiddenAngleDeg: angleDeg.map(() => Number.NaN),
+    hiddenDistanceM: distanceM.map(() => Number.NaN),
+  };
+}
+
+export function splitOccludedBands(skyline: Skyline, layer: DrawnLayer): DrawnLayer {
+  const hiddenAngleDeg = layer.angleDeg.map(() => Number.NaN);
+  const hiddenDistanceM = layer.distanceM.map(() => Number.NaN);
+  const visibleAngleDeg = layer.angleDeg.slice();
+  const visibleDistanceM = layer.distanceM.slice();
+  for (let index = 0; index < layer.angleDeg.length; index += 1) {
+    const angle = layer.angleDeg[index];
+    if (!Number.isFinite(angle)) continue;
+    const distance = layer.distanceM[index];
+    const ray = skyline.rays[index];
+    if (ridgePointVisible(ray, distance, angle)) continue;
+    visibleAngleDeg[index] = Number.NaN;
+    visibleDistanceM[index] = Number.NaN;
+    hiddenAngleDeg[index] = angle;
+    hiddenDistanceM[index] = distance;
+  }
+  return {
+    angleDeg: visibleAngleDeg,
+    distanceM: visibleDistanceM,
+    hiddenAngleDeg,
+    hiddenDistanceM,
+  };
 }
 
 /**
@@ -370,30 +430,40 @@ export function viewProfile(skyline: Skyline): DrawnProfile {
   const layerRadius = Math.max(1, Math.round(LAYER_SMOOTH_DEG / skyline.stepDeg));
   const layers = RIDGE_BANDS.map(([min, max]) => bandLayer(skyline, min, max));
   for (const layer of layers) {
+    Object.assign(layer, splitOccludedBands(skyline, layer));
+  }
+  for (const layer of layers) {
     fillShortGaps(layer.angleDeg, layer.distanceM, skyline.stepDeg);
     layer.angleDeg = smoothAngles(layer.angleDeg, layerRadius, true);
+    fillShortGaps(layer.hiddenAngleDeg, layer.hiddenDistanceM, skyline.stepDeg);
+    layer.hiddenAngleDeg = smoothAngles(layer.hiddenAngleDeg, layerRadius, true);
   }
+  const clearBelowSkyline = (layer: DrawnLayer, angle: number, ray: number, angles: number[], distances: number[]) => {
+    if (!Number.isFinite(angle) || angleDeg[ray] - angle >= SKYLINE_GAP_DEG) return;
+    angles[ray] = Number.NaN;
+    distances[ray] = Number.NaN;
+  };
+  const clearIfSameAsNearer = (layer: DrawnLayer, angle: number, ray: number, angles: number[], distances: number[], nearer: DrawnLayer) => {
+    const other = nearer.angleDeg[ray];
+    if (!Number.isFinite(angle) || !Number.isFinite(other) || Math.abs(angle - other) >= LAYER_GAP_DEG) return;
+    angles[ray] = Number.NaN;
+    distances[ray] = Number.NaN;
+  };
   layers.forEach((layer, index) => {
-    layer.angleDeg.forEach((angle, ray) => {
-      if (!Number.isFinite(angle) || angleDeg[ray] - angle >= SKYLINE_GAP_DEG) return;
-      layer.angleDeg[ray] = Number.NaN;
-      layer.distanceM[ray] = Number.NaN;
-    });
+    layer.angleDeg.forEach((angle, ray) => clearBelowSkyline(layer, angle, ray, layer.angleDeg, layer.distanceM));
+    layer.hiddenAngleDeg.forEach((angle, ray) => clearBelowSkyline(layer, angle, ray, layer.hiddenAngleDeg, layer.hiddenDistanceM));
     for (const nearer of layers.slice(0, index)) {
-      layer.angleDeg.forEach((angle, ray) => {
-        const other = nearer.angleDeg[ray];
-        if (!Number.isFinite(angle) || !Number.isFinite(other) || Math.abs(angle - other) >= LAYER_GAP_DEG) return;
-        layer.angleDeg[ray] = Number.NaN;
-        layer.distanceM[ray] = Number.NaN;
-      });
+      layer.angleDeg.forEach((angle, ray) => clearIfSameAsNearer(layer, angle, ray, layer.angleDeg, layer.distanceM, nearer));
+      layer.hiddenAngleDeg.forEach((angle, ray) => clearIfSameAsNearer(layer, angle, ray, layer.hiddenAngleDeg, layer.hiddenDistanceM, nearer));
     }
     dropShortRuns(layer.angleDeg, layer.distanceM, skyline.stepDeg);
+    dropShortRuns(layer.hiddenAngleDeg, layer.hiddenDistanceM, skyline.stepDeg, HIDDEN_MIN_RUN_DEG);
   });
   return {
     angleDeg,
     distanceM,
     layers: layers.filter((layer) => {
-      const angles = layer.angleDeg.filter((angle) => Number.isFinite(angle));
+      const angles = [...layer.angleDeg, ...layer.hiddenAngleDeg].filter((angle) => Number.isFinite(angle));
       if (angles.length === 0) return false;
       const ordered = angles.slice().sort((a, b) => a - b);
       const median = ordered[Math.floor(ordered.length / 2)];
