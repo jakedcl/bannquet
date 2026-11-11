@@ -17,15 +17,14 @@ import { acceptMove, noteSample, type LockState, type Spot } from '@/lib/peak-fi
 import { MAP_CENTER } from '@/lib/map';
 import {
   compassUnsure,
+  createGyroSmoother,
   headingJump,
   magneticHeading,
-  pushSample,
   motionAllowed,
   requestMotionPermission,
   viewHeading,
   viewPitch,
   viewRoll,
-  circularMean,
 } from '@/lib/peak-finder/orientation';
 import type { SkylinePayload, WorkerOut } from '@/lib/peak-finder/payload';
 import { loadPeaksAround } from '@/lib/peak-finder/peaks';
@@ -78,6 +77,7 @@ export function PeakFinder() {
   const baseRef = useRef(0);
   const followRef = useRef(false);
   const streamRef = useRef<MediaStream | null>(null);
+  const unsureRef = useRef(false);
 
   const getView = useCallback(() => viewRef.current, []);
 
@@ -168,34 +168,53 @@ export function PeakFinder() {
   }, [booted, spotLat, spotLng, attempt]);
 
   useEffect(() => {
-    if (!followRef.current || !gyroOn) return;
-    let buffer: number[] = [];
-    let previous: number | null = null;
+    if (!gyroOn) return;
+    const smoother = createGyroSmoother();
+    const useAbsolute = typeof window !== 'undefined' && 'ondeviceorientationabsolute' in window;
+    const eventName = useAbsolute ? 'deviceorientationabsolute' : 'deviceorientation';
+    let frame = 0;
+    let queued = false;
+    let previousRaw: number | null = null;
+    let lastJump = 0;
+    let lastAccuracy: number | null | undefined;
     const onReading = (event: DeviceOrientationEvent) => {
       const extra = event as DeviceOrientationEvent & { webkitCompassHeading?: number; webkitCompassAccuracy?: number };
       const magnetic = magneticHeading({
         alpha: event.alpha,
         beta: event.beta,
         gamma: event.gamma,
-        absolute: event.absolute,
+        absolute: useAbsolute || event.absolute,
         webkitCompassHeading: extra.webkitCompassHeading,
       });
       if (magnetic == null || !followRef.current) return;
-      buffer = pushSample(buffer, magnetic);
-      const smooth = circularMean(buffer);
       const screenAngle = window.screen?.orientation?.angle ?? 0;
-      baseRef.current = viewHeading(smooth, declination, screenAngle, 0);
-      viewRef.current.heading = wrap360(baseRef.current + offsetRef.current);
-      viewRef.current.pitch = viewPitch(event.beta, event.gamma, screenAngle);
-      viewRef.current.roll = viewRoll(event.beta, event.gamma, screenAngle);
-      setUnsure(compassUnsure(extra.webkitCompassAccuracy, headingJump(previous, magnetic)));
-      previous = magnetic;
+      const pitchRaw = viewPitch(event.beta, event.gamma, screenAngle);
+      const rollRaw = viewRoll(event.beta, event.gamma, screenAngle);
+      const filtered = smoother.smooth(magnetic, pitchRaw, rollRaw, performance.now());
+      lastJump = headingJump(previousRaw, magnetic);
+      previousRaw = magnetic;
+      lastAccuracy = extra.webkitCompassAccuracy;
+      if (queued) return;
+      queued = true;
+      frame = requestAnimationFrame(() => {
+        queued = false;
+        if (!followRef.current) return;
+        baseRef.current = viewHeading(filtered.magnetic, declination, screenAngle, 0);
+        viewRef.current.heading = wrap360(baseRef.current + offsetRef.current);
+        viewRef.current.pitch = filtered.pitch;
+        viewRef.current.roll = filtered.roll;
+        const unsure = compassUnsure(lastAccuracy, lastJump);
+        if (unsure !== unsureRef.current) {
+          unsureRef.current = unsure;
+          setUnsure(unsure);
+        }
+      });
     };
-    window.addEventListener('deviceorientationabsolute', onReading);
-    window.addEventListener('deviceorientation', onReading);
+    window.addEventListener(eventName, onReading);
     return () => {
-      window.removeEventListener('deviceorientationabsolute', onReading);
-      window.removeEventListener('deviceorientation', onReading);
+      window.removeEventListener(eventName, onReading);
+      cancelAnimationFrame(frame);
+      smoother.reset();
     };
   }, [gyroOn, declination]);
 

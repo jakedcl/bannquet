@@ -1,6 +1,16 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { compassUnsure, magneticHeading, motionAllowed, viewHeading, viewPitch } from './orientation';
+import {
+  OneEuroFilter,
+  applyHeadingDeadZone,
+  compassUnsure,
+  createGyroSmoother,
+  magneticHeading,
+  motionAllowed,
+  portraitCompassHeading,
+  viewHeading,
+  viewPitch,
+} from './orientation';
 
 test('iPhone heading plus declination gives true north', () => {
   const magnetic = magneticHeading({ alpha: null, beta: 90, gamma: 0, webkitCompassHeading: 0 });
@@ -32,6 +42,33 @@ test('motion is allowed when granted or not applicable', () => {
   assert.equal(motionAllowed('unsupported'), true);
   assert.equal(motionAllowed('denied'), false);
   assert.equal(motionAllowed('unavailable'), false);
+});
+
+test('portrait compass falls back when gimbal-locked', () => {
+  assert.ok(Math.abs(portraitCompassHeading(120, 90, 0) - 240) < 0.01);
+});
+
+test('one euro filter smooths across the 359/0 wrap', () => {
+  const filter = new OneEuroFilter(1.2, 0.01, 1, true);
+  const a = filter.filter(358, 0);
+  filter.filter(359, 16);
+  const c = filter.filter(1, 32);
+  assert.ok(c < 90 || c > 270, String(c));
+  assert.ok(Math.abs(c - a) < 8, `drift ${a} to ${c}`);
+});
+
+test('heading dead zone holds still when noise is tiny', () => {
+  assert.equal(applyHeadingDeadZone(10, 10.2), 10);
+  assert.equal(applyHeadingDeadZone(359, 359.2), 359);
+});
+
+test('gyro smoother damps a single spike', () => {
+  const smoother = createGyroSmoother();
+  smoother.smooth(10, 0, 0, 0);
+  smoother.smooth(80, 0, 0, 20);
+  smoother.smooth(12, 0, 0, 40);
+  const settled = smoother.smooth(12, 0, 0, 280);
+  assert.ok(settled.magnetic < 20, String(settled.magnetic));
 });
 
 test('a poor iPhone accuracy reading is unsure', () => {
