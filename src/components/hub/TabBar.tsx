@@ -2,9 +2,8 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { viewerCanContribute } from '@/lib/membership';
 import type { NavAccount } from '@/lib/sections';
-import { MapIcon, ProfileIcon, UploadIcon, WeatherIcon } from './Icons';
+import { MapIcon, ProfileIcon, WeatherIcon } from './Icons';
 
 function CommunityIcon({ className }: { className?: string }) {
   return (
@@ -25,7 +24,6 @@ export function TabBar({ account }: { account: NavAccount }) {
     { id: 'map', href: '/', label: 'Map', icon: MapIcon },
     { id: 'trips', href: '/community', label: 'Community', icon: CommunityIcon },
   ];
-  if (viewerCanContribute(account)) tabs.push({ id: 'upload', href: '/upload', label: 'Upload', icon: UploadIcon });
   tabs.push(
     { id: 'weather', href: '/mountain-weather', label: 'Weather', icon: WeatherIcon },
     { id: 'profile', href: profileHref(account), label: account ? 'Profile' : 'Log in', icon: ProfileIcon },

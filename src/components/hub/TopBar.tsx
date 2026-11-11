@@ -7,12 +7,10 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { signOutAction } from '@/app/sign-in/actions';
 import { SubmitButton } from '@/components/ui/SubmitButton';
-import { viewerCanContribute } from '@/lib/membership';
 import {
   COMMUNITY_LINKS,
   FISHING_LINKS,
   PEAK_FINDER_LINK,
-  UPLOAD_LINKS,
   communitySection,
   pathOn,
   settingsLinks,
@@ -47,7 +45,6 @@ function PendingBadge({ count }: { count?: number }) {
 export function TopBar({ account }: { account: BarAccount }) {
   const pathname = usePathname();
   const tab = activeTab(pathname, account);
-  const canUpload = viewerCanContribute(account);
   const [moreOn, setMoreOn] = useState<string | null>(null);
   const moreOpen = moreOn === pathname;
 
@@ -71,11 +68,6 @@ export function TopBar({ account }: { account: BarAccount }) {
               <MenuLinks links={COMMUNITY_LINKS} />
             </Menu>
           </nav>
-          {canUpload ? (
-            <Menu label="Upload" active={tab === 'upload'} align="right">
-              <MenuLinks links={UPLOAD_LINKS} />
-            </Menu>
-          ) : null}
           {account ? (
             <Menu
               align="right"
