@@ -36,6 +36,7 @@ import { DesktopPan } from './DesktopPan';
 import { DrawnView } from './DrawnView';
 import { LineUp } from './LineUp';
 import { PeakCard } from './PeakCard';
+import { RetroSwitch } from './RetroSwitch';
 import { SpotPicker } from './SpotPicker';
 import type { ViewPose } from './SkylineStage';
 
@@ -523,6 +524,7 @@ export function PeakFinder() {
             screen={screen}
             cameraOn={cameraOn}
             gyroOn={gyroOn}
+            gyroLocked={screen === 'explore' && cameraOn}
             hasCamera={showCamera}
             onCamera={() => void toggleCamera()}
             onGyro={() => void toggleGyro()}
@@ -601,6 +603,7 @@ function Controls({
   screen,
   cameraOn,
   gyroOn,
+  gyroLocked,
   hasCamera,
   onCamera,
   onGyro,
@@ -613,6 +616,7 @@ function Controls({
   screen: Screen;
   cameraOn: boolean;
   gyroOn: boolean;
+  gyroLocked: boolean;
   hasCamera: boolean;
   onCamera: () => void;
   onGyro: () => void;
@@ -627,26 +631,25 @@ function Controls({
   return (
     <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 px-2 pb-2 text-[#1a1a1a]">
       <div className="pointer-events-auto mx-auto flex max-w-3xl flex-col gap-1">
-        <div className="flex flex-wrap gap-1.5">
+        <div className="flex flex-wrap items-center gap-3">
           {showCameraToggle ? (
-            <button
-              type="button"
-              className="retro-button min-h-11 px-3 text-xs text-[#1a1a1a]"
-              aria-pressed={cameraOn}
-              onClick={onCamera}
-            >
-              Camera
-            </button>
+            <RetroSwitch
+              label="Camera"
+              checked={cameraOn}
+              onChange={(next) => {
+                if (next !== cameraOn) onCamera();
+              }}
+            />
           ) : null}
           {showGyro ? (
-            <button
-              type="button"
-              className="retro-button min-h-11 px-3 text-xs text-[#1a1a1a]"
-              aria-pressed={gyroOn}
-              onClick={onGyro}
-            >
-              Gyro
-            </button>
+            <RetroSwitch
+              label="Gyro"
+              checked={gyroOn || gyroLocked}
+              disabled={gyroLocked}
+              onChange={(next) => {
+                if (next !== gyroOn) onGyro();
+              }}
+            />
           ) : null}
           {onLineUp ? (
             <button type="button" className="retro-button min-h-11 px-3 text-xs text-[#1a1a1a]" onClick={onLineUp}>Line up</button>
