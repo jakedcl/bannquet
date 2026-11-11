@@ -40,6 +40,14 @@ const USGS_SPOT_ATTRIBUTION = 'Map and imagery: USGS National Map (public domain
 const SATELLITE_STYLE = rasterStyle(USGS_IMAGERY_TOPO_TILES, USGS_SPOT_ATTRIBUTION);
 const TOPO_STYLE = rasterStyle(USGS_TOPO_TILES, BASEMAP_ATTRIBUTION.topo);
 
+/** MapLibre opens compact attribution on wide canvases; keep the (i) only until tap. */
+function collapseAttribution(map: MlMap) {
+  const el = map.getContainer().querySelector('.maplibregl-ctrl-attrib');
+  if (el?.classList.contains('maplibregl-compact')) {
+    el.classList.remove('maplibregl-compact-show');
+  }
+}
+
 function BasemapToggle({
   basemap,
   onBasemap,
@@ -103,6 +111,10 @@ export function SpotPicker({
     });
     map.addControl(new NavigationControl({ visualizePitch: false }), 'top-right');
     map.addControl(new AttributionControl({ compact: true }), 'top-right');
+    const syncAttribution = () => collapseAttribution(map);
+    map.on('load', syncAttribution);
+    map.on('resize', syncAttribution);
+    requestAnimationFrame(syncAttribution);
     const marker = new Marker({ color: '#ffb300' }).setLngLat([lng, lat]).addTo(map);
     markerRef.current = marker;
     mapRef.current = map;
@@ -116,6 +128,8 @@ export function SpotPicker({
     const frame = requestAnimationFrame(() => map.resize());
     return () => {
       cancelAnimationFrame(frame);
+      map.off('load', syncAttribution);
+      map.off('resize', syncAttribution);
       observer.disconnect();
       markerRef.current = null;
       mapRef.current = null;
@@ -130,6 +144,7 @@ export function SpotPicker({
     if (!map || basemapRef.current === basemap) return;
     basemapRef.current = basemap;
     map.setStyle(basemap === 'satellite' ? SATELLITE_STYLE : TOPO_STYLE);
+    map.once('idle', () => collapseAttribution(map));
   }, [basemap]);
 
   useEffect(() => {
