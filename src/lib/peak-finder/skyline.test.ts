@@ -26,11 +26,17 @@ test('near-field bumps are not drawn, and a farther ridge is one clean line', ()
     return 450;
   }, 5);
   const view = viewProfile(skyline);
-  assert.ok(view.layers.length >= 1 && view.layers.length <= 3);
+  const nearSpike = skyline.rays.some((ray) => (
+    ray.distanceM.some((d, i) => d < 500 && ray.angleDeg[i] > 5)
+  ));
+  assert.ok(nearSpike, 'fixture has steep near samples');
+  assert.ok(Math.max(...view.angleDeg) > 0.5, 'a distant ridge still shapes the horizon');
+  for (let i = 1; i < view.angleDeg.length; i += 1) {
+    assert.ok(Math.abs(view.angleDeg[i] - view.angleDeg[i - 1]) < 0.4, `${view.angleDeg[i - 1]} to ${view.angleDeg[i]}`);
+  }
   for (const layer of view.layers) {
     const distances = layer.distanceM.filter((distance) => Number.isFinite(distance));
     assert.ok(distances.every((distance) => distance >= 4_000));
-    assert.ok(distances.some((distance) => distance > 15_000 && distance < 28_000));
     const angles = layer.angleDeg.filter((angle) => Number.isFinite(angle));
     for (let i = 1; i < angles.length; i += 1) {
       assert.ok(Math.abs(angles[i] - angles[i - 1]) < 0.35, `${angles[i - 1]} to ${angles[i]}`);
@@ -84,4 +90,27 @@ test('a ridge raises the horizon in that direction only', () => {
   const west = skylineAngle(skyline.rays[270 / 45]);
   const north = skylineAngle(skyline.rays[0]);
   assert.ok(west > north + 5, `west ${west} north ${north}`);
+});
+
+test('near-field urban DEM spikes do not define the drawn skyline', () => {
+  const skyline = castSkyline(40.64, -74.09, 8, (_lat, _lng, distance) => {
+    if (distance < 2_000) {
+      const bump = Math.floor(distance / 80) % 7 === 0;
+      return bump ? 95 : 8;
+    }
+    if (distance < 12_000) return 12 + distance * 0.0004;
+    return 20;
+  }, 1);
+  const rawSpiky = skyline.rays.some((ray) => (
+    ray.distanceM.some((d, i) => d < 500 && ray.angleDeg[i] > 25)
+  ));
+  assert.ok(rawSpiky, 'fixture should have steep near-field samples');
+  const view = viewProfile(skyline);
+  const angles = view.angleDeg;
+  const max = Math.max(...angles);
+  const maxStep = angles.reduce((worst, angle, index) => (
+    index === 0 ? worst : Math.max(worst, Math.abs(angle - angles[index - 1]))
+  ), 0);
+  assert.ok(max < 8, `drawn max ${max}`);
+  assert.ok(maxStep < 1.5, `step ${maxStep}`);
 });

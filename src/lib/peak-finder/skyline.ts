@@ -82,12 +82,33 @@ export function rayAt(skyline: Skyline, bearing: number): RayProfile {
   return skyline.rays[index];
 }
 
-export function skylineAngle(ray: RayProfile): number {
-  return ray.angleDeg[ray.skylineIndex] ?? -90;
+/** Horizon bearing: highest angle at or beyond `HORIZON_MIN_DISTANCE_M` (not underfoot DEM noise). */
+export function skylineAngle(ray: RayProfile, minDistanceM = HORIZON_MIN_DISTANCE_M): number {
+  let best = -90;
+  let found = false;
+  for (let i = 0; i < ray.count; i += 1) {
+    if (ray.distanceM[i] < minDistanceM) continue;
+    found = true;
+    if (ray.angleDeg[i] > best) best = ray.angleDeg[i];
+  }
+  if (!found) return ray.angleDeg[ray.skylineIndex] ?? -90;
+  return best;
 }
 
-export function skylineDistance(ray: RayProfile): number {
-  return ray.distanceM[ray.skylineIndex] ?? 0;
+export function skylineDistance(ray: RayProfile, minDistanceM = HORIZON_MIN_DISTANCE_M): number {
+  let best = -90;
+  let bestDistance = 0;
+  let found = false;
+  for (let i = 0; i < ray.count; i += 1) {
+    if (ray.distanceM[i] < minDistanceM) continue;
+    found = true;
+    if (ray.angleDeg[i] > best) {
+      best = ray.angleDeg[i];
+      bestDistance = ray.distanceM[i];
+    }
+  }
+  if (!found) return ray.distanceM[ray.skylineIndex] ?? 0;
+  return bestDistance;
 }
 
 /**
@@ -128,7 +149,9 @@ export type DrawnProfile = {
 };
 
 /** Closer than this is the ground underfoot. Its bumps are the scribbly hatching, so they are not drawn. */
-const RIDGE_START_M = 4_000;
+export const RIDGE_START_M = 4_000;
+
+const HORIZON_MIN_DISTANCE_M = RIDGE_START_M;
 
 /** One line per band: the highest ground in that range, not every bump along the ray. */
 const RIDGE_BANDS: readonly [number, number][] = [
