@@ -40,14 +40,45 @@ const USGS_SPOT_ATTRIBUTION = 'Map and imagery: USGS National Map (public domain
 const SATELLITE_STYLE = rasterStyle(USGS_IMAGERY_TOPO_TILES, USGS_SPOT_ATTRIBUTION);
 const TOPO_STYLE = rasterStyle(USGS_TOPO_TILES, BASEMAP_ATTRIBUTION.topo);
 
+function BasemapToggle({
+  basemap,
+  onBasemap,
+}: {
+  basemap: SpotBasemap;
+  onBasemap: (next: SpotBasemap) => void;
+}) {
+  return (
+    <div className="flex shrink-0 gap-1">
+      <button
+        type="button"
+        className={`retro-button min-h-11 px-3 text-xs ${basemap === 'satellite' ? 'retro-button-yellow' : ''}`}
+        aria-pressed={basemap === 'satellite'}
+        onClick={() => onBasemap('satellite')}
+      >
+        Satellite
+      </button>
+      <button
+        type="button"
+        className={`retro-button min-h-11 px-3 text-xs ${basemap === 'map' ? 'retro-button-yellow' : ''}`}
+        aria-pressed={basemap === 'map'}
+        onClick={() => onBasemap('map')}
+      >
+        Topo
+      </button>
+    </div>
+  );
+}
+
 export function SpotPicker({
   lat,
   lng,
   onChange,
+  onBack,
 }: {
   lat: number;
   lng: number;
   onChange: (spot: { lat: number; lng: number }) => void;
+  onBack?: () => void;
 }) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<MlMap | null>(null);
@@ -108,23 +139,15 @@ export function SpotPicker({
   return (
     <div className="relative h-full w-full">
       <div ref={containerRef} className="h-full w-full" />
-      <div className="absolute left-2 top-2 z-10 flex gap-1">
-        <button
-          type="button"
-          className={`retro-button min-h-11 px-3 text-xs ${basemap === 'satellite' ? 'retro-button-yellow' : ''}`}
-          aria-pressed={basemap === 'satellite'}
-          onClick={() => setBasemap('satellite')}
-        >
-          Satellite
-        </button>
-        <button
-          type="button"
-          className={`retro-button min-h-11 px-3 text-xs ${basemap === 'map' ? 'retro-button-yellow' : ''}`}
-          aria-pressed={basemap === 'map'}
-          onClick={() => setBasemap('map')}
-        >
-          Topo
-        </button>
+      <div className="pointer-events-none absolute left-2 right-14 top-2 z-20 flex flex-wrap items-center gap-2">
+        {onBack ? (
+          <button type="button" className="retro-button pointer-events-auto min-h-11 shrink-0 px-3 text-xs" onClick={onBack}>
+            Back
+          </button>
+        ) : null}
+        <div className="pointer-events-auto">
+          <BasemapToggle basemap={basemap} onBasemap={setBasemap} />
+        </div>
       </div>
     </div>
   );

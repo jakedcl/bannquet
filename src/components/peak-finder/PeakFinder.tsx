@@ -380,6 +380,7 @@ export function PeakFinder() {
   const showMoved = screen === 'explore' && lock.pending != null;
   const showMap = screen === 'pick-map' || (screen === 'pick-view' && !stacked);
   const showSkyline = screen === 'explore' || screen === 'pick-view';
+  const mapFillsWidth = stacked || screen === 'pick-map';
   const showCamera = screen === 'explore' && sensors && cameraOn && stream != null;
   const showDrawn = showSkyline && !showCamera;
   const gyroLocked = screen === 'explore' && sensors && cameraOn && stream != null;
@@ -408,19 +409,12 @@ export function PeakFinder() {
 
   return (
     <div className="relative flex h-full min-h-0 bg-[#e7e1d4] text-[#1a1a1a]">
-      <button
-        type="button"
-        className="retro-button absolute left-2 top-2 z-30 min-h-11 px-3 text-xs"
-        onClick={goStart}
-      >
-        Back
-      </button>
-
       {showMap ? (
-        <div className={stacked ? 'relative h-full w-full' : 'relative h-full w-[min(42%,28rem)] shrink-0 border-r-2 border-[#5c3a1e]'}>
+        <div className={mapFillsWidth ? 'relative h-full w-full' : 'relative h-full w-[min(42%,28rem)] shrink-0 border-r-2 border-[#5c3a1e]'}>
           <SpotPicker
             lat={pin.lat}
             lng={pin.lng}
+            onBack={goStart}
             onChange={(next) => {
               setPin(next);
               setSelected(null);
@@ -438,6 +432,15 @@ export function PeakFinder() {
 
       {showSkyline ? (
         <div className="relative min-w-0 flex-1">
+          {!showMap ? (
+            <button
+              type="button"
+              className="retro-button absolute left-2 top-2 z-30 min-h-11 px-3 text-xs"
+              onClick={goStart}
+            >
+              Back
+            </button>
+          ) : null}
           {showCamera ? (
             <CameraView
               stream={stream}
