@@ -7,7 +7,6 @@ import { projectDirection, verticalFov } from '@/lib/peak-finder/projection';
 import { LABEL_BOX_HEIGHT_PX, LABEL_TICK_PX, labelsInView, type LabelCandidate } from '@/lib/peak-finder/declutter';
 import { wrap180 } from '@/lib/peak-finder/geo';
 import type { GestureMode } from '@/lib/peak-finder/explore-gestures';
-import type { VisiblePeak } from '@/lib/peak-finder/visibility';
 
 export type ViewPose = { heading: number; pitch: number; roll: number; hfov: number };
 
@@ -15,8 +14,6 @@ export function SkylineStage({
   payload,
   appearance,
   getView,
-  onPick,
-  selectedName,
   onLook,
   gestureMode,
   onSettle,
@@ -25,8 +22,6 @@ export function SkylineStage({
   payload: SkylinePayload | null;
   appearance: 'camera' | 'drawn';
   getView: () => ViewPose;
-  onPick: (peak: VisiblePeak, anchor: { x: number; y: number }) => void;
-  selectedName: string | null;
   onLook: ((headingDelta: number, pitchDelta: number, fovScale: number) => void) | null;
   gestureMode: GestureMode;
   onSettle?: () => void;
@@ -174,11 +169,8 @@ export function SkylineStage({
                 }}
               />
             ) : null}
-            <button
-              type="button"
-              onPointerDown={(event) => event.stopPropagation()}
-              onClick={() => onPick(label, { x: label.x, y: label.y })}
-              className="pointer-events-auto absolute whitespace-nowrap px-0.5 text-left text-[13px] font-bold"
+            <span
+              className="pointer-events-none absolute whitespace-nowrap px-0.5 text-left text-[13px] font-bold"
               style={{
                 left: label.slidePx * Math.SQRT1_2,
                 bottom: LABEL_TICK_PX + label.slidePx * Math.SQRT1_2,
@@ -189,10 +181,9 @@ export function SkylineStage({
                 color,
                 textShadow: onCamera ? '0 0 2px #000, 0 1px 2px #000' : 'none',
               }}
-              aria-pressed={selectedName === label.name}
             >
               {label.name}
-            </button>
+            </span>
           </div>
         );
       })}

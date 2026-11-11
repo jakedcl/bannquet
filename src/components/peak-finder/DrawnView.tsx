@@ -3,14 +3,11 @@
 import { useEffect, useRef } from 'react';
 import type { SkylinePayload } from '@/lib/peak-finder/payload';
 import type { GestureMode } from '@/lib/peak-finder/explore-gestures';
-import type { VisiblePeak } from '@/lib/peak-finder/visibility';
 import { SkylineStage, type ViewPose } from './SkylineStage';
 
 export function DrawnView({
   payload,
   getView,
-  onPick,
-  selectedName,
   onLook,
   gestureMode,
   onSettle,
@@ -18,8 +15,6 @@ export function DrawnView({
 }: {
   payload: SkylinePayload | null;
   getView: () => ViewPose;
-  onPick: (peak: VisiblePeak, anchor: { x: number; y: number }) => void;
-  selectedName: string | null;
   onLook: ((headingDelta: number, pitchDelta: number, fovScale: number) => void) | null;
   gestureMode: GestureMode;
   onSettle?: () => void;
@@ -67,8 +62,6 @@ export function DrawnView({
         payload={payload}
         appearance="drawn"
         getView={getView}
-        onPick={onPick}
-        selectedName={selectedName}
         onLook={onLook}
         gestureMode={gestureMode}
         onSettle={onSettle}
