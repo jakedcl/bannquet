@@ -28,5 +28,27 @@ export function classifyServiceWorkerFetch(pathname: string, mode: string): SwFe
   return 'ignore';
 }
 
+/** Same-origin paths that must never go through the Peak Finder service worker. */
+export const SW_PASSTHROUGH_PATHS = ['/maplibre-gl-worker.mjs'] as const;
+
+export function isServiceWorkerPassthrough(pathname: string): boolean {
+  if (SW_PASSTHROUGH_PATHS.some((path) => pathname === path || pathname.startsWith(`${path}/`))) {
+    return true;
+  }
+  return pathname === '/map' || pathname.startsWith('/map/');
+}
+
+export function shouldServiceWorkerIntercept(
+  pathname: string,
+  mode: string,
+  peakFinderClient: boolean,
+): boolean {
+  if (isServiceWorkerPassthrough(pathname)) return false;
+  const kind = classifyServiceWorkerFetch(pathname, mode);
+  if (kind === 'ignore') return false;
+  if (kind === 'next-static') return peakFinderClient;
+  return true;
+}
+
 export const PEAK_FINDER_SW_URL = '/sw-peak-finder.js';
 export const PEAK_FINDER_SW_SCOPE = '/';

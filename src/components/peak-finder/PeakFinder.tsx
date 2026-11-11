@@ -576,12 +576,14 @@ export function PeakFinder() {
 
   if (screen === 'offline') {
     return (
-      <PeakFinderOffline
-        onBack={goStart}
-        onSaved={() => void listOfflineAreas().then(setOfflineAreas)}
-        onOpenSkyline={openSavedSkyline}
-        onSaveComplete={completeOfflineSave}
-      />
+      <div className="h-full min-h-0 w-full">
+        <PeakFinderOffline
+          onBack={goStart}
+          onSaved={() => void listOfflineAreas().then(setOfflineAreas)}
+          onOpenSkyline={openSavedSkyline}
+          onSaveComplete={completeOfflineSave}
+        />
+      </div>
     );
   }
 

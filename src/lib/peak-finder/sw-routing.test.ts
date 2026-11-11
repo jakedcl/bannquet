@@ -5,7 +5,9 @@ import {
   canCacheNavigationResponse,
   classifyServiceWorkerFetch,
   isPeakFinderPath,
+  isServiceWorkerPassthrough,
   pathMatchesScope,
+  shouldServiceWorkerIntercept,
 } from './sw-routing';
 
 test('/peak-finder matches peak finder paths with and without query', () => {
@@ -34,4 +36,12 @@ test('canCacheNavigationResponse rejects redirects and opaque types', () => {
   assert.equal(canCacheNavigationResponse(302, 'basic', true), false);
   assert.equal(canCacheNavigationResponse(200, 'opaqueredirect', false), false);
   assert.equal(canCacheNavigationResponse(401, 'basic', false), false);
+});
+
+test('service worker does not intercept maplibre worker or site map routes', () => {
+  assert.equal(isServiceWorkerPassthrough('/maplibre-gl-worker.mjs'), true);
+  assert.equal(isServiceWorkerPassthrough('/map'), true);
+  assert.equal(shouldServiceWorkerIntercept('/maplibre-gl-worker.mjs', '', true), false);
+  assert.equal(shouldServiceWorkerIntercept('/_next/static/chunks/1.js', '', false), false);
+  assert.equal(shouldServiceWorkerIntercept('/_next/static/chunks/1.js', '', true), true);
 });

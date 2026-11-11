@@ -106,7 +106,7 @@ export function PeakFinderOffline({ onBack, onSaved, onOpenSkyline, onSaveComple
 
   if (step === 'map' || step === 'downloading') {
     return (
-      <div className="h-full min-h-0">
+      <div className="flex h-full min-h-0 w-full flex-col">
         <OfflineAreaPicker
           initialLat={spot.lat}
           initialLng={spot.lng}

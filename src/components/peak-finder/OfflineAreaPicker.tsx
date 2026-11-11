@@ -127,7 +127,12 @@ export function OfflineAreaPicker({
     });
     const observer = new ResizeObserver(() => map.resize());
     observer.observe(container);
+    const frame = requestAnimationFrame(() => {
+      map.resize();
+      updateBox();
+    });
     return () => {
+      cancelAnimationFrame(frame);
       observer.disconnect();
       map.remove();
       mapRef.current = null;
@@ -175,9 +180,9 @@ export function OfflineAreaPicker({
   const radiusKm = radiusM / 1000;
 
   return (
-    <div className="relative flex h-full min-h-0 flex-col bg-[#e7e1d4] text-[#1a1a1a]">
-      <div className="relative min-h-0 flex-1">
-        <div ref={containerRef} className="absolute inset-0" />
+    <div className="relative flex h-full min-h-0 w-full flex-col bg-[#e7e1d4] text-[#1a1a1a]">
+      <div className="relative min-h-0 w-full flex-1 basis-0">
+        <div ref={containerRef} className="h-full w-full" />
         <div
           className="pointer-events-none absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2 border-[3px] border-[#ffc94d] bg-[#2d5016]/12 shadow-[0_0_0_9999px_rgba(26,26,26,0.28)]"
           style={{ width: box.width, height: box.height }}

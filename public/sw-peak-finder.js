@@ -1,10 +1,18 @@
-/* Peak Finder service worker — site root script, scope /. Only handles Peak Finder + its assets. */
-const SHELL_CACHE = 'pf-shell-v3';
-const ASSET_CACHE = 'pf-assets-v3';
+/* Peak Finder service worker — scope /, only Peak Finder shell + assets while on /peak-finder. */
+const SHELL_CACHE = 'pf-shell-v4';
+const ASSET_CACHE = 'pf-assets-v4';
 const SHELL_URL = '/peak-finder';
 
 function isPeakFinderPath(pathname) {
   return pathname === '/peak-finder' || pathname.startsWith('/peak-finder/');
+}
+
+function passthroughPath(pathname) {
+  return (
+    pathname === '/maplibre-gl-worker.mjs'
+    || pathname === '/map'
+    || pathname.startsWith('/map/')
+  );
 }
 
 function canCacheNavigation(response) {
@@ -18,6 +26,17 @@ async function shellFallback(request) {
     ?? (await cache.match(SHELL_URL, { ignoreSearch: true }))
     ?? (await cache.match(request.url.split('?')[0], { ignoreSearch: true }))
   );
+}
+
+async function peakFinderClientActive() {
+  const clients = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
+  return clients.some((client) => {
+    try {
+      return isPeakFinderPath(new URL(client.url).pathname);
+    } catch {
+      return false;
+    }
+  });
 }
 
 async function precacheShell() {
@@ -52,8 +71,10 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url);
   if (url.origin !== self.location.origin) return;
+  if (passthroughPath(url.pathname)) return;
 
   const pfPath = isPeakFinderPath(url.pathname);
+
   if (event.request.mode === 'navigate') {
     if (!pfPath) return;
     event.respondWith(
@@ -62,8 +83,7 @@ self.addEventListener('fetch', (event) => {
           const response = await fetch(event.request, { credentials: 'include' });
           if (canCacheNavigation(response)) {
             const cache = await caches.open(SHELL_CACHE);
-            const copy = response.clone();
-            await cache.put(SHELL_URL, copy);
+            await cache.put(SHELL_URL, response.clone());
             await cache.put(event.request, response.clone());
           }
           return response;
@@ -77,19 +97,26 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  if (!pfPath && !url.pathname.startsWith('/_next/')) return;
-
-  if (pfPath || url.pathname.startsWith('/_next/')) {
-    event.respondWith(
-      fetch(event.request)
-        .then((response) => {
-          if (response.ok && response.type === 'basic') {
-            const copy = response.clone();
-            void caches.open(ASSET_CACHE).then((cache) => cache.put(event.request, copy));
-          }
-          return response;
-        })
-        .catch(() => caches.match(event.request).then((hit) => hit ?? Response.error())),
-    );
-  }
+  event.respondWith(
+    (async () => {
+      const onPeakFinder = await peakFinderClientActive();
+      const nextChunk = url.pathname.startsWith('/_next/');
+      if (!pfPath && !(nextChunk && onPeakFinder)) {
+        return fetch(event.request);
+      }
+      try {
+        const response = await fetch(event.request);
+        if (response.ok && response.type === 'basic') {
+          const cache = await caches.open(nextChunk ? ASSET_CACHE : SHELL_CACHE);
+          await cache.put(event.request, response.clone());
+        }
+        return response;
+      } catch {
+        const cache = await caches.open(nextChunk ? ASSET_CACHE : SHELL_CACHE);
+        const hit = await cache.match(event.request);
+        if (hit) return hit;
+        return fetch(event.request);
+      }
+    })(),
+  );
 });
