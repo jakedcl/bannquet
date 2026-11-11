@@ -6,6 +6,10 @@ export const USGS_TOPO_TILES =
 export const USGS_IMAGERY_TILES =
   'https://basemap.nationalmap.gov/arcgis/rest/services/USGSImageryOnly/MapServer/tile/{z}/{y}/{x}';
 
+/** Satellite plus USGS labels, contours, and peak names. */
+export const USGS_IMAGERY_TOPO_TILES =
+  'https://basemap.nationalmap.gov/arcgis/rest/services/USGSImageryTopo/MapServer/tile/{z}/{y}/{x}';
+
 export const TERRARIUM_TILES =
   'https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png';
 

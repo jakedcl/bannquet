@@ -11,6 +11,7 @@ import { viewerCanContribute } from '@/lib/membership';
 import {
   COMMUNITY_LINKS,
   FISHING_LINKS,
+  PEAK_FINDER_LINK,
   UPLOAD_LINKS,
   communitySection,
   pathOn,
@@ -53,24 +54,24 @@ export function TopBar({ account }: { account: BarAccount }) {
 
   return (
     <header className="site-header hub-bar retro-banner fixed inset-x-0 top-0 z-50 !px-0 !py-0 text-white" style={{ height: 'var(--bar-h)' }}>
-      <div className="mx-auto flex h-full max-w-6xl items-center gap-2 px-3">
-        <Link href="/" aria-label="Bannquet home" className="ui-press mr-3 flex min-h-11 shrink-0 items-center">
+      <div className="flex h-full w-full items-center gap-2 px-3 sm:px-4 lg:px-6">
+        <Link href="/" aria-label="Bannquet home" className="ui-press flex min-h-11 shrink-0 items-center">
           <Image src="/logo.png" alt="BANNQUET" width={398} height={114} priority unoptimized className="header-logo !h-9 md:!h-10" />
         </Link>
 
-        <nav aria-label="Main" className="hidden min-w-0 flex-1 items-center gap-2 lg:flex">
-          <Link href="/" className={barLinkClass(tab === 'map')}>Map</Link>
-          <Link href="/trips" className={barLinkClass(tab === 'trips')}>Trips</Link>
-          <Link href="/mountain-weather" className={barLinkClass(tab === 'weather')}>Weather</Link>
-          <Menu label="Fishing" active={pathOn(pathname, '/fishing')}>
-            <MenuLinks links={[{ href: '/fishing', label: 'All fishing' }, ...FISHING_LINKS]} />
-          </Menu>
-          <Menu label="Community" active={tab === null && communitySection(pathname, account)}>
-            <MenuLinks links={COMMUNITY_LINKS} />
-          </Menu>
-        </nav>
-
-        <div className="ml-auto hidden shrink-0 items-center gap-2 lg:flex">
+        <div className="ml-auto hidden items-center gap-2 lg:flex">
+          <nav aria-label="Main" className="flex items-center gap-2">
+            <Link href="/" className={barLinkClass(tab === 'map')}>Map</Link>
+            <Link href="/trips" className={barLinkClass(tab === 'trips')}>Trips</Link>
+            <Link href="/mountain-weather" className={barLinkClass(tab === 'weather')}>Weather</Link>
+            <Link href={PEAK_FINDER_LINK.href} className={barLinkClass(pathOn(pathname, PEAK_FINDER_LINK.href))}>Peak Finder</Link>
+            <Menu label="Fishing" active={pathOn(pathname, '/fishing')}>
+              <MenuLinks links={[{ href: '/fishing', label: 'All fishing' }, ...FISHING_LINKS]} />
+            </Menu>
+            <Menu label="Community" active={tab === null && communitySection(pathname, account)}>
+              <MenuLinks links={COMMUNITY_LINKS} />
+            </Menu>
+          </nav>
           {canUpload ? (
             <Menu label="Upload" active={tab === 'upload'} align="right">
               <MenuLinks links={UPLOAD_LINKS} />
@@ -162,6 +163,11 @@ function MoreSheet({ account, onClose }: { account: BarAccount; onClose: () => v
           </button>
         </div>
         <div onClick={onClose} className="space-y-4 px-3 pt-3">
+          <div>
+            <ListGroup>
+              <ListRow href={PEAK_FINDER_LINK.href} title={PEAK_FINDER_LINK.label} />
+            </ListGroup>
+          </div>
           <div>
             <p className="t-eyebrow mb-1">Community</p>
             <ListGroup>

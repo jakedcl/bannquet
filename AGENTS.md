@@ -16,6 +16,7 @@ The framework repo is private. Cloud agents open it with `git clone --depth 1 ht
 
 ## Layout
 - `src/app/` routes incl. `peaks/`, `trips/`, `map/`, `mountain-weather/`, `conditions/`, `fishing/`, `community/`, `admin/`, `user/[username]`, `api/`.
+- Peak Finder (`/peak-finder`) is public and has no database. Peaks are static files in `public/peak-finder/`, logic is `src/lib/peak-finder/`, and `scripts/peak-finder/` rebuilds the chunks. Terrain is fetched in the browser from AWS Terrain Tiles.
 - `src/db/schema.ts` (Drizzle schema) and `drizzle/` (SQL migrations). `src/lib/` domain logic with `*.test.ts` beside it. `src/proxy.ts`.
 - `config/weather-regions.json` (adding a spot is a data change), `config/challenges/` (peak lists), `config/packing-templates.json`.
 - `API_DOCUMENTATION.md` covers weather endpoints.

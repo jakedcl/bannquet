@@ -15,6 +15,8 @@ export type NavAccount = {
   role: 'member' | 'admin' | 'pending';
 } | null;
 
+export const PEAK_FINDER_LINK: NavLink = { href: '/peak-finder', label: 'Peak Finder' };
+
 export const COMMUNITY_LINKS: NavLink[] = [
   { href: '/chat', label: 'Chat' },
   { href: '/peaks', label: 'Peaks' },
@@ -368,6 +370,10 @@ export function pageTrail(pathname: string, search: string, account: NavAccount,
 
   if (pathname === '/map') {
     return { parentHref: '/', crumbs: [{ href: '/map', label: 'Map' }] };
+  }
+
+  if (pathname === '/peak-finder') {
+    return { parentHref: '/', crumbs: [{ href: '/peak-finder', label: 'Peak Finder' }] };
   }
 
   const segment = decodeURIComponent(pathname.split('/').filter(Boolean).at(-1) ?? '');

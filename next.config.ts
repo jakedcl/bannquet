@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import { securityHeaderRules } from "./src/lib/security-headers";
 
 const nextConfig: NextConfig = {
   serverExternalPackages: ['unpdf'],
@@ -22,18 +23,7 @@ const nextConfig: NextConfig = {
   // Basic headers only. A full content policy would need to list every map,
   // tile and photo host, so it's left out; framing is blocked here instead.
   async headers() {
-    return [
-      {
-        source: "/:path*",
-        headers: [
-          { key: "X-Content-Type-Options", value: "nosniff" },
-          { key: "X-Frame-Options", value: "DENY" },
-          { key: "Content-Security-Policy", value: "frame-ancestors 'none'" },
-          { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
-          { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=(self)" },
-        ],
-      },
-    ];
+    return securityHeaderRules();
   },
   async redirects() {
     return [
@@ -49,6 +39,7 @@ const nextConfig: NextConfig = {
       { source: "/posts/new", destination: "/upload?kind=trip", permanent: false },
       { source: "/posts/:path*", destination: "/trips", permanent: false },
       { source: "/posts", destination: "/trips", permanent: false },
+      { source: "/peak-finder/sw.js", destination: "/sw-peak-finder.js", permanent: false },
     ];
   },
 };
