@@ -18,13 +18,13 @@ import { MAP_CENTER } from '@/lib/map';
 import {
   compassUnsure,
   createGyroSmoother,
+  deviceCameraPose,
   headingJump,
-  magneticHeading,
   motionAllowed,
   requestMotionPermission,
+  updateYawCalibration,
   viewHeading,
-  viewPitch,
-  viewRoll,
+  type YawCalibration,
 } from '@/lib/peak-finder/orientation';
 import type { SkylinePayload, WorkerOut } from '@/lib/peak-finder/payload';
 import { loadPeaksAround } from '@/lib/peak-finder/peaks';
@@ -177,29 +177,30 @@ export function PeakFinder() {
     let previousRaw: number | null = null;
     let lastJump = 0;
     let lastAccuracy: number | null | undefined;
+    let calibration: YawCalibration = { offset: 0, ready: false };
     const onReading = (event: DeviceOrientationEvent) => {
       const extra = event as DeviceOrientationEvent & { webkitCompassHeading?: number; webkitCompassAccuracy?: number };
-      const magnetic = magneticHeading({
+      const screenAngle = window.screen?.orientation?.angle ?? 0;
+      const reading = {
         alpha: event.alpha,
         beta: event.beta,
         gamma: event.gamma,
         absolute: useAbsolute || event.absolute,
         webkitCompassHeading: extra.webkitCompassHeading,
-      });
-      if (magnetic == null || !followRef.current) return;
-      const screenAngle = window.screen?.orientation?.angle ?? 0;
-      const pitchRaw = viewPitch(event.beta, event.gamma, screenAngle);
-      const rollRaw = viewRoll(event.beta, event.gamma, screenAngle);
-      const filtered = smoother.smooth(magnetic, pitchRaw, rollRaw, performance.now());
-      lastJump = headingJump(previousRaw, magnetic);
-      previousRaw = magnetic;
+      };
+      calibration = updateYawCalibration(calibration, reading, screenAngle);
+      const pose = deviceCameraPose(reading, screenAngle, calibration);
+      if (pose == null || !followRef.current) return;
+      const filtered = smoother.smooth(pose.magneticHeading, pose.pitch, pose.roll, performance.now());
+      lastJump = headingJump(previousRaw, pose.magneticHeading);
+      previousRaw = pose.magneticHeading;
       lastAccuracy = extra.webkitCompassAccuracy;
       if (queued) return;
       queued = true;
       frame = requestAnimationFrame(() => {
         queued = false;
         if (!followRef.current) return;
-        baseRef.current = viewHeading(filtered.magnetic, declination, screenAngle, 0);
+        baseRef.current = viewHeading(filtered.magnetic, declination, 0, 0);
         viewRef.current.heading = wrap360(baseRef.current + offsetRef.current);
         viewRef.current.pitch = filtered.pitch;
         viewRef.current.roll = filtered.roll;

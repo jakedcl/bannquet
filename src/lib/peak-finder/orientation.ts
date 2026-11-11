@@ -1,5 +1,7 @@
 import { angularDistance, wrap180, wrap360 } from './geo';
 
+const DEG = Math.PI / 180;
+
 export type OrientationReading = {
   alpha: number | null;
   beta: number | null;
@@ -9,61 +11,128 @@ export type OrientationReading = {
   webkitCompassAccuracy?: number | null;
 };
 
-/** Magnetic heading of the top of the phone, degrees clockwise from magnetic north. */
+export type Vec3 = { x: number; y: number; z: number };
+
+/** W3C Z–X′–Y″ order: world vector from device coordinates. */
+export function rotateDeviceToWorld(v: Vec3, alphaDeg: number, betaDeg: number, gammaDeg: number): Vec3 {
+  const g = gammaDeg * DEG;
+  const b = betaDeg * DEG;
+  const a = alphaDeg * DEG;
+  const x = v.x * Math.cos(g) + v.z * Math.sin(g);
+  const y = v.y;
+  const z = -v.x * Math.sin(g) + v.z * Math.cos(g);
+  const y2 = y * Math.cos(b) - z * Math.sin(b);
+  const z2 = y * Math.sin(b) + z * Math.cos(b);
+  const x2 = x;
+  const x3 = x2 * Math.cos(a) - y2 * Math.sin(a);
+  const y3 = x2 * Math.sin(a) + y2 * Math.cos(a);
+  return { x: x3, y: y3, z: z2 };
+}
+
+export type CameraPose = {
+  /** Magnetic heading, degrees clockwise from north, camera forward projected on the horizon. */
+  magneticHeading: number;
+  /** Positive when the camera points above the horizon. */
+  pitch: number;
+  roll: number;
+};
+
+/**
+ * Camera forward is out the back of the phone (−Z device). Earth frame: +X east, +Y north, +Z up.
+ * `yawOffsetMagnetic` aligns iOS alpha with true/magnetic north from a flat compass fix (not webkit per frame).
+ */
+export function cameraPoseFromDevice(
+  alpha: number,
+  beta: number,
+  gamma: number,
+  screenAngle: number,
+  yawOffsetMagnetic = 0,
+): CameraPose {
+  const back = rotateDeviceToWorld({ x: 0, y: 0, z: -1 }, alpha + screenAngle, beta, gamma);
+  const screenUp = rotateDeviceToWorld({ x: 0, y: 1, z: 0 }, alpha + screenAngle, beta, gamma);
+  const horizontal = Math.hypot(back.x, back.y) || 1e-6;
+  const magneticHeading = wrap360(Math.atan2(back.x, back.y) * (180 / Math.PI) + yawOffsetMagnetic);
+  const pitch = -Math.atan2(back.z, horizontal) * (180 / Math.PI);
+  const roll = Math.atan2(screenUp.x, screenUp.y) * (180 / Math.PI);
+  return { magneticHeading, pitch, roll };
+}
+
+export type YawCalibration = {
+  offset: number;
+  ready: boolean;
+};
+
+export function blendAngle(current: number, target: number, weight: number): number {
+  return wrap360(current + weight * wrap180(target - current));
+}
+
+/** Update magnetic yaw offset from webkit only when the phone is fairly flat (never per-frame when upright). */
+export function updateYawCalibration(
+  state: YawCalibration,
+  reading: OrientationReading,
+  screenAngle: number,
+  weight = 0.12,
+): YawCalibration {
+  const webkit = reading.webkitCompassHeading;
+  const beta = reading.beta;
+  const alpha = reading.alpha;
+  const gamma = reading.gamma;
+  if (
+    typeof webkit !== 'number'
+    || Number.isNaN(webkit)
+    || typeof alpha !== 'number'
+    || typeof beta !== 'number'
+    || typeof gamma !== 'number'
+  ) {
+    return state;
+  }
+  if (beta < 25 || beta > 65 || Math.abs(gamma) > 25) return state;
+  const raw = cameraPoseFromDevice(alpha, beta, gamma, screenAngle, 0).magneticHeading;
+  const target = wrap360(webkit - raw);
+  if (!state.ready) return { offset: target, ready: true };
+  return { offset: blendAngle(state.offset, target, weight), ready: true };
+}
+
+export function deviceCameraPose(
+  reading: OrientationReading,
+  screenAngle: number,
+  calibration: YawCalibration,
+): CameraPose | null {
+  if (
+    typeof reading.alpha !== 'number'
+    || Number.isNaN(reading.alpha)
+    || typeof reading.beta !== 'number'
+    || Number.isNaN(reading.beta)
+    || typeof reading.gamma !== 'number'
+    || Number.isNaN(reading.gamma)
+  ) {
+    return null;
+  }
+  const offset = calibration.ready ? calibration.offset : 0;
+  return cameraPoseFromDevice(reading.alpha, reading.beta, reading.gamma, screenAngle, offset);
+}
+
+/** @deprecated Use deviceCameraPose; kept for a few legacy call sites in tests. */
 export function magneticHeading(reading: OrientationReading): number | null {
-  const ios = reading.webkitCompassHeading;
-  if (typeof ios === 'number' && !Number.isNaN(ios)) return wrap360(ios);
-  if (typeof reading.alpha !== 'number' || Number.isNaN(reading.alpha)) return null;
-  if (!reading.absolute) return null;
-  const beta = reading.beta ?? 90;
-  const gamma = reading.gamma ?? 0;
-  if (beta >= 55 && beta <= 125) {
-    return portraitCompassHeading(reading.alpha, beta, gamma);
-  }
-  return wrap360(360 - reading.alpha);
+  const pose = deviceCameraPose(reading, 0, { offset: 0, ready: false });
+  return pose?.magneticHeading ?? null;
 }
 
-/**
- * Tilt-compensated compass for portrait, camera forward. Alpha alone gimbal-locks near beta=90.
- */
-export function portraitCompassHeading(alpha: number, beta: number, gamma: number): number {
-  const a = (alpha * Math.PI) / 180;
-  const b = (beta * Math.PI) / 180;
-  const sinA = Math.sin(a);
-  const cosA = Math.cos(a);
-  const cosB = Math.cos(b);
-  if (Math.abs(cosB) < 0.12) {
-    return wrap360(360 - alpha);
-  }
-  const heading = Math.atan2(-sinA * cosB, cosA * cosB) * (180 / Math.PI);
-  const gammaFix = ((gamma % 360) + 360) % 360;
-  if (gammaFix > 170 || gammaFix < 10) {
-    return wrap360(heading);
-  }
-  return wrap360(360 - alpha);
-}
-
-/**
- * Direction the camera view faces, degrees clockwise from true north.
- * Declination is added (west is negative). Landscape subtracts the screen angle.
- */
+/** Direction the camera view faces, degrees clockwise from true north. */
 export function viewHeading(magnetic: number, declination: number, screenAngle: number, calibrationOffset = 0): number {
   return wrap360(magnetic + declination - screenAngle + calibrationOffset);
 }
 
+/** @deprecated Use cameraPoseFromDevice pitch. */
 export function viewPitch(beta: number | null, gamma: number | null, screenAngle: number): number {
-  const angle = ((screenAngle % 360) + 360) % 360;
-  if (angle === 90) return gamma ?? 0;
-  if (angle === 270) return -(gamma ?? 0);
-  if (beta == null) return 0;
-  return 90 - beta;
+  if (beta == null || gamma == null) return 0;
+  return cameraPoseFromDevice(0, beta, gamma, screenAngle).pitch;
 }
 
+/** @deprecated Use cameraPoseFromDevice roll. */
 export function viewRoll(beta: number | null, gamma: number | null, screenAngle: number): number {
-  const angle = ((screenAngle % 360) + 360) % 360;
-  if (angle === 90) return (beta ?? 90) - 90;
-  if (angle === 270) return 90 - (beta ?? 90);
-  return gamma ?? 0;
+  if (beta == null || gamma == null) return 0;
+  return cameraPoseFromDevice(0, beta, gamma, screenAngle).roll;
 }
 
 export function circularMean(samples: readonly number[]): number {
@@ -71,7 +140,7 @@ export function circularMean(samples: readonly number[]): number {
   let x = 0;
   let y = 0;
   for (const sample of samples) {
-    const r = (sample * Math.PI) / 180;
+    const r = sample * DEG;
     x += Math.cos(r);
     y += Math.sin(r);
   }
@@ -84,7 +153,6 @@ export function pushSample(buffer: readonly number[], next: number, size = 8): n
   return copy;
 }
 
-/** iPhone reports accuracy in degrees. Worse than ±15°, or a jump, means line up. */
 export function compassUnsure(accuracyDeg: number | null | undefined, jumpDeg: number): boolean {
   if (typeof accuracyDeg === 'number' && (accuracyDeg < 0 || accuracyDeg > 15)) return true;
   return jumpDeg > 25;
@@ -96,7 +164,6 @@ export function motionAllowed(result: MotionPermission): boolean {
   return result === 'granted' || result === 'unsupported';
 }
 
-/** iOS 13+ needs a user gesture; a failed call is not the same as the user denying access. */
 export async function requestMotionPermission(): Promise<MotionPermission> {
   if (typeof window === 'undefined' || typeof DeviceOrientationEvent === 'undefined') return 'unsupported';
   const ctor = DeviceOrientationEvent as typeof DeviceOrientationEvent & {
@@ -165,6 +232,7 @@ export class OneEuroFilter {
 
 export const GYRO_HEADING_DEAD_ZONE_DEG = 0.35;
 const GYRO_TILT_DEAD_ZONE_DEG = 0.25;
+export const GYRO_HEADING_MAX_JUMP_DEG = 30;
 
 export function applyHeadingDeadZone(current: number, next: number, deadZone = GYRO_HEADING_DEAD_ZONE_DEG): number {
   return Math.abs(wrap180(next - current)) < deadZone ? current : next;
@@ -172,6 +240,14 @@ export function applyHeadingDeadZone(current: number, next: number, deadZone = G
 
 export function applyTiltDeadZone(current: number, next: number, deadZone = GYRO_TILT_DEAD_ZONE_DEG): number {
   return Math.abs(next - current) < deadZone ? current : next;
+}
+
+export function guardHeadingJump(current: number, next: number, spikeFrames: number): { heading: number; spikeFrames: number } {
+  const jump = Math.abs(wrap180(next - current));
+  if (jump <= GYRO_HEADING_MAX_JUMP_DEG) return { heading: next, spikeFrames: 0 };
+  const sustained = spikeFrames + 1;
+  if (sustained >= 3) return { heading: next, spikeFrames: 0 };
+  return { heading: current, spikeFrames: sustained };
 }
 
 export type GyroSmoother = {
@@ -191,6 +267,7 @@ export function createGyroSmoother(): GyroSmoother {
   let headingOut = 0;
   let pitchOut = 0;
   let rollOut = 0;
+  let spikeFrames = 0;
   let seeded = false;
   return {
     reset() {
@@ -198,9 +275,10 @@ export function createGyroSmoother(): GyroSmoother {
       pitch.reset();
       roll.reset();
       seeded = false;
+      spikeFrames = 0;
     },
     smooth(magnetic, pitchDeg, rollDeg, timeMs) {
-      const h = heading.filter(magnetic, timeMs);
+      let h = heading.filter(magnetic, timeMs);
       const p = pitch.filter(pitchDeg, timeMs);
       const r = roll.filter(rollDeg, timeMs);
       if (!seeded) {
@@ -210,6 +288,9 @@ export function createGyroSmoother(): GyroSmoother {
         seeded = true;
         return { magnetic: h, pitch: p, roll: r };
       }
+      const guarded = guardHeadingJump(headingOut, h, spikeFrames);
+      h = guarded.heading;
+      spikeFrames = guarded.spikeFrames;
       headingOut = applyHeadingDeadZone(headingOut, h);
       pitchOut = applyTiltDeadZone(pitchOut, p);
       rollOut = applyTiltDeadZone(rollOut, r);
