@@ -1,5 +1,4 @@
 import { DESKTOP_LABEL_CAP, PHONE_LABEL_CAP } from './constants';
-import { projectDirection } from './projection';
 import type { VisiblePeak } from './visibility';
 
 export type LabelCandidate = VisiblePeak & {
@@ -8,6 +7,7 @@ export type LabelCandidate = VisiblePeak & {
   labelWidthPx: number;
   /** Extra distance, in px, the name is stepped up-right so it clears a nearer label. */
   slidePx: number;
+  fontSizePx?: number;
 };
 
 /** Leader from the summit up to where the diagonal name starts. */
@@ -103,24 +103,3 @@ export function declutter(peaks: readonly LabelCandidate[], cap: number): LabelC
   return placed;
 }
 
-export function labelsInView(
-  peaks: readonly VisiblePeak[],
-  pose: { heading: number; pitch: number; roll: number; hfov: number },
-  width: number,
-  height: number,
-): LabelCandidate[] {
-  if (width < 2 || height < 2) return [];
-  const candidates: LabelCandidate[] = [];
-  for (const peak of peaks) {
-    const point = projectDirection(peak.bearingDeg, peak.angleDeg, pose.heading, pose.pitch, pose.roll, pose.hfov, width, height);
-    if (!point.inView) continue;
-    candidates.push({
-      ...peak,
-      x: point.x,
-      y: point.y,
-      labelWidthPx: Math.max(44, peak.name.length * 7.4 + 6),
-      slidePx: 0,
-    });
-  }
-  return declutter(candidates, labelCap(width));
-}

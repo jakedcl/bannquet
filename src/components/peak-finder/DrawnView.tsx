@@ -66,6 +66,7 @@ export function DrawnView({
         gestureMode={gestureMode}
         onSettle={onSettle}
         showReadout
+        reserveSummitName={payload?.onSummit?.name ?? null}
       />
     </div>
   );

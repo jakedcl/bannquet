@@ -4,7 +4,7 @@ import { fileURLToPath } from 'node:url';
 import { inflateSync } from 'node:zlib';
 import test from 'node:test';
 import { DEFAULT_HFOV_DEG, RAY_STEP_DEG } from './constants';
-import { labelsInView } from './declutter';
+import { labelsInView, legacyLabelsInView } from './label-placement';
 import { bearingDeg, distanceM, wrap180 } from './geo';
 import type { Peak } from './peaks';
 import { angleBefore, castSkyline, rayAt, skylineAngle, skylineDistance, viewProfile } from './skyline';
@@ -249,6 +249,88 @@ test('front ridges are drawn and labeled at default zoom from Marcy and Lower Au
   assertFrontRidgeView(MARCY_SUMMIT, peaks.filter((peak) => peak.name !== 'Mount Marcy'), marcy, ['Gray Peak', 'Mount Colden', 'Algonquin Peak']);
   const ausable = await loadGrids(LOWER_AUSABLE.lat, LOWER_AUSABLE.lng);
   assertFrontRidgeView(LOWER_AUSABLE, peaks, ausable, ['Mount Haystack', 'Basin Mountain', 'Mount Marcy']);
+});
+
+const KEENE_VALLEY = { lat: 44.1892, lng: -73.7681 };
+const PHONE_WIDTH = 390;
+const PHONE_HEIGHT = 700;
+
+test('Mount Colden phone view declutters overlapping labels but keeps Marcy', async () => {
+  const peaks = readPeaks(new URL('../../../config/challenges/adk46.json', import.meta.url));
+  const grids = await loadGrids(COLDEN_SUMMIT.lat, COLDEN_SUMMIT.lng);
+  const sample = (lat: number, lng: number, metres: number) => sampleHeight(grids, lat, lng, metres);
+  const eyeM = eyeHeightM(COLDEN_SUMMIT.lat, COLDEN_SUMMIT.lng, (lat, lng) => sample(lat, lng, 0));
+  const skyline = castSkyline(
+    COLDEN_SUMMIT.lat,
+    COLDEN_SUMMIT.lng,
+    eyeM,
+    (lat, lng, metres) => sample(lat, lng, metres) ?? 0,
+    RAY_STEP_DEG,
+  );
+  const raised = peaks.flatMap((peak) => {
+    const metres = distanceM(COLDEN_SUMMIT.lat, COLDEN_SUMMIT.lng, peak.lat, peak.lng);
+    const next = raiseSummit(peak, (lat, lng) => sample(lat, lng, metres));
+    return next ? [next] : [];
+  });
+  const visible = visiblePeaks(COLDEN_SUMMIT.lat, COLDEN_SUMMIT.lng, eyeM, raised, skyline);
+  let busiestHeading = 270;
+  let legacyMax = 0;
+  for (let heading = 0; heading < 360; heading += 10) {
+    const count = legacyLabelsInView(
+      visible,
+      { heading, pitch: 0, roll: 0, hfov: DEFAULT_HFOV_DEG },
+      PHONE_WIDTH,
+      PHONE_HEIGHT,
+    ).length;
+    if (count > legacyMax) {
+      legacyMax = count;
+      busiestHeading = heading;
+    }
+  }
+  const pose = { heading: busiestHeading, pitch: 0, roll: 0, hfov: DEFAULT_HFOV_DEG };
+  const before = legacyLabelsInView(visible, pose, PHONE_WIDTH, PHONE_HEIGHT);
+  const after = labelsInView(visible, pose, PHONE_WIDTH, PHONE_HEIGHT);
+  const markers = visible.filter((peak) => {
+    const delta = Math.abs(wrap180(peak.bearingDeg - busiestHeading));
+    return delta <= DEFAULT_HFOV_DEG / 2;
+  }).length;
+  assert.ok(before.length >= 8, `legacy labeled ${before.length} at heading ${busiestHeading}`);
+  if (before.length > after.length) {
+    assert.ok(after.length <= Math.max(6, before.length - 2), `after ${after.length} vs before ${before.length}`);
+  }
+  assert.ok(after.length <= legacyMax, `after ${after.length} should not exceed legacy cap fill ${legacyMax}`);
+  const marcyBearing = bearingDeg(COLDEN_SUMMIT.lat, COLDEN_SUMMIT.lng, MARCY_SUMMIT.lat, MARCY_SUMMIT.lng);
+  const towardMarcy = labelsInView(visible, {
+    heading: marcyBearing,
+    pitch: 0,
+    roll: 0,
+    hfov: DEFAULT_HFOV_DEG,
+  }, PHONE_WIDTH, PHONE_HEIGHT);
+  assert.ok(towardMarcy.some((peak) => peak.name === 'Mount Marcy'), `Marcy missing toward Marcy; got ${towardMarcy.map((p) => p.name).join(', ')}`);
+  assert.ok(markers > after.length, `ticks cover ${markers} visible peaks, ${after.length} labels`);
+});
+
+test('from Keene Valley valley floor, labels stay sparse without hiding major summits in view', async () => {
+  const peaks = readPeaks(new URL('../../../config/challenges/adk46.json', import.meta.url));
+  const grids = await loadGrids(KEENE_VALLEY.lat, KEENE_VALLEY.lng);
+  const sample = (lat: number, lng: number, metres: number) => sampleHeight(grids, lat, lng, metres);
+  const eyeM = eyeHeightM(KEENE_VALLEY.lat, KEENE_VALLEY.lng, (lat, lng) => sample(lat, lng, 0));
+  const skyline = castSkyline(
+    KEENE_VALLEY.lat,
+    KEENE_VALLEY.lng,
+    eyeM,
+    (lat, lng, metres) => sample(lat, lng, metres) ?? 0,
+    RAY_STEP_DEG,
+  );
+  const raised = peaks.flatMap((peak) => {
+    const metres = distanceM(KEENE_VALLEY.lat, KEENE_VALLEY.lng, peak.lat, peak.lng);
+    const next = raiseSummit(peak, (lat, lng) => sample(lat, lng, metres));
+    return next ? [next] : [];
+  });
+  const visible = visiblePeaks(KEENE_VALLEY.lat, KEENE_VALLEY.lng, eyeM, raised, skyline);
+  const labels = labelsInView(visible, { heading: 270, pitch: 0, roll: 0, hfov: DEFAULT_HFOV_DEG }, PHONE_WIDTH, PHONE_HEIGHT);
+  assert.ok(labels.length <= 16, `valley view labeled ${labels.length}`);
+  assert.ok(labels.length >= 3, `valley view should still name a few nearby highs (${labels.length})`);
 });
 
 test('from Mount Washington, the neighboring Presidential summits are labeled', async () => {
