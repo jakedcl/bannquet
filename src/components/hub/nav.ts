@@ -7,7 +7,7 @@ export function activeTab(pathname: string, account: NavAccount): TabId | null {
   if (pathname === '/' || pathOn(pathname, '/map') || pathOn(pathname, '/pins') || pathOn(pathname, '/routes')) return 'map';
   if (pathOn(pathname, '/trips') || pathOn(pathname, '/community') || pathOn(pathname, '/posts')) return 'trips';
   if (pathOn(pathname, '/upload')) return 'upload';
-  if (pathOn(pathname, '/mountain-weather') || pathOn(pathname, '/conditions')) return 'weather';
+  if (pathOn(pathname, '/mountain-weather')) return 'weather';
   if (pathOn(pathname, '/sign-in') || settingsSection(pathname, account)) return 'profile';
   return null;
 }

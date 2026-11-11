@@ -29,7 +29,6 @@ test('every section page has a breadcrumb, including the parent', () => {
   assert.equal(pageTrail('/posts', '', nobody).parentHref, '/community');
   assert.deepEqual(pageTrail('/peaks', '', nobody).crumbs?.map((crumb) => crumb.label), ['Community', 'Peaks']);
   assert.deepEqual(pageTrail('/chat', '', nobody).crumbs?.map((crumb) => crumb.label), ['Community', 'Chat']);
-  assert.deepEqual(pageTrail('/gear', '', nobody).crumbs?.map((crumb) => crumb.label), ['Community', 'Gear']);
   assert.deepEqual(pageTrail('/members', '', nobody).crumbs?.map((crumb) => crumb.label), ['Community', 'Members']);
   assert.deepEqual(pageTrail('/map', '', nobody).crumbs?.map((crumb) => crumb.label), ['Map']);
   assert.deepEqual(pageTrail('/upload', '', nobody).crumbs?.map((crumb) => crumb.label), ['Upload']);
@@ -75,14 +74,17 @@ test('an upload form sits under Upload', () => {
   assert.deepEqual(trail.crumbs?.map((crumb) => crumb.label), ['Upload', 'Pin']);
 });
 
-test('a post, pin, route, photo, and gear item name the record', () => {
+test('a post, pin, route, and photo name the record', () => {
   assert.equal(pageTrail('/posts/abc', '', nobody, 'Greasefest').crumbs?.at(-1)?.label, 'Greasefest');
   assert.equal(pageTrail('/pins/abc', '', nobody, 'Lookout').parentHref, '/map');
   assert.equal(pageTrail('/routes/abc', '', nobody, 'Ridge').crumbs?.at(-1)?.label, 'Ridge');
   assert.equal(pageTrail('/photos/abc', '', nobody).crumbs?.at(-1)?.label, 'Photo');
   assert.deepEqual(pageTrail('/photos/abc', '', nobody).crumbs?.map((crumb) => crumb.label), ['Community', 'Photos', 'Photo']);
   assert.deepEqual(pageTrail('/photos', '', nobody).crumbs?.map((crumb) => crumb.label), ['Community', 'Photos']);
-  assert.equal(pageTrail('/gear/abc', '', nobody, 'Stove').parentHref, '/gear');
+  assert.deepEqual(
+    pageTrail('/mountain-weather/conditions', '', nobody).crumbs?.map((crumb) => crumb.label),
+    ['Mountain Weather', 'Conditions'],
+  );
 });
 
 test('the home hero opens fishing the same way as the other parent sections', () => {

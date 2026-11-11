@@ -21,15 +21,19 @@ export const COMMUNITY_LINKS: NavLink[] = [
   { href: '/chat', label: 'Chat' },
   { href: '/peaks', label: 'Peaks' },
   { href: '/posts', label: 'Posts' },
-  { href: '/gear', label: 'Gear' },
+  { href: '/routes', label: 'Routes' },
+  { href: '/pins', label: 'Pins' },
   { href: '/photos', label: 'Photos' },
   { href: '/members', label: 'Members' },
 ];
 
-export const WEATHER_LINKS: NavLink[] = REGION_OPTIONS.map((option) => ({
-  href: `/mountain-weather?state=${option.code}`,
-  label: option.label,
-}));
+export const WEATHER_LINKS: NavLink[] = [
+  { href: '/mountain-weather/conditions', label: 'Conditions' },
+  ...REGION_OPTIONS.map((option) => ({
+    href: `/mountain-weather?state=${option.code}`,
+    label: option.label,
+  })),
+];
 
 export const UPLOAD_LINKS: NavLink[] = [
   { href: '/upload?kind=post', label: 'Post' },
@@ -38,14 +42,15 @@ export const UPLOAD_LINKS: NavLink[] = [
   { href: '/upload?kind=photo', label: 'Photo' },
 ];
 
-const COMMUNITY_ROOTS = ['/community', '/chat', '/peaks', '/posts', '/gear', '/photos', '/members'];
+const COMMUNITY_ROOTS = ['/community', '/chat', '/peaks', '/posts', '/photos', '/members', '/routes', '/pins'];
 
 const COMMUNITY_PAGES: Record<string, string> = {
   '/chat': 'Chat',
   '/peaks': 'Peaks',
   '/posts': 'Posts',
-  '/gear': 'Gear',
   '/photos': 'Photos',
+  '/routes': 'Routes',
+  '/pins': 'Pins',
   '/members': 'Members',
 };
 
@@ -209,10 +214,13 @@ export function pageTrail(pathname: string, search: string, account: NavAccount,
     };
   }
 
-  if (/^\/gear\/[^/]+$/.test(pathname)) {
+  if (pathname === '/mountain-weather/conditions') {
     return {
-      parentHref: '/gear',
-      crumbs: communityTrail('/gear', 'Gear', named(pathname, 'Gear', leaf)),
+      parentHref: '/mountain-weather',
+      crumbs: [
+        { href: '/mountain-weather', label: 'Mountain Weather' },
+        { href: '/mountain-weather/conditions', label: 'Conditions' },
+      ],
     };
   }
 
@@ -276,16 +284,6 @@ export function pageTrail(pathname: string, search: string, account: NavAccount,
       crumbs: [
         { href: profile, label: 'Profile' },
         { href: '/admin', label: 'Admin' },
-      ],
-    };
-  }
-
-  if (pathname === '/conditions') {
-    return {
-      parentHref: '/mountain-weather',
-      crumbs: [
-        { href: '/mountain-weather', label: 'Mountain Weather' },
-        { href: '/conditions', label: 'Conditions' },
       ],
     };
   }
@@ -400,7 +398,7 @@ export function matchSection(pathname: string, search: string, account: NavAccou
     };
   }
 
-  if (pathOn(pathname, '/mountain-weather') || pathname === '/conditions') {
+  if (pathOn(pathname, '/mountain-weather')) {
     return {
       id: 'weather',
       href: '/mountain-weather',
