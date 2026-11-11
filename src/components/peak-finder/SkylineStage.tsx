@@ -1,10 +1,12 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { cardinalLabel, formatDirection } from '@/lib/peak-finder/format';
 import type { SkylinePayload } from '@/lib/peak-finder/payload';
 import { projectDirection, verticalFov } from '@/lib/peak-finder/projection';
-import { LABEL_BOX_HEIGHT_PX, LABEL_TICK_PX, labelsInView, type LabelCandidate } from '@/lib/peak-finder/declutter';
+import { LABEL_BOX_HEIGHT_PX, LABEL_TICK_PX, type LabelCandidate } from '@/lib/peak-finder/declutter';
+import { labelFontWeight, labelOpacity } from '@/lib/peak-finder/label-ranking';
+import { placeLabels } from '@/lib/peak-finder/label-placement';
 import { wrap180 } from '@/lib/peak-finder/geo';
 import type { GestureMode } from '@/lib/peak-finder/explore-gestures';
 import type { VisiblePeak } from '@/lib/peak-finder/visibility';
@@ -21,6 +23,7 @@ export function SkylineStage({
   gestureMode,
   onSettle,
   showReadout,
+  reserveSummitName,
 }: {
   payload: SkylinePayload | null;
   appearance: 'camera' | 'drawn';
@@ -31,6 +34,7 @@ export function SkylineStage({
   gestureMode: GestureMode;
   onSettle?: () => void;
   showReadout: boolean;
+  reserveSummitName?: string | null;
 }) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const wrapRef = useRef<HTMLDivElement | null>(null);
@@ -76,7 +80,21 @@ export function SkylineStage({
     return () => cancelAnimationFrame(frame);
   }, [appearance, getView, size.height, size.width]);
 
-  const labels = labelsFor(payload, pose, size.width, size.height);
+  const placement = useMemo(() => {
+    if (!payload || size.width < 2 || size.height < 2) {
+      return { labels: [] as LabelCandidate[], markers: [] };
+    }
+    const reserve = reserveSummitName ? [reserveSummitName] : [];
+    return placeLabels(payload.peaks, pose, size.width, size.height, reserve);
+  }, [payload, pose, reserveSummitName, size.height, size.width]);
+  const labelByKey = useMemo(() => {
+    const map = new Map<string, LabelCandidate>();
+    for (const label of placement.labels) {
+      map.set(`${label.name}-${label.lat.toFixed(4)}-${label.lng.toFixed(4)}`, label);
+    }
+    return map;
+  }, [placement.labels]);
+  const labelTiltDeg = placement.labels.length < 12 ? -40 : -45;
 
   useEffect(() => {
     const wrap = wrapRef.current;
@@ -149,18 +167,35 @@ export function SkylineStage({
           Looking {formatDirection(pose.heading)}
         </p>
       ) : null}
-      {labels.map((label) => {
+      {placement.markers.map((marker) => {
+        const key = `${marker.name}-${marker.lat.toFixed(4)}-${marker.lng.toFixed(4)}`;
+        const label = labelByKey.get(key);
         const onCamera = appearance === 'camera';
         const color = onCamera ? '#e7f6c8' : '#2d5016';
+        const tickColor = onCamera ? 'rgba(231,246,200,0.85)' : 'rgba(45,80,22,0.72)';
+        if (!label) {
+          return (
+            <UnlabeledPeakTick
+              key={key}
+              marker={marker}
+              selected={selectedName === marker.name}
+              tickColor={tickColor}
+              onPick={onPick}
+            />
+          );
+        }
+        const fontSize = label.fontSizePx ?? 13;
+        const weight = labelFontWeight(label.distanceM);
+        const opacity = labelOpacity(label.distanceM);
         return (
           <div
-            key={`${label.name}-${label.lat.toFixed(3)}-${label.lng.toFixed(3)}`}
+            key={key}
             className="pointer-events-none absolute z-10 h-0 w-0"
             style={{ left: label.x, top: label.y }}
           >
             <span
               className="absolute left-0 w-px"
-              style={{ bottom: 0, height: LABEL_TICK_PX, background: color }}
+              style={{ bottom: 0, height: LABEL_TICK_PX, background: color, opacity }}
             />
             {label.slidePx > 0 ? (
               <span
@@ -169,7 +204,8 @@ export function SkylineStage({
                   bottom: LABEL_TICK_PX,
                   width: label.slidePx,
                   background: color,
-                  transform: 'rotate(-45deg)',
+                  opacity,
+                  transform: `rotate(${-labelTiltDeg}deg)`,
                   transformOrigin: 'left center',
                 }}
               />
@@ -178,15 +214,18 @@ export function SkylineStage({
               type="button"
               onPointerDown={(event) => event.stopPropagation()}
               onClick={() => onPick(label, { x: label.x, y: label.y })}
-              className="pointer-events-auto absolute whitespace-nowrap px-0.5 text-left text-[13px] font-bold"
+              className="pointer-events-auto absolute whitespace-nowrap px-0.5 text-left"
               style={{
                 left: label.slidePx * Math.SQRT1_2,
                 bottom: LABEL_TICK_PX + label.slidePx * Math.SQRT1_2,
                 height: LABEL_BOX_HEIGHT_PX,
                 lineHeight: `${LABEL_BOX_HEIGHT_PX}px`,
-                transform: 'rotate(-45deg)',
+                transform: `rotate(${labelTiltDeg}deg)`,
                 transformOrigin: 'left bottom',
                 color,
+                opacity,
+                fontSize,
+                fontWeight: weight,
                 textShadow: onCamera ? '0 0 2px #000, 0 1px 2px #000' : 'none',
               }}
               aria-pressed={selectedName === label.name}
@@ -200,9 +239,33 @@ export function SkylineStage({
   );
 }
 
-function labelsFor(payload: SkylinePayload | null, pose: ViewPose, width: number, height: number): LabelCandidate[] {
-  if (!payload) return [];
-  return labelsInView(payload.peaks, pose, width, height);
+function UnlabeledPeakTick({
+  marker,
+  selected,
+  tickColor,
+  onPick,
+}: {
+  marker: VisiblePeak & { x: number; y: number };
+  selected: boolean;
+  tickColor: string;
+  onPick: (peak: VisiblePeak, anchor: { x: number; y: number }) => void;
+}) {
+  return (
+    <div className="absolute z-[9] h-0 w-0" style={{ left: marker.x, top: marker.y }}>
+      <span
+        className="pointer-events-none absolute left-0 w-px"
+        style={{ bottom: 0, height: 9, background: tickColor }}
+      />
+      <button
+        type="button"
+        onPointerDown={(event) => event.stopPropagation()}
+        onClick={() => onPick(marker, { x: marker.x, y: marker.y })}
+        className="pointer-events-auto absolute -left-3 -top-4 h-8 w-8 bg-transparent"
+        aria-label={marker.name}
+        aria-pressed={selected}
+      />
+    </div>
+  );
 }
 
 function paint(
