@@ -117,7 +117,7 @@ export function SkylineStage({
         if (pointers.current.size === 0) last.current = null;
       } : undefined}
     >
-      <canvas ref={canvasRef} className="absolute inset-0 z-10 h-full w-full" />
+      <canvas ref={canvasRef} className="absolute inset-0 h-full w-full" />
       {showReadout ? (
         <p className="pointer-events-none absolute left-2 top-2 bg-[#e7e1d4]/90 px-2 py-1 text-xs font-bold text-[#5c3a1e]">
           Looking {formatDirection(pose.heading)}

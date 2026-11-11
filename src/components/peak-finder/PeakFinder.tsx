@@ -27,7 +27,6 @@ import {
   viewRoll,
   circularMean,
 } from '@/lib/peak-finder/orientation';
-import { primeVideoPlayback } from '@/lib/peak-finder/video-playback';
 import type { SkylinePayload, WorkerOut } from '@/lib/peak-finder/payload';
 import { loadPeaksAround } from '@/lib/peak-finder/peaks';
 import { initialFov, readCalibration, writeCalibration } from '@/lib/peak-finder/storage';
@@ -266,7 +265,6 @@ export function PeakFinder() {
         audio: false,
       });
       streamRef.current = nextStream;
-      await primeVideoPlayback(nextStream);
       setStream(nextStream);
       setCameraNote(null);
       return true;
