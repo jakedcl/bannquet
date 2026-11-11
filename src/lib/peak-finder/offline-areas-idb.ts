@@ -1,5 +1,6 @@
 import { OFFLINE_AREAS_STORE, OFFLINE_DB_NAME } from './constants';
-import { areaCoversPoint, type OfflineAreaRecord } from './offline';
+import type { OfflineAreaRecord } from './offline';
+import { findCoveringArea } from './start-screen-offline';
 
 function openDb(): Promise<IDBDatabase> {
   return new Promise((resolve, reject) => {
@@ -53,8 +54,5 @@ export function findAreaCovering(
   lat: number,
   lng: number,
 ): OfflineAreaRecord | null {
-  for (const area of areas) {
-    if (areaCoversPoint(area, lat, lng)) return area;
-  }
-  return null;
+  return findCoveringArea(areas, lat, lng);
 }

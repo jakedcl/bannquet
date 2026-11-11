@@ -47,6 +47,13 @@ import { PeakFinderBackButton } from './PeakFinderBackButton';
 import { registerPeakFinderServiceWorker } from '@/lib/peak-finder/register-sw';
 import { findAreaCovering, listOfflineAreas } from '@/lib/peak-finder/offline-areas-idb';
 import type { OfflineAreaRecord } from '@/lib/peak-finder/offline';
+import {
+  effectivelyOffline,
+  OFFLINE_GEO_TIMEOUT_MS,
+  offlineExploreCheck,
+  ONLINE_GEO_TIMEOUT_MS,
+  startScreenUi,
+} from '@/lib/peak-finder/start-screen-offline';
 import type { ViewPose } from './SkylineStage';
 
 const DEFAULT_PIN: Spot = { lat: MAP_CENTER.lat, lng: MAP_CENTER.lng };
@@ -88,6 +95,9 @@ export function PeakFinder() {
   const [networkOnline, setNetworkOnline] = useState(true);
   const [offlineAreas, setOfflineAreas] = useState<OfflineAreaRecord[]>([]);
   const [offlineSavedToast, setOfflineSavedToast] = useState(false);
+  const [networkReachable, setNetworkReachable] = useState(true);
+  const [startFindingLocation, setStartFindingLocation] = useState(false);
+  const [startOutsideSaved, setStartOutsideSaved] = useState(false);
 
   const viewRef = useRef<ViewPose>({ heading: 0, pitch: 0, roll: 0, hfov: DEFAULT_HFOV_DEG });
   const offsetRef = useRef(0);
@@ -141,10 +151,37 @@ export function PeakFinder() {
     setNetworkOnline(navigator.onLine);
   }, []);
 
+  const offlineMode = effectivelyOffline(networkOnline, networkReachable);
+
   useEffect(() => {
     if (screen !== 'start' && screen !== 'offline') return;
     void listOfflineAreas().then(setOfflineAreas);
   }, [screen]);
+
+  useEffect(() => {
+    if (screen !== 'start') return;
+    let cancelled = false;
+    const probe = async () => {
+      if (!navigator.onLine) {
+        if (!cancelled) setNetworkReachable(false);
+        return;
+      }
+      try {
+        const res = await fetch('/peak-finder/declination.v1.json', {
+          method: 'GET',
+          cache: 'no-store',
+          signal: AbortSignal.timeout(4_000),
+        });
+        if (!cancelled) setNetworkReachable(res.ok);
+      } catch {
+        if (!cancelled) setNetworkReachable(false);
+      }
+    };
+    void probe();
+    return () => {
+      cancelled = true;
+    };
+  }, [screen, networkOnline]);
 
   useEffect(() => {
     if (!offlineSavedToast) return;
@@ -397,16 +434,18 @@ export function PeakFinder() {
     setError(null);
     setLiningUp(false);
     setShowDragHint(true);
+    setStartFindingLocation(false);
+    setStartOutsideSaved(false);
   }
 
-  async function readLocation(): Promise<Spot | null> {
+  async function readLocation(timeoutMs: number, maximumAge = 0): Promise<Spot | null> {
     if (!navigator.geolocation) return null;
     try {
       return await new Promise<Spot>((resolve, reject) => {
         navigator.geolocation.getCurrentPosition(
           (position) => resolve({ lat: position.coords.latitude, lng: position.coords.longitude }),
           () => reject(new Error('location')),
-          { enableHighAccuracy: true, maximumAge: 0, timeout: 12_000 },
+          { enableHighAccuracy: true, maximumAge, timeout: timeoutMs },
         );
       });
     } catch {
@@ -435,11 +474,7 @@ export function PeakFinder() {
     }
   }
 
-  async function beginExplore() {
-    setStartNote(null);
-    setBanner(null);
-    setError(null);
-    setShowDragHint(true);
+  async function proceedExploreFrom(here: Spot) {
     if (sensors) {
       if (typeof OffscreenCanvas === 'undefined') {
         setError('This browser cannot draw the skyline. Use a current Safari or Chrome.');
@@ -458,29 +493,41 @@ export function PeakFinder() {
       }
       const cameraOk = await tryStartCamera();
       setCameraOn(cameraOk);
-      const here = await readLocation();
-      if (!here) {
-        setStartNote(LOCATION_DENIED);
-        if (cameraOk) {
-          stopCamera();
-          setCameraOn(false);
-        }
-        return;
-      }
       setLock({ locked: here, pending: null });
       setScreen('explore');
     } else {
-      const here = await readLocation();
-      if (!here) {
-        setStartNote(LOCATION_DENIED);
-        return;
-      }
       setLock({ locked: here, pending: null });
       viewRef.current.heading = 0;
       viewRef.current.pitch = 0;
       viewRef.current.roll = 0;
       setScreen('explore');
     }
+  }
+
+  async function beginExplore() {
+    setStartNote(null);
+    setStartOutsideSaved(false);
+    setBanner(null);
+    setError(null);
+    setShowDragHint(true);
+    setStartFindingLocation(true);
+    const timeoutMs = offlineMode ? OFFLINE_GEO_TIMEOUT_MS : ONLINE_GEO_TIMEOUT_MS;
+    const maxAge = offlineMode ? 120_000 : 0;
+    const here = await readLocation(timeoutMs, maxAge);
+    setStartFindingLocation(false);
+    if (!here) {
+      setStartNote(
+        offlineMode
+          ? 'Could not get a location fix in time. Try again in the open, or open a saved area below.'
+          : LOCATION_DENIED,
+      );
+      return;
+    }
+    if (offlineExploreCheck(offlineAreas, here.lat, here.lng, offlineMode) === 'outside') {
+      setStartOutsideSaved(true);
+      return;
+    }
+    await proceedExploreFrom(here);
   }
 
   function beginOffline() {
@@ -583,6 +630,7 @@ export function PeakFinder() {
           onSaved={() => void listOfflineAreas().then(setOfflineAreas)}
           onOpenSkyline={openSavedSkyline}
           onSaveComplete={completeOfflineSave}
+          canSaveNewArea={!offlineMode}
         />
       </div>
     );
@@ -604,23 +652,67 @@ export function PeakFinder() {
   const skylineGestures = gestureMode !== 'off';
 
   if (screen === 'start') {
+    const startUi = startScreenUi(offlineMode, offlineAreas.length);
     return (
-      <div className="relative flex h-full flex-col items-center justify-center gap-4 bg-[#e7e1d4] px-6 text-center text-[#1a1a1a]">
+      <div className="relative flex h-full flex-col items-center justify-center gap-4 overflow-y-auto bg-[#e7e1d4] px-6 py-4 text-center text-[#1a1a1a]">
         <h1 className="text-xl font-bold text-[#2d5016]">Peak Finder</h1>
+        {startUi.showOfflineBadge ? (
+          <span className="rounded border-2 border-[#5c3a1e] bg-[#ffc94d] px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide">
+            Offline
+          </span>
+        ) : null}
         <p className="max-w-sm text-sm leading-snug">See which peaks are in view from where you stand, or from a pin on the map.</p>
         <div className="flex w-full max-w-sm flex-col gap-2">
-          <button type="button" className="retro-button min-h-11 px-4 text-sm" onClick={() => void beginExplore()}>
+          <button
+            type="button"
+            className="retro-button min-h-11 px-4 text-sm"
+            disabled={startFindingLocation}
+            onClick={() => void beginExplore()}
+          >
             Explore my current location
           </button>
-          <button type="button" className="retro-button min-h-11 px-4 text-sm" onClick={beginPick}>
-            Pick a spot on the map
-          </button>
-          <button type="button" className="retro-button retro-button-yellow min-h-11 px-4 text-sm font-bold" onClick={beginOffline}>
-            Offline mode / Save area for offline
-          </button>
+          {startFindingLocation ? (
+            <p className="text-xs font-bold text-[#2d5016]" role="status">
+              Finding your location…
+            </p>
+          ) : null}
+          {startUi.showPickMap ? (
+            <button type="button" className="retro-button min-h-11 px-4 text-sm" onClick={beginPick}>
+              Pick a spot on the map
+            </button>
+          ) : null}
+          {startUi.showSaveOffline ? (
+            <button type="button" className="retro-button retro-button-yellow min-h-11 px-4 text-sm font-bold" onClick={beginOffline}>
+              Offline mode / Save area for offline
+            </button>
+          ) : null}
         </div>
-        {!networkOnline && offlineAreas.length > 0 ? (
-          <p className="max-w-sm text-xs leading-snug text-[#3d3d3d]">You are offline. Explore works inside saved areas.</p>
+        {startOutsideSaved ? (
+          <div className="flex w-full max-w-sm flex-col gap-2 text-left">
+            <p className="text-sm font-bold leading-snug text-red-900">
+              You&apos;re outside your saved offline areas.
+            </p>
+            <p className="text-xs leading-snug text-[#3d3d3d]">Open a saved area below, or move into one you downloaded and try Explore again.</p>
+          </div>
+        ) : null}
+        {startUi.showSavedAreasList || startOutsideSaved ? (
+          <ul className="flex w-full max-w-sm flex-col gap-2">
+            {offlineAreas.map((area) => (
+              <li key={area.id} className="retro-box flex flex-col gap-2 p-3 text-left text-sm">
+                <span className="font-bold">{area.name}</span>
+                <span className="text-xs text-[#3d3d3d]">
+                  {Math.round(area.radiusM / 1000)} km · {new Date(area.savedAt).toLocaleDateString()}
+                </span>
+                <button
+                  type="button"
+                  className="retro-button retro-button-yellow min-h-9 self-start px-3 text-xs"
+                  onClick={() => openSavedSkyline({ lat: area.lat, lng: area.lng })}
+                >
+                  Open skyline
+                </button>
+              </li>
+            ))}
+          </ul>
         ) : null}
         {startNote ? <p className="max-w-sm text-sm font-bold leading-snug text-red-900">{startNote}</p> : null}
         {offlineSavedToast ? (

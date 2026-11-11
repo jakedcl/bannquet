@@ -25,6 +25,7 @@ type Props = {
   onSaved: () => void;
   onOpenSkyline: (spot: Spot) => void;
   onSaveComplete: () => void;
+  canSaveNewArea?: boolean;
 };
 
 function newId(): string {
@@ -34,7 +35,7 @@ function newId(): string {
 const OFFLINE_USE_HINT =
   'With no signal, open Peak Finder and tap Explore my current location while you are inside this saved area.';
 
-export function PeakFinderOffline({ onBack, onSaved, onOpenSkyline, onSaveComplete }: Props) {
+export function PeakFinderOffline({ onBack, onSaved, onOpenSkyline, onSaveComplete, canSaveNewArea = true }: Props) {
   const [step, setStep] = useState<OfflineStep>('hub');
   const [areas, setAreas] = useState<OfflineAreaRecord[]>([]);
   const [spot, setSpot] = useState<Spot>(MAP_CENTER);
@@ -137,9 +138,13 @@ export function PeakFinderOffline({ onBack, onSaved, onOpenSkyline, onSaveComple
         <p className="mt-2 text-sm leading-snug">{OFFLINE_USE_HINT}</p>
         <p className="mt-2 text-xs text-[#3d3d3d]">Tip: on iPhone, Add to Home Screen keeps saved data longer.</p>
       </div>
-      <button type="button" className="retro-button retro-button-yellow min-h-11 w-full text-sm" onClick={startNewSave}>
-        Save area for offline
-      </button>
+      {canSaveNewArea ? (
+        <button type="button" className="retro-button retro-button-yellow min-h-11 w-full text-sm" onClick={startNewSave}>
+          Save area for offline
+        </button>
+      ) : (
+        <p className="text-center text-xs text-[#3d3d3d]">Connect to download a new offline area.</p>
+      )}
       {areas.length > 0 ? (
         <ul className="flex flex-col gap-2">
           {areas.map((area) => (
