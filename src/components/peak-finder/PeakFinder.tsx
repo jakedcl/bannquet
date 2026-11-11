@@ -38,6 +38,7 @@ import {
   shouldAutoEnableMotion,
   type MotionHint,
 } from '@/lib/peak-finder/motion-enable';
+import { FRESH_YAW_CALIBRATION } from '@/lib/peak-finder/compass-resync';
 import { initialFov, readCalibration, writeCalibration } from '@/lib/peak-finder/storage';
 import { CameraView } from './CameraView';
 import { DesktopPan } from './DesktopPan';
@@ -121,14 +122,44 @@ export function PeakFinder() {
   const debugModeRef = useRef(false);
   const gyroLiveRef = useRef<GyroDiagLive | null>(null);
   const gyroEventTimesRef = useRef<number[]>([]);
+  const gyroSmootherRef = useRef<ReturnType<typeof createGyroSmoother> | null>(null);
+  const gyroYawCalRef = useRef<YawCalibration>(FRESH_YAW_CALIBRATION);
+  const gyroPreviousRawRef = useRef<number | null>(null);
+  const gyroLastJumpRef = useRef(0);
+  const gyroLastAccuracyRef = useRef<number | null | undefined>(undefined);
+  const gyroLastPitchRef = useRef(0);
+  const liningUpRef = useRef(false);
   const gyroRecorder = useMemo(() => createGyroRecorder(), []);
 
   const getView = useCallback(() => viewRef.current, []);
 
+  const resyncCompassToDevice = useCallback(() => {
+    offsetRef.current = 0;
+    pitchOffsetRef.current = 0;
+    gyroSmootherRef.current?.reset();
+    gyroYawCalRef.current = FRESH_YAW_CALIBRATION;
+    gyroPreviousRawRef.current = null;
+    gyroLastJumpRef.current = 0;
+    gyroLastAccuracyRef.current = undefined;
+    unsureRef.current = false;
+    setUnsure(false);
+    if (followRef.current || liningUpRef.current) {
+      viewRef.current.heading = wrap360(baseRef.current);
+      viewRef.current.pitch = applyLineUpPitchOffset(
+        clampGyroViewPitch(gyroLastPitchRef.current),
+        0,
+      );
+    }
+  }, []);
+
+  useEffect(() => {
+    liningUpRef.current = liningUp;
+  }, [liningUp]);
+
   useEffect(() => {
     const calibration = readCalibration();
-    offsetRef.current = calibration.headingOffset;
-    pitchOffsetRef.current = calibration.pitchOffset ?? 0;
+    offsetRef.current = 0;
+    pitchOffsetRef.current = 0;
     viewRef.current = {
       heading: 0,
       pitch: 0,
@@ -311,6 +342,7 @@ export function PeakFinder() {
     motionSessionGrantedRef.current = true;
     setMotionHint(null);
     setBanner(null);
+    resyncCompassToDevice();
     gyroVerifyResolveRef.current?.(true);
     gyroVerifyResolveRef.current = null;
   }
@@ -364,14 +396,15 @@ export function PeakFinder() {
   useEffect(() => {
     if (!motionArmed) return;
     const smoother = createGyroSmoother();
+    gyroSmootherRef.current = smoother;
+    gyroYawCalRef.current = FRESH_YAW_CALIBRATION;
+    gyroPreviousRawRef.current = null;
+    gyroLastJumpRef.current = 0;
+    gyroLastAccuracyRef.current = undefined;
     const useAbsolute = typeof window !== 'undefined' && 'ondeviceorientationabsolute' in window;
     const eventName = useAbsolute ? 'deviceorientationabsolute' : 'deviceorientation';
     let frame = 0;
     let queued = false;
-    let previousRaw: number | null = null;
-    let lastJump = 0;
-    let lastAccuracy: number | null | undefined;
-    let calibration: YawCalibration = { offset: 0, ready: false };
     const pushDiag = (
       event: DeviceOrientationEvent,
       extra: DeviceOrientationEvent & { webkitCompassHeading?: number; webkitCompassAccuracy?: number },
@@ -399,8 +432,8 @@ export function PeakFinder() {
         rawPitch: pose?.pitch ?? null,
         smoothHeading: filtered.magnetic,
         smoothPitch: filtered.pitch,
-        yawOffset: calibration.offset,
-        yawReady: calibration.ready,
+        yawOffset: gyroYawCalRef.current.offset,
+        yawReady: gyroYawCalRef.current.ready,
         guardHeld: filtered.guardHeld,
       };
       gyroLiveRef.current = { ...sample, eventHz: eventRateHz(gyroEventTimesRef.current, now) };
@@ -417,12 +450,12 @@ export function PeakFinder() {
         absolute: useAbsolute || event.absolute,
         webkitCompassHeading: extra.webkitCompassHeading,
       };
-      calibration = updateYawCalibration(calibration, reading, screenAngle);
+      gyroYawCalRef.current = updateYawCalibration(gyroYawCalRef.current, reading, screenAngle);
       if (motionArmed && !gyroVerifiedRef.current && orientationEventHasData(event)) {
-        const poseProbe = deviceCameraPose(reading, screenAngle, calibration);
+        const poseProbe = deviceCameraPose(reading, screenAngle, gyroYawCalRef.current);
         if (poseProbe != null) confirmGyroLive();
       }
-      const pose = deviceCameraPose(reading, screenAngle, calibration);
+      const pose = deviceCameraPose(reading, screenAngle, gyroYawCalRef.current);
       if (pose == null) return;
       const filtered = followRef.current
         ? smoother.smooth(pose.magneticHeading, pose.pitch, pose.roll, performance.now())
@@ -434,9 +467,10 @@ export function PeakFinder() {
         };
       pushDiag(event, extra, pose, filtered, screenAngle);
       if (!followRef.current) return;
-      lastJump = headingJump(previousRaw, pose.magneticHeading);
-      previousRaw = pose.magneticHeading;
-      lastAccuracy = extra.webkitCompassAccuracy;
+      gyroLastJumpRef.current = headingJump(gyroPreviousRawRef.current, pose.magneticHeading);
+      gyroPreviousRawRef.current = pose.magneticHeading;
+      gyroLastAccuracyRef.current = extra.webkitCompassAccuracy;
+      gyroLastPitchRef.current = filtered.pitch;
       if (queued) return;
       queued = true;
       frame = requestAnimationFrame(() => {
@@ -449,7 +483,7 @@ export function PeakFinder() {
           pitchOffsetRef.current,
         );
         viewRef.current.roll = filtered.roll;
-        const unsure = compassUnsure(lastAccuracy, lastJump);
+        const unsure = compassUnsure(gyroLastAccuracyRef.current, gyroLastJumpRef.current);
         if (unsure !== unsureRef.current) {
           unsureRef.current = unsure;
           setUnsure(unsure);
@@ -461,9 +495,12 @@ export function PeakFinder() {
       window.removeEventListener(eventName, onReading);
       cancelAnimationFrame(frame);
       smoother.reset();
+      gyroSmootherRef.current = null;
       gyroLiveRef.current = null;
       gyroEventTimesRef.current = [];
     };
+    // confirmGyroLive is intentionally excluded — listener should stay stable across renders.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [motionArmed, declination, gyroRecorder]);
 
   useEffect(() => {
@@ -706,13 +743,40 @@ export function PeakFinder() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [screen, sensors, iosMotion]);
 
+  const screenRef = useRef<Screen>('start');
+
+  useEffect(() => {
+    screenRef.current = screen;
+  }, [screen]);
+
+  useEffect(() => {
+    const activeScreen = () => {
+      const s = screenRef.current;
+      return s === 'explore' || s === 'pick-view';
+    };
+    const onVisibility = () => {
+      if (!activeScreen() || document.visibilityState !== 'visible') return;
+      resyncCompassToDevice();
+    };
+    const onPageShow = () => {
+      if (!activeScreen()) return;
+      resyncCompassToDevice();
+    };
+    document.addEventListener('visibilitychange', onVisibility);
+    window.addEventListener('pageshow', onPageShow);
+    return () => {
+      document.removeEventListener('visibilitychange', onVisibility);
+      window.removeEventListener('pageshow', onPageShow);
+    };
+  }, [resyncCompassToDevice]);
+
+  function resetLineUp() {
+    resyncCompassToDevice();
+  }
+
   function finishLineUp() {
     setLiningUp(false);
-    writeCalibration({
-      headingOffset: offsetRef.current,
-      pitchOffset: pitchOffsetRef.current,
-      hfov: viewRef.current.hfov,
-    });
+    writeCalibration({ headingOffset: 0, pitchOffset: 0, hfov: viewRef.current.hfov });
   }
 
   function toggleLineUp() {
@@ -922,6 +986,7 @@ export function PeakFinder() {
             onEnableMotion={() => void enableGyroFromGesture()}
             liningUp={liningUp}
             onLineUp={showCamera ? toggleLineUp : null}
+            onLineUpReset={showCamera && liningUp ? resetLineUp : null}
             onChangeSpot={screen === 'pick-view' && stacked ? () => setScreen('pick-map') : null}
             coverageNote={coverage === 'partial' ? 'Some surrounding peak lists are not in this build, so a few names may be missing.' : null}
             onSummit={payload?.onSummit ?? null}
@@ -1002,6 +1067,7 @@ function Controls({
   onEnableMotion,
   liningUp,
   onLineUp,
+  onLineUpReset,
   onChangeSpot,
   coverageNote,
   onSummit,
@@ -1016,6 +1082,7 @@ function Controls({
   onEnableMotion: () => void;
   liningUp: boolean;
   onLineUp: (() => void) | null;
+  onLineUpReset: (() => void) | null;
   onChangeSpot: (() => void) | null;
   coverageNote: string | null;
   onSummit: { name: string; elevationM: number } | null;
@@ -1081,6 +1148,16 @@ function Controls({
                   if (next !== gyroOn) onGyro();
                 }}
               />
+            ) : null}
+            {onLineUpReset ? (
+              <button
+                type="button"
+                data-pf-control
+                className="peak-finder-control retro-button min-h-8 shrink-0 px-2 py-0 text-[10px] font-bold text-[#1a1a1a]"
+                onClick={onLineUpReset}
+              >
+                Reset
+              </button>
             ) : null}
             {onLineUp ? (
               <button

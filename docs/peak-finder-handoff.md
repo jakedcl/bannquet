@@ -84,7 +84,7 @@ Client-side only; no extra downloads.
 
 ### Orientation and line-up
 
-Gyro path is unchanged in `orientation.ts`: magnetic heading + declination + screen angle + yaw calibration. Stored **`headingOffset`** (`pf:calibration:v1`) is added on top of the live compass heading when following.
+Gyro path is unchanged in `orientation.ts`: magnetic heading + declination + screen angle + yaw calibration. In-memory **`headingOffset`** / **`pitchOffset`** are added on top of the live compass heading when following (session only — not restored on reload).
 
 **Gyro on explore** (`motion-enable.ts`, `orientation.ts`):
 
@@ -99,7 +99,9 @@ Gyro path is unchanged in `orientation.ts`: magnetic heading + declination + scr
 - **Horizontal**: updates `headingOffset` against the current compass base heading.
 - **Vertical**: updates **`pitchOffset`** (±15°, `line-up-offset.ts`), applied on top of `clampGyroViewPitch` output without changing sensor math.
 
-Pinch still changes `hfov` (22°–110°). Finishing line-up writes `headingOffset`, `pitchOffset`, and `hfov` to calibration.
+Pinch still changes `hfov` (22°–110°). Finishing line-up keeps offsets in memory for the visit; only **`hfov`** is persisted (`pf:calibration:v1` via `compass-resync.ts`).
+
+**Compass resync** (`resyncCompassToDevice` in `PeakFinder.tsx`): clears line-up offsets and resets yaw learning, One Euro smoother state, heading jump/unsure flags, then snaps the view to the current compass base. Runs when gyro is verified after a re-arm, when the tab becomes visible (`visibilitychange`) or returns from bfcache (`pageshow`), and manually via **Reset** while line-up is active (compact control next to **Done**). Turning gyro off does not clear offsets until one of those triggers; toggling gyro back on re-verifies and resyncs.
 
 ### Heading readout
 
@@ -111,7 +113,7 @@ Centered at the top of `SkylineStage` with safe-area inset. Shown on drawn and c
 
 **Explore (phone)**: optional live camera under the skyline; Cam and Gyro toggles; line-up when camera is on. **Desktop pick**: map + drawn pane; keyboard/wheel pan when not using sensors.
 
-**Bottom bar** (skyline, all phone widths): one compact strip at the bottom — **Cam**, **Gyro**, **Line up** / **Done**, **Change spot** (pick-view stacked layout only), **⋯** info. Semi-opaque bar, black/dark text readable on camera. Credits and disclaimers live **only** in the overlay opened by ⋯ (`PEAK_CREDITS`, `BARE_EARTH_NOTE`, partial-coverage note). Collapsed: **zero layout space** (popover is `absolute` above the bar). **You're on:** sits in a single line above the bar when applicable.
+**Bottom bar** (skyline, all phone widths): one compact strip at the bottom — **Cam**, **Gyro**, **Reset** (line-up only), **Line up** / **Done**, **Change spot** (pick-view stacked layout only), **⋯** info. Semi-opaque bar, black/dark text readable on camera. Credits and disclaimers live **only** in the overlay opened by ⋯ (`PEAK_CREDITS`, `BARE_EARTH_NOTE`, partial-coverage note). Collapsed: **zero layout space** (popover is `absolute` above the bar). **You're on:** sits in a single line above the bar when applicable.
 
 **Status** (top center): loading, errors, gyro unsure, coverage none, etc. — separate from the info popover.
 
@@ -152,7 +154,7 @@ New test files must be listed in the `test` script in `package.json`.
 | --- | --- |
 | Summit integration | `summit-view.test.ts` — Marcy/Washington visibility, front-ridge labels, Colden declutter counts, Keene Valley sparsity |
 | Labels | `label-ranking.test.ts`, `label-placement.test.ts`, `declutter.test.ts` |
-| Line-up / motion | `line-up-offset.test.ts`, `motion-enable.test.ts`, `explore-gestures.test.ts` |
+| Line-up / motion | `line-up-offset.test.ts`, `compass-resync.test.ts`, `motion-enable.test.ts`, `explore-gestures.test.ts` |
 | Offline | `offline.test.ts`, `start-screen-offline.test.ts`, `offline-area-picker-map.test.ts`, `offline-area-picker-layout.test.ts` |
 | SW | `sw-routing.test.ts` |
 | Core lib | `visibility`, `skyline`, `tiles`, `peaks`, `orientation`, `geo`, `location`, `gyro-*` |
