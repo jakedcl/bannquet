@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   BARE_EARTH_NOTE,
   DEFAULT_HFOV_DEG,
@@ -35,6 +35,8 @@ import { DesktopPan } from './DesktopPan';
 import { DrawnView } from './DrawnView';
 import { LineUp } from './LineUp';
 import { PeakCard } from './PeakCard';
+import { createGyroRecorder, eventRateHz, type GyroDiagLive } from '@/lib/peak-finder/gyro-diagnostics';
+import { PeakFinderGyroDebug } from './PeakFinderGyroDebug';
 import { RetroSwitch } from './RetroSwitch';
 import { SpotPicker } from './SpotPicker';
 import type { ViewPose } from './SkylineStage';
@@ -71,6 +73,7 @@ export function PeakFinder() {
   const [declinationNote, setDeclinationNote] = useState<string | null>(null);
   const [table, setTable] = useState<DeclinationTable | null>(null);
   const [showDragHint, setShowDragHint] = useState(true);
+  const [debugMode, setDebugMode] = useState(false);
 
   const viewRef = useRef<ViewPose>({ heading: 0, pitch: 0, roll: 0, hfov: DEFAULT_HFOV_DEG });
   const offsetRef = useRef(0);
@@ -78,6 +81,10 @@ export function PeakFinder() {
   const followRef = useRef(false);
   const streamRef = useRef<MediaStream | null>(null);
   const unsureRef = useRef(false);
+  const debugModeRef = useRef(false);
+  const gyroLiveRef = useRef<GyroDiagLive | null>(null);
+  const gyroEventTimesRef = useRef<number[]>([]);
+  const gyroRecorder = useMemo(() => createGyroRecorder(), []);
 
   const getView = useCallback(() => viewRef.current, []);
 
@@ -93,6 +100,9 @@ export function PeakFinder() {
     // eslint-disable-next-line react-hooks/set-state-in-effect -- client layout and sensors after hydration
     setSensors(readSensorCapable());
     setStacked(stackLayout());
+    const debug = new URLSearchParams(window.location.search).get('debug') === '1';
+    debugModeRef.current = debug;
+    setDebugMode(debug);
     setBooted(true);
     const media = window.matchMedia('(max-width: 1023px)');
     const onMedia = () => setStacked(media.matches);
@@ -178,6 +188,41 @@ export function PeakFinder() {
     let lastJump = 0;
     let lastAccuracy: number | null | undefined;
     let calibration: YawCalibration = { offset: 0, ready: false };
+    const pushDiag = (
+      event: DeviceOrientationEvent,
+      extra: DeviceOrientationEvent & { webkitCompassHeading?: number; webkitCompassAccuracy?: number },
+      pose: { magneticHeading: number; pitch: number; roll: number } | null,
+      filtered: { magnetic: number; pitch: number; guardHeld: boolean },
+      screenAngle: number,
+    ) => {
+      if (!debugModeRef.current) return;
+      const now = performance.now();
+      gyroEventTimesRef.current.push(now);
+      if (gyroEventTimesRef.current.length > 150) gyroEventTimesRef.current.shift();
+      const sample = {
+        t: now,
+        step: null as string | null,
+        eventType: eventName,
+        alpha: event.alpha,
+        beta: event.beta,
+        gamma: event.gamma,
+        absolute: Boolean(useAbsolute || event.absolute),
+        webkitHeading: extra.webkitCompassHeading ?? null,
+        webkitAccuracy: extra.webkitCompassAccuracy ?? null,
+        screenAngle,
+        windowOrientation: typeof window.orientation === 'number' ? window.orientation : 'n/a',
+        rawHeading: pose?.magneticHeading ?? null,
+        rawPitch: pose?.pitch ?? null,
+        smoothHeading: filtered.magnetic,
+        smoothPitch: filtered.pitch,
+        yawOffset: calibration.offset,
+        yawReady: calibration.ready,
+        guardHeld: filtered.guardHeld,
+      };
+      gyroLiveRef.current = { ...sample, eventHz: eventRateHz(gyroEventTimesRef.current, now) };
+      gyroRecorder.push(sample, Date.now());
+    };
+
     const onReading = (event: DeviceOrientationEvent) => {
       const extra = event as DeviceOrientationEvent & { webkitCompassHeading?: number; webkitCompassAccuracy?: number };
       const screenAngle = window.screen?.orientation?.angle ?? 0;
@@ -190,8 +235,17 @@ export function PeakFinder() {
       };
       calibration = updateYawCalibration(calibration, reading, screenAngle);
       const pose = deviceCameraPose(reading, screenAngle, calibration);
-      if (pose == null || !followRef.current) return;
-      const filtered = smoother.smooth(pose.magneticHeading, pose.pitch, pose.roll, performance.now());
+      if (pose == null) return;
+      const filtered = followRef.current
+        ? smoother.smooth(pose.magneticHeading, pose.pitch, pose.roll, performance.now())
+        : {
+          magnetic: pose.magneticHeading,
+          pitch: pose.pitch,
+          roll: pose.roll,
+          guardHeld: false,
+        };
+      pushDiag(event, extra, pose, filtered, screenAngle);
+      if (!followRef.current) return;
       lastJump = headingJump(previousRaw, pose.magneticHeading);
       previousRaw = pose.magneticHeading;
       lastAccuracy = extra.webkitCompassAccuracy;
@@ -216,8 +270,10 @@ export function PeakFinder() {
       window.removeEventListener(eventName, onReading);
       cancelAnimationFrame(frame);
       smoother.reset();
+      gyroLiveRef.current = null;
+      gyroEventTimesRef.current = [];
     };
-  }, [gyroOn, declination]);
+  }, [gyroOn, declination, gyroRecorder]);
 
   useEffect(() => {
     if (screen !== 'explore' || !lock.locked) return;
@@ -470,6 +526,9 @@ export function PeakFinder() {
 
       {showSkyline ? (
         <div className="relative min-w-0 flex-1">
+          {debugMode ? (
+            <PeakFinderGyroDebug liveRef={gyroLiveRef} recorder={gyroRecorder} />
+          ) : null}
           {!showMap ? (
             <button
               type="button"

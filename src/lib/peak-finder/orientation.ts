@@ -257,7 +257,7 @@ export type GyroSmoother = {
     pitch: number,
     roll: number,
     timeMs: number,
-  ): { magnetic: number; pitch: number; roll: number };
+  ): { magnetic: number; pitch: number; roll: number; guardHeld: boolean };
 };
 
 export function createGyroSmoother(): GyroSmoother {
@@ -286,15 +286,18 @@ export function createGyroSmoother(): GyroSmoother {
         pitchOut = p;
         rollOut = r;
         seeded = true;
-        return { magnetic: h, pitch: p, roll: r };
+        return { magnetic: h, pitch: p, roll: r, guardHeld: false };
       }
+      const filteredHeading = h;
       const guarded = guardHeadingJump(headingOut, h, spikeFrames);
       h = guarded.heading;
+      const guardHeld = guarded.spikeFrames > 0
+        && Math.abs(wrap180(filteredHeading - headingOut)) > GYRO_HEADING_MAX_JUMP_DEG;
       spikeFrames = guarded.spikeFrames;
       headingOut = applyHeadingDeadZone(headingOut, h);
       pitchOut = applyTiltDeadZone(pitchOut, p);
       rollOut = applyTiltDeadZone(rollOut, r);
-      return { magnetic: headingOut, pitch: pitchOut, roll: rollOut };
+      return { magnetic: headingOut, pitch: pitchOut, roll: rollOut, guardHeld };
     },
   };
 }
