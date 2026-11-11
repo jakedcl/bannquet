@@ -42,13 +42,17 @@ import { PeakFinderGyroDebug } from './PeakFinderGyroDebug';
 import { LineUpCaption } from './LineUp';
 import { RetroSwitch } from './RetroSwitch';
 import { SpotPicker } from './SpotPicker';
+import { PeakFinderOffline } from './PeakFinderOffline';
+import { registerPeakFinderServiceWorker } from '@/lib/peak-finder/register-sw';
+import { findAreaCovering, listOfflineAreas } from '@/lib/peak-finder/offline-areas-idb';
+import type { OfflineAreaRecord } from '@/lib/peak-finder/offline';
 import type { ViewPose } from './SkylineStage';
 
 const DEFAULT_PIN: Spot = { lat: MAP_CENTER.lat, lng: MAP_CENTER.lng };
 const LOCATION_DENIED = 'Location is blocked. Allow it in your browser settings and try again.';
 const CAMERA_DENIED = 'Camera is blocked. Allow it in your browser settings, then turn the camera on to try again.';
 
-type Screen = 'start' | 'explore' | 'pick-map' | 'pick-view';
+type Screen = 'start' | 'explore' | 'pick-map' | 'pick-view' | 'offline';
 type Coverage = 'full' | 'partial' | 'none';
 type ProgressState = { kind: 'loading'; fraction: number } | null;
 
@@ -77,6 +81,8 @@ export function PeakFinder() {
   const [table, setTable] = useState<DeclinationTable | null>(null);
   const [showDragHint, setShowDragHint] = useState(true);
   const [debugMode, setDebugMode] = useState(false);
+  const [networkOnline, setNetworkOnline] = useState(true);
+  const [offlineAreas, setOfflineAreas] = useState<OfflineAreaRecord[]>([]);
 
   const viewRef = useRef<ViewPose>({ heading: 0, pitch: 0, roll: 0, hfov: DEFAULT_HFOV_DEG });
   const offsetRef = useRef(0);
@@ -114,8 +120,42 @@ export function PeakFinder() {
   }, []);
 
   useEffect(() => {
+    registerPeakFinderServiceWorker();
+    const online = () => setNetworkOnline(true);
+    const offline = () => setNetworkOnline(false);
+    window.addEventListener('online', online);
+    window.addEventListener('offline', offline);
+    return () => {
+      window.removeEventListener('online', online);
+      window.removeEventListener('offline', offline);
+    };
+  }, []);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- mirror navigator.onLine after mount
+    setNetworkOnline(navigator.onLine);
+  }, []);
+
+  useEffect(() => {
+    if (screen !== 'start' && screen !== 'offline') return;
+    void listOfflineAreas().then(setOfflineAreas);
+  }, [screen]);
+
+  useEffect(() => {
     loadDeclination().then(setTable).catch(() => setDeclinationNote('The true-north fix did not load. Line up if the labels sit off to one side.'));
   }, []);
+
+  useEffect(() => {
+    if (screen !== 'explore' || !lock.locked || networkOnline) return;
+    void listOfflineAreas().then((areas) => {
+      const hit = findAreaCovering(areas, lock.locked!.lat, lock.locked!.lng);
+      if (!hit) {
+        setBanner('No saved offline area covers this spot. Names and terrain may be missing.');
+      } else {
+        setBanner(null);
+      }
+    });
+  }, [screen, lock.locked, networkOnline]);
 
   const spot: Spot | null = screen === 'explore'
     ? lock.locked
@@ -404,10 +444,20 @@ export function PeakFinder() {
     }
   }
 
+  function beginOffline() {
+    setStartNote(null);
+    setBanner(null);
+    setScreen('offline');
+  }
+
   function beginPick() {
     setStartNote(null);
     setBanner(null);
     setError(null);
+    if (!navigator.onLine) {
+      setStartNote('Needs a network connection for the map. While offline, use Explore my current location inside a saved area.');
+      return;
+    }
     setLock({ locked: null, pending: null });
     stopCamera();
     setCameraOn(false);
@@ -482,6 +532,19 @@ export function PeakFinder() {
     else setLiningUp(true);
   }
 
+  if (!booted) {
+    return <p className="p-4 text-sm font-bold text-[#1a1a1a]">Loading Peak Finder</p>;
+  }
+
+  if (screen === 'offline') {
+    return (
+      <PeakFinderOffline
+        onBack={goStart}
+        onSaved={() => void listOfflineAreas().then(setOfflineAreas)}
+      />
+    );
+  }
+
   const showMoved = screen === 'explore' && lock.pending != null;
   const showMap = screen === 'pick-map' || (screen === 'pick-view' && !stacked);
   const showSkyline = screen === 'explore' || screen === 'pick-view';
@@ -496,9 +559,6 @@ export function PeakFinder() {
     screen,
   });
   const skylineGestures = gestureMode !== 'off';
-  if (!booted) {
-    return <p className="p-4 text-sm font-bold text-[#1a1a1a]">Loading Peak Finder</p>;
-  }
 
   if (screen === 'start') {
     return (
@@ -512,7 +572,13 @@ export function PeakFinder() {
           <button type="button" className="retro-button min-h-11 px-4 text-sm" onClick={beginPick}>
             Pick a spot on the map
           </button>
+          <button type="button" className="retro-button retro-button-yellow min-h-11 px-4 text-sm font-bold" onClick={beginOffline}>
+            Offline mode / Save area for offline
+          </button>
         </div>
+        {!networkOnline && offlineAreas.length > 0 ? (
+          <p className="max-w-sm text-xs leading-snug text-[#3d3d3d]">You are offline. Explore works inside saved areas.</p>
+        ) : null}
         {startNote ? <p className="max-w-sm text-sm font-bold leading-snug text-red-900">{startNote}</p> : null}
       </div>
     );

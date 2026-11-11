@@ -75,6 +75,22 @@ export function tilesCoveringCircle(lat: number, lng: number, radiusM: number, z
 const EARTH_LAT_M = 110_574;
 
 /** Tiles for one view: fine zoom close in, coarse zoom out to 200 km. */
+/** Terrain tiles needed within `radiusM` (same zoom rings as the live view, capped by radius). */
+export function terrainTilesForRadius(lat: number, lng: number, radiusM: number): TileId[] {
+  const seen = new Set<string>();
+  const tiles: TileId[] = [];
+  for (const ring of TERRAIN_RINGS) {
+    const cap = Math.min(ring.radiusM, radiusM);
+    for (const tile of tilesCoveringCircle(lat, lng, cap, ring.zoom)) {
+      const key = `${tile.z}/${tile.x}/${tile.y}`;
+      if (seen.has(key)) continue;
+      seen.add(key);
+      tiles.push(tile);
+    }
+  }
+  return tiles;
+}
+
 export function terrainTiles(lat: number, lng: number): TileId[] {
   const seen = new Set<string>();
   const tiles: TileId[] = [];
