@@ -1,92 +1,127 @@
 # Peak Finder handoff
 
-Branch `lurk/peak-finder-v1-db63`, PR #49. Do not merge. Preview: https://bannquet-git-lurk-peak-finder-v1-db63-dcldev.vercel.app. The page is `/peak-finder`. This file is the state as of the ridge-and-label commit. Do not treat `prominenceDeg` on a visible peak as topographic prominence. That number is only how far the summit rises above the terrain behind it.
+Live at `/peak-finder` ([bannquet.com](https://www.bannquet.com/peak-finder)). This document describes **main** as of the current Peak Finder stack: offline saves, label declutter, explore UI, and no tap-to-open peak cards.
+
+Do not treat `prominenceDeg` on a visible peak as topographic prominence. It is only how far the summit rises above the terrain behind it along the skyline (a declutter signal, not stored chunk metadata).
 
 ## Architecture
 
-The page (`src/app/peak-finder/page.tsx`) renders `PeakFinder`. A web worker builds the skyline so the UI stays responsive. The worker posts a `SkylinePayload`: smoothed horizon, front-ridge layers, visible peaks, eye height, and `onSummit`.
+The App Router page (`src/app/peak-finder/page.tsx`) renders `PeakFinder`. A web worker builds the skyline so the UI stays responsive. The worker posts a `SkylinePayload`: smoothed horizon, front-ridge layers, visible peaks, eye height, and `onSummit`.
 
 | Piece | Role |
 | --- | --- |
-| `src/components/peak-finder/PeakFinder.tsx` | Modes, GPS, compass, worker, "You're on", peak card |
-| `SpotPicker.tsx` | Drop a pin. Opens on USGS satellite imagery, with a toggle to the OpenFreeMap standard style |
-| `DrawnView.tsx` / `CameraView.tsx` | Spot drawing, or the phone camera with the line on top |
-| `SkylineStage.tsx` | Canvas ridges, compass ticks, diagonal labels. Drag looks around. Pinch changes the field of view |
-| `LineUp.tsx` | "Drag the skyline onto a peak you know. Pinch to match its size." Stores a heading offset |
-| `PeakCard.tsx` | The one selected peak: feet, miles, direction |
-| `src/lib/peak-finder/peak-finder.worker.ts` | Load tiles, eye height, cast rays, snap summits, visibility, "You're on" |
+| `PeakFinder.tsx` | Modes (start, pick, explore, offline hub), GPS, compass, worker, controls, status |
+| `SpotPicker.tsx` | Map pin; USGS satellite with OpenFreeMap style toggle |
+| `DrawnView.tsx` / `CameraView.tsx` | Drawn skyline or phone camera with overlays |
+| `SkylineStage.tsx` | Canvas ridges, labels and tick marks, gestures, centered heading readout |
+| `LineUp.tsx` | Short caption during line-up mode |
+| `PeakFinderBackButton.tsx` | Shared top-left Back |
+| `PeakFinderOffline.tsx` / `OfflineAreaPicker.tsx` | Save and open offline areas |
+| `peak-finder.worker.ts` | Tiles, rays, visibility, pack payload |
 | `payload.ts` | Worker message types |
 | `peaks.ts` | 2° chunk index, decode, dedupe |
-| `tiles.ts` / `tile-cache.ts` | Which Terrarium tiles to fetch, bilinear sample, Cache API |
-| `skyline.ts` | Rays, horizon, the lines drawn in front of it |
-| `visibility.ts` | Who is labeled, and the summit underfoot |
-| `declutter.ts` | Which of those names fit on this screen |
-| `projection.ts` | Bearing and angle to a pixel. Vertical field of view follows the pane's aspect |
-| `geo.ts` | Distance, bearing, curvature, apparent elevation. Refraction `k = 0.13` |
-| `orientation.ts` / `declination.ts` / `wmm.ts` | Compass to true heading. The WMM is baked into a table, not run in the browser |
-| `location.ts` / `storage.ts` | "You've moved" after 1 km, and the last pin plus calibration in `localStorage` |
+| `tiles.ts` / `tile-cache.ts` | Terrarium fetch, bilinear sample, Cache API |
+| `skyline.ts` | Rays, horizon, front-ridge profile |
+| `visibility.ts` | Visible peaks, burial/occlusion, `onSummit` |
+| `declutter.ts` | Label box geometry, legacy distance-first `declutter` (tests) |
+| `label-ranking.ts` | Importance score, FOV-scaled cap, distance typography |
+| `label-placement.ts` | Greedy placement by importance, markers in view |
+| `line-up-offset.ts` | ±15° pitch offset on top of gyro pitch |
+| `projection.ts` | Bearing and angle to pixels; vertical FOV from aspect |
+| `geo.ts` | Distance, bearing, curvature, apparent elevation (`k = 0.13`) |
+| `orientation.ts` / `declination.ts` / `wmm.ts` | Compass → true heading; WMM table baked in |
+| `location.ts` / `storage.ts` | “You've moved”, last pin, heading/pitch calibration in `localStorage` |
+| `offline.ts` / `offline-areas-idb.ts` | Offline manifest, IndexedDB area list |
+| `start-screen-offline.ts` | Start screen when offline / saved areas |
+| `sw-routing.ts` | Which URLs the Peak Finder service worker handles |
+| `explore-gestures.ts` | `pan` vs `adjust` (line-up) gesture mode |
 | `format.ts` | Feet, miles, compass labels |
-| `src/lib/security-headers.ts` | Camera and motion sensors only on `/peak-finder` |
+| `src/lib/security-headers.ts` | Camera and motion only on `/peak-finder` |
 
-### Peak chunks
+There is **no** `PeakCard` or tap-to-open peak detail. Labels and tick marks are display-only.
 
-`public/peak-finder/peaks/index.json` is the US catalog (`coverage: "us"`, about 76,757 peaks, built 2026-11-10). Cells are 2°. A chunk is `public/peak-finder/peaks/us/{id}.v1.json`. Each row is `[name, lng×10⁴, lat×10⁴, elevation m or null]`, so the dot is good to about 10 m. The browser loads every chunk within 200 km and caches them (`pf-peaks-v1`).
+## Data and chunks
 
-Build dedupe, in `peaks.ts`: every OSM peak is kept, except two with the same name within 200 m collapse to the higher one. A GeoNames peak is dropped when any OSM peak is within 200 m, or an OSM peak with the same name is within 1.5 km. Chunks do not store topographic prominence, Wikipedia, or Wikidata.
+`public/peak-finder/peaks/index.json` is the US catalog (`coverage: "us"`, on the order of 76k peaks). Cells are **2°**. Each chunk is `public/peak-finder/peaks/us/{id}.v1.json` (for example `n44w074.v1.json`). Rows are `[name, lng×10⁴, lat×10⁴, elevation m or null]`, so coordinates resolve to about 10 m. The worker loads every chunk within **200 km** and caches them under **`pf-peaks-v1`**.
 
-### Terrain
+Build dedupe (`peaks.ts`): keep all OSM peaks except same name within 200 m → higher elevation wins. GeoNames drops if any OSM peak is within 200 m, or same-name OSM within 1.5 km. Chunks do not store topographic prominence, Wikipedia, or Wikidata.
 
-Tiles are AWS Terrarium PNGs (`TERRARIUM_TILES` in `src/lib/map.ts`). The worker fetches them directly and caches the decoded heights (`pf-terrain-v1`, about 150 MB). Rings in `TERRAIN_RINGS`:
+Declination: `public/peak-finder/declination.v1.json` (WMM2025, dated 2026-11-10), 1° cells.
 
-| Zoom | Out to |
+## Terrain
+
+AWS Terrarium PNGs (`TERRARIUM_TILES` in `src/lib/map.ts`). The worker fetches directly; decoded heights live in **`pf-terrain-v1`** (about 150 MB cap). Ring distances match `TERRAIN_RINGS` (zoom 12 → 8 km … zoom 8 → 200 km). `sampleHeight` tries preferred zoom, then finer, then coarser, with bilinear blend. Rays use 0.1° steps; missing samples become 0 m in the caster; summit snap treats missing as skip.
+
+## Visibility and ridges
+
+`eyeHeightM`: highest ground within 10 m plus 2 m. `raiseSummit`: highest within 130 m, `max(stored, sampled)`.
+
+Peaks drop if closer than 30 m, farther than 200 km, or ridges bury more than the top. `summitInView` and burial logic are unchanged from v1; integration tests on Marcy and Washington still guard this.
+
+`viewProfile` draws banded front ridges (4–15, 15–40, 40–100 km), with smoothing and filters described in `skyline.test.ts`. Hidden ridges render dashed on the canvas.
+
+## Labels (declutter)
+
+Client-side only; no extra downloads.
+
+1. **Ranking** (`peakImportanceScore`): `prominenceDeg`, nearness (~30 km scale), elevation.
+2. **Placement** (`placeLabels`): sort by importance; greedy overlap test on tilted label boxes (`declutter.labelCorners`); skip colliding labels at slide 0; nearest three peaks and `onSummit` name may slide up to 120 px to find a gap.
+3. **Cap** (`labelCapForView`): base 40 (phone) / 80 (desktop), scaled up when `hfov` narrows (pinch zoom in).
+4. **Ticks**: every in-view visible peak gets a small ridge tick; unlabeled peaks are ticks only (not tappable).
+5. **Typography**: font size, weight, and opacity scale with distance; tilt ~−45° (slightly shallower when few labels).
+
+`declutter.ts` still exposes the older distance-first `declutter` (240 px slides) for unit tests and `legacyLabelsInView` comparisons.
+
+## Gestures and modes
+
+| Mode | Gestures |
 | --- | --- |
-| 12 | 8 km |
-| 11 | 10 km |
-| 10 | 50 km |
-| 9 | 100 km |
-| 8 | 200 km |
+| Explore + gyro on | Skyline follows device; gestures off unless line-up |
+| Explore + gyro off, or pick-view | One-finger pan (heading + pitch), pinch FOV |
+| Line-up (`adjust`) | Overrides gyro follow: drag shifts stored offsets; pinch FOV |
 
-`sampleHeight` tries the preferred zoom, then a finer zoom, then coarser, and blends the four surrounding pixels. `zoomForDistance` matches the rings. Rays sample from 40 m out: every 80 m to 10 km, then 200 m, 400 m, and 800 m. Ray step is 0.1°. Apparent elevation uses curvature and refraction. A missing sample becomes 0 m inside the ray caster. Summit snap and eye height treat a missing sample as missing and skip it.
+`explore-gestures.ts`: line-up → `adjust`; else gyro on explore → `off`; else → `pan`.
 
-### Visibility
+### Orientation and line-up
 
-`eyeHeightM` is the highest ground within 10 m, plus 2 m. `raiseSummit` moves the dot onto the highest ground within 130 m (step 32 m) and uses `max(stored elevation, that sample)`.
+Gyro path is unchanged in `orientation.ts`: magnetic heading + declination + screen angle + yaw calibration. Stored **`headingOffset`** (`pf:calibration:v1`) is added on top of the live compass heading when following.
 
-A peak is dropped when it is closer than 30 m, farther than 200 km, or the ridges in front bury more than the top of it. `angleBefore` is the highest terrain from 60 m out to 300 m before the summit. The summit's own slopes inside that 300 m are not an occluder. Terrain behind the peak does not hide it. `summitInView` keeps the peak when its angle clears that occluder, or when `burialM` is at most 58 m (about the top 50 m, plus tile noise). `burialM` is how many meters of the summit sit behind the occluder's line, extended out to the peak.
+**Line-up** (camera on, explore): single bottom-bar control toggles Done/Line up. Drag in any direction:
 
-`clearsSkyline`, `bigEnough`, `VISIBLE_TOLERANCE_DEG` (0.05°), `MIN_PROMINENCE_DEG` (0.1°), `CLOSE_ALWAYS_M` (5 km), and `EYE_ABOVE_TERRAIN_M` (1.7) are leftovers from the old "must reach the horizon and stick up behind" rule. `assessPeak` does not call them. `EYE_ABOVE_TERRAIN_M` is not what the worker uses.
+- **Horizontal**: updates `headingOffset` against the current compass base heading.
+- **Vertical**: updates **`pitchOffset`** (±15°, `line-up-offset.ts`), applied on top of `clampGyroViewPitch` output without changing sensor math.
 
-From Marcy's summit this names 44 of the other 45 Adirondack High Peaks. Couchsachraga stays hidden, about 133 m behind the ridge in front. Nothing else on that list is even 20 m behind.
+Pinch still changes `hfov` (22°–110°). Finishing line-up writes `headingOffset`, `pitchOffset`, and `hfov` to calibration.
 
-### Ridge lines
+### Heading readout
 
-`viewProfile` smooths the horizon by 0.35°. In front of it, at most one line per band: 4–15 km, 15–40 km, 40–100 km. Nothing inside 4 km is drawn. That near ground was the scribbly hatching.
+Centered at the top of `SkylineStage` with safe-area inset. Shown on drawn and camera explore views (`Looking N`, `ENE`, etc.). Does not overlap the top-left Back button.
 
-A band sample is kept only when the band itself has 0.55° of relief and sits at least 0.55° below the horizon. Short gaps are filled, the line is smoothed by 0.8°, samples that have climbed back up to the horizon or onto a nearer line (within 0.4°) are removed, and runs shorter than 6° are dropped.
+## Explore and pick UI
 
-The whole line is then dropped when its median sits within 0.35° of flat eye level. That is the ground meeting the sky, which the blue/beige fill already draws. A ridge above that, or one you look down on from a summit, stays. The old cutoff required the median to be at least +0.8°. From Marcy the front ridges are below the horizon, so that cutoff erased every one of them. The smoothing radii did not change when the lines came back.
+**Start**: Explore current location, pick on map, offline hub (when online). Offline start adapts (`start-screen-offline.ts`): offline badge, hide map pick when offline, list saved areas, geolocation gate, outside-saved-area messaging.
 
-### Labels
+**Explore (phone)**: optional live camera under the skyline; Cam and Gyro toggles; line-up when camera is on. **Desktop pick**: map + drawn pane; keyboard/wheel pan when not using sensors.
 
-Names are 13 px, tilted 45° up and to the right, anchored on a 12 px vertical tick (`LABEL_TICK_PX`, box height 16 px). Overlap uses the rotated box. Nearer peaks are placed first. A farther name steps up the diagonal in 10 px steps, up to 240 px, and grows a thin leader. If it still overlaps, or the cap is full, it is dropped.
+**Bottom bar** (skyline, all phone widths): one compact strip at the bottom — **Cam**, **Gyro**, **Line up** / **Done**, **Change spot** (pick-view stacked layout only), **⋯** info. Semi-opaque bar, black/dark text readable on camera. Credits and disclaimers live **only** in the overlay opened by ⋯ (`PEAK_CREDITS`, `BARE_EARTH_NOTE`, partial-coverage note). Collapsed: **zero layout space** (popover is `absolute` above the bar). **You're on:** sits in a single line above the bar when applicable.
 
-The cap is 80 when the drawing pane is at least 640 px wide, and 40 otherwise (`labelCap`). The desktop pane beside the map is about 980 px, so it gets 80. Default field of view is 70° (pinch from 22° to 110°). `LABEL_MIN_GAP_PX` (44) is unused. The old rule was a horizontal gap and "the higher name wins," which is why front peaks vanished until you zoomed in.
+**Status** (top center): loading, errors, gyro unsure, coverage none, etc. — separate from the info popover.
 
-### Live, pick a spot, compass
+## Offline mode
 
-Desktop is pick a spot: map on the left, drawing on the right. Phone starts on the map, then the drawing. Live (camera) is phone-only. On a phone, pick a spot can follow the compass.
+- **Save radius**: default **100 km** per area (`OFFLINE_RADIUS_M`; picker clamp 50–100 km).
+- **Storage**: IndexedDB **`pf-offline-v1`**, store **`areas`** (metadata). Terrain URLs and peak chunk URLs cached via Cache API (`pf-terrain-v1`, `pf-peaks-v1`) using manifests from `offline.ts` (ocean tiles filtered against the peak index).
+- **Service worker**: `public/sw-peak-finder.js`, registered from the Peak Finder client; scope **`/`** (so `/peak-finder` navigation is controlled — see `sw-routing.test.ts`). Passthrough for `/map`, MapLibre worker, etc.
+- **Offline hub**: save flow, area picker map (`OfflineAreaPicker`), open saved skyline at pinned center.
+- **Refresh offline**: app shell can load from SW cache; worker still needs cached tiles/chunks for the spot.
 
-Heading is magnetic plus the 1° declination cell (`public/peak-finder/declination.v1.json`, WMM2025 for 2026-11-10), plus screen angle, plus the calibration offset in `pf:calibration:v1`. The last pin is `pf:last:v1`. If the compass jumps or its accuracy is poor, the status says to line up. Line-up turns drag and pinch into a heading and size correction. Moving more than 1 km offers "You've moved. Update view" (checked every 30 s).
+## You're on
 
-`/peak-finder` is its own `Permissions-Policy` rule: `camera=(self)` plus the motion sensors. Every other route sends `camera=()`. Two policy headers are intersected, so a site-wide `camera=()` on this path would turn the camera off. `src/lib/security-headers.test.ts` locks that in.
-
-### You're on
-
-`peakUnderfoot` is the nearest named peak within 322 m (0.2 mi), measured to the stored dot, not the snapped one. The line uses `max(stored elevation, terrain within 130 m)`. The same name is taken off the skyline when that peak is within 362 m. `assessPeak` also drops anything inside 30 m. The line is `You're on: {name}, {feet}` under the controls. Mount Marcy at 1,629 m formats as 5,344 ft.
+`peakUnderfoot`: nearest named peak within **322 m** (0.2 mi) to stored coordinates. Same name removed from skyline list when within 362 m. Footer line: `You're on: {name}, {feet}`.
 
 ## Scripts and tests
 
-Peak and declination builds are one-offs. The raw OSM and GeoNames files are not in the repo. `osmium` is required for `--pbf`.
+Peak and declination builds are one-offs (raw OSM/GeoNames not in repo; `osmium` for `--pbf`):
 
 ```bash
 npx tsx scripts/peak-finder/build-peaks.ts \
@@ -99,54 +134,44 @@ npx tsx scripts/peak-finder/build-declination.ts \
   --date 2026-11-10 --out public/peak-finder/declination.v1.json
 ```
 
-`--region northeast` limits the chunks to NY, NJ, PA, CT, RI, MA, VT, NH, ME. The committed index is the whole US. `scripts/peak-finder/land.ts` is the state-polygon helper those scripts use.
-
-Checks:
-
 ```bash
 npm run lint && npm run typecheck && npm test && npm run build
 ```
 
-New test files do nothing until they are added to the `test` script in `package.json`. `tsx --test` does not pick them up by itself.
+New test files must be listed in the `test` script in `package.json`.
 
-| Test | What it locks |
+| Area | Tests (representative) |
 | --- | --- |
-| `src/lib/peak-finder/summit-view.test.ts` | Marcy: the named High Peaks are visible and Couchsachraga is not (44 of 45). Washington: Adams, Jefferson, Madison, Monroe. Front ridges: looking west at the default 70° on a 980×720 pane, a real front-ridge line is drawn, and Gray, Colden, and Algonquin are labeled from Marcy (`44.112857, -73.923784`). Haystack, Basin, and Marcy are labeled from `44.112, -73.852` |
-| `visibility.test.ts` | A front peak shows with a taller mountain behind it. The top 50 m may sit behind a ridge. 200 m behind stays hidden. "You're on" is 0.2 mi |
-| `skyline.test.ts` | No hatching inside 4 km. A ridge below the horizon is still drawn from a summit. A line glued to the horizon is left out |
-| `declutter.test.ts` | The nearer name stays put. The farther one steps up or drops |
+| Summit integration | `summit-view.test.ts` — Marcy/Washington visibility, front-ridge labels, Colden declutter counts, Keene Valley sparsity |
+| Labels | `label-ranking.test.ts`, `label-placement.test.ts`, `declutter.test.ts` |
+| Line-up | `line-up-offset.test.ts`, `explore-gestures.test.ts` |
+| Offline | `offline.test.ts`, `start-screen-offline.test.ts`, `offline-area-picker-map.test.ts`, `offline-area-picker-layout.test.ts` |
+| SW | `sw-routing.test.ts` |
+| Core lib | `visibility`, `skyline`, `tiles`, `peaks`, `orientation`, `geo`, `location`, `gyro-*` |
+| Headers | `security-headers.test.ts` — camera/motion on `/peak-finder` only |
 
-`summit-view.test.ts` downloads Terrarium tiles into `/tmp/pf-summit-tiles` and decodes the PNGs itself (the worker uses `createImageBitmap`, which this test does not). The first run needs the network. Later runs are a few seconds. The High Peak coordinates come from `config/challenges/adk46.json` and `nh48.json`, not from the OSM chunks. The page itself labels whatever name is in the chunks.
+`summit-view.test.ts` downloads Terrarium tiles to `/tmp/pf-summit-tiles` on first run (network).
 
 ## Gotchas
 
-- A steep bank just in front of you hides distant peaks. `burialM` extends that bank's angle out to the summit, so a slope at 80 m can "bury" a mountain by kilometers. `angleBefore` ignores only the first 60 m. The east shore of Lower Ausable Lake (`44.106, -73.834`) hides Haystack and Marcy this way. The open west view used in the test and the screenshots is `44.112, -73.852`, on Sawteeth' shoulder, and the line there says you're on Sawteeth.
-- Zoom 12 tiles were fetched before they were ever sampled. `sampleHeight` used to skip anything finer than zoom 11. It now accepts zoom 12 and tries a finer zoom before a coarser one.
-- From the highest summit, other peaks sit on or below the horizon. Gray Peak's label falls in the beige on purpose. That is the geometry, not a missing ridge.
-- At Marcy's default zoom the diagonal names include a lot of minor OSM hills (Ice Cave Mountain and the like). The 46er test does not see those, because it feeds only the challenge list. The page loads the full chunks.
-- `prominenceDeg` will not rank those hills. It is the angular rise above the ground behind the peak, and declutter does not read it.
-- A second `Permissions-Policy` on `/peak-finder` that includes `camera=()` turns the camera off. Keep the route's own rule.
-- `git commit` on this agent appends a `Co-authored-by` trailer. The repo does not want that. Commit with `git commit-tree` (or strip the trailer before pushing).
-- Vercel previews and local dev use the Neon `preview` branch. Peak Finder does not need the database. Do not run `npm run db:migrate` against production.
+- Steep foreground hides distant peaks (`burialM`); Lower Ausable east-shore case remains the classic bad pin.
+- Bare-earth terrain: trees/buildings vs drawn line (`BARE_EARTH_NOTE` in info popover).
+- `prominenceDeg` is angular, not topographic prominence in chunks.
+- Second `Permissions-Policy` with `camera=()` on `/peak-finder` breaks the camera — keep the route-specific rule.
+- Peak Finder does not use the Neon DB; previews use Neon `preview` for the rest of the app only.
+- Line-up pitch offset is for alignment only; it does not replace gyro pitch math.
 
 ## Known limits
 
-- Labels are still dropped. The cap (80 or 40) stops the farthest names, and a name that cannot clear the others within 240 px is dropped. There is no tick left behind for an unlabeled visible peak, and no list of everything in view. The card only opens from a label.
-- Rank is distance, then angle. Minor named bumps compete with High Peaks. Chunks have no topographic prominence and no Wikipedia or Wikidata tags.
-- Bare earth. Trees and buildings can hide a summit the line still draws. The footer says so.
-- The east-shore case above is real: a pin against a slope sees almost nothing west.
-- Line-up is a heading offset plus pinch. It is not a "put this label on that summit" alignment.
-- Declination is one table for 2026-11-10, one degree cells. It is not recomputed for the day.
-- A ray sample with no tile is treated as sea level, which can cut a notch in the horizon.
-- Live view and "Use compass" are phone-only. Desktop is pick a spot and drag.
+- No peak detail card or tap targets; identify peaks by label text only.
+- Label cap and overlap skipping still hide some names; ticks show unlabeled summits without names.
+- Chunk list has no topo prominence / Wikipedia rank; importance uses skyline `prominenceDeg` + distance + elevation.
+- No visible-peaks list UI.
+- Declination table is fixed to the built date, not recomputed per day.
+- Live camera + full gyro: phone explore; desktop remains pick-and-pan unless sensors are available.
 
-## Next round
+## Next ideas (not scheduled)
 
-Do this on the same branch. Keep the Marcy 44/45 result, the front-ridge test, and the "You're on" line.
-
-1. Topographic prominence for every US peak, computed once and stored in the chunks. That is the declutter signal, not `prominenceDeg`.
-2. Rank a visible peak by that prominence, OSM Wikipedia and Wikidata tags, nearness, and how much of the summit is in view.
-3. Cap how many names a screen slice gets, and loosen the cap as the field of view narrows.
-4. Always keep a slot for the nearest peaks and for the "You're on" peak.
-5. Every visible peak stays. If it has no name, leave a tappable tick. Do not delete it from the payload.
-6. The drag-to-line-up compass fix that was proposed earlier, and a visible-peaks list.
+- **Field feedback**: Jake and friends are testing the live build; expect UX and compass tweaks from real use (no fixed checklist yet).
+- **v2 (parked)**: sun/moon position and integration with site **Mountain Forecast** — explicitly deferred.
+- Longer term (from earlier plans): topo prominence in chunks, richer rank signals, visible-peaks panel, tappable peaks if tap UX is redesigned.
