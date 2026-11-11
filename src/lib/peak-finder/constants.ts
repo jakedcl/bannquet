@@ -7,6 +7,10 @@ export const EYE_ABOVE_TERRAIN_M = 1.7;
 export const MOVED_THRESHOLD_M = 1_000;
 export const MOVE_CHECK_MS = 30_000;
 export const DEFAULT_HFOV_DEG = 70;
+/** Horizontal FOV used in gyro follow so 1° of device tilt ≈ 1° on the skyline (iPhone portrait primary camera). */
+export const GYRO_HFOV_DEG = 68;
+export const GYRO_PITCH_MIN_DEG = -85;
+export const GYRO_PITCH_MAX_DEG = 85;
 export const MIN_HFOV_DEG = 22;
 export const MAX_HFOV_DEG = 110;
 export const PHONE_LABEL_CAP = 40;

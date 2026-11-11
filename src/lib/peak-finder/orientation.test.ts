@@ -20,13 +20,13 @@ test('upright portrait cardinals match compass directions', () => {
   assert.ok(Math.abs(cameraPoseFromDevice(90, 90, 0, 0).magneticHeading - 270) < 0.05);
 });
 
-test('tilting up raises pitch and tilting down lowers it', () => {
+test('tilting toward sky raises pitch and toward ground lowers it', () => {
   const horizon = cameraPoseFromDevice(0, 90, 0, 0).pitch;
-  const up = cameraPoseFromDevice(0, 60, 0, 0).pitch;
-  const down = cameraPoseFromDevice(0, 110, 0, 0).pitch;
+  const sky = cameraPoseFromDevice(273, 170, 2, 0).pitch;
+  const ground = cameraPoseFromDevice(285, 10, 1, 0).pitch;
   assert.ok(Math.abs(horizon) < 0.5, String(horizon));
-  assert.ok(up > 25 && up < 35, `up ${up}`);
-  assert.ok(down < -15 && down > -25, `down ${down}`);
+  assert.ok(sky > 70 && sky < 90, `sky ${sky}`);
+  assert.ok(ground < -70 && ground > -90, `ground ${ground}`);
 });
 
 test('a small roll changes heading slightly, not ~180°', () => {

@@ -1,6 +1,14 @@
 import { wrap180 } from './geo';
 import { DEFAULT_HFOV_DEG } from './constants';
 
+/**
+ * Peak Finder view convention (heading/pitch → screen pixels):
+ * - **Heading** (true north, ° CW): bearing deltas map linearly with `hfovDeg` across viewport width (1° = width/hfov).
+ * - **Pitch** (° above horizon, from `cameraPoseFromDevice`): peak
+ *   elevation `angleDeg` minus `pitchDeg` gives vertical offset; positive pitch increases screen Y so the horizon
+ *   moves down (camera looking up, more sky). Vertical scale uses `verticalFov(hfov, width, height)` (1° = height/vfov).
+ * - **Roll** is only used for manual/drag views; gyro follow passes roll 0 so phone roll does not spin the skyline.
+ */
 export type ScreenPoint = { x: number; y: number; inView: boolean };
 
 export function verticalFov(hfovDeg: number, width: number, height: number): number {

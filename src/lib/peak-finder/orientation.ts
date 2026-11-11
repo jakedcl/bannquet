@@ -1,3 +1,4 @@
+import { GYRO_PITCH_MAX_DEG, GYRO_PITCH_MIN_DEG } from './constants';
 import { angularDistance, wrap180, wrap360 } from './geo';
 
 const DEG = Math.PI / 180;
@@ -32,8 +33,12 @@ export function rotateDeviceToWorld(v: Vec3, alphaDeg: number, betaDeg: number, 
 export type CameraPose = {
   /** Magnetic heading, degrees clockwise from north, camera forward projected on the horizon. */
   magneticHeading: number;
-  /** Positive when the camera points above the horizon. */
+  /**
+   * Elevation of camera forward above the horizon, in degrees.
+   * Matches `projectDirection` in projection.ts: positive pitch pulls the skyline down on screen (more sky visible).
+   */
   pitch: number;
+  /** Device roll; logged for diagnostics but not applied to the skyline in gyro follow mode. */
   roll: number;
 };
 
@@ -52,7 +57,7 @@ export function cameraPoseFromDevice(
   const screenUp = rotateDeviceToWorld({ x: 0, y: 1, z: 0 }, alpha + screenAngle, beta, gamma);
   const horizontal = Math.hypot(back.x, back.y) || 1e-6;
   const magneticHeading = wrap360(Math.atan2(back.x, back.y) * (180 / Math.PI) + yawOffsetMagnetic);
-  const pitch = -Math.atan2(back.z, horizontal) * (180 / Math.PI);
+  const pitch = Math.atan2(back.z, horizontal) * (180 / Math.PI);
   const roll = Math.atan2(screenUp.x, screenUp.y) * (180 / Math.PI);
   return { magneticHeading, pitch, roll };
 }
@@ -91,6 +96,10 @@ export function updateYawCalibration(
   const target = wrap360(webkit - raw);
   if (!state.ready) return { offset: target, ready: true };
   return { offset: blendAngle(state.offset, target, weight), ready: true };
+}
+
+export function clampGyroViewPitch(pitchDeg: number): number {
+  return Math.max(GYRO_PITCH_MIN_DEG, Math.min(GYRO_PITCH_MAX_DEG, pitchDeg));
 }
 
 export function deviceCameraPose(

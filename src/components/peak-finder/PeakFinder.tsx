@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   BARE_EARTH_NOTE,
   DEFAULT_HFOV_DEG,
+  GYRO_HFOV_DEG,
   MAX_HFOV_DEG,
   MIN_HFOV_DEG,
   MOVE_CHECK_MS,
@@ -16,6 +17,7 @@ import { wrap360 } from '@/lib/peak-finder/geo';
 import { acceptMove, noteSample, type LockState, type Spot } from '@/lib/peak-finder/location';
 import { MAP_CENTER } from '@/lib/map';
 import {
+  clampGyroViewPitch,
   compassUnsure,
   createGyroSmoother,
   deviceCameraPose,
@@ -135,6 +137,7 @@ export function PeakFinder() {
 
   useEffect(() => {
     followRef.current = gyroOn;
+    if (gyroOn) viewRef.current.hfov = GYRO_HFOV_DEG;
   }, [gyroOn]);
 
   useEffect(() => {
@@ -256,8 +259,8 @@ export function PeakFinder() {
         if (!followRef.current) return;
         baseRef.current = viewHeading(filtered.magnetic, declination, 0, 0);
         viewRef.current.heading = wrap360(baseRef.current + offsetRef.current);
-        viewRef.current.pitch = filtered.pitch;
-        viewRef.current.roll = filtered.roll;
+        viewRef.current.pitch = clampGyroViewPitch(filtered.pitch);
+        viewRef.current.roll = 0;
         const unsure = compassUnsure(lastAccuracy, lastJump);
         if (unsure !== unsureRef.current) {
           unsureRef.current = unsure;
