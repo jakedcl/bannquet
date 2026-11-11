@@ -77,7 +77,7 @@ export default async function PostPage({ params }: { params: Promise<{ id: strin
   return (
     <PageWrapper>
       <div className="mx-auto max-w-3xl space-y-5 px-4 pb-12 pt-6 md:pt-8">
-        <LargeTitle>{post.title}</LargeTitle>
+        <LargeTitle title={post.title} />
         <p className="text-sm text-gray-700">
           {authorHref ? <Link href={authorHref} className="font-bold underline">{post.authorName}</Link> : post.authorName}
           {' · '}
@@ -98,7 +98,7 @@ export default async function PostPage({ params }: { params: Promise<{ id: strin
               <LinkedText text={post.body} />
             </div>
             {canEditPost ? (
-              <EditDetails label="Edit post" adminPower={deletePostAdminPower}>
+              <EditDetails adminPower={deletePostAdminPower}>
                 <EditForm
                   action={updatePostAction}
                   hidden={{ id }}
