@@ -82,6 +82,36 @@ test('iPhone log replay: roll keeps heading within a few degrees', () => {
   assert.ok(span < 5, `span ${span}`);
 });
 
+function stepRolls(step: string): number[] {
+  return data.samples
+    .filter((s) => s.step === step)
+    .map((s) => deviceCameraPose(
+      { alpha: s.alpha, beta: s.beta, gamma: s.gamma },
+      s.screenAngle,
+      { offset: s.yawOffset, ready: true },
+    ))
+    .filter((p): p is NonNullable<typeof p> => p != null)
+    .map((p) => p.roll);
+}
+
+test('iPhone log replay: upright holds stay near zero roll', () => {
+  const north = stepRolls('Upright N');
+  const east = stepRolls('Upright E');
+  for (const r of [...north, ...east]) assert.ok(Math.abs(r) < 12, `roll ${r}`);
+  assert.ok(Math.abs(median(north)) < 3);
+  assert.ok(Math.abs(median(east)) < 3);
+});
+
+test('iPhone log replay: roll step changes smoothly', () => {
+  const rolls = stepRolls('Roll');
+  let maxStep = 0;
+  for (let i = 1; i < rolls.length; i += 1) {
+    maxStep = Math.max(maxStep, Math.abs(rolls[i] - rolls[i - 1]));
+  }
+  assert.ok(maxStep < 8, `max frame step ${maxStep}`);
+  assert.ok(Math.max(...rolls) - Math.min(...rolls) > 2, 'roll should move during roll step');
+});
+
 test('trimmed fixture file is present', () => {
   const file = path.join(import.meta.dirname, 'fixtures/gyrolog-iphone-trimmed.json');
   assert.ok(fs.statSync(file).size > 1000);

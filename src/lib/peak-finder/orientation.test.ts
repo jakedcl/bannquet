@@ -12,6 +12,7 @@ import {
   updateYawCalibration,
   viewHeading,
 } from './orientation';
+import { projectDirection } from './projection';
 
 test('upright portrait cardinals match compass directions', () => {
   assert.ok(Math.abs(cameraPoseFromDevice(0, 90, 0, 0).magneticHeading - 0) < 0.05);
@@ -119,4 +120,16 @@ test('a poor iPhone accuracy reading is unsure', () => {
   assert.equal(compassUnsure(20, 0), true);
   assert.equal(compassUnsure(5, 0), false);
   assert.equal(compassUnsure(5, 40), true);
+});
+
+test('synthetic ±20° roll has opposite signs for the skyline', () => {
+  const left = cameraPoseFromDevice(0, 70, 90, 0);
+  const right = cameraPoseFromDevice(0, 70, -90, 0);
+  assert.ok(left.roll < -15 && right.roll > 15, `${left.roll} ${right.roll}`);
+  assert.ok(Math.abs(left.roll + right.roll) < 2);
+  const width = 390;
+  const height = 700;
+  const flat = projectDirection(350, 0, 0, 0, 0, 68, width, height);
+  const tilted = projectDirection(350, 0, 0, 0, left.roll, 68, width, height);
+  assert.notEqual(tilted.y, flat.y);
 });

@@ -2,6 +2,8 @@ import { GYRO_PITCH_MAX_DEG, GYRO_PITCH_MIN_DEG } from './constants';
 import { angularDistance, wrap180, wrap360 } from './geo';
 
 const DEG = Math.PI / 180;
+const WORLD_UP: Vec3 = { x: 0, y: 0, z: 1 };
+const ROLL_FADE_PITCH_DEG = 70;
 
 export type OrientationReading = {
   alpha: number | null;
@@ -15,6 +17,66 @@ export type OrientationReading = {
 export type Vec3 = { x: number; y: number; z: number };
 
 /** W3C Z–X′–Y″ order: world vector from device coordinates. */
+function normalizeVec(v: Vec3): Vec3 {
+  const l = Math.hypot(v.x, v.y, v.z) || 1;
+  return { x: v.x / l, y: v.y / l, z: v.z / l };
+}
+
+function dotVec(a: Vec3, b: Vec3): number {
+  return a.x * b.x + a.y * b.y + a.z * b.z;
+}
+
+function crossVec(a: Vec3, b: Vec3): Vec3 {
+  return {
+    x: a.y * b.z - a.z * b.y,
+    y: a.z * b.x - a.x * b.z,
+    z: a.x * b.y - a.y * b.x,
+  };
+}
+
+function projectOntoPlane(v: Vec3, planeNormalUnit: Vec3): Vec3 | null {
+  const along = dotVec(v, planeNormalUnit);
+  const p = { x: v.x - planeNormalUnit.x * along, y: v.y - planeNormalUnit.y * along, z: v.z - planeNormalUnit.z * along };
+  const l = Math.hypot(p.x, p.y, p.z);
+  if (l < 1e-5) return null;
+  return { x: p.x / l, y: p.y / l, z: p.z / l };
+}
+
+/**
+ * Roll from the device attitude matrix (same frame as heading/pitch).
+ * Compares screen-up to world-up in the plane ⊥ to camera forward; falls back to atan2(right.z, up.z).
+ */
+export function cameraRollDeg(
+  alpha: number,
+  beta: number,
+  gamma: number,
+  screenAngle: number,
+  pitchDeg: number,
+): number {
+  const a = alpha + screenAngle;
+  const back = normalizeVec(rotateDeviceToWorld({ x: 0, y: 0, z: -1 }, a, beta, gamma));
+  const screenUp = rotateDeviceToWorld({ x: 0, y: 1, z: 0 }, a, beta, gamma);
+  const screenRight = rotateDeviceToWorld({ x: 1, y: 0, z: 0 }, a, beta, gamma);
+
+  const refUp = projectOntoPlane(WORLD_UP, back);
+  const upAxis = projectOntoPlane(screenUp, back);
+  let geomRoll: number;
+  if (refUp && upAxis) {
+    const c = crossVec(refUp, upAxis);
+    geomRoll = (Math.atan2(dotVec(c, back), dotVec(refUp, upAxis)) * 180) / Math.PI;
+  } else {
+    geomRoll = (Math.atan2(screenRight.z, screenUp.z) * 180) / Math.PI;
+  }
+  let roll = -geomRoll;
+  roll = Math.max(-90, Math.min(90, roll));
+  const absPitch = Math.abs(pitchDeg);
+  if (absPitch >= GYRO_PITCH_MAX_DEG) return 0;
+  if (absPitch > ROLL_FADE_PITCH_DEG) {
+    roll *= (GYRO_PITCH_MAX_DEG - absPitch) / (GYRO_PITCH_MAX_DEG - ROLL_FADE_PITCH_DEG);
+  }
+  return roll;
+}
+
 export function rotateDeviceToWorld(v: Vec3, alphaDeg: number, betaDeg: number, gammaDeg: number): Vec3 {
   const g = gammaDeg * DEG;
   const b = betaDeg * DEG;
@@ -38,7 +100,10 @@ export type CameraPose = {
    * Matches `projectDirection` in projection.ts: positive pitch pulls the skyline down on screen (more sky visible).
    */
   pitch: number;
-  /** Device roll; logged for diagnostics but not applied to the skyline in gyro follow mode. */
+  /**
+   * View roll (°) for `projectDirection`: keeps the drawn horizon level with the real world when the
+   * phone rolls. Phone clockwise → negative here so the skyline rotates counter‑clockwise on screen (1:1).
+   */
   roll: number;
 };
 
@@ -54,11 +119,10 @@ export function cameraPoseFromDevice(
   yawOffsetMagnetic = 0,
 ): CameraPose {
   const back = rotateDeviceToWorld({ x: 0, y: 0, z: -1 }, alpha + screenAngle, beta, gamma);
-  const screenUp = rotateDeviceToWorld({ x: 0, y: 1, z: 0 }, alpha + screenAngle, beta, gamma);
   const horizontal = Math.hypot(back.x, back.y) || 1e-6;
   const magneticHeading = wrap360(Math.atan2(back.x, back.y) * (180 / Math.PI) + yawOffsetMagnetic);
   const pitch = Math.atan2(back.z, horizontal) * (180 / Math.PI);
-  const roll = Math.atan2(screenUp.x, screenUp.y) * (180 / Math.PI);
+  const roll = cameraRollDeg(alpha, beta, gamma, screenAngle, pitch);
   return { magneticHeading, pitch, roll };
 }
 
@@ -241,6 +305,7 @@ export class OneEuroFilter {
 
 export const GYRO_HEADING_DEAD_ZONE_DEG = 0.35;
 const GYRO_TILT_DEAD_ZONE_DEG = 0.25;
+export const GYRO_ROLL_DEAD_ZONE_DEG = 0.75;
 export const GYRO_HEADING_MAX_JUMP_DEG = 30;
 
 export function applyHeadingDeadZone(current: number, next: number, deadZone = GYRO_HEADING_DEAD_ZONE_DEG): number {
@@ -249,6 +314,10 @@ export function applyHeadingDeadZone(current: number, next: number, deadZone = G
 
 export function applyTiltDeadZone(current: number, next: number, deadZone = GYRO_TILT_DEAD_ZONE_DEG): number {
   return Math.abs(next - current) < deadZone ? current : next;
+}
+
+export function applyRollDeadZone(current: number, next: number, deadZone = GYRO_ROLL_DEAD_ZONE_DEG): number {
+  return Math.abs(wrap180(next - current)) < deadZone ? current : next;
 }
 
 export function guardHeadingJump(current: number, next: number, spikeFrames: number): { heading: number; spikeFrames: number } {
@@ -272,7 +341,7 @@ export type GyroSmoother = {
 export function createGyroSmoother(): GyroSmoother {
   const heading = new OneEuroFilter(0.65, 0.04, 1.2, true);
   const pitch = new OneEuroFilter(1.0, 0.03, 1.5, false);
-  const roll = new OneEuroFilter(1.4, 0.02, 1.5, false);
+  const roll = new OneEuroFilter(1.0, 0.02, 1.2, true);
   let headingOut = 0;
   let pitchOut = 0;
   let rollOut = 0;
@@ -305,7 +374,7 @@ export function createGyroSmoother(): GyroSmoother {
       spikeFrames = guarded.spikeFrames;
       headingOut = applyHeadingDeadZone(headingOut, h);
       pitchOut = applyTiltDeadZone(pitchOut, p);
-      rollOut = applyTiltDeadZone(rollOut, r);
+      rollOut = applyRollDeadZone(rollOut, r);
       return { magnetic: headingOut, pitch: pitchOut, roll: rollOut, guardHeld };
     },
   };

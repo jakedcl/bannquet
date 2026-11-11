@@ -260,7 +260,7 @@ export function PeakFinder() {
         baseRef.current = viewHeading(filtered.magnetic, declination, 0, 0);
         viewRef.current.heading = wrap360(baseRef.current + offsetRef.current);
         viewRef.current.pitch = clampGyroViewPitch(filtered.pitch);
-        viewRef.current.roll = 0;
+        viewRef.current.roll = filtered.roll;
         const unsure = compassUnsure(lastAccuracy, lastJump);
         if (unsure !== unsureRef.current) {
           unsureRef.current = unsure;

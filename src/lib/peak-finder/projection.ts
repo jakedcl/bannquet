@@ -7,7 +7,8 @@ import { DEFAULT_HFOV_DEG } from './constants';
  * - **Pitch** (° above horizon, from `cameraPoseFromDevice`): peak
  *   elevation `angleDeg` minus `pitchDeg` gives vertical offset; positive pitch increases screen Y so the horizon
  *   moves down (camera looking up, more sky). Vertical scale uses `verticalFov(hfov, width, height)` (1° = height/vfov).
- * - **Roll** is only used for manual/drag views; gyro follow passes roll 0 so phone roll does not spin the skyline.
+ * - **Roll** (view roll from `cameraPoseFromDevice`): rotates projected points about the viewport center so the
+ *   drawn horizon stays level with the real world (phone roll clockwise ⇒ negative roll here, skyline CCW).
  */
 export type ScreenPoint = { x: number; y: number; inView: boolean };
 
