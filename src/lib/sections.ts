@@ -20,7 +20,7 @@ export const PEAK_FINDER_LINK: NavLink = { href: '/peak-finder', label: 'Peak Fi
 export const COMMUNITY_LINKS: NavLink[] = [
   { href: '/chat', label: 'Chat' },
   { href: '/peaks', label: 'Peaks' },
-  { href: '/trips', label: 'Trips' },
+  { href: '/posts', label: 'Posts' },
   { href: '/gear', label: 'Gear' },
   { href: '/photos', label: 'Photos' },
   { href: '/members', label: 'Members' },
@@ -33,17 +33,19 @@ export const WEATHER_LINKS: NavLink[] = REGION_OPTIONS.map((option) => ({
 }));
 
 export const UPLOAD_LINKS: NavLink[] = [
+  { href: '/upload?kind=post', label: 'Post' },
   { href: '/upload?kind=trip', label: 'Trip' },
   { href: '/upload?kind=route', label: 'Route' },
   { href: '/upload?kind=pin', label: 'Pin' },
   { href: '/upload?kind=photo', label: 'Photo' },
 ];
 
-const COMMUNITY_ROOTS = ['/community', '/chat', '/peaks', '/trips', '/gear', '/photos', '/members', '/notifications'];
+const COMMUNITY_ROOTS = ['/community', '/chat', '/peaks', '/posts', '/trips', '/gear', '/photos', '/members', '/notifications'];
 
 const COMMUNITY_PAGES: Record<string, string> = {
   '/chat': 'Chat',
   '/peaks': 'Peaks',
+  '/posts': 'Posts',
   '/trips': 'Trips',
   '/gear': 'Gear',
   '/photos': 'Photos',
@@ -59,6 +61,7 @@ const STATE_NAMES: Record<string, string> = {
 };
 
 const PROFILE_LISTS: Record<string, string> = {
+  posts: 'Posts',
   trips: 'Trips',
   routes: 'Routes',
   pins: 'Pins',
@@ -203,6 +206,13 @@ export function pageTrail(pathname: string, search: string, account: NavAccount,
     if (!section) return { parentHref: '/members', crumbs };
     crumbs.push({ href: pathname, label: section });
     return { parentHref: profileHref, crumbs };
+  }
+
+  if (/^\/posts\/[^/]+$/.test(pathname)) {
+    return {
+      parentHref: '/posts',
+      crumbs: communityTrail('/posts', 'Posts', named(pathname, 'Post', leaf)),
+    };
   }
 
   if (/^\/trips\/[^/]+$/.test(pathname)) {

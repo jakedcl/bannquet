@@ -106,6 +106,22 @@ export const invites = pgTable('invites', {
   createdAt,
 });
 
+export const feedPosts = pgTable(
+  'posts',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    title: text('title').notNull(),
+    body: text('body').notNull().default(''),
+    createdBy: text('created_by').references(() => users.id, { onDelete: 'set null' }),
+    createdAt,
+    updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),
+  },
+  (table) => [
+    index('posts_created_by_idx').on(table.createdBy),
+    index('posts_created_at_idx').on(table.createdAt),
+  ],
+);
+
 export const trips = pgTable(
   'trips',
   {

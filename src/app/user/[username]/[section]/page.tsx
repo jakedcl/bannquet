@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
 import PageWrapper from '@/components/ui/PageWrapper';
-import { PeakRows, Pager, PhotoGrid, PinRows, RouteRows, TripRows } from '@/components/profile/ProfileLists';
+import { PeakRows, Pager, PhotoGrid, PinRows, PostRows, RouteRows, TripRows } from '@/components/profile/ProfileLists';
 import { Card } from '@/components/hub/Card';
 import { HubPage } from '@/components/hub/Page';
 import { getViewer } from '@/app/sign-in/actions';
@@ -13,12 +13,14 @@ import { loadProfileLibrary } from '@/lib/posts';
 import { profileMember } from '@/lib/profile-member';
 import { canDeleteOwned } from '@/lib/membership';
 import { listMemberPeakRows } from '@/lib/summits';
+import { listPostsByOwner } from '@/lib/feed-posts';
 import { listTripsByOwner } from '@/lib/trips';
 import { loadFailed } from '@/lib/load-error';
 
 export const dynamic = 'force-dynamic';
 
 const SECTIONS = {
+  posts: 'Posts',
   trips: 'Trips',
   routes: 'Routes',
   pins: 'Pins',
@@ -33,6 +35,7 @@ function isSection(value: string): value is Section {
 }
 
 type ProfileSectionData =
+  | { kind: 'posts'; total: number; pages: number; page: number; posts: Awaited<ReturnType<typeof listPostsByOwner>> }
   | { kind: 'trips'; total: number; pages: number; page: number; trips: Awaited<ReturnType<typeof listTripsByOwner>> }
   | { kind: 'routes'; total: number; pages: number; page: number; routes: Awaited<ReturnType<typeof loadProfileLibrary>>['routes'] }
   | { kind: 'pins'; total: number; pages: number; page: number; pins: Awaited<ReturnType<typeof loadProfilePins>> }
@@ -40,6 +43,10 @@ type ProfileSectionData =
   | { kind: 'peaks'; total: number; pages: number; page: number; peaks: Awaited<ReturnType<typeof listMemberPeakRows>>; names: Record<string, string> };
 
 async function loadProfileSection(section: Section, memberId: string, page: number): Promise<ProfileSectionData> {
+  if (section === 'posts') {
+    const posts = await listPostsByOwner(memberId);
+    return { kind: 'posts', posts, total: posts.length, pages: 1, page: 1 };
+  }
   if (section === 'trips') {
     const trips = await listTripsByOwner(memberId);
     return { kind: 'trips', trips, total: trips.length, pages: 1, page: 1 };
@@ -69,6 +76,7 @@ function sectionBody(
   ownerId: string,
 ): ReactNode {
   if (loaded.total === 0) return <p className="text-sm">No {loaded.kind} yet.</p>;
+  if (loaded.kind === 'posts') return <PostRows posts={loaded.posts} manage={manage} viewer={viewer} ownerId={ownerId} />;
   if (loaded.kind === 'trips') return <TripRows trips={loaded.trips} manage={manage} viewer={viewer} ownerId={ownerId} />;
   if (loaded.kind === 'routes') {
     return <RouteRows routes={loaded.routes} manage={manage} profilePath={`/user/${handle}`} viewer={viewer} ownerId={ownerId} />;

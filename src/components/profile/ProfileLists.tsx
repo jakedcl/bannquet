@@ -8,6 +8,7 @@ import type { DataColumn } from '@/components/ui/DataTable';
 import { deletePhotoAction, deleteRouteAction } from '@/app/library/actions';
 import { deletePeakRowAction } from '@/app/peaks/actions';
 import { deletePinAction } from '@/app/pins/actions';
+import { deletePostAction } from '@/app/posts/actions';
 import { deleteTripAction } from '@/app/trips/actions';
 import { ACTIVITY_META, isActivity } from '@/lib/activities';
 import { PIN_KIND_LABELS, isPinKind } from '@/lib/pin-kinds';
@@ -258,6 +259,67 @@ export function PhotoGrid({
         </figure>
       ))}
     </div>
+  );
+}
+
+export function PostRows({
+  posts,
+  manage,
+  collapsed = false,
+  viewer,
+  ownerId,
+}: {
+  posts: Array<{ id: string; title: string; createdAt: string }>;
+  manage: boolean;
+  collapsed?: boolean;
+  viewer?: ProfileManageViewer | null;
+  ownerId?: string;
+}) {
+  const adminDelete = manage && ownerId ? deleteAsAdmin(viewer, ownerId) : false;
+  const columns: DataColumn<(typeof posts)[number]>[] = [
+    {
+      id: 'title',
+      header: 'Post',
+      sticky: true,
+      sortValue: (row) => row.title,
+      cell: (row) => <Link href={`/posts/${row.id}`} className="font-bold underline">{row.title}</Link>,
+    },
+    {
+      id: 'date',
+      header: 'Posted',
+      sortValue: (row) => row.createdAt,
+      cell: (row) => formatTripDate(row.createdAt.slice(0, 10)),
+    },
+  ];
+  if (manage) {
+    columns.push({
+      id: 'delete',
+      header: '',
+      sortValue: () => null,
+      cell: (row) => (
+        <Trash>
+          <ConfirmDelete
+            action={deletePostAction}
+            confirm="Delete this post?"
+            adminPower={adminDelete}
+            label={adminDelete ? adminPowerLabel('Delete post').ariaLabel : undefined}
+            fields={{ id: row.id }}
+          />
+        </Trash>
+      ),
+    });
+  }
+  return (
+    <BrowseTable
+      rows={posts}
+      columns={columns}
+      rowKey={(row) => row.id}
+      empty="No posts yet."
+      defaultSort={{ id: 'date', dir: 'desc' }}
+      placeholder="Post title"
+      searchText={(row) => row.title}
+      collapsed={collapsed}
+    />
   );
 }
 

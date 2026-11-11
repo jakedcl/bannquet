@@ -9,8 +9,7 @@ import { listTopGearByHolds } from '@/lib/gear';
 import { listTopMembersByPeaks } from '@/lib/members-directory';
 import { loadMapData, type MapFeatureCollection } from '@/lib/posts';
 import { popularPeaksByFriends } from '@/lib/summits';
-import { listTripsPeek } from '@/lib/trips';
-import { formatTripDate } from '@/lib/utils';
+import { listPostsPeek } from '@/lib/feed-posts';
 
 export const dynamic = 'force-dynamic';
 
@@ -24,15 +23,15 @@ function clip(value: string): string {
 }
 
 function emptyPeek(): CommunityPeek {
-  return { chat: [], peaks: [], trips: [], members: [], gear: [], points: EMPTY, lines: EMPTY };
+  return { chat: [], peaks: [], posts: [], members: [], gear: [], points: EMPTY, lines: EMPTY };
 }
 
 async function loadPeek(viewerId: string | null): Promise<CommunityPeek> {
   const peakNames = new Map(allPeaks().map((peak) => [peak.slug, peak.name]));
-  const [messages, popularPeaks, trips, members, gear, map] = await Promise.all([
+  const [messages, popularPeaks, posts, members, gear, map] = await Promise.all([
     listChatMessages(null, PEEK),
     popularPeaksByFriends(PEEK),
-    listTripsPeek(PEEK),
+    listPostsPeek(PEEK),
     listTopMembersByPeaks(PEEK),
     listTopGearByHolds(PEEK),
     loadMapData(viewerId),
@@ -50,10 +49,10 @@ async function loadPeek(viewerId: string | null): Promise<CommunityPeek> {
       name: peakNames.get(row.peakSlug) ?? row.peakSlug,
       detail: row.friends === 1 ? '1 friend' : `${row.friends} friends`,
     })),
-    trips: trips.map((trip) => ({
-      id: trip.id,
-      title: trip.title,
-      when: trip.tripDate ? formatTripDate(trip.tripDate) : null,
+    posts: posts.map((post) => ({
+      id: post.id,
+      title: post.title,
+      when: post.createdAt ? new Date(post.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : null,
     })),
     members: members.map((member) => ({
       id: member.id,

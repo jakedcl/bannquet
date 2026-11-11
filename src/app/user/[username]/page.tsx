@@ -1,7 +1,7 @@
 import { AvatarImage } from '@/components/ui/AvatarImage';
 import { notFound, redirect } from 'next/navigation';
 import PageWrapper from '@/components/ui/PageWrapper';
-import { PeakRows, GearRows, PhotoGrid, PinRows, RouteRows, SeeAll, TripRows } from '@/components/profile/ProfileLists';
+import { PeakRows, GearRows, PhotoGrid, PinRows, PostRows, RouteRows, SeeAll, TripRows } from '@/components/profile/ProfileLists';
 import { ChallengeBadge } from '@/components/stats/ChallengeBadge';
 import { Pill } from '@/components/hub/Button';
 import { Button } from '@/components/hub/Button';
@@ -19,6 +19,7 @@ import { canDeleteOwned } from '@/lib/membership';
 import { PROFILE_PREVIEW } from '@/lib/list-page';
 import { listMemberPeakRows, summitCountsForUser } from '@/lib/summits';
 import { listGear } from '@/lib/gear';
+import { listPostsByOwner } from '@/lib/feed-posts';
 import { listTripsByOwner } from '@/lib/trips';
 import { loadFailed } from '@/lib/load-error';
 
@@ -39,16 +40,18 @@ export default async function UserPage({ params }: { params: Promise<{ username:
   let pins: Awaited<ReturnType<typeof loadProfilePins>> = [];
   let summitCounts: Awaited<ReturnType<typeof summitCountsForUser>> = [];
   let peakRows: Awaited<ReturnType<typeof listMemberPeakRows>> = [];
+  let posts: Awaited<ReturnType<typeof listPostsByOwner>> = [];
   let trips: Awaited<ReturnType<typeof listTripsByOwner>> = [];
   let gear: Awaited<ReturnType<typeof listGear>> = [];
   let error: string | null = null;
   try {
-    [library, activities, pins, summitCounts, peakRows, trips, gear] = await Promise.all([
+    [library, activities, pins, summitCounts, peakRows, posts, trips, gear] = await Promise.all([
       loadProfileLibrary(member.id),
       loadLoggedActivities(member.id),
       loadProfilePins(member.id),
       summitCountsForUser(member.id),
       listMemberPeakRows(member.id),
+      listPostsByOwner(member.id),
       listTripsByOwner(member.id),
       listGear().catch(() => []),
     ]);
@@ -142,9 +145,10 @@ export default async function UserPage({ params }: { params: Promise<{ username:
             <SeeAll href={`${profilePath}/photos`} total={library.photos.length} />
           </Card>
         ) : null}
-        {trips.length > 0 ? (
-          <Card title="Trips">
-            <TripRows trips={trips} manage={manage} collapsed viewer={viewer} ownerId={member.id} />
+        {posts.length > 0 ? (
+          <Card title="Posts">
+            <PostRows posts={posts} manage={manage} collapsed viewer={viewer} ownerId={member.id} />
+            <SeeAll href={`${profilePath}/posts`} total={posts.length} />
           </Card>
         ) : null}
         {ownPeaks.length > 0 ? (

@@ -7,7 +7,7 @@ import type { MapFeatureCollection } from '@/lib/posts';
 export type CommunityPeek = {
   chat: { id: string; name: string; handle: string | null; body: string }[];
   peaks: { slug: string; name: string; detail: string | null }[];
-  trips: { id: string; title: string; when: string | null }[];
+  posts: { id: string; title: string; when: string | null }[];
   members: { id: string; name: string; handle: string | null; detail: string | null }[];
   gear: { id: string; name: string; detail: string | null }[];
   points: MapFeatureCollection;
@@ -52,13 +52,13 @@ export function CommunityBoard({ peek }: { peek: CommunityPeek }) {
         )}
       </DashboardWindow>
 
-      <DashboardWindow title="Trips" href="/trips">
-        {peek.trips.length === 0 ? <Empty /> : (
+      <DashboardWindow title="Posts" href="/posts">
+        {peek.posts.length === 0 ? <Empty /> : (
           <ul className="divide-y divide-[#e6e6e6] text-sm">
-            {peek.trips.map((trip) => (
-              <li key={trip.id} className="flex min-w-0 items-center justify-between gap-2">
-                <Link href={`/trips/${trip.id}`} className="flex min-h-11 min-w-0 items-center truncate font-bold underline">{trip.title}</Link>
-                {trip.when ? <span className="shrink-0">{trip.when}</span> : null}
+            {peek.posts.map((post) => (
+              <li key={post.id} className="flex min-w-0 items-center justify-between gap-2">
+                <Link href={`/posts/${post.id}`} className="flex min-h-11 min-w-0 items-center truncate font-bold underline">{post.title}</Link>
+                {post.when ? <span className="shrink-0">{post.when}</span> : null}
               </li>
             ))}
           </ul>

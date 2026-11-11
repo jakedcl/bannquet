@@ -4,7 +4,15 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { viewerCanContribute } from '@/lib/membership';
 import type { NavAccount } from '@/lib/sections';
-import { MapIcon, ProfileIcon, TripsIcon, UploadIcon, WeatherIcon } from './Icons';
+import { MapIcon, ProfileIcon, UploadIcon, WeatherIcon } from './Icons';
+
+function CommunityIcon({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
+      <path d="M4 19V5a2 2 0 012-2h12a2 2 0 012 2v14M8 17h.01M12 17h.01M16 17h.01M8 13h8M8 9h8" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
 import { activeTab, profileHref, type TabId } from './nav';
 
 type Tab = { id: TabId; href: string; label: string; icon: (props: { className?: string }) => React.ReactNode };
@@ -15,7 +23,7 @@ export function TabBar({ account }: { account: NavAccount }) {
   const current = activeTab(pathname, account);
   const tabs: Tab[] = [
     { id: 'map', href: '/', label: 'Map', icon: MapIcon },
-    { id: 'trips', href: '/trips', label: 'Trips', icon: TripsIcon },
+    { id: 'trips', href: '/community', label: 'Community', icon: CommunityIcon },
   ];
   if (viewerCanContribute(account)) tabs.push({ id: 'upload', href: '/upload', label: 'Upload', icon: UploadIcon });
   tabs.push(

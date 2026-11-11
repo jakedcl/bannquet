@@ -4,6 +4,7 @@ import { PinForm } from '@/components/pins/PinForm';
 import { PhotoUpload, RouteUpload } from '@/components/posts/ProfileAdds';
 import { Card } from '@/components/hub/Card';
 import { ListGroup, ListRow } from '@/components/hub/ListRow';
+import { NewPostForm } from '@/components/feed/NewPostForm';
 import { NewTripForm } from '@/components/trips/NewTripForm';
 import { getViewer } from '@/app/sign-in/actions';
 import { isDatabaseConfigured } from '@/db';
@@ -17,6 +18,7 @@ import { HubPage } from '@/components/hub/Page';
 export const dynamic = 'force-dynamic';
 
 const KINDS = [
+  { id: 'post', label: 'New post' },
   { id: 'trip', label: 'New trip' },
   { id: 'route', label: 'Route (GPX)' },
   { id: 'pin', label: 'Pin' },
@@ -48,7 +50,6 @@ export default async function UploadPage({
   searchParams: Promise<{ kind?: string; pin?: string | string[]; route?: string | string[]; photo?: string | string[] }>;
 }) {
   const params = await searchParams;
-  if (params.kind === 'post') redirect('/upload?kind=trip');
   const kind = isKind(params.kind) ? params.kind : null;
   const viewer = await getViewer();
   if (!viewer) redirect(signInPath(uploadPath(kind, params)));
@@ -79,6 +80,11 @@ export default async function UploadPage({
             </ListGroup>
           </Card>
         )}
+        {kind === 'post' ? (
+          <Card>
+            <NewPostForm />
+          </Card>
+        ) : null}
         {kind === 'trip' ? (
           <Card>
             <NewTripForm viewerId={viewer.id} catalog={catalog} preset={preset} />
