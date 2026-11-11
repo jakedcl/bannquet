@@ -34,9 +34,10 @@ import { loadPeaksAround } from '@/lib/peak-finder/peaks';
 import { applyLineUpPitchOffset, clampLineUpPitchOffset } from '@/lib/peak-finder/line-up-offset';
 import {
   applyMotionPermission,
+  GYRO_UNSURE_STATUS,
   GYRO_VERIFY_MS,
+  MOTION_BLOCKED_STATUS,
   shouldAutoEnableMotion,
-  type MotionHint,
 } from '@/lib/peak-finder/motion-enable';
 import { FRESH_YAW_CALIBRATION } from '@/lib/peak-finder/compass-resync';
 import { initialFov, readCalibration, writeCalibration } from '@/lib/peak-finder/storage';
@@ -71,7 +72,7 @@ const OFFLINE_SAVED_TOAST_TEXT =
   "Saved! When you're in this area with no signal, open Peak Finder and tap Explore my current location — it'll use your offline map automatically.";
 
 type Screen = 'start' | 'explore' | 'pick-map' | 'pick-view' | 'offline';
-type Coverage = 'full' | 'partial' | 'none';
+type Coverage = 'full' | 'none';
 type ProgressState = { kind: 'loading'; fraction: number } | null;
 
 export function PeakFinder() {
@@ -88,7 +89,6 @@ export function PeakFinder() {
   const [cameraNote, setCameraNote] = useState<string | null>(null);
   const [gyroOn, setGyroOn] = useState(false);
   const [motionArmed, setMotionArmed] = useState(false);
-  const [motionHint, setMotionHint] = useState<MotionHint>(null);
   const [banner, setBanner] = useState<string | null>(null);
   const [payload, setPayload] = useState<SkylinePayload | null>(null);
   const [progress, setProgress] = useState<ProgressState>(null);
@@ -303,7 +303,6 @@ export function PeakFinder() {
     loadPeaksAround(spotLat, spotLng).then((loaded) => {
       if (cancelled) return;
       if (loaded.loaded.length === 0) setCoverage('none');
-      else if (loaded.loaded.length < loaded.wanted.length) setCoverage('partial');
       else setCoverage('full');
       worker.postMessage({
         type: 'build',
@@ -340,7 +339,6 @@ export function PeakFinder() {
     gyroVerifiedRef.current = true;
     setGyroOn(true);
     motionSessionGrantedRef.current = true;
-    setMotionHint(null);
     setBanner(null);
     resyncCompassToDevice();
     gyroVerifyResolveRef.current?.(true);
@@ -353,7 +351,6 @@ export function PeakFinder() {
     gyroVerifiedRef.current = false;
     setMotionArmed(false);
     setGyroOn(false);
-    setMotionHint('tap');
     gyroVerifyResolveRef.current?.(false);
     gyroVerifyResolveRef.current = null;
   }
@@ -372,21 +369,19 @@ export function PeakFinder() {
     stopGyroListening();
     setGyroOn(false);
     if (!fromGesture && !shouldAutoEnableMotion(iosMotion, motionSessionGrantedRef.current)) {
-      setMotionHint('tap');
       return false;
     }
     const motion = await requestMotionPermission();
     const next = applyMotionPermission(iosMotion, motion, motionSessionGrantedRef.current);
     motionSessionGrantedRef.current = next.sessionGranted;
     if (!next.mayListen) {
-      setMotionHint(next.hint);
-      if (motion === 'denied') {
-        setBanner('Gyro is blocked. Allow motion access, or drag the skyline.');
+      if (next.motionBlocked) {
+        setBanner(MOTION_BLOCKED_STATUS);
       }
       return false;
     }
     setMotionArmed(true);
-    setMotionHint(null);
+    setBanner(null);
     return waitForGyroVerify();
   }
 
@@ -555,7 +550,6 @@ export function PeakFinder() {
     setCameraNote(null);
     stopGyroListening();
     setGyroOn(false);
-    setMotionHint(null);
     setBanner(null);
     setPayload(null);
     setProgress(null);
@@ -697,7 +691,6 @@ export function PeakFinder() {
     if (gyroOn || motionArmed) {
       stopGyroListening();
       setGyroOn(false);
-      if (!motionSessionGrantedRef.current && iosMotion) setMotionHint('tap');
       return;
     }
     await enableGyroFromGesture();
@@ -779,9 +772,8 @@ export function PeakFinder() {
     writeCalibration({ headingOffset: 0, pitchOffset: 0, hfov: viewRef.current.hfov });
   }
 
-  function toggleLineUp() {
-    if (liningUp) finishLineUp();
-    else setLiningUp(true);
+  function startLineUp() {
+    setLiningUp(true);
   }
 
   if (!booted) {
@@ -982,15 +974,13 @@ export function PeakFinder() {
             screen={screen}
             cameraOn={cameraOn}
             gyroOn={gyroOn}
-            motionHint={screen === 'explore' ? motionHint : null}
             onCamera={() => void toggleCamera()}
             onGyro={() => void toggleGyro()}
-            onEnableMotion={() => void enableGyroFromGesture()}
             liningUp={liningUp}
-            onLineUp={showCamera ? toggleLineUp : null}
+            onStartLineUp={showCamera && !liningUp ? startLineUp : null}
+            onLineUpDone={showCamera && liningUp ? finishLineUp : null}
             onLineUpReset={showCamera && liningUp ? resetLineUp : null}
             onChangeSpot={screen === 'pick-view' && stacked ? () => setScreen('pick-map') : null}
-            coverageNote={coverage === 'partial' ? 'Some surrounding peak lists are not in this build, so a few names may be missing.' : null}
             onSummit={payload?.onSummit ?? null}
           />
         </div>
@@ -1025,15 +1015,21 @@ function Status({
     ?? (loading ? 'Loading…' : null)
     ?? banner
     ?? cameraNote
-    ?? (unsure ? 'Gyro unsure. Line up.' : null)
+    ?? (unsure ? GYRO_UNSURE_STATUS : null)
     ?? declinationNote
     ?? (coverage === 'none' ? 'Peak names for this spot are not in this build. The Northeast is loaded: NY, NJ, PA, CT, RI, MA, VT, NH, ME.' : null)
     ?? (payload && payload.peaks.length === 0 ? 'No named peaks are visible from here.' : null);
   const drawPulse = loading && progress.fraction >= 0.85;
   const fillPct = loading ? Math.min(progress.fraction, 0.85) * 100 : 0;
   if (!text) return null;
+  const unsureOnly = unsure && text === GYRO_UNSURE_STATUS;
   return (
-    <div className="absolute left-1/2 top-12 z-20 w-[min(28rem,calc(100%-1rem))] -translate-x-1/2 bg-[#1a1a1a]/80 px-3 py-2 text-center text-sm font-bold leading-snug text-white" role="status">
+    <div
+      className={`absolute left-1/2 top-12 z-20 w-[min(28rem,calc(100%-1rem))] -translate-x-1/2 bg-[#1a1a1a]/80 px-3 py-2 text-center font-bold leading-snug text-white ${
+        unsureOnly ? 'text-xs' : 'text-sm'
+      }`}
+      role="status"
+    >
       <p>{text}</p>
       {loading ? (
         <div
@@ -1063,35 +1059,32 @@ function Controls({
   screen,
   cameraOn,
   gyroOn,
-  motionHint,
   onCamera,
   onGyro,
-  onEnableMotion,
   liningUp,
-  onLineUp,
+  onStartLineUp,
+  onLineUpDone,
   onLineUpReset,
   onChangeSpot,
-  coverageNote,
   onSummit,
 }: {
   sensors: boolean;
   screen: Screen;
   cameraOn: boolean;
   gyroOn: boolean;
-  motionHint: MotionHint;
   onCamera: () => void;
   onGyro: () => void;
-  onEnableMotion: () => void;
   liningUp: boolean;
-  onLineUp: (() => void) | null;
+  onStartLineUp: (() => void) | null;
+  onLineUpDone: (() => void) | null;
   onLineUpReset: (() => void) | null;
   onChangeSpot: (() => void) | null;
-  coverageNote: string | null;
   onSummit: { name: string; elevationM: number } | null;
 }) {
   const [infoOpen, setInfoOpen] = useState(false);
   const showCameraToggle = sensors && screen === 'explore';
   const showGyro = sensors && (screen === 'explore' || screen === 'pick-view');
+  const lineUpAboveBar = liningUp && onLineUpDone && onLineUpReset;
   return (
     <div className="peak-finder-controls pointer-events-none absolute inset-x-0 bottom-0 z-40 px-2 pb-1.5 text-[#1a1a1a]">
       <div
@@ -1099,20 +1092,30 @@ function Controls({
         style={{ touchAction: 'manipulation' }}
         onPointerDown={(event) => event.stopPropagation()}
       >
-        {motionHint === 'tap' && !gyroOn ? (
-          <button
-            type="button"
-            data-pf-control
-            className="peak-finder-control absolute inset-x-0 bottom-full mb-0.5 truncate rounded border border-[#5c3a1e]/35 bg-[#ffc94d]/95 px-2 py-0.5 text-center text-[10px] font-bold text-[#1a1a1a]"
-            onClick={onEnableMotion}
-          >
-            Tap to turn on motion
-          </button>
+        {lineUpAboveBar ? (
+          <div className="absolute inset-x-0 bottom-full mb-1 flex items-center justify-center gap-1.5">
+            <button
+              type="button"
+              data-pf-control
+              className="peak-finder-control retro-button min-h-8 shrink-0 px-2 py-0 text-[10px] font-bold text-[#1a1a1a]"
+              onClick={onLineUpReset}
+            >
+              Reset
+            </button>
+            <button
+              type="button"
+              data-pf-control
+              className="peak-finder-control retro-button min-h-8 shrink-0 px-2 py-0 text-[10px] font-bold text-[#1a1a1a]"
+              onClick={onLineUpDone}
+            >
+              Done
+            </button>
+          </div>
         ) : null}
         {onSummit ? (
           <p
             className={`pointer-events-none absolute inset-x-0 truncate px-0.5 text-[10px] font-bold leading-tight text-[#1a1a1a] drop-shadow-[0_0_2px_rgba(231,225,212,0.9)] ${
-              motionHint === 'tap' && !gyroOn ? 'bottom-[calc(100%+1.5rem)]' : 'bottom-full mb-0.5'
+              lineUpAboveBar ? 'bottom-[calc(100%+2.25rem)]' : 'bottom-full mb-0.5'
             }`}
           >
             You&apos;re on: {onSummit.name}, {formatFeet(onSummit.elevationM)}
@@ -1124,8 +1127,7 @@ function Controls({
             role="dialog"
             aria-label="Peak finder notes"
           >
-            {coverageNote ? <p className="mb-1">{coverageNote}</p> : null}
-            <p className={coverageNote ? 'mb-1' : ''}>{PEAK_CREDITS}</p>
+            <p className="mb-1">{PEAK_CREDITS}</p>
             <p>{BARE_EARTH_NOTE}</p>
           </div>
         ) : null}
@@ -1151,24 +1153,14 @@ function Controls({
                 }}
               />
             ) : null}
-            {onLineUpReset ? (
+            {onStartLineUp ? (
               <button
                 type="button"
                 data-pf-control
                 className="peak-finder-control retro-button min-h-8 shrink-0 px-2 py-0 text-[10px] font-bold text-[#1a1a1a]"
-                onClick={onLineUpReset}
+                onClick={onStartLineUp}
               >
-                Reset
-              </button>
-            ) : null}
-            {onLineUp ? (
-              <button
-                type="button"
-                data-pf-control
-                className="peak-finder-control retro-button min-h-8 shrink-0 px-2 py-0 text-[10px] font-bold text-[#1a1a1a]"
-                onClick={onLineUp}
-              >
-                {liningUp ? 'Done' : 'Line up'}
+                Line up
               </button>
             ) : null}
             {onChangeSpot ? (

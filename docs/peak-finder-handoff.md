@@ -89,19 +89,20 @@ Gyro path is unchanged in `orientation.ts`: magnetic heading + declination + scr
 **Gyro on explore** (`motion-enable.ts`, `orientation.ts`):
 
 - **Gyro on** in the UI means live sensor data, not permission or session memory. After permission allows listening, the app arms `deviceorientation` and waits up to **~1.5 s** (`GYRO_VERIFY_MS`) for events with non-null alpha/beta/gamma and a usable pose (`orientationEventHasData`). Only then is gyro marked on.
-- If nothing arrives in that window, gyro stays off and **Tap to turn on motion** shows (iOS `requestPermission` runs in that tap handler).
+- If nothing arrives in that window, the **Gyro** toggle stays off.
 - Entering explore re-runs auto arm + verify when the platform can call the permission API without a gesture, or when this tab already got **granted** once this session (`motionSessionGrantedRef` — in-memory only, never drives the Gyro toggle). Nothing is persisted in `localStorage`.
-- **Cam** (user gesture) requests motion when required, waits for live verification, then starts the camera — camera mode does not run with gyro off.
-- **Gyro** toggle turns follow on/off; the tap chip is the same path as tapping Gyro/Cam when motion is not active.
+- **Gyro** toggle is the motion control: off until live events verify; tap (user gesture) runs `requestPermission` on iOS, then arm + verify. **Cam** (gesture) still enables gyro the same way before starting the camera.
+- If permission is **denied**, gyro stays off and status shows `MOTION_BLOCKED_STATUS` from `motion-enable.ts`.
+- **Gyro unsure** status (small type): `GYRO_UNSURE_STATUS` — hidden during line-up.
 
-**Line-up** (camera on, explore): single bottom-bar control toggles Done/Line up. Drag in any direction:
+**Line-up** (camera on, explore): **Line up** in the bottom bar starts alignment; while active, **Reset** and **Done** sit centered above the bar (not inside it). **Done** exits line-up; **Reset** clears offsets but stays in line-up. Drag in any direction:
 
 - **Horizontal**: updates `headingOffset` against the current compass base heading.
 - **Vertical**: updates **`pitchOffset`** (±15°, `line-up-offset.ts`), applied on top of `clampGyroViewPitch` output without changing sensor math.
 
 Pinch still changes `hfov` (22°–110°). Finishing line-up keeps offsets in memory for the visit; only **`hfov`** is persisted (`pf:calibration:v1` via `compass-resync.ts`).
 
-**Compass resync** (`resyncCompassToDevice` in `PeakFinder.tsx`): clears line-up offsets and resets yaw learning, One Euro smoother state, heading jump/unsure flags, then snaps the view to the current compass base. Runs when gyro is verified after a re-arm, when the tab becomes visible (`visibilitychange`) or returns from bfcache (`pageshow`), and manually via **Reset** while line-up is active (compact control next to **Done**). Turning gyro off does not clear offsets until one of those triggers; toggling gyro back on re-verifies and resyncs.
+**Compass resync** (`resyncCompassToDevice` in `PeakFinder.tsx`): clears line-up offsets and resets yaw learning, One Euro smoother state, heading jump/unsure flags, then snaps the view to the current compass base. Runs when gyro is verified after a re-arm, when the tab becomes visible (`visibilitychange`) or returns from bfcache (`pageshow`), and manually via **Reset** while line-up is active. Turning gyro off does not clear offsets until one of those triggers; toggling gyro back on re-verifies and resyncs.
 
 ### Heading readout
 
@@ -113,7 +114,7 @@ Centered at the top of `SkylineStage` with safe-area inset. Shown on drawn and c
 
 **Explore (phone)**: optional live camera under the skyline; Cam and Gyro toggles; line-up when camera is on. **Desktop pick**: map + drawn pane; keyboard/wheel pan when not using sensors.
 
-**Bottom bar** (skyline, all phone widths): one compact strip at the bottom — **Cam**, **Gyro**, **Reset** (line-up only), **Line up** / **Done**, **Change spot** (pick-view stacked layout only), **⋯** info. Semi-opaque bar, black/dark text readable on camera. Credits and disclaimers live **only** in the overlay opened by ⋯ (`PEAK_CREDITS`, `BARE_EARTH_NOTE`, partial-coverage note). Collapsed: **zero layout space** (popover is `absolute` above the bar). **You're on:** sits in a single line above the bar when applicable.
+**Bottom bar** (skyline, all phone widths): one compact strip — **Cam**, **Gyro**, **Line up** (when not aligning), **Change spot** (pick-view stacked layout only), **⋯** info. While line-up is active, **Reset** + **Done** float centered above the bar. Semi-opaque bar, black/dark text readable on camera. Credits and disclaimers live **only** in the overlay opened by ⋯ (`PEAK_CREDITS`, `BARE_EARTH_NOTE`). **You're on:** sits in a single line above the bar when applicable.
 
 **Status** (top center): loading, errors, gyro unsure, coverage none, etc. — separate from the info popover. Hidden while line-up is active so the line-up caption is the only top message.
 
