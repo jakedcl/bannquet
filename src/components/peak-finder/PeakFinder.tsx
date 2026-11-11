@@ -344,6 +344,25 @@ export function PeakFinder() {
     setLiningUp(false);
   }
 
+  function openSavedSkyline(spot: Spot) {
+    stopCamera();
+    setStartNote(null);
+    setBanner(null);
+    setError(null);
+    setPin(spot);
+    setLock({ locked: null, pending: null });
+    setCameraOn(false);
+    setCameraNote(null);
+    setGyroOn(false);
+    setSelected(null);
+    setPayload(null);
+    setProgress(null);
+    setLiningUp(false);
+    setShowDragHint(true);
+    setScreen('pick-view');
+    setAttempt((value) => value + 1);
+  }
+
   function goStart() {
     stopCamera();
     setScreen('start');
@@ -541,6 +560,7 @@ export function PeakFinder() {
       <PeakFinderOffline
         onBack={goStart}
         onSaved={() => void listOfflineAreas().then(setOfflineAreas)}
+        onOpenSkyline={openSavedSkyline}
       />
     );
   }

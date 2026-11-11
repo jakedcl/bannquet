@@ -24,8 +24,10 @@ export const RAY_STEP_DEG = 0.1;
 export const TERRAIN_CACHE = 'pf-terrain-v1';
 export const PEAKS_CACHE = 'pf-peaks-v1';
 export const TERRAIN_CACHE_CAP_BYTES = 150 * 1024 * 1024;
-/** Radius saved for each offline area (terrain + peaks). */
+/** Default radius saved for each offline area (terrain + peaks). */
 export const OFFLINE_RADIUS_M = 100_000;
+export const OFFLINE_MIN_RADIUS_M = 50_000;
+export const OFFLINE_MAX_RADIUS_M = 100_000;
 export const OFFLINE_DB_NAME = 'pf-offline-v1';
 export const OFFLINE_AREAS_STORE = 'areas';
 export const OFFLINE_AVG_TILE_BYTES = 80_000;

@@ -1,4 +1,6 @@
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+import path from 'node:path';
 import test from 'node:test';
 import { OFFLINE_RADIUS_M } from './constants';
 import {
@@ -7,8 +9,14 @@ import {
   offlineManifestFor,
   offlinePeakChunkIds,
   offlineTerrainTileUrls,
+  resolveOfflinePeakChunks,
 } from './offline';
+import { chunksCovering, type PeakIndex } from './peaks';
 import { terrainTilesForRadius } from './tiles';
+
+const PEAK_INDEX = JSON.parse(
+  readFileSync(path.join(process.cwd(), 'public/peak-finder/peaks/index.json'), 'utf8'),
+) as PeakIndex;
 
 /** Slide Mountain, Catskills — common offline test point. */
 const SLIDE = { lat: 41.998127, lng: -74.38633, name: 'Slide Mountain' };
@@ -43,4 +51,19 @@ test('areaCoversPoint respects 100 km radius', () => {
   const area = { lat: SLIDE.lat, lng: SLIDE.lng, radiusM: OFFLINE_RADIUS_M };
   assert.equal(areaCoversPoint(area, SLIDE.lat, SLIDE.lng), true);
   assert.equal(areaCoversPoint(area, 40.7, -74.0), false);
+});
+
+/** Staten Island — circle touches an unpublished ocean chunk; save must still work. */
+const STATEN = { lat: 40.617, lng: -74.126 };
+
+test('Staten Island omits peak chunks that are not in the index', () => {
+  const wanted = chunksCovering(STATEN.lat, STATEN.lng, OFFLINE_RADIUS_M, PEAK_INDEX.cellDeg);
+  const resolved = resolveOfflinePeakChunks(STATEN.lat, STATEN.lng, PEAK_INDEX);
+  const have = new Set(PEAK_INDEX.chunks.map((chunk) => chunk.id));
+  const missingFromIndex = wanted.filter((id) => !have.has(id));
+  assert.ok(missingFromIndex.length > 0, 'fixture expects at least one non-index cell');
+  assert.ok(resolved.length < wanted.length);
+  assert.equal(resolved.every((id) => have.has(id)), true);
+  const manifest = offlineManifestFor(STATEN.lat, STATEN.lng, OFFLINE_RADIUS_M, resolved);
+  assert.ok(manifest.peakUrls.every((url) => !url.includes(missingFromIndex[0])));
 });

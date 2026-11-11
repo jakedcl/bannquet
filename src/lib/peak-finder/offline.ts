@@ -7,7 +7,7 @@ import {
   TERRAIN_CACHE,
 } from './constants';
 import { distanceM } from './geo';
-import { chunksCovering, loadPeakIndex } from './peaks';
+import { chunksCovering, loadPeakIndex, loadPeaksAround, type PeakIndex } from './peaks';
 import { terrainTilesForRadius, terrariumUrl } from './tiles';
 
 export type OfflineAreaRecord = {
@@ -42,13 +42,26 @@ export function areaCoversPoint(area: Pick<OfflineAreaRecord, 'lat' | 'lng' | 'r
   return distanceM(area.lat, area.lng, lat, lng) <= area.radiusM;
 }
 
+/** Peak chunk ids that exist in the published index (ocean / empty cells are omitted). */
+export function resolveOfflinePeakChunks(
+  lat: number,
+  lng: number,
+  index: PeakIndex,
+  radiusM = OFFLINE_RADIUS_M,
+): string[] {
+  const wanted = chunksCovering(lat, lng, radiusM, index.cellDeg || CHUNK_DEG);
+  const have = new Set(index.chunks.map((chunk) => chunk.id));
+  return wanted.filter((id) => have.has(id));
+}
+
 export function offlineManifestFor(
   lat: number,
   lng: number,
   radiusM = OFFLINE_RADIUS_M,
+  peakChunkIds?: readonly string[],
 ): { terrainUrls: string[]; peakUrls: string[]; tileCount: number; chunkCount: number; estimatedBytes: number } {
   const terrainUrls = offlineTerrainTileUrls(lat, lng, radiusM);
-  const chunkIds = offlinePeakChunkIds(lat, lng, radiusM);
+  const chunkIds = peakChunkIds ? [...peakChunkIds] : offlinePeakChunkIds(lat, lng, radiusM);
   const peakUrls = [
     '/peak-finder/peaks/index.json',
     '/peak-finder/declination.v1.json',
@@ -77,13 +90,25 @@ async function mapPool<T>(items: readonly T[], size: number, run: (item: T) => P
   await Promise.all(Array.from({ length: Math.min(size, items.length) }, () => worker()));
 }
 
-async function putUrls(cache: Cache, urls: readonly string[], onDone: (n: number) => void): Promise<void> {
+async function putUrls(
+  cache: Cache,
+  urls: readonly string[],
+  onDone: (n: number) => void,
+  options?: { skipFailed?: boolean },
+): Promise<void> {
   let finished = 0;
   await mapPool(urls, DOWNLOAD_CONCURRENCY, async (url) => {
     const hit = await cache.match(url);
     if (!hit) {
       const res = await fetch(url, { mode: url.startsWith('http') ? 'cors' : 'same-origin' });
-      if (!res.ok) throw new Error(`Could not download ${url}`);
+      if (!res.ok) {
+        if (options?.skipFailed) {
+          finished += 1;
+          onDone(finished);
+          return;
+        }
+        throw new Error(`Could not download ${url}`);
+      }
       await cache.put(url, res);
     }
     finished += 1;
@@ -109,26 +134,21 @@ export async function downloadOfflineData(
   radiusM = OFFLINE_RADIUS_M,
 ): Promise<{ terrainUrls: string[]; peakUrls: string[] }> {
   if (typeof caches === 'undefined') throw new Error('Cache Storage is not available in this browser.');
-  const manifest = offlineManifestFor(lat, lng, radiusM);
+  await requestOfflinePersistence();
+  const index = await loadPeakIndex();
+  const chunkIds = resolveOfflinePeakChunks(lat, lng, index, radiusM);
+  const manifest = offlineManifestFor(lat, lng, radiusM, chunkIds);
   const total = manifest.terrainUrls.length + manifest.peakUrls.length;
   let done = 0;
   const tick = () => onProgress({ done, total });
   tick();
-  await requestOfflinePersistence();
   const terrainCache = await caches.open(TERRAIN_CACHE);
   const peaksCache = await caches.open(PEAKS_CACHE);
-  const index = await loadPeakIndex();
-  const wanted = offlinePeakChunkIds(lat, lng, radiusM, index.cellDeg || CHUNK_DEG);
-  const have = new Set(index.chunks.map((chunk) => chunk.id));
-  const missing = wanted.filter((id) => !have.has(id));
-  if (missing.length > 0) {
-    throw new Error(`Peak data is missing for this area (${missing.length} chunk${missing.length === 1 ? '' : 's'}).`);
-  }
   try {
     await putUrls(terrainCache, manifest.terrainUrls, (n) => {
       done = n;
       tick();
-    });
+    }, { skipFailed: true });
     await putUrls(peaksCache, manifest.peakUrls, (n) => {
       done = manifest.terrainUrls.length + n;
       tick();
@@ -145,4 +165,33 @@ export async function downloadOfflineData(
 
 export function defaultAreaName(lat: number, lng: number): string {
   return `${lat.toFixed(3)}°, ${lng.toFixed(3)}°`;
+}
+
+export async function suggestAreaName(lat: number, lng: number): Promise<string> {
+  try {
+    const { peaks } = await loadPeaksAround(lat, lng, 80_000);
+    if (peaks.length === 0) return defaultAreaName(lat, lng);
+    let nearest = peaks[0];
+    let best = distanceM(lat, lng, nearest.lat, nearest.lng);
+    for (const peak of peaks) {
+      const d = distanceM(lat, lng, peak.lat, peak.lng);
+      if (d < best) {
+        best = d;
+        nearest = peak;
+      }
+    }
+    return `Near ${nearest.name}`;
+  } catch {
+    return defaultAreaName(lat, lng);
+  }
+}
+
+export async function offlineManifestResolved(
+  lat: number,
+  lng: number,
+  radiusM = OFFLINE_RADIUS_M,
+): Promise<ReturnType<typeof offlineManifestFor>> {
+  const index = await loadPeakIndex();
+  const chunkIds = resolveOfflinePeakChunks(lat, lng, index, radiusM);
+  return offlineManifestFor(lat, lng, radiusM, chunkIds);
 }
