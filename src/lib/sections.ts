@@ -27,7 +27,23 @@ export const COMMUNITY_LINKS: NavLink[] = [
   { href: '/members', label: 'Members' },
 ];
 
+/** Desktop community menu: section home first, then sub-pages. */
+export const COMMUNITY_MENU_LINKS: NavLink[] = [
+  { href: '/community', label: 'Community' },
+  ...COMMUNITY_LINKS,
+];
+
 export const WEATHER_LINKS: NavLink[] = [
+  { href: '/mountain-weather/conditions', label: 'Conditions' },
+  ...REGION_OPTIONS.map((option) => ({
+    href: `/mountain-weather?state=${option.code}`,
+    label: option.label,
+  })),
+];
+
+/** Desktop weather menu: dashboard and conditions first, then state sub-pages. */
+export const WEATHER_MENU_LINKS: NavLink[] = [
+  { href: '/mountain-weather', label: 'Weather' },
   { href: '/mountain-weather/conditions', label: 'Conditions' },
   ...REGION_OPTIONS.map((option) => ({
     href: `/mountain-weather?state=${option.code}`,
@@ -82,6 +98,12 @@ export type PageTrail = {
 export const FISHING_LINKS: NavLink[] = [
   { href: '/fishing/saltwater', label: 'Saltwater' },
   { href: '/fishing/freshwater', label: 'Freshwater' },
+];
+
+/** Desktop fishing menu: section home first, then sub-pages. */
+export const FISHING_MENU_LINKS: NavLink[] = [
+  { href: '/fishing', label: 'Fishing' },
+  ...FISHING_LINKS,
 ];
 
 export type HomeAction = {

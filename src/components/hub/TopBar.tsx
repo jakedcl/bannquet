@@ -9,8 +9,11 @@ import { signOutAction } from '@/app/sign-in/actions';
 import { SubmitButton } from '@/components/ui/SubmitButton';
 import {
   COMMUNITY_LINKS,
+  COMMUNITY_MENU_LINKS,
   FISHING_LINKS,
+  FISHING_MENU_LINKS,
   PEAK_FINDER_LINK,
+  WEATHER_MENU_LINKS,
   communitySection,
   pathOn,
   settingsLinks,
@@ -58,21 +61,22 @@ export function TopBar({ account }: { account: BarAccount }) {
         <div className="ml-auto hidden items-center gap-2 lg:flex">
           <nav aria-label="Main" className="flex items-center gap-2">
             <Link href="/" className={barLinkClass(tab === 'map')}>Map</Link>
-            <Link href="/community" className={barLinkClass(tab === 'trips')}>Community</Link>
-            <Link href="/mountain-weather" className={barLinkClass(tab === 'weather')}>Weather</Link>
             <Link href={PEAK_FINDER_LINK.href} className={barLinkClass(pathOn(pathname, PEAK_FINDER_LINK.href))}>Peak Finder</Link>
             <Menu label="Fishing" active={pathOn(pathname, '/fishing')}>
-              <MenuLinks links={[{ href: '/fishing', label: 'All fishing' }, ...FISHING_LINKS]} />
+              <MenuLinks links={FISHING_MENU_LINKS} />
             </Menu>
-            <Menu label="Community" active={tab === null && communitySection(pathname, account)}>
-              <MenuLinks links={COMMUNITY_LINKS} />
+            <Menu label="Community" active={communitySection(pathname, account)}>
+              <MenuLinks links={COMMUNITY_MENU_LINKS} />
+            </Menu>
+            <Menu label="Weather" active={pathOn(pathname, '/mountain-weather')}>
+              <MenuLinks links={WEATHER_MENU_LINKS} />
             </Menu>
           </nav>
           {account ? (
             <Menu
               align="right"
               active={tab === 'profile'}
-              label={<span className="flex items-center gap-2">Settings<PendingBadge count={account.pendingCount} /></span>}
+              label={<span className="flex items-center gap-2">Profile<PendingBadge count={account.pendingCount} /></span>}
             >
               <AccountRows account={account} rowClass={menuRowClass} />
             </Menu>
@@ -161,18 +165,16 @@ function MoreSheet({ account, onClose }: { account: BarAccount; onClose: () => v
           <div>
             <p className="t-eyebrow mb-1">Community</p>
             <ListGroup>
+              <ListRow href="/community" title="Community" />
               {COMMUNITY_LINKS.map((item) => (
-                <ListRow
-                  key={item.href}
-                  href={item.href}
-                  title={item.label}
-                />
+                <ListRow key={item.href} href={item.href} title={item.label} />
               ))}
             </ListGroup>
           </div>
           <div>
             <p className="t-eyebrow mb-1">Fishing</p>
             <ListGroup>
+              <ListRow href="/fishing" title="Fishing" />
               {FISHING_LINKS.map((item) => (
                 <ListRow key={item.href} href={item.href} title={item.label} />
               ))}
