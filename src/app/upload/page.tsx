@@ -6,8 +6,11 @@ import { Card } from '@/components/hub/Card';
 import { ListGroup, ListRow } from '@/components/hub/ListRow';
 import { NewPostForm } from '@/components/feed/NewPostForm';
 import { getViewer } from '@/app/sign-in/actions';
+import { listChatCatalog } from '@/lib/chat';
+import { isDatabaseConfigured } from '@/db';
 import { APPROVAL_WAIT, canContribute } from '@/lib/membership';
 import { UPLOAD_LINKS } from '@/lib/sections';
+import { presetFromCatalog } from '@/lib/trip-draft';
 import { signInPath } from '@/lib/sign-in-next';
 import { HubPage } from '@/components/hub/Page';
 
@@ -36,10 +39,18 @@ function uploadPath(kind: UploadKind | null): string {
 export default async function UploadPage({
   searchParams,
 }: {
-  searchParams: Promise<{ kind?: string }>;
+  searchParams: Promise<{ kind?: string; pin?: string | string[]; route?: string | string[]; photo?: string | string[] }>;
 }) {
   const params = await searchParams;
   const kind = isKind(params.kind) ? params.kind : null;
+  const catalog = kind === 'post' && isDatabaseConfigured()
+    ? await listChatCatalog().catch(() => [])
+    : [];
+  const preset = presetFromCatalog(catalog, {
+    pin: params.pin,
+    route: params.route,
+    photo: params.photo,
+  });
   const viewer = await getViewer();
   if (!viewer) redirect(signInPath(uploadPath(kind)));
 
@@ -69,7 +80,7 @@ export default async function UploadPage({
         )}
         {kind === 'post' ? (
           <Card>
-            <NewPostForm />
+            <NewPostForm viewerId={viewer.id} catalog={catalog} preset={preset} />
           </Card>
         ) : null}
         {kind === 'route' ? (

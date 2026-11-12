@@ -7,6 +7,7 @@ import {
   integer,
   pgEnum,
   pgTable,
+  primaryKey,
   text,
   timestamp,
   uuid,
@@ -185,6 +186,33 @@ export const photos = pgTable(
   (table) => [
     index('photos_point_idx').using('gist', table.point),
   ],
+);
+
+export const postPins = pgTable(
+  'post_pins',
+  {
+    postId: uuid('post_id').notNull().references(() => feedPosts.id, { onDelete: 'cascade' }),
+    pinId: uuid('pin_id').notNull().references(() => pins.id, { onDelete: 'cascade' }),
+  },
+  (table) => [primaryKey({ columns: [table.postId, table.pinId] })],
+);
+
+export const postRoutes = pgTable(
+  'post_routes',
+  {
+    postId: uuid('post_id').notNull().references(() => feedPosts.id, { onDelete: 'cascade' }),
+    trackId: uuid('track_id').notNull().references(() => tracks.id, { onDelete: 'cascade' }),
+  },
+  (table) => [primaryKey({ columns: [table.postId, table.trackId] })],
+);
+
+export const postPhotos = pgTable(
+  'post_photos',
+  {
+    postId: uuid('post_id').notNull().references(() => feedPosts.id, { onDelete: 'cascade' }),
+    photoId: uuid('photo_id').notNull().references(() => photos.id, { onDelete: 'cascade' }),
+  },
+  (table) => [primaryKey({ columns: [table.postId, table.photoId] })],
 );
 
 export const chatMessages = pgTable(

@@ -1,6 +1,13 @@
 import { sql } from 'drizzle-orm';
 import { getDb } from '@/db';
 import { oneAtATime } from '@/lib/dedupe';
+import {
+  attachToNewPost,
+  filterOwnedAttachments,
+  listPostAttachments,
+  savePostAttachments,
+  type PostAttachment,
+} from '@/lib/post-attachments';
 
 type QueryRows = { rows?: Record<string, unknown>[] };
 
@@ -27,6 +34,7 @@ export type PostSummary = {
 export type PostDetail = PostSummary & {
   body: string;
   updatedAt: string;
+  attachments: PostAttachment[];
 };
 
 function mapSummary(row: Record<string, unknown>): PostSummary | null {
@@ -103,14 +111,22 @@ export async function getPost(id: string): Promise<PostDetail | null> {
   const row = asRows(result)[0];
   const summary = row ? mapSummary(row) : null;
   if (!summary) return null;
+  const attachments = await listPostAttachments(id);
   return {
     ...summary,
     body: text(row.body) ?? '',
     updatedAt: text(row.updated_at) ?? summary.createdAt,
+    attachments,
   };
 }
 
-export async function createPost(input: { userId: string; title: string; body: string }): Promise<string> {
+export async function createPost(input: {
+  userId: string;
+  title: string;
+  body: string;
+  attachments?: Array<{ kind: 'pin' | 'route' | 'photo'; id: string }>;
+  admin?: boolean;
+}): Promise<string> {
   return oneAtATime('post', input.userId, async (tx) => {
     const existing = await tx.execute(sql`
       select id::text as id from posts
@@ -127,6 +143,8 @@ export async function createPost(input: { userId: string; title: string; body: s
     `);
     const id = text(asRows(inserted)[0]?.id);
     if (!id) throw new Error('Could not save that post.');
+    const attachments = await filterOwnedAttachments(input.attachments ?? [], input.userId, input.admin ?? false);
+    await attachToNewPost(tx, id, attachments);
     return id;
   });
 }
@@ -136,6 +154,7 @@ export async function updatePost(input: {
   title: string;
   body: string;
   actor: { id: string; admin: boolean };
+  attachments?: Array<{ kind: 'pin' | 'route' | 'photo'; id: string }>;
 }): Promise<boolean> {
   const row = await getDb().execute(sql`
     select created_by::text as created_by from posts where id = ${input.id}::uuid
@@ -149,7 +168,12 @@ export async function updatePost(input: {
     where id = ${input.id}::uuid
     returning id::text as id
   `);
-  return asRows(result).length > 0;
+  if (asRows(result).length === 0) return false;
+  if (input.attachments) {
+    const attachments = await filterOwnedAttachments(input.attachments, input.actor.id, input.actor.admin);
+    await savePostAttachments(input.id, attachments);
+  }
+  return true;
 }
 
 export async function deletePost(id: string, actor: { id: string; admin: boolean }): Promise<boolean> {

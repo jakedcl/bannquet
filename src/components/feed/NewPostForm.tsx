@@ -2,12 +2,24 @@
 
 import { useActionState, useState } from 'react';
 import { createPostAction } from '@/app/posts/actions';
+import { PostAttachmentsEditor } from '@/components/posts/PostAttachmentsEditor';
 import { SubmitButton } from '@/components/ui/SubmitButton';
+import type { ChatCatalogItem } from '@/lib/chat-view';
+import type { DraftItem } from '@/lib/trip-draft';
 
-export function NewPostForm() {
+export function NewPostForm({
+  viewerId,
+  catalog,
+  preset,
+}: {
+  viewerId: string;
+  catalog: ChatCatalogItem[];
+  preset: DraftItem[];
+}) {
   const [state, action] = useActionState(createPostAction, null);
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
+  const [attached, setAttached] = useState<DraftItem[]>(preset);
 
   return (
     <form action={action} className="space-y-4">
@@ -35,6 +47,12 @@ export function NewPostForm() {
           className="w-full retro-box-inset bg-white px-3 py-2"
         />
       </label>
+      <PostAttachmentsEditor
+        viewerId={viewerId}
+        catalog={catalog}
+        attached={attached}
+        onChange={setAttached}
+      />
       {state?.error ? <p className="text-sm font-bold text-red-700">{state.error}</p> : null}
       <SubmitButton tone="yellow" pendingLabel="Saving…">Save post</SubmitButton>
     </form>

@@ -5,6 +5,7 @@ import { redirect } from 'next/navigation';
 import { requireContributor } from '@/lib/contributor';
 import { cleanPostFields } from '@/lib/post-fields';
 import { createPost, deletePost, updatePost } from '@/lib/feed-posts';
+import { readAttachments } from '@/lib/post-attachments';
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
@@ -22,9 +23,15 @@ export async function createPostAction(
   if (!viewer) return { error: error ?? 'Sign in to add a post.' };
   const parsed = cleanPostFields({ title: formData.get('title'), body: formData.get('body') });
   if ('error' in parsed) return { error: parsed.error };
+  const attachments = readAttachments(formData);
   let id = '';
   try {
-    id = await createPost({ userId: viewer.id, ...parsed.fields });
+    id = await createPost({
+      userId: viewer.id,
+      ...parsed.fields,
+      attachments,
+      admin: viewer.role === 'admin',
+    });
   } catch {
     return { error: 'Could not save that post. Try again in a minute.' };
   }
@@ -41,9 +48,11 @@ export async function updatePostAction(
   if (!UUID.test(id)) return { error: 'That post is missing.' };
   const parsed = cleanPostFields({ title: formData.get('title'), body: formData.get('body') });
   if ('error' in parsed) return { error: parsed.error };
+  const attachments = readAttachments(formData);
   const ok = await updatePost({
     id,
     ...parsed.fields,
+    attachments,
     actor: { id: viewer.id, admin: viewer.role === 'admin' },
   });
   if (!ok) return { error: 'You can only edit your own posts.' };
