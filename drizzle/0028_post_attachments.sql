@@ -1,7 +1,5 @@
--- Post junction tables for pins, routes, and photos.
--- Production: run this AFTER 0025_migrate_trips_to_posts and BEFORE 0026_drop_trips_notifications
--- so trip_pins / trip_routes / trip_photos rows copy into real post attachments. On preview,
--- those trip tables may already be gone; the copy block is a no-op and only creates tables.
+-- Preview catch-up after an older 0026 without post_* (already applied on preview).
+-- Production fresh apply creates and copies in 0026 first; this file is idempotent.
 CREATE TABLE IF NOT EXISTS "post_pins" (
   "post_id" uuid NOT NULL REFERENCES "posts"("id") ON DELETE CASCADE,
   "pin_id" uuid NOT NULL REFERENCES "pins"("id") ON DELETE CASCADE,
