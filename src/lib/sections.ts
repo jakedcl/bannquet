@@ -139,6 +139,8 @@ export function linkOn(pathname: string, search: string, href: string): boolean 
   if (path === '/members' && pathname.startsWith('/user/')) return true;
   if (path === '/fishing') return pathname === '/fishing';
   if (path === '/fishing/freshwater') return pathname === path || /^\/fishing\/\d+$/.test(pathname);
+  if (path === '/community' && !query) return pathname === '/community';
+  if (path === '/mountain-weather' && !query) return pathname === '/mountain-weather';
   if (!query) return pathOn(pathname, path);
   if (pathname !== path) return false;
   const want = new URLSearchParams(query);
@@ -405,7 +407,7 @@ export function matchSection(pathname: string, search: string, account: NavAccou
       id: 'fishing',
       href: '/fishing',
       label: 'Fishing',
-      links: FISHING_LINKS,
+      links: FISHING_MENU_LINKS,
       landing: false,
     };
   }
@@ -415,7 +417,7 @@ export function matchSection(pathname: string, search: string, account: NavAccou
       id: 'community',
       href: '/community',
       label: 'Community',
-      links: COMMUNITY_LINKS,
+      links: COMMUNITY_MENU_LINKS,
       landing: false,
     };
   }
@@ -424,8 +426,8 @@ export function matchSection(pathname: string, search: string, account: NavAccou
     return {
       id: 'weather',
       href: '/mountain-weather',
-      label: 'Mountain Weather',
-      links: WEATHER_LINKS,
+      label: 'Weather',
+      links: WEATHER_MENU_LINKS,
       landing: false,
     };
   }

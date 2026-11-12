@@ -100,6 +100,20 @@ test('the home hero opens fishing the same way as the other parent sections', ()
   assert.deepEqual(HOME_ACTIONS.find((action) => action.id === 'map')?.links, []);
 });
 
+test('section chrome lists include each section home first', () => {
+  const community = matchSection('/chat', '', nobody);
+  assert.deepEqual(community?.links[0], { href: '/community', label: 'Community' });
+  assert.equal(linkOn('/community', '', '/community'), true);
+  assert.equal(linkOn('/chat', '', '/community'), false);
+
+  const weather = matchSection('/mountain-weather', '', nobody);
+  assert.equal(weather?.label, 'Weather');
+  assert.deepEqual(weather?.links[0], { href: '/mountain-weather', label: 'Weather' });
+  assert.equal(linkOn('/mountain-weather', '', '/mountain-weather'), true);
+  assert.equal(linkOn('/mountain-weather/conditions', '', '/mountain-weather'), false);
+  assert.equal(linkOn('/mountain-weather/conditions', '', '/mountain-weather/conditions'), true);
+});
+
 test('fishing is its own section, outside community', () => {
   assert.equal(communitySection('/fishing'), false);
   assert.equal(communitySection('/fishing/stocking'), false);
@@ -108,6 +122,9 @@ test('fishing is its own section, outside community', () => {
   assert.equal(main?.id, 'fishing');
   assert.equal(main?.label, 'Fishing');
   assert.equal(main?.landing, false);
+  assert.deepEqual(main?.links[0], { href: '/fishing', label: 'Fishing' });
+  assert.equal(linkOn('/fishing', '', '/fishing'), true);
+  assert.equal(linkOn('/fishing/saltwater', '', '/fishing'), false);
   assert.equal(main?.links.some((link) => link.href === '/fishing/saltwater'), true);
   assert.equal(main?.links.some((link) => link.href === '/fishing/freshwater'), true);
   assert.equal(linkOn('/fishing', '', '/fishing/saltwater'), false);
