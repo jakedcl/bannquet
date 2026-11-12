@@ -64,11 +64,11 @@ export async function loadLoggedActivities(userId: string): Promise<Activity[]> 
   const result = await getDb().execute(sql`
     select activity, count(*)::int as n, max(happened)::text as latest
     from (
-      select activity::text, coalesce(started_at::date, created_at::date)
+      select activity::text as activity, coalesce(started_at::date, created_at::date) as happened
       from tracks
       where user_id = ${userId} and activity is not null
       union all
-      select activity::text, coalesce(visited_on, created_at::date)
+      select activity::text as activity, coalesce(visited_on, created_at::date) as happened
       from pins
       where created_by = ${userId} and activity is not null
     ) uploads
