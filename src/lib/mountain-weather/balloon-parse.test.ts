@@ -23,6 +23,14 @@ const NO_BALLOON_BLOCK = [
   'crane-mountain',
   'hadley-mountain',
   'pharaoh-mountain',
+  'gore-mountain',
+  'stratton-mountain',
+  'mount-equinox',
+  'dorset-mountain',
+  'bromley-mountain',
+  'manchester-vt',
+  'haystack-mountain',
+  'bald-mountain',
 ];
 
 test('balloon Champlain fixture parses wind rows and hours', () => {
@@ -50,5 +58,5 @@ test('balloon bindings are explicit (no ALY-area or unlisted central ADK guesses
     .filter((p) => p.office === 'BTV').length;
   const bound = Object.values(bindings.places).filter((p) => p.balloon).length;
   assert.equal(btvCount, 53);
-  assert.equal(bound, 42);
+  assert.equal(bound, 34);
 });

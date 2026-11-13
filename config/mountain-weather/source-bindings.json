@@ -12,7 +12,7 @@
       },
       "balloon": {
         "regionMatch": "the Northern Adirondacks of New York",
-        "bindReason": "Lake Placid/Keene High Peaks; Northern Adirondacks bulletin cities (BTV)."
+        "bindReason": "Lake Placid bulletin city (Essex Co. NY, BTV WFO)."
       }
     },
     "whiteface-mountain": {
@@ -26,7 +26,7 @@
       },
       "balloon": {
         "regionMatch": "the Northern Adirondacks of New York",
-        "bindReason": "Lake Placid corridor; Northern Adirondacks bulletin cities (BTV)."
+        "bindReason": "Lake Placid bulletin city (Essex Co. NY, BTV WFO)."
       }
     },
     "dix-mountain": {
@@ -40,7 +40,7 @@
       },
       "balloon": {
         "regionMatch": "the Northern Adirondacks of New York",
-        "bindReason": "Lake Placid/Keene High Peaks; Northern Adirondacks bulletin cities (BTV)."
+        "bindReason": "Lake Placid bulletin city (Essex Co. NY, BTV WFO)."
       }
     },
     "algonquin-peak": {
@@ -54,7 +54,7 @@
       },
       "balloon": {
         "regionMatch": "the Northern Adirondacks of New York",
-        "bindReason": "Lake Placid/High Peaks; Northern Adirondacks bulletin cities (BTV)."
+        "bindReason": "Lake Placid bulletin city (Essex Co. NY, BTV WFO)."
       }
     },
     "mount-colden": {
@@ -68,7 +68,7 @@
       },
       "balloon": {
         "regionMatch": "the Northern Adirondacks of New York",
-        "bindReason": "Lake Placid/High Peaks; Northern Adirondacks bulletin cities (BTV)."
+        "bindReason": "Lake Placid bulletin city (Essex Co. NY, BTV WFO)."
       }
     },
     "mount-colvin": {
@@ -82,7 +82,7 @@
       },
       "balloon": {
         "regionMatch": "the Northern Adirondacks of New York",
-        "bindReason": "Lake Placid/Keene area; Northern Adirondacks bulletin cities (BTV)."
+        "bindReason": "Lake Placid bulletin city (Keene, Essex Co. NY, BTV WFO)."
       }
     },
     "giant-mountain": {
@@ -92,7 +92,7 @@
       },
       "balloon": {
         "regionMatch": "the Northern Adirondacks of New York",
-        "bindReason": "Lake Placid/Keene area; Northern Adirondacks bulletin cities (BTV)."
+        "bindReason": "Lake Placid bulletin city (Keene, Essex Co. NY, BTV WFO)."
       }
     },
     "santanoni-peak": {
@@ -102,7 +102,7 @@
       },
       "balloon": {
         "regionMatch": "the Northern Adirondacks of New York",
-        "bindReason": "Newcomb/Tupper corridor; Northern Adirondacks bulletin cities (BTV)."
+        "bindReason": "Newcomb bulletin city (Essex Co. NY, BTV WFO)."
       }
     },
     "cascade-mountain": {
@@ -112,7 +112,7 @@
       },
       "balloon": {
         "regionMatch": "the Northern Adirondacks of New York",
-        "bindReason": "Lake Placid/Keene area; Northern Adirondacks bulletin cities (BTV)."
+        "bindReason": "Lake Placid bulletin city (Keene, Essex Co. NY, BTV WFO)."
       }
     },
     "mckenzie-mountain": {
@@ -122,7 +122,7 @@
       },
       "balloon": {
         "regionMatch": "the Northern Adirondacks of New York",
-        "bindReason": "Saranac Lake area; Northern Adirondacks bulletin cities (BTV)."
+        "bindReason": "Saranac Lake bulletin city (Franklin Co. NY, BTV WFO)."
       }
     },
     "mount-van-hoevenberg": {
@@ -132,7 +132,7 @@
       },
       "balloon": {
         "regionMatch": "the Northern Adirondacks of New York",
-        "bindReason": "Lake Placid/Olympic region; Northern Adirondacks bulletin cities (BTV)."
+        "bindReason": "Lake Placid bulletin city (Essex Co. NY, BTV WFO)."
       }
     },
     "keene-valley": {
@@ -142,7 +142,7 @@
       },
       "balloon": {
         "regionMatch": "the Northern Adirondacks of New York",
-        "bindReason": "Keene Valley base; Northern Adirondacks bulletin cities (BTV)."
+        "bindReason": "Lake Placid bulletin city (Keene, Essex Co. NY, BTV WFO)."
       }
     },
     "lyon-mountain": {
@@ -152,7 +152,7 @@
       },
       "balloon": {
         "regionMatch": "the Northern Adirondacks of New York",
-        "bindReason": "Dannemora/Chazy in Northern Adirondacks bulletin cities (BTV), not St. Lawrence valley."
+        "bindReason": "Dannemora bulletin city (Clinton Co. NY, BTV WFO)."
       }
     },
     "ampersand-mountain": {
@@ -162,7 +162,7 @@
       },
       "balloon": {
         "regionMatch": "the Northern Adirondacks of New York",
-        "bindReason": "Saranac Lake area; Northern Adirondacks bulletin cities (BTV)."
+        "bindReason": "Saranac Lake bulletin city (Franklin/Essex Co. NY, BTV WFO)."
       }
     },
     "debar-mountain": {
@@ -172,7 +172,7 @@
       },
       "balloon": {
         "regionMatch": "the Northern Adirondacks of New York",
-        "bindReason": "Saranac Lake/Debar Pond area; Northern Adirondacks bulletin cities (BTV)."
+        "bindReason": "Saranac Lake bulletin city (Franklin Co. NY, BTV WFO)."
       }
     },
     "st-regis-mountain": {
@@ -182,7 +182,7 @@
       },
       "balloon": {
         "regionMatch": "the Northern Adirondacks of New York",
-        "bindReason": "Saranac Lake/Paul Smiths; Northern Adirondacks bulletin cities (BTV)."
+        "bindReason": "Saranac Lake bulletin city (Franklin Co. NY, BTV WFO)."
       }
     },
     "mount-arab": {
@@ -192,7 +192,7 @@
       },
       "balloon": {
         "regionMatch": "the Northern Adirondacks of New York",
-        "bindReason": "Tupper Lake/Saranac area; Northern Adirondacks bulletin cities (BTV)."
+        "bindReason": "Tupper Lake bulletin city (Franklin/St. Lawrence Co. NY, BTV WFO)."
       }
     },
     "snowy-mountain": {
@@ -217,10 +217,6 @@
       "rec": {
         "office": "BTV",
         "sectionMatch": "Northern Adirondacks of New York"
-      },
-      "balloon": {
-        "regionMatch": "the Northern Adirondacks of New York",
-        "bindReason": "North Creek/Lake Placid zone; Northern Adirondacks bulletin cities (BTV)."
       }
     },
     "blue-ridge-mountain": {
@@ -352,7 +348,7 @@
       },
       "balloon": {
         "regionMatch": "Central and Northeast Vermont",
-        "bindReason": "Derby/Newport NEK; Central and Northeast Vermont bulletin cities (BTV)."
+        "bindReason": "Newport/Derby bulletin cities (Orleans Co. VT, BTV WFO)."
       }
     },
     "belvidere-mountain": {
@@ -362,7 +358,7 @@
       },
       "balloon": {
         "regionMatch": "Central and Northeast Vermont",
-        "bindReason": "North/Central VT Greens; Central and Northeast Vermont bulletin cities (BTV)."
+        "bindReason": "Newport bulletin city (Orleans Co. VT, BTV WFO)."
       }
     },
     "jay-village": {
@@ -372,7 +368,7 @@
       },
       "balloon": {
         "regionMatch": "Central and Northeast Vermont",
-        "bindReason": "Derby/Newport area; Central and Northeast Vermont bulletin cities (BTV)."
+        "bindReason": "Derby bulletin city (Orleans Co. VT, BTV WFO)."
       }
     },
     "mount-mansfield": {
@@ -387,7 +383,7 @@
       },
       "balloon": {
         "regionMatch": "Central and Northeast Vermont",
-        "bindReason": "Stowe/Montpelier Greens; Central and Northeast Vermont bulletin cities (BTV)."
+        "bindReason": "Stowe bulletin city (Lamoille Co. VT, BTV WFO)."
       }
     },
     "smugglers-notch": {
@@ -401,7 +397,7 @@
       },
       "balloon": {
         "regionMatch": "Central and Northeast Vermont",
-        "bindReason": "Stowe/Jeffersonville; Central and Northeast Vermont bulletin cities (BTV)."
+        "bindReason": "Stowe bulletin city (Lamoille Co. VT, BTV WFO)."
       }
     },
     "stowe-town": {
@@ -411,7 +407,7 @@
       },
       "balloon": {
         "regionMatch": "Central and Northeast Vermont",
-        "bindReason": "Stowe in bulletin city list (BTV)."
+        "bindReason": "Stowe bulletin city (Lamoille Co. VT, BTV WFO)."
       }
     },
     "camels-hump": {
@@ -421,7 +417,7 @@
       },
       "balloon": {
         "regionMatch": "Central and Northeast Vermont",
-        "bindReason": "Montpelier/Waitsfield Greens; Central and Northeast Vermont bulletin cities (BTV)."
+        "bindReason": "Waitsfield bulletin city (Washington Co. VT, BTV WFO)."
       }
     },
     "mount-ellen": {
@@ -431,7 +427,7 @@
       },
       "balloon": {
         "regionMatch": "Central and Northeast Vermont",
-        "bindReason": "Waitsfield/Mad River; Central and Northeast Vermont bulletin cities (BTV)."
+        "bindReason": "Waitsfield bulletin city (Washington Co. VT, BTV WFO)."
       }
     },
     "bread-loaf-mountain": {
@@ -441,7 +437,7 @@
       },
       "balloon": {
         "regionMatch": "the Champlain Valley of Vermont and New York",
-        "bindReason": "Middlebury/Ripton in Champlain Valley bulletin cities (BTV)."
+        "bindReason": "Middlebury/Ripton bulletin cities (Addison Co. VT, BTV WFO)."
       }
     },
     "mount-worcester": {
@@ -451,7 +447,7 @@
       },
       "balloon": {
         "regionMatch": "Central and Northeast Vermont",
-        "bindReason": "Central VT Greens; Central and Northeast Vermont bulletin cities (BTV)."
+        "bindReason": "Montpelier bulletin city (Worcester, Washington Co. VT, BTV WFO)."
       }
     },
     "waterbury": {
@@ -461,7 +457,7 @@
       },
       "balloon": {
         "regionMatch": "Central and Northeast Vermont",
-        "bindReason": "Montpelier/Waterbury corridor; Central and Northeast Vermont bulletin cities (BTV)."
+        "bindReason": "Montpelier bulletin city (Waterbury, Washington Co. VT, BTV WFO)."
       }
     },
     "signal-mountain": {
@@ -471,7 +467,7 @@
       },
       "balloon": {
         "regionMatch": "Central and Northeast Vermont",
-        "bindReason": "Island Pond NEK in Central and Northeast Vermont bulletin cities (BTV)."
+        "bindReason": "Island Pond bulletin city (Essex Co. VT, BTV WFO)."
       }
     },
     "burke-mountain": {
@@ -481,7 +477,7 @@
       },
       "balloon": {
         "regionMatch": "Central and Northeast Vermont",
-        "bindReason": "Newport/Derby NEK; Central and Northeast Vermont bulletin cities (BTV)."
+        "bindReason": "Newport bulletin city (Orleans Co. VT, BTV WFO)."
       }
     },
     "monadnock-mountain": {
@@ -492,7 +488,7 @@
       },
       "balloon": {
         "regionMatch": "Central and Northeast Vermont",
-        "bindReason": "Island Pond/Bradford NEK; Central and Northeast Vermont bulletin cities (BTV).",
+        "bindReason": "Bradford bulletin city (Essex Co. VT, BTV WFO).",
         "nearbyLabel": "Essex County VT Monadnock only — NH Mount Monadnock is GYX, not this balloon product."
       }
     },
@@ -503,47 +499,31 @@
       },
       "balloon": {
         "regionMatch": "Southern Vermont",
-        "bindReason": "Killington in Southern Vermont bulletin cities (BTV)."
+        "bindReason": "Killington bulletin city (Rutland Co. VT, BTV WFO)."
       }
     },
     "stratton-mountain": {
       "rec": {
         "office": "BTV",
         "sectionMatch": "Southern Green Mountains of Vermont"
-      },
-      "balloon": {
-        "regionMatch": "Southern Vermont",
-        "bindReason": "Southern VT ski zone; Southern Vermont bulletin cities (BTV)."
       }
     },
     "mount-equinox": {
       "rec": {
         "office": "BTV",
         "sectionMatch": "Southern Green Mountains of Vermont"
-      },
-      "balloon": {
-        "regionMatch": "Southern Vermont",
-        "bindReason": "Manchester/Bennington area; Southern Vermont bulletin cities (BTV)."
       }
     },
     "dorset-mountain": {
       "rec": {
         "office": "BTV",
         "sectionMatch": "Southern Green Mountains of Vermont"
-      },
-      "balloon": {
-        "regionMatch": "Southern Vermont",
-        "bindReason": "Southern VT Greens; Southern Vermont bulletin cities (BTV)."
       }
     },
     "haystack-mountain": {
       "rec": {
         "office": "BTV",
         "sectionMatch": "Southern Green Mountains of Vermont"
-      },
-      "balloon": {
-        "regionMatch": "Southern Vermont",
-        "bindReason": "Wilmington/Mt Snow near Ludlow/Springfield bulletin cities (BTV)."
       }
     },
     "ludlow-mountain": {
@@ -553,17 +533,13 @@
       },
       "balloon": {
         "regionMatch": "Southern Vermont",
-        "bindReason": "Ludlow in Southern Vermont bulletin cities (BTV)."
+        "bindReason": "Ludlow bulletin city (Windsor Co. VT, BTV WFO)."
       }
     },
     "bromley-mountain": {
       "rec": {
         "office": "BTV",
         "sectionMatch": "Southern Green Mountains of Vermont"
-      },
-      "balloon": {
-        "regionMatch": "Southern Vermont",
-        "bindReason": "Peru/Manchester area; Southern Vermont bulletin cities (BTV)."
       }
     },
     "mount-ascutney": {
@@ -573,27 +549,19 @@
       },
       "balloon": {
         "regionMatch": "Southern Vermont",
-        "bindReason": "Springfield/WRJ corridor in Southern Vermont bulletin cities (BTV)."
+        "bindReason": "Springfield bulletin city (Windsor Co. VT, BTV WFO)."
       }
     },
     "bald-mountain": {
       "rec": {
         "office": "BTV",
         "sectionMatch": "Southern Green Mountains of Vermont"
-      },
-      "balloon": {
-        "regionMatch": "Southern Vermont",
-        "bindReason": "Southern VT; Southern Vermont bulletin cities (BTV)."
       }
     },
     "manchester-vt": {
       "rec": {
         "office": "BTV",
         "sectionMatch": "Southern Green Mountains of Vermont"
-      },
-      "balloon": {
-        "regionMatch": "Southern Vermont",
-        "bindReason": "Manchester area; Southern Vermont bulletin cities (BTV)."
       }
     },
     "mount-washington": {
