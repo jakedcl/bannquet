@@ -1,5 +1,4 @@
 import { ForecastPeriod, ForecastSnippet, WeatherData, WeatherHazard } from '@/types/weather';
-import { DEFAULT_REGION, REGION_WEATHER_SECTIONS, RegionCode } from '@/lib/regions';
 import { outsideFetch } from '@/lib/outside-fetch';
 import { feelsLikeF, windMphFromText } from '@/lib/feels-like';
 import {
@@ -10,11 +9,6 @@ import {
 } from '@/lib/grid-series';
 
 const USER_AGENT = 'Bannquet-Weather-App (admin@bannquet.com)';
-
-export function getMountainsForRegion(region: RegionCode) {
-  const sections = REGION_WEATHER_SECTIONS[region] ?? REGION_WEATHER_SECTIONS[DEFAULT_REGION];
-  return sections.flatMap((section) => section.spots);
-}
 
 // Simple helper to fetch data
 async function fetchWeather<T = unknown>(url: string): Promise<T> {

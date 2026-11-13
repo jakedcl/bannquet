@@ -34,8 +34,8 @@ test('every section page has a breadcrumb, including the parent', () => {
   assert.deepEqual(pageTrail('/upload', '', nobody).crumbs?.map((crumb) => crumb.label), ['Upload']);
   assert.deepEqual(pageTrail('/mountain-weather', '', nobody).crumbs?.map((crumb) => crumb.label), ['Mountain Weather']);
   assert.equal(pageTrail('/mountain-weather', '', nobody).parentHref, '/');
-  assert.deepEqual(pageTrail('/mountain-weather/vt', '', nobody).crumbs?.map((crumb) => crumb.label), ['Mountain Weather', 'Vermont']);
-  assert.equal(pageTrail('/mountain-weather/ny', '', nobody).parentHref, '/mountain-weather');
+  assert.deepEqual(pageTrail('/mountain-weather/vermont', '', nobody).crumbs?.map((crumb) => crumb.label), ['Mountain Weather', 'Vermont']);
+  assert.equal(pageTrail('/mountain-weather/new-york', '', nobody).parentHref, '/mountain-weather');
   assert.deepEqual(pageTrail('/fishing', '', nobody).crumbs?.map((crumb) => crumb.label), ['Fishing']);
   assert.equal(pageTrail('/fishing', '', nobody).parentHref, '/');
   assert.equal(pageTrail('/', '', nobody).crumbs, null);
@@ -48,12 +48,12 @@ test('member pages stay in Community, except your own profile', () => {
   assert.equal(communitySection('/user/jake/pins', jake), false);
   assert.equal(communitySection('/peaks/adk46_algonquin_peak', null), true);
   assert.equal(linkOn('/user/jkiddf', '', '/members'), true);
-  assert.equal(linkOn('/mountain-weather', '', '/mountain-weather/ny'), false);
-  assert.equal(linkOn('/mountain-weather/ny', '', '/mountain-weather/ny'), true);
-  assert.equal(linkOn('/mountain-weather', '', '/mountain-weather/vt'), false);
-  assert.equal(linkOn('/mountain-weather/vt', '', '/mountain-weather/vt'), true);
-  assert.equal(linkOn('/mountain-weather/nh', '', '/mountain-weather/ny'), false);
-  assert.equal(linkOn('/mountain-weather/nh/presidential-range/mt-washington', '', '/mountain-weather/nh'), false);
+  assert.equal(linkOn('/mountain-weather', '', '/mountain-weather/new-york'), false);
+  assert.equal(linkOn('/mountain-weather/new-york', '', '/mountain-weather/new-york'), true);
+  assert.equal(linkOn('/mountain-weather', '', '/mountain-weather/vermont'), false);
+  assert.equal(linkOn('/mountain-weather/vermont', '', '/mountain-weather/vermont'), true);
+  assert.equal(linkOn('/mountain-weather/new-hampshire', '', '/mountain-weather/new-york'), false);
+  assert.equal(linkOn('/mountain-weather/new-hampshire/presidential-range/mount-washington', '', '/mountain-weather/new-hampshire'), false);
 });
 
 test('settings opens the profile, and the owner also gets Admin', () => {

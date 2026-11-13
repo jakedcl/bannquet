@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import { mountainWeatherRedirects } from "./src/lib/mountain-weather/redirects";
 import { securityHeaderRules } from "./src/lib/security-headers";
 
 const nextConfig: NextConfig = {
@@ -27,6 +28,7 @@ const nextConfig: NextConfig = {
   },
   async redirects() {
     return [
+      ...mountainWeatherRedirects(),
       { source: "/studio", destination: "/admin", permanent: false },
       { source: "/studio/:path*", destination: "/admin", permanent: false },
       { source: "/hikers/:username", destination: "/user/:username", permanent: false },

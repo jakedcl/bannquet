@@ -1,4 +1,5 @@
 import placesJson from '../../../config/mountain-weather/places.json';
+import { canonicalPlaceId, resolveMountainStateSlug, type MountainStateCode } from '@/lib/mountain-weather/slugs';
 
 export type MountainPlace = {
   id: string;
@@ -17,7 +18,7 @@ export type MountainSection = {
 };
 
 export type MountainState = {
-  code: string;
+  code: MountainStateCode;
   name: string;
   sections: MountainSection[];
 };
@@ -31,28 +32,36 @@ const FILE = placesJson as PlacesFile;
 
 export const MOUNTAIN_STATES = FILE.states;
 
-export const STATE_CODES = ['ny', 'vt', 'nh', 'me'] as const;
-export type MountainStateCode = (typeof STATE_CODES)[number];
+export {
+  STATE_CODES,
+  type MountainStateCode,
+  mountainStateSlug,
+  resolveMountainStateSlug,
+  isMountainStateSlug,
+} from '@/lib/mountain-weather/slugs';
 
 export function isMountainStateCode(value: string): value is MountainStateCode {
-  return STATE_CODES.includes(value as MountainStateCode);
+  return resolveMountainStateSlug(value) !== null;
 }
 
-export function getMountainState(code: string): MountainState | null {
+export function getMountainState(codeOrSlug: string): MountainState | null {
+  const code = resolveMountainStateSlug(codeOrSlug);
+  if (!code) return null;
   return MOUNTAIN_STATES.find((state) => state.code === code) ?? null;
 }
 
-export function getMountainSection(stateCode: string, sectionId: string): MountainSection | null {
-  const state = getMountainState(stateCode);
+export function getMountainSection(stateCodeOrSlug: string, sectionId: string): MountainSection | null {
+  const state = getMountainState(stateCodeOrSlug);
   return state?.sections.find((section) => section.id === sectionId) ?? null;
 }
 
-export function getMountainPlace(stateCode: string, sectionId: string, placeId: string): MountainPlace | null {
-  const section = getMountainSection(stateCode, sectionId);
-  return section?.places.find((place) => place.id === placeId) ?? null;
+export function getMountainPlace(stateCodeOrSlug: string, sectionId: string, placeId: string): MountainPlace | null {
+  const section = getMountainSection(stateCodeOrSlug, sectionId);
+  const wanted = canonicalPlaceId(placeId);
+  return section?.places.find((place) => place.id === wanted) ?? null;
 }
 
-export function allMountainPlaces(): Array<MountainPlace & { state: string; sectionId: string; sectionTitle: string }> {
+export function allMountainPlaces(): Array<MountainPlace & { state: MountainStateCode; sectionId: string; sectionTitle: string }> {
   return MOUNTAIN_STATES.flatMap((state) => state.sections.flatMap((section) => section.places.map((place) => ({
     ...place,
     state: state.code,
@@ -63,4 +72,15 @@ export function allMountainPlaces(): Array<MountainPlace & { state: string; sect
 
 export function placeCount(): number {
   return allMountainPlaces().length;
+}
+
+export function summitOfSection(section: MountainSection): MountainPlace | null {
+  const summits = section.places.filter((place) => !place.isBase);
+  const pool = summits.length > 0 ? summits : section.places;
+  if (pool.length === 0) return null;
+  return pool.reduce((best, place) => {
+    const elev = place.elevationFt ?? 0;
+    const bestElev = best.elevationFt ?? 0;
+    return elev >= bestElev ? place : best;
+  });
 }

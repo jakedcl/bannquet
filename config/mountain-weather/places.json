@@ -10,7 +10,7 @@
           "title": "Adirondack High Peaks",
           "places": [
             {
-              "id": "mt-marcy",
+              "id": "mount-marcy",
               "name": "Mount Marcy",
               "lat": 44.1128,
               "lon": -73.9237,
@@ -454,7 +454,7 @@
           "title": "Northern Greens",
           "places": [
             {
-              "id": "mt-mansfield",
+              "id": "mount-mansfield",
               "name": "Mount Mansfield",
               "lat": 44.5439,
               "lon": -72.8151,
@@ -673,7 +673,7 @@
           "title": "Presidential Range",
           "places": [
             {
-              "id": "mt-washington",
+              "id": "mount-washington",
               "name": "Mount Washington",
               "lat": 44.2706,
               "lon": -71.3033,
@@ -724,7 +724,7 @@
           "title": "Franconia & Pemi",
           "places": [
             {
-              "id": "mt-lafayette",
+              "id": "mount-lafayette",
               "name": "Mount Lafayette",
               "lat": 44.1606,
               "lon": -71.645,

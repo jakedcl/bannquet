@@ -2,8 +2,11 @@ import {
   getMountainPlace,
   getMountainSection,
   getMountainState,
-  isMountainStateCode,
+  isMountainStateSlug,
+  resolveMountainStateSlug,
+  type MountainStateCode,
 } from '@/lib/mountain-weather/places';
+import { mountainStateSlug, mountainWeatherPath } from '@/lib/mountain-weather/slugs';
 import { REGION_OPTIONS } from '@/lib/regions';
 
 export type NavLink = {
@@ -42,7 +45,7 @@ export const COMMUNITY_MENU_LINKS: NavLink[] = [
 export const WEATHER_LINKS: NavLink[] = [
   { href: '/mountain-weather/conditions', label: 'Conditions' },
   ...REGION_OPTIONS.map((option) => ({
-    href: `/mountain-weather/${option.code}`,
+    href: mountainWeatherPath(option.code as MountainStateCode),
     label: option.label,
   })),
 ];
@@ -52,7 +55,7 @@ export const WEATHER_MENU_LINKS: NavLink[] = [
   { href: '/mountain-weather', label: 'Weather' },
   { href: '/mountain-weather/conditions', label: 'Conditions' },
   ...REGION_OPTIONS.map((option) => ({
-    href: `/mountain-weather/${option.code}`,
+    href: mountainWeatherPath(option.code as MountainStateCode),
     label: option.label,
   })),
 ];
@@ -142,7 +145,7 @@ export function linkOn(pathname: string, search: string, href: string): boolean 
   if (path === '/mountain-weather' && !query) return pathname === '/mountain-weather';
   if (!query) {
     const stateTail = path.startsWith('/mountain-weather/') ? path.slice('/mountain-weather/'.length) : '';
-    if (stateTail && !stateTail.includes('/') && isMountainStateCode(stateTail)) {
+    if (stateTail && !stateTail.includes('/') && isMountainStateSlug(stateTail)) {
       return pathname === path;
     }
     return pathOn(pathname, path);
@@ -334,18 +337,20 @@ export function pageTrail(pathname: string, search: string, account: NavAccount,
 
   const mountainPlace = pathname.match(/^\/mountain-weather\/([^/]+)\/([^/]+)\/([^/]+)$/);
   if (mountainPlace) {
-    const [, stateCode, sectionId, placeId] = mountainPlace;
-    if (isMountainStateCode(stateCode)) {
+    const [, stateSegment, sectionId, placeId] = mountainPlace;
+    const stateCode = resolveMountainStateSlug(stateSegment);
+    if (stateCode) {
       const state = getMountainState(stateCode);
       const section = getMountainSection(stateCode, sectionId);
       const place = getMountainPlace(stateCode, sectionId, placeId);
       if (state && section && place) {
+        const stateSlug = mountainStateSlug(stateCode);
         return {
-          parentHref: `/mountain-weather/${stateCode}/${sectionId}`,
+          parentHref: `/mountain-weather/${stateSlug}/${sectionId}`,
           crumbs: [
             { href: '/mountain-weather', label: 'Mountain Weather' },
-            { href: `/mountain-weather/${stateCode}`, label: state.name },
-            { href: `/mountain-weather/${stateCode}/${sectionId}`, label: section.title },
+            { href: `/mountain-weather/${stateSlug}`, label: state.name },
+            { href: `/mountain-weather/${stateSlug}/${sectionId}`, label: section.title },
             { href: pathname, label: leaf ?? place.name },
           ],
         };
@@ -355,16 +360,18 @@ export function pageTrail(pathname: string, search: string, account: NavAccount,
 
   const mountainSection = pathname.match(/^\/mountain-weather\/([^/]+)\/([^/]+)$/);
   if (mountainSection) {
-    const [, stateCode, sectionId] = mountainSection;
-    if (isMountainStateCode(stateCode)) {
+    const [, stateSegment, sectionId] = mountainSection;
+    const stateCode = resolveMountainStateSlug(stateSegment);
+    if (stateCode) {
       const state = getMountainState(stateCode);
       const section = getMountainSection(stateCode, sectionId);
       if (state && section) {
+        const stateSlug = mountainStateSlug(stateCode);
         return {
-          parentHref: `/mountain-weather/${stateCode}`,
+          parentHref: `/mountain-weather/${stateSlug}`,
           crumbs: [
             { href: '/mountain-weather', label: 'Mountain Weather' },
-            { href: `/mountain-weather/${stateCode}`, label: state.name },
+            { href: `/mountain-weather/${stateSlug}`, label: state.name },
             { href: pathname, label: section.title },
           ],
         };
@@ -374,8 +381,8 @@ export function pageTrail(pathname: string, search: string, account: NavAccount,
 
   const mountainState = pathname.match(/^\/mountain-weather\/([^/]+)$/);
   if (mountainState) {
-    const stateCode = mountainState[1];
-    if (isMountainStateCode(stateCode)) {
+    const stateCode = resolveMountainStateSlug(mountainState[1]);
+    if (stateCode) {
       const state = getMountainState(stateCode);
       if (state) {
         return {

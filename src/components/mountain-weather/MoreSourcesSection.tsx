@@ -1,5 +1,5 @@
 import { CollapsibleSection } from '@/components/mountain-weather/CollapsibleSection';
-import type { MoreSourceLink } from '@/lib/mountain-weather/more-sources';
+import { moreSourcesHasAny, type MoreSourceGroups } from '@/lib/mountain-weather/more-sources';
 
 const GROUP_LABEL = {
   office: 'NWS office products',
@@ -8,7 +8,8 @@ const GROUP_LABEL = {
   national: 'Maps and outlooks',
 } as const;
 
-export function MoreSourcesSection({ groups }: { groups: Record<keyof typeof GROUP_LABEL, MoreSourceLink[]> }) {
+export function MoreSourcesSection({ groups }: { groups: MoreSourceGroups }) {
+  if (!moreSourcesHasAny(groups)) return null;
   return (
     <CollapsibleSection title="More sources" subtitle="Link-only items stay labeled; MWOBS and Mesonet terms apply.">
       <div className="space-y-4 text-sm">

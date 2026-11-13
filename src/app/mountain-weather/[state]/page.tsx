@@ -4,19 +4,38 @@ import PageWrapper from '@/components/ui/PageWrapper';
 import { LargeTitle } from '@/components/hub/SectionHeader';
 import { Card } from '@/components/hub/Card';
 import { ListGroup, ListRow } from '@/components/hub/ListRow';
-import { getMountainState, isMountainStateCode } from '@/lib/mountain-weather/places';
+import { MoreSourcesSection } from '@/components/mountain-weather/MoreSourcesSection';
+import { WeatherGlanceList } from '@/components/weather/WeatherGlanceList';
+import {
+  getMountainState,
+  isMountainStateSlug,
+  resolveMountainStateSlug,
+} from '@/lib/mountain-weather/places';
+import { moreSourcesForState } from '@/lib/mountain-weather/more-sources';
+import { mountainWeatherPath } from '@/lib/mountain-weather/slugs';
+import { loadStateSectionGlances } from '@/lib/weather-hub';
 
 export const dynamic = 'force-dynamic';
 
 export function generateStaticParams() {
-  return [{ state: 'ny' }, { state: 'vt' }, { state: 'nh' }, { state: 'me' }];
+  return [
+    { state: 'new-york' },
+    { state: 'vermont' },
+    { state: 'new-hampshire' },
+    { state: 'maine' },
+  ];
 }
 
 export default async function MountainStatePage({ params }: { params: Promise<{ state: string }> }) {
-  const { state } = await params;
-  if (!isMountainStateCode(state)) notFound();
-  const entry = getMountainState(state);
+  const { state: stateParam } = await params;
+  if (!isMountainStateSlug(stateParam)) notFound();
+  const stateCode = resolveMountainStateSlug(stateParam);
+  if (!stateCode) notFound();
+  const entry = getMountainState(stateCode);
   if (!entry) notFound();
+
+  const glances = await loadStateSectionGlances(stateCode);
+  const moreSources = moreSourcesForState(stateCode);
 
   return (
     <PageWrapper>
@@ -26,17 +45,21 @@ export default async function MountainStatePage({ params }: { params: Promise<{ 
         </p>
         <LargeTitle title={entry.name} />
         <Card title="Sections" padded={false}>
+          <WeatherGlanceList items={glances} />
+        </Card>
+        <Card title="All sections" padded={false}>
           <ListGroup bare>
             {entry.sections.map((section) => (
               <ListRow
                 key={section.id}
-                href={`/mountain-weather/${state}/${section.id}`}
+                href={mountainWeatherPath(stateCode, section.id)}
                 title={section.title}
                 subtitle={`${section.places.length} places`}
               />
             ))}
           </ListGroup>
         </Card>
+        <MoreSourcesSection groups={moreSources} />
       </div>
     </PageWrapper>
   );

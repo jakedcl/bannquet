@@ -3,10 +3,14 @@ import { redirect } from 'next/navigation';
 import PageWrapper from '@/components/ui/PageWrapper';
 import { LargeTitle } from '@/components/hub/SectionHeader';
 import WeatherTicker from '@/components/ui/WeatherTicker';
+import { WeatherHub } from '@/components/weather/WeatherHub';
 import { Card } from '@/components/hub/Card';
 import { ListGroup, ListRow } from '@/components/hub/ListRow';
 import { MOUNTAIN_STATES, placeCount } from '@/lib/mountain-weather/places';
-import { isRegionCode } from '@/lib/regions';
+import { loadWeatherHub } from '@/lib/weather-hub';
+import { isRegionCode, type RegionCode } from '@/lib/regions';
+import { mountainWeatherPath } from '@/lib/mountain-weather/slugs';
+import type { MountainStateCode } from '@/lib/mountain-weather/slugs';
 
 export const dynamic = 'force-dynamic';
 
@@ -17,8 +21,10 @@ export default async function MountainWeatherPage({
 }) {
   const { state } = await searchParams;
   if (state && isRegionCode(state)) {
-    redirect(`/mountain-weather/${state}`);
+    redirect(mountainWeatherPath(state as MountainStateCode));
   }
+
+  const hub = await loadWeatherHub();
 
   return (
     <PageWrapper className="hub">
@@ -28,6 +34,7 @@ export default async function MountainWeatherPage({
           {placeCount()} peaks and bases across New York, Vermont, New Hampshire, and Maine.
         </p>
         <WeatherTicker />
+        <WeatherHub states={hub} />
         <Card padded={false}>
           <ListGroup bare>
             <ListRow href="/mountain-weather/conditions" title="Conditions" subtitle="Live regional extremes" />
@@ -38,7 +45,7 @@ export default async function MountainWeatherPage({
             {MOUNTAIN_STATES.map((entry) => (
               <ListRow
                 key={entry.code}
-                href={`/mountain-weather/${entry.code}`}
+                href={mountainWeatherPath(entry.code)}
                 title={entry.name}
                 subtitle={`${entry.sections.length} sections · ${entry.sections.reduce((n, s) => n + s.places.length, 0)} places`}
               />
@@ -46,11 +53,11 @@ export default async function MountainWeatherPage({
           </ListGroup>
         </Card>
         <p className="text-sm">
-          <Link href="/mountain-weather/ny/adirondack-high-peaks/mt-marcy" className="font-bold underline">
+          <Link href={mountainWeatherPath('ny', 'adirondack-high-peaks', 'mount-marcy')} className="font-bold underline">
             Mount Marcy
           </Link>
           {' · '}
-          <Link href="/mountain-weather/nh/presidential-range/mt-washington" className="font-bold underline">
+          <Link href={mountainWeatherPath('nh', 'presidential-range', 'mount-washington')} className="font-bold underline">
             Mount Washington
           </Link>
         </p>

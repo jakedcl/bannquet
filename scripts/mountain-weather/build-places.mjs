@@ -71,7 +71,15 @@ function slugify(name) {
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-|-$/g, '');
+  if (base.startsWith('mt-')) return `mount-${base.slice(3)}`;
   return base;
+}
+
+function normalizePlaceId(id) {
+  if (!id) return id;
+  const dashed = id.replace(/_/g, '-');
+  if (dashed.startsWith('mt-')) return `mount-${dashed.slice(3)}`;
+  return dashed;
 }
 
 function cleanName(name) {
@@ -146,10 +154,13 @@ function loadPeakIndex() {
 
 function lookupCoords(name, legacy, peaks) {
   const key = slugify(name);
-  if (COORD_OVERRIDES[key]) return { ...COORD_OVERRIDES[key], id: key };
+  if (COORD_OVERRIDES[key]) return { ...COORD_OVERRIDES[key], id: normalizePlaceId(key) };
 
   const plain = cleanName(name).toLowerCase();
-  if (legacy.has(plain)) return { ...legacy.get(plain), id: legacy.get(plain).id ?? key };
+  if (legacy.has(plain)) {
+    const leg = legacy.get(plain);
+    return { ...leg, id: normalizePlaceId(leg.id ?? key) };
+  }
 
   const aliases = {
     "camel's hump": 'camels hump',
@@ -169,14 +180,17 @@ function lookupCoords(name, legacy, peaks) {
     'monadnock mountain (vt)': 'monadnock mountain',
   };
   const search = aliases[plain] ?? plain;
-  if (legacy.has(search)) return { ...legacy.get(search), id: legacy.get(search).id ?? key };
+  if (legacy.has(search)) {
+    const leg = legacy.get(search);
+    return { ...leg, id: normalizePlaceId(leg.id ?? key) };
+  }
   if (peaks.has(search)) {
     const hit = peaks.get(search);
-    return { lat: hit.lat, lon: hit.lon, elevationFt: hit.elevationFt, id: key };
+    return { lat: hit.lat, lon: hit.lon, elevationFt: hit.elevationFt, id: normalizePlaceId(key) };
   }
   for (const [peakName, coords] of peaks) {
     if (peakName.includes(search) || search.includes(peakName)) {
-      return { ...coords, id: key };
+      return { ...coords, id: normalizePlaceId(key) };
     }
   }
   return null;
