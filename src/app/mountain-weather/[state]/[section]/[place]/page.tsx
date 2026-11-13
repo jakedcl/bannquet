@@ -3,6 +3,7 @@ import Link from 'next/link';
 import PageWrapper from '@/components/ui/PageWrapper';
 import { LargeTitle } from '@/components/hub/SectionHeader';
 import { BasicForecastSection } from '@/components/mountain-weather/BasicForecastSection';
+import { MountainForecastSection } from '@/components/mountain-weather/MountainForecastSection';
 import { MoreSourcesSection } from '@/components/mountain-weather/MoreSourcesSection';
 import {
   getMountainPlace,
@@ -13,6 +14,7 @@ import {
 } from '@/lib/mountain-weather/places';
 import { moreSourcesForPlace } from '@/lib/mountain-weather/more-sources';
 import { mountainWeatherPath } from '@/lib/mountain-weather/slugs';
+import { readMtnPointForPlace } from '@/lib/mountain-weather/read-mtn-point';
 import { readNwsGridBaseline } from '@/lib/mountain-weather/readers/nws-grid-baseline';
 
 export const dynamic = 'force-dynamic';
@@ -31,7 +33,10 @@ export default async function MountainPlacePage({
   const place = getMountainPlace(stateCode, sectionId, placeId);
   if (!stateEntry || !section || !place) notFound();
 
-  const baseline = await readNwsGridBaseline(place);
+  const [baseline, mtnPoint] = await Promise.all([
+    readNwsGridBaseline(place),
+    readMtnPointForPlace(place.id),
+  ]);
   const moreSources = moreSourcesForPlace(stateCode, sectionId, place);
 
   return (
@@ -52,6 +57,7 @@ export default async function MountainPlacePage({
           {place.elevationFt !== null ? `${place.elevationFt.toLocaleString('en-US')} ft · ` : ''}
           NWS {place.office} · {place.lat.toFixed(4)}, {place.lon.toFixed(4)}
         </p>
+        <MountainForecastSection result={mtnPoint} placeName={place.name} />
         <BasicForecastSection result={baseline} placeName={place.name} placeElevationFt={place.elevationFt} />
         <MoreSourcesSection groups={moreSources} />
       </div>
