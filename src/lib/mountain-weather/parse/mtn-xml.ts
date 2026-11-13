@@ -1,17 +1,12 @@
 import { XMLParser } from 'fast-xml-parser';
 import { skyLabelEnhanced, skyLabelStandard, windDirFromDegrees } from '@/lib/mountain-weather/parse/mtn-sky';
-
-function attachSnowIce(
-  hourly: MtnEnhancedPeriod[],
-  snowBlocks: number[],
-  iceBlocks: number[],
-): MtnEnhancedPeriod[] {
-  return hourly.map((row, index) => ({
-    ...row,
-    snowIn: snowBlocks[Math.floor(index / 6)] ?? null,
-    iceIn: iceBlocks[Math.floor(index / 6)] ?? null,
-  }));
-}
+import { formatMtnHourEt, parseCycleStartNy, addHoursUtc } from '@/lib/mountain-weather/parse/mtn-time';
+import {
+  parseMtnCsvList,
+  parseMtnNumberList,
+  parseMtnToken,
+  type MtnAmount,
+} from '@/lib/mountain-weather/parse/mtn-values';
 import type {
   MtnEnhancedPeriod,
   MtnEnhancedPoint,
@@ -26,30 +21,20 @@ const parser = new XMLParser({
   isArray: (name) => name === 'MARKER',
 });
 
-function numList(raw: unknown): number[] {
-  if (typeof raw !== 'string') return [];
-  return raw.split(',').map((part) => {
-    const v = part.trim();
-    if (v === 'T' || v === '') return 0;
-    const n = Number(v);
-    return Number.isFinite(n) ? n : 0;
-  });
-}
-
-function parseNumber(raw: string): number | null {
-  const v = raw.trim();
-  if (!v || v === 'T' || v === 'NR') return null;
-  const n = Number(v);
-  return Number.isFinite(n) ? n : null;
-}
-
-function parseLatLon(marker: Record<string, unknown>) {
+function parseLatLon(marker: Record<string, unknown>): { lat: number | null; lon: number | null } {
   const lat = Number(marker.LAT);
   const lon = Number(marker.LON);
   return {
-    lat: Number.isFinite(lat) ? lat : 0,
-    lon: Number.isFinite(lon) ? lon : 0,
+    lat: Number.isFinite(lat) ? lat : null,
+    lon: Number.isFinite(lon) ? lon : null,
   };
+}
+
+function parseElevationFt(text: string): number | null {
+  const match = text.match(/at\s+([\d,]+)\s+ft/i);
+  if (!match) return null;
+  const n = Number(match[1].replace(/,/g, ''));
+  return Number.isFinite(n) ? n : null;
 }
 
 function parseNarratives(text: string): MtnNarrativePeriod[] {
@@ -68,36 +53,67 @@ function parseNarratives(text: string): MtnNarrativePeriod[] {
   return out;
 }
 
-function rowCells(line: string): string[] {
-  const split = line.split(/\s{2,}/).map((p) => p.trim()).filter(Boolean);
-  if (split.length >= 2) {
-    return split[split.length - 1].split(/\s+/).filter(Boolean);
-  }
-  const tokens = line.trim().split(/\s+/);
-  const firstValue = tokens.findIndex((token) => /^-?\d/.test(token) || token === 'NR' || token === 'IO' || token === 'OB');
-  if (firstValue === -1) return tokens.slice(2);
-  return tokens.slice(firstValue);
+const DATA_ROW_PREFIXES: [key: string, prefixes: string[]][] = [
+  ['time', ['TIME (EST)', 'TIME (EDT)', 'TIME']],
+  ['temp', ['TEMP (F)', 'TEMP']],
+  ['windDir', ['WIND DIR']],
+  ['windSpd', ['WIND SPD (MPH)', 'WIND SPD']],
+  ['windGst', ['WIND GST (MPH)', 'WIND GST']],
+  ['sky', ['SKY COVER (%)', 'SKY COVER']],
+  ['windChl', ['WIND CHL (F)', 'WIND CHL']],
+  ['pop', ['PROB PRECIP (%)', 'PROB PRECIP']],
+  ['lightning', ['LIGHTNING RISK', 'LIGHTNING']],
+  ['snow', ['SNOW AMT (IN)', 'SNOW AMT']],
+  ['ice', ['ICE ACCUM (IN)', 'ICE ACCUM']],
+];
+
+function findDataLine(lines: string[], prefixes: string[]): string | undefined {
+  return lines.find((line) => prefixes.some((p) => line.startsWith(p)));
 }
 
-function parseStandardTable(text: string): MtnTabularPeriod[] {
+function rowTokensAfterPrefix(line: string, prefixes: string[]): string[] {
+  const prefix = prefixes.find((p) => line.startsWith(p));
+  if (!prefix) return [];
+  return line.slice(prefix.length).trim().split(/\s+/).filter(Boolean);
+}
+
+function parseDataRows(lines: string[]): Record<string, string[]> {
+  const out: Record<string, string[]> = {};
+  for (const [key, prefixes] of DATA_ROW_PREFIXES) {
+    const line = findDataLine(lines, prefixes);
+    out[key] = line ? rowTokensAfterPrefix(line, prefixes) : [];
+  }
+  return out;
+}
+
+function snowBlockLabelsFromTimes(times: string[]): string[] {
+  const labels: string[] = [];
+  for (let i = 0; i < times.length; i += 2) {
+    if (times[i] !== undefined) labels.push(times[i]);
+  }
+  return labels;
+}
+
+function parseStandardTable(text: string): Pick<MtnStandardPoint, 'tabular' | 'snowBlocks' | 'iceBlocks' | 'snowBlockLabels'> {
   const section = text.split('Detailed Forecast Data:')[1];
-  if (!section) return [];
+  if (!section) {
+    return { tabular: [], snowBlocks: [], iceBlocks: [], snowBlockLabels: [] };
+  }
   const lines = section.split('\n').map((l) => l.trim()).filter(Boolean);
-  const timeLine = lines.find((l) => l.startsWith('TIME'));
-  if (!timeLine) return [];
-  const times = rowCells(timeLine);
-  const pick = (prefix: string) => lines.find((l) => l.startsWith(prefix));
-  const temps = rowCells(pick('TEMP') ?? '').map(parseNumber);
-  const windDirs = rowCells(pick('WIND DIR') ?? '');
-  const speeds = rowCells(pick('WIND SPD') ?? '').map(parseNumber);
-  const gusts = rowCells(pick('WIND GST') ?? '').map(parseNumber);
-  const skies = rowCells(pick('SKY COVER') ?? '').map(skyLabelStandard);
-  const chills = rowCells(pick('WIND CHL') ?? '').map(parseNumber);
-  const pops = rowCells(pick('PROB PRECIP') ?? '').map(parseNumber);
-  const lightning = rowCells(pick('LIGHTNING') ?? '');
-  const snow = rowCells(pick('SNOW AMT') ?? '').map(parseNumber);
-  const ice = rowCells(pick('ICE ACCUM') ?? '').map(parseNumber);
-  return times.map((label, index) => ({
+  const rows = parseDataRows(lines);
+  const times = rows.time ?? [];
+  const temps = (rows.temp ?? []).map((t) => parseMtnToken(t)).map((v) => (typeof v === 'number' ? v : null));
+  const windDirs = rows.windDir ?? [];
+  const speeds = (rows.windSpd ?? []).map((t) => parseMtnToken(t)).map((v) => (typeof v === 'number' ? v : null));
+  const gusts = (rows.windGst ?? []).map((t) => parseMtnToken(t)).map((v) => (typeof v === 'number' ? v : null));
+  const skies = (rows.sky ?? []).map(skyLabelStandard);
+  const chills = (rows.windChl ?? []).map((t) => parseMtnToken(t)).map((v) => (typeof v === 'number' ? v : null));
+  const pops = (rows.pop ?? []).map((t) => parseMtnToken(t)).map((v) => (typeof v === 'number' ? v : null));
+  const lightning = rows.lightning ?? [];
+  const snowBlocks = (rows.snow ?? []).map((t) => parseMtnToken(t)) as MtnAmount[];
+  const iceBlocks = (rows.ice ?? []).map((t) => parseMtnToken(t)) as MtnAmount[];
+
+  const tabular: MtnTabularPeriod[] = times.map((label, index) => ({
     label,
     tempF: temps[index] ?? null,
     windDir: windDirs[index] ?? null,
@@ -107,9 +123,14 @@ function parseStandardTable(text: string): MtnTabularPeriod[] {
     windChillF: chills[index] ?? null,
     precipPct: pops[index] ?? null,
     lightning: lightning[index] ?? null,
-    snowIn: snow[index] ?? null,
-    iceIn: ice[index] ?? null,
   }));
+
+  return {
+    tabular,
+    snowBlocks,
+    iceBlocks,
+    snowBlockLabels: snowBlockLabelsFromTimes(times),
+  };
 }
 
 function parseIssuedLine(text: string): string | null {
@@ -129,23 +150,21 @@ export function parseMtnStandardXml(xml: string): Record<string, MtnStandardPoin
     if (!location) continue;
     const text = String(marker.TEXT ?? '');
     const { lat, lon } = parseLatLon(marker);
+    const table = parseStandardTable(text);
     out[location] = {
       location,
       lat,
       lon,
+      elevationFt: parseElevationFt(text),
       issuedLine: parseIssuedLine(text),
       narratives: parseNarratives(text),
-      tabular: parseStandardTable(text),
+      tabular: table.tabular,
+      snowBlocks: table.snowBlocks,
+      iceBlocks: table.iceBlocks,
+      snowBlockLabels: table.snowBlockLabels,
     };
   }
   return out;
-}
-
-function parseCycleStart(raw: string): Date | null {
-  const parts = raw.split(',').map((p) => Number(p.trim()));
-  if (parts.length < 4 || parts.some((n) => !Number.isFinite(n))) return null;
-  const [year, month0, day, hour] = parts;
-  return new Date(year, month0, day, hour);
 }
 
 export function parseMtnEnhancedXml(xml: string, office: 'BTV' | 'ALY'): Record<string, MtnEnhancedPoint> {
@@ -159,42 +178,45 @@ export function parseMtnEnhancedXml(xml: string, office: 'BTV' | 'ALY'): Record<
     const location = String(marker.LOCATION ?? '').trim().toUpperCase();
     if (!location) continue;
     const { lat, lon } = parseLatLon(marker);
-    const cycleStart = typeof marker.DATE === 'string' ? parseCycleStart(marker.DATE) : null;
-    const temps = numList(marker.TEMP);
-    const winds = numList(marker.WIND);
-    const speeds = numList(marker.SPEED);
-    const gusts = marker.GUST !== undefined ? numList(marker.GUST) : [];
+    const textStub = String(marker.TEXT ?? '');
+    const elevationFt = parseElevationFt(textStub);
+    const cycleStart = typeof marker.DATE === 'string' ? parseCycleStartNy(marker.DATE) : null;
+    const temps = parseMtnNumberList(marker.TEMP);
+    const winds = parseMtnNumberList(marker.WIND);
+    const speeds = parseMtnNumberList(marker.SPEED);
+    const gusts = marker.GUST !== undefined ? parseMtnNumberList(marker.GUST) : [];
     const skies = typeof marker.SKY === 'string' ? marker.SKY.split(',') : [];
-    const chills = numList(marker.CHILL);
-    const pops = numList(marker.POP);
-    const snowBlocks = numList(marker.SNOW);
-    const iceBlocks = marker.ICE !== undefined ? numList(marker.ICE) : [];
-    const hourly = temps.map((tempF, index) => {
-      const time = cycleStart ? new Date(cycleStart.getTime() + index * 3600_000) : new Date(NaN);
+    const chills = parseMtnNumberList(marker.CHILL);
+    const pops = parseMtnNumberList(marker.POP);
+    const snowBlocks = parseMtnCsvList(marker.SNOW);
+    const iceBlocks = marker.ICE !== undefined ? parseMtnCsvList(marker.ICE) : [];
+
+    const hourly: MtnEnhancedPeriod[] = temps.map((tempF, index) => {
+      const time = cycleStart ? addHoursUtc(cycleStart, index) : new Date(NaN);
       const windDeg = winds[index] ?? null;
       return {
         time,
-        label: Number.isNaN(time.getTime())
-          ? `H+${index}`
-          : time.toLocaleString('en-US', { timeZone: 'America/New_York', hour: 'numeric', month: 'short', day: 'numeric' }),
+        label: cycleStart
+          ? formatMtnHourEt(time)
+          : `H+${index}`,
         tempF,
-        windDirDeg: windDeg ?? null,
-        windDir: windDirFromDegrees(windDeg ?? null),
+        windDirDeg: windDeg,
+        windDir: windDirFromDegrees(windDeg),
         windMph: speeds[index] ?? null,
         gustMph: gusts[index] ?? null,
         sky: skyLabelEnhanced(skies[index] ?? null, office),
         windChillF: chills[index] ?? null,
         precipPct: pops[index] ?? null,
-        snowIn: null,
-        iceIn: null,
       };
     });
+
     out[location] = {
       location,
       lat,
       lon,
+      elevationFt,
       cycleStart,
-      hourly: attachSnowIce(hourly, snowBlocks, iceBlocks),
+      hourly,
       snowBlocks,
       iceBlocks,
     };

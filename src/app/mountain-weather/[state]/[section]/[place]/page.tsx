@@ -4,6 +4,8 @@ import PageWrapper from '@/components/ui/PageWrapper';
 import { LargeTitle } from '@/components/hub/SectionHeader';
 import { BasicForecastSection } from '@/components/mountain-weather/BasicForecastSection';
 import { MountainForecastSection } from '@/components/mountain-weather/MountainForecastSection';
+import { WeatherHazardsHeader } from '@/components/mountain-weather/WeatherHazardsHeader';
+import { buildMtnDisplay } from '@/lib/mountain-weather/mtn-display';
 import { MoreSourcesSection } from '@/components/mountain-weather/MoreSourcesSection';
 import {
   getMountainPlace,
@@ -53,8 +55,18 @@ export default async function MountainPlacePage({
           title={place.name}
           eyebrow={place.isBase ? 'Base' : 'Summit'}
         />
+        {baseline.data?.hazards?.length ? <WeatherHazardsHeader hazards={baseline.data.hazards} /> : null}
         <p className="text-sm text-gray-700">
-          {place.elevationFt !== null ? `${place.elevationFt.toLocaleString('en-US')} ft · ` : ''}
+          {(() => {
+            const nwsElev = mtnPoint?.data ? buildMtnDisplay(mtnPoint.data).meta.nwsElevationFt : null;
+            const elev =
+              nwsElev !== null && nwsElev !== undefined
+                ? `${nwsElev.toLocaleString('en-US')} ft (NWS)`
+                : place.elevationFt !== null
+                  ? `${place.elevationFt.toLocaleString('en-US')} ft (catalog)`
+                  : null;
+            return elev ? `${elev} · ` : '';
+          })()}
           NWS {place.office} · {place.lat.toFixed(4)}, {place.lon.toFixed(4)}
         </p>
         <MountainForecastSection result={mtnPoint} placeName={place.name} />

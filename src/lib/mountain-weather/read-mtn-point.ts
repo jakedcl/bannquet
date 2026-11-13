@@ -22,8 +22,6 @@ function assembleBundle(
 ): SourceResult<MtnPointBundle> {
   const standardPoint = standardFile.data?.[ref.loc] ?? null;
   const enhancedPoint = enhancedFile.data?.[ref.loc] ?? null;
-  const hasGust = ref.office === 'BTV';
-  const hasIce = ref.office === 'BTV';
 
   if (standardFile.status === 'error' && enhancedFile.status === 'error') {
     return {
@@ -59,8 +57,6 @@ function assembleBundle(
       office: ref.office,
       standard: standardPoint,
       enhanced: enhancedPoint,
-      hasGust,
-      hasIce,
     },
     issuedAt,
     validFrom: null,

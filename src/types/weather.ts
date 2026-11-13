@@ -39,6 +39,10 @@ export type GridExtras = {
   snowfallAmount: GridValueSample[];
   iceAccumulation: GridValueSample[];
   ceilingHeight: GridValueSample[];
+  dewpoint: GridValueSample[];
+  skyCover: GridValueSample[];
+  quantitativePrecipitation: GridValueSample[];
+  probabilityOfThunderstorm: GridValueSample[];
 };
 
 export interface WeatherData {
@@ -59,11 +63,15 @@ export interface WeatherData {
   snowAmount?: number | null;
   iceAccumulation?: number | null;
   visibility?: number | null;
+  dewpoint?: number | null;
   skyCover?: number | null;
+  quantitativePrecipitation?: number | null;
+  probabilityOfThunderstorm?: number | null;
   ceilingHeight?: number | null;
   gridExtras?: GridExtras | null;
   hazards: WeatherHazard[];
-  timestamp: string;
+  /** Start time of the current hourly period; null when the API sends none. */
+  timestamp: string | null;
   icon?: string;
   hourlyForecast?: ForecastSnippet[];
   dailyForecast?: ForecastSnippet[];
@@ -76,7 +84,11 @@ export type ForecastSnippet = {
   startTime: string;
   temperature: number;
   windSpeed?: string;
+  windDirection?: string;
+  windGust?: string;
   shortForecast?: string;
+  detailedForecast?: string;
+  precipChance?: number | null;
   isDaytime?: boolean;
   icon?: string;
   secondaryTemp?: number;
@@ -106,6 +118,7 @@ export type ForecastPeriod = {
   temperatureTrend: string | null;
   windSpeed: string;
   windDirection: string;
+  windGust?: string | null;
   icon: string;
   shortForecast: string;
   detailedForecast: string;

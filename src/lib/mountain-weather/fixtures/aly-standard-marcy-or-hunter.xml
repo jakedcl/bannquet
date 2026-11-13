@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MARKERS>
+<MARKER>
+<LAT>42.1778</LAT>
+<LON>-74.2304</LON>
+<LOCATION>HUNTER MOUNTAIN</LOCATION>
+<TEXT>The forecast for Hunter Mountain, New York at 4,040 ft:
+Last Updated at 139 PM EST Fri Nov 13 2026
+
+.TONIGHT...Mostly cloudy until midnight, then becoming partly
+cloudy. Lows in the lower 20s. Northwest winds around 10 mph. 
+.SATURDAY...Partly sunny in the morning, then becoming cloudy. A
+chance of snow showers in the afternoon. Highs in the lower 30s.
+Northwest winds 10 to 15 mph. 
+.SATURDAY NIGHT...Mostly cloudy until midnight, then becoming
+partly cloudy. A chance of snow showers until midnight. Lows in
+the upper 20s. Northwest winds around 15 mph. 
+.SUNDAY...Partly sunny. Highs in the lower 30s. Northwest winds
+around 15 mph with gusts up to 25 mph. 
+
+Detailed Forecast Data:
+
+DATE                   Sat 11/14/26            Sun 11/15/26
+TIME (EST)       18 21 00 03 06 09 12 15 18 21 00 03 06 09 12 15 18
+TEMP (F)         26 25 24 23 24 25 28 31 30 29 28 28 28 28 30 30 30
+WIND DIR         NW NW NW NW NW NW NW NW NW NW NW NW NW NW NW NW NW
+WIND SPD (MPH)   11 11 10 10 11 11 12 12 12 12 13 14 14 13 13 13 14
+WIND GST (MPH)   19 20 19 18 19 20 21 19 20 20 21 23 21 21 23 23 23
+SKY COVER (%)    84 80 82 70 71 65 84 88 78 78 72 69 65 58 65 65 67
+WIND CHL (F)     15 14 14 12 13 14 17 21 20 19 17 16 16 17 19 19 19
+PROB PRECIP (%)  10  5  2  4  3  3  4 22 21 15 12 11 11  1  1  0  0
+LIGHTNING RISK   NR NR NR NR NR NR NR NR NR NR NR NR NR NR NR NR NR 
+SNOW AMT (IN)     0     0     0     0     0     0     0     0     0
+</TEXT>
+</MARKER>
+</MARKERS>

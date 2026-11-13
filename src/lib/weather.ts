@@ -121,6 +121,10 @@ export async function getWeather(lat: number, lon: number): Promise<WeatherData>
   const snowAmount = normalizeGridValue(gridProps.snowfallAmount);
   const iceAccumulation = normalizeGridValue(gridProps.iceAccumulation);
   const visibility = normalizeGridValue(gridProps.visibility);
+  const dewpoint = normalizeGridValue(gridProps.dewpoint);
+  const skyCover = normalizeGridValue(gridProps.skyCover);
+  const quantitativePrecipitation = normalizeGridValue(gridProps.quantitativePrecipitation);
+  const probabilityOfThunderstorm = normalizeGridValue(gridProps.probabilityOfThunderstorm);
   const ceilingHeight = normalizeGridValue(gridProps.ceilingHeight);
   const elevationFt = gridElevationFt(gridProps.elevation);
   const gridExtras = {
@@ -129,6 +133,10 @@ export async function getWeather(lat: number, lon: number): Promise<WeatherData>
     snowfallAmount: gridSeriesSamples(gridProps.snowfallAmount),
     iceAccumulation: gridSeriesSamples(gridProps.iceAccumulation),
     ceilingHeight: gridSeriesSamples(gridProps.ceilingHeight),
+    dewpoint: gridSeriesSamples(gridProps.dewpoint),
+    skyCover: gridSeriesSamples(gridProps.skyCover),
+    quantitativePrecipitation: gridSeriesSamples(gridProps.quantitativePrecipitation),
+    probabilityOfThunderstorm: gridSeriesSamples(gridProps.probabilityOfThunderstorm),
   };
 
   const precipRaw = currentPeriod?.probabilityOfPrecipitation?.value;
@@ -142,9 +150,9 @@ export async function getWeather(lat: number, lon: number): Promise<WeatherData>
         heatIndexF: heatIndex,
       });
 
-  const hourlyForecast = mapForecastSlice(hourlyPeriods.slice(0, 8));
+  const hourlyForecast = mapForecastSlice(hourlyPeriods, false, true);
   const dailyForecast = buildDailyHighLow(dailyPeriods, 7);
-  const forecastPeriods = mapForecastSlice(dailyPeriods.slice(0, 8));
+  const forecastPeriods = mapForecastSlice(dailyPeriods, false, true);
   
   return {
     temperature: temperatureF,
@@ -163,10 +171,14 @@ export async function getWeather(lat: number, lon: number): Promise<WeatherData>
     snowAmount,
     iceAccumulation,
     visibility,
+    dewpoint,
+    skyCover,
+    quantitativePrecipitation,
+    probabilityOfThunderstorm,
     ceilingHeight,
     gridExtras,
     hazards,
-    timestamp: currentPeriod?.startTime ?? new Date().toISOString(),
+    timestamp: currentPeriod?.startTime ?? null,
     icon: currentPeriod?.icon,
     hourlyForecast,
     dailyForecast,
@@ -174,13 +186,22 @@ export async function getWeather(lat: number, lon: number): Promise<WeatherData>
   };
 }
 
-function mapForecastSlice(periods: ForecastPeriod[], compactName = false): ForecastSnippet[] {
-  return periods.map((period) => ({
+function mapForecastSlice(
+  periods: ForecastPeriod[],
+  compactName = false,
+  fullHourly = false,
+): ForecastSnippet[] {
+  const slice = fullHourly ? periods : periods.slice(0, 8);
+  return slice.map((period) => ({
     name: compactName ? abbreviateName(period.name, period.startTime) : period.name,
     startTime: period.startTime,
     temperature: period.temperature,
     windSpeed: period.windSpeed,
+    windDirection: period.windDirection,
+    windGust: period.windGust ?? undefined,
     shortForecast: period.shortForecast,
+    detailedForecast: period.detailedForecast,
+    precipChance: period.probabilityOfPrecipitation?.value ?? null,
     isDaytime: period.isDaytime,
     icon: period.icon,
   }));

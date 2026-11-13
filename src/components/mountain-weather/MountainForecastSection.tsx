@@ -1,5 +1,6 @@
 import { CollapsibleSection } from '@/components/mountain-weather/CollapsibleSection';
-import type { MtnNarrativePeriod, MtnPointBundle } from '@/lib/mountain-weather/mtn-point-types';
+import { buildMtnDisplay, fmtMtnAmount, fmtMtnLightning } from '@/lib/mountain-weather/mtn-display';
+import type { MtnPointBundle } from '@/lib/mountain-weather/mtn-point-types';
 import { windDirFromDegrees } from '@/lib/mountain-weather/parse/mtn-sky';
 import type { SourceResult } from '@/lib/mountain-weather/source-types';
 import {
@@ -19,6 +20,21 @@ function sourceLabel(office: 'BTV' | 'ALY'): { org: string } {
 function fmtNum(value: number | null | undefined, suffix = ''): string {
   if (value === null || value === undefined || !Number.isFinite(value)) return '—';
   return `${value}${suffix}`;
+}
+
+function fmtWind(row: {
+  windDir?: string | null;
+  windDirDeg?: number | null;
+  windMph?: number | null;
+}): string {
+  const compass = row.windDir ?? windDirFromDegrees(row.windDirDeg ?? null);
+  const mph = fmtNum(row.windMph ?? null, ' mph');
+  if (!compass && mph === '—') return '—';
+  if (row.windDirDeg !== null && row.windDirDeg !== undefined && Number.isFinite(row.windDirDeg)) {
+    const deg = `${Math.round(row.windDirDeg)}°`;
+    return [compass, deg, mph !== '—' ? mph : null].filter(Boolean).join(' ');
+  }
+  return [compass, mph !== '—' ? mph : null].filter(Boolean).join(' ');
 }
 
 export function MountainForecastSection({
@@ -45,75 +61,84 @@ export function MountainForecastSection({
   }
 
   const data = result.data;
-  const enhanced = data.enhanced;
-  const standard = data.standard;
+  const display = buildMtnDisplay(data);
+  const { meta, hourly, snowIce } = display;
+  const elev =
+    meta.nwsElevationFt !== null ? `${meta.nwsElevationFt.toLocaleString('en-US')} ft (NWS)` : null;
 
   return (
     <CollapsibleSection
       title="Mountain forecast"
-      subtitle={`${source?.org} · ${data.loc}${enhanced ? ' · enhanced hourly table' : ' · standard table'}${stale}`}
+      subtitle={`${source?.org} · ${data.loc}${data.enhanced ? ' · enhanced hourly table' : ' · standard table'}${elev ? ` · ${elev}` : ''}${stale}`}
       defaultOpen
     >
       <div className="space-y-4 text-sm">
-        {standard?.issuedLine ? <p className="text-xs text-gray-700">{standard.issuedLine}</p> : null}
-        {standard?.narratives?.length ? (
-          <NarrativeList narratives={standard.narratives} placeName={placeName} />
+        {meta.issuedLine ? <p className="text-xs font-bold text-gray-800">{meta.issuedLine}</p> : null}
+        {data.standard?.narratives?.length ? (
+          <NarrativeList narratives={data.standard.narratives} placeName={placeName} />
         ) : null}
         <div className="overflow-x-auto">
-            <table className="min-w-full border border-[#5c3a1e]/30 text-xs">
+          <table className="min-w-full border border-[#5c3a1e]/30 text-xs">
+            <thead className="bg-white/70">
+              <tr className="text-left uppercase tracking-wide">
+                <th className="px-2 py-1">Period</th>
+                <th className="px-2 py-1">Temp</th>
+                <th className="px-2 py-1">Wind</th>
+                {meta.showGust ? <th className="px-2 py-1">Gust</th> : null}
+                <th className="px-2 py-1">Chill</th>
+                <th className="px-2 py-1">PoP</th>
+                <th className="px-2 py-1">Sky</th>
+                {meta.showLightning ? <th className="px-2 py-1">Lightning</th> : null}
+              </tr>
+            </thead>
+            <tbody>
+              {hourly.map((row) => (
+                <tr key={`${row.label}-${row.tempF}-${row.windMph}`} className="border-t border-[#5c3a1e]/15">
+                  <td className="whitespace-nowrap px-2 py-1 font-bold">{row.label}</td>
+                  <td className="px-2 py-1 tabular-nums">{fmtNum(row.tempF, '°')}</td>
+                  <td className="px-2 py-1">{fmtWind(row)}</td>
+                  {meta.showGust ? <td className="px-2 py-1 tabular-nums">{fmtNum(row.gustMph, ' mph')}</td> : null}
+                  <td className="px-2 py-1 tabular-nums">{fmtNum(row.windChillF, '°')}</td>
+                  <td className="px-2 py-1 tabular-nums">{fmtNum(row.precipPct, '%')}</td>
+                  <td className="px-2 py-1">{row.sky ?? '—'}</td>
+                  {meta.showLightning ? (
+                    <td className="px-2 py-1">{fmtMtnLightning(row.lightning)}</td>
+                  ) : null}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        {meta.showSnowBlocks && snowIce.length > 0 ? (
+          <div className="overflow-x-auto">
+            <p className="text-xs font-bold uppercase text-gray-700">6-hour snow and ice totals</p>
+            <table className="mt-1 min-w-full border border-[#5c3a1e]/30 text-xs">
               <thead className="bg-white/70">
                 <tr className="text-left uppercase tracking-wide">
-                  <th className="px-2 py-1">Period</th>
-                  <th className="px-2 py-1">Temp</th>
-                  <th className="px-2 py-1">Wind</th>
-                  {data.hasGust ? <th className="px-2 py-1">Gust</th> : null}
-                  <th className="px-2 py-1">Chill</th>
-                  <th className="px-2 py-1">PoP</th>
-                  <th className="px-2 py-1">Sky</th>
+                  <th className="px-2 py-1">Block start</th>
                   <th className="px-2 py-1">Snow</th>
-                  {data.hasIce ? <th className="px-2 py-1">Ice</th> : null}
+                  {meta.showIce ? <th className="px-2 py-1">Ice</th> : null}
                 </tr>
               </thead>
               <tbody>
-                {enhanced?.hourly?.length
-                  ? enhanced.hourly.map((row) => (
-                    <tr key={`${row.label}-${row.tempF}-${row.windMph}`} className="border-t border-[#5c3a1e]/15">
-                      <td className="whitespace-nowrap px-2 py-1 font-bold">{row.label}</td>
-                      <td className="px-2 py-1 tabular-nums">{fmtNum(row.tempF, '°')}</td>
-                      <td className="px-2 py-1">
-                        {row.windDir ?? windDirFromDegrees(row.windDirDeg)} {fmtNum(row.windMph, ' mph')}
-                      </td>
-                      {data.hasGust ? <td className="px-2 py-1 tabular-nums">{fmtNum(row.gustMph, ' mph')}</td> : null}
-                      <td className="px-2 py-1 tabular-nums">{fmtNum(row.windChillF, '°')}</td>
-                      <td className="px-2 py-1 tabular-nums">{fmtNum(row.precipPct, '%')}</td>
-                      <td className="px-2 py-1">{row.sky ?? '—'}</td>
-                      <td className="px-2 py-1 tabular-nums">{fmtNum(row.snowIn, '"')}</td>
-                      {data.hasIce ? <td className="px-2 py-1 tabular-nums">{fmtNum(row.iceIn, '"')}</td> : null}
-                    </tr>
-                  ))
-                  : standard?.tabular.map((row) => (
-                    <tr key={row.label} className="border-t border-[#5c3a1e]/15">
-                      <td className="whitespace-nowrap px-2 py-1 font-bold">{row.label}</td>
-                      <td className="px-2 py-1 tabular-nums">{fmtNum(row.tempF, '°')}</td>
-                      <td className="px-2 py-1">{row.windDir ?? '—'} {fmtNum(row.windMph, ' mph')}</td>
-                      {data.hasGust ? <td className="px-2 py-1 tabular-nums">{fmtNum(row.gustMph, ' mph')}</td> : null}
-                      <td className="px-2 py-1 tabular-nums">{fmtNum(row.windChillF, '°')}</td>
-                      <td className="px-2 py-1 tabular-nums">{fmtNum(row.precipPct, '%')}</td>
-                      <td className="px-2 py-1">{row.sky ?? '—'}</td>
-                      <td className="px-2 py-1 tabular-nums">{fmtNum(row.snowIn, '"')}</td>
-                      {data.hasIce ? <td className="px-2 py-1 tabular-nums">{fmtNum(row.iceIn, '"')}</td> : null}
-                    </tr>
-                  ))}
+                {snowIce.map((block) => (
+                  <tr key={block.label} className="border-t border-[#5c3a1e]/15">
+                    <td className="whitespace-nowrap px-2 py-1 font-bold">{block.label}</td>
+                    <td className="px-2 py-1 tabular-nums">{fmtMtnAmount(block.snowIn)}</td>
+                    {meta.showIce ? <td className="px-2 py-1 tabular-nums">{fmtMtnAmount(block.iceIn)}</td> : null}
+                  </tr>
+                ))}
               </tbody>
             </table>
-        </div>
+          </div>
+        ) : null}
         <p className="text-xs text-gray-700">
           Source: {source?.org} ·{' '}
           <a href={result.sourceUrl} className="font-bold underline" target="_blank" rel="noopener noreferrer">
             NWS mountain XML ({data.office === 'BTV' ? NWS_MTN_BTV_STANDARD_DEF.url : NWS_MTN_ALY_STANDARD_DEF.url})
           </a>
           {result.issuedAt
-            ? ` · Last-Modified ${new Date(result.issuedAt).toLocaleString('en-US', { timeZone: 'America/New_York' })} ET`
+            ? ` · file Last-Modified ${new Date(result.issuedAt).toLocaleString('en-US', { timeZone: 'America/New_York' })} ET`
             : null}
         </p>
       </div>
@@ -121,7 +146,13 @@ export function MountainForecastSection({
   );
 }
 
-function NarrativeList({ narratives, placeName }: { narratives: MtnNarrativePeriod[]; placeName: string }) {
+function NarrativeList({
+  narratives,
+  placeName,
+}: {
+  narratives: { name: string; text: string }[];
+  placeName: string;
+}) {
   return (
     <div>
       <p className="text-xs font-bold uppercase text-gray-700">Narrative · {placeName}</p>

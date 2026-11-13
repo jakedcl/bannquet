@@ -1,5 +1,7 @@
 export type MtnOffice = 'BTV' | 'ALY';
 
+export type MtnAmount = number | 'T' | null;
+
 export type MtnNarrativePeriod = {
   name: string;
   text: string;
@@ -15,17 +17,19 @@ export type MtnTabularPeriod = {
   windChillF: number | null;
   precipPct: number | null;
   lightning: string | null;
-  snowIn: number | null;
-  iceIn: number | null;
 };
 
 export type MtnStandardPoint = {
   location: string;
-  lat: number;
-  lon: number;
+  lat: number | null;
+  lon: number | null;
+  elevationFt: number | null;
   issuedLine: string | null;
   narratives: MtnNarrativePeriod[];
   tabular: MtnTabularPeriod[];
+  snowBlocks: MtnAmount[];
+  iceBlocks: MtnAmount[];
+  snowBlockLabels: string[];
 };
 
 export type MtnEnhancedPeriod = {
@@ -39,18 +43,17 @@ export type MtnEnhancedPeriod = {
   sky: string | null;
   windChillF: number | null;
   precipPct: number | null;
-  snowIn: number | null;
-  iceIn: number | null;
 };
 
 export type MtnEnhancedPoint = {
   location: string;
-  lat: number;
-  lon: number;
+  lat: number | null;
+  lon: number | null;
+  elevationFt: number | null;
   cycleStart: Date | null;
   hourly: MtnEnhancedPeriod[];
-  snowBlocks: number[];
-  iceBlocks: number[];
+  snowBlocks: MtnAmount[];
+  iceBlocks: MtnAmount[];
 };
 
 export type MtnPointBundle = {
@@ -58,8 +61,4 @@ export type MtnPointBundle = {
   office: MtnOffice;
   standard: MtnStandardPoint | null;
   enhanced: MtnEnhancedPoint | null;
-  hasGust: boolean;
-  hasIce: boolean;
 };
-
-export type MtnFileIndex = Record<string, MtnStandardPoint | MtnEnhancedPoint>;
