@@ -5,11 +5,25 @@ import test from 'node:test';
 import places from '../../../config/mountain-weather/places.json';
 import bindingsJson from '../../../config/mountain-weather/source-bindings.json';
 import type { PlaceSourceBinding } from '@/lib/mountain-weather/source-bindings';
-
-const bindings = bindingsJson as { places: Record<string, PlaceSourceBinding> };
 import { parseBalloonXml, pickBalloonRegion } from '@/lib/mountain-weather/parse/balloon';
 
+const bindings = bindingsJson as { places: Record<string, PlaceSourceBinding> };
+
 const FIX = path.resolve(process.cwd(), 'src/lib/mountain-weather/fixtures');
+
+const NO_BALLOON_BLOCK = [
+  'gunks-ridge',
+  'thacher-park',
+  'prospect-mountain',
+  'black-mountain',
+  'pillsbury-mountain',
+  'blue-ridge-mountain',
+  'fishing-brook-range',
+  'vanderwhacker-mountain',
+  'crane-mountain',
+  'hadley-mountain',
+  'pharaoh-mountain',
+];
 
 test('balloon Champlain fixture parses wind rows and hours', () => {
   const xml = readFileSync(path.join(FIX, 'balloon-champlain-sample.xml'), 'utf8');
@@ -23,23 +37,18 @@ test('balloon Champlain fixture parses wind rows and hours', () => {
   assert.ok(region.tafLines.length > 0);
 });
 
-test('every BTV catalog place has balloon binding with unique region titles', () => {
-  const btvIds = [];
-  for (const state of places.states) {
-    for (const section of state.sections) {
-      for (const place of section.places) {
-        if (place.office === 'BTV') btvIds.push(place.id);
-      }
-    }
+test('balloon bindings are explicit (no ALY-area or unlisted central ADK guesses)', () => {
+  for (const id of NO_BALLOON_BLOCK) {
+    assert.ok(!bindings.places[id]?.balloon, `${id} must not have in-page balloon binding`);
   }
-  const regions = new Set();
-  for (const id of btvIds) {
-    const binding = bindings.places[id]?.balloon;
-    assert.ok(binding, `missing balloon binding for ${id}`);
-    regions.add(binding.regionMatch);
-  }
-  assert.equal(btvIds.length, 53);
-  assert.ok(regions.size >= 4);
+  assert.ok(bindings.places['killington-peak']?.balloon?.regionMatch === 'Southern Vermont');
+  assert.ok(bindings.places['mount-marcy']?.balloon?.bindReason);
   assert.ok(!bindings.places['mount-monadnock']?.balloon);
-  assert.ok(bindings.places['monadnock-mountain']?.balloon?.nearbyLabel);
+
+  const btvCount = places.states
+    .flatMap((s) => s.sections.flatMap((sec) => sec.places))
+    .filter((p) => p.office === 'BTV').length;
+  const bound = Object.values(bindings.places).filter((p) => p.balloon).length;
+  assert.equal(btvCount, 53);
+  assert.equal(bound, 42);
 });

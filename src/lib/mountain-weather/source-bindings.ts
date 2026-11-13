@@ -25,6 +25,8 @@ export type AllLocationsPlaceBinding = {
 export type BalloonPlaceBinding = {
   regionMatch: string;
   nearbyLabel?: string;
+  /** Set in source-bindings.json from build script; audit trail for explicit balloon city coverage. */
+  bindReason?: string;
 };
 
 export type PlaceSourceBinding = {

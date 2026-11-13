@@ -1,7 +1,7 @@
 import type { BalloonPlaceSlice } from '@/lib/mountain-weather/balloon-types';
 import { pickBalloonRegion } from '@/lib/mountain-weather/parse/balloon';
 import { readBtvBalloonForecast } from '@/lib/mountain-weather/readers/nws-btv-balloon';
-import { sourceBindingForPlace, type BalloonPlaceBinding } from '@/lib/mountain-weather/source-bindings';
+import { sourceBindingForPlace } from '@/lib/mountain-weather/source-bindings';
 import type { SourceResult } from '@/lib/mountain-weather/source-types';
 
 export async function readBalloonForPlace(placeId: string): Promise<SourceResult<BalloonPlaceSlice> | null> {

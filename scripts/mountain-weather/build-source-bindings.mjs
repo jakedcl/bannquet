@@ -84,48 +84,75 @@ const ALL_LOCATIONS_BY_PLACE = {
   'white-cap-mountain': { office: 'CAR', loc: 'TOP OF WHITE CAP MOUNTAIN' },
 };
 
-/** Balloon region titles must match BTV balloon.xml “For …” blocks (audit: NH Mount Monadnock is GYX, not VT monadnock-mountain). */
+/** balloon.xml region titles (must match “For …” blocks). In-page binding only when listed here — no section guessing. */
 const BALLOON_CHAMPLAIN = 'the Champlain Valley of Vermont and New York';
 const BALLOON_CENTRAL_NE = 'Central and Northeast Vermont';
 const BALLOON_SOUTHERN = 'Southern Vermont';
 const BALLOON_N_ADK = 'the Northern Adirondacks of New York';
-const BALLOON_ST_LAWRENCE = 'the St. Lawrence Valley of New York';
 
-const BALLOON_CHAMPLAIN_PLACES = new Set([
-  'gunks-ridge',
-  'thacher-park',
-  'prospect-mountain',
-  'black-mountain',
-]);
+/**
+ * Explicit BTV balloon bindings: place must be BTV WFO and sit in a bulletin region’s named-city area.
+ * Omitted places (e.g. ALY-area shawangunks, borderline central-southern ADK) get More sources link only.
+ */
+const BALLOON_BY_PLACE = {
+  'mount-marcy': { regionMatch: BALLOON_N_ADK, bindReason: 'Lake Placid/Keene High Peaks; Northern Adirondacks bulletin cities (BTV).' },
+  'whiteface-mountain': { regionMatch: BALLOON_N_ADK, bindReason: 'Lake Placid corridor; Northern Adirondacks bulletin cities (BTV).' },
+  'dix-mountain': { regionMatch: BALLOON_N_ADK, bindReason: 'Lake Placid/Keene High Peaks; Northern Adirondacks bulletin cities (BTV).' },
+  'algonquin-peak': { regionMatch: BALLOON_N_ADK, bindReason: 'Lake Placid/High Peaks; Northern Adirondacks bulletin cities (BTV).' },
+  'mount-colden': { regionMatch: BALLOON_N_ADK, bindReason: 'Lake Placid/High Peaks; Northern Adirondacks bulletin cities (BTV).' },
+  'mount-colvin': { regionMatch: BALLOON_N_ADK, bindReason: 'Lake Placid/Keene area; Northern Adirondacks bulletin cities (BTV).' },
+  'giant-mountain': { regionMatch: BALLOON_N_ADK, bindReason: 'Lake Placid/Keene area; Northern Adirondacks bulletin cities (BTV).' },
+  'santanoni-peak': { regionMatch: BALLOON_N_ADK, bindReason: 'Newcomb/Tupper corridor; Northern Adirondacks bulletin cities (BTV).' },
+  'cascade-mountain': { regionMatch: BALLOON_N_ADK, bindReason: 'Lake Placid/Keene area; Northern Adirondacks bulletin cities (BTV).' },
+  'mckenzie-mountain': { regionMatch: BALLOON_N_ADK, bindReason: 'Saranac Lake area; Northern Adirondacks bulletin cities (BTV).' },
+  'mount-van-hoevenberg': { regionMatch: BALLOON_N_ADK, bindReason: 'Lake Placid/Olympic region; Northern Adirondacks bulletin cities (BTV).' },
+  'keene-valley': { regionMatch: BALLOON_N_ADK, bindReason: 'Keene Valley base; Northern Adirondacks bulletin cities (BTV).' },
+  'ampersand-mountain': { regionMatch: BALLOON_N_ADK, bindReason: 'Saranac Lake area; Northern Adirondacks bulletin cities (BTV).' },
+  'debar-mountain': { regionMatch: BALLOON_N_ADK, bindReason: 'Saranac Lake/Debar Pond area; Northern Adirondacks bulletin cities (BTV).' },
+  'st-regis-mountain': { regionMatch: BALLOON_N_ADK, bindReason: 'Saranac Lake/Paul Smiths; Northern Adirondacks bulletin cities (BTV).' },
+  'mount-arab': { regionMatch: BALLOON_N_ADK, bindReason: 'Tupper Lake/Saranac area; Northern Adirondacks bulletin cities (BTV).' },
+  'lyon-mountain': { regionMatch: BALLOON_N_ADK, bindReason: 'Dannemora/Chazy in Northern Adirondacks bulletin cities (BTV), not St. Lawrence valley.' },
+  'gore-mountain': { regionMatch: BALLOON_N_ADK, bindReason: 'North Creek/Lake Placid zone; Northern Adirondacks bulletin cities (BTV).' },
+  'jay-peak': { regionMatch: BALLOON_CENTRAL_NE, bindReason: 'Derby/Newport NEK; Central and Northeast Vermont bulletin cities (BTV).' },
+  'belvidere-mountain': { regionMatch: BALLOON_CENTRAL_NE, bindReason: 'North/Central VT Greens; Central and Northeast Vermont bulletin cities (BTV).' },
+  'jay-village': { regionMatch: BALLOON_CENTRAL_NE, bindReason: 'Derby/Newport area; Central and Northeast Vermont bulletin cities (BTV).' },
+  'mount-mansfield': { regionMatch: BALLOON_CENTRAL_NE, bindReason: 'Stowe/Montpelier Greens; Central and Northeast Vermont bulletin cities (BTV).' },
+  'smugglers-notch': { regionMatch: BALLOON_CENTRAL_NE, bindReason: 'Stowe/Jeffersonville; Central and Northeast Vermont bulletin cities (BTV).' },
+  'stowe-town': { regionMatch: BALLOON_CENTRAL_NE, bindReason: 'Stowe in bulletin city list (BTV).' },
+  'camels-hump': { regionMatch: BALLOON_CENTRAL_NE, bindReason: 'Montpelier/Waitsfield Greens; Central and Northeast Vermont bulletin cities (BTV).' },
+  'mount-ellen': { regionMatch: BALLOON_CENTRAL_NE, bindReason: 'Waitsfield/Mad River; Central and Northeast Vermont bulletin cities (BTV).' },
+  'mount-worcester': { regionMatch: BALLOON_CENTRAL_NE, bindReason: 'Central VT Greens; Central and Northeast Vermont bulletin cities (BTV).' },
+  'waterbury': { regionMatch: BALLOON_CENTRAL_NE, bindReason: 'Montpelier/Waterbury corridor; Central and Northeast Vermont bulletin cities (BTV).' },
+  'bread-loaf-mountain': { regionMatch: BALLOON_CHAMPLAIN, bindReason: 'Middlebury/Ripton in Champlain Valley bulletin cities (BTV).' },
+  'burke-mountain': { regionMatch: BALLOON_CENTRAL_NE, bindReason: 'Newport/Derby NEK; Central and Northeast Vermont bulletin cities (BTV).' },
+  'signal-mountain': { regionMatch: BALLOON_CENTRAL_NE, bindReason: 'Island Pond NEK in Central and Northeast Vermont bulletin cities (BTV).' },
+  'monadnock-mountain': {
+    regionMatch: BALLOON_CENTRAL_NE,
+    bindReason: 'Island Pond/Bradford NEK; Central and Northeast Vermont bulletin cities (BTV).',
+    nearbyLabel: 'Essex County VT Monadnock only — NH Mount Monadnock is GYX, not this balloon product.',
+  },
+  'killington-peak': { regionMatch: BALLOON_SOUTHERN, bindReason: 'Killington in Southern Vermont bulletin cities (BTV).' },
+  'stratton-mountain': { regionMatch: BALLOON_SOUTHERN, bindReason: 'Southern VT ski zone; Southern Vermont bulletin cities (BTV).' },
+  'mount-equinox': { regionMatch: BALLOON_SOUTHERN, bindReason: 'Manchester/Bennington area; Southern Vermont bulletin cities (BTV).' },
+  'dorset-mountain': { regionMatch: BALLOON_SOUTHERN, bindReason: 'Southern VT Greens; Southern Vermont bulletin cities (BTV).' },
+  'haystack-mountain': { regionMatch: BALLOON_SOUTHERN, bindReason: 'Wilmington/Mt Snow near Ludlow/Springfield bulletin cities (BTV).' },
+  'ludlow-mountain': { regionMatch: BALLOON_SOUTHERN, bindReason: 'Ludlow in Southern Vermont bulletin cities (BTV).' },
+  'bromley-mountain': { regionMatch: BALLOON_SOUTHERN, bindReason: 'Peru/Manchester area; Southern Vermont bulletin cities (BTV).' },
+  'mount-ascutney': { regionMatch: BALLOON_SOUTHERN, bindReason: 'Springfield/WRJ corridor in Southern Vermont bulletin cities (BTV).' },
+  'bald-mountain': { regionMatch: BALLOON_SOUTHERN, bindReason: 'Southern VT; Southern Vermont bulletin cities (BTV).' },
+  'manchester-vt': { regionMatch: BALLOON_SOUTHERN, bindReason: 'Manchester area; Southern Vermont bulletin cities (BTV).' },
+};
 
-function balloonForPlace(place, sectionId) {
+function balloonForPlace(place) {
   if (place.office !== 'BTV') return null;
-  if (sectionId === 'southern-greens') return { regionMatch: BALLOON_SOUTHERN };
-  if (place.id === 'bread-loaf-mountain') return { regionMatch: BALLOON_SOUTHERN };
-  if (sectionId === 'northern-greens' || sectionId === 'central-greens' || sectionId === 'jay-peak') {
-    return { regionMatch: BALLOON_CENTRAL_NE };
-  }
-  if (sectionId === 'northeast-kingdom') {
-    if (place.id === 'signal-mountain') {
-      return {
-        regionMatch: BALLOON_N_ADK,
-        nearbyLabel:
-          'Northern Adirondacks balloon region (Signal Mountain is VT; not NH Mount Monadnock / GYX)',
-      };
-    }
-    if (place.id === 'monadnock-mountain') {
-      return {
-        regionMatch: BALLOON_CENTRAL_NE,
-        nearbyLabel: 'Essex County VT Monadnock naming only; NH Mount Monadnock uses GYX, not this balloon product',
-      };
-    }
-    return { regionMatch: BALLOON_CENTRAL_NE };
-  }
-  if (place.id === 'lyon-mountain') return { regionMatch: BALLOON_ST_LAWRENCE };
-  if (BALLOON_CHAMPLAIN_PLACES.has(place.id) || sectionId === 'shawangunks' || sectionId === 'thacher-park') {
-    return { regionMatch: BALLOON_CHAMPLAIN };
-  }
-  return { regionMatch: BALLOON_N_ADK };
+  const entry = BALLOON_BY_PLACE[place.id];
+  if (!entry) return null;
+  const { regionMatch, bindReason, nearbyLabel } = entry;
+  return {
+    regionMatch,
+    ...(bindReason ? { bindReason } : {}),
+    ...(nearbyLabel ? { nearbyLabel } : {}),
+  };
 }
 
 function recForPlace(place, sectionId, stateCode) {
@@ -194,7 +221,7 @@ for (const state of places.states) {
       }
       const allLocations = ALL_LOCATIONS_BY_PLACE[place.id] ?? null;
       const avg = AVG_BY_PLACE[place.id] ?? null;
-      const balloon = balloonForPlace(place, section.id);
+      const balloon = balloonForPlace(place);
       if (!rec && !allLocations && !avg && !balloon) continue;
       out.places[place.id] = {
         ...(rec ? { rec } : {}),
