@@ -22,5 +22,8 @@ export function defaultResumeHint(type: string | null): string {
   if (type === 'AVG') {
     return 'Off season — avalanche weather guidance usually resumes in late fall.';
   }
+  if (type === 'HYD' || type === 'stake') {
+    return 'Off season — snow stake summaries usually resume when winter reporting begins.';
+  }
   return 'Off season — check back when the product resumes.';
 }

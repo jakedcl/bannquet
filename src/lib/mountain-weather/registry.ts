@@ -123,6 +123,57 @@ export const NWS_ALL_LOCATIONS_CAR_DEF: SourceDef = {
   expectedEveryHours: 3,
 };
 
+export const NWS_BTV_MANSFIELD_HYD_DEF: SourceDef = {
+  id: 'nws-btv-mansfield-hyd',
+  org: 'National Weather Service Burlington',
+  kind: 'measured',
+  terms: 'reuse-ok',
+  url: 'https://www.weather.gov/source/btv/rec/mansfieldHYD.xml',
+  ttlSeconds: 1800,
+  expectedEveryHours: 24,
+  season: 'winter',
+};
+
+export const NWS_BTV_MANSFIELD_PROFILE_DEF: SourceDef = {
+  id: 'nws-btv-mansfield-profile',
+  org: 'National Weather Service Burlington',
+  kind: 'derived',
+  terms: 'reuse-ok',
+  url: 'https://www.weather.gov/source/btv/profile/publicprofile.xml',
+  ttlSeconds: 1800,
+  expectedEveryHours: 1,
+};
+
+export const NWS_BTV_MMN_SNOW_CLIM_DEF: SourceDef = {
+  id: 'nws-btv-mmn-snow-climatology',
+  org: 'National Weather Service Burlington',
+  kind: 'official',
+  terms: 'reuse-ok',
+  url: 'https://www.weather.gov/source/btv/rec/mmn/avgdepth.xml',
+  ttlSeconds: 86_400,
+  expectedEveryHours: 24,
+};
+
+export const NWS_RR2_BTV_DEF: SourceDef = {
+  id: 'nws-btv-rr2',
+  org: 'National Weather Service Burlington',
+  kind: 'measured',
+  terms: 'reuse-ok',
+  url: 'https://api.weather.gov/products/types/RR2/locations/BTV',
+  ttlSeconds: 1800,
+  expectedEveryHours: 1,
+};
+
+export const NWS_STATION_MMNV1_DEF: SourceDef = {
+  id: 'nws-station-mmnv1',
+  org: 'National Weather Service',
+  kind: 'measured',
+  terms: 'reuse-ok',
+  url: 'https://api.weather.gov/stations/MMNV1/observations/latest',
+  ttlSeconds: 600,
+  expectedEveryHours: 1,
+};
+
 export const NWS_MTN_ALY_ENHANCED_DEF: SourceDef = {
   id: 'nws-aly-mtn-enhanced',
   org: 'National Weather Service Albany',
@@ -147,4 +198,9 @@ export const SOURCE_REGISTRY: Record<string, SourceDef> = {
   [NWS_AVG_GYX_DEF.id]: NWS_AVG_GYX_DEF,
   [NWS_ALL_LOCATIONS_GYX_DEF.id]: NWS_ALL_LOCATIONS_GYX_DEF,
   [NWS_ALL_LOCATIONS_CAR_DEF.id]: NWS_ALL_LOCATIONS_CAR_DEF,
+  [NWS_BTV_MANSFIELD_HYD_DEF.id]: NWS_BTV_MANSFIELD_HYD_DEF,
+  [NWS_BTV_MANSFIELD_PROFILE_DEF.id]: NWS_BTV_MANSFIELD_PROFILE_DEF,
+  [NWS_BTV_MMN_SNOW_CLIM_DEF.id]: NWS_BTV_MMN_SNOW_CLIM_DEF,
+  [NWS_RR2_BTV_DEF.id]: NWS_RR2_BTV_DEF,
+  [NWS_STATION_MMNV1_DEF.id]: NWS_STATION_MMNV1_DEF,
 };

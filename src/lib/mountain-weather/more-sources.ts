@@ -110,6 +110,46 @@ function baseCatalog(ctx: CatalogContext): MoreSourceEntry[] {
         placeIds: [place.id],
       },
     );
+    if (place.id === 'mount-mansfield') {
+      entries.push(
+        {
+          id: 'mansfield-enhanced-charts',
+          scope: 'place',
+          org: 'NWS Burlington',
+          label: 'Mansfield hourly mountain charts',
+          href: 'https://www.weather.gov/btv/mountain_enhanced?loc=MOUNT%20MANSFIELD',
+          mode: 'link',
+          placeIds: ['mount-mansfield'],
+        },
+        {
+          id: 'btv-profile-page',
+          scope: 'place',
+          org: 'NWS Burlington',
+          label: 'Elevation profile page',
+          href: 'https://www.weather.gov/btv/profile',
+          mode: 'link',
+          placeIds: ['mount-mansfield'],
+        },
+        {
+          id: 'mmnv1-timeseries',
+          scope: 'place',
+          org: 'NWS',
+          label: 'MMNV1 time series',
+          href: 'https://www.weather.gov/wrh/timeseries?site=MMNV1',
+          mode: 'link',
+          placeIds: ['mount-mansfield'],
+        },
+        {
+          id: 'btv-mtn-dashboard',
+          scope: 'place',
+          org: 'NWS Burlington',
+          label: 'Forecaster mountain dashboard (unofficial)',
+          href: 'https://www.weather.gov/source/btv/rec/mtnDashboard.html',
+          mode: 'link',
+          placeIds: ['mount-mansfield'],
+        },
+      );
+    }
     if (/whiteface/i.test(place.name)) {
       entries.push({
         id: 'whiteface-cam',
