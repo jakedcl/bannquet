@@ -112,7 +112,11 @@ export function MansfieldPackSection({ pack }: { pack: MansfieldPackData | null 
                   <li key={f.key}>
                     <span className="font-bold">{f.label}:</span>{' '}
                     {f.value === null ? '—' : `${f.value}${f.unit ? ` ${f.unit}` : ''}`}
-                    {f.qualityControl ? <span className="text-gray-600"> ({f.qualityControl})</span> : null}
+                    {f.qcFailed ? (
+                      <span className="text-gray-700"> (failed NWS quality check)</span>
+                    ) : f.qualityControl ? (
+                      <span className="text-gray-600"> (QC {f.qualityControl})</span>
+                    ) : null}
                   </li>
                 ))}
               </ul>
@@ -124,13 +128,24 @@ export function MansfieldPackSection({ pack }: { pack: MansfieldPackData | null 
         ) : null}
       </PackBlock>
 
-      <PackBlock title="RR2 summit temperature (SHEF)" def={defs.rr2Summit} result={pack.rr2Summit}>
+      <PackBlock title="RR2 summit (SHEF)" def={defs.rr2Summit} result={pack.rr2Summit}>
         {pack.rr2Summit.data ? (
           <>
-            <p>
-              <span className="font-bold">TAIRGZZ:</span>{' '}
-              {pack.rr2Summit.data.summitTempF === null ? '—' : `${pack.rr2Summit.data.summitTempF} °F`}
-            </p>
+            {pack.rr2Summit.data.reportHeader ? (
+              <p className="font-mono text-xs text-gray-800">{pack.rr2Summit.data.reportHeader}</p>
+            ) : null}
+            <ul className="space-y-1 text-sm">
+              {pack.rr2Summit.data.shefFields.map((f) => (
+                <li key={f.code}>
+                  <span className="font-bold">{f.code}:</span> {f.value ?? '—'}
+                </li>
+              ))}
+            </ul>
+            {pack.rr2Summit.data.summitTempF !== null ? (
+              <p className="text-xs text-gray-700">
+                <span className="font-bold">TAIRGZZ (°F):</span> {pack.rr2Summit.data.summitTempF}
+              </p>
+            ) : null}
             <p className="font-mono text-xs text-gray-800">{pack.rr2Summit.data.rawLine}</p>
           </>
         ) : null}

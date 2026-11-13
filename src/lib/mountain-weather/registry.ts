@@ -174,6 +174,16 @@ export const NWS_STATION_MMNV1_DEF: SourceDef = {
   expectedEveryHours: 1,
 };
 
+export const NWS_BTV_BALLOON_DEF: SourceDef = {
+  id: 'nws-btv-balloon',
+  org: 'National Weather Service Burlington',
+  kind: 'forecast',
+  terms: 'reuse-ok',
+  url: 'https://www.weather.gov/source/btv/rec/balloon.xml',
+  ttlSeconds: 1800,
+  expectedEveryHours: 6,
+};
+
 export const NWS_MTN_ALY_ENHANCED_DEF: SourceDef = {
   id: 'nws-aly-mtn-enhanced',
   org: 'National Weather Service Albany',
@@ -203,4 +213,5 @@ export const SOURCE_REGISTRY: Record<string, SourceDef> = {
   [NWS_BTV_MMN_SNOW_CLIM_DEF.id]: NWS_BTV_MMN_SNOW_CLIM_DEF,
   [NWS_RR2_BTV_DEF.id]: NWS_RR2_BTV_DEF,
   [NWS_STATION_MMNV1_DEF.id]: NWS_STATION_MMNV1_DEF,
+  [NWS_BTV_BALLOON_DEF.id]: NWS_BTV_BALLOON_DEF,
 };

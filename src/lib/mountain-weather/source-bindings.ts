@@ -22,10 +22,16 @@ export type AllLocationsPlaceBinding = {
   bandLabel?: string;
 };
 
+export type BalloonPlaceBinding = {
+  regionMatch: string;
+  nearbyLabel?: string;
+};
+
 export type PlaceSourceBinding = {
   rec?: RecPlaceBinding | RecPlaceBinding[];
   allLocations?: AllLocationsPlaceBinding | AllLocationsPlaceBinding[];
   avg?: AvgPlaceBinding | AvgPlaceBinding[];
+  balloon?: BalloonPlaceBinding;
 };
 
 type BindingsFile = {

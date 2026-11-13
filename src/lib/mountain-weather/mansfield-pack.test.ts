@@ -45,10 +45,20 @@ test('RR2 BTV sample extracts MMNV1 summit temperature', () => {
   const parsed = parseRr2MansfieldSummit(text);
   assert.ok(parsed);
   assert.equal(parsed.summitTempF, 20.5);
+  assert.ok(parsed.shefFields.some((f) => f.code === 'DH2118'));
+  assert.ok(parsed.shefFields.some((f) => f.code === 'TAIRGZZ' && f.value === '20.5'));
 });
 
 test('MMNV1 latest JSON parses without throwing', () => {
   const json = readFileSync(path.join(FIX, 'mansfield-mmnv1-latest.json'), 'utf8');
   const parsed = parseNwsStationLatest(json);
   assert.equal(parsed.stationId, 'MMNV1');
+  const failed = parsed.fields.filter((f) => f.qcFailed);
+  assert.ok(failed.length > 0);
+});
+
+test('Mansfield HYD fixture includes column header lines', () => {
+  const xml = readFileSync(path.join(FIX, 'mansfield-hyd-sample.xml'), 'utf8');
+  const parsed = parseMansfieldHydXml(xml);
+  assert.ok(parsed.headerLines.some((l) => l.startsWith('Station')));
 });

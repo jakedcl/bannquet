@@ -91,7 +91,11 @@ export function parseMansfieldHydText(text: string): MansfieldHyd {
   let row: MansfieldHydRow | null = null;
   for (const line of lines) {
     const trimmed = line.trim();
-    if (!trimmed || trimmed.startsWith('Station') || trimmed.startsWith('24 Hrs') || trimmed === '$$') continue;
+    if (!trimmed || trimmed === '$$') continue;
+    if (trimmed.startsWith('Station') || trimmed.startsWith('24 Hrs') || /^\s+24 Hrs/.test(line)) {
+      headerLines.push(trimmed);
+      continue;
+    }
     if (trimmed.startsWith('...') || /County\.\.\./.test(trimmed)) continue;
     const parsed = parseMansfieldRow(trimmed);
     if (parsed) {

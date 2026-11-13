@@ -19,6 +19,9 @@ const FIELD_LABELS: Record<string, string> = {
   heatIndex: 'Heat index',
   cloudLayers: 'Cloud layers',
   elevation: 'Sensor elevation',
+  presentWeather: 'Present weather',
+  rawMessage: 'Raw message',
+  textDescription: 'Text description',
 };
 
 function unitLabel(unitCode: string | undefined): string | null {
@@ -37,6 +40,14 @@ function unitLabel(unitCode: string | undefined): string | null {
   return map[unitCode] ?? unitCode.replace('wmoUnit:', '');
 }
 
+function formatObservationValue(val: unknown): number | string | null {
+  if (val === null || val === undefined) return null;
+  if (typeof val === 'number' || typeof val === 'string') return val;
+  if (Array.isArray(val)) return JSON.stringify(val);
+  if (typeof val === 'object') return JSON.stringify(val);
+  return String(val);
+}
+
 export function parseNwsStationLatest(jsonText: string): NwsStationLatest {
   const doc = JSON.parse(jsonText) as {
     properties?: Record<string, unknown>;
@@ -47,23 +58,34 @@ export function parseNwsStationLatest(jsonText: string): NwsStationLatest {
   const fields: NwsStationField[] = [];
   for (const [key, val] of Object.entries(p)) {
     if (key.startsWith('@') || key === 'station' || key === 'stationId' || key === 'stationName') continue;
-    if (key === 'timestamp' || key === 'rawMessage' || key === 'textDescription' || key === 'icon') continue;
-    if (key === 'presentWeather' && Array.isArray(val) && val.length === 0) continue;
+    if (key === 'timestamp' || key === 'icon') continue;
+
+    if (key === 'presentWeather') {
+      if (Array.isArray(val) && val.length > 0) {
+        fields.push({
+          key,
+          label: FIELD_LABELS[key] ?? key,
+          value: JSON.stringify(val),
+          unit: null,
+          qualityControl: null,
+          qcFailed: false,
+        });
+      }
+      continue;
+    }
+
     if (typeof val !== 'object' || val === null || !('value' in val)) continue;
     const entry = val as { value: unknown; unitCode?: string; qualityControl?: string };
-    const value =
-      entry.value === null || entry.value === undefined
-        ? null
-        : typeof entry.value === 'number' || typeof entry.value === 'string'
-          ? entry.value
-          : JSON.stringify(entry.value);
-    if (value === null && (entry.qualityControl === 'Z' || entry.qualityControl === 'z')) continue;
+    const qc = entry.qualityControl ?? null;
+    const qcFailed = (qc === 'Z' || qc === 'z') && (entry.value === null || entry.value === undefined);
+    const value = formatObservationValue(entry.value);
     fields.push({
       key,
       label: FIELD_LABELS[key] ?? key.replace(/([A-Z])/g, ' $1').trim(),
       value,
       unit: unitLabel(entry.unitCode),
-      qualityControl: entry.qualityControl ?? null,
+      qualityControl: qc,
+      qcFailed,
     });
   }
 

@@ -46,9 +46,16 @@ export type MansfieldSnowClimatology = {
   min: MmnDepthPoint[];
 };
 
+export type Rr2ShefField = {
+  code: string;
+  value: string | null;
+};
+
 export type MansfieldRr2Summit = {
   stationId: string;
   rawLine: string;
+  reportHeader: string | null;
+  shefFields: Rr2ShefField[];
   summitTempF: number | null;
 };
 
@@ -58,6 +65,7 @@ export type NwsStationField = {
   value: number | string | null;
   unit: string | null;
   qualityControl: string | null;
+  qcFailed: boolean;
 };
 
 export type NwsStationLatest = {

@@ -110,6 +110,42 @@ function baseCatalog(ctx: CatalogContext): MoreSourceEntry[] {
         placeIds: [place.id],
       },
     );
+    if (place.office === 'BTV') {
+      entries.push({
+        id: 'btv-balloon-xml',
+        scope: 'place',
+        org: 'NWS Burlington',
+        label: 'Hot air balloon / ridge wind forecast (XML)',
+        href: 'https://www.weather.gov/source/btv/rec/balloon.xml',
+        mode: 'link',
+        offices: ['BTV'],
+        placeIds: [place.id],
+      });
+    }
+    if (place.office === 'ALY') {
+      entries.push({
+        id: 'aly-fzl',
+        scope: 'place',
+        org: 'NWS Albany',
+        label: 'Observed freezing level (FZL; link only)',
+        href: 'https://www.weather.gov/source/aly/rec/fzl.xml',
+        mode: 'link',
+        offices: ['ALY'],
+        placeIds: [place.id],
+      });
+    }
+    if (place.office === 'GYX') {
+      entries.push({
+        id: 'gyx-fzl',
+        scope: 'place',
+        org: 'NWS Gray',
+        label: 'Observed freezing level (FZL; link only)',
+        href: 'https://www.weather.gov/source/gyx/rec/fzl.xml',
+        mode: 'link',
+        offices: ['GYX'],
+        placeIds: [place.id],
+      });
+    }
     if (place.id === 'mount-mansfield') {
       entries.push(
         {

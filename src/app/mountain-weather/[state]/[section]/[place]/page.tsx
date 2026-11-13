@@ -7,6 +7,7 @@ import { AllLocationsSection } from '@/components/mountain-weather/AllLocationsS
 import { MountainForecastSection } from '@/components/mountain-weather/MountainForecastSection';
 import { AvgForecastSection } from '@/components/mountain-weather/AvgForecastSection';
 import { RecForecastSection } from '@/components/mountain-weather/RecForecastSection';
+import { BalloonForecastSection } from '@/components/mountain-weather/BalloonForecastSection';
 import { MansfieldPackSection } from '@/components/mountain-weather/MansfieldPackSection';
 import { WeatherHazardsHeader } from '@/components/mountain-weather/WeatherHazardsHeader';
 import { buildMtnDisplay } from '@/lib/mountain-weather/mtn-display';
@@ -22,6 +23,7 @@ import { moreSourcesForPlace } from '@/lib/mountain-weather/more-sources';
 import { mountainWeatherPath } from '@/lib/mountain-weather/slugs';
 import { readAvgForPlace } from '@/lib/mountain-weather/read-place-avg';
 import { readAllLocationsForPlace, readRecForPlace } from '@/lib/mountain-weather/read-place-rec';
+import { readBalloonForPlace } from '@/lib/mountain-weather/read-place-balloon';
 import { readMansfieldPack } from '@/lib/mountain-weather/read-mansfield-pack';
 import { readMtnPointForPlace } from '@/lib/mountain-weather/read-mtn-point';
 import { readNwsGridBaseline } from '@/lib/mountain-weather/readers/nws-grid-baseline';
@@ -42,13 +44,14 @@ export default async function MountainPlacePage({
   const place = getMountainPlace(stateCode, sectionId, placeId);
   if (!stateEntry || !section || !place) notFound();
 
-  const [baseline, mtnPoint, rec, avg, allLocations, mansfieldPack] = await Promise.all([
+  const [baseline, mtnPoint, rec, avg, allLocations, mansfieldPack, balloon] = await Promise.all([
     readNwsGridBaseline(place),
     readMtnPointForPlace(place.id),
     readRecForPlace(place.id),
     readAvgForPlace(place.id),
     readAllLocationsForPlace(place.id),
     readMansfieldPack(place.id),
+    readBalloonForPlace(place.id),
   ]);
   const moreSources = moreSourcesForPlace(stateCode, sectionId, place);
 
@@ -84,6 +87,7 @@ export default async function MountainPlacePage({
         <RecForecastSection results={rec} />
         <AvgForecastSection results={avg} />
         <AllLocationsSection results={allLocations} />
+        <BalloonForecastSection result={balloon} />
         <MansfieldPackSection pack={mansfieldPack} />
         <BasicForecastSection result={baseline} placeName={place.name} placeElevationFt={place.elevationFt} />
         <MoreSourcesSection groups={moreSources} />

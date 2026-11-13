@@ -84,6 +84,50 @@ const ALL_LOCATIONS_BY_PLACE = {
   'white-cap-mountain': { office: 'CAR', loc: 'TOP OF WHITE CAP MOUNTAIN' },
 };
 
+/** Balloon region titles must match BTV balloon.xml “For …” blocks (audit: NH Mount Monadnock is GYX, not VT monadnock-mountain). */
+const BALLOON_CHAMPLAIN = 'the Champlain Valley of Vermont and New York';
+const BALLOON_CENTRAL_NE = 'Central and Northeast Vermont';
+const BALLOON_SOUTHERN = 'Southern Vermont';
+const BALLOON_N_ADK = 'the Northern Adirondacks of New York';
+const BALLOON_ST_LAWRENCE = 'the St. Lawrence Valley of New York';
+
+const BALLOON_CHAMPLAIN_PLACES = new Set([
+  'gunks-ridge',
+  'thacher-park',
+  'prospect-mountain',
+  'black-mountain',
+]);
+
+function balloonForPlace(place, sectionId) {
+  if (place.office !== 'BTV') return null;
+  if (sectionId === 'southern-greens') return { regionMatch: BALLOON_SOUTHERN };
+  if (place.id === 'bread-loaf-mountain') return { regionMatch: BALLOON_SOUTHERN };
+  if (sectionId === 'northern-greens' || sectionId === 'central-greens' || sectionId === 'jay-peak') {
+    return { regionMatch: BALLOON_CENTRAL_NE };
+  }
+  if (sectionId === 'northeast-kingdom') {
+    if (place.id === 'signal-mountain') {
+      return {
+        regionMatch: BALLOON_N_ADK,
+        nearbyLabel:
+          'Northern Adirondacks balloon region (Signal Mountain is VT; not NH Mount Monadnock / GYX)',
+      };
+    }
+    if (place.id === 'monadnock-mountain') {
+      return {
+        regionMatch: BALLOON_CENTRAL_NE,
+        nearbyLabel: 'Essex County VT Monadnock naming only; NH Mount Monadnock uses GYX, not this balloon product',
+      };
+    }
+    return { regionMatch: BALLOON_CENTRAL_NE };
+  }
+  if (place.id === 'lyon-mountain') return { regionMatch: BALLOON_ST_LAWRENCE };
+  if (BALLOON_CHAMPLAIN_PLACES.has(place.id) || sectionId === 'shawangunks' || sectionId === 'thacher-park') {
+    return { regionMatch: BALLOON_CHAMPLAIN };
+  }
+  return { regionMatch: BALLOON_N_ADK };
+}
+
 function recForPlace(place, sectionId, stateCode) {
   if (sectionId === 'southern-greens') {
     return { office: 'BTV', sectionMatch: 'Southern Green Mountains of Vermont' };
@@ -150,11 +194,13 @@ for (const state of places.states) {
       }
       const allLocations = ALL_LOCATIONS_BY_PLACE[place.id] ?? null;
       const avg = AVG_BY_PLACE[place.id] ?? null;
-      if (!rec && !allLocations && !avg) continue;
+      const balloon = balloonForPlace(place, section.id);
+      if (!rec && !allLocations && !avg && !balloon) continue;
       out.places[place.id] = {
         ...(rec ? { rec } : {}),
         ...(allLocations ? { allLocations } : {}),
         ...(avg ? { avg } : {}),
+        ...(balloon ? { balloon } : {}),
       };
     }
   }
