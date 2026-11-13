@@ -1,0 +1,121 @@
+
+000
+SXUS41 KBTV 131823
+RECBTV
+
+Recreational Forecast
+National Weather Service Burlington VT
+123 PM EST Fri Nov 13 2026
+
+.The Forecast for the Northern Waters of Lake Champlain,
+including Malletts Bay, the Inland Sea, and Isle La Motte...
+
+.REST OF TODAY...North winds 5 to 10 knots. Mostly cloudy. Waves
+1 to 2 feet. 
+.TONIGHT...Northwest winds 5 to 10 knots. Cloudy. A chance of rain
+or snow showers overnight. Waves 1 to 2 feet. 
+.SATURDAY...Northwest winds 5 to 10 knots. Rain showers likely or a
+chance of snow showers in the morning, then rain showers in the
+afternoon. Waves 1 to 2 feet. 
+.SATURDAY NIGHT...Northwest winds 5 to 15 knots. Rain showers likely
+in the evening. Waves 1 to 2 feet. 
+.SUNDAY...Northwest winds 10 to 15 knots. Mostly cloudy. Waves 1 to
+2 feet. 
+.SUNDAY NIGHT...Northwest winds 5 to 10 knots. Partly cloudy. Waves
+1 to 2 feet. 
+.MONDAY...Northwest winds 5 to 10 knots, becoming light and
+variable. Partly sunny. Waves 1 foot or less. 
+.MONDAY NIGHT...Light and variable winds. Mostly clear. Waves 1 foot
+or less. 
+.TUESDAY...South winds 10 knots or less, becoming southwest. Partly
+sunny. Waves 1 foot or less. 
+
+&&
+
+.The Forecast for the Broad Waters of Lake Champlain,
+including Colchester Reef, Valcour Island, and Cumberland Bay...
+
+.REST OF TODAY...North winds 10 to 15 knots. Mostly cloudy. Waves
+1 to 3 feet. 
+.TONIGHT...Northwest winds 5 to 15 knots. Cloudy. A slight chance of
+rain or snow showers overnight. Waves 1 to 2 feet. 
+.SATURDAY...West winds 5 to 10 knots, becoming northwest. A chance
+of rain or snow showers in the morning, then rain showers in the
+afternoon. Waves 1 to 3 feet. 
+.SATURDAY NIGHT...Northwest winds 10 to 15 knots, increasing to
+15 to 20 knots. Rain showers likely in the evening, then a chance of
+rain showers overnight. Waves 1 to 3 feet, building to 2 to 4 feet,
+then  subsiding to 1 to 3 feet. 
+.SUNDAY...Northwest winds 10 to 15 knots. Mostly cloudy. Waves 1 to
+2 feet. 
+.SUNDAY NIGHT...Northwest winds 5 to 15 knots. Partly cloudy. Waves
+1 to 2 feet. 
+.MONDAY...Northwest winds 5 to 10 knots, becoming light and
+variable. Partly sunny. Waves 1 foot or less. 
+.MONDAY NIGHT...Light and variable winds, becoming south 5 to
+10 knots. Mostly clear. Waves 1 foot or less. 
+.TUESDAY...South winds 10 knots or less. Partly sunny. Waves 1 foot
+or less. 
+
+&&
+
+.The Forecast for the Southern Waters of Lake Champlain,
+including Willsboro and Shelburne Bays, and Diamond Island...
+
+.REST OF TODAY...North winds 15 to 20 knots. Mostly cloudy. Waves
+1 to 3 feet. 
+.TONIGHT...North winds 5 to 15 knots, becoming northwest. Cloudy. A
+slight chance of rain showers overnight. Waves 1 to 2 feet. 
+.SATURDAY...West winds 5 to 10 knots, becoming northwest. A chance
+of rain or snow showers in the morning, then rain showers likely in
+the afternoon. Waves 1 to 3 feet. 
+.SATURDAY NIGHT...Northwest winds 5 to 15 knots. Rain showers likely
+in the evening, then a chance of rain showers overnight. Waves 1 to
+3 feet, building to 2 to 4 feet, then  subsiding to 1 to 3 feet. 
+.SUNDAY...Northwest winds 10 to 15 knots. Mostly cloudy. Waves 1 to
+2 feet. 
+.SUNDAY NIGHT...Northwest winds 5 to 15 knots. Partly cloudy. Waves
+1 to 2 feet. 
+.MONDAY...Northwest winds 10 knots or less. Partly sunny. Waves
+1 foot or less. 
+.MONDAY NIGHT...Light and variable winds. Mostly clear. Waves 1 foot
+or less. 
+.TUESDAY...South winds 10 knots or less. Partly sunny. Waves 1 foot
+or less. 
+
+Latest Level and Temperature Data from Around Lake Champlain
+                                Level           Temperature
+USGS gage at Rouses Point NY    93.20 feet      44 degrees
+USGS gage at Burlington VT      93.28 feet      49 degrees
+USGS gage at Port Henry NY      93.07 feet      42 degrees
+
+
+&&
+
+.The Higher Summits Forecast for the Northern Adirondacks of New York
+and the Northern Green Mountains of Vermont...
+
+.REST OF TODAY...Cloudy. Near steady temperature in the mid 20s.
+North winds around 10 mph. 
+.TONIGHT...Summits obscured in clouds. A chance of snow showers
+after midnight. Little or no snow accumulation. Near steady
+temperature in the lower 20s. Northwest winds 10 to 15 mph. 
+.SATURDAY...Summits obscured in clouds. A chance of snow showers in
+the morning, then snow showers in the afternoon. Snow accumulation
+around an inch. Highs in the upper 20s. Northwest winds around
+10 mph. 
+
+.The Higher Summits Forecast for the Southern Green Mountains of Vermont...
+
+.REST OF TODAY...Cloudy. Highs in the upper 20s. North winds around
+10 mph. 
+.TONIGHT...Cloudy until midnight, then becoming in and out of
+clouds. A slight chance of snow showers after midnight. Near steady
+temperature in the mid 20s. Northwest winds 10 to 15 mph. 
+.SATURDAY...Summits obscured in clouds. A slight chance of snow
+showers in the morning, then snow showers likely in the afternoon.
+Snow accumulation around an inch. Highs in the lower 30s. Northwest
+winds around 10 mph. 
+
+
+$$

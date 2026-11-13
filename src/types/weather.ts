@@ -89,6 +89,11 @@ export type ForecastSnippet = {
   shortForecast?: string;
   detailedForecast?: string;
   precipChance?: number | null;
+  /** NWS grid weather layer (coverage, type, intensity) for this hour. */
+  gridWeather?: string | null;
+  gridWeatherCoverage?: string | null;
+  gridWeatherType?: string | null;
+  gridWeatherIntensity?: string | null;
   isDaytime?: boolean;
   icon?: string;
   secondaryTemp?: number;

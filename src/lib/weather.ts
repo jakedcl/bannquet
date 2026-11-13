@@ -2,10 +2,14 @@ import { ForecastPeriod, ForecastSnippet, WeatherData, WeatherHazard } from '@/t
 import { outsideFetch } from '@/lib/outside-fetch';
 import { feelsLikeF, windMphFromText } from '@/lib/feels-like';
 import {
+  formatGridWeatherLayer,
   gridElevationFt,
   gridSeriesSamples,
+  gridWeatherAtInstant,
+  humanizeWeatherToken,
   normalizeGridValue,
   type GridSeries,
+  type GridWeatherSeries,
 } from '@/lib/grid-series';
 
 const USER_AGENT = 'Bannquet-Weather-App (admin@bannquet.com)';
@@ -150,7 +154,11 @@ export async function getWeather(lat: number, lon: number): Promise<WeatherData>
         heatIndexF: heatIndex,
       });
 
-  const hourlyForecast = mapForecastSlice(hourlyPeriods, false, true);
+  const weatherSeries = gridProps.weather as GridWeatherSeries | undefined;
+  const hourlyForecast = enrichHourlyWithGridWeather(
+    mapForecastSlice(hourlyPeriods, false, true),
+    weatherSeries,
+  );
   const dailyForecast = buildDailyHighLow(dailyPeriods, 7);
   const forecastPeriods = mapForecastSlice(dailyPeriods, false, true);
   
@@ -184,6 +192,19 @@ export async function getWeather(lat: number, lon: number): Promise<WeatherData>
     dailyForecast,
     forecastPeriods,
   };
+}
+
+function enrichHourlyWithGridWeather(periods: ForecastSnippet[], weatherSeries?: GridWeatherSeries): ForecastSnippet[] {
+  return periods.map((period) => {
+    const layer = gridWeatherAtInstant(weatherSeries, period.startTime);
+    return {
+      ...period,
+      gridWeather: formatGridWeatherLayer(layer),
+      gridWeatherCoverage: humanizeWeatherToken(layer?.coverage),
+      gridWeatherType: humanizeWeatherToken(layer?.weather),
+      gridWeatherIntensity: humanizeWeatherToken(layer?.intensity),
+    };
+  });
 }
 
 function mapForecastSlice(

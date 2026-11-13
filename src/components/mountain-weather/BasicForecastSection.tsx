@@ -186,6 +186,7 @@ function HourlyTable({ periods }: { periods: NonNullable<BaselineForecast['hourl
               <th className="px-2 py-1">Wind</th>
               <th className="px-2 py-1">Gust</th>
               <th className="px-2 py-1">PoP</th>
+              <th className="px-2 py-1">Grid weather</th>
               <th className="px-2 py-1">Forecast</th>
             </tr>
           </thead>
@@ -201,6 +202,7 @@ function HourlyTable({ periods }: { periods: NonNullable<BaselineForecast['hourl
                 <td className="px-2 py-1 tabular-nums">
                   {p.precipChance !== null && p.precipChance !== undefined ? `${p.precipChance}%` : '—'}
                 </td>
+                <td className="px-2 py-1">{p.gridWeather ?? '—'}</td>
                 <td className="px-2 py-1">{p.shortForecast ?? '—'}</td>
               </tr>
             ))}

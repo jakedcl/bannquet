@@ -3,7 +3,9 @@ import Link from 'next/link';
 import PageWrapper from '@/components/ui/PageWrapper';
 import { LargeTitle } from '@/components/hub/SectionHeader';
 import { BasicForecastSection } from '@/components/mountain-weather/BasicForecastSection';
+import { AllLocationsSection } from '@/components/mountain-weather/AllLocationsSection';
 import { MountainForecastSection } from '@/components/mountain-weather/MountainForecastSection';
+import { RecForecastSection } from '@/components/mountain-weather/RecForecastSection';
 import { WeatherHazardsHeader } from '@/components/mountain-weather/WeatherHazardsHeader';
 import { buildMtnDisplay } from '@/lib/mountain-weather/mtn-display';
 import { MoreSourcesSection } from '@/components/mountain-weather/MoreSourcesSection';
@@ -16,6 +18,7 @@ import {
 } from '@/lib/mountain-weather/places';
 import { moreSourcesForPlace } from '@/lib/mountain-weather/more-sources';
 import { mountainWeatherPath } from '@/lib/mountain-weather/slugs';
+import { readAllLocationsForPlace, readRecForPlace } from '@/lib/mountain-weather/read-place-rec';
 import { readMtnPointForPlace } from '@/lib/mountain-weather/read-mtn-point';
 import { readNwsGridBaseline } from '@/lib/mountain-weather/readers/nws-grid-baseline';
 
@@ -35,9 +38,11 @@ export default async function MountainPlacePage({
   const place = getMountainPlace(stateCode, sectionId, placeId);
   if (!stateEntry || !section || !place) notFound();
 
-  const [baseline, mtnPoint] = await Promise.all([
+  const [baseline, mtnPoint, rec, allLocations] = await Promise.all([
     readNwsGridBaseline(place),
     readMtnPointForPlace(place.id),
+    readRecForPlace(place.id),
+    readAllLocationsForPlace(place.id),
   ]);
   const moreSources = moreSourcesForPlace(stateCode, sectionId, place);
 
@@ -70,6 +75,8 @@ export default async function MountainPlacePage({
           NWS {place.office} · {place.lat.toFixed(4)}, {place.lon.toFixed(4)}
         </p>
         <MountainForecastSection result={mtnPoint} placeName={place.name} />
+        <RecForecastSection result={rec} />
+        <AllLocationsSection result={allLocations} />
         <BasicForecastSection result={baseline} placeName={place.name} placeElevationFt={place.elevationFt} />
         <MoreSourcesSection groups={moreSources} />
       </div>

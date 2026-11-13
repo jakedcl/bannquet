@@ -40,6 +40,67 @@ export const NWS_MTN_ALY_STANDARD_DEF: SourceDef = {
   expectedEveryHours: 6,
 };
 
+export const NWS_REC_BTV_DEF: SourceDef = {
+  id: 'nws-btv-rec',
+  org: 'National Weather Service Burlington',
+  kind: 'forecast',
+  terms: 'reuse-ok',
+  url: 'https://api.weather.gov/products/types/REC/locations/BTV',
+  ttlSeconds: 1800,
+  expectedEveryHours: 6,
+};
+
+export const NWS_REC_ALY_DEF: SourceDef = {
+  id: 'nws-aly-rec',
+  org: 'National Weather Service Albany',
+  kind: 'forecast',
+  terms: 'reuse-ok',
+  url: 'https://api.weather.gov/products/types/REC/locations/ALY',
+  ttlSeconds: 1800,
+  expectedEveryHours: 6,
+};
+
+export const NWS_REC_GYX_DEF: SourceDef = {
+  id: 'nws-gyx-rec',
+  org: 'National Weather Service Gray',
+  kind: 'forecast',
+  terms: 'reuse-ok',
+  url: 'https://api.weather.gov/products/types/REC/locations/GYX',
+  ttlSeconds: 1800,
+  expectedEveryHours: 6,
+};
+
+export const NWS_REC_CAR_DEF: SourceDef = {
+  id: 'nws-car-rec',
+  org: 'National Weather Service Caribou',
+  kind: 'forecast',
+  terms: 'reuse-ok',
+  url: 'https://api.weather.gov/products/types/REC/locations/CAR',
+  ttlSeconds: 1800,
+  expectedEveryHours: 6,
+};
+
+export const NWS_ALL_LOCATIONS_GYX_DEF: SourceDef = {
+  id: 'nws-gyx-all-locations',
+  org: 'National Weather Service Gray',
+  kind: 'forecast',
+  terms: 'reuse-ok',
+  url: 'https://www.weather.gov/source/gyx/rec/allLocations.xml',
+  ttlSeconds: 1800,
+  expectedEveryHours: 3,
+  season: 'summer',
+};
+
+export const NWS_ALL_LOCATIONS_CAR_DEF: SourceDef = {
+  id: 'nws-car-all-locations',
+  org: 'National Weather Service Caribou',
+  kind: 'forecast',
+  terms: 'reuse-ok',
+  url: 'https://www.weather.gov/source/car/rec/allLocations.xml',
+  ttlSeconds: 1800,
+  expectedEveryHours: 3,
+};
+
 export const NWS_MTN_ALY_ENHANCED_DEF: SourceDef = {
   id: 'nws-aly-mtn-enhanced',
   org: 'National Weather Service Albany',
@@ -56,4 +117,10 @@ export const SOURCE_REGISTRY: Record<string, SourceDef> = {
   [NWS_MTN_BTV_ENHANCED_DEF.id]: NWS_MTN_BTV_ENHANCED_DEF,
   [NWS_MTN_ALY_STANDARD_DEF.id]: NWS_MTN_ALY_STANDARD_DEF,
   [NWS_MTN_ALY_ENHANCED_DEF.id]: NWS_MTN_ALY_ENHANCED_DEF,
+  [NWS_REC_BTV_DEF.id]: NWS_REC_BTV_DEF,
+  [NWS_REC_ALY_DEF.id]: NWS_REC_ALY_DEF,
+  [NWS_REC_GYX_DEF.id]: NWS_REC_GYX_DEF,
+  [NWS_REC_CAR_DEF.id]: NWS_REC_CAR_DEF,
+  [NWS_ALL_LOCATIONS_GYX_DEF.id]: NWS_ALL_LOCATIONS_GYX_DEF,
+  [NWS_ALL_LOCATIONS_CAR_DEF.id]: NWS_ALL_LOCATIONS_CAR_DEF,
 };

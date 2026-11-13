@@ -1,0 +1,593 @@
+{
+  "version": 1,
+  "places": {
+    "mount-marcy": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Northern Adirondacks of New York"
+      }
+    },
+    "whiteface-mountain": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Northern Adirondacks of New York"
+      }
+    },
+    "dix-mountain": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Northern Adirondacks of New York"
+      }
+    },
+    "algonquin-peak": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Northern Adirondacks of New York"
+      }
+    },
+    "mount-colden": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Northern Adirondacks of New York"
+      }
+    },
+    "mount-colvin": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Northern Adirondacks of New York"
+      }
+    },
+    "giant-mountain": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Northern Adirondacks of New York"
+      }
+    },
+    "santanoni-peak": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Northern Adirondacks of New York"
+      }
+    },
+    "cascade-mountain": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Northern Adirondacks of New York"
+      }
+    },
+    "mckenzie-mountain": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Northern Adirondacks of New York"
+      }
+    },
+    "mount-van-hoevenberg": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Northern Adirondacks of New York"
+      }
+    },
+    "keene-valley": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Northern Adirondacks of New York"
+      }
+    },
+    "lyon-mountain": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Northern Adirondacks of New York"
+      }
+    },
+    "ampersand-mountain": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Northern Adirondacks of New York"
+      }
+    },
+    "debar-mountain": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Northern Adirondacks of New York"
+      }
+    },
+    "st-regis-mountain": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Northern Adirondacks of New York"
+      }
+    },
+    "mount-arab": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Northern Adirondacks of New York"
+      }
+    },
+    "snowy-mountain": {
+      "rec": {
+        "office": "ALY",
+        "sectionMatch": "Southern Adirondacks"
+      }
+    },
+    "blue-mountain": {
+      "rec": {
+        "office": "ALY",
+        "sectionMatch": "Southern Adirondacks"
+      }
+    },
+    "pillsbury-mountain": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Northern Adirondacks of New York"
+      }
+    },
+    "gore-mountain": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Northern Adirondacks of New York"
+      }
+    },
+    "blue-ridge-mountain": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Northern Adirondacks of New York"
+      }
+    },
+    "fishing-brook-range": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Northern Adirondacks of New York"
+      }
+    },
+    "vanderwhacker-mountain": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Northern Adirondacks of New York"
+      }
+    },
+    "crane-mountain": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Northern Adirondacks of New York"
+      }
+    },
+    "hadley-mountain": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Northern Adirondacks of New York"
+      }
+    },
+    "black-mountain": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Northern Adirondacks of New York"
+      }
+    },
+    "pharaoh-mountain": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Northern Adirondacks of New York"
+      }
+    },
+    "prospect-mountain": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Northern Adirondacks of New York"
+      }
+    },
+    "slide-mountain": {
+      "rec": {
+        "office": "ALY",
+        "sectionMatch": "Eastern Catskills"
+      }
+    },
+    "hunter-mountain": {
+      "rec": {
+        "office": "ALY",
+        "sectionMatch": "Eastern Catskills"
+      }
+    },
+    "peekamoose-mountain": {
+      "rec": {
+        "office": "ALY",
+        "sectionMatch": "Eastern Catskills"
+      }
+    },
+    "balsam-lake-mountain": {
+      "rec": {
+        "office": "ALY",
+        "sectionMatch": "Eastern Catskills"
+      }
+    },
+    "panther-mountain": {
+      "rec": {
+        "office": "ALY",
+        "sectionMatch": "Eastern Catskills"
+      }
+    },
+    "windham-high-peak": {
+      "rec": {
+        "office": "ALY",
+        "sectionMatch": "Eastern Catskills"
+      }
+    },
+    "overlook-mountain": {
+      "rec": {
+        "office": "ALY",
+        "sectionMatch": "Eastern Catskills"
+      }
+    },
+    "red-hill": {
+      "rec": {
+        "office": "ALY",
+        "sectionMatch": "Eastern Catskills"
+      }
+    },
+    "mount-tremper": {
+      "rec": {
+        "office": "ALY",
+        "sectionMatch": "Eastern Catskills"
+      }
+    },
+    "tannersville": {
+      "rec": {
+        "office": "ALY",
+        "sectionMatch": "Eastern Catskills"
+      }
+    },
+    "gunks-ridge": {
+      "rec": {
+        "office": "ALY",
+        "sectionMatch": "Mid Hudson River",
+        "nearbyLabel": "Mid Hudson Valley REC (nearby)"
+      }
+    },
+    "thacher-park": {
+      "rec": {
+        "office": "ALY",
+        "sectionMatch": "Mid Hudson River",
+        "nearbyLabel": "Mid Hudson Valley REC (nearby)"
+      }
+    },
+    "jay-peak": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Northern Adirondacks of New York"
+      }
+    },
+    "belvidere-mountain": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Northern Adirondacks of New York"
+      }
+    },
+    "jay-village": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Northern Adirondacks of New York"
+      }
+    },
+    "mount-mansfield": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Northern Adirondacks of New York"
+      }
+    },
+    "smugglers-notch": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Northern Adirondacks of New York"
+      }
+    },
+    "stowe-town": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Northern Adirondacks of New York"
+      }
+    },
+    "camels-hump": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Northern Adirondacks of New York"
+      }
+    },
+    "mount-ellen": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Northern Adirondacks of New York"
+      }
+    },
+    "bread-loaf-mountain": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Northern Adirondacks of New York"
+      }
+    },
+    "mount-worcester": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Northern Adirondacks of New York"
+      }
+    },
+    "waterbury": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Northern Adirondacks of New York"
+      }
+    },
+    "signal-mountain": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Northern Adirondacks of New York"
+      }
+    },
+    "burke-mountain": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Northern Adirondacks of New York"
+      }
+    },
+    "monadnock-mountain": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Northern Adirondacks of New York"
+      }
+    },
+    "killington-peak": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Southern Green Mountains of Vermont"
+      }
+    },
+    "stratton-mountain": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Southern Green Mountains of Vermont"
+      }
+    },
+    "mount-equinox": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Southern Green Mountains of Vermont"
+      }
+    },
+    "dorset-mountain": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Southern Green Mountains of Vermont"
+      }
+    },
+    "haystack-mountain": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Southern Green Mountains of Vermont"
+      }
+    },
+    "ludlow-mountain": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Southern Green Mountains of Vermont"
+      }
+    },
+    "bromley-mountain": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Southern Green Mountains of Vermont"
+      }
+    },
+    "mount-ascutney": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Southern Green Mountains of Vermont"
+      }
+    },
+    "bald-mountain": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Southern Green Mountains of Vermont"
+      }
+    },
+    "manchester-vt": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Southern Green Mountains of Vermont"
+      }
+    },
+    "mount-washington": {
+      "rec": {
+        "office": "GYX",
+        "sectionMatch": "Summits Above 4000 Feet"
+      },
+      "allLocations": {
+        "office": "GYX",
+        "loc": "MOUNT WASHINGTON"
+      }
+    },
+    "mount-adams": {
+      "rec": {
+        "office": "GYX",
+        "sectionMatch": "Summits Above 4000 Feet"
+      },
+      "allLocations": {
+        "office": "GYX",
+        "loc": "MOUNT ADAMS"
+      }
+    },
+    "pinkham-notch": {
+      "rec": {
+        "office": "GYX",
+        "sectionMatch": "Summits Above 4000 Feet"
+      }
+    },
+    "crawford-notch": {
+      "rec": {
+        "office": "GYX",
+        "sectionMatch": "Summits Above 4000 Feet"
+      }
+    },
+    "baldface-mountain": {
+      "rec": {
+        "office": "GYX",
+        "sectionMatch": "Summits Above 4000 Feet"
+      }
+    },
+    "mount-lafayette": {
+      "rec": {
+        "office": "GYX",
+        "sectionMatch": "Summits Above 4000 Feet"
+      }
+    },
+    "mount-moosilauke": {
+      "rec": {
+        "office": "GYX",
+        "sectionMatch": "Summits Above 4000 Feet"
+      }
+    },
+    "mount-osceola": {
+      "rec": {
+        "office": "GYX",
+        "sectionMatch": "Summits Above 4000 Feet"
+      }
+    },
+    "cannon-mountain": {
+      "rec": {
+        "office": "GYX",
+        "sectionMatch": "Summits Above 4000 Feet"
+      }
+    },
+    "kancamagus-pass": {
+      "rec": {
+        "office": "GYX",
+        "sectionMatch": "Summits Above 4000 Feet"
+      }
+    },
+    "franconia-notch": {
+      "rec": {
+        "office": "GYX",
+        "sectionMatch": "Summits Above 4000 Feet"
+      }
+    },
+    "rumney-crag": {
+      "rec": {
+        "office": "GYX",
+        "sectionMatch": "Summits Above 4000 Feet"
+      }
+    },
+    "mount-monadnock": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Northern Adirondacks of New York"
+      },
+      "allLocations": {
+        "office": "GYX",
+        "loc": "MOUNT MONADNOCK"
+      }
+    },
+    "north-pack-monadnock": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Northern Adirondacks of New York"
+      },
+      "allLocations": {
+        "office": "GYX",
+        "loc": "NORTH PACK MONADNOCK"
+      }
+    },
+    "katahdin": {
+      "rec": {
+        "office": "CAR",
+        "sectionMatch": "TOP OF MOUNT KATAHDIN"
+      },
+      "allLocations": {
+        "office": "CAR",
+        "loc": "MOUNT KATAHDIN"
+      }
+    },
+    "katahdin-woods-and-waters": {
+      "rec": {
+        "office": "CAR",
+        "sectionMatch": "KATAHDIN WOODS AND WATERS"
+      },
+      "allLocations": {
+        "office": "CAR",
+        "loc": "KATAHDIN WOODS AND WATERS"
+      }
+    },
+    "millinocket": {
+      "rec": {
+        "office": "CAR",
+        "sectionMatch": "TOP OF MOUNT KATAHDIN",
+        "nearbyLabel": "Katahdin summit REC (nearby)"
+      }
+    },
+    "white-cap-mountain": {
+      "rec": {
+        "office": "CAR",
+        "sectionMatch": "TOP OF WHITE CAP MOUNTAIN"
+      },
+      "allLocations": {
+        "office": "CAR",
+        "loc": "TOP OF WHITE CAP MOUNTAIN"
+      }
+    },
+    "sugarloaf-mountain": {
+      "rec": {
+        "office": "GYX",
+        "sectionMatch": "2500 Feet to 4000 Feet"
+      },
+      "allLocations": {
+        "office": "GYX",
+        "loc": "SUGARLOAF MOUNTAIN"
+      }
+    },
+    "bigelow": {
+      "rec": {
+        "office": "GYX",
+        "sectionMatch": "2500 Feet to 4000 Feet"
+      }
+    },
+    "rangeley": {
+      "rec": {
+        "office": "GYX",
+        "sectionMatch": "2500 Feet to 4000 Feet"
+      }
+    },
+    "deboullie-mountain": {
+      "rec": {
+        "office": "CAR",
+        "sectionMatch": "TOP OF DEBOULLIE MOUNTAIN"
+      },
+      "allLocations": {
+        "office": "CAR",
+        "loc": "TOP OF DEBOULLIE MOUNTAIN"
+      }
+    },
+    "mars-hill-mountain": {
+      "rec": {
+        "office": "CAR",
+        "sectionMatch": "TOP OF MARS HILL MOUNTAIN"
+      },
+      "allLocations": {
+        "office": "CAR",
+        "loc": "TOP OF MARS HILL MOUNTAIN"
+      }
+    },
+    "cadillac-mountain": {
+      "rec": {
+        "office": "CAR",
+        "sectionMatch": "TOP OF CADILLAC MOUNTAIN"
+      },
+      "allLocations": {
+        "office": "CAR",
+        "loc": "TOP OF CADILLAC MOUNTAIN"
+      }
+    },
+    "bar-harbor": {
+      "rec": {
+        "office": "CAR",
+        "sectionMatch": "TOP OF CADILLAC MOUNTAIN",
+        "nearbyLabel": "Cadillac summit REC (nearby)"
+      }
+    }
+  }
+}

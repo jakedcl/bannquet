@@ -56,6 +56,95 @@ function formatSampleTime(iso: string): string {
   });
 }
 
+export type GridWeatherLayer = {
+  coverage: string | null;
+  weather: string | null;
+  intensity: string | null;
+};
+
+export type GridWeatherSeries = {
+  values?: { validTime: string; value: GridWeatherLayer[] | null }[];
+};
+
+export type GridWeatherSample = {
+  validTime: string;
+  label: string;
+  layers: GridWeatherLayer[];
+  text: string | null;
+};
+
+export function humanizeWeatherToken(token: string | null | undefined): string | null {
+  if (!token) return null;
+  return token.replace(/_/g, ' ');
+}
+
+export function formatGridWeatherLayer(layer: GridWeatherLayer | null | undefined): string | null {
+  if (!layer) return null;
+  const parts = [layer.coverage, layer.weather, layer.intensity]
+    .map(humanizeWeatherToken)
+    .filter((p): p is string => Boolean(p));
+  return parts.length > 0 ? parts.join(' ') : null;
+}
+
+function parseIntervalEndMs(validTime: string): number | null {
+  const [startStr, duration] = validTime.split('/');
+  const start = new Date(startStr).getTime();
+  if (Number.isNaN(start)) return null;
+  if (!duration?.startsWith('PT')) return start + 3600_000;
+  const hours = duration.match(/(\d+)H/);
+  const minutes = duration.match(/(\d+)M/);
+  const ms =
+    start +
+    (hours ? Number(hours[1]) * 3600_000 : 0) +
+    (minutes ? Number(minutes[1]) * 60_000 : 0);
+  return ms;
+}
+
+export function gridWeatherAtInstant(series: GridWeatherSeries | undefined, isoStart: string): GridWeatherLayer | null {
+  const t = new Date(isoStart).getTime();
+  if (Number.isNaN(t) || !series?.values?.length) return null;
+  for (const entry of series.values) {
+    const startStr = entry.validTime.split('/')[0] ?? entry.validTime;
+    const start = new Date(startStr).getTime();
+    const end = parseIntervalEndMs(entry.validTime) ?? start + 3600_000;
+    if (t >= start && t < end) {
+      const layer = entry.value?.[0];
+      return layer
+        ? {
+            coverage: layer.coverage ?? null,
+            weather: layer.weather ?? null,
+            intensity: layer.intensity ?? null,
+          }
+        : null;
+    }
+  }
+  return null;
+}
+
+export function gridWeatherSeriesSamples(series: GridWeatherSeries | undefined, limit = 48): GridWeatherSample[] {
+  if (!series?.values?.length) return [];
+  const out: GridWeatherSample[] = [];
+  for (const entry of series.values) {
+    const start = entry.validTime.split('/')[0] ?? entry.validTime;
+    const layers =
+      entry.value?.map((layer) => ({
+        coverage: layer.coverage ?? null,
+        weather: layer.weather ?? null,
+        intensity: layer.intensity ?? null,
+      })) ?? [];
+  const text = layers.map((l) => formatGridWeatherLayer(l)).filter(Boolean).join('; ') || null;
+    if (!text && layers.every((l) => !l.coverage && !l.weather && !l.intensity)) continue;
+    out.push({
+      validTime: start,
+      label: formatSampleTime(start),
+      layers,
+      text,
+    });
+    if (out.length >= limit) break;
+  }
+  return out;
+}
+
 export function gridElevationFt(elevation?: { value?: number | null; uom?: string } | null): number | null {
   const value = elevation?.value;
   if (value === null || value === undefined || !Number.isFinite(value)) return null;
