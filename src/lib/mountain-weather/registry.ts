@@ -80,6 +80,28 @@ export const NWS_REC_CAR_DEF: SourceDef = {
   expectedEveryHours: 6,
 };
 
+export const NWS_AVG_BTV_DEF: SourceDef = {
+  id: 'nws-btv-avg',
+  org: 'National Weather Service Burlington',
+  kind: 'forecast',
+  terms: 'reuse-ok',
+  url: 'https://api.weather.gov/products/types/AVG/locations/BTV',
+  ttlSeconds: 1800,
+  expectedEveryHours: 12,
+  season: 'winter',
+};
+
+export const NWS_AVG_GYX_DEF: SourceDef = {
+  id: 'nws-gyx-avg',
+  org: 'National Weather Service Gray',
+  kind: 'forecast',
+  terms: 'reuse-ok',
+  url: 'https://api.weather.gov/products/types/AVG/locations/GYX',
+  ttlSeconds: 1800,
+  expectedEveryHours: 12,
+  season: 'winter',
+};
+
 export const NWS_ALL_LOCATIONS_GYX_DEF: SourceDef = {
   id: 'nws-gyx-all-locations',
   org: 'National Weather Service Gray',
@@ -121,6 +143,8 @@ export const SOURCE_REGISTRY: Record<string, SourceDef> = {
   [NWS_REC_ALY_DEF.id]: NWS_REC_ALY_DEF,
   [NWS_REC_GYX_DEF.id]: NWS_REC_GYX_DEF,
   [NWS_REC_CAR_DEF.id]: NWS_REC_CAR_DEF,
+  [NWS_AVG_BTV_DEF.id]: NWS_AVG_BTV_DEF,
+  [NWS_AVG_GYX_DEF.id]: NWS_AVG_GYX_DEF,
   [NWS_ALL_LOCATIONS_GYX_DEF.id]: NWS_ALL_LOCATIONS_GYX_DEF,
   [NWS_ALL_LOCATIONS_CAR_DEF.id]: NWS_ALL_LOCATIONS_CAR_DEF,
 };

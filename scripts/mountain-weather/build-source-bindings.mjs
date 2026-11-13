@@ -6,6 +6,52 @@ import path from 'node:path';
 const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), '../..');
 const places = JSON.parse(fs.readFileSync(path.join(ROOT, 'config/mountain-weather/places.json'), 'utf8'));
 
+const AVG_BY_PLACE = {
+  'smugglers-notch': { office: 'BTV', pointMatch: 'Smugglers Notch' },
+  'mount-marcy': { office: 'BTV', pointMatch: 'Mount Marcy' },
+  'algonquin-peak': { office: 'BTV', pointMatch: 'Algonquin Peak' },
+  'whiteface-mountain': { office: 'BTV', pointMatch: 'Whiteface Mountain' },
+  'dix-mountain': { office: 'BTV', pointMatch: 'Dix Mountain' },
+  'mount-colden': { office: 'BTV', pointMatch: 'Mount Colden' },
+  'mount-colvin': { office: 'BTV', pointMatch: 'Mount Colvin' },
+  'mount-mansfield': {
+    office: 'BTV',
+    pointMatch: 'Smugglers Notch',
+    nearbyLabel:
+      'Smugglers Notch AVG (nearby; Essex County VT Monadnock naming is unrelated — NH Mount Monadnock has no BTV AVG point)',
+  },
+  'mount-washington': [
+    { office: 'GYX', pointMatch: 'PRESIDENTIAL RANGE FORECAST AREA/MOUNT WASHINGTON' },
+    { office: 'GYX', pointMatch: 'TUCKERMAN AND HUNTINGTON RAVINES' },
+  ],
+  'mount-adams': [
+    {
+      office: 'GYX',
+      pointMatch: 'PRESIDENTIAL RANGE FORECAST AREA/MOUNT WASHINGTON',
+      nearbyLabel:
+        'Presidential Range / Mount Washington AVG (6,288 ft); Adams also has REC 2,500–4,000 ft band and allLocations MOUNT ADAMS',
+    },
+    { office: 'GYX', pointMatch: 'TUCKERMAN AND HUNTINGTON RAVINES' },
+  ],
+  'pinkham-notch': { office: 'GYX', pointMatch: 'TUCKERMAN AND HUNTINGTON RAVINES' },
+  'mount-lafayette': {
+    office: 'GYX',
+    pointMatch: 'FRANCONIA NOTCH/MOUNT LAFAYETTE',
+    elevationNote: '4,000 ft (AVG point elevation, not Lafayette summit)',
+  },
+  'franconia-notch': {
+    office: 'GYX',
+    pointMatch: 'FRANCONIA NOTCH/MOUNT LAFAYETTE',
+    elevationNote: '4,000 ft (Franconia Notch / Lafayette AVG point)',
+  },
+  'crawford-notch': { office: 'GYX', pointMatch: 'CRAWFORD NOTCH AMC HIGHLAND CENTER' },
+  'kancamagus-pass': { office: 'GYX', pointMatch: 'KANCAMAGUS HIGHWAY PASS' },
+  'mount-osceola': { office: 'GYX', pointMatch: 'MOUNT OSCEOLA' },
+  'cannon-mountain': { office: 'GYX', pointMatch: 'CANNON MOUNTAIN' },
+  'baldface-mountain': { office: 'GYX', pointMatch: 'BALDFACE MOUNTAIN' },
+  'mount-moosilauke': { office: 'GYX', pointMatch: 'MOUNT MOOSILAUKE' },
+};
+
 const ALL_LOCATIONS = {
   'mount-washington': { office: 'GYX', loc: 'MOUNT WASHINGTON' },
   'mount-adams': { office: 'GYX', loc: 'MOUNT ADAMS' },
@@ -82,10 +128,12 @@ for (const state of places.states) {
     for (const place of section.places) {
       const rec = recForPlace(place, section.id, state.code);
       const allLocations = ALL_LOCATIONS[place.id] ?? null;
-      if (!rec && !allLocations) continue;
+      const avg = AVG_BY_PLACE[place.id] ?? null;
+      if (!rec && !allLocations && !avg) continue;
       out.places[place.id] = {
         ...(rec ? { rec } : {}),
         ...(allLocations ? { allLocations } : {}),
+        ...(avg ? { avg } : {}),
       };
     }
   }

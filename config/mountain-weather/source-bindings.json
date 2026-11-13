@@ -5,36 +5,60 @@
       "rec": {
         "office": "BTV",
         "sectionMatch": "Northern Adirondacks of New York"
+      },
+      "avg": {
+        "office": "BTV",
+        "pointMatch": "Mount Marcy"
       }
     },
     "whiteface-mountain": {
       "rec": {
         "office": "BTV",
         "sectionMatch": "Northern Adirondacks of New York"
+      },
+      "avg": {
+        "office": "BTV",
+        "pointMatch": "Whiteface Mountain"
       }
     },
     "dix-mountain": {
       "rec": {
         "office": "BTV",
         "sectionMatch": "Northern Adirondacks of New York"
+      },
+      "avg": {
+        "office": "BTV",
+        "pointMatch": "Dix Mountain"
       }
     },
     "algonquin-peak": {
       "rec": {
         "office": "BTV",
         "sectionMatch": "Northern Adirondacks of New York"
+      },
+      "avg": {
+        "office": "BTV",
+        "pointMatch": "Algonquin Peak"
       }
     },
     "mount-colden": {
       "rec": {
         "office": "BTV",
         "sectionMatch": "Northern Adirondacks of New York"
+      },
+      "avg": {
+        "office": "BTV",
+        "pointMatch": "Mount Colden"
       }
     },
     "mount-colvin": {
       "rec": {
         "office": "BTV",
         "sectionMatch": "Northern Adirondacks of New York"
+      },
+      "avg": {
+        "office": "BTV",
+        "pointMatch": "Mount Colvin"
       }
     },
     "giant-mountain": {
@@ -271,12 +295,21 @@
       "rec": {
         "office": "BTV",
         "sectionMatch": "Northern Adirondacks of New York"
+      },
+      "avg": {
+        "office": "BTV",
+        "pointMatch": "Smugglers Notch",
+        "nearbyLabel": "Smugglers Notch AVG (nearby; Essex County VT Monadnock naming is unrelated — NH Mount Monadnock has no BTV AVG point)"
       }
     },
     "smugglers-notch": {
       "rec": {
         "office": "BTV",
         "sectionMatch": "Northern Adirondacks of New York"
+      },
+      "avg": {
+        "office": "BTV",
+        "pointMatch": "Smugglers Notch"
       }
     },
     "stowe-town": {
@@ -402,7 +435,17 @@
       "allLocations": {
         "office": "GYX",
         "loc": "MOUNT WASHINGTON"
-      }
+      },
+      "avg": [
+        {
+          "office": "GYX",
+          "pointMatch": "PRESIDENTIAL RANGE FORECAST AREA/MOUNT WASHINGTON"
+        },
+        {
+          "office": "GYX",
+          "pointMatch": "TUCKERMAN AND HUNTINGTON RAVINES"
+        }
+      ]
     },
     "mount-adams": {
       "rec": {
@@ -412,60 +455,109 @@
       "allLocations": {
         "office": "GYX",
         "loc": "MOUNT ADAMS"
-      }
+      },
+      "avg": [
+        {
+          "office": "GYX",
+          "pointMatch": "PRESIDENTIAL RANGE FORECAST AREA/MOUNT WASHINGTON",
+          "nearbyLabel": "Presidential Range / Mount Washington AVG (6,288 ft); Adams also has REC 2,500–4,000 ft band and allLocations MOUNT ADAMS"
+        },
+        {
+          "office": "GYX",
+          "pointMatch": "TUCKERMAN AND HUNTINGTON RAVINES"
+        }
+      ]
     },
     "pinkham-notch": {
       "rec": {
         "office": "GYX",
         "sectionMatch": "Summits Above 4000 Feet"
+      },
+      "avg": {
+        "office": "GYX",
+        "pointMatch": "TUCKERMAN AND HUNTINGTON RAVINES"
       }
     },
     "crawford-notch": {
       "rec": {
         "office": "GYX",
         "sectionMatch": "Summits Above 4000 Feet"
+      },
+      "avg": {
+        "office": "GYX",
+        "pointMatch": "CRAWFORD NOTCH AMC HIGHLAND CENTER"
       }
     },
     "baldface-mountain": {
       "rec": {
         "office": "GYX",
         "sectionMatch": "Summits Above 4000 Feet"
+      },
+      "avg": {
+        "office": "GYX",
+        "pointMatch": "BALDFACE MOUNTAIN"
       }
     },
     "mount-lafayette": {
       "rec": {
         "office": "GYX",
         "sectionMatch": "Summits Above 4000 Feet"
+      },
+      "avg": {
+        "office": "GYX",
+        "pointMatch": "FRANCONIA NOTCH/MOUNT LAFAYETTE",
+        "elevationNote": "4,000 ft (AVG point elevation, not Lafayette summit)"
       }
     },
     "mount-moosilauke": {
       "rec": {
         "office": "GYX",
         "sectionMatch": "Summits Above 4000 Feet"
+      },
+      "avg": {
+        "office": "GYX",
+        "pointMatch": "MOUNT MOOSILAUKE"
       }
     },
     "mount-osceola": {
       "rec": {
         "office": "GYX",
         "sectionMatch": "Summits Above 4000 Feet"
+      },
+      "avg": {
+        "office": "GYX",
+        "pointMatch": "MOUNT OSCEOLA"
       }
     },
     "cannon-mountain": {
       "rec": {
         "office": "GYX",
         "sectionMatch": "Summits Above 4000 Feet"
+      },
+      "avg": {
+        "office": "GYX",
+        "pointMatch": "CANNON MOUNTAIN"
       }
     },
     "kancamagus-pass": {
       "rec": {
         "office": "GYX",
         "sectionMatch": "Summits Above 4000 Feet"
+      },
+      "avg": {
+        "office": "GYX",
+        "pointMatch": "KANCAMAGUS HIGHWAY PASS"
       }
     },
     "franconia-notch": {
       "rec": {
         "office": "GYX",
         "sectionMatch": "Summits Above 4000 Feet"
+      },
+      "avg": {
+        "office": "GYX",
+        "pointMatch": "FRANCONIA NOTCH/MOUNT LAFAYETTE",
+        "elevationNote": "4,000 ft (Franconia Notch / Lafayette AVG point)"
       }
     },
     "rumney-crag": {

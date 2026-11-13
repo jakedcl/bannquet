@@ -1,6 +1,14 @@
 import bindingsJson from '../../../config/mountain-weather/source-bindings.json';
+import type { AvgOffice } from '@/lib/mountain-weather/avg-types';
 import type { RecOffice } from '@/lib/mountain-weather/rec-types';
 import type { AllLocationsOffice } from '@/lib/mountain-weather/all-locations-types';
+
+export type AvgPlaceBinding = {
+  office: AvgOffice;
+  pointMatch: string;
+  nearbyLabel?: string;
+  elevationNote?: string;
+};
 
 export type PlaceSourceBinding = {
   rec?: {
@@ -12,6 +20,7 @@ export type PlaceSourceBinding = {
     office: AllLocationsOffice;
     loc: string;
   };
+  avg?: AvgPlaceBinding | AvgPlaceBinding[];
 };
 
 type BindingsFile = {

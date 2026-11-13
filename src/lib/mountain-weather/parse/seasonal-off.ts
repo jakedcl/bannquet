@@ -19,5 +19,8 @@ export function defaultResumeHint(type: string | null): string {
   if (type === 'Lake' || type === 'Beach' || type === 'Island') {
     return 'Off season — usually resumes in late spring or summer.';
   }
+  if (type === 'AVG') {
+    return 'Off season — avalanche weather guidance usually resumes in late fall.';
+  }
   return 'Off season — check back when the product resumes.';
 }
