@@ -134,7 +134,7 @@ async function mapPool<T, R>(items: T[], limit: number, fn: (item: T) => Promise
 }
 
 async function loadRegion(code: string, section: WeatherSection, now: Date): Promise<RegionGlance> {
-  const href = `/mountain-weather?state=${code}#${section.id}`;
+  const href = `/mountain-weather/${code}/${section.id}`;
   const blank: RegionGlance = {
     id: section.id,
     title: section.title,
@@ -201,7 +201,7 @@ export async function loadWeatherHub(now = new Date()): Promise<StateGlance[]> {
     return {
       code: option.code,
       name: STATE_NAMES[option.code] ?? option.label,
-      href: `/mountain-weather?state=${option.code}`,
+      href: `/mountain-weather/${option.code}`,
       regions: slice,
     };
   });

@@ -1,4 +1,10 @@
-import { REGION_OPTIONS, isRegionCode } from '@/lib/regions';
+import {
+  getMountainPlace,
+  getMountainSection,
+  getMountainState,
+  isMountainStateCode,
+} from '@/lib/mountain-weather/places';
+import { REGION_OPTIONS } from '@/lib/regions';
 
 export type NavLink = {
   href: string;
@@ -36,7 +42,7 @@ export const COMMUNITY_MENU_LINKS: NavLink[] = [
 export const WEATHER_LINKS: NavLink[] = [
   { href: '/mountain-weather/conditions', label: 'Conditions' },
   ...REGION_OPTIONS.map((option) => ({
-    href: `/mountain-weather?state=${option.code}`,
+    href: `/mountain-weather/${option.code}`,
     label: option.label,
   })),
 ];
@@ -46,7 +52,7 @@ export const WEATHER_MENU_LINKS: NavLink[] = [
   { href: '/mountain-weather', label: 'Weather' },
   { href: '/mountain-weather/conditions', label: 'Conditions' },
   ...REGION_OPTIONS.map((option) => ({
-    href: `/mountain-weather?state=${option.code}`,
+    href: `/mountain-weather/${option.code}`,
     label: option.label,
   })),
 ];
@@ -68,13 +74,6 @@ const COMMUNITY_PAGES: Record<string, string> = {
   '/routes': 'Routes',
   '/pins': 'Pins',
   '/members': 'Members',
-};
-
-const STATE_NAMES: Record<string, string> = {
-  ny: 'New York',
-  vt: 'Vermont',
-  nh: 'New Hampshire',
-  me: 'Maine',
 };
 
 const PROFILE_LISTS: Record<string, string> = {
@@ -141,7 +140,13 @@ export function linkOn(pathname: string, search: string, href: string): boolean 
   if (path === '/fishing/freshwater') return pathname === path || /^\/fishing\/\d+$/.test(pathname);
   if (path === '/community' && !query) return pathname === '/community';
   if (path === '/mountain-weather' && !query) return pathname === '/mountain-weather';
-  if (!query) return pathOn(pathname, path);
+  if (!query) {
+    const stateTail = path.startsWith('/mountain-weather/') ? path.slice('/mountain-weather/'.length) : '';
+    if (stateTail && !stateTail.includes('/') && isMountainStateCode(stateTail)) {
+      return pathname === path;
+    }
+    return pathOn(pathname, path);
+  }
   if (pathname !== path) return false;
   const want = new URLSearchParams(query);
   const have = new URLSearchParams(search.startsWith('?') ? search.slice(1) : search);
@@ -324,18 +329,64 @@ export function pageTrail(pathname: string, search: string, account: NavAccount,
   }
 
   if (pathname === '/mountain-weather') {
-    const requested = new URLSearchParams(search).get('state');
-    if (!isRegionCode(requested)) {
-      return { parentHref: '/', crumbs: [{ href: '/mountain-weather', label: 'Mountain Weather' }] };
+    return { parentHref: '/', crumbs: [{ href: '/mountain-weather', label: 'Mountain Weather' }] };
+  }
+
+  const mountainPlace = pathname.match(/^\/mountain-weather\/([^/]+)\/([^/]+)\/([^/]+)$/);
+  if (mountainPlace) {
+    const [, stateCode, sectionId, placeId] = mountainPlace;
+    if (isMountainStateCode(stateCode)) {
+      const state = getMountainState(stateCode);
+      const section = getMountainSection(stateCode, sectionId);
+      const place = getMountainPlace(stateCode, sectionId, placeId);
+      if (state && section && place) {
+        return {
+          parentHref: `/mountain-weather/${stateCode}/${sectionId}`,
+          crumbs: [
+            { href: '/mountain-weather', label: 'Mountain Weather' },
+            { href: `/mountain-weather/${stateCode}`, label: state.name },
+            { href: `/mountain-weather/${stateCode}/${sectionId}`, label: section.title },
+            { href: pathname, label: leaf ?? place.name },
+          ],
+        };
+      }
     }
-    const name = STATE_NAMES[requested] ?? requested.toUpperCase();
-    return {
-      parentHref: '/mountain-weather',
-      crumbs: [
-        { href: '/mountain-weather', label: 'Mountain Weather' },
-        { href: `/mountain-weather?state=${requested}`, label: name },
-      ],
-    };
+  }
+
+  const mountainSection = pathname.match(/^\/mountain-weather\/([^/]+)\/([^/]+)$/);
+  if (mountainSection) {
+    const [, stateCode, sectionId] = mountainSection;
+    if (isMountainStateCode(stateCode)) {
+      const state = getMountainState(stateCode);
+      const section = getMountainSection(stateCode, sectionId);
+      if (state && section) {
+        return {
+          parentHref: `/mountain-weather/${stateCode}`,
+          crumbs: [
+            { href: '/mountain-weather', label: 'Mountain Weather' },
+            { href: `/mountain-weather/${stateCode}`, label: state.name },
+            { href: pathname, label: section.title },
+          ],
+        };
+      }
+    }
+  }
+
+  const mountainState = pathname.match(/^\/mountain-weather\/([^/]+)$/);
+  if (mountainState) {
+    const stateCode = mountainState[1];
+    if (isMountainStateCode(stateCode)) {
+      const state = getMountainState(stateCode);
+      if (state) {
+        return {
+          parentHref: '/mountain-weather',
+          crumbs: [
+            { href: '/mountain-weather', label: 'Mountain Weather' },
+            { href: pathname, label: state.name },
+          ],
+        };
+      }
+    }
   }
 
   if (pathname === '/fishing') {
