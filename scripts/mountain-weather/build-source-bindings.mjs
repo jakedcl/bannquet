@@ -33,6 +33,23 @@ function recForPlace(place, sectionId, stateCode) {
   if (sectionId === 'central-southern-adirondacks' && place.office === 'ALY') {
     return { office: 'ALY', sectionMatch: 'Southern Adirondacks' };
   }
+  if (sectionId === 'monadnock-region') {
+    return { office: 'GYX', sectionMatch: 'Summits of Mount Monadnock' };
+  }
+  if (sectionId === 'northeast-kingdom') {
+    const band = {
+      office: 'BTV',
+      sectionMatch: 'Northern Adirondacks of New York',
+    };
+    if (place.id === 'monadnock-mountain') {
+      return {
+        ...band,
+        nearbyLabel:
+          'BTV combined Northern Adirondacks / Northern Greens band (Essex County VT Monadnock; not NH Mount Monadnock)',
+      };
+    }
+    return band;
+  }
   if (place.office === 'BTV') {
     return { office: 'BTV', sectionMatch: 'Northern Adirondacks of New York' };
   }
@@ -41,12 +58,6 @@ function recForPlace(place, sectionId, stateCode) {
   }
   if (sectionId === 'mahoosucs-bigelow') {
     return { office: 'GYX', sectionMatch: '2500 Feet to 4000 Feet' };
-  }
-  if (sectionId === 'monadnock-region' || sectionId === 'northeast-kingdom') {
-    if (place.id === 'monadnock-mountain') {
-      return { office: 'GYX', sectionMatch: 'Summits of Mount Monadnock' };
-    }
-    return { office: 'BTV', sectionMatch: 'Northern Adirondacks of New York' };
   }
   if (sectionId === 'baxter-state-park') {
     if (place.id === 'katahdin') return { office: 'CAR', sectionMatch: 'TOP OF MOUNT KATAHDIN' };

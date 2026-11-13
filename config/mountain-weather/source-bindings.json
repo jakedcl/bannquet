@@ -330,7 +330,8 @@
     "monadnock-mountain": {
       "rec": {
         "office": "BTV",
-        "sectionMatch": "Northern Adirondacks of New York"
+        "sectionMatch": "Northern Adirondacks of New York",
+        "nearbyLabel": "BTV combined Northern Adirondacks / Northern Greens band (Essex County VT Monadnock; not NH Mount Monadnock)"
       }
     },
     "killington-peak": {
@@ -475,8 +476,8 @@
     },
     "mount-monadnock": {
       "rec": {
-        "office": "BTV",
-        "sectionMatch": "Northern Adirondacks of New York"
+        "office": "GYX",
+        "sectionMatch": "Summits of Mount Monadnock"
       },
       "allLocations": {
         "office": "GYX",
@@ -485,8 +486,8 @@
     },
     "north-pack-monadnock": {
       "rec": {
-        "office": "BTV",
-        "sectionMatch": "Northern Adirondacks of New York"
+        "office": "GYX",
+        "sectionMatch": "Summits of Mount Monadnock"
       },
       "allLocations": {
         "office": "GYX",
