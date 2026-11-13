@@ -1,5 +1,5 @@
 import { CollapsibleSection } from '@/components/mountain-weather/CollapsibleSection';
-import type { AvgCell, AvgPlaceSlice } from '@/lib/mountain-weather/avg-types';
+import type { AvgCell, AvgDateGrid, AvgPlaceSlice } from '@/lib/mountain-weather/avg-types';
 import { defaultResumeHint } from '@/lib/mountain-weather/parse/seasonal-off';
 import { NWS_AVG_BTV_DEF, NWS_AVG_GYX_DEF } from '@/lib/mountain-weather/registry';
 import type { SourceResult } from '@/lib/mountain-weather/source-types';
@@ -26,6 +26,49 @@ function formatCell(value: AvgCell): string {
   if (value === null) return '—';
   if (value === 'T') return 'T';
   return String(value);
+}
+
+function AvgGridTable({ grid, gridIndex }: { grid: AvgDateGrid; gridIndex: number }) {
+  const columnLabels =
+    grid.timeLabels.length > 0
+      ? grid.timeLabels
+      : grid.rows[0]?.values.map((_, i) => String(i + 1)) ?? [];
+
+  return (
+    <div className="space-y-1">
+      {grid.dateHeading ? (
+        <p className="text-xs font-bold uppercase tracking-wide text-gray-800">{grid.dateHeading}</p>
+      ) : (
+        <p className="text-xs font-bold text-gray-800">Period {gridIndex + 1}</p>
+      )}
+      <div className="overflow-x-auto">
+        <table className="min-w-full border border-[#5c3a1e]/30 text-[11px]">
+          <thead className="bg-white/70">
+            <tr>
+              <th className="sticky left-0 bg-white/90 px-2 py-1 text-left">Field</th>
+              {columnLabels.map((label, idx) => (
+                <th key={`${label}-${idx}`} className="whitespace-nowrap px-1 py-1 text-center font-bold">
+                  {label}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {grid.rows.map((row) => (
+              <tr key={`${gridIndex}-${row.key}-${row.label}`} className="border-t border-[#5c3a1e]/15">
+                <td className="sticky left-0 bg-white/95 px-2 py-1 font-bold whitespace-nowrap">{row.label}</td>
+                {row.values.map((cell, idx) => (
+                  <td key={idx} className="px-1 py-1 text-center">
+                    {formatCell(cell)}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
 }
 
 function AvgBlock({ result }: { result: SourceResult<AvgPlaceSlice> }) {
@@ -55,7 +98,7 @@ function AvgBlock({ result }: { result: SourceResult<AvgPlaceSlice> }) {
       subtitle={`${def?.org} · ${data.point.title}${elev ? ` · ${elev}` : ''}${data.nearbyLabel ? ` · ${data.nearbyLabel}` : ''}${seasonal ? ' · off season' : ''}${stale}`}
       defaultOpen={!seasonal}
     >
-      <div className="space-y-2 text-sm">
+      <div className="space-y-3 text-sm">
         {seasonal ? (
           <p className="border border-[#5c3a1e]/30 bg-white/60 p-2 text-xs font-bold">
             {defaultResumeHint('AVG')}
@@ -63,35 +106,7 @@ function AvgBlock({ result }: { result: SourceResult<AvgPlaceSlice> }) {
             {data.seasonalMessage ? ` ${data.seasonalMessage}` : null}
           </p>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="min-w-full border border-[#5c3a1e]/30 text-[11px]">
-              <thead className="bg-white/70">
-                <tr>
-                  <th className="sticky left-0 bg-white/90 px-2 py-1 text-left">Field</th>
-                  {(data.point.timeLabels.length > 0
-                    ? data.point.timeLabels
-                    : data.point.rows[0]?.values.map((_, i) => String(i + 1))
-                  ).map((label, idx) => (
-                    <th key={`${label}-${idx}`} className="whitespace-nowrap px-1 py-1 text-center font-bold">
-                      {label}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {data.point.rows.map((row) => (
-                  <tr key={row.key} className="border-t border-[#5c3a1e]/15">
-                    <td className="sticky left-0 bg-white/95 px-2 py-1 font-bold whitespace-nowrap">{row.label}</td>
-                    {row.values.map((cell, idx) => (
-                      <td key={idx} className="px-1 py-1 text-center">
-                        {formatCell(cell)}
-                      </td>
-                    ))}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          data.point.grids.map((grid, idx) => <AvgGridTable key={idx} grid={grid} gridIndex={idx} />)
         )}
         <p className="text-xs text-gray-700">
           Issued {formatEt(result.issuedAt)} ET ·{' '}

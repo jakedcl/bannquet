@@ -1,4 +1,4 @@
-import type { AvgBulletin, AvgPoint, AvgTableRow } from '@/lib/mountain-weather/avg-types';
+import type { AvgBulletin, AvgDateGrid, AvgPoint, AvgTableRow } from '@/lib/mountain-weather/avg-types';
 import { normalizeAvgSearchKey, parseAvgToken } from '@/lib/mountain-weather/parse/avg-values';
 import { detectSeasonalOffMessage } from '@/lib/mountain-weather/parse/seasonal-off';
 
@@ -60,16 +60,48 @@ function parseDataLine(line: string): AvgTableRow | null {
   return { key: rowLabelKey(label), label, values };
 }
 
-function parseTimeLabels(block: string): string[] {
-  const lines = block.split('\n').map((l) => l.trim());
-  const timeIdx = lines.findIndex((l) => /^Time \(LT\)/i.test(l) || /^TIME \(LT\)/i.test(l));
+function parseTimeLabels(segmentLines: string[]): string[] {
+  const timeIdx = segmentLines.findIndex((l) => /^Time \(LT\)/i.test(l) || /^TIME \(LT\)/i.test(l));
   if (timeIdx === -1) return [];
-  for (let i = timeIdx + 1; i < Math.min(timeIdx + 4, lines.length); i++) {
-    const tokens = lines[i].split(/\s+/).filter(Boolean);
+  for (let i = timeIdx + 1; i < Math.min(timeIdx + 4, segmentLines.length); i++) {
+    const tokens = segmentLines[i].split(/\s+/).filter(Boolean);
     const hourish = tokens.filter((t) => /^\d{1,2}$/.test(t) || /^\d{1,2}[ap]$/i.test(t));
     if (hourish.length >= 4) return tokens;
   }
   return [];
+}
+
+function parseDateGrids(block: string): AvgDateGrid[] {
+  const lines = block.split('\n');
+  const grids: AvgDateGrid[] = [];
+  let i = 0;
+  while (i < lines.length) {
+    const line = lines[i];
+    if (!/^\s*Date\s+/i.test(line)) {
+      i += 1;
+      continue;
+    }
+    const dateHeading = line.trim();
+    const segmentLines: string[] = [];
+    i += 1;
+    while (i < lines.length && !/^\s*Date\s+/i.test(lines[i])) {
+      segmentLines.push(lines[i]);
+      i += 1;
+    }
+    const rows: AvgTableRow[] = [];
+    for (const segLine of segmentLines) {
+      const row = parseDataLine(segLine);
+      if (row) rows.push(row);
+    }
+    if (rows.length > 0) {
+      grids.push({
+        dateHeading,
+        timeLabels: parseTimeLabels(segmentLines.map((l) => l.trim())),
+        rows,
+      });
+    }
+  }
+  return grids;
 }
 
 function parsePointBlock(block: string): AvgPoint | null {
@@ -77,24 +109,13 @@ function parsePointBlock(block: string): AvgPoint | null {
   if (!titleMatch) return null;
   const title = titleMatch[1].replace(/\s+/g, ' ').trim();
   if (!title) return null;
-  const rows: AvgTableRow[] = [];
-  let sawDate = false;
-  for (const line of block.split('\n')) {
-    if (/^\s*Date\s+/i.test(line)) {
-      if (sawDate && rows.length > 0) break;
-      sawDate = true;
-      continue;
-    }
-    const row = parseDataLine(line);
-    if (row) rows.push(row);
-  }
-  if (rows.length === 0) return null;
+  const grids = parseDateGrids(block);
+  if (grids.length === 0) return null;
   return {
     title,
     elevationFt: parseElevationFt(title),
     searchKey: normalizeAvgSearchKey(title),
-    timeLabels: parseTimeLabels(block),
-    rows,
+    grids,
   };
 }
 

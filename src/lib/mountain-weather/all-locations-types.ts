@@ -13,5 +13,6 @@ export type AllLocationsMarker = {
 export type AllLocationsPlaceSlice = {
   office: AllLocationsOffice;
   loc: string;
+  bandLabel: string | null;
   marker: AllLocationsMarker;
 };

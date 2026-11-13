@@ -78,9 +78,9 @@ export default async function MountainPlacePage({
           NWS {place.office} · {place.lat.toFixed(4)}, {place.lon.toFixed(4)}
         </p>
         <MountainForecastSection result={mtnPoint} placeName={place.name} />
-        <RecForecastSection result={rec} />
+        <RecForecastSection results={rec} />
         <AvgForecastSection results={avg} />
-        <AllLocationsSection result={allLocations} />
+        <AllLocationsSection results={allLocations} />
         <BasicForecastSection result={baseline} placeName={place.name} placeElevationFt={place.elevationFt} />
         <MoreSourcesSection groups={moreSources} />
       </div>

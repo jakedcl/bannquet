@@ -28,9 +28,7 @@ function formatEt(value: string | null): string {
   });
 }
 
-export function RecForecastSection({ result }: { result: SourceResult<RecPlaceSlice> | null }) {
-  if (!result) return null;
-
+function RecBlock({ result }: { result: SourceResult<RecPlaceSlice> }) {
   const def = result.data ? OFFICE_DEF[result.data.office] : null;
   const stale = result.status === 'stale' ? ' · stale' : '';
 
@@ -103,5 +101,16 @@ export function RecForecastSection({ result }: { result: SourceResult<RecPlaceSl
         </p>
       </div>
     </CollapsibleSection>
+  );
+}
+
+export function RecForecastSection({ results }: { results: SourceResult<RecPlaceSlice>[] | null }) {
+  if (!results || results.length === 0) return null;
+  return (
+    <>
+      {results.map((result, idx) => (
+        <RecBlock key={`${result.data?.sectionMatch ?? 'err'}-${idx}`} result={result} />
+      ))}
+    </>
   );
 }

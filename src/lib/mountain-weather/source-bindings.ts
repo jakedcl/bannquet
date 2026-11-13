@@ -10,16 +10,21 @@ export type AvgPlaceBinding = {
   elevationNote?: string;
 };
 
+export type RecPlaceBinding = {
+  office: RecOffice;
+  sectionMatch: string;
+  nearbyLabel?: string;
+};
+
+export type AllLocationsPlaceBinding = {
+  office: AllLocationsOffice;
+  loc: string;
+  bandLabel?: string;
+};
+
 export type PlaceSourceBinding = {
-  rec?: {
-    office: RecOffice;
-    sectionMatch: string;
-    nearbyLabel?: string;
-  };
-  allLocations?: {
-    office: AllLocationsOffice;
-    loc: string;
-  };
+  rec?: RecPlaceBinding | RecPlaceBinding[];
+  allLocations?: AllLocationsPlaceBinding | AllLocationsPlaceBinding[];
   avg?: AvgPlaceBinding | AvgPlaceBinding[];
 };
 

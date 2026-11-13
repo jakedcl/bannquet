@@ -26,12 +26,20 @@ test('BTV winter fixture parses seven distinct point titles', () => {
   const smug = pickAvgPoint(bulletin, 'Smugglers Notch');
   assert.ok(smug);
   assert.equal(smug.elevationFt, 3370);
-  const gust = smug.rows.find((r) => r.key.includes('wind_gust'));
+  assert.ok(smug.grids.length >= 2, 'expected 3-hourly and 6-hourly date grids');
+  const hourly = smug.grids[0];
+  assert.match(hourly.dateHeading ?? '', /Saturday/i);
+  assert.ok(hourly.timeLabels.length >= 10);
+  const gust = hourly.rows.find((r) => r.key.includes('wind_gust'));
   assert.ok(gust);
-  assert.ok(gust.values.every((v) => v === null));
-  const ratio = smug.rows.find((r) => r.key.includes('snow_ratio'));
+  assert.equal(gust.values.length, 0);
+  const ratio = hourly.rows.find((r) => r.key.includes('snow_ratio'));
   assert.ok(ratio);
   assert.ok(ratio.values.some((v) => typeof v === 'number'));
+  const sixHour = smug.grids[1];
+  assert.match(sixHour.dateHeading ?? '', /Mon 11\/16/i);
+  assert.ok(sixHour.rows.some((r) => r.label.includes('12 Hour QPF')));
+  assert.ok(sixHour.timeLabels.length >= 10);
 });
 
 test('GYX winter fixture includes Washington and Franconia points', () => {
@@ -43,8 +51,9 @@ test('GYX winter fixture includes Washington and Franconia points', () => {
   const fran = pickAvgPoint(bulletin, 'FRANCONIA NOTCH/MOUNT LAFAYETTE');
   assert.ok(fran);
   assert.equal(fran.elevationFt, 4000);
-  const snowLevel = wash.rows.find((r) => r.key.includes('snow_level'));
+  const snowLevel = wash.grids[0]?.rows.find((r) => r.key.includes('snow_level'));
   assert.ok(snowLevel, 'GYX Washington block should include snow level row when present');
+  assert.ok(wash.grids.length >= 1);
 });
 
 test('IEM AFOS archive fixture parses Smugglers block', () => {
@@ -76,4 +85,17 @@ test('AVG bindings: no VT Monadnock vs NH Monadnock title collision', () => {
   assert.equal(adams.length, 2);
   assert.match(adams[0].pointMatch, /WASHINGTON/i);
   assert.match(adams[1].pointMatch, /RAVINES/i);
+});
+
+test('Washington and Adams pages bind both elevation REC and allLocations bands', () => {
+  const wash = bindings.places['mount-washington'];
+  const adams = bindings.places['mount-adams'];
+  assert.ok(wash?.rec && Array.isArray(wash.rec) && wash.rec.length === 2);
+  assert.ok(adams?.rec && Array.isArray(adams.rec) && adams.rec.length === 2);
+  assert.ok(wash.rec.some((r) => /4000/.test(r.sectionMatch)));
+  assert.ok(wash.rec.some((r) => /2500/.test(r.sectionMatch)));
+  assert.ok(wash.allLocations && Array.isArray(wash.allLocations) && wash.allLocations.length === 2);
+  assert.ok(adams.allLocations && Array.isArray(adams.allLocations) && adams.allLocations.length === 2);
+  assert.ok(wash.allLocations.some((a) => a.loc === 'MOUNT ADAMS' && a.bandLabel?.includes('Mid-elevation')));
+  assert.ok(adams.allLocations.some((a) => a.loc === 'MOUNT WASHINGTON'));
 });

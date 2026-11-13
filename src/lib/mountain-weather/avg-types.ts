@@ -8,12 +8,17 @@ export type AvgTableRow = {
   values: AvgCell[];
 };
 
+export type AvgDateGrid = {
+  dateHeading: string | null;
+  timeLabels: string[];
+  rows: AvgTableRow[];
+};
+
 export type AvgPoint = {
   title: string;
   elevationFt: number | null;
   searchKey: string;
-  timeLabels: string[];
-  rows: AvgTableRow[];
+  grids: AvgDateGrid[];
 };
 
 export type AvgBulletin = {

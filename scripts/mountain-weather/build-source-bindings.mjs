@@ -52,9 +52,27 @@ const AVG_BY_PLACE = {
   'mount-moosilauke': { office: 'GYX', pointMatch: 'MOUNT MOOSILAUKE' },
 };
 
-const ALL_LOCATIONS = {
-  'mount-washington': { office: 'GYX', loc: 'MOUNT WASHINGTON' },
-  'mount-adams': { office: 'GYX', loc: 'MOUNT ADAMS' },
+const MID_ELEVATION_BAND_LABEL =
+  'Mid-elevation band (2,500–4,000 ft; GYX labels this Mount Adams)';
+
+const PRESIDENTIAL_REC_BANDS = [
+  { office: 'GYX', sectionMatch: 'Summits Above 4000 Feet' },
+  { office: 'GYX', sectionMatch: '2500 Feet to 4000 Feet', nearbyLabel: MID_ELEVATION_BAND_LABEL },
+];
+
+const ALL_LOCATIONS_BY_PLACE = {
+  'mount-washington': [
+    { office: 'GYX', loc: 'MOUNT WASHINGTON' },
+    { office: 'GYX', loc: 'MOUNT ADAMS', bandLabel: MID_ELEVATION_BAND_LABEL },
+  ],
+  'mount-adams': [
+    { office: 'GYX', loc: 'MOUNT ADAMS', bandLabel: MID_ELEVATION_BAND_LABEL },
+    {
+      office: 'GYX',
+      loc: 'MOUNT WASHINGTON',
+      bandLabel: 'Summits above 4,000 ft (Mount Washington)',
+    },
+  ],
   'sugarloaf-mountain': { office: 'GYX', loc: 'SUGARLOAF MOUNTAIN' },
   'mount-monadnock': { office: 'GYX', loc: 'MOUNT MONADNOCK' },
   'north-pack-monadnock': { office: 'GYX', loc: 'NORTH PACK MONADNOCK' },
@@ -126,8 +144,11 @@ const out = { version: 1, places: {} };
 for (const state of places.states) {
   for (const section of state.sections) {
     for (const place of section.places) {
-      const rec = recForPlace(place, section.id, state.code);
-      const allLocations = ALL_LOCATIONS[place.id] ?? null;
+      let rec = recForPlace(place, section.id, state.code);
+      if (place.id === 'mount-washington' || place.id === 'mount-adams') {
+        rec = PRESIDENTIAL_REC_BANDS;
+      }
+      const allLocations = ALL_LOCATIONS_BY_PLACE[place.id] ?? null;
       const avg = AVG_BY_PLACE[place.id] ?? null;
       if (!rec && !allLocations && !avg) continue;
       out.places[place.id] = {

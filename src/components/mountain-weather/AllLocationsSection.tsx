@@ -25,9 +25,7 @@ function formatEt(value: string | null): string {
   });
 }
 
-export function AllLocationsSection({ result }: { result: SourceResult<AllLocationsPlaceSlice> | null }) {
-  if (!result) return null;
-
+function AllLocationsBlock({ result }: { result: SourceResult<AllLocationsPlaceSlice> }) {
   const def = result.data ? OFFICE_DEF[result.data.office] : null;
   const stale = result.status === 'stale' ? ' · stale' : '';
   const seasonal = result.status === 'seasonal-off';
@@ -43,12 +41,12 @@ export function AllLocationsSection({ result }: { result: SourceResult<AllLocati
     );
   }
 
-  const { marker, loc } = result.data;
+  const { marker, loc, bandLabel } = result.data;
 
   return (
     <CollapsibleSection
       title="allLocations narrative"
-      subtitle={`${def?.org} · ${loc}${marker.type ? ` · ${marker.type}` : ''}${seasonal ? ' · off season' : ''}${stale}`}
+      subtitle={`${def?.org} · ${loc}${bandLabel ? ` · ${bandLabel}` : ''}${marker.type ? ` · ${marker.type}` : ''}${seasonal ? ' · off season' : ''}${stale}`}
       defaultOpen={!seasonal}
     >
       <div className="space-y-2 text-sm">
@@ -72,5 +70,16 @@ export function AllLocationsSection({ result }: { result: SourceResult<AllLocati
         </p>
       </div>
     </CollapsibleSection>
+  );
+}
+
+export function AllLocationsSection({ results }: { results: SourceResult<AllLocationsPlaceSlice>[] | null }) {
+  if (!results || results.length === 0) return null;
+  return (
+    <>
+      {results.map((result, idx) => (
+        <AllLocationsBlock key={`${result.data?.loc ?? 'err'}-${idx}`} result={result} />
+      ))}
+    </>
   );
 }

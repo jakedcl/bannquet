@@ -428,14 +428,28 @@
       }
     },
     "mount-washington": {
-      "rec": {
-        "office": "GYX",
-        "sectionMatch": "Summits Above 4000 Feet"
-      },
-      "allLocations": {
-        "office": "GYX",
-        "loc": "MOUNT WASHINGTON"
-      },
+      "rec": [
+        {
+          "office": "GYX",
+          "sectionMatch": "Summits Above 4000 Feet"
+        },
+        {
+          "office": "GYX",
+          "sectionMatch": "2500 Feet to 4000 Feet",
+          "nearbyLabel": "Mid-elevation band (2,500–4,000 ft; GYX labels this Mount Adams)"
+        }
+      ],
+      "allLocations": [
+        {
+          "office": "GYX",
+          "loc": "MOUNT WASHINGTON"
+        },
+        {
+          "office": "GYX",
+          "loc": "MOUNT ADAMS",
+          "bandLabel": "Mid-elevation band (2,500–4,000 ft; GYX labels this Mount Adams)"
+        }
+      ],
       "avg": [
         {
           "office": "GYX",
@@ -448,14 +462,29 @@
       ]
     },
     "mount-adams": {
-      "rec": {
-        "office": "GYX",
-        "sectionMatch": "Summits Above 4000 Feet"
-      },
-      "allLocations": {
-        "office": "GYX",
-        "loc": "MOUNT ADAMS"
-      },
+      "rec": [
+        {
+          "office": "GYX",
+          "sectionMatch": "Summits Above 4000 Feet"
+        },
+        {
+          "office": "GYX",
+          "sectionMatch": "2500 Feet to 4000 Feet",
+          "nearbyLabel": "Mid-elevation band (2,500–4,000 ft; GYX labels this Mount Adams)"
+        }
+      ],
+      "allLocations": [
+        {
+          "office": "GYX",
+          "loc": "MOUNT ADAMS",
+          "bandLabel": "Mid-elevation band (2,500–4,000 ft; GYX labels this Mount Adams)"
+        },
+        {
+          "office": "GYX",
+          "loc": "MOUNT WASHINGTON",
+          "bandLabel": "Summits above 4,000 ft (Mount Washington)"
+        }
+      ],
       "avg": [
         {
           "office": "GYX",
