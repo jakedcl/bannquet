@@ -37,10 +37,10 @@ test('live conditions pick the same extremes the banner scrolls', () => {
   assert.equal(byLabel['COLDEST FEELS-LIKE'].location, 'Washington, White Mountains');
   assert.equal(byLabel['LOWEST TEMP'], undefined);
   assert.equal(byLabel['LOWEST WIND CHILL'], undefined);
-  assert.equal(byLabel['SNOWING NOW'].value, 'Marcy');
+  assert.equal(byLabel['FORECAST SNOW CHANCE'].value, 'Marcy');
 });
 
 test('a dry set of spots leaves snow off the banner', () => {
   const stats = extremeStatsFromSpots(spots.map((spot) => ({ ...spot, isSnowing: false })));
-  assert.equal(stats.some((stat) => stat.label === 'SNOWING NOW'), false);
+  assert.equal(stats.some((stat) => stat.label === 'FORECAST SNOW CHANCE'), false);
 });

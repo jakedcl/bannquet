@@ -16,6 +16,7 @@ export type ExtremeSpot = {
   windChill: number;
   windSpeed: number;
   windGust: number;
+  /** True when the hourly PoP is above 50% and air temp is below freezing (forecast, not observed). */
   isSnowing: boolean;
 };
 
@@ -66,9 +67,9 @@ export function extremeStatsFromSpots(results: ExtremeSpot[]): ExtremeStat[] {
       location: `${coldest.mountain}, ${coldest.state}`,
     },
     ...(snowingLocations.length > 0 ? [{
-      label: 'SNOWING NOW',
+      label: 'FORECAST SNOW CHANCE',
       value: snowingPreview,
-      location: snowingLocations[0].state,
+      location: `${snowingLocations.length} of ${results.length} sampled peaks`,
     }] : []),
   ];
 }
@@ -113,28 +114,33 @@ export async function loadWeatherExtremes(): Promise<ExtremeReport> {
       const settled = await Promise.allSettled(
         batch.map(async (mountain) => {
           const weather = await getExtremeWeatherSnapshot(mountain.lat, mountain.lon);
-          const windSpeedNum = windMphFromText(weather.windSpeed);
-          const windGustNum = windMphFromText(weather.windGust);
-          const currentTemp = weather.temperature || 0;
-          const windChill = feelsLikeF({ tempF: currentTemp, windMph: windSpeedNum });
+          const windSpeedNum = windMphFromText(weather.windSpeed ?? '');
+          const windGustNum = weather.windGust ?? 0;
+          const currentTemp = weather.temperature;
+          const windChill = currentTemp === null
+            ? null
+            : feelsLikeF({ tempF: currentTemp, windMph: windSpeedNum });
           const hourlyTemps = weather.hourlyTemps;
-          const minTemp = hourlyTemps.length > 0
+          const minTemp = hourlyTemps.length > 0 && currentTemp !== null
             ? Math.min(...hourlyTemps, currentTemp)
-            : currentTemp;
-          const maxTemp = hourlyTemps.length > 0
+            : (hourlyTemps.length > 0 ? Math.min(...hourlyTemps) : currentTemp);
+          const maxTemp = hourlyTemps.length > 0 && currentTemp !== null
             ? Math.max(...hourlyTemps, currentTemp)
-            : currentTemp;
+            : (hourlyTemps.length > 0 ? Math.max(...hourlyTemps) : currentTemp);
+
+          const precip = weather.precipitation;
+          const isSnowing = precip !== null && currentTemp !== null && precip > 50 && currentTemp < 32;
 
           return {
             mountain: mountain.name,
             state: mountain.state,
-            temperature: currentTemp,
-            minTemperature: minTemp,
-            maxTemperature: maxTemp,
-            windChill: Math.round(windChill),
+            temperature: currentTemp ?? NaN,
+            minTemperature: minTemp ?? NaN,
+            maxTemperature: maxTemp ?? NaN,
+            windChill: windChill === null ? NaN : Math.round(windChill),
             windSpeed: windSpeedNum,
             windGust: windGustNum,
-            isSnowing: weather.precipitation > 50 && currentTemp < 32,
+            isSnowing,
           };
         }),
       );
@@ -253,8 +259,8 @@ async function getExtremeWeatherSnapshot(lat: number, lon: number) {
     pointData.properties?.forecastGridData
       ? fetchNwsJson<NwsGridResponse>(pointData.properties.forecastGridData)
         .then(currentGustMph)
-        .catch(() => 0)
-      : Promise.resolve(0),
+        .catch(() => null)
+      : Promise.resolve(null),
   ]);
   const periods = Array.isArray(hourlyData.properties?.periods) ? hourlyData.properties?.periods : [];
   const currentPeriod = periods[0];
@@ -267,20 +273,21 @@ async function getExtremeWeatherSnapshot(lat: number, lon: number) {
     .map((period) => period.temperature)
     .filter((temp): temp is number => typeof temp === 'number');
 
+  const precip = currentPeriod.probabilityOfPrecipitation?.value;
   return {
-    temperature: typeof currentPeriod.temperature === 'number' ? currentPeriod.temperature : 0,
-    windSpeed: currentPeriod.windSpeed ?? '0 mph',
+    temperature: typeof currentPeriod.temperature === 'number' ? currentPeriod.temperature : null,
+    windSpeed: currentPeriod.windSpeed ?? null,
     windGust: gustMph,
-    precipitation: currentPeriod.probabilityOfPrecipitation?.value ?? 0,
+    precipitation: precip === null || precip === undefined ? null : precip,
     hourlyTemps,
   };
 }
 
 // Gridpoint values are ISO intervals ("2026-11-04T00:00:00+00:00/PT2H") in km/h.
-function currentGustMph(grid: NwsGridResponse, now = Date.now()): number {
+function currentGustMph(grid: NwsGridResponse, now = Date.now()): number | null {
   const gust = grid.properties?.windGust;
   const value = gridValueAt(gust?.values, now);
-  if (value === null) return 0;
+  if (value === null) return null;
   const mph = gust?.uom?.includes('km_h') ? value * 0.621371 : value;
   return Math.round(mph);
 }

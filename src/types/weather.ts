@@ -26,26 +26,42 @@ export interface WeatherHazard {
   areaDesc?: string;
 }
 
+export type GridValueSample = {
+  validTime: string;
+  value: number | null;
+  label: string;
+};
+
+export type GridExtras = {
+  /** NWS grid cell elevation in feet, when the API provides it. */
+  elevationFt: number | null;
+  snowLevel: GridValueSample[];
+  snowfallAmount: GridValueSample[];
+  iceAccumulation: GridValueSample[];
+  ceilingHeight: GridValueSample[];
+};
+
 export interface WeatherData {
-  temperature: number;
+  temperature: number | null;
   apparentTemperature?: number | null;
   windChill?: number | null;
   heatIndex?: number | null;
   /** Shared rule in `src/lib/feels-like.ts`, same as the live banner. */
-  feelsLike: number;
+  feelsLike: number | null;
   relativeHumidity?: number | null;
   conditions: string[];
-  windSpeed: string;
-  windDirection: string;
+  windSpeed: string | null;
+  windDirection: string | null;
   windGust?: number | null;
   summitWind?: number | null;
-  precipitation: number;
+  precipitation: number | null;
   snowLevel?: number | null;
   snowAmount?: number | null;
   iceAccumulation?: number | null;
   visibility?: number | null;
   skyCover?: number | null;
   ceilingHeight?: number | null;
+  gridExtras?: GridExtras | null;
   hazards: WeatherHazard[];
   timestamp: string;
   icon?: string;

@@ -1,9 +1,6 @@
-'use client';
-
-import { useEffect } from 'react';
-import WeatherDashboard from '@/components/WeatherDashboard';
+import WeatherDashboard from '@/components/weather/WeatherDashboard';
 import { LargeTitle, SectionHeader } from '@/components/hub/SectionHeader';
-import { useRegion } from '@/contexts/RegionContext';
+import { HashScroll } from '@/components/weather/HashScroll';
 import { DEFAULT_REGION, REGION_LABELS, REGION_WEATHER_SECTIONS, isRegionCode, type WeatherSection } from '@/lib/regions';
 
 const STATE_NAMES: Record<string, string> = {
@@ -14,24 +11,14 @@ const STATE_NAMES: Record<string, string> = {
 };
 
 export function MountainWeather({ state }: { state?: string }) {
-  const { setRegion } = useRegion();
   const region = isRegionCode(state) ? state : DEFAULT_REGION;
   const sections = REGION_WEATHER_SECTIONS[region] ?? REGION_WEATHER_SECTIONS[DEFAULT_REGION];
   const regionLabel = REGION_LABELS[region] ?? region.toUpperCase();
   const stateName = STATE_NAMES[region] ?? regionLabel;
 
-  useEffect(() => {
-    setRegion(region);
-  }, [region, setRegion]);
-
-  useEffect(() => {
-    const id = window.location.hash.slice(1);
-    if (!id) return;
-    document.getElementById(id)?.scrollIntoView({ block: 'start' });
-  }, [region]);
-
   return (
     <div className="mx-auto min-w-0 max-w-6xl space-y-8 px-4 pb-12 pt-6 md:pt-8">
+      <HashScroll />
       <LargeTitle eyebrow="Mountain Weather" title={stateName} />
 
       <section className="space-y-10" aria-label={`${regionLabel} forecast`}>
