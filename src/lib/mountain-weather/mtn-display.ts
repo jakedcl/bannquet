@@ -30,6 +30,13 @@ function tabularSlot(index: number): number {
   return Math.floor(index / 3);
 }
 
+/** unstable_cache serializes Dates to strings — coerce before calling Date methods. */
+function asCycleStart(raw: Date | string | null | undefined): Date | null {
+  if (raw == null) return null;
+  const d = raw instanceof Date ? raw : new Date(raw);
+  return Number.isNaN(d.getTime()) ? null : d;
+}
+
 function mergeFromStandard(
   hourly: MtnEnhancedPeriod[],
   standard: MtnStandardPoint | null,
@@ -58,7 +65,7 @@ function snowIceBlocks(bundle: MtnPointBundle): MtnAccumBlock[] {
     [];
   const count = Math.max(snow.length, ice.length);
   if (count === 0) return [];
-  const start = enhanced?.cycleStart ?? null;
+  const start = asCycleStart(enhanced?.cycleStart ?? null);
   const blocks: MtnAccumBlock[] = [];
   for (let i = 0; i < count; i++) {
     const label = start

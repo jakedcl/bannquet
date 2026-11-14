@@ -4,7 +4,7 @@ import type { FzlBulletin, FzlOffice } from '@/lib/mountain-weather/fzl-types';
 import { parseFzlProduct } from '@/lib/mountain-weather/parse/fzl';
 import { NWS_FZL_ALY_DEF, NWS_FZL_GYX_DEF } from '@/lib/mountain-weather/registry';
 import type { SourceDef, SourceResult } from '@/lib/mountain-weather/source-types';
-import { outsideFetch } from '@/lib/outside-fetch';
+import { nwsApiFetch } from '@/lib/nws-api-fetch';
 
 const USER_AGENT = 'Bannquet-Weather-App (admin@bannquet.com)';
 
@@ -23,7 +23,7 @@ async function fetchLatestFzl(office: FzlOffice): Promise<{
   sourceUrl: string;
 }> {
   const listUrl = `https://api.weather.gov/products/types/FZL/locations/${office}`;
-  const listRes = await outsideFetch(listUrl, {
+  const listRes = await nwsApiFetch(listUrl, {
     headers: { 'User-Agent': USER_AGENT, Accept: 'application/ld+json' },
     next: { revalidate: 0 },
   });
@@ -32,7 +32,7 @@ async function fetchLatestFzl(office: FzlOffice): Promise<{
   const latest = list['@graph']?.[0];
   if (!latest?.id) throw new Error(`No FZL products for ${office}`);
   const productUrl = `https://api.weather.gov/products/${latest.id}`;
-  const productRes = await outsideFetch(productUrl, {
+  const productRes = await nwsApiFetch(productUrl, {
     headers: { 'User-Agent': USER_AGENT, Accept: 'application/ld+json' },
     next: { revalidate: 0 },
   });

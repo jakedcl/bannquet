@@ -4,7 +4,7 @@ import type { MansfieldRr2Summit } from '@/lib/mountain-weather/mansfield-types'
 import { parseRr2MansfieldSummit } from '@/lib/mountain-weather/parse/rr2-mansfield';
 import { NWS_RR2_BTV_DEF } from '@/lib/mountain-weather/registry';
 import type { SourceResult } from '@/lib/mountain-weather/source-types';
-import { outsideFetch } from '@/lib/outside-fetch';
+import { nwsApiFetch } from '@/lib/nws-api-fetch';
 
 const USER_AGENT = 'Bannquet-Weather-App (admin@bannquet.com)';
 
@@ -12,7 +12,7 @@ async function load(): Promise<SourceResult<MansfieldRr2Summit>> {
   const def = NWS_RR2_BTV_DEF;
   try {
     const listUrl = `https://api.weather.gov/products/types/RR2/locations/BTV`;
-    const listRes = await outsideFetch(listUrl, {
+    const listRes = await nwsApiFetch(listUrl, {
       headers: { 'User-Agent': USER_AGENT, Accept: 'application/ld+json' },
       next: { revalidate: 0 },
     });
@@ -21,7 +21,7 @@ async function load(): Promise<SourceResult<MansfieldRr2Summit>> {
     const latest = list['@graph']?.[0];
     if (!latest?.id) throw new Error('No RR2 products in feed');
     const productUrl = `https://api.weather.gov/products/${latest.id}`;
-    const productRes = await outsideFetch(productUrl, {
+    const productRes = await nwsApiFetch(productUrl, {
       headers: { 'User-Agent': USER_AGENT, Accept: 'application/ld+json' },
       next: { revalidate: 0 },
     });

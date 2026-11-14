@@ -20,7 +20,7 @@ test('buildSourceResult isolates parse failures', () => {
     },
   });
   assert.equal(result.status, 'error');
-  assert.equal(result.error, 'Source data could not be parsed');
+  assert.match(result.error ?? '', /Source data could not be parsed/);
 });
 
 test('buildSourceResult returns parsed data on success', () => {

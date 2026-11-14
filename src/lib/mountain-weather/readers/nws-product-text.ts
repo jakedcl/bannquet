@@ -1,5 +1,5 @@
 import type { MountainWfo } from '@/lib/mountain-weather/nws-office';
-import { outsideFetch } from '@/lib/outside-fetch';
+import { nwsApiFetch } from '@/lib/nws-api-fetch';
 
 const USER_AGENT = 'Bannquet-Weather-App (admin@bannquet.com)';
 
@@ -18,7 +18,7 @@ export async function fetchLatestNwsProductText(
   sourceUrl: string;
 }> {
   const listUrl = `https://api.weather.gov/products/types/${kind}/locations/${office}`;
-  const listRes = await outsideFetch(listUrl, {
+  const listRes = await nwsApiFetch(listUrl, {
     headers: { 'User-Agent': USER_AGENT, Accept: 'application/ld+json' },
     next: { revalidate: 0 },
   });
@@ -27,7 +27,7 @@ export async function fetchLatestNwsProductText(
   const latest = list['@graph']?.[0];
   if (!latest?.id) throw new Error(`No ${kind} products in feed for ${office}`);
   const productUrl = `https://api.weather.gov/products/${latest.id}`;
-  const productRes = await outsideFetch(productUrl, {
+  const productRes = await nwsApiFetch(productUrl, {
     headers: { 'User-Agent': USER_AGENT, Accept: 'application/ld+json' },
     next: { revalidate: 0 },
   });

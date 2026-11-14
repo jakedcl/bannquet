@@ -90,13 +90,14 @@ test('enhanced cycle start is ET-labelled when TZ=UTC', () => {
   else process.env.TZ = prev;
   const start = parsed['MOUNT MARCY']?.cycleStart;
   assert.ok(start);
+  const startDate = start instanceof Date ? start : new Date(start);
   const parts = new Intl.DateTimeFormat('en-US', {
     timeZone: 'America/New_York',
     month: 'numeric',
     day: 'numeric',
     hour: 'numeric',
     hour12: false,
-  }).formatToParts(start);
+  }).formatToParts(startDate);
   const bag = Object.fromEntries(parts.map((p) => [p.type, p.value]));
   assert.equal(bag.month, '11');
   assert.equal(bag.day, '13');

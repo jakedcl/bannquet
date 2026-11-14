@@ -67,9 +67,10 @@ function wallClockNewYorkToUtc(year: number, month: number, day: number, hour: n
   return matches(lo) ? new Date(lo) : null;
 }
 
-export function formatMtnHourEt(time: Date): string {
-  if (Number.isNaN(time.getTime())) return '—';
-  return time.toLocaleString('en-US', {
+export function formatMtnHourEt(time: Date | string): string {
+  const d = time instanceof Date ? time : new Date(time);
+  if (Number.isNaN(d.getTime())) return '—';
+  return d.toLocaleString('en-US', {
     timeZone: 'America/New_York',
     hour: 'numeric',
     month: 'short',
@@ -77,6 +78,18 @@ export function formatMtnHourEt(time: Date): string {
   });
 }
 
-export function addHoursUtc(start: Date, hours: number): Date {
-  return new Date(start.getTime() + hours * 3600_000);
+function coerceEpochMs(start: Date | string | number): number {
+  if (typeof start === 'number' && Number.isFinite(start)) return start;
+  if (typeof start === 'string') return Date.parse(start);
+  if (start instanceof Date && typeof start.getTime === 'function') {
+    const ms = start.getTime();
+    if (Number.isFinite(ms)) return ms;
+  }
+  return Date.parse(String(start));
+}
+
+export function addHoursUtc(start: Date | string | number, hours: number): Date {
+  const ms = coerceEpochMs(start);
+  if (!Number.isFinite(ms)) return new Date(NaN);
+  return new Date(ms + hours * 3600_000);
 }

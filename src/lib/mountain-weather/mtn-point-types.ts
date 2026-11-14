@@ -50,7 +50,7 @@ export type MtnEnhancedPoint = {
   lat: number | null;
   lon: number | null;
   elevationFt: number | null;
-  cycleStart: Date | null;
+  cycleStart: Date | string | null;
   hourly: MtnEnhancedPeriod[];
   snowBlocks: MtnAmount[];
   iceBlocks: MtnAmount[];

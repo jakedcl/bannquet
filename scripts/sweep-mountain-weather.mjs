@@ -104,6 +104,23 @@ function scanText(text) {
   return hits;
 }
 
+function scanAttributedSourceErrors(text, route) {
+  const hits = [];
+  const re = /data-mwx-source-error="([^"]+)"/g;
+  let m;
+  while ((m = re.exec(text))) {
+    hits.push({
+      route,
+      pattern: 'source error',
+      section: 'Weather observation',
+      context: m[1],
+      plainSample: m[1],
+      serverError: m[1],
+    });
+  }
+  return hits;
+}
+
 function scanUiFailures(text, route) {
   const plain = stripTags(text);
   const hits = [];
@@ -139,7 +156,8 @@ async function main() {
       const row = await fetchRoute(route);
       const patternHits = row.text ? scanText(row.text) : [];
       const uiFailureHits = row.text ? scanUiFailures(row.text, route) : [];
-      results.push({ ...row, patternHits, uiFailureHits });
+      const attributedErrors = row.text ? scanAttributedSourceErrors(row.text, route) : [];
+      results.push({ ...row, patternHits, uiFailureHits, attributedErrors });
     }
   }
 
@@ -158,9 +176,15 @@ async function main() {
     }
   }
 
-  const sourceErrorOnly = uiFailures.filter(
-    (h) => h.pattern === 'did not load' || h.pattern === 'source error' || h.pattern === 'could not be parsed',
-  );
+  const attributed = results.flatMap((r) => r.attributedErrors ?? []);
+  const sourceErrorOnly = [
+    ...uiFailures.filter(
+      (h) =>
+        (h.pattern === 'did not load' || h.pattern === 'source error' || h.pattern === 'could not be parsed') &&
+        h.pattern !== 'not in this issuance',
+    ),
+    ...attributed,
+  ].filter((h) => !/not in this issuance/i.test(h.context ?? ''));
 
   const upstreamChecks = [];
   const UA = 'Bannquet-Mountain-Weather-Sweep';

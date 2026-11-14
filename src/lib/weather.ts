@@ -1,22 +1,25 @@
 import { ForecastPeriod, ForecastSnippet, WeatherData, WeatherHazard } from '@/types/weather';
-import { outsideFetch } from '@/lib/outside-fetch';
+import { nwsApiFetch } from '@/lib/nws-api-fetch';
 import { feelsLikeF, windMphFromText } from '@/lib/feels-like';
 import {
   formatGridWeatherLayer,
   gridElevationFt,
-  gridSeriesSamples,
   gridWeatherAtInstant,
   humanizeWeatherToken,
-  normalizeGridValue,
   type GridSeries,
   type GridWeatherSeries,
 } from '@/lib/grid-series';
+import {
+  gridSeriesSamplesForKind,
+  normalizeGridScalar,
+  type GridScalarKind,
+} from '@/lib/mountain-weather/grid-display-units';
 
 const USER_AGENT = 'Bannquet-Weather-App (admin@bannquet.com)';
 
 // Simple helper to fetch data
 async function fetchWeather<T = unknown>(url: string): Promise<T> {
-  const response = await outsideFetch(url, {
+  const response = await nwsApiFetch(url, {
     headers: {
       'User-Agent': USER_AGENT,
       Accept: 'application/geo+json',
@@ -115,32 +118,34 @@ export async function getWeather(lat: number, lon: number): Promise<WeatherData>
   const gridProps = gridData.properties;
 
   const temperatureF = typeof currentPeriod?.temperature === 'number' ? currentPeriod.temperature : null;
-  const apparentTemperature = normalizeGridValue(gridProps.apparentTemperature);
-  const windChill = normalizeGridValue(gridProps.windChill);
-  const heatIndex = normalizeGridValue(gridProps.heatIndex);
-  const relativeHumidity = normalizeGridValue(gridProps.relativeHumidity);
-  const summitWind = normalizeGridValue(gridProps.windSpeed);
-  const windGust = normalizeGridValue(gridProps.windGust);
-  const snowLevel = normalizeGridValue(gridProps.snowLevel);
-  const snowAmount = normalizeGridValue(gridProps.snowfallAmount);
-  const iceAccumulation = normalizeGridValue(gridProps.iceAccumulation);
-  const visibility = normalizeGridValue(gridProps.visibility);
-  const dewpoint = normalizeGridValue(gridProps.dewpoint);
-  const skyCover = normalizeGridValue(gridProps.skyCover);
-  const quantitativePrecipitation = normalizeGridValue(gridProps.quantitativePrecipitation);
-  const probabilityOfThunderstorm = normalizeGridValue(gridProps.probabilityOfThunderstorm);
-  const ceilingHeight = normalizeGridValue(gridProps.ceilingHeight);
+  const gridNow = (series: GridSeries | undefined, kind: GridScalarKind) =>
+    normalizeGridScalar(series, kind);
+  const apparentTemperature = gridNow(gridProps.apparentTemperature, 'temperature');
+  const windChill = gridNow(gridProps.windChill, 'temperature');
+  const heatIndex = gridNow(gridProps.heatIndex, 'temperature');
+  const relativeHumidity = gridNow(gridProps.relativeHumidity, 'percent');
+  const summitWind = gridNow(gridProps.windSpeed, 'windSpeed');
+  const windGust = gridNow(gridProps.windGust, 'windSpeed');
+  const snowLevel = gridNow(gridProps.snowLevel, 'lengthFeet');
+  const snowAmount = gridNow(gridProps.snowfallAmount, 'precipInches');
+  const iceAccumulation = gridNow(gridProps.iceAccumulation, 'precipInches');
+  const visibility = gridNow(gridProps.visibility, 'visibility');
+  const dewpoint = gridNow(gridProps.dewpoint, 'temperature');
+  const skyCover = gridNow(gridProps.skyCover, 'percent');
+  const quantitativePrecipitation = gridNow(gridProps.quantitativePrecipitation, 'precipInches');
+  const probabilityOfThunderstorm = gridNow(gridProps.probabilityOfThunderstorm, 'percent');
+  const ceilingHeight = gridNow(gridProps.ceilingHeight, 'ceilingHeight');
   const elevationFt = gridElevationFt(gridProps.elevation);
   const gridExtras = {
     elevationFt,
-    snowLevel: gridSeriesSamples(gridProps.snowLevel),
-    snowfallAmount: gridSeriesSamples(gridProps.snowfallAmount),
-    iceAccumulation: gridSeriesSamples(gridProps.iceAccumulation),
-    ceilingHeight: gridSeriesSamples(gridProps.ceilingHeight),
-    dewpoint: gridSeriesSamples(gridProps.dewpoint),
-    skyCover: gridSeriesSamples(gridProps.skyCover),
-    quantitativePrecipitation: gridSeriesSamples(gridProps.quantitativePrecipitation),
-    probabilityOfThunderstorm: gridSeriesSamples(gridProps.probabilityOfThunderstorm),
+    snowLevel: gridSeriesSamplesForKind(gridProps.snowLevel, 'lengthFeet'),
+    snowfallAmount: gridSeriesSamplesForKind(gridProps.snowfallAmount, 'precipInches'),
+    iceAccumulation: gridSeriesSamplesForKind(gridProps.iceAccumulation, 'precipInches'),
+    ceilingHeight: gridSeriesSamplesForKind(gridProps.ceilingHeight, 'ceilingHeight'),
+    dewpoint: gridSeriesSamplesForKind(gridProps.dewpoint, 'temperature'),
+    skyCover: gridSeriesSamplesForKind(gridProps.skyCover, 'percent'),
+    quantitativePrecipitation: gridSeriesSamplesForKind(gridProps.quantitativePrecipitation, 'precipInches'),
+    probabilityOfThunderstorm: gridSeriesSamplesForKind(gridProps.probabilityOfThunderstorm, 'percent'),
   };
 
   const precipRaw = currentPeriod?.probabilityOfPrecipitation?.value;

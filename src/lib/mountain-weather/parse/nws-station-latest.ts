@@ -1,4 +1,5 @@
 import type { NwsStationField, NwsStationLatest } from '@/lib/mountain-weather/mansfield-types';
+import { nwsObservationProperties } from '@/lib/mountain-weather/parse/nws-observation-properties';
 
 const FIELD_LABELS: Record<string, string> = {
   temperature: 'Temperature',
@@ -49,11 +50,11 @@ function formatObservationValue(val: unknown): number | string | null {
 }
 
 export function parseNwsStationLatest(jsonText: string): NwsStationLatest {
-  const doc = JSON.parse(jsonText) as {
-    properties?: Record<string, unknown>;
-  };
-  const p = doc.properties;
-  if (!p) throw new Error('Invalid station observation JSON');
+  const doc = JSON.parse(jsonText) as Record<string, unknown>;
+  const p = nwsObservationProperties(doc);
+  if (!p.stationId && !p.timestamp && Object.keys(p).length < 3) {
+    throw new Error('Invalid station observation JSON (missing observation properties)');
+  }
 
   const fields: NwsStationField[] = [];
   for (const [key, val] of Object.entries(p)) {

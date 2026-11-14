@@ -1,9 +1,14 @@
 import { CollapsibleSection } from '@/components/mountain-weather/CollapsibleSection';
+import { NotInIssuanceNote } from '@/components/mountain-weather/NotInIssuanceNote';
 import { SourceErrorNote } from '@/components/mountain-weather/SourceErrorNote';
 import type { PlaceObservationsData, StationObservationBlock } from '@/lib/mountain-weather/read-place-observations';
 import type { PlaceStationObservationBinding } from '@/lib/mountain-weather/station-bindings';
 import type { SourceDef } from '@/lib/mountain-weather/source-types';
 import type { SourceResult } from '@/lib/mountain-weather/source-types';
+import {
+  formatStationFieldDisplay,
+  stationHasReadableMeasurements,
+} from '@/lib/mountain-weather/parse/nws-station-units';
 import {
   ASRC_WHITEFACE_TIMELAPSE_DEF,
   type AscrWhitefaceTimelapse,
@@ -95,10 +100,23 @@ function StationBlock({
         </p>
       ) : null}
       <p className="text-xs text-gray-600">{binding.bindReason}</p>
-      {result.status === 'error' || !result.data ? (
-        <SourceErrorNote label="Weather observation" href={result.sourceUrl ?? 'https://api.weather.gov/'} />
+      {result.status === 'not-in-issuance' ? (
+        <NotInIssuanceNote
+          label="Weather observation"
+          href={result.sourceUrl ?? 'https://api.weather.gov/'}
+          latestIssuanceEt={formatEt(result.issuedAt)}
+        />
+      ) : result.status === 'error' || !result.data ? (
+        <SourceErrorNote
+          label="Weather observation"
+          href={result.sourceUrl ?? 'https://api.weather.gov/'}
+          serverError={result.error}
+        />
       ) : (
         <>
+          {!stationHasReadableMeasurements(result.data.fields) ? (
+            <p className="text-sm text-gray-700">No measured readings in the latest observation report.</p>
+          ) : null}
           {(() => {
             const text = result.data.fields.find((f) => f.key === 'textDescription');
             return text?.value ? <p className="text-sm font-bold">{text.value}</p> : null;
@@ -107,10 +125,10 @@ function StationBlock({
             {result.data.fields.map((f) => (
               <li key={f.key}>
                 <span className="font-bold">{f.label}:</span>{' '}
-                {f.value === null ? (
-                  <span className="text-gray-700">null</span>
+                {f.value === null || f.value === undefined || f.value === '' ? (
+                  <span className="text-gray-700">no reading in last report</span>
                 ) : (
-                  `${f.value}${f.unit ? ` ${f.unit}` : ''}`
+                  formatStationFieldDisplay(f)
                 )}
                 {f.qcFailed ? (
                   <span className="text-gray-700"> (failed NWS quality check)</span>

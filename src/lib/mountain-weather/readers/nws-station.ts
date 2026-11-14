@@ -1,11 +1,9 @@
-import { cachedSourceRead, buildSourceResult } from '@/lib/mountain-weather/fetch-source';
+import { buildSourceResult, cachedSourceRead, fetchSourceBody } from '@/lib/mountain-weather/fetch-source';
 import { freshnessFromIssued, mergeFreshness } from '@/lib/mountain-weather/freshness';
 import type { NwsStationLatest } from '@/lib/mountain-weather/mansfield-types';
 import { parseNwsStationLatest } from '@/lib/mountain-weather/parse/nws-station-latest';
+import { stationHasReadableMeasurements } from '@/lib/mountain-weather/parse/nws-station-units';
 import type { SourceDef, SourceResult } from '@/lib/mountain-weather/source-types';
-import { outsideFetch } from '@/lib/outside-fetch';
-
-const USER_AGENT = 'Bannquet-Weather-App (admin@bannquet.com)';
 
 export function nwsStationSourceDef(stationId: string): SourceDef {
   const slug = stationId.toLowerCase();
@@ -26,33 +24,35 @@ function loadFactory(stationId: string): () => Promise<SourceResult<NwsStationLa
   const def = nwsStationSourceDef(stationId);
   const url = def.url;
   return async (): Promise<SourceResult<NwsStationLatest>> => {
-    try {
-      const res = await outsideFetch(url, {
-        headers: { 'User-Agent': USER_AGENT, Accept: 'application/ld+json' },
-        next: { revalidate: 0 },
-      });
-      const sourceUrl = res.url || url;
-      if (!res.ok) throw new Error(`Station HTTP ${res.status}`);
-      const text = await res.text();
-      const issuedAt = res.headers.get('last-modified');
-      const base = buildSourceResult({
-        fetched: { ok: true, text, issuedAt, fetchedAt: issuedAt ?? new Date().toISOString(), httpStatus: res.status, sourceUrl },
-        parse: parseNwsStationLatest,
-        issuedAt,
-      });
-      if (base.status === 'error' || !base.data) return base;
-      return mergeFreshness(freshnessFromIssued(base.issuedAt, def.expectedEveryHours), base);
-    } catch (err) {
+    const fetched = await fetchSourceBody(url, 8_000, {
+      accept: 'application/geo+json, application/ld+json',
+    });
+    if (!fetched.ok && fetched.httpStatus === 404) {
       return {
-        status: 'error',
+        status: 'not-in-issuance',
         data: null,
         issuedAt: null,
         validFrom: null,
         validTo: null,
-        sourceUrl: url,
-        error: err instanceof Error ? err.message : String(err),
+        sourceUrl: fetched.sourceUrl,
+        error: 'No latest observation published for this station (HTTP 404)',
       };
     }
+    const base = buildSourceResult({
+      fetched,
+      parse: parseNwsStationLatest,
+      issuedAt: fetched.ok ? fetched.issuedAt : null,
+    });
+    if (base.status === 'error' || !base.data) return base;
+
+    if (!stationHasReadableMeasurements(base.data.fields)) {
+      return {
+        ...base,
+        status: 'ok',
+      };
+    }
+
+    return mergeFreshness(freshnessFromIssued(base.issuedAt, def.expectedEveryHours), base);
   };
 }
 

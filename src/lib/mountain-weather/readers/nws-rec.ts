@@ -4,7 +4,7 @@ import { parseRecBulletin } from '@/lib/mountain-weather/parse/rec';
 import type { RecBulletin, RecOffice } from '@/lib/mountain-weather/rec-types';
 import { NWS_REC_ALY_DEF, NWS_REC_BTV_DEF, NWS_REC_CAR_DEF, NWS_REC_GYX_DEF } from '@/lib/mountain-weather/registry';
 import type { SourceDef, SourceResult } from '@/lib/mountain-weather/source-types';
-import { outsideFetch } from '@/lib/outside-fetch';
+import { nwsApiFetch } from '@/lib/nws-api-fetch';
 
 const USER_AGENT = 'Bannquet-Weather-App (admin@bannquet.com)';
 
@@ -38,7 +38,7 @@ async function fetchLatestRec(office: RecOffice): Promise<{
   sourceUrl: string;
 }> {
   const listUrl = `https://api.weather.gov/products/types/REC/locations/${office}`;
-  const listRes = await outsideFetch(listUrl, {
+  const listRes = await nwsApiFetch(listUrl, {
     headers: { 'User-Agent': USER_AGENT, Accept: 'application/ld+json' },
     next: { revalidate: 0 },
   });
@@ -47,7 +47,7 @@ async function fetchLatestRec(office: RecOffice): Promise<{
   const latest = list['@graph']?.[0];
   if (!latest?.id) throw new Error('No REC products in feed');
   const productUrl = `https://api.weather.gov/products/${latest.id}`;
-  const productRes = await outsideFetch(productUrl, {
+  const productRes = await nwsApiFetch(productUrl, {
     headers: { 'User-Agent': USER_AGENT, Accept: 'application/ld+json' },
     next: { revalidate: 0 },
   });

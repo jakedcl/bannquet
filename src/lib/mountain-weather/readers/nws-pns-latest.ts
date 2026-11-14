@@ -3,7 +3,7 @@ import type { MountainWfo } from '@/lib/mountain-weather/nws-office';
 import { parsePnsSnowReports } from '@/lib/mountain-weather/parse/pns';
 import type { StormReportProduct } from '@/lib/mountain-weather/snow-types';
 import type { SourceDef, SourceResult } from '@/lib/mountain-weather/source-types';
-import { outsideFetch } from '@/lib/outside-fetch';
+import { nwsApiFetch } from '@/lib/nws-api-fetch';
 
 const USER_AGENT = 'Bannquet-Weather-App (admin@bannquet.com)';
 
@@ -27,14 +27,14 @@ async function fetchLatestPns(office: MountainWfo): Promise<{
   sourceUrl: string;
 }> {
   const listUrl = `https://api.weather.gov/products/types/PNS/locations/${office}`;
-  const listRes = await outsideFetch(listUrl, {
+  const listRes = await nwsApiFetch(listUrl, {
     headers: { 'User-Agent': USER_AGENT, Accept: 'application/ld+json' },
     next: { revalidate: 0 },
   });
   if (!listRes.ok) throw new Error(`PNS list HTTP ${listRes.status}`);
   const list = (await listRes.json()) as { '@graph'?: { id: string; issuanceTime?: string }[] };
   const latest = list['@graph']?.[0];
-  const direct = await outsideFetch(pnsDef(office).url, {
+  const direct = await nwsApiFetch(pnsDef(office).url, {
     headers: { 'User-Agent': USER_AGENT, Accept: 'application/ld+json' },
     next: { revalidate: 0 },
   });
@@ -51,7 +51,7 @@ async function fetchLatestPns(office: MountainWfo): Promise<{
   }
   if (!latest?.id) throw new Error(`No PNS for ${office}`);
   const productUrl = `https://api.weather.gov/products/${latest.id}`;
-  const productRes = await outsideFetch(productUrl, {
+  const productRes = await nwsApiFetch(productUrl, {
     headers: { 'User-Agent': USER_AGENT, Accept: 'application/ld+json' },
     next: { revalidate: 0 },
   });

@@ -2,7 +2,7 @@ import { cachedSourceRead, buildSourceResult } from '@/lib/mountain-weather/fetc
 import { parseRecBulletin } from '@/lib/mountain-weather/parse/rec';
 import type { RecBulletin, RecOffice } from '@/lib/mountain-weather/rec-types';
 import type { SourceResult } from '@/lib/mountain-weather/source-types';
-import { outsideFetch } from '@/lib/outside-fetch';
+import { nwsApiFetch } from '@/lib/nws-api-fetch';
 
 const USER_AGENT = 'Bannquet-Weather-App (admin@bannquet.com)';
 
@@ -18,7 +18,7 @@ type ProductDoc = { productText?: string; issuanceTime?: string };
 
 async function fetchRecProductList(office: RecOffice): Promise<{ id: string; issuanceTime?: string }[]> {
   const listUrl = `https://api.weather.gov/products/types/REC/locations/${office}`;
-  const listRes = await outsideFetch(listUrl, {
+  const listRes = await nwsApiFetch(listUrl, {
     headers: { 'User-Agent': USER_AGENT, Accept: 'application/ld+json' },
     next: { revalidate: 0 },
   });
@@ -32,7 +32,7 @@ async function fetchRecProducts(office: RecOffice, limit = 20): Promise<RecBulle
   const out: RecBulletinEntry[] = [];
   for (const meta of products) {
     const productUrl = `https://api.weather.gov/products/${meta.id}`;
-    const productRes = await outsideFetch(productUrl, {
+    const productRes = await nwsApiFetch(productUrl, {
       headers: { 'User-Agent': USER_AGENT, Accept: 'application/ld+json' },
       next: { revalidate: 0 },
     });

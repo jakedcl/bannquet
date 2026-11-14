@@ -4,7 +4,7 @@ import { parseAvgBulletin } from '@/lib/mountain-weather/parse/avg';
 import type { AvgBulletin, AvgOffice } from '@/lib/mountain-weather/avg-types';
 import { NWS_AVG_BTV_DEF, NWS_AVG_GYX_DEF } from '@/lib/mountain-weather/registry';
 import type { SourceDef, SourceResult } from '@/lib/mountain-weather/source-types';
-import { outsideFetch } from '@/lib/outside-fetch';
+import { nwsApiFetch } from '@/lib/nws-api-fetch';
 
 const USER_AGENT = 'Bannquet-Weather-App (admin@bannquet.com)';
 
@@ -23,7 +23,7 @@ async function fetchLatestAvg(office: AvgOffice): Promise<{
   sourceUrl: string;
 }> {
   const listUrl = `https://api.weather.gov/products/types/AVG/locations/${office}`;
-  const listRes = await outsideFetch(listUrl, {
+  const listRes = await nwsApiFetch(listUrl, {
     headers: { 'User-Agent': USER_AGENT, Accept: 'application/ld+json' },
     next: { revalidate: 0 },
   });
@@ -32,7 +32,7 @@ async function fetchLatestAvg(office: AvgOffice): Promise<{
   const latest = list['@graph']?.[0];
   if (!latest?.id) throw new Error('No AVG products in feed');
   const productUrl = `https://api.weather.gov/products/${latest.id}`;
-  const productRes = await outsideFetch(productUrl, {
+  const productRes = await nwsApiFetch(productUrl, {
     headers: { 'User-Agent': USER_AGENT, Accept: 'application/ld+json' },
     next: { revalidate: 0 },
   });
