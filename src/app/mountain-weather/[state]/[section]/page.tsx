@@ -14,9 +14,11 @@ import {
 } from '@/lib/mountain-weather/places';
 import { moreSourcesForSection } from '@/lib/mountain-weather/more-sources';
 import { mountainWeatherPath } from '@/lib/mountain-weather/slugs';
-import { BulletinsSection } from '@/components/mountain-weather/BulletinsSection';
-import { bulletinOfficeForSection } from '@/lib/mountain-weather/bulletin-bindings';
-import { readOfficeBulletins } from '@/lib/mountain-weather/read-office-bulletins';
+import { ScopeBulletinsSection } from '@/components/mountain-weather/ScopeBulletinsSection';
+import {
+  bulletinOfficesForSection,
+  readBulletinsForOffices,
+} from '@/lib/mountain-weather/read-scope-bulletins';
 import { loadPlaceGlances } from '@/lib/weather-hub';
 
 export const dynamic = 'force-dynamic';
@@ -34,11 +36,11 @@ export default async function MountainSectionPage({
   const section = getMountainSection(stateCode, sectionId);
   if (!stateEntry || !section) notFound();
 
-  const sectionBulletin = bulletinOfficeForSection(sectionId);
+  const bulletinOffices = bulletinOfficesForSection(stateCode, sectionId);
   const [glances, moreSources, bulletins] = await Promise.all([
     loadPlaceGlances(stateCode, sectionId),
     Promise.resolve(moreSourcesForSection(stateCode, sectionId)),
-    sectionBulletin?.office ? readOfficeBulletins(sectionBulletin.office) : Promise.resolve(null),
+    readBulletinsForOffices(bulletinOffices),
   ]);
 
   return (
@@ -50,7 +52,7 @@ export default async function MountainSectionPage({
           <Link href={mountainWeatherPath(stateCode)} className="font-bold underline">{stateEntry.name}</Link>
         </p>
         <LargeTitle title={section.title} />
-        <BulletinsSection bundle={bulletins} />
+        <ScopeBulletinsSection bundles={bulletins} />
         <Card title="Places" padded={false}>
           <WeatherGlanceList items={glances} />
         </Card>

@@ -72,14 +72,27 @@ function ProductBlock({
   );
 }
 
-export function BulletinsSection({ bundle }: { bundle: OfficeBulletinBundle | null }) {
+export function BulletinsSection({
+  bundle,
+  labeledByOffice,
+}: {
+  bundle: OfficeBulletinBundle | null;
+  /** When true, prefix titles with the WFO id (for multi-office scope pages). */
+  labeledByOffice?: boolean;
+}) {
   if (!bundle) return null;
   const afdDef = afdSourceDef(bundle.office as MountainWfo);
+  const officeTag = `NWS ${bundle.office}`;
+  const hwoTag = bundle.office === 'BTV' ? ' + HWO' : labeledByOffice ? ' · GHWO link' : '';
 
   return (
     <CollapsibleSection
-      title="Bulletins"
-      subtitle={`NWS ${bundle.office} · AFD${bundle.office === 'BTV' ? ' + HWO' : ''}`}
+      title={labeledByOffice ? `${officeTag} · Bulletins` : 'Bulletins'}
+      subtitle={
+        labeledByOffice
+          ? `AFD${hwoTag}`
+          : `${officeTag} · AFD${bundle.office === 'BTV' ? ' + HWO' : ''}`
+      }
       defaultOpen={false}
     >
       <div className="space-y-3">

@@ -102,6 +102,26 @@ export const NWS_AVG_GYX_DEF: SourceDef = {
   season: 'winter',
 };
 
+export const NWS_FZL_ALY_DEF: SourceDef = {
+  id: 'nws-aly-fzl',
+  org: 'National Weather Service Albany',
+  kind: 'measured',
+  terms: 'reuse-ok',
+  url: 'https://api.weather.gov/products/types/FZL/locations/ALY',
+  ttlSeconds: 1800,
+  expectedEveryHours: 12,
+};
+
+export const NWS_FZL_GYX_DEF: SourceDef = {
+  id: 'nws-gyx-fzl',
+  org: 'National Weather Service Gray',
+  kind: 'measured',
+  terms: 'reuse-ok',
+  url: 'https://api.weather.gov/products/types/FZL/locations/GYX',
+  ttlSeconds: 1800,
+  expectedEveryHours: 12,
+};
+
 export const NWS_ALL_LOCATIONS_GYX_DEF: SourceDef = {
   id: 'nws-gyx-all-locations',
   org: 'National Weather Service Gray',
@@ -251,6 +271,8 @@ export const SOURCE_REGISTRY: Record<string, SourceDef> = {
   [NWS_REC_CAR_DEF.id]: NWS_REC_CAR_DEF,
   [NWS_AVG_BTV_DEF.id]: NWS_AVG_BTV_DEF,
   [NWS_AVG_GYX_DEF.id]: NWS_AVG_GYX_DEF,
+  [NWS_FZL_ALY_DEF.id]: NWS_FZL_ALY_DEF,
+  [NWS_FZL_GYX_DEF.id]: NWS_FZL_GYX_DEF,
   [NWS_ALL_LOCATIONS_GYX_DEF.id]: NWS_ALL_LOCATIONS_GYX_DEF,
   [NWS_ALL_LOCATIONS_CAR_DEF.id]: NWS_ALL_LOCATIONS_CAR_DEF,
   [NWS_BTV_MANSFIELD_HYD_DEF.id]: NWS_BTV_MANSFIELD_HYD_DEF,

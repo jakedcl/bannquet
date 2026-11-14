@@ -3,6 +3,7 @@ import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import test from 'node:test';
 import bindings from '../../../config/mountain-weather/bulletin-bindings.json';
+import { bulletinOfficesForSection, bulletinOfficesForState } from '@/lib/mountain-weather/read-scope-bulletins';
 import { parseAfdProduct } from '@/lib/mountain-weather/parse/afd';
 import { parseNwsDiscussionSections } from '@/lib/mountain-weather/parse/nws-discussion';
 
@@ -32,4 +33,14 @@ test('gunks and thacher bulletin office is ALY; NY and VT states have no whole-a
   assert.equal(bindings.states.vt, null);
   assert.equal(bindings.states.me, null);
   assert.ok(bindings.unboundScopes['central-southern-adirondacks']);
+});
+
+test('mixed states and sections enumerate every covering WFO', () => {
+  assert.deepEqual(bulletinOfficesForState('ny'), ['BTV', 'ALY']);
+  assert.deepEqual(bulletinOfficesForState('vt'), ['BTV', 'ALY']);
+  assert.deepEqual(bulletinOfficesForState('me'), ['GYX', 'CAR']);
+  assert.deepEqual(bulletinOfficesForState('nh'), ['GYX']);
+  assert.deepEqual(bulletinOfficesForSection('ny', 'central-southern-adirondacks'), ['BTV', 'ALY']);
+  assert.deepEqual(bulletinOfficesForSection('vt', 'southern-greens'), ['BTV', 'ALY']);
+  assert.deepEqual(bulletinOfficesForSection('ny', 'adirondack-high-peaks'), ['BTV']);
 });

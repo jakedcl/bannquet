@@ -27,6 +27,8 @@ import { BulletinsSection } from '@/components/mountain-weather/BulletinsSection
 import { bulletinOfficeForPlace } from '@/lib/mountain-weather/bulletin-bindings';
 import { readBalloonForPlace } from '@/lib/mountain-weather/read-place-balloon';
 import { readOfficeBulletins } from '@/lib/mountain-weather/read-office-bulletins';
+import { FzlForecastSection } from '@/components/mountain-weather/FzlForecastSection';
+import { readFzlForPlace } from '@/lib/mountain-weather/read-place-fzl';
 import { readMansfieldPack } from '@/lib/mountain-weather/read-mansfield-pack';
 import { readMtnPointForPlace } from '@/lib/mountain-weather/read-mtn-point';
 import { readNwsGridBaseline } from '@/lib/mountain-weather/readers/nws-grid-baseline';
@@ -50,7 +52,7 @@ export default async function MountainPlacePage({
   const bulletinBinding = bulletinOfficeForPlace(place.id);
   const bulletinOffice = bulletinBinding?.office ?? null;
 
-  const [baseline, mtnPoint, rec, avg, allLocations, mansfieldPack, balloon, bulletins] = await Promise.all([
+  const [baseline, mtnPoint, rec, avg, allLocations, mansfieldPack, balloon, bulletins, fzl] = await Promise.all([
     readNwsGridBaseline(place),
     readMtnPointForPlace(place.id),
     readRecForPlace(place.id),
@@ -59,6 +61,7 @@ export default async function MountainPlacePage({
     readMansfieldPack(place.id),
     readBalloonForPlace(place.id),
     bulletinOffice ? readOfficeBulletins(bulletinOffice) : Promise.resolve(null),
+    readFzlForPlace(place),
   ]);
   const moreSources = moreSourcesForPlace(stateCode, sectionId, place);
 
@@ -91,6 +94,7 @@ export default async function MountainPlacePage({
           NWS {place.office} · {place.lat.toFixed(4)}, {place.lon.toFixed(4)}
         </p>
         <BulletinsSection bundle={bulletins} />
+        <FzlForecastSection result={fzl} />
         <MountainForecastSection result={mtnPoint} placeName={place.name} />
         <RecForecastSection results={rec} />
         <AvgForecastSection results={avg} />
