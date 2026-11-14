@@ -88,6 +88,11 @@ function StationBlock({
       defaultOpen={binding.kind === 'summit'}
     >
       <p className="text-xs text-gray-800">{placementNote(binding, placeElevationFt)}</p>
+      {(binding.kind === 'valley' || binding.kind === 'base') && binding.distanceMi > 25 ? (
+        <p className="text-xs font-bold text-amber-950">
+          Distant station: {binding.distanceMi} mi away, may not reflect conditions here.
+        </p>
+      ) : null}
       <p className="text-xs text-gray-600">{binding.bindReason}</p>
       {result.status === 'error' || !result.data ? (
         <p className="text-sm font-bold">{result.error ?? 'Observation did not load.'}</p>

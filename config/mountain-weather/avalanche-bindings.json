@@ -1,0 +1,140 @@
+{
+  "version": 1,
+  "ruleSummary": "MWAC for mount-washington, mount-adams, pinkham-notch. NYSAC for all places in Adirondack High Peaks and Northern Adirondacks sections. AVG subpages derived from explicit source-bindings avg pointMatch values (16 points).",
+  "centers": {
+    "MWAC": {
+      "id": "MWAC",
+      "name": "Mount Washington Avalanche Center",
+      "mapLayerUrl": "https://api.avalanche.org/v2/public/products/map-layer/MWAC",
+      "org": "MWAC (USFS)"
+    },
+    "NYSAC": {
+      "id": "NYSAC",
+      "name": "NY DEC Adirondack avalanche guidance",
+      "mapLayerUrl": "https://api.avalanche.org/v2/public/products/map-layer/NYSAC",
+      "org": "NY DEC"
+    }
+  },
+  "places": {
+    "mount-washington": {
+      "centers": [
+        "MWAC"
+      ],
+      "bindReason": "Presidential Range avalanche forecast zone (MWAC via avalanche.org map-layer)."
+    },
+    "mount-adams": {
+      "centers": [
+        "MWAC"
+      ],
+      "bindReason": "Presidential Range avalanche forecast zone (MWAC via avalanche.org map-layer)."
+    },
+    "pinkham-notch": {
+      "centers": [
+        "MWAC"
+      ],
+      "bindReason": "Presidential Range avalanche forecast zone (MWAC via avalanche.org map-layer)."
+    },
+    "mount-marcy": {
+      "centers": [
+        "NYSAC"
+      ],
+      "bindReason": "Adirondack Park avalanche guidance zone (NY DEC NYSAC via avalanche.org map-layer)."
+    },
+    "whiteface-mountain": {
+      "centers": [
+        "NYSAC"
+      ],
+      "bindReason": "Adirondack Park avalanche guidance zone (NY DEC NYSAC via avalanche.org map-layer)."
+    },
+    "dix-mountain": {
+      "centers": [
+        "NYSAC"
+      ],
+      "bindReason": "Adirondack Park avalanche guidance zone (NY DEC NYSAC via avalanche.org map-layer)."
+    },
+    "algonquin-peak": {
+      "centers": [
+        "NYSAC"
+      ],
+      "bindReason": "Adirondack Park avalanche guidance zone (NY DEC NYSAC via avalanche.org map-layer)."
+    },
+    "mount-colden": {
+      "centers": [
+        "NYSAC"
+      ],
+      "bindReason": "Adirondack Park avalanche guidance zone (NY DEC NYSAC via avalanche.org map-layer)."
+    },
+    "mount-colvin": {
+      "centers": [
+        "NYSAC"
+      ],
+      "bindReason": "Adirondack Park avalanche guidance zone (NY DEC NYSAC via avalanche.org map-layer)."
+    },
+    "giant-mountain": {
+      "centers": [
+        "NYSAC"
+      ],
+      "bindReason": "Adirondack Park avalanche guidance zone (NY DEC NYSAC via avalanche.org map-layer)."
+    },
+    "santanoni-peak": {
+      "centers": [
+        "NYSAC"
+      ],
+      "bindReason": "Adirondack Park avalanche guidance zone (NY DEC NYSAC via avalanche.org map-layer)."
+    },
+    "cascade-mountain": {
+      "centers": [
+        "NYSAC"
+      ],
+      "bindReason": "Adirondack Park avalanche guidance zone (NY DEC NYSAC via avalanche.org map-layer)."
+    },
+    "mckenzie-mountain": {
+      "centers": [
+        "NYSAC"
+      ],
+      "bindReason": "Adirondack Park avalanche guidance zone (NY DEC NYSAC via avalanche.org map-layer)."
+    },
+    "mount-van-hoevenberg": {
+      "centers": [
+        "NYSAC"
+      ],
+      "bindReason": "Adirondack Park avalanche guidance zone (NY DEC NYSAC via avalanche.org map-layer)."
+    },
+    "keene-valley": {
+      "centers": [
+        "NYSAC"
+      ],
+      "bindReason": "Adirondack Park avalanche guidance zone (NY DEC NYSAC via avalanche.org map-layer)."
+    },
+    "lyon-mountain": {
+      "centers": [
+        "NYSAC"
+      ],
+      "bindReason": "Adirondack Park avalanche guidance zone (NY DEC NYSAC via avalanche.org map-layer)."
+    },
+    "ampersand-mountain": {
+      "centers": [
+        "NYSAC"
+      ],
+      "bindReason": "Adirondack Park avalanche guidance zone (NY DEC NYSAC via avalanche.org map-layer)."
+    },
+    "debar-mountain": {
+      "centers": [
+        "NYSAC"
+      ],
+      "bindReason": "Adirondack Park avalanche guidance zone (NY DEC NYSAC via avalanche.org map-layer)."
+    },
+    "st-regis-mountain": {
+      "centers": [
+        "NYSAC"
+      ],
+      "bindReason": "Adirondack Park avalanche guidance zone (NY DEC NYSAC via avalanche.org map-layer)."
+    },
+    "mount-arab": {
+      "centers": [
+        "NYSAC"
+      ],
+      "bindReason": "Adirondack Park avalanche guidance zone (NY DEC NYSAC via avalanche.org map-layer)."
+    }
+  }
+}

@@ -32,6 +32,8 @@ import { readFzlForPlace } from '@/lib/mountain-weather/read-place-fzl';
 import { readMansfieldPack } from '@/lib/mountain-weather/read-mansfield-pack';
 import { ObservationsSection } from '@/components/mountain-weather/ObservationsSection';
 import { readPlaceObservations } from '@/lib/mountain-weather/read-place-observations';
+import { AvalancheSection } from '@/components/mountain-weather/AvalancheSection';
+import { readPlaceAvalanche } from '@/lib/mountain-weather/read-place-avalanche';
 import { readMtnPointForPlace } from '@/lib/mountain-weather/read-mtn-point';
 import { readNwsGridBaseline } from '@/lib/mountain-weather/readers/nws-grid-baseline';
 
@@ -54,7 +56,7 @@ export default async function MountainPlacePage({
   const bulletinBinding = bulletinOfficeForPlace(place.id);
   const bulletinOffice = bulletinBinding?.office ?? null;
 
-  const [baseline, mtnPoint, rec, avg, allLocations, mansfieldPack, balloon, bulletins, fzl, observations] =
+  const [baseline, mtnPoint, rec, avg, allLocations, mansfieldPack, balloon, bulletins, fzl, observations, avalanche] =
     await Promise.all([
     readNwsGridBaseline(place),
     readMtnPointForPlace(place.id),
@@ -66,7 +68,9 @@ export default async function MountainPlacePage({
     bulletinOffice ? readOfficeBulletins(bulletinOffice) : Promise.resolve(null),
     readFzlForPlace(place),
     readPlaceObservations(place.id),
+    readPlaceAvalanche(place.id),
   ]);
+  const showStandaloneAvg = !avalanche;
   const moreSources = moreSourcesForPlace(stateCode, sectionId, place);
 
   return (
@@ -98,10 +102,11 @@ export default async function MountainPlacePage({
           NWS {place.office} · {place.lat.toFixed(4)}, {place.lon.toFixed(4)}
         </p>
         <BulletinsSection bundle={bulletins} />
+        <AvalancheSection data={avalanche} />
         <FzlForecastSection result={fzl} />
         <MountainForecastSection result={mtnPoint} placeName={place.name} />
         <RecForecastSection results={rec} />
-        <AvgForecastSection results={avg} />
+        {showStandaloneAvg ? <AvgForecastSection results={avg} /> : null}
         <AllLocationsSection results={allLocations} />
         <BalloonForecastSection result={balloon} />
         <MansfieldPackSection pack={mansfieldPack} />

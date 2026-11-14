@@ -64,6 +64,13 @@ export function getMountainPlace(stateCodeOrSlug: string, sectionId: string, pla
   return section?.places.find((place) => place.id === wanted) ?? null;
 }
 
+export function findMountainPlaceCatalogEntry(
+  placeId: string,
+): (MountainPlace & { state: MountainStateCode; sectionId: string; sectionTitle: string }) | null {
+  const wanted = canonicalPlaceId(placeId);
+  return allMountainPlaces().find((place) => place.id === wanted) ?? null;
+}
+
 export function allMountainPlaces(): Array<MountainPlace & { state: MountainStateCode; sectionId: string; sectionTitle: string }> {
   return MOUNTAIN_STATES.flatMap((state) => state.sections.flatMap((section) => section.places.map((place) => ({
     ...place,

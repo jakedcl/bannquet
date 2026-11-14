@@ -2,6 +2,8 @@ import type { SourceDef } from '@/lib/mountain-weather/source-types';
 import { allBoundStationIds } from '@/lib/mountain-weather/station-bindings';
 import { nwsStationSourceDef } from '@/lib/mountain-weather/readers/nws-station';
 import { ASRC_WHITEFACE_TIMELAPSE_DEF } from '@/lib/mountain-weather/readers/asrc-whiteface-timelapse';
+import { AVALANCHE_MAP_LAYER_MWAC_DEF } from '@/lib/mountain-weather/readers/avalanche-map-layer-mwac';
+import { AVALANCHE_MAP_LAYER_NYSAC_DEF } from '@/lib/mountain-weather/readers/avalanche-map-layer-nysac';
 
 export const NWS_GRID_BASELINE_DEF: SourceDef = {
   id: 'nws-grid-baseline',
@@ -296,5 +298,7 @@ export const SOURCE_REGISTRY: Record<string, SourceDef> = {
   [NWS_AFD_CAR_DEF.id]: NWS_AFD_CAR_DEF,
   [NWS_HWO_BTV_DEF.id]: NWS_HWO_BTV_DEF,
   [ASRC_WHITEFACE_TIMELAPSE_DEF.id]: ASRC_WHITEFACE_TIMELAPSE_DEF,
+  [AVALANCHE_MAP_LAYER_MWAC_DEF.id]: AVALANCHE_MAP_LAYER_MWAC_DEF,
+  [AVALANCHE_MAP_LAYER_NYSAC_DEF.id]: AVALANCHE_MAP_LAYER_NYSAC_DEF,
   ...stationRegistry,
 };

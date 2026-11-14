@@ -38,6 +38,7 @@ export default async function MountainWeatherPage({
         <Card padded={false}>
           <ListGroup bare>
             <ListRow href="/mountain-weather/conditions" title="Conditions" subtitle="Live regional extremes" />
+            <ListRow href="/mountain-weather/snow" title="Snow" subtitle="Avalanche hub (MWAC, NYSAC, NWS AVG)" />
           </ListGroup>
         </Card>
         <Card title="States" padded={false}>
