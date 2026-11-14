@@ -1,4 +1,5 @@
 import placesJson from '../../../config/mountain-weather/places.json';
+import type { MountainWfo } from '@/lib/mountain-weather/nws-office';
 import { canonicalPlaceId, resolveMountainStateSlug, type MountainStateCode } from '@/lib/mountain-weather/slugs';
 
 export type MountainPlace = {
@@ -7,7 +8,9 @@ export type MountainPlace = {
   lat: number;
   lon: number;
   elevationFt: number | null;
-  office: 'BTV' | 'ALY' | 'GYX' | 'CAR';
+  /** NWS WFO from api.weather.gov/points (properties.cwa). */
+  office: MountainWfo;
+  gridId?: string;
   isBase: boolean;
 };
 

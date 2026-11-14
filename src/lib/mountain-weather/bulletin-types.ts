@@ -1,6 +1,6 @@
-import type { MountainPlace } from '@/lib/mountain-weather/places';
+import type { MountainWfo } from '@/lib/mountain-weather/nws-office';
 
-export type BulletinOffice = MountainPlace['office'];
+export type BulletinOffice = MountainWfo;
 
 export type DiscussionSection = {
   key: string;

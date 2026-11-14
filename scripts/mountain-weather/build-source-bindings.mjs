@@ -146,9 +146,36 @@ function balloonForPlace(place) {
   };
 }
 
+const REC_PLACE_OVERRIDE = {
+  'pillsbury-mountain': {
+    office: 'GYX',
+    sectionMatch: '2500 Feet to 4000 Feet',
+    nearbyLabel: 'KGYX mid-elevation REC (Pillsbury under Gray CWA)',
+  },
+  'lyon-mountain': {
+    office: 'ALY',
+    sectionMatch: 'Southern Adirondacks',
+    nearbyLabel: 'KALY REC (Clinton Co. under Albany CWA)',
+  },
+};
+
 function recForPlace(place, sectionId, stateCode) {
+  if (REC_PLACE_OVERRIDE[place.id]) return REC_PLACE_OVERRIDE[place.id];
+
+  const wfo = place.office;
+
   if (sectionId === 'southern-greens') {
-    return { office: 'BTV', sectionMatch: 'Southern Green Mountains of Vermont' };
+    if (wfo === 'BTV') return { office: 'BTV', sectionMatch: 'Southern Green Mountains of Vermont' };
+    if (wfo === 'ALY') {
+      return {
+        office: 'ALY',
+        sectionMatch: 'Southern Adirondacks',
+        nearbyLabel: 'KALY recreation band nearest southern Green peak',
+      };
+    }
+    if (wfo === 'BOX') {
+      return { office: 'BOX', sectionMatch: 'Southern New England', nearbyLabel: 'KBOX REC (Stratton area)' };
+    }
   }
   if (sectionId === 'catskill-mountains' || sectionId === 'shawangunks' || sectionId === 'thacher-park') {
     if (sectionId === 'shawangunks' || sectionId === 'thacher-park') {
@@ -176,8 +203,25 @@ function recForPlace(place, sectionId, stateCode) {
     }
     return band;
   }
-  if (place.office === 'BTV') {
+  if (wfo === 'BTV') {
     return { office: 'BTV', sectionMatch: 'Northern Adirondacks of New York' };
+  }
+  if (wfo === 'ALY') {
+    if (sectionId === 'northern-adirondacks' || sectionId === 'adirondack-high-peaks') {
+      return {
+        office: 'ALY',
+        sectionMatch: 'Southern Adirondacks',
+        nearbyLabel: 'KALY REC band nearest northern Adirondack peak',
+      };
+    }
+    return null;
+  }
+  if (wfo === 'GYX' && sectionId === 'central-southern-adirondacks') {
+    return {
+      office: 'GYX',
+      sectionMatch: '2500 Feet to 4000 Feet',
+      nearbyLabel: 'KGYX REC nearest western Maine / northern NH band',
+    };
   }
   if (sectionId === 'presidential-range' || sectionId === 'franconia-pemi' || sectionId === 'rumney-climbing') {
     return { office: 'GYX', sectionMatch: 'Summits Above 4000 Feet' };

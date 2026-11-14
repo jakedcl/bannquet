@@ -25,9 +25,11 @@ test('discussion parser preserves bodies across && delimiters', () => {
   assert.match(sections[1].body, /Line B/);
 });
 
-test('gunks and thacher bulletin office is ALY; NY state has no whole-area bulletin', () => {
+test('gunks and thacher bulletin office is ALY; NY and VT states have no whole-area bulletin', () => {
   assert.equal(bindings.places['gunks-ridge'].office, 'ALY');
   assert.equal(bindings.places['thacher-park'].office, 'ALY');
   assert.equal(bindings.states.ny, null);
+  assert.equal(bindings.states.vt, null);
+  assert.equal(bindings.states.me, null);
   assert.ok(bindings.unboundScopes['central-southern-adirondacks']);
 });

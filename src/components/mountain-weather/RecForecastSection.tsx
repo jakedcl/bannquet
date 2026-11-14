@@ -1,19 +1,34 @@
 import { CollapsibleSection } from '@/components/mountain-weather/CollapsibleSection';
 import type { RecPlaceSlice } from '@/lib/mountain-weather/rec-types';
 import type { SourceResult } from '@/lib/mountain-weather/source-types';
+import type { RecOffice } from '@/lib/mountain-weather/rec-types';
 import {
   NWS_REC_ALY_DEF,
   NWS_REC_BTV_DEF,
   NWS_REC_CAR_DEF,
   NWS_REC_GYX_DEF,
 } from '@/lib/mountain-weather/registry';
+import type { SourceDef } from '@/lib/mountain-weather/source-types';
 
-const OFFICE_DEF = {
+const OFFICE_DEF: Record<'BTV' | 'ALY' | 'GYX' | 'CAR', SourceDef> = {
   BTV: NWS_REC_BTV_DEF,
   ALY: NWS_REC_ALY_DEF,
   GYX: NWS_REC_GYX_DEF,
   CAR: NWS_REC_CAR_DEF,
-} as const;
+};
+
+function recSourceDef(office: RecOffice): SourceDef {
+  if (office in OFFICE_DEF) return OFFICE_DEF[office as keyof typeof OFFICE_DEF];
+  return {
+    id: `nws-${office.toLowerCase()}-rec`,
+    org: `National Weather Service ${office}`,
+    kind: 'forecast',
+    terms: 'reuse-ok',
+    url: `https://api.weather.gov/products/types/REC/locations/${office}`,
+    ttlSeconds: 1800,
+    expectedEveryHours: 6,
+  };
+}
 
 function formatEt(value: string | null): string {
   if (!value) return '—';
@@ -29,7 +44,7 @@ function formatEt(value: string | null): string {
 }
 
 function RecBlock({ result }: { result: SourceResult<RecPlaceSlice> }) {
-  const def = result.data ? OFFICE_DEF[result.data.office] : null;
+  const def = result.data ? recSourceDef(result.data.office) : null;
   const stale = result.status === 'stale' ? ' · stale' : '';
 
   if (result.status === 'error' || !result.data) {

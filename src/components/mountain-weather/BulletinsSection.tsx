@@ -1,29 +1,10 @@
 import { CollapsibleSection } from '@/components/mountain-weather/CollapsibleSection';
 import type { OfficeBulletinBundle } from '@/lib/mountain-weather/read-office-bulletins';
 import type { NwsTextProduct } from '@/lib/mountain-weather/bulletin-types';
-import {
-  NWS_AFD_ALY_DEF,
-  NWS_AFD_BTV_DEF,
-  NWS_AFD_CAR_DEF,
-  NWS_AFD_GYX_DEF,
-  NWS_HWO_BTV_DEF,
-} from '@/lib/mountain-weather/registry';
-import type { BulletinOffice } from '@/lib/mountain-weather/bulletin-types';
+import type { MountainWfo } from '@/lib/mountain-weather/nws-office';
+import { afdSourceDef, ghwoUrl } from '@/lib/mountain-weather/nws-office';
+import { NWS_HWO_BTV_DEF } from '@/lib/mountain-weather/registry';
 import type { SourceDef, SourceResult } from '@/lib/mountain-weather/source-types';
-
-const AFD_DEF: Record<BulletinOffice, SourceDef> = {
-  BTV: NWS_AFD_BTV_DEF,
-  ALY: NWS_AFD_ALY_DEF,
-  GYX: NWS_AFD_GYX_DEF,
-  CAR: NWS_AFD_CAR_DEF,
-};
-
-const GHWO_URL: Record<BulletinOffice, string> = {
-  BTV: 'https://www.weather.gov/erh/ghwo?wfo=btv',
-  ALY: 'https://www.weather.gov/erh/ghwo?wfo=aly',
-  GYX: 'https://www.weather.gov/erh/ghwo?wfo=gyx',
-  CAR: 'https://www.weather.gov/erh/ghwo?wfo=car',
-};
 
 function formatEt(value: string | null): string {
   if (!value) return '—';
@@ -93,10 +74,14 @@ function ProductBlock({
 
 export function BulletinsSection({ bundle }: { bundle: OfficeBulletinBundle | null }) {
   if (!bundle) return null;
-  const afdDef = AFD_DEF[bundle.office];
+  const afdDef = afdSourceDef(bundle.office as MountainWfo);
 
   return (
-    <CollapsibleSection title="Bulletins" subtitle={`NWS ${bundle.office} · AFD${bundle.office === 'BTV' ? ' + HWO' : ''}`} defaultOpen={false}>
+    <CollapsibleSection
+      title="Bulletins"
+      subtitle={`NWS ${bundle.office} · AFD${bundle.office === 'BTV' ? ' + HWO' : ''}`}
+      defaultOpen={false}
+    >
       <div className="space-y-3">
         <ProductBlock title="Area Forecast Discussion (AFD)" def={afdDef} result={bundle.afd} defaultOpen />
         {bundle.office === 'BTV' && bundle.hwo !== null ? (
@@ -104,14 +89,19 @@ export function BulletinsSection({ bundle }: { bundle: OfficeBulletinBundle | nu
         ) : (
           <CollapsibleSection
             title="Hazardous Weather Outlook"
-            subtitle={`${AFD_DEF[bundle.office].org} · link only`}
+            subtitle={`${afdDef.org} · link only`}
             defaultOpen={false}
           >
             <p className="text-sm">
               Text HWO is not shown in-page for {bundle.office}; use the graphical outlook.
             </p>
             <p className="text-xs text-gray-700">
-              <a href={GHWO_URL[bundle.office]} className="font-bold underline" target="_blank" rel="noopener noreferrer">
+              <a
+                href={ghwoUrl(bundle.office as MountainWfo)}
+                className="font-bold underline"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 Graphical Hazardous Weather Outlook (GHWO)
               </a>
             </p>

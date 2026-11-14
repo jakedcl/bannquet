@@ -147,12 +147,9 @@
     },
     "lyon-mountain": {
       "rec": {
-        "office": "BTV",
-        "sectionMatch": "Northern Adirondacks of New York"
-      },
-      "balloon": {
-        "regionMatch": "the Northern Adirondacks of New York",
-        "bindReason": "Dannemora bulletin city (Clinton Co. NY, BTV WFO)."
+        "office": "ALY",
+        "sectionMatch": "Southern Adirondacks",
+        "nearbyLabel": "KALY REC (Clinton Co. under Albany CWA)"
       }
     },
     "ampersand-mountain": {
@@ -201,22 +198,17 @@
         "sectionMatch": "Southern Adirondacks"
       }
     },
-    "blue-mountain": {
-      "rec": {
-        "office": "ALY",
-        "sectionMatch": "Southern Adirondacks"
-      }
-    },
     "pillsbury-mountain": {
       "rec": {
-        "office": "BTV",
-        "sectionMatch": "Northern Adirondacks of New York"
+        "office": "GYX",
+        "sectionMatch": "2500 Feet to 4000 Feet",
+        "nearbyLabel": "KGYX mid-elevation REC (Pillsbury under Gray CWA)"
       }
     },
     "gore-mountain": {
       "rec": {
-        "office": "BTV",
-        "sectionMatch": "Northern Adirondacks of New York"
+        "office": "ALY",
+        "sectionMatch": "Southern Adirondacks"
       }
     },
     "blue-ridge-mountain": {
@@ -227,8 +219,8 @@
     },
     "fishing-brook-range": {
       "rec": {
-        "office": "BTV",
-        "sectionMatch": "Northern Adirondacks of New York"
+        "office": "ALY",
+        "sectionMatch": "Southern Adirondacks"
       }
     },
     "vanderwhacker-mountain": {
@@ -239,29 +231,18 @@
     },
     "crane-mountain": {
       "rec": {
-        "office": "BTV",
-        "sectionMatch": "Northern Adirondacks of New York"
+        "office": "GYX",
+        "sectionMatch": "2500 Feet to 4000 Feet",
+        "nearbyLabel": "KGYX REC nearest western Maine / northern NH band"
       }
     },
     "hadley-mountain": {
       "rec": {
-        "office": "BTV",
-        "sectionMatch": "Northern Adirondacks of New York"
-      }
-    },
-    "black-mountain": {
-      "rec": {
-        "office": "BTV",
-        "sectionMatch": "Northern Adirondacks of New York"
+        "office": "ALY",
+        "sectionMatch": "Southern Adirondacks"
       }
     },
     "pharaoh-mountain": {
-      "rec": {
-        "office": "BTV",
-        "sectionMatch": "Northern Adirondacks of New York"
-      }
-    },
-    "prospect-mountain": {
       "rec": {
         "office": "BTV",
         "sectionMatch": "Northern Adirondacks of New York"
@@ -430,16 +411,6 @@
         "bindReason": "Waitsfield bulletin city (Washington Co. VT, BTV WFO)."
       }
     },
-    "bread-loaf-mountain": {
-      "rec": {
-        "office": "BTV",
-        "sectionMatch": "Northern Adirondacks of New York"
-      },
-      "balloon": {
-        "regionMatch": "the Champlain Valley of Vermont and New York",
-        "bindReason": "Middlebury/Ripton bulletin cities (Addison Co. VT, BTV WFO)."
-      }
-    },
     "mount-worcester": {
       "rec": {
         "office": "BTV",
@@ -464,10 +435,6 @@
       "rec": {
         "office": "BTV",
         "sectionMatch": "Northern Adirondacks of New York"
-      },
-      "balloon": {
-        "regionMatch": "Central and Northeast Vermont",
-        "bindReason": "Island Pond bulletin city (Essex Co. VT, BTV WFO)."
       }
     },
     "burke-mountain": {
@@ -504,14 +471,16 @@
     },
     "stratton-mountain": {
       "rec": {
-        "office": "BTV",
-        "sectionMatch": "Southern Green Mountains of Vermont"
+        "office": "BOX",
+        "sectionMatch": "Southern New England",
+        "nearbyLabel": "KBOX REC (Stratton area)"
       }
     },
     "mount-equinox": {
       "rec": {
-        "office": "BTV",
-        "sectionMatch": "Southern Green Mountains of Vermont"
+        "office": "ALY",
+        "sectionMatch": "Southern Adirondacks",
+        "nearbyLabel": "KALY recreation band nearest southern Green peak"
       }
     },
     "dorset-mountain": {
@@ -522,8 +491,9 @@
     },
     "haystack-mountain": {
       "rec": {
-        "office": "BTV",
-        "sectionMatch": "Southern Green Mountains of Vermont"
+        "office": "ALY",
+        "sectionMatch": "Southern Adirondacks",
+        "nearbyLabel": "KALY recreation band nearest southern Green peak"
       }
     },
     "ludlow-mountain": {
@@ -538,8 +508,9 @@
     },
     "bromley-mountain": {
       "rec": {
-        "office": "BTV",
-        "sectionMatch": "Southern Green Mountains of Vermont"
+        "office": "ALY",
+        "sectionMatch": "Southern Adirondacks",
+        "nearbyLabel": "KALY recreation band nearest southern Green peak"
       }
     },
     "mount-ascutney": {
@@ -560,8 +531,9 @@
     },
     "manchester-vt": {
       "rec": {
-        "office": "BTV",
-        "sectionMatch": "Southern Green Mountains of Vermont"
+        "office": "ALY",
+        "sectionMatch": "Southern Adirondacks",
+        "nearbyLabel": "KALY recreation band nearest southern Green peak"
       }
     },
     "mount-washington": {
@@ -655,10 +627,6 @@
       }
     },
     "baldface-mountain": {
-      "rec": {
-        "office": "GYX",
-        "sectionMatch": "Summits Above 4000 Feet"
-      },
       "avg": {
         "office": "GYX",
         "pointMatch": "BALDFACE MOUNTAIN"

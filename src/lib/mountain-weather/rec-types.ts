@@ -1,4 +1,4 @@
-export type RecOffice = 'BTV' | 'ALY' | 'GYX' | 'CAR';
+export type RecOffice = 'BTV' | 'ALY' | 'GYX' | 'CAR' | 'BOX' | 'OKX';
 
 export type RecPeriod = {
   name: string;

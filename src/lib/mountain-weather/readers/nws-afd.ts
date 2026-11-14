@@ -2,24 +2,12 @@ import { cachedSourceRead, buildSourceResult } from '@/lib/mountain-weather/fetc
 import { freshnessFromIssued, mergeFreshness } from '@/lib/mountain-weather/freshness';
 import type { BulletinOffice, NwsTextProduct } from '@/lib/mountain-weather/bulletin-types';
 import { parseAfdProduct } from '@/lib/mountain-weather/parse/afd';
-import {
-  NWS_AFD_ALY_DEF,
-  NWS_AFD_BTV_DEF,
-  NWS_AFD_CAR_DEF,
-  NWS_AFD_GYX_DEF,
-} from '@/lib/mountain-weather/registry';
-import type { SourceDef, SourceResult } from '@/lib/mountain-weather/source-types';
+import { afdSourceDef } from '@/lib/mountain-weather/nws-office';
+import type { SourceResult } from '@/lib/mountain-weather/source-types';
 import { fetchLatestNwsProductText } from '@/lib/mountain-weather/readers/nws-product-text';
 
-const DEFS: Record<BulletinOffice, SourceDef> = {
-  BTV: NWS_AFD_BTV_DEF,
-  ALY: NWS_AFD_ALY_DEF,
-  GYX: NWS_AFD_GYX_DEF,
-  CAR: NWS_AFD_CAR_DEF,
-};
-
 async function loadAfd(office: BulletinOffice): Promise<SourceResult<NwsTextProduct>> {
-  const def = DEFS[office];
+  const def = afdSourceDef(office);
   try {
     const fetched = await fetchLatestNwsProductText('AFD', office);
     const base = buildSourceResult({
@@ -47,7 +35,7 @@ const officeReaders = new Map<BulletinOffice, () => Promise<SourceResult<NwsText
 function readerForOffice(office: BulletinOffice) {
   let reader = officeReaders.get(office);
   if (!reader) {
-    const def = DEFS[office];
+    const def = afdSourceDef(office);
     reader = cachedSourceRead({
       cacheKey: [def.id, office],
       def,

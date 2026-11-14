@@ -3,456 +3,429 @@
   "places": {
     "mount-marcy": {
       "office": "BTV",
-      "bindReason": "Catalog place.office BTV (CWA matches county assignment in places.json)."
+      "bindReason": "api.weather.gov/points cwa=BTV gridId=BTV."
     },
     "whiteface-mountain": {
       "office": "BTV",
-      "bindReason": "Catalog place.office BTV (CWA matches county assignment in places.json)."
+      "bindReason": "api.weather.gov/points cwa=BTV gridId=BTV."
     },
     "dix-mountain": {
       "office": "BTV",
-      "bindReason": "Catalog place.office BTV (CWA matches county assignment in places.json)."
+      "bindReason": "api.weather.gov/points cwa=BTV gridId=BTV."
     },
     "algonquin-peak": {
       "office": "BTV",
-      "bindReason": "Catalog place.office BTV (CWA matches county assignment in places.json)."
+      "bindReason": "api.weather.gov/points cwa=BTV gridId=BTV."
     },
     "mount-colden": {
       "office": "BTV",
-      "bindReason": "Catalog place.office BTV (CWA matches county assignment in places.json)."
+      "bindReason": "api.weather.gov/points cwa=BTV gridId=BTV."
     },
     "mount-colvin": {
       "office": "BTV",
-      "bindReason": "Catalog place.office BTV (CWA matches county assignment in places.json)."
+      "bindReason": "api.weather.gov/points cwa=BTV gridId=BTV."
     },
     "giant-mountain": {
       "office": "BTV",
-      "bindReason": "Catalog place.office BTV (CWA matches county assignment in places.json)."
+      "bindReason": "api.weather.gov/points cwa=BTV gridId=BTV."
     },
     "santanoni-peak": {
       "office": "BTV",
-      "bindReason": "Catalog place.office BTV (CWA matches county assignment in places.json)."
+      "bindReason": "api.weather.gov/points cwa=BTV gridId=BTV."
     },
     "cascade-mountain": {
       "office": "BTV",
-      "bindReason": "Catalog place.office BTV (CWA matches county assignment in places.json)."
+      "bindReason": "api.weather.gov/points cwa=BTV gridId=BTV."
     },
     "mckenzie-mountain": {
       "office": "BTV",
-      "bindReason": "Catalog place.office BTV (CWA matches county assignment in places.json)."
+      "bindReason": "api.weather.gov/points cwa=BTV gridId=BTV."
     },
     "mount-van-hoevenberg": {
       "office": "BTV",
-      "bindReason": "Catalog place.office BTV (CWA matches county assignment in places.json)."
+      "bindReason": "api.weather.gov/points cwa=BTV gridId=BTV."
     },
     "keene-valley": {
       "office": "BTV",
-      "bindReason": "Catalog place.office BTV (CWA matches county assignment in places.json)."
+      "bindReason": "api.weather.gov/points cwa=BTV gridId=BTV."
     },
     "lyon-mountain": {
-      "office": "BTV",
-      "bindReason": "Catalog place.office BTV (CWA matches county assignment in places.json)."
+      "office": "ALY",
+      "bindReason": "api.weather.gov/points cwa=ALY gridId=ALY."
     },
     "ampersand-mountain": {
       "office": "BTV",
-      "bindReason": "Catalog place.office BTV (CWA matches county assignment in places.json)."
+      "bindReason": "api.weather.gov/points cwa=BTV gridId=BTV."
     },
     "debar-mountain": {
       "office": "BTV",
-      "bindReason": "Catalog place.office BTV (CWA matches county assignment in places.json)."
+      "bindReason": "api.weather.gov/points cwa=BTV gridId=BTV."
     },
     "st-regis-mountain": {
       "office": "BTV",
-      "bindReason": "Catalog place.office BTV (CWA matches county assignment in places.json)."
+      "bindReason": "api.weather.gov/points cwa=BTV gridId=BTV."
     },
     "mount-arab": {
       "office": "BTV",
-      "bindReason": "Catalog place.office BTV (CWA matches county assignment in places.json)."
+      "bindReason": "api.weather.gov/points cwa=BTV gridId=BTV."
     },
     "snowy-mountain": {
       "office": "ALY",
-      "bindReason": "Catalog place.office ALY (CWA matches county assignment in places.json)."
+      "bindReason": "api.weather.gov/points cwa=ALY gridId=ALY."
     },
     "blue-mountain": {
-      "office": "ALY",
-      "bindReason": "Catalog place.office ALY (CWA matches county assignment in places.json)."
+      "office": "OKX",
+      "bindReason": "api.weather.gov/points cwa=OKX gridId=OKX."
     },
     "pillsbury-mountain": {
-      "office": "BTV",
-      "bindReason": "Catalog place.office BTV (CWA matches county assignment in places.json)."
+      "office": "GYX",
+      "bindReason": "api.weather.gov/points cwa=GYX gridId=GYX."
     },
     "gore-mountain": {
-      "office": "BTV",
-      "bindReason": "Catalog place.office BTV (CWA matches county assignment in places.json)."
+      "office": "ALY",
+      "bindReason": "api.weather.gov/points cwa=ALY gridId=ALY."
     },
     "blue-ridge-mountain": {
       "office": "BTV",
-      "bindReason": "Catalog place.office BTV (CWA matches county assignment in places.json)."
+      "bindReason": "api.weather.gov/points cwa=BTV gridId=BTV."
     },
     "fishing-brook-range": {
-      "office": "BTV",
-      "bindReason": "Catalog place.office BTV (CWA matches county assignment in places.json)."
+      "office": "ALY",
+      "bindReason": "api.weather.gov/points cwa=ALY gridId=ALY."
     },
     "vanderwhacker-mountain": {
       "office": "BTV",
-      "bindReason": "Catalog place.office BTV (CWA matches county assignment in places.json)."
+      "bindReason": "api.weather.gov/points cwa=BTV gridId=BTV."
     },
     "crane-mountain": {
-      "office": "BTV",
-      "bindReason": "Catalog place.office BTV (CWA matches county assignment in places.json)."
+      "office": "GYX",
+      "bindReason": "api.weather.gov/points cwa=GYX gridId=GYX."
     },
     "hadley-mountain": {
-      "office": "BTV",
-      "bindReason": "Catalog place.office BTV (CWA matches county assignment in places.json)."
+      "office": "ALY",
+      "bindReason": "api.weather.gov/points cwa=ALY gridId=ALY."
     },
     "black-mountain": {
-      "office": "BTV",
-      "bindReason": "Catalog place.office BTV (CWA matches county assignment in places.json)."
+      "office": "OKX",
+      "bindReason": "api.weather.gov/points cwa=OKX gridId=OKX."
     },
     "pharaoh-mountain": {
       "office": "BTV",
-      "bindReason": "Catalog place.office BTV (CWA matches county assignment in places.json)."
+      "bindReason": "api.weather.gov/points cwa=BTV gridId=BTV."
     },
     "prospect-mountain": {
-      "office": "BTV",
-      "bindReason": "Catalog place.office BTV (CWA matches county assignment in places.json)."
+      "office": "OKX",
+      "bindReason": "api.weather.gov/points cwa=OKX gridId=OKX."
     },
     "slide-mountain": {
       "office": "ALY",
-      "bindReason": "Catalog place.office ALY (CWA matches county assignment in places.json)."
+      "bindReason": "api.weather.gov/points cwa=ALY gridId=ALY."
     },
     "hunter-mountain": {
       "office": "ALY",
-      "bindReason": "Catalog place.office ALY (CWA matches county assignment in places.json)."
+      "bindReason": "api.weather.gov/points cwa=ALY gridId=ALY."
     },
     "peekamoose-mountain": {
       "office": "ALY",
-      "bindReason": "Catalog place.office ALY (CWA matches county assignment in places.json)."
+      "bindReason": "api.weather.gov/points cwa=ALY gridId=ALY."
     },
     "balsam-lake-mountain": {
       "office": "ALY",
-      "bindReason": "Catalog place.office ALY (CWA matches county assignment in places.json)."
+      "bindReason": "api.weather.gov/points cwa=ALY gridId=ALY."
     },
     "panther-mountain": {
-      "office": "ALY",
-      "bindReason": "Catalog place.office ALY (CWA matches county assignment in places.json)."
+      "office": "OKX",
+      "bindReason": "api.weather.gov/points cwa=OKX gridId=OKX."
     },
     "windham-high-peak": {
       "office": "ALY",
-      "bindReason": "Catalog place.office ALY (CWA matches county assignment in places.json)."
+      "bindReason": "api.weather.gov/points cwa=ALY gridId=ALY."
     },
     "overlook-mountain": {
       "office": "ALY",
-      "bindReason": "Catalog place.office ALY (CWA matches county assignment in places.json)."
+      "bindReason": "api.weather.gov/points cwa=ALY gridId=ALY."
     },
     "red-hill": {
-      "office": "ALY",
-      "bindReason": "Catalog place.office ALY (CWA matches county assignment in places.json)."
+      "office": "BOX",
+      "bindReason": "api.weather.gov/points cwa=BOX gridId=BOX."
     },
     "mount-tremper": {
       "office": "ALY",
-      "bindReason": "Catalog place.office ALY (CWA matches county assignment in places.json)."
+      "bindReason": "api.weather.gov/points cwa=ALY gridId=ALY."
     },
     "tannersville": {
       "office": "ALY",
-      "bindReason": "Catalog place.office ALY (CWA matches county assignment in places.json)."
+      "bindReason": "api.weather.gov/points cwa=ALY gridId=ALY."
     },
     "gunks-ridge": {
       "office": "ALY",
-      "bindReason": "Mid-Hudson / Catskills CWA (KALY), not KBTV."
+      "bindReason": "api.weather.gov/points cwa=ALY gridId=ALY."
     },
     "thacher-park": {
       "office": "ALY",
-      "bindReason": "Capital District CWA (KALY), not KBTV."
+      "bindReason": "api.weather.gov/points cwa=ALY gridId=ALY."
     },
     "jay-peak": {
       "office": "BTV",
-      "bindReason": "Catalog place.office BTV (CWA matches county assignment in places.json)."
+      "bindReason": "api.weather.gov/points cwa=BTV gridId=BTV."
     },
     "belvidere-mountain": {
       "office": "BTV",
-      "bindReason": "Catalog place.office BTV (CWA matches county assignment in places.json)."
+      "bindReason": "api.weather.gov/points cwa=BTV gridId=BTV."
     },
     "jay-village": {
       "office": "BTV",
-      "bindReason": "Catalog place.office BTV (CWA matches county assignment in places.json)."
+      "bindReason": "api.weather.gov/points cwa=BTV gridId=BTV."
     },
     "mount-mansfield": {
       "office": "BTV",
-      "bindReason": "Catalog place.office BTV (CWA matches county assignment in places.json)."
+      "bindReason": "api.weather.gov/points cwa=BTV gridId=BTV."
     },
     "smugglers-notch": {
       "office": "BTV",
-      "bindReason": "Catalog place.office BTV (CWA matches county assignment in places.json)."
+      "bindReason": "api.weather.gov/points cwa=BTV gridId=BTV."
     },
     "stowe-town": {
       "office": "BTV",
-      "bindReason": "Catalog place.office BTV (CWA matches county assignment in places.json)."
+      "bindReason": "api.weather.gov/points cwa=BTV gridId=BTV."
     },
     "camels-hump": {
       "office": "BTV",
-      "bindReason": "Catalog place.office BTV (CWA matches county assignment in places.json)."
+      "bindReason": "api.weather.gov/points cwa=BTV gridId=BTV."
     },
     "mount-ellen": {
       "office": "BTV",
-      "bindReason": "Catalog place.office BTV (CWA matches county assignment in places.json)."
+      "bindReason": "api.weather.gov/points cwa=BTV gridId=BTV."
     },
     "bread-loaf-mountain": {
-      "office": "BTV",
-      "bindReason": "Catalog place.office BTV (CWA matches county assignment in places.json)."
+      "office": "ALY",
+      "bindReason": "api.weather.gov/points cwa=ALY gridId=ALY."
     },
     "mount-worcester": {
       "office": "BTV",
-      "bindReason": "Catalog place.office BTV (CWA matches county assignment in places.json)."
+      "bindReason": "api.weather.gov/points cwa=BTV gridId=BTV."
     },
     "waterbury": {
       "office": "BTV",
-      "bindReason": "Catalog place.office BTV (CWA matches county assignment in places.json)."
+      "bindReason": "api.weather.gov/points cwa=BTV gridId=BTV."
     },
     "signal-mountain": {
-      "office": "BTV",
-      "bindReason": "Catalog place.office BTV (CWA matches county assignment in places.json)."
+      "office": "ALY",
+      "bindReason": "api.weather.gov/points cwa=ALY gridId=ALY."
     },
     "burke-mountain": {
       "office": "BTV",
-      "bindReason": "Catalog place.office BTV (CWA matches county assignment in places.json)."
+      "bindReason": "api.weather.gov/points cwa=BTV gridId=BTV."
     },
     "monadnock-mountain": {
       "office": "BTV",
-      "bindReason": "Catalog place.office BTV (CWA matches county assignment in places.json)."
+      "bindReason": "api.weather.gov/points cwa=BTV gridId=BTV."
     },
     "killington-peak": {
       "office": "BTV",
-      "bindReason": "Catalog place.office BTV (CWA matches county assignment in places.json)."
+      "bindReason": "api.weather.gov/points cwa=BTV gridId=BTV."
     },
     "stratton-mountain": {
-      "office": "BTV",
-      "bindReason": "Catalog place.office BTV (CWA matches county assignment in places.json)."
+      "office": "BOX",
+      "bindReason": "api.weather.gov/points cwa=BOX gridId=BOX."
     },
     "mount-equinox": {
-      "office": "BTV",
-      "bindReason": "Catalog place.office BTV (CWA matches county assignment in places.json)."
+      "office": "ALY",
+      "bindReason": "api.weather.gov/points cwa=ALY gridId=ALY."
     },
     "dorset-mountain": {
       "office": "BTV",
-      "bindReason": "Catalog place.office BTV (CWA matches county assignment in places.json)."
+      "bindReason": "api.weather.gov/points cwa=BTV gridId=BTV."
     },
     "haystack-mountain": {
-      "office": "BTV",
-      "bindReason": "Catalog place.office BTV (CWA matches county assignment in places.json)."
+      "office": "ALY",
+      "bindReason": "api.weather.gov/points cwa=ALY gridId=ALY."
     },
     "ludlow-mountain": {
       "office": "BTV",
-      "bindReason": "Catalog place.office BTV (CWA matches county assignment in places.json)."
+      "bindReason": "api.weather.gov/points cwa=BTV gridId=BTV."
     },
     "bromley-mountain": {
-      "office": "BTV",
-      "bindReason": "Catalog place.office BTV (CWA matches county assignment in places.json)."
+      "office": "ALY",
+      "bindReason": "api.weather.gov/points cwa=ALY gridId=ALY."
     },
     "mount-ascutney": {
       "office": "BTV",
-      "bindReason": "Catalog place.office BTV (CWA matches county assignment in places.json)."
+      "bindReason": "api.weather.gov/points cwa=BTV gridId=BTV."
     },
     "bald-mountain": {
       "office": "BTV",
-      "bindReason": "Catalog place.office BTV (CWA matches county assignment in places.json)."
+      "bindReason": "Known-bad catalog coordinates (final-pass); NWS points lookup skipped."
     },
     "manchester-vt": {
-      "office": "BTV",
-      "bindReason": "Catalog place.office BTV (CWA matches county assignment in places.json)."
+      "office": "ALY",
+      "bindReason": "api.weather.gov/points cwa=ALY gridId=ALY."
     },
     "mount-washington": {
       "office": "GYX",
-      "bindReason": "Catalog place.office GYX (CWA matches county assignment in places.json)."
+      "bindReason": "api.weather.gov/points cwa=GYX gridId=GYX."
     },
     "mount-adams": {
       "office": "GYX",
-      "bindReason": "Catalog place.office GYX (CWA matches county assignment in places.json)."
+      "bindReason": "api.weather.gov/points cwa=GYX gridId=GYX."
     },
     "pinkham-notch": {
       "office": "GYX",
-      "bindReason": "Catalog place.office GYX (CWA matches county assignment in places.json)."
+      "bindReason": "api.weather.gov/points cwa=GYX gridId=GYX."
     },
     "crawford-notch": {
       "office": "GYX",
-      "bindReason": "Catalog place.office GYX (CWA matches county assignment in places.json)."
+      "bindReason": "api.weather.gov/points cwa=GYX gridId=GYX."
     },
     "baldface-mountain": {
-      "office": "GYX",
-      "bindReason": "Catalog place.office GYX (CWA matches county assignment in places.json)."
+      "office": "ALY",
+      "bindReason": "api.weather.gov/points cwa=ALY gridId=ALY."
     },
     "mount-lafayette": {
       "office": "GYX",
-      "bindReason": "Catalog place.office GYX (CWA matches county assignment in places.json)."
+      "bindReason": "api.weather.gov/points cwa=GYX gridId=GYX."
     },
     "mount-moosilauke": {
       "office": "GYX",
-      "bindReason": "Catalog place.office GYX (CWA matches county assignment in places.json)."
+      "bindReason": "api.weather.gov/points cwa=GYX gridId=GYX."
     },
     "mount-osceola": {
       "office": "GYX",
-      "bindReason": "Catalog place.office GYX (CWA matches county assignment in places.json)."
+      "bindReason": "api.weather.gov/points cwa=GYX gridId=GYX."
     },
     "cannon-mountain": {
       "office": "GYX",
-      "bindReason": "Catalog place.office GYX (CWA matches county assignment in places.json)."
+      "bindReason": "api.weather.gov/points cwa=GYX gridId=GYX."
     },
     "kancamagus-pass": {
       "office": "GYX",
-      "bindReason": "Catalog place.office GYX (CWA matches county assignment in places.json)."
+      "bindReason": "api.weather.gov/points cwa=GYX gridId=GYX."
     },
     "franconia-notch": {
       "office": "GYX",
-      "bindReason": "Catalog place.office GYX (CWA matches county assignment in places.json)."
+      "bindReason": "api.weather.gov/points cwa=GYX gridId=GYX."
     },
     "rumney-crag": {
       "office": "GYX",
-      "bindReason": "Catalog place.office GYX (CWA matches county assignment in places.json)."
+      "bindReason": "api.weather.gov/points cwa=GYX gridId=GYX."
     },
     "mount-monadnock": {
       "office": "GYX",
-      "bindReason": "Catalog place.office GYX (CWA matches county assignment in places.json)."
+      "bindReason": "api.weather.gov/points cwa=GYX gridId=GYX."
     },
     "north-pack-monadnock": {
       "office": "GYX",
-      "bindReason": "Catalog place.office GYX (CWA matches county assignment in places.json)."
+      "bindReason": "api.weather.gov/points cwa=GYX gridId=GYX."
     },
     "katahdin": {
       "office": "CAR",
-      "bindReason": "Catalog place.office CAR (CWA matches county assignment in places.json)."
+      "bindReason": "api.weather.gov/points cwa=CAR gridId=CAR."
     },
     "katahdin-woods-and-waters": {
       "office": "CAR",
-      "bindReason": "Catalog place.office CAR (CWA matches county assignment in places.json)."
+      "bindReason": "api.weather.gov/points cwa=CAR gridId=CAR."
     },
     "millinocket": {
       "office": "CAR",
-      "bindReason": "Catalog place.office CAR (CWA matches county assignment in places.json)."
+      "bindReason": "api.weather.gov/points cwa=CAR gridId=CAR."
     },
     "white-cap-mountain": {
       "office": "CAR",
-      "bindReason": "Catalog place.office CAR (CWA matches county assignment in places.json)."
+      "bindReason": "api.weather.gov/points cwa=CAR gridId=CAR."
     },
     "sugarloaf-mountain": {
-      "office": "CAR",
-      "bindReason": "Catalog place.office CAR (CWA matches county assignment in places.json)."
+      "office": "GYX",
+      "bindReason": "api.weather.gov/points cwa=GYX gridId=GYX."
     },
     "bigelow": {
-      "office": "CAR",
-      "bindReason": "Catalog place.office CAR (CWA matches county assignment in places.json)."
+      "office": "GYX",
+      "bindReason": "api.weather.gov/points cwa=GYX gridId=GYX."
     },
     "rangeley": {
-      "office": "CAR",
-      "bindReason": "Catalog place.office CAR (CWA matches county assignment in places.json)."
+      "office": "GYX",
+      "bindReason": "api.weather.gov/points cwa=GYX gridId=GYX."
     },
     "deboullie-mountain": {
       "office": "CAR",
-      "bindReason": "Catalog place.office CAR (CWA matches county assignment in places.json)."
+      "bindReason": "api.weather.gov/points cwa=CAR gridId=CAR."
     },
     "mars-hill-mountain": {
       "office": "CAR",
-      "bindReason": "Catalog place.office CAR (CWA matches county assignment in places.json)."
+      "bindReason": "api.weather.gov/points cwa=CAR gridId=CAR."
     },
     "cadillac-mountain": {
       "office": "CAR",
-      "bindReason": "Catalog place.office CAR (CWA matches county assignment in places.json)."
+      "bindReason": "api.weather.gov/points cwa=CAR gridId=CAR."
     },
     "bar-harbor": {
       "office": "CAR",
-      "bindReason": "Catalog place.office CAR (CWA matches county assignment in places.json)."
+      "bindReason": "api.weather.gov/points cwa=CAR gridId=CAR."
     }
   },
   "states": {
-    "vt": {
-      "office": "BTV",
-      "bindReason": "All catalog VT peaks are in KBTV; HWO covers Vermont zones."
-    },
-    "nh": {
-      "office": "GYX",
-      "bindReason": "All catalog NH peaks are in KGYX."
-    },
-    "me": {
-      "office": "CAR",
-      "bindReason": "All catalog ME peaks are in KCAR."
-    },
-    "ny": null
+    "ny": null,
+    "vt": null,
+    "nh": null,
+    "me": null
   },
   "sections": {
     "adirondack-high-peaks": {
       "office": "BTV",
-      "bindReason": "Section is entirely KBTV (Essex/Franklin ADK)."
-    },
-    "northern-adirondacks": {
-      "office": "BTV",
-      "bindReason": "Section is entirely KBTV."
-    },
-    "jay-peak": {
-      "office": "BTV",
-      "bindReason": "Section is entirely KBTV (NEK / Orleans)."
-    },
-    "northern-greens": {
-      "office": "BTV",
-      "bindReason": "Section is entirely KBTV."
-    },
-    "central-greens": {
-      "office": "BTV",
-      "bindReason": "Section is entirely KBTV."
-    },
-    "northeast-kingdom": {
-      "office": "BTV",
-      "bindReason": "Section is entirely KBTV (NEK)."
-    },
-    "southern-greens": {
-      "office": "BTV",
-      "bindReason": "Section is entirely KBTV (Rutland/Windsor/etc.)."
-    },
-    "catskill-mountains": {
-      "office": "ALY",
-      "bindReason": "Section is entirely KALY."
+      "bindReason": "Every place in Adirondack High Peaks shares cwa BTV."
     },
     "shawangunks": {
       "office": "ALY",
-      "bindReason": "Single place; CWA KALY (override from catalog BTV)."
+      "bindReason": "Every place in Shawangunks shares cwa ALY."
     },
     "thacher-park": {
       "office": "ALY",
-      "bindReason": "Single place; CWA KALY."
+      "bindReason": "Every place in Thacher Park shares cwa ALY."
     },
-    "presidential-range": {
-      "office": "GYX",
-      "bindReason": "Section is entirely KGYX."
+    "jay-peak": {
+      "office": "BTV",
+      "bindReason": "Every place in Jay Peak shares cwa BTV."
+    },
+    "northern-greens": {
+      "office": "BTV",
+      "bindReason": "Every place in Northern Greens shares cwa BTV."
     },
     "franconia-pemi": {
       "office": "GYX",
-      "bindReason": "Section is entirely KGYX."
+      "bindReason": "Every place in Franconia & Pemi shares cwa GYX."
     },
     "rumney-climbing": {
       "office": "GYX",
-      "bindReason": "Section is entirely KGYX."
+      "bindReason": "Every place in Rumney Climbing shares cwa GYX."
     },
     "monadnock-region": {
       "office": "GYX",
-      "bindReason": "Section is entirely KGYX."
+      "bindReason": "Every place in Monadnock Region (new) shares cwa GYX."
     },
     "baxter-state-park": {
       "office": "CAR",
-      "bindReason": "Section is entirely KCAR."
+      "bindReason": "Every place in Baxter State Park shares cwa CAR."
     },
     "mahoosucs-bigelow": {
-      "office": "CAR",
-      "bindReason": "Section is entirely KCAR."
+      "office": "GYX",
+      "bindReason": "Every place in Mahoosucs & Bigelow shares cwa GYX."
     },
     "northern-maine": {
       "office": "CAR",
-      "bindReason": "Section is entirely KCAR."
+      "bindReason": "Every place in Northern Maine (new) shares cwa CAR."
     },
     "acadia": {
       "office": "CAR",
-      "bindReason": "Section is entirely KCAR."
+      "bindReason": "Every place in Acadia shares cwa CAR."
     }
   },
   "unboundScopes": {
-    "central-southern-adirondacks": "Mixed KBTV and KALY peaks in one section; no single office covers the whole section.",
-    "ny": "Catalog NY spans KBTV and KALY; no state-wide bulletin block."
+    "northern-adirondacks": "Mixed cwa (ALY, BTV); no single-office bulletin block.",
+    "central-southern-adirondacks": "Mixed cwa (ALY, OKX, GYX, BTV); no single-office bulletin block.",
+    "catskill-mountains": "Mixed cwa (ALY, OKX, BOX); no single-office bulletin block.",
+    "central-greens": "Mixed cwa (BTV, ALY); no single-office bulletin block.",
+    "northeast-kingdom": "Mixed cwa (ALY, BTV); no single-office bulletin block.",
+    "southern-greens": "Mixed cwa (BTV, BOX, ALY); no single-office bulletin block.",
+    "presidential-range": "Mixed cwa (GYX, ALY); no single-office bulletin block.",
+    "ny": "Catalog New York spans multiple CWAs; no state-wide bulletin block."
   }
 }

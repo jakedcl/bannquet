@@ -1,4 +1,4 @@
-import type { BulletinOffice } from '@/lib/mountain-weather/bulletin-types';
+import type { MountainWfo } from '@/lib/mountain-weather/nws-office';
 import { outsideFetch } from '@/lib/outside-fetch';
 
 const USER_AGENT = 'Bannquet-Weather-App (admin@bannquet.com)';
@@ -10,7 +10,7 @@ type ProductDoc = { productText?: string; issuanceTime?: string };
 
 export async function fetchLatestNwsProductText(
   kind: NwsProductKind,
-  office: BulletinOffice,
+  office: MountainWfo,
 ): Promise<{
   text: string;
   issuanceTime: string | null;

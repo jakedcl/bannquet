@@ -2,23 +2,31 @@ import { cachedSourceRead, buildSourceResult } from '@/lib/mountain-weather/fetc
 import { freshnessFromIssued, mergeFreshness } from '@/lib/mountain-weather/freshness';
 import { parseRecBulletin } from '@/lib/mountain-weather/parse/rec';
 import type { RecBulletin, RecOffice } from '@/lib/mountain-weather/rec-types';
-import {
-  NWS_REC_ALY_DEF,
-  NWS_REC_BTV_DEF,
-  NWS_REC_CAR_DEF,
-  NWS_REC_GYX_DEF,
-} from '@/lib/mountain-weather/registry';
+import { NWS_REC_ALY_DEF, NWS_REC_BTV_DEF, NWS_REC_CAR_DEF, NWS_REC_GYX_DEF } from '@/lib/mountain-weather/registry';
 import type { SourceDef, SourceResult } from '@/lib/mountain-weather/source-types';
 import { outsideFetch } from '@/lib/outside-fetch';
 
 const USER_AGENT = 'Bannquet-Weather-App (admin@bannquet.com)';
 
-const DEFS: Record<RecOffice, SourceDef> = {
+const CORE_DEFS: Record<'BTV' | 'ALY' | 'GYX' | 'CAR', SourceDef> = {
   BTV: NWS_REC_BTV_DEF,
   ALY: NWS_REC_ALY_DEF,
   GYX: NWS_REC_GYX_DEF,
   CAR: NWS_REC_CAR_DEF,
 };
+
+function recDef(office: RecOffice): SourceDef {
+  if (office in CORE_DEFS) return CORE_DEFS[office as keyof typeof CORE_DEFS];
+  return {
+    id: `nws-${office.toLowerCase()}-rec`,
+    org: `National Weather Service ${office}`,
+    kind: 'forecast',
+    terms: 'reuse-ok',
+    url: `https://api.weather.gov/products/types/REC/locations/${office}`,
+    ttlSeconds: 1800,
+    expectedEveryHours: 6,
+  };
+}
 
 type ProductList = { '@graph'?: { id: string; issuanceTime?: string }[] };
 type ProductDoc = { productText?: string; issuanceTime?: string };
@@ -52,7 +60,7 @@ async function fetchLatestRec(office: RecOffice): Promise<{
 }
 
 async function loadRecOffice(office: RecOffice): Promise<SourceResult<RecBulletin>> {
-  const def = DEFS[office];
+  const def = recDef(office);
   try {
     const fetched = await fetchLatestRec(office);
     const base = buildSourceResult({
@@ -80,7 +88,7 @@ const officeReaders = new Map<RecOffice, () => Promise<SourceResult<RecBulletin>
 function readerForOffice(office: RecOffice) {
   let reader = officeReaders.get(office);
   if (!reader) {
-    const def = DEFS[office];
+    const def = recDef(office);
     reader = cachedSourceRead({
       cacheKey: [def.id, office],
       def,

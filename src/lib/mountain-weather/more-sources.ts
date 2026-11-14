@@ -26,6 +26,8 @@ const OFFICE_HUB: Record<MountainPlace['office'], string> = {
   ALY: 'https://www.weather.gov/aly',
   GYX: 'https://www.weather.gov/gyx',
   CAR: 'https://www.weather.gov/car',
+  BOX: 'https://www.weather.gov/box',
+  OKX: 'https://www.weather.gov/okx',
 };
 
 const STATE_FOR_OFFICE: Record<MountainPlace['office'], string> = {
@@ -33,13 +35,15 @@ const STATE_FOR_OFFICE: Record<MountainPlace['office'], string> = {
   ALY: 'NY',
   GYX: 'NH',
   CAR: 'ME',
+  BOX: 'MA',
+  OKX: 'NY',
 };
 
 const OFFICES_BY_STATE: Record<MountainStateCode, MountainPlace['office'][]> = {
-  ny: ['BTV', 'ALY'],
-  vt: ['BTV'],
-  nh: ['GYX'],
-  me: ['CAR'],
+  ny: ['BTV', 'ALY', 'OKX'],
+  vt: ['BTV', 'ALY', 'BOX'],
+  nh: ['GYX', 'ALY'],
+  me: ['CAR', 'GYX'],
 };
 
 const SECTIONS_WITH_MOUNTAIN_VIEWER = new Set([
