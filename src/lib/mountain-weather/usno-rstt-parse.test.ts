@@ -20,7 +20,7 @@ const marcyBody = {
       ],
       sundata: [
         { phen: 'Begin Civil Twilight', time: '06:19' },
-        { phen: 'Rise', time: '06:50' },
+        { phen: 'Rise', time: '06:50  ST' },
         { phen: 'Upper Transit', time: '11:40' },
         { phen: 'Set', time: '16:30' },
         { phen: 'End Civil Twilight', time: '17:01' },

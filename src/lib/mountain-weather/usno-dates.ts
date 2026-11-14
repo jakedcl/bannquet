@@ -17,6 +17,8 @@ export function usnoEtDatesThrough(anchor: Date, count: number): string[] {
   return out;
 }
 
-export function formatEtLabel(dateEt: string): string {
-  return `${dateEt} (ET)`;
+export function easternTimeZoneLabel(isDst: boolean | null): string {
+  if (isDst === true) return 'EDT';
+  if (isDst === false) return 'EST';
+  return 'ET';
 }

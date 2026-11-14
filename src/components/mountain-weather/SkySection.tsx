@@ -1,8 +1,8 @@
 import { CollapsibleSection } from '@/components/mountain-weather/CollapsibleSection';
-import type { PlaceSkyData } from '@/lib/mountain-weather/sky-types';
+import type { PlaceSkyData, UsnoTimedEvent } from '@/lib/mountain-weather/sky-types';
 import { USNO_RSTT_ONEDAY_DEF } from '@/lib/mountain-weather/readers/usno-rstt-oneday';
 
-function EventList({ title, rows }: { title: string; rows: Array<{ phen: string; time: string | null }> }) {
+function EventList({ title, rows }: { title: string; rows: UsnoTimedEvent[] }) {
   if (!rows.length) return null;
   return (
     <div>
@@ -10,7 +10,7 @@ function EventList({ title, rows }: { title: string; rows: Array<{ phen: string;
       <ul className="text-sm">
         {rows.map((row) => (
           <li key={`${row.phen}-${row.time}`}>
-            {row.phen}: {row.time ?? 'null (USNO)'}
+            {row.phen}: {row.display ?? row.time ?? 'null (USNO)'} {row.marker ? `(${row.marker})` : ''}
           </li>
         ))}
       </ul>
@@ -36,7 +36,7 @@ export function SkySection({ data }: { data: PlaceSkyData }) {
         {data.days.map((day) => (
           <article key={day.dateEt} className="retro-box border-[#5c3a1e] bg-white/60 p-3">
             <h3 className="text-sm font-bold">
-              {day.dateEt} · {day.dayOfWeek ?? '—'} (ET)
+              {day.dateEt} · {day.dayOfWeek ?? '—'} ({day.tzLabel})
             </h3>
             <dl className="mt-2 grid gap-1 text-sm sm:grid-cols-2">
               <div>

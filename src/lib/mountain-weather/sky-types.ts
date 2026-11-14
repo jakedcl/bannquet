@@ -3,6 +3,8 @@ import type { SourceResult } from '@/lib/mountain-weather/source-types';
 export type UsnoTimedEvent = {
   phen: string;
   time: string | null;
+  display: string;
+  marker: 'DT' | 'ST' | null;
 };
 
 export type UsnoDaySky = {

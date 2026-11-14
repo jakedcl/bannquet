@@ -1,5 +1,5 @@
 import type { UsnoDaySky, UsnoTimedEvent } from '@/lib/mountain-weather/sky-types';
-import { formatEtLabel } from '@/lib/mountain-weather/usno-dates';
+import { easternTimeZoneLabel } from '@/lib/mountain-weather/usno-dates';
 
 type UsnoApiDay = {
   year: number;
@@ -16,15 +16,23 @@ type UsnoApiDay = {
   moondata?: Array<{ phen: string; time: string }>;
 };
 
+export function normalizeUsnoClock(time: string): { clock: string; marker: 'DT' | 'ST' | null } {
+  const m = time.match(/^(\d{1,2}:\d{2})(?:\s+(DT|ST))?$/i);
+  if (!m) return { clock: time.trim(), marker: null };
+  const marker = m[2]?.toUpperCase() === 'DT' ? 'DT' : m[2]?.toUpperCase() === 'ST' ? 'ST' : null;
+  return { clock: m[1], marker };
+}
+
 function minutesFromClock(value: string): number | null {
-  const m = value.match(/^(\d{1,2}):(\d{2})$/);
+  const { clock } = normalizeUsnoClock(value);
+  const m = clock.match(/^(\d{1,2}):(\d{2})$/);
   if (!m) return null;
   return Number(m[1]) * 60 + Number(m[2]);
 }
 
 function dayLengthLabel(sundata: UsnoTimedEvent[]): string | null {
-  const rise = sundata.find((row) => row.phen === 'Rise')?.time;
-  const set = sundata.find((row) => row.phen === 'Set')?.time;
+  const rise = sundata.find((row) => row.phen === 'Rise')?.display;
+  const set = sundata.find((row) => row.phen === 'Set')?.display;
   if (!rise || !set) return null;
   const a = minutesFromClock(rise);
   const b = minutesFromClock(set);
@@ -44,14 +52,19 @@ export function parseUsnoRsttDay(dateEt: string, sourceUrl: string, body: unknow
     throw new Error('USNO response missing properties.data');
   }
 
-  const sunEvents: UsnoTimedEvent[] = (data.sundata ?? []).map((row) => ({
-    phen: row.phen,
-    time: row.time ?? null,
-  }));
-  const moonEvents: UsnoTimedEvent[] = (data.moondata ?? []).map((row) => ({
-    phen: row.phen,
-    time: row.time ?? null,
-  }));
+  const mapEvents = (rows: UsnoApiDay['sundata']): UsnoTimedEvent[] =>
+    (rows ?? []).map((row) => {
+      const { clock, marker } = normalizeUsnoClock(row.time);
+      return {
+        phen: row.phen,
+        time: row.time ?? null,
+        display: clock,
+        marker,
+      };
+    });
+
+  const sunEvents = mapEvents(data.sundata);
+  const moonEvents = mapEvents(data.moondata);
 
   const closest = data.closestphase;
   const closestPhase =
@@ -62,13 +75,15 @@ export function parseUsnoRsttDay(dateEt: string, sourceUrl: string, body: unknow
         }
       : null;
 
+  const tz = easternTimeZoneLabel(data.isdst ?? null);
+
   return {
     dateEt,
     dayOfWeek: data.day_of_week ?? null,
     year: data.year,
     month: data.month,
     day: data.day,
-    tzLabel: formatEtLabel(dateEt),
+    tzLabel: tz,
     isDst: data.isdst ?? null,
     label: data.label ?? null,
     curphase: data.curphase ?? null,

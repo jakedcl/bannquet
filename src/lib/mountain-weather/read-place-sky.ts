@@ -10,7 +10,7 @@ export const USNO_HORIZON_NOTE =
   'Times are for a sea-level horizon at these coordinates. USNO does not adjust for local terrain or summit elevation; sunrise and sunset can differ on peaks and in valleys.';
 
 export const USNO_API_TWILIGHT_NOTE =
-  'The USNO rstt/oneday API documents civil twilight begin/end only (not nautical or astronomical). All sundata and moondata fields returned by the API are listed below.';
+  'The USNO rstt/oneday API (v4) documents civil twilight begin/end only — no nautical or astronomical twilight on this endpoint or other published rstt URLs we verified. All sundata and moondata fields returned by the API are listed below. Requests use tz=-5&dst=true so USNO applies U.S. daylight saving rules per date (times marked DT or ST).';
 
 async function loadDays(lat: number, lon: number, start = new Date()): Promise<PlaceSkyData> {
   const dates = usnoEtDatesThrough(start, SKY_DAYS);

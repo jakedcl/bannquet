@@ -18,7 +18,7 @@ const ET_OFFSET = -5;
 const readers = new Map<string, () => Promise<SourceResult<UsnoDaySky>>>();
 
 function urlFor(date: string, lat: number, lon: number) {
-  return `${USNO_RSTT_ONEDAY_DEF.url}?date=${date}&coords=${lat},${lon}&tz=${ET_OFFSET}`;
+  return `${USNO_RSTT_ONEDAY_DEF.url}?date=${date}&coords=${lat},${lon}&tz=${ET_OFFSET}&dst=true`;
 }
 
 function readerFor(date: string, lat: number, lon: number) {
