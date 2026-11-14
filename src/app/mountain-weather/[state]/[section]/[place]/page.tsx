@@ -38,6 +38,8 @@ import { readPlaceSnow } from '@/lib/mountain-weather/read-place-snow';
 import { SnowSection } from '@/components/mountain-weather/SnowSection';
 import { readMtnPointForPlace } from '@/lib/mountain-weather/read-mtn-point';
 import { readNwsGridBaseline } from '@/lib/mountain-weather/readers/nws-grid-baseline';
+import { readPlaceMaps } from '@/lib/mountain-weather/read-place-maps';
+import { MapsSection } from '@/components/mountain-weather/MapsSection';
 
 export const dynamic = 'force-dynamic';
 
@@ -58,7 +60,7 @@ export default async function MountainPlacePage({
   const bulletinBinding = bulletinOfficeForPlace(place.id);
   const bulletinOffice = bulletinBinding?.office ?? null;
 
-  const [baseline, mtnPoint, rec, avg, allLocations, mansfieldPack, balloon, bulletins, fzl, observations, avalanche, snow] =
+  const [baseline, mtnPoint, rec, avg, allLocations, mansfieldPack, balloon, bulletins, fzl, observations, avalanche, snow, maps] =
     await Promise.all([
     readNwsGridBaseline(place),
     readMtnPointForPlace(place.id),
@@ -72,6 +74,7 @@ export default async function MountainPlacePage({
     readPlaceObservations(place.id),
     readPlaceAvalanche(place.id),
     readPlaceSnow(place),
+    readPlaceMaps(place, { state: stateCode, sectionId }),
   ]);
   const showStandaloneAvg = !avalanche;
   const moreSources = moreSourcesForPlace(stateCode, sectionId, place);
@@ -107,6 +110,7 @@ export default async function MountainPlacePage({
         <BulletinsSection bundle={bulletins} />
         <AvalancheSection data={avalanche} />
         <SnowSection data={snow} />
+        <MapsSection data={maps} place={place} />
         <FzlForecastSection result={fzl} />
         <MountainForecastSection result={mtnPoint} placeName={place.name} />
         <RecForecastSection results={rec} />

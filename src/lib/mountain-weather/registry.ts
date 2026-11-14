@@ -8,6 +8,9 @@ import { WPC_PWPF_SNOW_DEF } from '@/lib/mountain-weather/readers/wpc-pwpf-snow'
 import { NERFC_SNOW_OPS_DEF } from '@/lib/mountain-weather/readers/nerfc-snow-ops';
 import { NOHRSC_NE_INDEX_DEF } from '@/lib/mountain-weather/readers/nohrsc-northeast-images';
 import { NOHRSC_STATION_SNOWDEPTH_DEF } from '@/lib/mountain-weather/readers/nohrsc-station-snowdepth';
+import { NWS_RIDGE_NE_MOSAIC_DEF } from '@/lib/mountain-weather/readers/nws-ridge-radar';
+import { GOES19_NE_GEOCOLOR_DEF, GOES19_NE_GLM_DEF } from '@/lib/mountain-weather/readers/goes-19-ne';
+import { NWS_ALERTS_ACTIVE_NE_DEF } from '@/lib/mountain-weather/readers/nws-alerts-active-ne';
 
 export const NWS_GRID_BASELINE_DEF: SourceDef = {
   id: 'nws-grid-baseline',
@@ -308,5 +311,9 @@ export const SOURCE_REGISTRY: Record<string, SourceDef> = {
   [NERFC_SNOW_OPS_DEF.id]: NERFC_SNOW_OPS_DEF,
   [NOHRSC_NE_INDEX_DEF.id]: NOHRSC_NE_INDEX_DEF,
   [NOHRSC_STATION_SNOWDEPTH_DEF.id]: NOHRSC_STATION_SNOWDEPTH_DEF,
+  [NWS_RIDGE_NE_MOSAIC_DEF.id]: NWS_RIDGE_NE_MOSAIC_DEF,
+  [GOES19_NE_GEOCOLOR_DEF.id]: GOES19_NE_GEOCOLOR_DEF,
+  [GOES19_NE_GLM_DEF.id]: GOES19_NE_GLM_DEF,
+  [NWS_ALERTS_ACTIVE_NE_DEF.id]: NWS_ALERTS_ACTIVE_NE_DEF,
   ...stationRegistry,
 };
