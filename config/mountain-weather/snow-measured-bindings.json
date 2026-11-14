@@ -1,0 +1,5318 @@
+{
+  "version": 1,
+  "nohrscSnapshotAt": "2026-11-14T06:46:16.859Z",
+  "ruleSummary": "Nearest measured snow from NOHRSC/COCORAHS station snow-depth table (2026-11-14). Summit vs valley by distance and elevation; >25 mi labeled distant; never valley as summit when >400 ft below catalog summit.",
+  "places": {
+    "mount-marcy": {
+      "measured": [
+        {
+          "stationId": "LPLN6",
+          "source": "NOHRSC",
+          "stationName": "LAKE PLACID 2 S",
+          "lat": 44.3042,
+          "lon": -73.9839,
+          "stationElevationFt": 1877,
+          "distanceMi": 13.6,
+          "elevationDiffFt": -3467,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 13.6 mi."
+        },
+        {
+          "stationId": "NY-ES-18",
+          "source": "COCORAHS",
+          "stationName": "MORIAH 1.9 ESE, NY",
+          "lat": 44.0327,
+          "lon": -73.4723,
+          "stationElevationFt": 423,
+          "distanceMi": 23.1,
+          "elevationDiffFt": -4921,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 23.1 mi."
+        },
+        {
+          "stationId": "NY-FK-7",
+          "source": "COCORAHS",
+          "stationName": "SARANAC LAKE 6.2 N, NY",
+          "lat": 44.41359,
+          "lon": -74.15211,
+          "stationElevationFt": 1722,
+          "distanceMi": 23.7,
+          "elevationDiffFt": -3622,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 23.7 mi."
+        },
+        {
+          "stationId": "NY-HM-8",
+          "source": "COCORAHS",
+          "stationName": "LONG LAKE 1.2 N, NY",
+          "lat": 43.9907,
+          "lon": -74.4188,
+          "stationElevationFt": 1821,
+          "distanceMi": 26,
+          "elevationDiffFt": -3523,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 26 mi (distant; labeled in UI)."
+        }
+      ]
+    },
+    "whiteface-mountain": {
+      "measured": [
+        {
+          "stationId": "LPLN6",
+          "source": "NOHRSC",
+          "stationName": "LAKE PLACID 2 S",
+          "lat": 44.3042,
+          "lon": -73.9839,
+          "stationElevationFt": 1877,
+          "distanceMi": 5.8,
+          "elevationDiffFt": -2990,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 5.8 mi."
+        },
+        {
+          "stationId": "NY-FK-7",
+          "source": "COCORAHS",
+          "stationName": "SARANAC LAKE 6.2 N, NY",
+          "lat": 44.41359,
+          "lon": -74.15211,
+          "stationElevationFt": 1722,
+          "distanceMi": 12.7,
+          "elevationDiffFt": -3145,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 12.7 mi."
+        },
+        {
+          "stationId": "NY-ES-18",
+          "source": "COCORAHS",
+          "stationName": "MORIAH 1.9 ESE, NY",
+          "lat": 44.0327,
+          "lon": -73.4723,
+          "stationElevationFt": 423,
+          "distanceMi": 31.4,
+          "elevationDiffFt": -4444,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 31.4 mi (distant; labeled in UI)."
+        },
+        {
+          "stationId": "CLTV1",
+          "source": "NOHRSC",
+          "stationName": "CHARLOTTE",
+          "lat": 44.3108,
+          "lon": -73.2492,
+          "stationElevationFt": 246,
+          "distanceMi": 32.5,
+          "elevationDiffFt": -4621,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 32.5 mi (distant; labeled in UI)."
+        }
+      ]
+    },
+    "dix-mountain": {
+      "measured": [
+        {
+          "stationId": "NY-ES-18",
+          "source": "COCORAHS",
+          "stationName": "MORIAH 1.9 ESE, NY",
+          "lat": 44.0327,
+          "lon": -73.4723,
+          "stationElevationFt": 423,
+          "distanceMi": 16,
+          "elevationDiffFt": -4434,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 16 mi."
+        },
+        {
+          "stationId": "LPLN6",
+          "source": "NOHRSC",
+          "stationName": "LAKE PLACID 2 S",
+          "lat": 44.3042,
+          "lon": -73.9839,
+          "stationElevationFt": 1877,
+          "distanceMi": 18.2,
+          "elevationDiffFt": -2980,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 18.2 mi."
+        },
+        {
+          "stationId": "VRGV1",
+          "source": "NOHRSC",
+          "stationName": "VERGENNES",
+          "lat": 44.1719,
+          "lon": -73.2472,
+          "stationElevationFt": 200,
+          "distanceMi": 27.5,
+          "elevationDiffFt": -4657,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 27.5 mi (distant; labeled in UI)."
+        },
+        {
+          "stationId": "NY-WR-21",
+          "source": "COCORAHS",
+          "stationName": "BRANT LAKE 1.7 ENE, NY",
+          "lat": 43.68223,
+          "lon": -73.71838,
+          "stationElevationFt": 1257,
+          "distanceMi": 27.8,
+          "elevationDiffFt": -3600,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 27.8 mi (distant; labeled in UI)."
+        }
+      ]
+    },
+    "algonquin-peak": {
+      "measured": [
+        {
+          "stationId": "LPLN6",
+          "source": "NOHRSC",
+          "stationName": "LAKE PLACID 2 S",
+          "lat": 44.3042,
+          "lon": -73.9839,
+          "stationElevationFt": 1877,
+          "distanceMi": 11.1,
+          "elevationDiffFt": -3237,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 11.1 mi."
+        },
+        {
+          "stationId": "NY-FK-7",
+          "source": "COCORAHS",
+          "stationName": "SARANAC LAKE 6.2 N, NY",
+          "lat": 44.41359,
+          "lon": -74.15211,
+          "stationElevationFt": 1722,
+          "distanceMi": 20.4,
+          "elevationDiffFt": -3392,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 20.4 mi."
+        },
+        {
+          "stationId": "NY-HM-8",
+          "source": "COCORAHS",
+          "stationName": "LONG LAKE 1.2 N, NY",
+          "lat": 43.9907,
+          "lon": -74.4188,
+          "stationElevationFt": 1821,
+          "distanceMi": 23.9,
+          "elevationDiffFt": -3293,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 23.9 mi."
+        },
+        {
+          "stationId": "NY-ES-18",
+          "source": "COCORAHS",
+          "stationName": "MORIAH 1.9 ESE, NY",
+          "lat": 44.0327,
+          "lon": -73.4723,
+          "stationElevationFt": 423,
+          "distanceMi": 26.7,
+          "elevationDiffFt": -4691,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 26.7 mi (distant; labeled in UI)."
+        }
+      ]
+    },
+    "mount-colden": {
+      "measured": [
+        {
+          "stationId": "LPLN6",
+          "source": "NOHRSC",
+          "stationName": "LAKE PLACID 2 S",
+          "lat": 44.3042,
+          "lon": -73.9839,
+          "stationElevationFt": 1877,
+          "distanceMi": 12.3,
+          "elevationDiffFt": -2838,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 12.3 mi."
+        },
+        {
+          "stationId": "NY-FK-7",
+          "source": "COCORAHS",
+          "stationName": "SARANAC LAKE 6.2 N, NY",
+          "lat": 44.41359,
+          "lon": -74.15211,
+          "stationElevationFt": 1722,
+          "distanceMi": 22,
+          "elevationDiffFt": -2993,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 22 mi."
+        },
+        {
+          "stationId": "NY-HM-8",
+          "source": "COCORAHS",
+          "stationName": "LONG LAKE 1.2 N, NY",
+          "lat": 43.9907,
+          "lon": -74.4188,
+          "stationElevationFt": 1821,
+          "distanceMi": 24.7,
+          "elevationDiffFt": -2894,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 24.7 mi."
+        },
+        {
+          "stationId": "NY-ES-18",
+          "source": "COCORAHS",
+          "stationName": "MORIAH 1.9 ESE, NY",
+          "lat": 44.0327,
+          "lon": -73.4723,
+          "stationElevationFt": 423,
+          "distanceMi": 25.1,
+          "elevationDiffFt": -4292,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 25.1 mi (distant; labeled in UI)."
+        }
+      ]
+    },
+    "mount-colvin": {
+      "measured": [
+        {
+          "stationId": "LPLN6",
+          "source": "NOHRSC",
+          "stationName": "LAKE PLACID 2 S",
+          "lat": 44.3042,
+          "lon": -73.9839,
+          "stationElevationFt": 1877,
+          "distanceMi": 16.3,
+          "elevationDiffFt": -2203,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 16.3 mi."
+        },
+        {
+          "stationId": "NY-ES-18",
+          "source": "COCORAHS",
+          "stationName": "MORIAH 1.9 ESE, NY",
+          "lat": 44.0327,
+          "lon": -73.4723,
+          "stationElevationFt": 423,
+          "distanceMi": 18.5,
+          "elevationDiffFt": -3657,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 18.5 mi."
+        },
+        {
+          "stationId": "NY-FK-7",
+          "source": "COCORAHS",
+          "stationName": "SARANAC LAKE 6.2 N, NY",
+          "lat": 44.41359,
+          "lon": -74.15211,
+          "stationElevationFt": 1722,
+          "distanceMi": 27.1,
+          "elevationDiffFt": -2358,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 27.1 mi (distant; labeled in UI)."
+        },
+        {
+          "stationId": "NY-WR-21",
+          "source": "COCORAHS",
+          "stationName": "BRANT LAKE 1.7 ENE, NY",
+          "lat": 43.68223,
+          "lon": -73.71838,
+          "stationElevationFt": 1257,
+          "distanceMi": 29,
+          "elevationDiffFt": -2823,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 29 mi (distant; labeled in UI)."
+        }
+      ]
+    },
+    "giant-mountain": {
+      "measured": [
+        {
+          "stationId": "NY-ES-18",
+          "source": "COCORAHS",
+          "stationName": "MORIAH 1.9 ESE, NY",
+          "lat": 44.0327,
+          "lon": -73.4723,
+          "stationElevationFt": 423,
+          "distanceMi": 15.2,
+          "elevationDiffFt": -4204,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 15.2 mi."
+        },
+        {
+          "stationId": "LPLN6",
+          "source": "NOHRSC",
+          "stationName": "LAKE PLACID 2 S",
+          "lat": 44.3042,
+          "lon": -73.9839,
+          "stationElevationFt": 1877,
+          "distanceMi": 16.4,
+          "elevationDiffFt": -2750,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 16.4 mi."
+        },
+        {
+          "stationId": "VRGV1",
+          "source": "NOHRSC",
+          "stationName": "VERGENNES",
+          "lat": 44.1719,
+          "lon": -73.2472,
+          "stationElevationFt": 200,
+          "distanceMi": 23.5,
+          "elevationDiffFt": -4427,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 23.5 mi."
+        },
+        {
+          "stationId": "CLTV1",
+          "source": "NOHRSC",
+          "stationName": "CHARLOTTE",
+          "lat": 44.3108,
+          "lon": -73.2492,
+          "stationElevationFt": 246,
+          "distanceMi": 25.5,
+          "elevationDiffFt": -4381,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 25.5 mi (distant; labeled in UI)."
+        }
+      ]
+    },
+    "santanoni-peak": {
+      "measured": [
+        {
+          "stationId": "NY-HM-8",
+          "source": "COCORAHS",
+          "stationName": "LONG LAKE 1.2 N, NY",
+          "lat": 43.9907,
+          "lon": -74.4188,
+          "stationElevationFt": 1821,
+          "distanceMi": 15.6,
+          "elevationDiffFt": -2786,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 15.6 mi."
+        },
+        {
+          "stationId": "LPLN6",
+          "source": "NOHRSC",
+          "stationName": "LAKE PLACID 2 S",
+          "lat": 44.3042,
+          "lon": -73.9839,
+          "stationElevationFt": 1877,
+          "distanceMi": 17,
+          "elevationDiffFt": -2730,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 17 mi."
+        },
+        {
+          "stationId": "NY-FK-7",
+          "source": "COCORAHS",
+          "stationName": "SARANAC LAKE 6.2 N, NY",
+          "lat": 44.41359,
+          "lon": -74.15211,
+          "stationElevationFt": 1722,
+          "distanceMi": 22.9,
+          "elevationDiffFt": -2885,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 22.9 mi."
+        },
+        {
+          "stationId": "INDN6",
+          "source": "NOHRSC",
+          "stationName": "INDIAN LAKE",
+          "lat": 43.755,
+          "lon": -74.2756,
+          "stationElevationFt": 1650,
+          "distanceMi": 23.7,
+          "elevationDiffFt": -2957,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 23.7 mi."
+        }
+      ]
+    },
+    "cascade-mountain": {
+      "measured": [
+        {
+          "stationId": "LPLN6",
+          "source": "NOHRSC",
+          "stationName": "LAKE PLACID 2 S",
+          "lat": 44.3042,
+          "lon": -73.9839,
+          "stationElevationFt": 1877,
+          "distanceMi": 8.5,
+          "elevationDiffFt": -2221,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 8.5 mi."
+        },
+        {
+          "stationId": "NY-FK-7",
+          "source": "COCORAHS",
+          "stationName": "SARANAC LAKE 6.2 N, NY",
+          "lat": 44.41359,
+          "lon": -74.15211,
+          "stationElevationFt": 1722,
+          "distanceMi": 19.7,
+          "elevationDiffFt": -2376,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 19.7 mi."
+        },
+        {
+          "stationId": "NY-ES-18",
+          "source": "COCORAHS",
+          "stationName": "MORIAH 1.9 ESE, NY",
+          "lat": 44.0327,
+          "lon": -73.4723,
+          "stationElevationFt": 423,
+          "distanceMi": 23.1,
+          "elevationDiffFt": -3675,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 23.1 mi."
+        },
+        {
+          "stationId": "VRGV1",
+          "source": "NOHRSC",
+          "stationName": "VERGENNES",
+          "lat": 44.1719,
+          "lon": -73.2472,
+          "stationElevationFt": 200,
+          "distanceMi": 30.5,
+          "elevationDiffFt": -3898,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 30.5 mi (distant; labeled in UI)."
+        }
+      ]
+    },
+    "mckenzie-mountain": {
+      "measured": [
+        {
+          "stationId": "LPLN6",
+          "source": "NOHRSC",
+          "stationName": "LAKE PLACID 2 S",
+          "lat": 44.3042,
+          "lon": -73.9839,
+          "stationElevationFt": 1877,
+          "distanceMi": 3.3,
+          "elevationDiffFt": -1945,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 3.3 mi."
+        },
+        {
+          "stationId": "NY-FK-7",
+          "source": "COCORAHS",
+          "stationName": "SARANAC LAKE 6.2 N, NY",
+          "lat": 44.41359,
+          "lon": -74.15211,
+          "stationElevationFt": 1722,
+          "distanceMi": 8,
+          "elevationDiffFt": -2100,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 8 mi."
+        },
+        {
+          "stationId": "NY-HM-8",
+          "source": "COCORAHS",
+          "stationName": "LONG LAKE 1.2 N, NY",
+          "lat": 43.9907,
+          "lon": -74.4188,
+          "stationElevationFt": 1821,
+          "distanceMi": 30.6,
+          "elevationDiffFt": -2001,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 30.6 mi (distant; labeled in UI)."
+        },
+        {
+          "stationId": "NY-ES-18",
+          "source": "COCORAHS",
+          "stationName": "MORIAH 1.9 ESE, NY",
+          "lat": 44.0327,
+          "lon": -73.4723,
+          "stationElevationFt": 423,
+          "distanceMi": 34.8,
+          "elevationDiffFt": -3399,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 34.8 mi (distant; labeled in UI)."
+        }
+      ]
+    },
+    "mount-van-hoevenberg": {
+      "measured": [
+        {
+          "stationId": "LPLN6",
+          "source": "NOHRSC",
+          "stationName": "LAKE PLACID 2 S",
+          "lat": 44.3042,
+          "lon": -73.9839,
+          "stationElevationFt": 1877,
+          "distanceMi": 7,
+          "elevationDiffFt": -1062,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 7 mi."
+        },
+        {
+          "stationId": "NY-FK-7",
+          "source": "COCORAHS",
+          "stationName": "SARANAC LAKE 6.2 N, NY",
+          "lat": 44.41359,
+          "lon": -74.15211,
+          "stationElevationFt": 1722,
+          "distanceMi": 17.9,
+          "elevationDiffFt": -1217,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 17.9 mi."
+        },
+        {
+          "stationId": "NY-ES-18",
+          "source": "COCORAHS",
+          "stationName": "MORIAH 1.9 ESE, NY",
+          "lat": 44.0327,
+          "lon": -73.4723,
+          "stationElevationFt": 423,
+          "distanceMi": 25.8,
+          "elevationDiffFt": -2516,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 25.8 mi (distant; labeled in UI)."
+        },
+        {
+          "stationId": "NY-HM-8",
+          "source": "COCORAHS",
+          "stationName": "LONG LAKE 1.2 N, NY",
+          "lat": 43.9907,
+          "lon": -74.4188,
+          "stationElevationFt": 1821,
+          "distanceMi": 28.6,
+          "elevationDiffFt": -1118,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 28.6 mi (distant; labeled in UI)."
+        }
+      ]
+    },
+    "keene-valley": {
+      "measured": [
+        {
+          "stationId": "LPLN6",
+          "source": "NOHRSC",
+          "stationName": "LAKE PLACID 2 S",
+          "lat": 44.3042,
+          "lon": -73.9839,
+          "stationElevationFt": 1877,
+          "distanceMi": 12.6,
+          "elevationDiffFt": 847,
+          "kind": "base",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 12.6 mi."
+        },
+        {
+          "stationId": "NY-ES-18",
+          "source": "COCORAHS",
+          "stationName": "MORIAH 1.9 ESE, NY",
+          "lat": 44.0327,
+          "lon": -73.4723,
+          "stationElevationFt": 423,
+          "distanceMi": 19,
+          "elevationDiffFt": -607,
+          "kind": "base",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 19 mi."
+        },
+        {
+          "stationId": "NY-FK-7",
+          "source": "COCORAHS",
+          "stationName": "SARANAC LAKE 6.2 N, NY",
+          "lat": 44.41359,
+          "lon": -74.15211,
+          "stationElevationFt": 1722,
+          "distanceMi": 23.8,
+          "elevationDiffFt": 692,
+          "kind": "base",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 23.8 mi."
+        },
+        {
+          "stationId": "VRGV1",
+          "source": "NOHRSC",
+          "stationName": "VERGENNES",
+          "lat": 44.1719,
+          "lon": -73.2472,
+          "stationElevationFt": 200,
+          "distanceMi": 26.7,
+          "elevationDiffFt": -830,
+          "kind": "base",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 26.7 mi (distant; labeled in UI)."
+        }
+      ]
+    },
+    "lyon-mountain": {
+      "measured": [
+        {
+          "stationId": "MALN6",
+          "source": "NOHRSC",
+          "stationName": "MALONE",
+          "lat": 44.8418,
+          "lon": -74.306,
+          "stationElevationFt": 876,
+          "distanceMi": 23.7,
+          "elevationDiffFt": -2953,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 23.7 mi."
+        },
+        {
+          "stationId": "NY-FK-7",
+          "source": "COCORAHS",
+          "stationName": "SARANAC LAKE 6.2 N, NY",
+          "lat": 44.41359,
+          "lon": -74.15211,
+          "stationElevationFt": 1722,
+          "distanceMi": 24.5,
+          "elevationDiffFt": -2107,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 24.5 mi."
+        },
+        {
+          "stationId": "LPLN6",
+          "source": "NOHRSC",
+          "stationName": "LAKE PLACID 2 S",
+          "lat": 44.3042,
+          "lon": -73.9839,
+          "stationElevationFt": 1877,
+          "distanceMi": 28.2,
+          "elevationDiffFt": -1952,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 28.2 mi (distant; labeled in UI)."
+        },
+        {
+          "stationId": "VT-FR-21",
+          "source": "COCORAHS",
+          "stationName": "FAIRFAX 4.9 WNW, VT",
+          "lat": 44.6888,
+          "lon": -73.1034,
+          "stationElevationFt": 400,
+          "distanceMi": 37.4,
+          "elevationDiffFt": -3429,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 37.4 mi (distant; labeled in UI)."
+        }
+      ]
+    },
+    "ampersand-mountain": {
+      "measured": [
+        {
+          "stationId": "LPLN6",
+          "source": "NOHRSC",
+          "stationName": "LAKE PLACID 2 S",
+          "lat": 44.3042,
+          "lon": -73.9839,
+          "stationElevationFt": 1877,
+          "distanceMi": 11.8,
+          "elevationDiffFt": -1475,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 11.8 mi."
+        },
+        {
+          "stationId": "NY-FK-7",
+          "source": "COCORAHS",
+          "stationName": "SARANAC LAKE 6.2 N, NY",
+          "lat": 44.41359,
+          "lon": -74.15211,
+          "stationElevationFt": 1722,
+          "distanceMi": 12.6,
+          "elevationDiffFt": -1630,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 12.6 mi."
+        },
+        {
+          "stationId": "NY-HM-8",
+          "source": "COCORAHS",
+          "stationName": "LONG LAKE 1.2 N, NY",
+          "lat": 43.9907,
+          "lon": -74.4188,
+          "stationElevationFt": 1821,
+          "distanceMi": 20,
+          "elevationDiffFt": -1531,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 20 mi."
+        },
+        {
+          "stationId": "INDN6",
+          "source": "NOHRSC",
+          "stationName": "INDIAN LAKE",
+          "lat": 43.755,
+          "lon": -74.2756,
+          "stationElevationFt": 1650,
+          "distanceMi": 33.3,
+          "elevationDiffFt": -1702,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 33.3 mi (distant; labeled in UI)."
+        }
+      ]
+    },
+    "debar-mountain": {
+      "measured": [
+        {
+          "stationId": "NY-FK-7",
+          "source": "COCORAHS",
+          "stationName": "SARANAC LAKE 6.2 N, NY",
+          "lat": 44.41359,
+          "lon": -74.15211,
+          "stationElevationFt": 1722,
+          "distanceMi": 13.5,
+          "elevationDiffFt": -1595,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 13.5 mi."
+        },
+        {
+          "stationId": "MALN6",
+          "source": "NOHRSC",
+          "stationName": "MALONE",
+          "lat": 44.8418,
+          "lon": -74.306,
+          "stationElevationFt": 876,
+          "distanceMi": 17,
+          "elevationDiffFt": -2441,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 17 mi."
+        },
+        {
+          "stationId": "LPLN6",
+          "source": "NOHRSC",
+          "stationName": "LAKE PLACID 2 S",
+          "lat": 44.3042,
+          "lon": -73.9839,
+          "stationElevationFt": 1877,
+          "distanceMi": 23.7,
+          "elevationDiffFt": -1440,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 23.7 mi."
+        }
+      ]
+    },
+    "st-regis-mountain": {
+      "measured": [
+        {
+          "stationId": "NY-FK-7",
+          "source": "COCORAHS",
+          "stationName": "SARANAC LAKE 6.2 N, NY",
+          "lat": 44.41359,
+          "lon": -74.15211,
+          "stationElevationFt": 1722,
+          "distanceMi": 8.8,
+          "elevationDiffFt": -1116,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 8.8 mi."
+        },
+        {
+          "stationId": "LPLN6",
+          "source": "NOHRSC",
+          "stationName": "LAKE PLACID 2 S",
+          "lat": 44.3042,
+          "lon": -73.9839,
+          "stationElevationFt": 1877,
+          "distanceMi": 18.5,
+          "elevationDiffFt": -961,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 18.5 mi."
+        },
+        {
+          "stationId": "NY-HM-8",
+          "source": "COCORAHS",
+          "stationName": "LONG LAKE 1.2 N, NY",
+          "lat": 43.9907,
+          "lon": -74.4188,
+          "stationElevationFt": 1821,
+          "distanceMi": 29.2,
+          "elevationDiffFt": -1017,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 29.2 mi (distant; labeled in UI)."
+        },
+        {
+          "stationId": "MALN6",
+          "source": "NOHRSC",
+          "stationName": "MALONE",
+          "lat": 44.8418,
+          "lon": -74.306,
+          "stationElevationFt": 876,
+          "distanceMi": 30,
+          "elevationDiffFt": -1962,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 30 mi (distant; labeled in UI)."
+        }
+      ]
+    },
+    "mount-arab": {
+      "measured": [
+        {
+          "stationId": "NY-HM-8",
+          "source": "COCORAHS",
+          "stationName": "LONG LAKE 1.2 N, NY",
+          "lat": 43.9907,
+          "lon": -74.4188,
+          "stationElevationFt": 1821,
+          "distanceMi": 16.9,
+          "elevationDiffFt": -712,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 16.9 mi."
+        },
+        {
+          "stationId": "NY-FK-7",
+          "source": "COCORAHS",
+          "stationName": "SARANAC LAKE 6.2 N, NY",
+          "lat": 44.41359,
+          "lon": -74.15211,
+          "stationElevationFt": 1722,
+          "distanceMi": 25.8,
+          "elevationDiffFt": -811,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 25.8 mi (distant; labeled in UI)."
+        },
+        {
+          "stationId": "LPLN6",
+          "source": "NOHRSC",
+          "stationName": "LAKE PLACID 2 S",
+          "lat": 44.3042,
+          "lon": -73.9839,
+          "stationElevationFt": 1877,
+          "distanceMi": 30.5,
+          "elevationDiffFt": -656,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 30.5 mi (distant; labeled in UI)."
+        },
+        {
+          "stationId": "INDN6",
+          "source": "NOHRSC",
+          "stationName": "INDIAN LAKE",
+          "lat": 43.755,
+          "lon": -74.2756,
+          "stationElevationFt": 1650,
+          "distanceMi": 34.6,
+          "elevationDiffFt": -883,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 34.6 mi (distant; labeled in UI)."
+        }
+      ]
+    },
+    "snowy-mountain": {
+      "measured": [
+        {
+          "stationId": "INDN6",
+          "source": "NOHRSC",
+          "stationName": "INDIAN LAKE",
+          "lat": 43.755,
+          "lon": -74.2756,
+          "stationElevationFt": 1650,
+          "distanceMi": 6.7,
+          "elevationDiffFt": -2249,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 6.7 mi."
+        },
+        {
+          "stationId": "NY-HM-10",
+          "source": "COCORAHS",
+          "stationName": "LAKE PLEASANT 2.3 WSW, NY",
+          "lat": 43.4549,
+          "lon": -74.45287,
+          "stationElevationFt": 1759,
+          "distanceMi": 17.3,
+          "elevationDiffFt": -2140,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 17.3 mi."
+        },
+        {
+          "stationId": "NY-HM-8",
+          "source": "COCORAHS",
+          "stationName": "LONG LAKE 1.2 N, NY",
+          "lat": 43.9907,
+          "lon": -74.4188,
+          "stationElevationFt": 1821,
+          "distanceMi": 20.1,
+          "elevationDiffFt": -2078,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 20.1 mi."
+        },
+        {
+          "stationId": "NCKN6",
+          "source": "NOHRSC",
+          "stationName": "NORTH CREEK 5 SE",
+          "lat": 43.6611,
+          "lon": -73.8969,
+          "stationElevationFt": 879,
+          "distanceMi": 24.6,
+          "elevationDiffFt": -3020,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 24.6 mi."
+        }
+      ]
+    },
+    "blue-mountain": {
+      "measured": [
+        {
+          "stationId": "NY-HM-8",
+          "source": "COCORAHS",
+          "stationName": "LONG LAKE 1.2 N, NY",
+          "lat": 43.9907,
+          "lon": -74.4188,
+          "stationElevationFt": 1821,
+          "distanceMi": 8.2,
+          "elevationDiffFt": -1929,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 8.2 mi."
+        },
+        {
+          "stationId": "INDN6",
+          "source": "NOHRSC",
+          "stationName": "INDIAN LAKE",
+          "lat": 43.755,
+          "lon": -74.2756,
+          "stationElevationFt": 1650,
+          "distanceMi": 10.2,
+          "elevationDiffFt": -2100,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 10.2 mi."
+        },
+        {
+          "stationId": "NY-HM-10",
+          "source": "COCORAHS",
+          "stationName": "LAKE PLEASANT 2.3 WSW, NY",
+          "lat": 43.4549,
+          "lon": -74.45287,
+          "stationElevationFt": 1759,
+          "distanceMi": 29,
+          "elevationDiffFt": -1991,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 29 mi (distant; labeled in UI)."
+        },
+        {
+          "stationId": "NCKN6",
+          "source": "NOHRSC",
+          "stationName": "NORTH CREEK 5 SE",
+          "lat": 43.6611,
+          "lon": -73.8969,
+          "stationElevationFt": 879,
+          "distanceMi": 29.1,
+          "elevationDiffFt": -2871,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 29.1 mi (distant; labeled in UI)."
+        }
+      ]
+    },
+    "pillsbury-mountain": {
+      "measured": [
+        {
+          "stationId": "NY-HM-10",
+          "source": "COCORAHS",
+          "stationName": "LAKE PLEASANT 2.3 WSW, NY",
+          "lat": 43.4549,
+          "lon": -74.45287,
+          "stationElevationFt": 1759,
+          "distanceMi": 9.2,
+          "elevationDiffFt": -1838,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 9.2 mi."
+        },
+        {
+          "stationId": "INDN6",
+          "source": "NOHRSC",
+          "stationName": "INDIAN LAKE",
+          "lat": 43.755,
+          "lon": -74.2756,
+          "stationElevationFt": 1650,
+          "distanceMi": 16.8,
+          "elevationDiffFt": -1947,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 16.8 mi."
+        },
+        {
+          "stationId": "NY-HM-8",
+          "source": "COCORAHS",
+          "stationName": "LONG LAKE 1.2 N, NY",
+          "lat": 43.9907,
+          "lon": -74.4188,
+          "stationElevationFt": 1821,
+          "distanceMi": 28.6,
+          "elevationDiffFt": -1776,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 28.6 mi (distant; labeled in UI)."
+        },
+        {
+          "stationId": "NVLN6",
+          "source": "NOHRSC",
+          "stationName": "NORTHVILLE",
+          "lat": 43.2333,
+          "lon": -74.1667,
+          "stationElevationFt": 869,
+          "distanceMi": 29.6,
+          "elevationDiffFt": -2728,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 29.6 mi (distant; labeled in UI)."
+        }
+      ]
+    },
+    "gore-mountain": {
+      "measured": [
+        {
+          "stationId": "NCKN6",
+          "source": "NOHRSC",
+          "stationName": "NORTH CREEK 5 SE",
+          "lat": 43.6611,
+          "lon": -73.8969,
+          "stationElevationFt": 879,
+          "distanceMi": 7.6,
+          "elevationDiffFt": -2684,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 7.6 mi."
+        },
+        {
+          "stationId": "INDN6",
+          "source": "NOHRSC",
+          "stationName": "INDIAN LAKE",
+          "lat": 43.755,
+          "lon": -74.2756,
+          "stationElevationFt": 1650,
+          "distanceMi": 12.7,
+          "elevationDiffFt": -1913,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 12.7 mi."
+        },
+        {
+          "stationId": "NY-WR-10",
+          "source": "COCORAHS",
+          "stationName": "WARRENSBURG 2.1 WNW, NY",
+          "lat": 43.51784,
+          "lon": -73.81069,
+          "stationElevationFt": 682,
+          "distanceMi": 16,
+          "elevationDiffFt": -2881,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 16 mi."
+        },
+        {
+          "stationId": "NY-WR-21",
+          "source": "COCORAHS",
+          "stationName": "BRANT LAKE 1.7 ENE, NY",
+          "lat": 43.68223,
+          "lon": -73.71838,
+          "stationElevationFt": 1257,
+          "distanceMi": 16.5,
+          "elevationDiffFt": -2306,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 16.5 mi."
+        }
+      ]
+    },
+    "blue-ridge-mountain": {
+      "measured": [
+        {
+          "stationId": "NY-WR-21",
+          "source": "COCORAHS",
+          "stationName": "BRANT LAKE 1.7 ENE, NY",
+          "lat": 43.68223,
+          "lon": -73.71838,
+          "stationElevationFt": 1257,
+          "distanceMi": 17.4,
+          "elevationDiffFt": -2208,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 17.4 mi."
+        },
+        {
+          "stationId": "NY-ES-18",
+          "source": "COCORAHS",
+          "stationName": "MORIAH 1.9 ESE, NY",
+          "lat": 44.0327,
+          "lon": -73.4723,
+          "stationElevationFt": 423,
+          "distanceMi": 18.6,
+          "elevationDiffFt": -3042,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 18.6 mi."
+        },
+        {
+          "stationId": "NCKN6",
+          "source": "NOHRSC",
+          "stationName": "NORTH CREEK 5 SE",
+          "lat": 43.6611,
+          "lon": -73.8969,
+          "stationElevationFt": 879,
+          "distanceMi": 18.7,
+          "elevationDiffFt": -2586,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 18.7 mi."
+        },
+        {
+          "stationId": "INDN6",
+          "source": "NOHRSC",
+          "stationName": "INDIAN LAKE",
+          "lat": 43.755,
+          "lon": -74.2756,
+          "stationElevationFt": 1650,
+          "distanceMi": 25.8,
+          "elevationDiffFt": -1815,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 25.8 mi (distant; labeled in UI)."
+        }
+      ]
+    },
+    "fishing-brook-range": {
+      "measured": [
+        {
+          "stationId": "NY-HM-8",
+          "source": "COCORAHS",
+          "stationName": "LONG LAKE 1.2 N, NY",
+          "lat": 43.9907,
+          "lon": -74.4188,
+          "stationElevationFt": 1821,
+          "distanceMi": 7,
+          "elevationDiffFt": -1579,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 7 mi."
+        },
+        {
+          "stationId": "INDN6",
+          "source": "NOHRSC",
+          "stationName": "INDIAN LAKE",
+          "lat": 43.755,
+          "lon": -74.2756,
+          "stationElevationFt": 1650,
+          "distanceMi": 11.5,
+          "elevationDiffFt": -1750,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 11.5 mi."
+        },
+        {
+          "stationId": "NCKN6",
+          "source": "NOHRSC",
+          "stationName": "NORTH CREEK 5 SE",
+          "lat": 43.6611,
+          "lon": -73.8969,
+          "stationElevationFt": 879,
+          "distanceMi": 27.6,
+          "elevationDiffFt": -2521,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 27.6 mi (distant; labeled in UI)."
+        },
+        {
+          "stationId": "LPLN6",
+          "source": "NOHRSC",
+          "stationName": "LAKE PLACID 2 S",
+          "lat": 44.3042,
+          "lon": -73.9839,
+          "stationElevationFt": 1877,
+          "distanceMi": 31.5,
+          "elevationDiffFt": -1523,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 31.5 mi (distant; labeled in UI)."
+        }
+      ]
+    },
+    "vanderwhacker-mountain": {
+      "measured": [
+        {
+          "stationId": "INDN6",
+          "source": "NOHRSC",
+          "stationName": "INDIAN LAKE",
+          "lat": 43.755,
+          "lon": -74.2756,
+          "stationElevationFt": 1650,
+          "distanceMi": 13.3,
+          "elevationDiffFt": -1739,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 13.3 mi."
+        },
+        {
+          "stationId": "NY-HM-8",
+          "source": "COCORAHS",
+          "stationName": "LONG LAKE 1.2 N, NY",
+          "lat": 43.9907,
+          "lon": -74.4188,
+          "stationElevationFt": 1821,
+          "distanceMi": 17.3,
+          "elevationDiffFt": -1568,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 17.3 mi."
+        },
+        {
+          "stationId": "NCKN6",
+          "source": "NOHRSC",
+          "stationName": "NORTH CREEK 5 SE",
+          "lat": 43.6611,
+          "lon": -73.8969,
+          "stationElevationFt": 879,
+          "distanceMi": 19.2,
+          "elevationDiffFt": -2510,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 19.2 mi."
+        },
+        {
+          "stationId": "NY-WR-21",
+          "source": "COCORAHS",
+          "stationName": "BRANT LAKE 1.7 ENE, NY",
+          "lat": 43.68223,
+          "lon": -73.71838,
+          "stationElevationFt": 1257,
+          "distanceMi": 24,
+          "elevationDiffFt": -2132,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 24 mi."
+        }
+      ]
+    },
+    "crane-mountain": {
+      "measured": [
+        {
+          "stationId": "NY-WR-10",
+          "source": "COCORAHS",
+          "stationName": "WARRENSBURG 2.1 WNW, NY",
+          "lat": 43.51784,
+          "lon": -73.81069,
+          "stationElevationFt": 682,
+          "distanceMi": 7.8,
+          "elevationDiffFt": -2572,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 7.8 mi."
+        },
+        {
+          "stationId": "NCKN6",
+          "source": "NOHRSC",
+          "stationName": "NORTH CREEK 5 SE",
+          "lat": 43.6611,
+          "lon": -73.8969,
+          "stationElevationFt": 879,
+          "distanceMi": 8.7,
+          "elevationDiffFt": -2375,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 8.7 mi."
+        },
+        {
+          "stationId": "NY-WR-17",
+          "source": "COCORAHS",
+          "stationName": "LAKE GEORGE 1.0 N, NY",
+          "lat": 43.4403,
+          "lon": -73.7126,
+          "stationElevationFt": 591,
+          "distanceMi": 14.5,
+          "elevationDiffFt": -2663,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 14.5 mi."
+        },
+        {
+          "stationId": "NY-WR-21",
+          "source": "COCORAHS",
+          "stationName": "BRANT LAKE 1.7 ENE, NY",
+          "lat": 43.68223,
+          "lon": -73.71838,
+          "stationElevationFt": 1257,
+          "distanceMi": 15.5,
+          "elevationDiffFt": -1997,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 15.5 mi."
+        }
+      ]
+    },
+    "hadley-mountain": {
+      "measured": [
+        {
+          "stationId": "NY-WR-10",
+          "source": "COCORAHS",
+          "stationName": "WARRENSBURG 2.1 WNW, NY",
+          "lat": 43.51784,
+          "lon": -73.81069,
+          "stationElevationFt": 682,
+          "distanceMi": 12.4,
+          "elevationDiffFt": -1969,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 12.4 mi."
+        },
+        {
+          "stationId": "NY-WR-17",
+          "source": "COCORAHS",
+          "stationName": "LAKE GEORGE 1.0 N, NY",
+          "lat": 43.4403,
+          "lon": -73.7126,
+          "stationElevationFt": 591,
+          "distanceMi": 13.6,
+          "elevationDiffFt": -2060,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 13.6 mi."
+        },
+        {
+          "stationId": "NVLN6",
+          "source": "NOHRSC",
+          "stationName": "NORTHVILLE",
+          "lat": 43.2333,
+          "lon": -74.1667,
+          "stationElevationFt": 869,
+          "distanceMi": 14.2,
+          "elevationDiffFt": -1782,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 14.2 mi."
+        },
+        {
+          "stationId": "NY-SR-22",
+          "source": "COCORAHS",
+          "stationName": "GREENFIELD CENTER 1.6 W, NY",
+          "lat": 43.12684,
+          "lon": -73.8786,
+          "stationElevationFt": 620,
+          "distanceMi": 18.1,
+          "elevationDiffFt": -2031,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 18.1 mi."
+        }
+      ]
+    },
+    "black-mountain": {
+      "measured": [
+        {
+          "stationId": "NCKN6",
+          "source": "NOHRSC",
+          "stationName": "NORTH CREEK 5 SE",
+          "lat": 43.6611,
+          "lon": -73.8969,
+          "stationElevationFt": 879,
+          "distanceMi": 13.5,
+          "elevationDiffFt": -1761,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 13.5 mi."
+        },
+        {
+          "stationId": "INDN6",
+          "source": "NOHRSC",
+          "stationName": "INDIAN LAKE",
+          "lat": 43.755,
+          "lon": -74.2756,
+          "stationElevationFt": 1650,
+          "distanceMi": 14.3,
+          "elevationDiffFt": -990,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 14.3 mi."
+        },
+        {
+          "stationId": "NY-WR-10",
+          "source": "COCORAHS",
+          "stationName": "WARRENSBURG 2.1 WNW, NY",
+          "lat": 43.51784,
+          "lon": -73.81069,
+          "stationElevationFt": 682,
+          "distanceMi": 16.9,
+          "elevationDiffFt": -1958,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 16.9 mi."
+        },
+        {
+          "stationId": "NY-HM-10",
+          "source": "COCORAHS",
+          "stationName": "LAKE PLEASANT 2.3 WSW, NY",
+          "lat": 43.4549,
+          "lon": -74.45287,
+          "stationElevationFt": 1759,
+          "distanceMi": 17.7,
+          "elevationDiffFt": -881,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 17.7 mi."
+        }
+      ]
+    },
+    "pharaoh-mountain": {
+      "measured": [
+        {
+          "stationId": "NY-WR-21",
+          "source": "COCORAHS",
+          "stationName": "BRANT LAKE 1.7 ENE, NY",
+          "lat": 43.68223,
+          "lon": -73.71838,
+          "stationElevationFt": 1257,
+          "distanceMi": 9.9,
+          "elevationDiffFt": -1276,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 9.9 mi."
+        },
+        {
+          "stationId": "NCKN6",
+          "source": "NOHRSC",
+          "stationName": "NORTH CREEK 5 SE",
+          "lat": 43.6611,
+          "lon": -73.8969,
+          "stationElevationFt": 879,
+          "distanceMi": 16.1,
+          "elevationDiffFt": -1654,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 16.1 mi."
+        },
+        {
+          "stationId": "NY-ES-18",
+          "source": "COCORAHS",
+          "stationName": "MORIAH 1.9 ESE, NY",
+          "lat": 44.0327,
+          "lon": -73.4723,
+          "stationElevationFt": 423,
+          "distanceMi": 17.5,
+          "elevationDiffFt": -2110,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 17.5 mi."
+        },
+        {
+          "stationId": "NY-WR-10",
+          "source": "COCORAHS",
+          "stationName": "WARRENSBURG 2.1 WNW, NY",
+          "lat": 43.51784,
+          "lon": -73.81069,
+          "stationElevationFt": 682,
+          "distanceMi": 22.1,
+          "elevationDiffFt": -1851,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 22.1 mi."
+        }
+      ]
+    },
+    "prospect-mountain": {
+      "measured": [
+        {
+          "stationId": "NY-WR-17",
+          "source": "COCORAHS",
+          "stationName": "LAKE GEORGE 1.0 N, NY",
+          "lat": 43.4403,
+          "lon": -73.7126,
+          "stationElevationFt": 591,
+          "distanceMi": 2,
+          "elevationDiffFt": -1439,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 2 mi."
+        },
+        {
+          "stationId": "NY-WR-10",
+          "source": "COCORAHS",
+          "stationName": "WARRENSBURG 2.1 WNW, NY",
+          "lat": 43.51784,
+          "lon": -73.81069,
+          "stationElevationFt": 682,
+          "distanceMi": 7.2,
+          "elevationDiffFt": -1348,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 7.2 mi."
+        },
+        {
+          "stationId": "NY-WR-21",
+          "source": "COCORAHS",
+          "stationName": "BRANT LAKE 1.7 ENE, NY",
+          "lat": 43.68223,
+          "lon": -73.71838,
+          "stationElevationFt": 1257,
+          "distanceMi": 17.8,
+          "elevationDiffFt": -773,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 17.8 mi."
+        },
+        {
+          "stationId": "NCKN6",
+          "source": "NOHRSC",
+          "stationName": "NORTH CREEK 5 SE",
+          "lat": 43.6611,
+          "lon": -73.8969,
+          "stationElevationFt": 879,
+          "distanceMi": 18,
+          "elevationDiffFt": -1151,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 18 mi."
+        }
+      ]
+    },
+    "slide-mountain": {
+      "measured": [
+        {
+          "stationId": "NY-UL-28",
+          "source": "COCORAHS",
+          "stationName": "KERHONKSON 3.7 N, NY",
+          "lat": 41.83214,
+          "lon": -74.30115,
+          "stationElevationFt": 915,
+          "distanceMi": 12.3,
+          "elevationDiffFt": -3265,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 12.3 mi."
+        },
+        {
+          "stationId": "NY-UL-19",
+          "source": "COCORAHS",
+          "stationName": "WOODSTOCK 0.8 ENE, NY",
+          "lat": 42.04097,
+          "lon": -74.09588,
+          "stationElevationFt": 499,
+          "distanceMi": 15.2,
+          "elevationDiffFt": -3681,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 15.2 mi."
+        },
+        {
+          "stationId": "NY-GR-14",
+          "source": "COCORAHS",
+          "stationName": "LEXINGTON 1.5 N, NY",
+          "lat": 42.26024,
+          "lon": -74.35875,
+          "stationElevationFt": 1913,
+          "distanceMi": 18.1,
+          "elevationDiffFt": -2267,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 18.1 mi."
+        },
+        {
+          "stationId": "NY-UL-31",
+          "source": "COCORAHS",
+          "stationName": "HURLEY 2.2 S, NY",
+          "lat": 41.88149,
+          "lon": -74.05626,
+          "stationElevationFt": 171,
+          "distanceMi": 18.8,
+          "elevationDiffFt": -4009,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 18.8 mi."
+        }
+      ]
+    },
+    "hunter-mountain": {
+      "measured": [
+        {
+          "stationId": "NY-GR-14",
+          "source": "COCORAHS",
+          "stationName": "LEXINGTON 1.5 N, NY",
+          "lat": 42.26024,
+          "lon": -74.35875,
+          "stationElevationFt": 1913,
+          "distanceMi": 8.7,
+          "elevationDiffFt": -2127,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 8.7 mi."
+        },
+        {
+          "stationId": "NY-UL-37",
+          "source": "COCORAHS",
+          "stationName": "SAUGERTIES 4.7 NW, NY",
+          "lat": 42.12165,
+          "lon": -74.01407,
+          "stationElevationFt": 374,
+          "distanceMi": 11.7,
+          "elevationDiffFt": -3666,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 11.7 mi."
+        },
+        {
+          "stationId": "NY-UL-19",
+          "source": "COCORAHS",
+          "stationName": "WOODSTOCK 0.8 ENE, NY",
+          "lat": 42.04097,
+          "lon": -74.09588,
+          "stationElevationFt": 499,
+          "distanceMi": 11.7,
+          "elevationDiffFt": -3541,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 11.7 mi."
+        },
+        {
+          "stationId": "NY-GR-6",
+          "source": "COCORAHS",
+          "stationName": "FREEHOLD 3.4 E, NY",
+          "lat": 42.36045,
+          "lon": -73.9835,
+          "stationElevationFt": 696,
+          "distanceMi": 17.9,
+          "elevationDiffFt": -3344,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 17.9 mi."
+        }
+      ]
+    },
+    "peekamoose-mountain": {
+      "measured": [
+        {
+          "stationId": "NY-UL-28",
+          "source": "COCORAHS",
+          "stationName": "KERHONKSON 3.7 N, NY",
+          "lat": 41.83214,
+          "lon": -74.30115,
+          "stationElevationFt": 915,
+          "distanceMi": 9.7,
+          "elevationDiffFt": -2928,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 9.7 mi."
+        },
+        {
+          "stationId": "NY-UL-19",
+          "source": "COCORAHS",
+          "stationName": "WOODSTOCK 0.8 ENE, NY",
+          "lat": 42.04097,
+          "lon": -74.09588,
+          "stationElevationFt": 499,
+          "distanceMi": 16.7,
+          "elevationDiffFt": -3344,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 16.7 mi."
+        },
+        {
+          "stationId": "NY-UL-31",
+          "source": "COCORAHS",
+          "stationName": "HURLEY 2.2 S, NY",
+          "lat": 41.88149,
+          "lon": -74.05626,
+          "stationElevationFt": 171,
+          "distanceMi": 18.3,
+          "elevationDiffFt": -3672,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 18.3 mi."
+        },
+        {
+          "stationId": "NY-UL-53",
+          "source": "COCORAHS",
+          "stationName": "TILLSON 2.2 ENE, NY",
+          "lat": 41.84135,
+          "lon": -74.02804,
+          "stationElevationFt": 318,
+          "distanceMi": 20.5,
+          "elevationDiffFt": -3525,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 20.5 mi."
+        }
+      ]
+    },
+    "balsam-lake-mountain": {
+      "measured": [
+        {
+          "stationId": "NY-GR-14",
+          "source": "COCORAHS",
+          "stationName": "LEXINGTON 1.5 N, NY",
+          "lat": 42.26024,
+          "lon": -74.35875,
+          "stationElevationFt": 1913,
+          "distanceMi": 19.1,
+          "elevationDiffFt": -1817,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 19.1 mi."
+        },
+        {
+          "stationId": "NY-UL-28",
+          "source": "COCORAHS",
+          "stationName": "KERHONKSON 3.7 N, NY",
+          "lat": 41.83214,
+          "lon": -74.30115,
+          "stationElevationFt": 915,
+          "distanceMi": 21.1,
+          "elevationDiffFt": -2815,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 21.1 mi."
+        },
+        {
+          "stationId": "NY-DL-25",
+          "source": "COCORAHS",
+          "stationName": "HOBART 4.8 ESE, NY",
+          "lat": 42.3523,
+          "lon": -74.5783,
+          "stationElevationFt": 2205,
+          "distanceMi": 21.2,
+          "elevationDiffFt": -1525,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 21.2 mi."
+        },
+        {
+          "stationId": "NY-UL-19",
+          "source": "COCORAHS",
+          "stationName": "WOODSTOCK 0.8 ENE, NY",
+          "lat": 42.04097,
+          "lon": -74.09588,
+          "stationElevationFt": 499,
+          "distanceMi": 25.6,
+          "elevationDiffFt": -3231,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 25.6 mi (distant; labeled in UI)."
+        }
+      ]
+    },
+    "panther-mountain": {
+      "measured": [
+        {
+          "stationId": "NY-GR-14",
+          "source": "COCORAHS",
+          "stationName": "LEXINGTON 1.5 N, NY",
+          "lat": 42.26024,
+          "lon": -74.35875,
+          "stationElevationFt": 1913,
+          "distanceMi": 14.2,
+          "elevationDiffFt": -1807,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 14.2 mi."
+        },
+        {
+          "stationId": "NY-UL-19",
+          "source": "COCORAHS",
+          "stationName": "WOODSTOCK 0.8 ENE, NY",
+          "lat": 42.04097,
+          "lon": -74.09588,
+          "stationElevationFt": 499,
+          "distanceMi": 15.4,
+          "elevationDiffFt": -3221,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 15.4 mi."
+        },
+        {
+          "stationId": "NY-UL-28",
+          "source": "COCORAHS",
+          "stationName": "KERHONKSON 3.7 N, NY",
+          "lat": 41.83214,
+          "lon": -74.30115,
+          "stationElevationFt": 915,
+          "distanceMi": 16.2,
+          "elevationDiffFt": -2805,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 16.2 mi."
+        },
+        {
+          "stationId": "NY-UL-37",
+          "source": "COCORAHS",
+          "stationName": "SAUGERTIES 4.7 NW, NY",
+          "lat": 42.12165,
+          "lon": -74.01407,
+          "stationElevationFt": 374,
+          "distanceMi": 20,
+          "elevationDiffFt": -3346,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 20 mi."
+        }
+      ]
+    },
+    "windham-high-peak": {
+      "measured": [
+        {
+          "stationId": "NY-GR-6",
+          "source": "COCORAHS",
+          "stationName": "FREEHOLD 3.4 E, NY",
+          "lat": 42.36045,
+          "lon": -73.9835,
+          "stationElevationFt": 696,
+          "distanceMi": 8.7,
+          "elevationDiffFt": -2828,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 8.7 mi."
+        },
+        {
+          "stationId": "NY-GR-7",
+          "source": "COCORAHS",
+          "stationName": "GREENVILLE 0.7 E, NY",
+          "lat": 42.414,
+          "lon": -74.009,
+          "stationElevationFt": 810,
+          "distanceMi": 9.7,
+          "elevationDiffFt": -2714,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 9.7 mi."
+        },
+        {
+          "stationId": "NY-GR-14",
+          "source": "COCORAHS",
+          "stationName": "LEXINGTON 1.5 N, NY",
+          "lat": 42.26024,
+          "lon": -74.35875,
+          "stationElevationFt": 1913,
+          "distanceMi": 11.6,
+          "elevationDiffFt": -1611,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 11.6 mi."
+        },
+        {
+          "stationId": "NY-UL-37",
+          "source": "COCORAHS",
+          "stationName": "SAUGERTIES 4.7 NW, NY",
+          "lat": 42.12165,
+          "lon": -74.01407,
+          "stationElevationFt": 374,
+          "distanceMi": 14.9,
+          "elevationDiffFt": -3150,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 14.9 mi."
+        }
+      ]
+    },
+    "overlook-mountain": {
+      "measured": [
+        {
+          "stationId": "NY-UL-19",
+          "source": "COCORAHS",
+          "stationName": "WOODSTOCK 0.8 ENE, NY",
+          "lat": 42.04097,
+          "lon": -74.09588,
+          "stationElevationFt": 499,
+          "distanceMi": 3.1,
+          "elevationDiffFt": -2637,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 3.1 mi."
+        },
+        {
+          "stationId": "NY-UL-37",
+          "source": "COCORAHS",
+          "stationName": "SAUGERTIES 4.7 NW, NY",
+          "lat": 42.12165,
+          "lon": -74.01407,
+          "stationElevationFt": 374,
+          "distanceMi": 4.8,
+          "elevationDiffFt": -2762,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 4.8 mi."
+        },
+        {
+          "stationId": "NY-DT-24",
+          "source": "COCORAHS",
+          "stationName": "RED HOOK 1.2 NNE, NY",
+          "lat": 42.00967,
+          "lon": -73.86419,
+          "stationElevationFt": 217,
+          "distanceMi": 12.9,
+          "elevationDiffFt": -2919,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 12.9 mi."
+        },
+        {
+          "stationId": "NY-UL-31",
+          "source": "COCORAHS",
+          "stationName": "HURLEY 2.2 S, NY",
+          "lat": 41.88149,
+          "lon": -74.05626,
+          "stationElevationFt": 171,
+          "distanceMi": 14.2,
+          "elevationDiffFt": -2965,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 14.2 mi."
+        }
+      ]
+    },
+    "red-hill": {
+      "measured": [
+        {
+          "stationId": "NY-UL-28",
+          "source": "COCORAHS",
+          "stationName": "KERHONKSON 3.7 N, NY",
+          "lat": 41.83214,
+          "lon": -74.30115,
+          "stationElevationFt": 915,
+          "distanceMi": 12.8,
+          "elevationDiffFt": -2071,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 12.8 mi."
+        },
+        {
+          "stationId": "NY-UL-46",
+          "source": "COCORAHS",
+          "stationName": "PINE BUSH 3.3 N, NY",
+          "lat": 41.65649,
+          "lon": -74.2937,
+          "stationElevationFt": 463,
+          "distanceMi": 21.8,
+          "elevationDiffFt": -2523,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 21.8 mi."
+        },
+        {
+          "stationId": "NY-UL-19",
+          "source": "COCORAHS",
+          "stationName": "WOODSTOCK 0.8 ENE, NY",
+          "lat": 42.04097,
+          "lon": -74.09588,
+          "stationElevationFt": 499,
+          "distanceMi": 23.1,
+          "elevationDiffFt": -2487,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 23.1 mi."
+        },
+        {
+          "stationId": "NY-UL-31",
+          "source": "COCORAHS",
+          "stationName": "HURLEY 2.2 S, NY",
+          "lat": 41.88149,
+          "lon": -74.05626,
+          "stationElevationFt": 171,
+          "distanceMi": 23.9,
+          "elevationDiffFt": -2815,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 23.9 mi."
+        }
+      ]
+    },
+    "mount-tremper": {
+      "measured": [
+        {
+          "stationId": "NY-UL-19",
+          "source": "COCORAHS",
+          "stationName": "WOODSTOCK 0.8 ENE, NY",
+          "lat": 42.04097,
+          "lon": -74.09588,
+          "stationElevationFt": 499,
+          "distanceMi": 9.6,
+          "elevationDiffFt": -2241,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 9.6 mi."
+        },
+        {
+          "stationId": "NY-GR-14",
+          "source": "COCORAHS",
+          "stationName": "LEXINGTON 1.5 N, NY",
+          "lat": 42.26024,
+          "lon": -74.35875,
+          "stationElevationFt": 1913,
+          "distanceMi": 13.5,
+          "elevationDiffFt": -827,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 13.5 mi."
+        },
+        {
+          "stationId": "NY-UL-37",
+          "source": "COCORAHS",
+          "stationName": "SAUGERTIES 4.7 NW, NY",
+          "lat": 42.12165,
+          "lon": -74.01407,
+          "stationElevationFt": 374,
+          "distanceMi": 13.9,
+          "elevationDiffFt": -2366,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 13.9 mi."
+        },
+        {
+          "stationId": "NY-UL-28",
+          "source": "COCORAHS",
+          "stationName": "KERHONKSON 3.7 N, NY",
+          "lat": 41.83214,
+          "lon": -74.30115,
+          "stationElevationFt": 915,
+          "distanceMi": 16.8,
+          "elevationDiffFt": -1825,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 16.8 mi."
+        }
+      ]
+    },
+    "tannersville": {
+      "measured": [
+        {
+          "stationId": "NY-UL-37",
+          "source": "COCORAHS",
+          "stationName": "SAUGERTIES 4.7 NW, NY",
+          "lat": 42.12165,
+          "lon": -74.01407,
+          "stationElevationFt": 374,
+          "distanceMi": 8,
+          "elevationDiffFt": -1526,
+          "kind": "base",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 8 mi."
+        },
+        {
+          "stationId": "NY-UL-19",
+          "source": "COCORAHS",
+          "stationName": "WOODSTOCK 0.8 ENE, NY",
+          "lat": 42.04097,
+          "lon": -74.09588,
+          "stationElevationFt": 499,
+          "distanceMi": 10.9,
+          "elevationDiffFt": -1401,
+          "kind": "base",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 10.9 mi."
+        },
+        {
+          "stationId": "NY-GR-14",
+          "source": "COCORAHS",
+          "stationName": "LEXINGTON 1.5 N, NY",
+          "lat": 42.26024,
+          "lon": -74.35875,
+          "stationElevationFt": 1913,
+          "distanceMi": 12.3,
+          "elevationDiffFt": 13,
+          "kind": "base",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 12.3 mi."
+        },
+        {
+          "stationId": "NY-GR-6",
+          "source": "COCORAHS",
+          "stationName": "FREEHOLD 3.4 E, NY",
+          "lat": 42.36045,
+          "lon": -73.9835,
+          "stationElevationFt": 696,
+          "distanceMi": 13.7,
+          "elevationDiffFt": -1204,
+          "kind": "base",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 13.7 mi."
+        }
+      ]
+    },
+    "gunks-ridge": {
+      "measured": [
+        {
+          "stationId": "NY-UL-46",
+          "source": "COCORAHS",
+          "stationName": "PINE BUSH 3.3 N, NY",
+          "lat": 41.65649,
+          "lon": -74.2937,
+          "stationElevationFt": 463,
+          "distanceMi": 6.3,
+          "elevationDiffFt": -1777,
+          "kind": "base",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 6.3 mi."
+        },
+        {
+          "stationId": "NY-UL-28",
+          "source": "COCORAHS",
+          "stationName": "KERHONKSON 3.7 N, NY",
+          "lat": 41.83214,
+          "lon": -74.30115,
+          "stationElevationFt": 915,
+          "distanceMi": 7.4,
+          "elevationDiffFt": -1325,
+          "kind": "base",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 7.4 mi."
+        },
+        {
+          "stationId": "NY-UL-53",
+          "source": "COCORAHS",
+          "stationName": "TILLSON 2.2 ENE, NY",
+          "lat": 41.84135,
+          "lon": -74.02804,
+          "stationElevationFt": 318,
+          "distanceMi": 13,
+          "elevationDiffFt": -1922,
+          "kind": "base",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 13 mi."
+        },
+        {
+          "stationId": "NY-UL-31",
+          "source": "COCORAHS",
+          "stationName": "HURLEY 2.2 S, NY",
+          "lat": 41.88149,
+          "lon": -74.05626,
+          "stationElevationFt": 171,
+          "distanceMi": 13.7,
+          "elevationDiffFt": -2069,
+          "kind": "base",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 13.7 mi."
+        }
+      ]
+    },
+    "thacher-park": {
+      "measured": [
+        {
+          "stationId": "NY-AB-1",
+          "source": "COCORAHS",
+          "stationName": "ALTAMONT 2.7 SSW, NY",
+          "lat": 42.66696,
+          "lon": -74.0509,
+          "stationElevationFt": 1450,
+          "distanceMi": 2.4,
+          "elevationDiffFt": 150,
+          "kind": "base",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 2.4 mi."
+        },
+        {
+          "stationId": "NY-SC-44",
+          "source": "COCORAHS",
+          "stationName": "WESTMERE 0.7 W, NY",
+          "lat": 42.68828,
+          "lon": -73.88907,
+          "stationElevationFt": 259,
+          "distanceMi": 6.6,
+          "elevationDiffFt": -1041,
+          "kind": "base",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 6.6 mi."
+        },
+        {
+          "stationId": "NY-AB-66",
+          "source": "COCORAHS",
+          "stationName": "ALTAMONT 3.5 NW, NY",
+          "lat": 42.73785,
+          "lon": -74.08938,
+          "stationElevationFt": 853,
+          "distanceMi": 7.2,
+          "elevationDiffFt": -447,
+          "kind": "base",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 7.2 mi."
+        },
+        {
+          "stationId": "NY-AB-23",
+          "source": "COCORAHS",
+          "stationName": "ALBANY 0.7 SW, NY",
+          "lat": 42.66019,
+          "lon": -73.8103,
+          "stationElevationFt": 253,
+          "distanceMi": 10.1,
+          "elevationDiffFt": -1047,
+          "kind": "base",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 10.1 mi."
+        }
+      ]
+    },
+    "jay-peak": {
+      "measured": [
+        {
+          "stationId": "ENFV1",
+          "source": "NOHRSC",
+          "stationName": "ENOSBURG FALLS 2",
+          "lat": 44.9096,
+          "lon": -72.8137,
+          "stationElevationFt": 423,
+          "distanceMi": 14.1,
+          "elevationDiffFt": -3435,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 14.1 mi."
+        },
+        {
+          "stationId": "VT-OL-26",
+          "source": "COCORAHS",
+          "stationName": "CRAFTSBURY COMMON 0.8 NW, VT",
+          "lat": 44.66338,
+          "lon": -72.39245,
+          "stationElevationFt": 912,
+          "distanceMi": 19.2,
+          "elevationDiffFt": -2946,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 19.2 mi."
+        },
+        {
+          "stationId": "VT-OL-37",
+          "source": "COCORAHS",
+          "stationName": "BROWNINGTON 4.7 ESE, VT",
+          "lat": 44.80632,
+          "lon": -72.08213,
+          "stationElevationFt": 1467,
+          "distanceMi": 23.2,
+          "elevationDiffFt": -2391,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 23.2 mi."
+        },
+        {
+          "stationId": "VT-OL-12",
+          "source": "COCORAHS",
+          "stationName": "GREENSBORO 3.9 NNE, VT",
+          "lat": 44.631,
+          "lon": -72.28,
+          "stationElevationFt": 2080,
+          "distanceMi": 23.6,
+          "elevationDiffFt": -1778,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 23.6 mi."
+        }
+      ]
+    },
+    "belvidere-mountain": {
+      "measured": [
+        {
+          "stationId": "VT-OL-26",
+          "source": "COCORAHS",
+          "stationName": "CRAFTSBURY COMMON 0.8 NW, VT",
+          "lat": 44.66338,
+          "lon": -72.39245,
+          "stationElevationFt": 912,
+          "distanceMi": 10.9,
+          "elevationDiffFt": -2428,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 10.9 mi."
+        },
+        {
+          "stationId": "ENFV1",
+          "source": "NOHRSC",
+          "stationName": "ENOSBURG FALLS 2",
+          "lat": 44.9096,
+          "lon": -72.8137,
+          "stationElevationFt": 423,
+          "distanceMi": 16,
+          "elevationDiffFt": -2917,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 16 mi."
+        },
+        {
+          "stationId": "VT-OL-12",
+          "source": "COCORAHS",
+          "stationName": "GREENSBORO 3.9 NNE, VT",
+          "lat": 44.631,
+          "lon": -72.28,
+          "stationElevationFt": 2080,
+          "distanceMi": 16.5,
+          "elevationDiffFt": -1260,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 16.5 mi."
+        },
+        {
+          "stationId": "MMNV1",
+          "source": "NOHRSC",
+          "stationName": "MT. MANSFIELD",
+          "lat": 44.5248,
+          "lon": -72.8154,
+          "stationElevationFt": 3904,
+          "distanceMi": 21.5,
+          "elevationDiffFt": 564,
+          "kind": "summit",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 21.5 mi."
+        }
+      ]
+    },
+    "jay-village": {
+      "measured": [
+        {
+          "stationId": "ENFV1",
+          "source": "NOHRSC",
+          "stationName": "ENOSBURG FALLS 2",
+          "lat": 44.9096,
+          "lon": -72.8137,
+          "stationElevationFt": 423,
+          "distanceMi": 18.6,
+          "elevationDiffFt": -677,
+          "kind": "base",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 18.6 mi."
+        },
+        {
+          "stationId": "VT-OL-26",
+          "source": "COCORAHS",
+          "stationName": "CRAFTSBURY COMMON 0.8 NW, VT",
+          "lat": 44.66338,
+          "lon": -72.39245,
+          "stationElevationFt": 912,
+          "distanceMi": 19.8,
+          "elevationDiffFt": -188,
+          "kind": "base",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 19.8 mi."
+        },
+        {
+          "stationId": "VT-OL-37",
+          "source": "COCORAHS",
+          "stationName": "BROWNINGTON 4.7 ESE, VT",
+          "lat": 44.80632,
+          "lon": -72.08213,
+          "stationElevationFt": 1467,
+          "distanceMi": 19.9,
+          "elevationDiffFt": 367,
+          "kind": "base",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 19.9 mi."
+        },
+        {
+          "stationId": "VT-OL-12",
+          "source": "COCORAHS",
+          "stationName": "GREENSBORO 3.9 NNE, VT",
+          "lat": 44.631,
+          "lon": -72.28,
+          "stationElevationFt": 2080,
+          "distanceMi": 23.2,
+          "elevationDiffFt": 980,
+          "kind": "base",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 23.2 mi."
+        }
+      ]
+    },
+    "mount-mansfield": {
+      "measured": [
+        {
+          "stationId": "MMSV1",
+          "source": "NOHRSC",
+          "stationName": "MOUNT MANSFIELD",
+          "lat": 44.5333,
+          "lon": -72.8333,
+          "stationElevationFt": 2287,
+          "distanceMi": 1.2,
+          "elevationDiffFt": -2106,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 1.2 mi."
+        },
+        {
+          "stationId": "MMNV1",
+          "source": "NOHRSC",
+          "stationName": "MT. MANSFIELD",
+          "lat": 44.5248,
+          "lon": -72.8154,
+          "stationElevationFt": 3904,
+          "distanceMi": 1.3,
+          "elevationDiffFt": -489,
+          "kind": "summit",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 1.3 mi."
+        },
+        {
+          "stationId": "VT-CH-57",
+          "source": "COCORAHS",
+          "stationName": "UNDERHILL 3.6 ESE, VT",
+          "lat": 44.50112,
+          "lon": -72.88108,
+          "stationElevationFt": 1102,
+          "distanceMi": 4.4,
+          "elevationDiffFt": -3291,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 4.4 mi."
+        },
+        {
+          "stationId": "VT-CH-4",
+          "source": "COCORAHS",
+          "stationName": "UNDERHILL 4.4 NNE, VT",
+          "lat": 44.58774,
+          "lon": -72.9225,
+          "stationElevationFt": 955,
+          "distanceMi": 6.1,
+          "elevationDiffFt": -3438,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 6.1 mi."
+        }
+      ]
+    },
+    "smugglers-notch": {
+      "measured": [
+        {
+          "stationId": "MMNV1",
+          "source": "NOHRSC",
+          "stationName": "MT. MANSFIELD",
+          "lat": 44.5248,
+          "lon": -72.8154,
+          "stationElevationFt": 3904,
+          "distanceMi": 2.3,
+          "elevationDiffFt": 534,
+          "kind": "base",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 2.3 mi."
+        },
+        {
+          "stationId": "MMSV1",
+          "source": "NOHRSC",
+          "stationName": "MOUNT MANSFIELD",
+          "lat": 44.5333,
+          "lon": -72.8333,
+          "stationElevationFt": 2287,
+          "distanceMi": 2.4,
+          "elevationDiffFt": -1083,
+          "kind": "base",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 2.4 mi."
+        },
+        {
+          "stationId": "VT-CH-57",
+          "source": "COCORAHS",
+          "stationName": "UNDERHILL 3.6 ESE, VT",
+          "lat": 44.50112,
+          "lon": -72.88108,
+          "stationElevationFt": 1102,
+          "distanceMi": 5.6,
+          "elevationDiffFt": -2268,
+          "kind": "base",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 5.6 mi."
+        },
+        {
+          "stationId": "VT-CH-4",
+          "source": "COCORAHS",
+          "stationName": "UNDERHILL 4.4 NNE, VT",
+          "lat": 44.58774,
+          "lon": -72.9225,
+          "stationElevationFt": 955,
+          "distanceMi": 6.6,
+          "elevationDiffFt": -2415,
+          "kind": "base",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 6.6 mi."
+        }
+      ]
+    },
+    "stowe-town": {
+      "measured": [
+        {
+          "stationId": "MMNV1",
+          "source": "NOHRSC",
+          "stationName": "MT. MANSFIELD",
+          "lat": 44.5248,
+          "lon": -72.8154,
+          "stationElevationFt": 3904,
+          "distanceMi": 7.6,
+          "elevationDiffFt": 2864,
+          "kind": "base",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 7.6 mi."
+        },
+        {
+          "stationId": "MMSV1",
+          "source": "NOHRSC",
+          "stationName": "MOUNT MANSFIELD",
+          "lat": 44.5333,
+          "lon": -72.8333,
+          "stationElevationFt": 2287,
+          "distanceMi": 8.7,
+          "elevationDiffFt": 1247,
+          "kind": "base",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 8.7 mi."
+        },
+        {
+          "stationId": "VT-CH-57",
+          "source": "COCORAHS",
+          "stationName": "UNDERHILL 3.6 ESE, VT",
+          "lat": 44.50112,
+          "lon": -72.88108,
+          "stationElevationFt": 1102,
+          "distanceMi": 10,
+          "elevationDiffFt": 62,
+          "kind": "base",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 10 mi."
+        },
+        {
+          "stationId": "NVLV1",
+          "source": "NOHRSC",
+          "stationName": "NASHVILLE",
+          "lat": 44.4497,
+          "lon": -72.9264,
+          "stationElevationFt": 797,
+          "distanceMi": 12,
+          "elevationDiffFt": -243,
+          "kind": "base",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 12 mi."
+        }
+      ]
+    },
+    "camels-hump": {
+      "measured": [
+        {
+          "stationId": "VT-CH-7",
+          "source": "COCORAHS",
+          "stationName": "HUNTINGTON 1.1 E, VT",
+          "lat": 44.32488,
+          "lon": -72.9657,
+          "stationElevationFt": 968,
+          "distanceMi": 3.9,
+          "elevationDiffFt": -3115,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 3.9 mi."
+        },
+        {
+          "stationId": "NVLV1",
+          "source": "NOHRSC",
+          "stationName": "NASHVILLE",
+          "lat": 44.4497,
+          "lon": -72.9264,
+          "stationElevationFt": 797,
+          "distanceMi": 9.2,
+          "elevationDiffFt": -3286,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 9.2 mi."
+        },
+        {
+          "stationId": "VT-CH-53",
+          "source": "COCORAHS",
+          "stationName": "HINESBURG 1.5 SW, VT",
+          "lat": 44.31655,
+          "lon": -73.13531,
+          "stationElevationFt": 427,
+          "distanceMi": 12.3,
+          "elevationDiffFt": -3656,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 12.3 mi."
+        },
+        {
+          "stationId": "VT-CH-57",
+          "source": "COCORAHS",
+          "stationName": "UNDERHILL 3.6 ESE, VT",
+          "lat": 44.50112,
+          "lon": -72.88108,
+          "stationElevationFt": 1102,
+          "distanceMi": 12.6,
+          "elevationDiffFt": -2981,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 12.6 mi."
+        }
+      ]
+    },
+    "mount-ellen": {
+      "measured": [
+        {
+          "stationId": "SLNV1",
+          "source": "NOHRSC",
+          "stationName": "SOUTH LINCOLN",
+          "lat": 44.0746,
+          "lon": -72.9718,
+          "stationElevationFt": 1368,
+          "distanceMi": 6.3,
+          "elevationDiffFt": -2715,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 6.3 mi."
+        },
+        {
+          "stationId": "BRIV1",
+          "source": "NOHRSC",
+          "stationName": "BRISTOL",
+          "lat": 44.1402,
+          "lon": -73.0872,
+          "stationElevationFt": 541,
+          "distanceMi": 8,
+          "elevationDiffFt": -3542,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 8 mi."
+        },
+        {
+          "stationId": "VT-CH-7",
+          "source": "COCORAHS",
+          "stationName": "HUNTINGTON 1.1 E, VT",
+          "lat": 44.32488,
+          "lon": -72.9657,
+          "stationElevationFt": 968,
+          "distanceMi": 11.5,
+          "elevationDiffFt": -3115,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 11.5 mi."
+        },
+        {
+          "stationId": "VT-WS-10",
+          "source": "COCORAHS",
+          "stationName": "NORTHFIELD 1.5 N, VT",
+          "lat": 44.16986,
+          "lon": -72.652,
+          "stationElevationFt": 699,
+          "distanceMi": 13.7,
+          "elevationDiffFt": -3384,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 13.7 mi."
+        }
+      ]
+    },
+    "bread-loaf-mountain": {
+      "measured": [
+        {
+          "stationId": "SLNV1",
+          "source": "NOHRSC",
+          "stationName": "SOUTH LINCOLN",
+          "lat": 44.0746,
+          "lon": -72.9718,
+          "stationElevationFt": 1368,
+          "distanceMi": 5.2,
+          "elevationDiffFt": -2467,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 5.2 mi."
+        },
+        {
+          "stationId": "VT-AD-20",
+          "source": "COCORAHS",
+          "stationName": "HANCOCK 0.3 S, VT",
+          "lat": 43.92166,
+          "lon": -72.84042,
+          "stationElevationFt": 906,
+          "distanceMi": 7.5,
+          "elevationDiffFt": -2929,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 7.5 mi."
+        },
+        {
+          "stationId": "VT-OG-10",
+          "source": "COCORAHS",
+          "stationName": "BRAINTREE 2.8 SW, VT",
+          "lat": 43.93491,
+          "lon": -72.74855,
+          "stationElevationFt": 1591,
+          "distanceMi": 10.7,
+          "elevationDiffFt": -2244,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 10.7 mi."
+        },
+        {
+          "stationId": "VT-AD-24",
+          "source": "COCORAHS",
+          "stationName": "MIDDLEBURY 0.3 N, VT",
+          "lat": 44.01808,
+          "lon": -73.16844,
+          "stationElevationFt": 377,
+          "distanceMi": 11.3,
+          "elevationDiffFt": -3458,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 11.3 mi."
+        }
+      ]
+    },
+    "mount-worcester": {
+      "measured": [
+        {
+          "stationId": "MMNV1",
+          "source": "NOHRSC",
+          "stationName": "MT. MANSFIELD",
+          "lat": 44.5248,
+          "lon": -72.8154,
+          "stationElevationFt": 3904,
+          "distanceMi": 12.4,
+          "elevationDiffFt": 611,
+          "kind": "summit",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 12.4 mi."
+        },
+        {
+          "stationId": "MMSV1",
+          "source": "NOHRSC",
+          "stationName": "MOUNT MANSFIELD",
+          "lat": 44.5333,
+          "lon": -72.8333,
+          "stationElevationFt": 2287,
+          "distanceMi": 13.4,
+          "elevationDiffFt": -1006,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 13.4 mi."
+        },
+        {
+          "stationId": "PLFV1",
+          "source": "NOHRSC",
+          "stationName": "PLAINFIELD",
+          "lat": 44.2761,
+          "lon": -72.415,
+          "stationElevationFt": 846,
+          "distanceMi": 14.5,
+          "elevationDiffFt": -2447,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 14.5 mi."
+        },
+        {
+          "stationId": "VT-CH-57",
+          "source": "COCORAHS",
+          "stationName": "UNDERHILL 3.6 ESE, VT",
+          "lat": 44.50112,
+          "lon": -72.88108,
+          "stationElevationFt": 1102,
+          "distanceMi": 14.8,
+          "elevationDiffFt": -2191,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 14.8 mi."
+        }
+      ]
+    },
+    "waterbury": {
+      "measured": [
+        {
+          "stationId": "VT-CH-7",
+          "source": "COCORAHS",
+          "stationName": "HUNTINGTON 1.1 E, VT",
+          "lat": 44.32488,
+          "lon": -72.9657,
+          "stationElevationFt": 968,
+          "distanceMi": 10.4,
+          "elevationDiffFt": 368,
+          "kind": "base",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 10.4 mi."
+        },
+        {
+          "stationId": "NVLV1",
+          "source": "NOHRSC",
+          "stationName": "NASHVILLE",
+          "lat": 44.4497,
+          "lon": -72.9264,
+          "stationElevationFt": 797,
+          "distanceMi": 11.4,
+          "elevationDiffFt": 197,
+          "kind": "base",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 11.4 mi."
+        },
+        {
+          "stationId": "VT-WS-10",
+          "source": "COCORAHS",
+          "stationName": "NORTHFIELD 1.5 N, VT",
+          "lat": 44.16986,
+          "lon": -72.652,
+          "stationElevationFt": 699,
+          "distanceMi": 12.7,
+          "elevationDiffFt": 99,
+          "kind": "base",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 12.7 mi."
+        },
+        {
+          "stationId": "VT-CH-57",
+          "source": "COCORAHS",
+          "stationName": "UNDERHILL 3.6 ESE, VT",
+          "lat": 44.50112,
+          "lon": -72.88108,
+          "stationElevationFt": 1102,
+          "distanceMi": 12.9,
+          "elevationDiffFt": 502,
+          "kind": "base",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 12.9 mi."
+        }
+      ]
+    },
+    "signal-mountain": {
+      "measured": [
+        {
+          "stationId": "PLFV1",
+          "source": "NOHRSC",
+          "stationName": "PLAINFIELD",
+          "lat": 44.2761,
+          "lon": -72.415,
+          "stationElevationFt": 846,
+          "distanceMi": 6.6,
+          "elevationDiffFt": -2524,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 6.6 mi."
+        },
+        {
+          "stationId": "WTPV1",
+          "source": "NOHRSC",
+          "stationName": "WEST TOPSHAM 2SW",
+          "lat": 44.0935,
+          "lon": -72.3497,
+          "stationElevationFt": 1302,
+          "distanceMi": 7.9,
+          "elevationDiffFt": -2068,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 7.9 mi."
+        },
+        {
+          "stationId": "VT-CL-23",
+          "source": "COCORAHS",
+          "stationName": "RYEGATE 1.5 N, VT",
+          "lat": 44.23024,
+          "lon": -72.10523,
+          "stationElevationFt": 1207,
+          "distanceMi": 11,
+          "elevationDiffFt": -2163,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 11 mi."
+        },
+        {
+          "stationId": "CORV1",
+          "source": "NOHRSC",
+          "stationName": "CORINTH",
+          "lat": 44.0069,
+          "lon": -72.3194,
+          "stationElevationFt": 1201,
+          "distanceMi": 13.8,
+          "elevationDiffFt": -2169,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 13.8 mi."
+        }
+      ]
+    },
+    "burke-mountain": {
+      "measured": [
+        {
+          "stationId": "VT-ES-3",
+          "source": "COCORAHS",
+          "stationName": "LUNENBURG 2.3 NNW, VT",
+          "lat": 44.49324,
+          "lon": -71.70446,
+          "stationElevationFt": 1473,
+          "distanceMi": 10.7,
+          "elevationDiffFt": -1794,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 10.7 mi."
+        },
+        {
+          "stationId": "LUNV1",
+          "source": "NOHRSC",
+          "stationName": "LUNENBURG 2 NNW",
+          "lat": 44.4933,
+          "lon": -71.7046,
+          "stationElevationFt": 1470,
+          "distanceMi": 10.7,
+          "elevationDiffFt": -1797,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 10.7 mi."
+        },
+        {
+          "stationId": "VT-CL-47",
+          "source": "COCORAHS",
+          "stationName": "ST. JOHNSBURY 0.4 N, VT",
+          "lat": 44.42423,
+          "lon": -72.02189,
+          "stationElevationFt": 696,
+          "distanceMi": 11.9,
+          "elevationDiffFt": -2571,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 11.9 mi."
+        },
+        {
+          "stationId": "SJBV1",
+          "source": "NOHRSC",
+          "stationName": "SAINT JOHNSBURY",
+          "lat": 44.42,
+          "lon": -72.0194,
+          "stationElevationFt": 705,
+          "distanceMi": 12.1,
+          "elevationDiffFt": -2562,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 12.1 mi."
+        }
+      ]
+    },
+    "monadnock-mountain": {
+      "measured": [
+        {
+          "stationId": "AVLV1",
+          "source": "NOHRSC",
+          "stationName": "AVERILL",
+          "lat": 44.9988,
+          "lon": -71.7098,
+          "stationElevationFt": 1703,
+          "distanceMi": 10.7,
+          "elevationDiffFt": -1445,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 10.7 mi."
+        },
+        {
+          "stationId": "PTBN3",
+          "source": "NOHRSC",
+          "stationName": "PITTSBURG RESERVOIR",
+          "lat": 45.0469,
+          "lon": -71.383,
+          "stationElevationFt": 1329,
+          "distanceMi": 13,
+          "elevationDiffFt": -1819,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 13 mi."
+        },
+        {
+          "stationId": "NUMN3",
+          "source": "NOHRSC",
+          "stationName": "NORTHUMBERLAND",
+          "lat": 44.5283,
+          "lon": -71.5044,
+          "stationElevationFt": 1089,
+          "distanceMi": 25.6,
+          "elevationDiffFt": -2059,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 25.6 mi (distant; labeled in UI)."
+        },
+        {
+          "stationId": "VT-OL-37",
+          "source": "COCORAHS",
+          "stationName": "BROWNINGTON 4.7 ESE, VT",
+          "lat": 44.80632,
+          "lon": -72.08213,
+          "stationElevationFt": 1467,
+          "distanceMi": 27.1,
+          "elevationDiffFt": -1681,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 27.1 mi (distant; labeled in UI)."
+        }
+      ]
+    },
+    "killington-peak": {
+      "measured": [
+        {
+          "stationId": "VT-RT-28",
+          "source": "COCORAHS",
+          "stationName": "SHREWSBURY 0.8 W, VT",
+          "lat": 43.50806,
+          "lon": -72.88238,
+          "stationElevationFt": 1460,
+          "distanceMi": 7.4,
+          "elevationDiffFt": -2775,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 7.4 mi."
+        },
+        {
+          "stationId": "VT-RT-7",
+          "source": "COCORAHS",
+          "stationName": "RUTLAND 1.2 N, VT",
+          "lat": 43.62533,
+          "lon": -72.9779,
+          "stationElevationFt": 630,
+          "distanceMi": 8,
+          "elevationDiffFt": -3605,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 8 mi."
+        },
+        {
+          "stationId": "RUTV1",
+          "source": "NOHRSC",
+          "stationName": "RUTLAND",
+          "lat": 43.6253,
+          "lon": -72.9781,
+          "stationElevationFt": 627,
+          "distanceMi": 8,
+          "elevationDiffFt": -3608,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 8 mi."
+        },
+        {
+          "stationId": "VT-RT-1",
+          "source": "COCORAHS",
+          "stationName": "WEST RUTLAND 1.2 N, VT",
+          "lat": 43.61068,
+          "lon": -73.0466,
+          "stationElevationFt": 686,
+          "distanceMi": 11.3,
+          "elevationDiffFt": -3549,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 11.3 mi."
+        }
+      ]
+    },
+    "stratton-mountain": {
+      "measured": [
+        {
+          "stationId": "VT-BN-24",
+          "source": "COCORAHS",
+          "stationName": "BONDVILLE 2.4 WNW, VT",
+          "lat": 43.16211,
+          "lon": -72.91708,
+          "stationElevationFt": 1722,
+          "distanceMi": 5.3,
+          "elevationDiffFt": -2218,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 5.3 mi."
+        },
+        {
+          "stationId": "LBKV1",
+          "source": "NOHRSC",
+          "stationName": "LYE BROOK",
+          "lat": 43.05,
+          "lon": -73.0333,
+          "stationElevationFt": 2375,
+          "distanceMi": 6,
+          "elevationDiffFt": -1565,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 6 mi."
+        },
+        {
+          "stationId": "VT-WH-43",
+          "source": "COCORAHS",
+          "stationName": "LONDONDERRY 0.1 NE, VT",
+          "lat": 43.2271,
+          "lon": -72.806,
+          "stationElevationFt": 1165,
+          "distanceMi": 11.4,
+          "elevationDiffFt": -2775,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 11.4 mi."
+        },
+        {
+          "stationId": "PERV1",
+          "source": "NOHRSC",
+          "stationName": "PERU",
+          "lat": 43.2667,
+          "lon": -72.9,
+          "stationElevationFt": 1827,
+          "distanceMi": 12.5,
+          "elevationDiffFt": -2113,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 12.5 mi."
+        }
+      ]
+    },
+    "mount-equinox": {
+      "measured": [
+        {
+          "stationId": "LBKV1",
+          "source": "NOHRSC",
+          "stationName": "LYE BROOK",
+          "lat": 43.05,
+          "lon": -73.0333,
+          "stationElevationFt": 2375,
+          "distanceMi": 9.1,
+          "elevationDiffFt": -1465,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 9.1 mi."
+        },
+        {
+          "stationId": "VT-BN-24",
+          "source": "COCORAHS",
+          "stationName": "BONDVILLE 2.4 WNW, VT",
+          "lat": 43.16211,
+          "lon": -72.91708,
+          "stationElevationFt": 1722,
+          "distanceMi": 10.1,
+          "elevationDiffFt": -2118,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 10.1 mi."
+        },
+        {
+          "stationId": "NY-WS-11",
+          "source": "COCORAHS",
+          "stationName": "PAWLET 6.2 SW, NY",
+          "lat": 43.29429,
+          "lon": -73.27743,
+          "stationElevationFt": 584,
+          "distanceMi": 12,
+          "elevationDiffFt": -3256,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 12 mi."
+        },
+        {
+          "stationId": "PERV1",
+          "source": "NOHRSC",
+          "stationName": "PERU",
+          "lat": 43.2667,
+          "lon": -72.9,
+          "stationElevationFt": 1827,
+          "distanceMi": 13,
+          "elevationDiffFt": -2013,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 13 mi."
+        }
+      ]
+    },
+    "dorset-mountain": {
+      "measured": [
+        {
+          "stationId": "PERV1",
+          "source": "NOHRSC",
+          "stationName": "PERU",
+          "lat": 43.2667,
+          "lon": -72.9,
+          "stationElevationFt": 1827,
+          "distanceMi": 7.1,
+          "elevationDiffFt": -1933,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 7.1 mi."
+        },
+        {
+          "stationId": "VT-RT-25",
+          "source": "COCORAHS",
+          "stationName": "WALLINGFORD 2.7 SSW, VT",
+          "lat": 43.43371,
+          "lon": -72.99031,
+          "stationElevationFt": 617,
+          "distanceMi": 8.8,
+          "elevationDiffFt": -3143,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 8.8 mi."
+        },
+        {
+          "stationId": "VT-BN-3",
+          "source": "COCORAHS",
+          "stationName": "LANDGROVE 1.1 NNE, VT",
+          "lat": 43.29092,
+          "lon": -72.8326,
+          "stationElevationFt": 1818,
+          "distanceMi": 9.9,
+          "elevationDiffFt": -1942,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 9.9 mi."
+        },
+        {
+          "stationId": "VT-BN-24",
+          "source": "COCORAHS",
+          "stationName": "BONDVILLE 2.4 WNW, VT",
+          "lat": 43.16211,
+          "lon": -72.91708,
+          "stationElevationFt": 1722,
+          "distanceMi": 11.6,
+          "elevationDiffFt": -2038,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 11.6 mi."
+        }
+      ]
+    },
+    "haystack-mountain": {
+      "measured": [
+        {
+          "stationId": "VT-BN-12",
+          "source": "COCORAHS",
+          "stationName": "STAMFORD 5.0 NNE, VT",
+          "lat": 42.82,
+          "lon": -73.02,
+          "stationElevationFt": 2260,
+          "distanceMi": 8.3,
+          "elevationDiffFt": -1185,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 8.3 mi."
+        },
+        {
+          "stationId": "LBKV1",
+          "source": "NOHRSC",
+          "stationName": "LYE BROOK",
+          "lat": 43.05,
+          "lon": -73.0333,
+          "stationElevationFt": 2375,
+          "distanceMi": 11,
+          "elevationDiffFt": -1070,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 11 mi."
+        },
+        {
+          "stationId": "VT-BN-24",
+          "source": "COCORAHS",
+          "stationName": "BONDVILLE 2.4 WNW, VT",
+          "lat": 43.16211,
+          "lon": -72.91708,
+          "stationElevationFt": 1722,
+          "distanceMi": 17.2,
+          "elevationDiffFt": -1723,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 17.2 mi."
+        },
+        {
+          "stationId": "MA-FR-31",
+          "source": "COCORAHS",
+          "stationName": "COLRAIN 3.7 WNW, MA",
+          "lat": 42.68716,
+          "lon": -72.75112,
+          "stationElevationFt": 787,
+          "distanceMi": 17.8,
+          "elevationDiffFt": -2658,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 17.8 mi."
+        }
+      ]
+    },
+    "ludlow-mountain": {
+      "measured": [
+        {
+          "stationId": "VT-BN-3",
+          "source": "COCORAHS",
+          "stationName": "LANDGROVE 1.1 NNE, VT",
+          "lat": 43.29092,
+          "lon": -72.8326,
+          "stationElevationFt": 1818,
+          "distanceMi": 8.8,
+          "elevationDiffFt": -1502,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 8.8 mi."
+        },
+        {
+          "stationId": "VT-RT-28",
+          "source": "COCORAHS",
+          "stationName": "SHREWSBURY 0.8 W, VT",
+          "lat": 43.50806,
+          "lon": -72.88238,
+          "stationElevationFt": 1460,
+          "distanceMi": 9.7,
+          "elevationDiffFt": -1860,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 9.7 mi."
+        },
+        {
+          "stationId": "PERV1",
+          "source": "NOHRSC",
+          "stationName": "PERU",
+          "lat": 43.2667,
+          "lon": -72.9,
+          "stationElevationFt": 1827,
+          "distanceMi": 12.1,
+          "elevationDiffFt": -1493,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 12.1 mi."
+        },
+        {
+          "stationId": "VT-RT-25",
+          "source": "COCORAHS",
+          "stationName": "WALLINGFORD 2.7 SSW, VT",
+          "lat": 43.43371,
+          "lon": -72.99031,
+          "stationElevationFt": 617,
+          "distanceMi": 12.2,
+          "elevationDiffFt": -2703,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 12.2 mi."
+        }
+      ]
+    },
+    "bromley-mountain": {
+      "measured": [
+        {
+          "stationId": "PERV1",
+          "source": "NOHRSC",
+          "stationName": "PERU",
+          "lat": 43.2667,
+          "lon": -72.9,
+          "stationElevationFt": 1827,
+          "distanceMi": 3.4,
+          "elevationDiffFt": -1436,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 3.4 mi."
+        },
+        {
+          "stationId": "VT-BN-24",
+          "source": "COCORAHS",
+          "stationName": "BONDVILLE 2.4 WNW, VT",
+          "lat": 43.16211,
+          "lon": -72.91708,
+          "stationElevationFt": 1722,
+          "distanceMi": 4.7,
+          "elevationDiffFt": -1541,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 4.7 mi."
+        },
+        {
+          "stationId": "VT-WH-43",
+          "source": "COCORAHS",
+          "stationName": "LONDONDERRY 0.1 NE, VT",
+          "lat": 43.2271,
+          "lon": -72.806,
+          "stationElevationFt": 1165,
+          "distanceMi": 6.7,
+          "elevationDiffFt": -2098,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 6.7 mi."
+        },
+        {
+          "stationId": "VT-BN-3",
+          "source": "COCORAHS",
+          "stationName": "LANDGROVE 1.1 NNE, VT",
+          "lat": 43.29092,
+          "lon": -72.8326,
+          "stationElevationFt": 1818,
+          "distanceMi": 6.9,
+          "elevationDiffFt": -1445,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 6.9 mi."
+        }
+      ]
+    },
+    "mount-ascutney": {
+      "measured": [
+        {
+          "stationId": "VT-WR-10",
+          "source": "COCORAHS",
+          "stationName": "WEST WINDSOR 1.7 S, VT",
+          "lat": 43.46164,
+          "lon": -72.49197,
+          "stationElevationFt": 741,
+          "distanceMi": 2.2,
+          "elevationDiffFt": -2399,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 2.2 mi."
+        },
+        {
+          "stationId": "NOSV1",
+          "source": "NOHRSC",
+          "stationName": "NORTH SPRINGFIELD LAKE",
+          "lat": 43.3392,
+          "lon": -72.5056,
+          "stationElevationFt": 568,
+          "distanceMi": 7.7,
+          "elevationDiffFt": -2572,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 7.7 mi."
+        },
+        {
+          "stationId": "NOHV1",
+          "source": "NOHRSC",
+          "stationName": "NORTH HARTLAND LAKE",
+          "lat": 43.6027,
+          "lon": -72.3621,
+          "stationElevationFt": 571,
+          "distanceMi": 11.9,
+          "elevationDiffFt": -2569,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 11.9 mi."
+        },
+        {
+          "stationId": "NH-SL-3",
+          "source": "COCORAHS",
+          "stationName": "WEST UNITY 0.7 WSW, NH",
+          "lat": 43.28652,
+          "lon": -72.3297,
+          "stationElevationFt": 919,
+          "distanceMi": 12.5,
+          "elevationDiffFt": -2221,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 12.5 mi."
+        }
+      ]
+    },
+    "bald-mountain": {
+      "measured": [
+        {
+          "stationId": "VT-BN-12",
+          "source": "COCORAHS",
+          "stationName": "STAMFORD 5.0 NNE, VT",
+          "lat": 42.82,
+          "lon": -73.02,
+          "stationElevationFt": 2260,
+          "distanceMi": 9.4,
+          "elevationDiffFt": -597,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 9.4 mi."
+        },
+        {
+          "stationId": "LBKV1",
+          "source": "NOHRSC",
+          "stationName": "LYE BROOK",
+          "lat": 43.05,
+          "lon": -73.0333,
+          "stationElevationFt": 2375,
+          "distanceMi": 10.5,
+          "elevationDiffFt": -482,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 10.5 mi."
+        },
+        {
+          "stationId": "BSKN6",
+          "source": "NOHRSC",
+          "stationName": "BUSKIRK",
+          "lat": 42.9361,
+          "lon": -73.4325,
+          "stationElevationFt": 505,
+          "distanceMi": 14.6,
+          "elevationDiffFt": -2352,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 14.6 mi."
+        },
+        {
+          "stationId": "NY-WS-15",
+          "source": "COCORAHS",
+          "stationName": "CAMBRIDGE 4.2 SW, NY",
+          "lat": 42.99079,
+          "lon": -73.44839,
+          "stationElevationFt": 702,
+          "distanceMi": 16.1,
+          "elevationDiffFt": -2155,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 16.1 mi."
+        }
+      ]
+    },
+    "manchester-vt": {
+      "measured": [
+        {
+          "stationId": "VT-BN-24",
+          "source": "COCORAHS",
+          "stationName": "BONDVILLE 2.4 WNW, VT",
+          "lat": 43.16211,
+          "lon": -72.91708,
+          "stationElevationFt": 1722,
+          "distanceMi": 7.8,
+          "elevationDiffFt": 822,
+          "kind": "base",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 7.8 mi."
+        },
+        {
+          "stationId": "LBKV1",
+          "source": "NOHRSC",
+          "stationName": "LYE BROOK",
+          "lat": 43.05,
+          "lon": -73.0333,
+          "stationElevationFt": 2375,
+          "distanceMi": 8.1,
+          "elevationDiffFt": 1475,
+          "kind": "base",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 8.1 mi."
+        },
+        {
+          "stationId": "PERV1",
+          "source": "NOHRSC",
+          "stationName": "PERU",
+          "lat": 43.2667,
+          "lon": -72.9,
+          "stationElevationFt": 1827,
+          "distanceMi": 11.2,
+          "elevationDiffFt": 927,
+          "kind": "base",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 11.2 mi."
+        },
+        {
+          "stationId": "NY-WS-11",
+          "source": "COCORAHS",
+          "stationName": "PAWLET 6.2 SW, NY",
+          "lat": 43.29429,
+          "lon": -73.27743,
+          "stationElevationFt": 584,
+          "distanceMi": 13.7,
+          "elevationDiffFt": -316,
+          "kind": "base",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 13.7 mi."
+        }
+      ]
+    },
+    "mount-washington": {
+      "measured": [
+        {
+          "stationId": "MWN",
+          "source": "NOHRSC",
+          "stationName": "MOUNT WASHINGTON",
+          "lat": 44.2667,
+          "lon": -71.3,
+          "stationElevationFt": 5627,
+          "distanceMi": 0.3,
+          "elevationDiffFt": -661,
+          "kind": "summit",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 0.3 mi."
+        },
+        {
+          "stationId": "KMWN",
+          "source": "NOHRSC",
+          "stationName": "MOUNT WASHINGTON",
+          "lat": 44.26666,
+          "lon": -71.3,
+          "stationElevationFt": 5627,
+          "distanceMi": 0.3,
+          "elevationDiffFt": -661,
+          "kind": "summit",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 0.3 mi."
+        },
+        {
+          "stationId": "NH-CS-19",
+          "source": "COCORAHS",
+          "stationName": "CARROLL 4.6 NE, NH",
+          "lat": 44.33765,
+          "lon": -71.46461,
+          "stationElevationFt": 1722,
+          "distanceMi": 9.2,
+          "elevationDiffFt": -4566,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 9.2 mi."
+        },
+        {
+          "stationId": "BRLN3",
+          "source": "NOHRSC",
+          "stationName": "BERLIN",
+          "lat": 44.4535,
+          "lon": -71.1854,
+          "stationElevationFt": 932,
+          "distanceMi": 13.9,
+          "elevationDiffFt": -5356,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 13.9 mi."
+        }
+      ]
+    },
+    "mount-adams": {
+      "measured": [
+        {
+          "stationId": "MWN",
+          "source": "NOHRSC",
+          "stationName": "MOUNT WASHINGTON",
+          "lat": 44.2667,
+          "lon": -71.3,
+          "stationElevationFt": 5627,
+          "distanceMi": 3.8,
+          "elevationDiffFt": -172,
+          "kind": "summit",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 3.8 mi."
+        },
+        {
+          "stationId": "KMWN",
+          "source": "NOHRSC",
+          "stationName": "MOUNT WASHINGTON",
+          "lat": 44.26666,
+          "lon": -71.3,
+          "stationElevationFt": 5627,
+          "distanceMi": 3.8,
+          "elevationDiffFt": -172,
+          "kind": "summit",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 3.8 mi."
+        },
+        {
+          "stationId": "NH-CS-19",
+          "source": "COCORAHS",
+          "stationName": "CARROLL 4.6 NE, NH",
+          "lat": 44.33765,
+          "lon": -71.46461,
+          "stationElevationFt": 1722,
+          "distanceMi": 8.6,
+          "elevationDiffFt": -4077,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 8.6 mi."
+        },
+        {
+          "stationId": "BRLN3",
+          "source": "NOHRSC",
+          "stationName": "BERLIN",
+          "lat": 44.4535,
+          "lon": -71.1854,
+          "stationElevationFt": 932,
+          "distanceMi": 10.6,
+          "elevationDiffFt": -4867,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 10.6 mi."
+        }
+      ]
+    },
+    "pinkham-notch": {
+      "measured": [
+        {
+          "stationId": "MWN",
+          "source": "NOHRSC",
+          "stationName": "MOUNT WASHINGTON",
+          "lat": 44.2667,
+          "lon": -71.3,
+          "stationElevationFt": 5627,
+          "distanceMi": 2.4,
+          "elevationDiffFt": 3610,
+          "kind": "base",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 2.4 mi."
+        },
+        {
+          "stationId": "KMWN",
+          "source": "NOHRSC",
+          "stationName": "MOUNT WASHINGTON",
+          "lat": 44.26666,
+          "lon": -71.3,
+          "stationElevationFt": 5627,
+          "distanceMi": 2.4,
+          "elevationDiffFt": 3610,
+          "kind": "base",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 2.4 mi."
+        },
+        {
+          "stationId": "NH-CS-19",
+          "source": "COCORAHS",
+          "stationName": "CARROLL 4.6 NE, NH",
+          "lat": 44.33765,
+          "lon": -71.46461,
+          "stationElevationFt": 1722,
+          "distanceMi": 11.8,
+          "elevationDiffFt": -295,
+          "kind": "base",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 11.8 mi."
+        },
+        {
+          "stationId": "BRLN3",
+          "source": "NOHRSC",
+          "stationName": "BERLIN",
+          "lat": 44.4535,
+          "lon": -71.1854,
+          "stationElevationFt": 932,
+          "distanceMi": 13.9,
+          "elevationDiffFt": -1085,
+          "kind": "base",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 13.9 mi."
+        }
+      ]
+    },
+    "crawford-notch": {
+      "measured": [
+        {
+          "stationId": "MWN",
+          "source": "NOHRSC",
+          "stationName": "MOUNT WASHINGTON",
+          "lat": 44.2667,
+          "lon": -71.3,
+          "stationElevationFt": 5627,
+          "distanceMi": 7.8,
+          "elevationDiffFt": 3727,
+          "kind": "base",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 7.8 mi."
+        },
+        {
+          "stationId": "KMWN",
+          "source": "NOHRSC",
+          "stationName": "MOUNT WASHINGTON",
+          "lat": 44.26666,
+          "lon": -71.3,
+          "stationElevationFt": 5627,
+          "distanceMi": 7.8,
+          "elevationDiffFt": 3727,
+          "kind": "base",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 7.8 mi."
+        },
+        {
+          "stationId": "NH-CS-19",
+          "source": "COCORAHS",
+          "stationName": "CARROLL 4.6 NE, NH",
+          "lat": 44.33765,
+          "lon": -71.46461,
+          "stationElevationFt": 1722,
+          "distanceMi": 12.6,
+          "elevationDiffFt": -178,
+          "kind": "base",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 12.6 mi."
+        },
+        {
+          "stationId": "NCON3",
+          "source": "NOHRSC",
+          "stationName": "NORTH CONWAY",
+          "lat": 44.0562,
+          "lon": -71.1297,
+          "stationElevationFt": 535,
+          "distanceMi": 14.4,
+          "elevationDiffFt": -1365,
+          "kind": "base",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 14.4 mi."
+        }
+      ]
+    },
+    "baldface-mountain": {
+      "measured": [
+        {
+          "stationId": "ME-OX-46",
+          "source": "COCORAHS",
+          "stationName": "LOVELL 5.2 N, ME",
+          "lat": 44.19985,
+          "lon": -70.90239,
+          "stationElevationFt": 436,
+          "distanceMi": 9.6,
+          "elevationDiffFt": -3111,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 9.6 mi."
+        },
+        {
+          "stationId": "MWN",
+          "source": "NOHRSC",
+          "stationName": "MOUNT WASHINGTON",
+          "lat": 44.2667,
+          "lon": -71.3,
+          "stationElevationFt": 5627,
+          "distanceMi": 10.7,
+          "elevationDiffFt": 2080,
+          "kind": "summit",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 10.7 mi."
+        },
+        {
+          "stationId": "KMWN",
+          "source": "NOHRSC",
+          "stationName": "MOUNT WASHINGTON",
+          "lat": 44.26666,
+          "lon": -71.3,
+          "stationElevationFt": 5627,
+          "distanceMi": 10.7,
+          "elevationDiffFt": 2080,
+          "kind": "summit",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 10.7 mi."
+        },
+        {
+          "stationId": "NCON3",
+          "source": "NOHRSC",
+          "stationName": "NORTH CONWAY",
+          "lat": 44.0562,
+          "lon": -71.1297,
+          "stationElevationFt": 535,
+          "distanceMi": 13.1,
+          "elevationDiffFt": -3012,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 13.1 mi."
+        }
+      ]
+    },
+    "mount-lafayette": {
+      "measured": [
+        {
+          "stationId": "NH-CS-19",
+          "source": "COCORAHS",
+          "stationName": "CARROLL 4.6 NE, NH",
+          "lat": 44.33765,
+          "lon": -71.46461,
+          "stationElevationFt": 1722,
+          "distanceMi": 15.1,
+          "elevationDiffFt": -3527,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 15.1 mi."
+        },
+        {
+          "stationId": "MWN",
+          "source": "NOHRSC",
+          "stationName": "MOUNT WASHINGTON",
+          "lat": 44.2667,
+          "lon": -71.3,
+          "stationElevationFt": 5627,
+          "distanceMi": 18.6,
+          "elevationDiffFt": 378,
+          "kind": "summit",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 18.6 mi."
+        },
+        {
+          "stationId": "KMWN",
+          "source": "NOHRSC",
+          "stationName": "MOUNT WASHINGTON",
+          "lat": 44.26666,
+          "lon": -71.3,
+          "stationElevationFt": 5627,
+          "distanceMi": 18.6,
+          "elevationDiffFt": 378,
+          "kind": "summit",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 18.6 mi."
+        },
+        {
+          "stationId": "WENN3",
+          "source": "NOHRSC",
+          "stationName": "P.O. BOX 197 WENTWORTH, NH",
+          "lat": 43.9519,
+          "lon": -71.9156,
+          "stationElevationFt": 935,
+          "distanceMi": 19.7,
+          "elevationDiffFt": -4314,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 19.7 mi."
+        }
+      ]
+    },
+    "mount-moosilauke": {
+      "measured": [
+        {
+          "stationId": "WENN3",
+          "source": "NOHRSC",
+          "stationName": "P.O. BOX 197 WENTWORTH, NH",
+          "lat": 43.9519,
+          "lon": -71.9156,
+          "stationElevationFt": 935,
+          "distanceMi": 6.5,
+          "elevationDiffFt": -3867,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 6.5 mi."
+        },
+        {
+          "stationId": "VT-OG-14",
+          "source": "COCORAHS",
+          "stationName": "BRADFORD 2.2 NNW, VT",
+          "lat": 44.02268,
+          "lon": -72.14756,
+          "stationElevationFt": 1132,
+          "distanceMi": 15.7,
+          "elevationDiffFt": -3670,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 15.7 mi."
+        },
+        {
+          "stationId": "HDEN3",
+          "source": "NOHRSC",
+          "stationName": "HOLDERNESS 4.6 NW",
+          "lat": 43.7738,
+          "lon": -71.6555,
+          "stationElevationFt": 846,
+          "distanceMi": 19.4,
+          "elevationDiffFt": -3956,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 19.4 mi."
+        },
+        {
+          "stationId": "MSRN3",
+          "source": "NOHRSC",
+          "stationName": "MASCOMA RIVER",
+          "lat": 43.7833,
+          "lon": -72.0333,
+          "stationElevationFt": 1404,
+          "distanceMi": 19.5,
+          "elevationDiffFt": -3398,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 19.5 mi."
+        }
+      ]
+    },
+    "mount-osceola": {
+      "measured": [
+        {
+          "stationId": "NH-CR-26",
+          "source": "COCORAHS",
+          "stationName": "CENTER SANDWICH 4.9 E, NH",
+          "lat": 43.80976,
+          "lon": -71.3415,
+          "stationElevationFt": 751,
+          "distanceMi": 16.4,
+          "elevationDiffFt": -3589,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 16.4 mi."
+        },
+        {
+          "stationId": "ESDN3",
+          "source": "NOHRSC",
+          "stationName": "EAST SANDWICH",
+          "lat": 43.8099,
+          "lon": -71.3425,
+          "stationElevationFt": 735,
+          "distanceMi": 16.4,
+          "elevationDiffFt": -3605,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 16.4 mi."
+        },
+        {
+          "stationId": "TMWN3",
+          "source": "NOHRSC",
+          "stationName": "TAMWORTH 4",
+          "lat": 43.8639,
+          "lon": -71.2661,
+          "stationElevationFt": 538,
+          "distanceMi": 16.5,
+          "elevationDiffFt": -3802,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 16.5 mi."
+        },
+        {
+          "stationId": "HDEN3",
+          "source": "NOHRSC",
+          "stationName": "HOLDERNESS 4.6 NW",
+          "lat": 43.7738,
+          "lon": -71.6555,
+          "stationElevationFt": 846,
+          "distanceMi": 16.8,
+          "elevationDiffFt": -3494,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 16.8 mi."
+        }
+      ]
+    },
+    "cannon-mountain": {
+      "measured": [
+        {
+          "stationId": "NH-CS-19",
+          "source": "COCORAHS",
+          "stationName": "CARROLL 4.6 NE, NH",
+          "lat": 44.33765,
+          "lon": -71.46461,
+          "stationElevationFt": 1722,
+          "distanceMi": 17.1,
+          "elevationDiffFt": -2358,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 17.1 mi."
+        },
+        {
+          "stationId": "WENN3",
+          "source": "NOHRSC",
+          "stationName": "P.O. BOX 197 WENTWORTH, NH",
+          "lat": 43.9519,
+          "lon": -71.9156,
+          "stationElevationFt": 935,
+          "distanceMi": 17.8,
+          "elevationDiffFt": -3145,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 17.8 mi."
+        },
+        {
+          "stationId": "VT-CL-23",
+          "source": "COCORAHS",
+          "stationName": "RYEGATE 1.5 N, VT",
+          "lat": 44.23024,
+          "lon": -72.10523,
+          "stationElevationFt": 1207,
+          "distanceMi": 20.8,
+          "elevationDiffFt": -2873,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 20.8 mi."
+        },
+        {
+          "stationId": "MWN",
+          "source": "NOHRSC",
+          "stationName": "MOUNT WASHINGTON",
+          "lat": 44.2667,
+          "lon": -71.3,
+          "stationElevationFt": 5627,
+          "distanceMi": 21.2,
+          "elevationDiffFt": 1547,
+          "kind": "summit",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 21.2 mi."
+        }
+      ]
+    },
+    "kancamagus-pass": {
+      "measured": [
+        {
+          "stationId": "TMWN3",
+          "source": "NOHRSC",
+          "stationName": "TAMWORTH 4",
+          "lat": 43.8639,
+          "lon": -71.2661,
+          "stationElevationFt": 538,
+          "distanceMi": 15.8,
+          "elevationDiffFt": -2317,
+          "kind": "base",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 15.8 mi."
+        },
+        {
+          "stationId": "ESDN3",
+          "source": "NOHRSC",
+          "stationName": "EAST SANDWICH",
+          "lat": 43.8099,
+          "lon": -71.3425,
+          "stationElevationFt": 735,
+          "distanceMi": 16.6,
+          "elevationDiffFt": -2120,
+          "kind": "base",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 16.6 mi."
+        },
+        {
+          "stationId": "NH-CR-26",
+          "source": "COCORAHS",
+          "stationName": "CENTER SANDWICH 4.9 E, NH",
+          "lat": 43.80976,
+          "lon": -71.3415,
+          "stationElevationFt": 751,
+          "distanceMi": 16.7,
+          "elevationDiffFt": -2104,
+          "kind": "base",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 16.7 mi."
+        },
+        {
+          "stationId": "NH-CR-11",
+          "source": "COCORAHS",
+          "stationName": "NORTH CONWAY 1.4 SSW, NH",
+          "lat": 44.03556,
+          "lon": -71.1401,
+          "stationElevationFt": 538,
+          "distanceMi": 17.5,
+          "elevationDiffFt": -2317,
+          "kind": "base",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 17.5 mi."
+        }
+      ]
+    },
+    "franconia-notch": {
+      "measured": [
+        {
+          "stationId": "NH-CS-19",
+          "source": "COCORAHS",
+          "stationName": "CARROLL 4.6 NE, NH",
+          "lat": 44.33765,
+          "lon": -71.46461,
+          "stationElevationFt": 1722,
+          "distanceMi": 16.6,
+          "elevationDiffFt": -218,
+          "kind": "base",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 16.6 mi."
+        },
+        {
+          "stationId": "WENN3",
+          "source": "NOHRSC",
+          "stationName": "P.O. BOX 197 WENTWORTH, NH",
+          "lat": 43.9519,
+          "lon": -71.9156,
+          "stationElevationFt": 935,
+          "distanceMi": 18.2,
+          "elevationDiffFt": -1005,
+          "kind": "base",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 18.2 mi."
+        },
+        {
+          "stationId": "MWN",
+          "source": "NOHRSC",
+          "stationName": "MOUNT WASHINGTON",
+          "lat": 44.2667,
+          "lon": -71.3,
+          "stationElevationFt": 5627,
+          "distanceMi": 20.4,
+          "elevationDiffFt": 3687,
+          "kind": "base",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 20.4 mi."
+        },
+        {
+          "stationId": "KMWN",
+          "source": "NOHRSC",
+          "stationName": "MOUNT WASHINGTON",
+          "lat": 44.26666,
+          "lon": -71.3,
+          "stationElevationFt": 5627,
+          "distanceMi": 20.4,
+          "elevationDiffFt": 3687,
+          "kind": "base",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 20.4 mi."
+        }
+      ]
+    },
+    "rumney-crag": {
+      "measured": [
+        {
+          "stationId": "HDEN3",
+          "source": "NOHRSC",
+          "stationName": "HOLDERNESS 4.6 NW",
+          "lat": 43.7738,
+          "lon": -71.6555,
+          "stationElevationFt": 846,
+          "distanceMi": 8.1,
+          "elevationDiffFt": -554,
+          "kind": "base",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 8.1 mi."
+        },
+        {
+          "stationId": "MSRN3",
+          "source": "NOHRSC",
+          "stationName": "MASCOMA RIVER",
+          "lat": 43.7833,
+          "lon": -72.0333,
+          "stationElevationFt": 1404,
+          "distanceMi": 11.1,
+          "elevationDiffFt": 4,
+          "kind": "base",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 11.1 mi."
+        },
+        {
+          "stationId": "WENN3",
+          "source": "NOHRSC",
+          "stationName": "P.O. BOX 197 WENTWORTH, NH",
+          "lat": 43.9519,
+          "lon": -71.9156,
+          "stationElevationFt": 935,
+          "distanceMi": 11.3,
+          "elevationDiffFt": -465,
+          "kind": "base",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 11.3 mi."
+        },
+        {
+          "stationId": "NH-BK-18",
+          "source": "COCORAHS",
+          "stationName": "NEW HAMPTON 4.1 N, NH",
+          "lat": 43.66397,
+          "lon": -71.6427,
+          "stationElevationFt": 719,
+          "distanceMi": 12.9,
+          "elevationDiffFt": -681,
+          "kind": "base",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 12.9 mi."
+        }
+      ]
+    },
+    "mount-monadnock": {
+      "measured": [
+        {
+          "stationId": "JAPN3",
+          "source": "NOHRSC",
+          "stationName": "JAFFREY SILVER RANCH AIRPARK",
+          "lat": 42.8088,
+          "lon": -72.0053,
+          "stationElevationFt": 1053,
+          "distanceMi": 6.3,
+          "elevationDiffFt": -2112,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 6.3 mi."
+        },
+        {
+          "stationId": "MCDN3",
+          "source": "NOHRSC",
+          "stationName": "EDWARD MACDOWELL LAKE",
+          "lat": 42.8941,
+          "lon": -71.9842,
+          "stationElevationFt": 974,
+          "distanceMi": 6.7,
+          "elevationDiffFt": -2191,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 6.7 mi."
+        },
+        {
+          "stationId": "OTTN3",
+          "source": "NOHRSC",
+          "stationName": "OTTER BROOK LAKE",
+          "lat": 42.95,
+          "lon": -72.2333,
+          "stationElevationFt": 810,
+          "distanceMi": 8.8,
+          "elevationDiffFt": -2355,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 8.8 mi."
+        },
+        {
+          "stationId": "NH-CH-27",
+          "source": "COCORAHS",
+          "stationName": "KEENE 1.3 SW, NH",
+          "lat": 42.9373,
+          "lon": -72.3157,
+          "stationElevationFt": 535,
+          "distanceMi": 11.7,
+          "elevationDiffFt": -2630,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 11.7 mi."
+        }
+      ]
+    },
+    "north-pack-monadnock": {
+      "measured": [
+        {
+          "stationId": "NH-HL-103",
+          "source": "COCORAHS",
+          "stationName": "TEMPLE 1.2 ENE, NH",
+          "lat": 42.826,
+          "lon": -71.82923,
+          "stationElevationFt": 925,
+          "distanceMi": 4.5,
+          "elevationDiffFt": -1351,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 4.5 mi."
+        },
+        {
+          "stationId": "MCDN3",
+          "source": "NOHRSC",
+          "stationName": "EDWARD MACDOWELL LAKE",
+          "lat": 42.8941,
+          "lon": -71.9842,
+          "stationElevationFt": 974,
+          "distanceMi": 6,
+          "elevationDiffFt": -1302,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 6 mi."
+        },
+        {
+          "stationId": "JAPN3",
+          "source": "NOHRSC",
+          "stationName": "JAFFREY SILVER RANCH AIRPARK",
+          "lat": 42.8088,
+          "lon": -72.0053,
+          "stationElevationFt": 1053,
+          "distanceMi": 8.9,
+          "elevationDiffFt": -1223,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 8.9 mi."
+        },
+        {
+          "stationId": "NH-CH-20",
+          "source": "COCORAHS",
+          "stationName": "RINDGE 3.2 ESE, NH",
+          "lat": 42.731,
+          "lon": -71.952,
+          "stationElevationFt": 1207,
+          "distanceMi": 11.6,
+          "elevationDiffFt": -1069,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 11.6 mi."
+        }
+      ]
+    },
+    "katahdin": {
+      "measured": [
+        {
+          "stationId": "MWTM1",
+          "source": "NOHRSC",
+          "stationName": "MILLINOCKET WWTP",
+          "lat": 45.6404,
+          "lon": -68.6747,
+          "stationElevationFt": 358,
+          "distanceMi": 21.8,
+          "elevationDiffFt": -4910,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 21.8 mi."
+        }
+      ]
+    },
+    "katahdin-woods-and-waters": {
+      "measured": [
+        {
+          "stationId": "MWTM1",
+          "source": "NOHRSC",
+          "stationName": "MILLINOCKET WWTP",
+          "lat": 45.6404,
+          "lon": -68.6747,
+          "stationElevationFt": 358,
+          "distanceMi": 18.8,
+          "elevationDiffFt": -842,
+          "kind": "base",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 18.8 mi."
+        },
+        {
+          "stationId": "LNKM1",
+          "source": "NOHRSC",
+          "stationName": "LINCOLN SANITARY DISTRICT/WTP",
+          "lat": 45.3752,
+          "lon": -68.5082,
+          "stationElevationFt": 180,
+          "distanceMi": 36.2,
+          "elevationDiffFt": -1020,
+          "kind": "base",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 36.2 mi (distant; labeled in UI)."
+        },
+        {
+          "stationId": "LNCM1",
+          "source": "NOHRSC",
+          "stationName": "LINCOLN WATER DISTRICT",
+          "lat": 45.3241,
+          "lon": -68.583,
+          "stationElevationFt": 200,
+          "distanceMi": 39.7,
+          "elevationDiffFt": -1000,
+          "kind": "base",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 39.7 mi (distant; labeled in UI)."
+        }
+      ]
+    },
+    "millinocket": {
+      "measured": [
+        {
+          "stationId": "MWTM1",
+          "source": "NOHRSC",
+          "stationName": "MILLINOCKET WWTP",
+          "lat": 45.6404,
+          "lon": -68.6747,
+          "stationElevationFt": 358,
+          "distanceMi": 2.1,
+          "elevationDiffFt": -42,
+          "kind": "base",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 2.1 mi."
+        },
+        {
+          "stationId": "LNKM1",
+          "source": "NOHRSC",
+          "stationName": "LINCOLN SANITARY DISTRICT/WTP",
+          "lat": 45.3752,
+          "lon": -68.5082,
+          "stationElevationFt": 180,
+          "distanceMi": 21.8,
+          "elevationDiffFt": -220,
+          "kind": "base",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 21.8 mi."
+        },
+        {
+          "stationId": "LNCM1",
+          "source": "NOHRSC",
+          "stationName": "LINCOLN WATER DISTRICT",
+          "lat": 45.3241,
+          "lon": -68.583,
+          "stationElevationFt": 200,
+          "distanceMi": 23.8,
+          "elevationDiffFt": -200,
+          "kind": "base",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 23.8 mi."
+        },
+        {
+          "stationId": "DFXM1",
+          "source": "NOHRSC",
+          "stationName": "DOVER-FOXCROFT",
+          "lat": 45.1872,
+          "lon": -69.1841,
+          "stationElevationFt": 325,
+          "distanceMi": 39.8,
+          "elevationDiffFt": -75,
+          "kind": "base",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 39.8 mi (distant; labeled in UI)."
+        }
+      ]
+    },
+    "white-cap-mountain": {
+      "measured": [
+        {
+          "stationId": "RKWM1",
+          "source": "NOHRSC",
+          "stationName": "MOOSEHEAD LAKE",
+          "lat": 45.5833,
+          "lon": -69.7167,
+          "stationElevationFt": 1033,
+          "distanceMi": 22.8,
+          "elevationDiffFt": -2621,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 22.8 mi."
+        },
+        {
+          "stationId": "DFXM1",
+          "source": "NOHRSC",
+          "stationName": "DOVER-FOXCROFT",
+          "lat": 45.1872,
+          "lon": -69.1841,
+          "stationElevationFt": 325,
+          "distanceMi": 25.6,
+          "elevationDiffFt": -3329,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 25.6 mi (distant; labeled in UI)."
+        },
+        {
+          "stationId": "MWTM1",
+          "source": "NOHRSC",
+          "stationName": "MILLINOCKET WWTP",
+          "lat": 45.6404,
+          "lon": -68.6747,
+          "stationElevationFt": 358,
+          "distanceMi": 28.3,
+          "elevationDiffFt": -3296,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 28.3 mi (distant; labeled in UI)."
+        },
+        {
+          "stationId": "BRAM1",
+          "source": "NOHRSC",
+          "stationName": "BRASSUA DAM",
+          "lat": 45.6602,
+          "lon": -69.8119,
+          "stationElevationFt": 1043,
+          "distanceMi": 28.3,
+          "elevationDiffFt": -2611,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 28.3 mi (distant; labeled in UI)."
+        }
+      ]
+    },
+    "sugarloaf-mountain": {
+      "measured": [
+        {
+          "stationId": "KINM1",
+          "source": "NOHRSC",
+          "stationName": "KINGFIELD",
+          "lat": 44.9595,
+          "lon": -70.1753,
+          "stationElevationFt": 597,
+          "distanceMi": 8.4,
+          "elevationDiffFt": -3640,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 8.4 mi."
+        },
+        {
+          "stationId": "PPSM1",
+          "source": "NOHRSC",
+          "stationName": "PHILLIPS 3",
+          "lat": 44.8187,
+          "lon": -70.3866,
+          "stationElevationFt": 1152,
+          "distanceMi": 15.1,
+          "elevationDiffFt": -3085,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 15.1 mi."
+        },
+        {
+          "stationId": "RGNM1",
+          "source": "NOHRSC",
+          "stationName": "RANGELEY 2NW",
+          "lat": 44.9894,
+          "lon": -70.6722,
+          "stationElevationFt": 1772,
+          "distanceMi": 17.8,
+          "elevationDiffFt": -2465,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 17.8 mi."
+        },
+        {
+          "stationId": "RANM1",
+          "source": "NOHRSC",
+          "stationName": "RANGELEY",
+          "lat": 44.9891,
+          "lon": -70.6719,
+          "stationElevationFt": 1772,
+          "distanceMi": 17.8,
+          "elevationDiffFt": -2465,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 17.8 mi."
+        }
+      ]
+    },
+    "bigelow": {
+      "measured": [
+        {
+          "stationId": "KINM1",
+          "source": "NOHRSC",
+          "stationName": "KINGFIELD",
+          "lat": 44.9595,
+          "lon": -70.1753,
+          "stationElevationFt": 597,
+          "distanceMi": 14.1,
+          "elevationDiffFt": -3553,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 14.1 mi."
+        },
+        {
+          "stationId": "RGNM1",
+          "source": "NOHRSC",
+          "stationName": "RANGELEY 2NW",
+          "lat": 44.9894,
+          "lon": -70.6722,
+          "stationElevationFt": 1772,
+          "distanceMi": 21.7,
+          "elevationDiffFt": -2378,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 21.7 mi."
+        },
+        {
+          "stationId": "RANM1",
+          "source": "NOHRSC",
+          "stationName": "RANGELEY",
+          "lat": 44.9891,
+          "lon": -70.6719,
+          "stationElevationFt": 1772,
+          "distanceMi": 21.7,
+          "elevationDiffFt": -2378,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 21.7 mi."
+        },
+        {
+          "stationId": "PPSM1",
+          "source": "NOHRSC",
+          "stationName": "PHILLIPS 3",
+          "lat": 44.8187,
+          "lon": -70.3866,
+          "stationElevationFt": 1152,
+          "distanceMi": 23.2,
+          "elevationDiffFt": -2998,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 23.2 mi."
+        }
+      ]
+    },
+    "rangeley": {
+      "measured": [
+        {
+          "stationId": "RGNM1",
+          "source": "NOHRSC",
+          "stationName": "RANGELEY 2NW",
+          "lat": 44.9894,
+          "lon": -70.6722,
+          "stationElevationFt": 1772,
+          "distanceMi": 2.1,
+          "elevationDiffFt": 254,
+          "kind": "base",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 2.1 mi."
+        },
+        {
+          "stationId": "RANM1",
+          "source": "NOHRSC",
+          "stationName": "RANGELEY",
+          "lat": 44.9891,
+          "lon": -70.6719,
+          "stationElevationFt": 1772,
+          "distanceMi": 2.1,
+          "elevationDiffFt": 254,
+          "kind": "base",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 2.1 mi."
+        },
+        {
+          "stationId": "PPSM1",
+          "source": "NOHRSC",
+          "stationName": "PHILLIPS 3",
+          "lat": 44.8187,
+          "lon": -70.3866,
+          "stationElevationFt": 1152,
+          "distanceMi": 16.2,
+          "elevationDiffFt": -366,
+          "kind": "base",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 16.2 mi."
+        },
+        {
+          "stationId": "KINM1",
+          "source": "NOHRSC",
+          "stationName": "KINGFIELD",
+          "lat": 44.9595,
+          "lon": -70.1753,
+          "stationElevationFt": 597,
+          "distanceMi": 22.9,
+          "elevationDiffFt": -921,
+          "kind": "base",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 22.9 mi."
+        }
+      ]
+    },
+    "deboullie-mountain": {
+      "measured": [
+        {
+          "stationId": "FISM1",
+          "source": "NOHRSC",
+          "stationName": "FORT KENT COOP",
+          "lat": 47.2386,
+          "lon": -68.6119,
+          "stationElevationFt": 659,
+          "distanceMi": 22.3,
+          "elevationDiffFt": -1322,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 22.3 mi."
+        },
+        {
+          "stationId": "ME-AR-18",
+          "source": "COCORAHS",
+          "stationName": "NEW SWEDEN 4.9 NNW, ME",
+          "lat": 47.0108,
+          "lon": -68.1439,
+          "stationElevationFt": 840,
+          "distanceMi": 34.6,
+          "elevationDiffFt": -1141,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 34.6 mi (distant; labeled in UI)."
+        }
+      ]
+    },
+    "mars-hill-mountain": {
+      "measured": [
+        {
+          "stationId": "ME-AR-46",
+          "source": "COCORAHS",
+          "stationName": "PRESQUE ISLE 1.1 W, ME",
+          "lat": 46.68529,
+          "lon": -68.01025,
+          "stationElevationFt": 463,
+          "distanceMi": 14.7,
+          "elevationDiffFt": -1286,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 14.7 mi."
+        },
+        {
+          "stationId": "ME-AR-15",
+          "source": "COCORAHS",
+          "stationName": "PRESQUE ISLE 1.3 WSW, ME",
+          "lat": 46.68172,
+          "lon": -68.02802,
+          "stationElevationFt": 463,
+          "distanceMi": 15.1,
+          "elevationDiffFt": -1286,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 15.1 mi."
+        },
+        {
+          "stationId": "CARM1",
+          "source": "NOHRSC",
+          "stationName": "CARIBOU WFO",
+          "lat": 46.8681,
+          "lon": -68.0125,
+          "stationElevationFt": 627,
+          "distanceMi": 25.8,
+          "elevationDiffFt": -1122,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 25.8 mi (distant; labeled in UI)."
+        },
+        {
+          "stationId": "ME-AR-18",
+          "source": "COCORAHS",
+          "stationName": "NEW SWEDEN 4.9 NNW, ME",
+          "lat": 47.0108,
+          "lon": -68.1439,
+          "stationElevationFt": 840,
+          "distanceMi": 37.3,
+          "elevationDiffFt": -909,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 37.3 mi (distant; labeled in UI)."
+        }
+      ]
+    },
+    "cadillac-mountain": {
+      "measured": [
+        {
+          "stationId": "ME-HN-68",
+          "source": "COCORAHS",
+          "stationName": "SOUTHWEST HARBOR 2.2 SE, ME",
+          "lat": 44.25436,
+          "lon": -68.29771,
+          "stationElevationFt": 49,
+          "distanceMi": 7.6,
+          "elevationDiffFt": -1481,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 7.6 mi."
+        },
+        {
+          "stationId": "ME-HN-2",
+          "source": "COCORAHS",
+          "stationName": "EAST SURRY, ME",
+          "lat": 44.49367,
+          "lon": -68.45775,
+          "stationElevationFt": 112,
+          "distanceMi": 15.1,
+          "elevationDiffFt": -1418,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 15.1 mi."
+        },
+        {
+          "stationId": "ME-HN-4",
+          "source": "COCORAHS",
+          "stationName": "MARIAVILLE 1.4 ESE, ME",
+          "lat": 44.7181,
+          "lon": -68.3881,
+          "stationElevationFt": 121,
+          "distanceMi": 26.6,
+          "elevationDiffFt": -1409,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 26.6 mi (distant; labeled in UI)."
+        },
+        {
+          "stationId": "ME-WL-35",
+          "source": "COCORAHS",
+          "stationName": "NORTHPORT 0.7 NE, ME",
+          "lat": 44.34772,
+          "lon": -68.95601,
+          "stationElevationFt": 164,
+          "distanceMi": 36,
+          "elevationDiffFt": -1366,
+          "kind": "valley",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 36 mi (distant; labeled in UI)."
+        }
+      ]
+    },
+    "bar-harbor": {
+      "measured": [
+        {
+          "stationId": "ME-HN-68",
+          "source": "COCORAHS",
+          "stationName": "SOUTHWEST HARBOR 2.2 SE, ME",
+          "lat": 44.25436,
+          "lon": -68.29771,
+          "stationElevationFt": 49,
+          "distanceMi": 10.3,
+          "elevationDiffFt": -101,
+          "kind": "base",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 10.3 mi."
+        },
+        {
+          "stationId": "ME-HN-2",
+          "source": "COCORAHS",
+          "stationName": "EAST SURRY, ME",
+          "lat": 44.49367,
+          "lon": -68.45775,
+          "stationElevationFt": 112,
+          "distanceMi": 14.5,
+          "elevationDiffFt": -38,
+          "kind": "base",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 14.5 mi."
+        },
+        {
+          "stationId": "ME-HN-4",
+          "source": "COCORAHS",
+          "stationName": "MARIAVILLE 1.4 ESE, ME",
+          "lat": 44.7181,
+          "lon": -68.3881,
+          "stationElevationFt": 121,
+          "distanceMi": 24.6,
+          "elevationDiffFt": -29,
+          "kind": "base",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 24.6 mi."
+        },
+        {
+          "stationId": "ME-WL-35",
+          "source": "COCORAHS",
+          "stationName": "NORTHPORT 0.7 NE, ME",
+          "lat": 44.34772,
+          "lon": -68.95601,
+          "stationElevationFt": 164,
+          "distanceMi": 37.3,
+          "elevationDiffFt": 14,
+          "kind": "base",
+          "element": "snowdepth",
+          "bindReason": "NOHRSC snowdepth report · 37.3 mi (distant; labeled in UI)."
+        }
+      ]
+    }
+  },
+  "audit": [
+    {
+      "placeId": "mount-marcy",
+      "count": 4
+    },
+    {
+      "placeId": "whiteface-mountain",
+      "count": 4
+    },
+    {
+      "placeId": "dix-mountain",
+      "count": 4
+    },
+    {
+      "placeId": "algonquin-peak",
+      "count": 4
+    },
+    {
+      "placeId": "mount-colden",
+      "count": 4
+    },
+    {
+      "placeId": "mount-colvin",
+      "count": 4
+    },
+    {
+      "placeId": "giant-mountain",
+      "count": 4
+    },
+    {
+      "placeId": "santanoni-peak",
+      "count": 4
+    },
+    {
+      "placeId": "cascade-mountain",
+      "count": 4
+    },
+    {
+      "placeId": "mckenzie-mountain",
+      "count": 4
+    },
+    {
+      "placeId": "mount-van-hoevenberg",
+      "count": 4
+    },
+    {
+      "placeId": "keene-valley",
+      "count": 4
+    },
+    {
+      "placeId": "lyon-mountain",
+      "count": 4
+    },
+    {
+      "placeId": "ampersand-mountain",
+      "count": 4
+    },
+    {
+      "placeId": "debar-mountain",
+      "count": 3
+    },
+    {
+      "placeId": "st-regis-mountain",
+      "count": 4
+    },
+    {
+      "placeId": "mount-arab",
+      "count": 4
+    },
+    {
+      "placeId": "snowy-mountain",
+      "count": 4
+    },
+    {
+      "placeId": "blue-mountain",
+      "count": 4
+    },
+    {
+      "placeId": "pillsbury-mountain",
+      "count": 4
+    },
+    {
+      "placeId": "gore-mountain",
+      "count": 4
+    },
+    {
+      "placeId": "blue-ridge-mountain",
+      "count": 4
+    },
+    {
+      "placeId": "fishing-brook-range",
+      "count": 4
+    },
+    {
+      "placeId": "vanderwhacker-mountain",
+      "count": 4
+    },
+    {
+      "placeId": "crane-mountain",
+      "count": 4
+    },
+    {
+      "placeId": "hadley-mountain",
+      "count": 4
+    },
+    {
+      "placeId": "black-mountain",
+      "count": 4
+    },
+    {
+      "placeId": "pharaoh-mountain",
+      "count": 4
+    },
+    {
+      "placeId": "prospect-mountain",
+      "count": 4
+    },
+    {
+      "placeId": "slide-mountain",
+      "count": 4
+    },
+    {
+      "placeId": "hunter-mountain",
+      "count": 4
+    },
+    {
+      "placeId": "peekamoose-mountain",
+      "count": 4
+    },
+    {
+      "placeId": "balsam-lake-mountain",
+      "count": 4
+    },
+    {
+      "placeId": "panther-mountain",
+      "count": 4
+    },
+    {
+      "placeId": "windham-high-peak",
+      "count": 4
+    },
+    {
+      "placeId": "overlook-mountain",
+      "count": 4
+    },
+    {
+      "placeId": "red-hill",
+      "count": 4
+    },
+    {
+      "placeId": "mount-tremper",
+      "count": 4
+    },
+    {
+      "placeId": "tannersville",
+      "count": 4
+    },
+    {
+      "placeId": "gunks-ridge",
+      "count": 4
+    },
+    {
+      "placeId": "thacher-park",
+      "count": 4
+    },
+    {
+      "placeId": "jay-peak",
+      "count": 4
+    },
+    {
+      "placeId": "belvidere-mountain",
+      "count": 4
+    },
+    {
+      "placeId": "jay-village",
+      "count": 4
+    },
+    {
+      "placeId": "mount-mansfield",
+      "count": 4
+    },
+    {
+      "placeId": "smugglers-notch",
+      "count": 4
+    },
+    {
+      "placeId": "stowe-town",
+      "count": 4
+    },
+    {
+      "placeId": "camels-hump",
+      "count": 4
+    },
+    {
+      "placeId": "mount-ellen",
+      "count": 4
+    },
+    {
+      "placeId": "bread-loaf-mountain",
+      "count": 4
+    },
+    {
+      "placeId": "mount-worcester",
+      "count": 4
+    },
+    {
+      "placeId": "waterbury",
+      "count": 4
+    },
+    {
+      "placeId": "signal-mountain",
+      "count": 4
+    },
+    {
+      "placeId": "burke-mountain",
+      "count": 4
+    },
+    {
+      "placeId": "monadnock-mountain",
+      "count": 4
+    },
+    {
+      "placeId": "killington-peak",
+      "count": 4
+    },
+    {
+      "placeId": "stratton-mountain",
+      "count": 4
+    },
+    {
+      "placeId": "mount-equinox",
+      "count": 4
+    },
+    {
+      "placeId": "dorset-mountain",
+      "count": 4
+    },
+    {
+      "placeId": "haystack-mountain",
+      "count": 4
+    },
+    {
+      "placeId": "ludlow-mountain",
+      "count": 4
+    },
+    {
+      "placeId": "bromley-mountain",
+      "count": 4
+    },
+    {
+      "placeId": "mount-ascutney",
+      "count": 4
+    },
+    {
+      "placeId": "bald-mountain",
+      "count": 4
+    },
+    {
+      "placeId": "manchester-vt",
+      "count": 4
+    },
+    {
+      "placeId": "mount-washington",
+      "count": 4
+    },
+    {
+      "placeId": "mount-adams",
+      "count": 4
+    },
+    {
+      "placeId": "pinkham-notch",
+      "count": 4
+    },
+    {
+      "placeId": "crawford-notch",
+      "count": 4
+    },
+    {
+      "placeId": "baldface-mountain",
+      "count": 4
+    },
+    {
+      "placeId": "mount-lafayette",
+      "count": 4
+    },
+    {
+      "placeId": "mount-moosilauke",
+      "count": 4
+    },
+    {
+      "placeId": "mount-osceola",
+      "count": 4
+    },
+    {
+      "placeId": "cannon-mountain",
+      "count": 4
+    },
+    {
+      "placeId": "kancamagus-pass",
+      "count": 4
+    },
+    {
+      "placeId": "franconia-notch",
+      "count": 4
+    },
+    {
+      "placeId": "rumney-crag",
+      "count": 4
+    },
+    {
+      "placeId": "mount-monadnock",
+      "count": 4
+    },
+    {
+      "placeId": "north-pack-monadnock",
+      "count": 4
+    },
+    {
+      "placeId": "katahdin",
+      "count": 1
+    },
+    {
+      "placeId": "katahdin-woods-and-waters",
+      "count": 3
+    },
+    {
+      "placeId": "millinocket",
+      "count": 4
+    },
+    {
+      "placeId": "white-cap-mountain",
+      "count": 4
+    },
+    {
+      "placeId": "sugarloaf-mountain",
+      "count": 4
+    },
+    {
+      "placeId": "bigelow",
+      "count": 4
+    },
+    {
+      "placeId": "rangeley",
+      "count": 4
+    },
+    {
+      "placeId": "deboullie-mountain",
+      "count": 2
+    },
+    {
+      "placeId": "mars-hill-mountain",
+      "count": 4
+    },
+    {
+      "placeId": "cadillac-mountain",
+      "count": 4
+    },
+    {
+      "placeId": "bar-harbor",
+      "count": 4
+    }
+  ]
+}

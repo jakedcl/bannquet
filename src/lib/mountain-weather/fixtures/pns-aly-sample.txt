@@ -1,0 +1,18 @@
+
+000
+NOUS41 KALY 131924
+PNSALY
+CTZ001-013-MAZ001-025-NYZ032-033-038>043-047>054-058>061-063>066-
+082>084-VTZ013>015-140724-
+
+Public Information Statement
+National Weather Service Albany NY
+224 PM EST Fri Nov 13 2026
+
+...PRECIPITATION REPORTS...
+
+Location                     Amount    Time/Date       Provider            
+
+...New York...
+1 NE Lake Placid             6.0 Inch  0800 AM 11/14   COOP                 
+Mount Marcy area             5.0 Inch  0900 AM 11/14   Public               

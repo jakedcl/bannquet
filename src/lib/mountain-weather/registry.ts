@@ -4,6 +4,10 @@ import { nwsStationSourceDef } from '@/lib/mountain-weather/readers/nws-station'
 import { ASRC_WHITEFACE_TIMELAPSE_DEF } from '@/lib/mountain-weather/readers/asrc-whiteface-timelapse';
 import { AVALANCHE_MAP_LAYER_MWAC_DEF } from '@/lib/mountain-weather/readers/avalanche-map-layer-mwac';
 import { AVALANCHE_MAP_LAYER_NYSAC_DEF } from '@/lib/mountain-weather/readers/avalanche-map-layer-nysac';
+import { WPC_PWPF_SNOW_DEF } from '@/lib/mountain-weather/readers/wpc-pwpf-snow';
+import { NERFC_SNOW_OPS_DEF } from '@/lib/mountain-weather/readers/nerfc-snow-ops';
+import { NOHRSC_NE_INDEX_DEF } from '@/lib/mountain-weather/readers/nohrsc-northeast-images';
+import { NOHRSC_STATION_SNOWDEPTH_DEF } from '@/lib/mountain-weather/readers/nohrsc-station-snowdepth';
 
 export const NWS_GRID_BASELINE_DEF: SourceDef = {
   id: 'nws-grid-baseline',
@@ -300,5 +304,9 @@ export const SOURCE_REGISTRY: Record<string, SourceDef> = {
   [ASRC_WHITEFACE_TIMELAPSE_DEF.id]: ASRC_WHITEFACE_TIMELAPSE_DEF,
   [AVALANCHE_MAP_LAYER_MWAC_DEF.id]: AVALANCHE_MAP_LAYER_MWAC_DEF,
   [AVALANCHE_MAP_LAYER_NYSAC_DEF.id]: AVALANCHE_MAP_LAYER_NYSAC_DEF,
+  [WPC_PWPF_SNOW_DEF.id]: WPC_PWPF_SNOW_DEF,
+  [NERFC_SNOW_OPS_DEF.id]: NERFC_SNOW_OPS_DEF,
+  [NOHRSC_NE_INDEX_DEF.id]: NOHRSC_NE_INDEX_DEF,
+  [NOHRSC_STATION_SNOWDEPTH_DEF.id]: NOHRSC_STATION_SNOWDEPTH_DEF,
   ...stationRegistry,
 };
