@@ -6,7 +6,7 @@ Branch: `lurk/site-overhaul-01d6` · PR [#54](https://github.com/jakedcl/bannque
 
 | Hash | What it shows |
 |------|----------------|
-| *(cosmetic)* | Removes “(new)” labels, merges state **Places + Sections** into one grouped list, hides empty snow/LSR/PNS/measured blocks and failed-only sky, docs + dead-code trim |
+| `a07b1d1` | Cosmetic: no “(new)” labels, state **Places by section** (one card), hide empty snow blocks, overflow tweaks, docs |
 | `26d3862` | **M16:** `/mountain-weather/conditions` + **Live ticker** from `readNwsStationLatest` (M10 bindings, station + age); state/section place lines from `readNwsGridBaseline`; retired `REGION_WEATHER_SECTIONS` |
 | `b96863f` | **M15 fix:** Compass clock-as-UTC timestamps; TMDD tenths-°C ESS fields; HTTP 500 called out |
 | `f23def5` | **M15:** Ground & access (DEC/WFAS links, USDM drought, Compass ESS, AirNow stub) |
