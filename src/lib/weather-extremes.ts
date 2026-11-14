@@ -17,7 +17,7 @@ export type ExtremeSpot = {
   maxTemperature: number;
   windChill: number;
   windSpeed: number;
-  windGust: number;
+  windGust: number | null;
   /** Measured conditions never set forecast snow flags. */
   isSnowing: boolean;
   stationId?: string;
@@ -37,10 +37,13 @@ export type ExtremeReport = {
 export function extremeStatsFromSpots(results: ExtremeSpot[]): ExtremeStat[] {
   if (results.length === 0) return [];
 
-  const windCandidates = results.filter((s) => s.windSpeed > 0 || s.windGust > 0);
+  const gustMph = (s: ExtremeSpot) => (s.windGust != null && s.windGust > 0 ? s.windGust : null);
+  const windCandidates = results.filter((s) => s.windSpeed > 0 || gustMph(s) != null);
   const highestWind = (windCandidates.length ? windCandidates : results).reduce((max, curr) => {
-    const maxScore = Math.max(max.windGust > max.windSpeed ? max.windGust : max.windSpeed, max.windSpeed);
-    const curScore = Math.max(curr.windGust > curr.windSpeed ? curr.windGust : curr.windSpeed, curr.windSpeed);
+    const maxGust = gustMph(max);
+    const curGust = gustMph(curr);
+    const maxScore = Math.max(maxGust != null && maxGust > max.windSpeed ? maxGust : max.windSpeed, max.windSpeed);
+    const curScore = Math.max(curGust != null && curGust > curr.windSpeed ? curGust : curr.windSpeed, curr.windSpeed);
     return curScore > maxScore ? curr : max;
   }, (windCandidates.length ? windCandidates : results)[0]);
   const highestTemp = results.reduce((max, curr) =>
@@ -52,8 +55,8 @@ export function extremeStatsFromSpots(results: ExtremeSpot[]): ExtremeStat[] {
     {
       label: 'HIGHEST WIND',
       value:
-        highestWind.windGust > 0 && highestWind.windGust > highestWind.windSpeed
-          ? `${highestWind.windSpeed} mph, gusts ${highestWind.windGust}`
+        gustMph(highestWind) != null && gustMph(highestWind)! > highestWind.windSpeed
+          ? `${highestWind.windSpeed} mph, gusts ${gustMph(highestWind)}`
           : `${highestWind.windSpeed} mph`,
       location: `${highestWind.mountain}, ${highestWind.state}`,
       stationId: highestWind.stationId,

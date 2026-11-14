@@ -43,7 +43,7 @@ export type MeasuredConditionSpot = {
   maxTemperature: number;
   windChill: number;
   windSpeed: number;
-  windGust: number;
+  windGust: number | null;
 };
 
 export type MountainConditionsReport = {
@@ -118,7 +118,7 @@ export async function loadMountainConditionsReport(now = new Date()): Promise<Mo
     }
     const temp = scalars.tempF;
     const wind = scalars.windMph ?? 0;
-    const gust = scalars.gustMph ?? 0;
+    const gust = scalars.gustMph;
     const chill = scalars.windChillF ?? temp;
     spots.push({
       placeId: job.place.id,

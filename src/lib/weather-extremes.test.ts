@@ -44,3 +44,20 @@ test('measured extremes never include forecast snow', () => {
   const stats = extremeStatsFromSpots(spots);
   assert.equal(stats.some((stat) => stat.label === 'FORECAST SNOW CHANCE'), false);
 });
+
+test('missing wind gust stays null for JSON extremes', () => {
+  const spot: ExtremeSpot = {
+    mountain: 'Test',
+    state: 'NY',
+    temperature: 40,
+    minTemperature: 40,
+    maxTemperature: 40,
+    windChill: 38,
+    windSpeed: 10,
+    windGust: null,
+    isSnowing: false,
+  };
+  assert.equal(spot.windGust, null);
+  const stats = extremeStatsFromSpots([spot]);
+  assert.equal(stats[0]?.value, '10 mph');
+});

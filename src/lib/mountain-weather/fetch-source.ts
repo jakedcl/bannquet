@@ -95,6 +95,13 @@ export function buildSourceResult<T>(input: {
   }
 }
 
+class SourceCacheSkip<T> extends Error {
+  constructor(readonly result: SourceResult<T>) {
+    super('mwx-cache-skip');
+    this.name = 'SourceCacheSkip';
+  }
+}
+
 /** Cached parsed source; one entry per cache key (never stores raw gridpoint JSON). */
 export function cachedSourceRead<T>(options: {
   cacheKey: string[];
@@ -102,15 +109,25 @@ export function cachedSourceRead<T>(options: {
   resolveUrl?: () => string;
   read: () => Promise<SourceResult<T>>;
 }): () => Promise<SourceResult<T>> {
-  const wrapped = async (): Promise<SourceResult<T>> => {
+  const cacheKey = ['mwx-ok-cache-v1', ...options.cacheKey];
+  const compute = async (): Promise<SourceResult<T>> => {
     const result = await options.read();
     if (result.status === 'error' && result.error) {
       logMountainWeatherSourceError(options.def.id, result.sourceUrl ?? options.def.url, result.error);
+      throw new SourceCacheSkip(result);
     }
     return result;
   };
-  return unstable_cache(wrapped, options.cacheKey, {
+  const cached = unstable_cache(compute, cacheKey, {
     revalidate: options.def.ttlSeconds,
     tags: [options.def.id],
   });
+  return async (): Promise<SourceResult<T>> => {
+    try {
+      return await cached();
+    } catch (err) {
+      if (err instanceof SourceCacheSkip) return err.result;
+      throw err;
+    }
+  };
 }

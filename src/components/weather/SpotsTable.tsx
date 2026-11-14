@@ -39,7 +39,9 @@ export function SpotsTable({ spots }: { spots: ExtremeSpot[] }) {
       align: 'right',
       sortValue: (row) => row.windSpeed,
       cell: (row) =>
-        row.windGust > row.windSpeed ? `${row.windSpeed} mph · gust ${row.windGust}` : `${row.windSpeed} mph`,
+        row.windGust != null && row.windGust > row.windSpeed
+          ? `${row.windSpeed} mph · gust ${row.windGust}`
+          : `${row.windSpeed} mph`,
     },
     {
       id: 'chill',

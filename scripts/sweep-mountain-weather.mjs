@@ -51,10 +51,19 @@ const PATTERNS = [
 const UI_FAILURE_PATTERNS = [
   { name: 'did not load', re: /did not load/gi },
   { name: 'source error', re: /source error/gi },
-  { name: 'unavailable', re: />\s*[^<]{0,80}\(unavailable\)/gi },
+  { name: 'unavailable', re: /\(unavailable\)|\b(?:AVG|REC|HWO) unavailable\b/gi },
   { name: 'could not be parsed', re: /could not be parsed/gi },
+  { name: 'data-mwx-source-error', re: /data-mwx-source-error=/gi },
   { name: 'not in this issuance', re: /not in this issuance/gi },
 ];
+
+const SWEEP_FAILURE_PATTERNS = new Set([
+  'did not load',
+  'source error',
+  'unavailable',
+  'could not be parsed',
+  'data-mwx-source-error',
+]);
 
 function loadPlaces() {
   const raw = JSON.parse(fs.readFileSync(path.join(ROOT, 'config/mountain-weather/places.json'), 'utf8'));
@@ -197,13 +206,9 @@ async function main() {
 
   const attributed = results.flatMap((r) => r.attributedErrors ?? []);
   const sourceErrorOnly = [
-    ...uiFailures.filter(
-      (h) =>
-        (h.pattern === 'did not load' || h.pattern === 'source error' || h.pattern === 'could not be parsed') &&
-        h.pattern !== 'not in this issuance',
-    ),
+    ...uiFailures.filter((h) => SWEEP_FAILURE_PATTERNS.has(h.pattern)),
     ...attributed,
-  ].filter((h) => !/not in this issuance/i.test(h.context ?? ''));
+  ].filter((h) => h.pattern !== 'not in this issuance' && !/not in this issuance/i.test(h.context ?? ''));
 
   const upstreamChecks = [];
   const UA = 'Bannquet-Mountain-Weather-Sweep';
@@ -266,6 +271,8 @@ async function main() {
           ]),
         ),
         sourceErrors: sourceErrorOnly,
+        sourceErrorCount: sourceErrorOnly.length,
+        sourceErrorRoutes: [...new Set(sourceErrorOnly.map((h) => h.route))],
         upstreamEvidence: upstreamChecks,
       },
       null,
@@ -273,7 +280,7 @@ async function main() {
     ),
   );
 
-  if (badStatus.length || patternBad.length) {
+  if (badStatus.length || patternBad.length || sourceErrorOnly.length > 0) {
     process.exitCode = 1;
   }
 }
