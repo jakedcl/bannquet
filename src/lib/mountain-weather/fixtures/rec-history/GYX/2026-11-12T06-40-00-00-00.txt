@@ -1,0 +1,140 @@
+
+000
+SXUS41 KGYX 120640
+RECGYX
+
+Recreation Report for New Hampshire and western Maine
+National Weather Service Gray ME
+140 AM EST Thu Nov 12 2026
+
+MEZ007>009-NHZ002>004-122100-
+Elevations From 2500 Feet to 4000 Feet in Northern New Hampshire and
+the Western Maine Mountains-
+140 AM EST Thu Nov 12 2026
+
+...Recreation forecast for elevations between 2500 and 4000 feet in 
+northern New Hampshire and the western Maine mountains...
+
+.TODAY...Summits obscured. A slight chance of snow this morning. A
+chance of snow this afternoon. Highs in the mid 30s. Light and
+variable winds. Chance of snow 50 percent. 
+.TONIGHT...Summits obscured. A chance of snow in the evening, then
+snow likely after midnight. Lows in the mid 20s. Northeast winds up
+to 10 mph with gusts up to 30 mph. Chance of snow 70 percent. 
+.FRIDAY...Summits obscured in the morning. A chance of snow. Highs
+in the lower 30s. North winds up to 10 mph with gusts up to 25 mph.
+Chance of snow 50 percent. 
+
+$$
+
+MEZ007>009-NHZ002>004-122100-
+Summits Above 4000 Feet in Northern New Hampshire and Western Maine-
+140 AM EST Thu Nov 12 2026
+
+...Recreation forecast for summits above 4000 feet in northern New
+Hampshire and western Maine...
+
+.TODAY...Summits obscured. A chance of snow. Highs around 30. South
+winds around 10 mph shifting to the east this afternoon. Chance of
+snow 50 percent. 
+.TONIGHT...Snow. Lows in the mid 20s. Northeast winds 10 to 20 mph
+with gusts up to 45 mph. Chance of snow near 100 percent. 
+.FRIDAY...Summits obscured in the morning. Snow likely in the
+morning, then a chance of snow in the afternoon. Highs in the upper
+20s. North winds 10 to 20 mph with gusts up to 40 mph. Chance of
+snow 60 percent. 
+
+$$
+
+NHZ011-015-122100-
+Summits of Mount Monadnock and North Pack Monadnock Mountain-
+140 AM EST Thu Nov 12 2026
+
+...Recreation forecast for summits of Mount Monadnock and North Pack
+Monadnock mountain...
+
+.TODAY...A slight chance of snow this morning. Rain. Highs around
+40. Light and variable winds becoming northeast around 15 mph this
+afternoon. Chance of precipitation near 100 percent. 
+.TONIGHT...Rain and snow. Lows around 30. Northeast winds 10 to
+20 mph with gusts up to 35 mph. Chance of precipitation near
+100 percent. 
+.FRIDAY...Summits obscured in the morning. Snow. Highs in the mid
+30s. North winds around 20 mph decreasing to around 10 mph in the
+afternoon. Chance of snow 80 percent. 
+
+$$
+
+MEZ024-122100-
+Islands of Casco Bay Maine-
+140 AM EST Thu Nov 12 2026
+
+...Forecast for the Islands of Casco Bay Maine...
+
+.TODAY...Cloudy. A slight chance of rain this morning, then a chance
+of rain this afternoon. Highs in the upper 40s. Northeast winds
+10 to 15 mph with gusts up to 25 mph. Chance of rain 40 percent. 
+.TONIGHT...Rain. Snow likely after midnight. Lows in the mid 30s.
+Northeast winds 10 to 20 mph with gusts up to 35 mph. Chance of
+precipitation near 100 percent. 
+.FRIDAY...Cloudy in the morning. Rain and snow likely in the
+morning, then a chance of rain in the afternoon. Highs in the lower
+40s. North winds 10 to 20 mph with gusts up to 35 mph. Chance of
+precipitation 70 percent. 
+
+$$
+
+MEZ025-027-122100-
+Islands and Necks of the Mid Coast of Maine-
+140 AM EST Thu Nov 12 2026
+
+...Forecast for the Islands and Necks of the Mid Coast of Maine...
+
+.TODAY...Cloudy. A slight chance of rain this afternoon. Highs in
+the mid 40s. Light and variable winds becoming northeast around
+10 mph this afternoon. Chance of rain 20 percent. 
+.TONIGHT...Cloudy. A chance of rain in the evening, then rain likely
+after midnight. Lows in the mid 30s. Northeast winds 10 to 15 mph
+with gusts up to 30 mph. Chance of rain 70 percent. 
+.FRIDAY...Cloudy in the morning. Rain and snow likely in the
+morning, then a chance of rain in the afternoon. Highs in the lower
+40s. North winds 10 to 15 mph with gusts up to 30 mph. Chance of
+precipitation 70 percent. 
+
+$$
+
+MEZ027-028-122100-
+Islands of Penobscot Bay Maine-
+140 AM EST Thu Nov 12 2026
+
+...Forecast for the Islands of Penobscot Bay Maine...
+
+.TODAY...Cloudy. Highs in the mid 40s. Light and variable winds. 
+.TONIGHT...Cloudy. A chance of rain in the evening, then rain likely
+after midnight. Lows in the mid 30s. Northeast winds 10 to 15 mph
+with gusts up to 35 mph. Chance of rain 70 percent. 
+.FRIDAY...Cloudy in the morning. Rain likely with a chance of snow
+in the morning, then a chance of rain in the afternoon. Highs in the
+lower 40s. North winds 10 to 15 mph with gusts up to 35 mph. Chance
+of precipitation 70 percent. 
+
+$$
+
+MEZ026-027-122100-
+Offshore Islands of Monhegan, Matinicus and Criehaven-
+140 AM EST Thu Nov 12 2026
+
+...Forecast for the Offshore Islands of Monhegan, Matinicus and
+Criehaven...
+
+.TODAY...Cloudy. A slight chance of rain this afternoon. Highs in
+the upper 40s. Northeast winds 10 to 15 mph. Chance of rain
+20 percent. 
+.TONIGHT...Cloudy, rain. Lows around 40. Northeast winds 20 to
+30 mph with gusts up to 40 mph. Chance of rain 90 percent. 
+.FRIDAY...Cloudy in the morning. Rain. Highs in the mid 40s.
+Northeast winds 20 to 30 mph with gusts up to 40 mph. Chance of rain
+80 percent. 
+
+$$
+

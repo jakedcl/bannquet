@@ -2,7 +2,7 @@
 
 import { useActionState, useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { publishProfilePhotos, publishProfileTrack } from '@/app/trip-reports/actions';
+import { publishProfilePhotos, publishProfileTrack } from '@/app/upload/publish-actions';
 import { PhotoFields } from '@/components/posts/PhotoFields';
 import { HideEndsToggle } from '@/components/routes/HideEndsToggle';
 import type { UploadedPhoto } from '@/components/posts/prepare-photo';
@@ -12,8 +12,7 @@ import { ACTIVITIES, ACTIVITY_META } from '@/lib/activities';
 import { formatFeetGain, formatMiles, packTrack } from '@/lib/gpx';
 import { cleanRouteTitle, routeTitle } from '@/lib/route-title';
 import { SummitPrompts } from '@/components/peaks/SummitPrompts';
-import { SaveThenTrip } from '@/components/trips/SaveThenTrip';
-import { useReportCreated } from '@/components/trips/use-created';
+import { useReportCreated } from '@/lib/upload-created';
 import type { DraftItem } from '@/lib/trip-draft';
 
 export function RouteUpload({
@@ -67,10 +66,6 @@ export function RouteUpload({
   function finishSuggestions() {
     if (!saveId || continued.current === saveId) return;
     continued.current = saveId;
-    if (state?.continueTo) {
-      router.push(state.continueTo);
-      return;
-    }
     if (inline && state?.created?.length) onCreated?.(state.created);
   }
 
@@ -152,7 +147,6 @@ export function RouteUpload({
       <SubmitButton pendingLabel="Saving…" disabled={!trackJson}>
         Save route
       </SubmitButton>
-      {inline ? null : <SaveThenTrip disabled={pending || !trackJson} />}
     </form>
     {suggestions.length > 0 ? (
       <SummitPrompts key={saveId || 'summits'} peaks={suggestions} onClear={finishSuggestions} />
@@ -199,9 +193,6 @@ export function PhotoUpload({
       <SubmitButton pendingLabel="Saving…" disabled={photos.length === 0}>
         Save photos
       </SubmitButton>
-      {inline ? null : (
-        <SaveThenTrip disabled={pending || photos.length === 0} />
-      )}
     </form>
   );
 }

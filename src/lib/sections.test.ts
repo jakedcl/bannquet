@@ -25,18 +25,17 @@ test('a profile list adds the section and backs up to the profile', () => {
 test('every section page has a breadcrumb, including the parent', () => {
   assert.deepEqual(pageTrail('/community', '', nobody).crumbs?.map((crumb) => crumb.label), ['Community']);
   assert.equal(pageTrail('/community', '', nobody).parentHref, '/');
-  assert.deepEqual(pageTrail('/trips', '', nobody).crumbs?.map((crumb) => crumb.label), ['Community', 'Trips']);
-  assert.equal(pageTrail('/trips', '', nobody).parentHref, '/community');
+  assert.deepEqual(pageTrail('/posts', '', nobody).crumbs?.map((crumb) => crumb.label), ['Community', 'Posts']);
+  assert.equal(pageTrail('/posts', '', nobody).parentHref, '/community');
   assert.deepEqual(pageTrail('/peaks', '', nobody).crumbs?.map((crumb) => crumb.label), ['Community', 'Peaks']);
   assert.deepEqual(pageTrail('/chat', '', nobody).crumbs?.map((crumb) => crumb.label), ['Community', 'Chat']);
-  assert.deepEqual(pageTrail('/gear', '', nobody).crumbs?.map((crumb) => crumb.label), ['Community', 'Gear']);
   assert.deepEqual(pageTrail('/members', '', nobody).crumbs?.map((crumb) => crumb.label), ['Community', 'Members']);
   assert.deepEqual(pageTrail('/map', '', nobody).crumbs?.map((crumb) => crumb.label), ['Map']);
   assert.deepEqual(pageTrail('/upload', '', nobody).crumbs?.map((crumb) => crumb.label), ['Upload']);
   assert.deepEqual(pageTrail('/mountain-weather', '', nobody).crumbs?.map((crumb) => crumb.label), ['Mountain Weather']);
   assert.equal(pageTrail('/mountain-weather', '', nobody).parentHref, '/');
-  assert.deepEqual(pageTrail('/mountain-weather', 'state=vt', nobody).crumbs?.map((crumb) => crumb.label), ['Mountain Weather', 'Vermont']);
-  assert.equal(pageTrail('/mountain-weather', 'state=ny', nobody).parentHref, '/mountain-weather');
+  assert.deepEqual(pageTrail('/mountain-weather/vermont', '', nobody).crumbs?.map((crumb) => crumb.label), ['Mountain Weather', 'Vermont']);
+  assert.equal(pageTrail('/mountain-weather/new-york', '', nobody).parentHref, '/mountain-weather');
   assert.deepEqual(pageTrail('/fishing', '', nobody).crumbs?.map((crumb) => crumb.label), ['Fishing']);
   assert.equal(pageTrail('/fishing', '', nobody).parentHref, '/');
   assert.equal(pageTrail('/', '', nobody).crumbs, null);
@@ -49,19 +48,20 @@ test('member pages stay in Community, except your own profile', () => {
   assert.equal(communitySection('/user/jake/pins', jake), false);
   assert.equal(communitySection('/peaks/adk46_algonquin_peak', null), true);
   assert.equal(linkOn('/user/jkiddf', '', '/members'), true);
-  assert.equal(linkOn('/mountain-weather', '', '/mountain-weather?state=ny'), false);
-  assert.equal(linkOn('/mountain-weather', 'state=ny', '/mountain-weather?state=ny'), true);
-  assert.equal(linkOn('/mountain-weather', '', '/mountain-weather?state=vt'), false);
-  assert.equal(linkOn('/mountain-weather', 'state=vt', '/mountain-weather?state=vt'), true);
-  assert.equal(linkOn('/mountain-weather', 'state=nh', '/mountain-weather?state=ny'), false);
+  assert.equal(linkOn('/mountain-weather', '', '/mountain-weather/new-york'), false);
+  assert.equal(linkOn('/mountain-weather/new-york', '', '/mountain-weather/new-york'), true);
+  assert.equal(linkOn('/mountain-weather', '', '/mountain-weather/vermont'), false);
+  assert.equal(linkOn('/mountain-weather/vermont', '', '/mountain-weather/vermont'), true);
+  assert.equal(linkOn('/mountain-weather/new-hampshire', '', '/mountain-weather/new-york'), false);
+  assert.equal(linkOn('/mountain-weather/new-hampshire/presidential-range/mount-washington', '', '/mountain-weather/new-hampshire'), false);
 });
 
 test('settings opens the profile, and the owner also gets Admin', () => {
   const member = { handle: 'jkiddf', role: 'member' as const };
   const owner = { handle: 'jake', role: 'admin' as const };
   assert.equal(settingsHref(member), '/user/jkiddf');
-  assert.deepEqual(visibleLinks(settingsLinks(member)).map((link) => link.label), ['Profile', 'Notifications']);
-  assert.deepEqual(visibleLinks(settingsLinks(owner)).map((link) => link.label), ['Profile', 'Notifications', 'Admin']);
+  assert.deepEqual(visibleLinks(settingsLinks(member)).map((link) => link.label), ['Profile']);
+  assert.deepEqual(visibleLinks(settingsLinks(owner)).map((link) => link.label), ['Profile', 'Admin']);
   assert.equal(matchSection('/user/jake', '', owner), null);
   assert.equal(matchSection('/user/jkiddf', '', owner)?.id, 'community');
   assert.equal(matchSection('/community', '', owner)?.landing, false);
@@ -75,14 +75,17 @@ test('an upload form sits under Upload', () => {
   assert.deepEqual(trail.crumbs?.map((crumb) => crumb.label), ['Upload', 'Pin']);
 });
 
-test('a trip, pin, route, photo, and gear item name the record', () => {
-  assert.equal(pageTrail('/trips/abc', '', nobody, 'Weekend').crumbs?.at(-1)?.label, 'Weekend');
+test('a post, pin, route, and photo name the record', () => {
+  assert.equal(pageTrail('/posts/abc', '', nobody, 'Greasefest').crumbs?.at(-1)?.label, 'Greasefest');
   assert.equal(pageTrail('/pins/abc', '', nobody, 'Lookout').parentHref, '/map');
   assert.equal(pageTrail('/routes/abc', '', nobody, 'Ridge').crumbs?.at(-1)?.label, 'Ridge');
   assert.equal(pageTrail('/photos/abc', '', nobody).crumbs?.at(-1)?.label, 'Photo');
   assert.deepEqual(pageTrail('/photos/abc', '', nobody).crumbs?.map((crumb) => crumb.label), ['Community', 'Photos', 'Photo']);
   assert.deepEqual(pageTrail('/photos', '', nobody).crumbs?.map((crumb) => crumb.label), ['Community', 'Photos']);
-  assert.equal(pageTrail('/gear/abc', '', nobody, 'Stove').parentHref, '/gear');
+  assert.deepEqual(
+    pageTrail('/mountain-weather/conditions', '', nobody).crumbs?.map((crumb) => crumb.label),
+    ['Mountain Weather', 'Conditions'],
+  );
 });
 
 test('the home hero opens fishing the same way as the other parent sections', () => {
@@ -98,6 +101,20 @@ test('the home hero opens fishing the same way as the other parent sections', ()
   assert.deepEqual(HOME_ACTIONS.find((action) => action.id === 'map')?.links, []);
 });
 
+test('section chrome lists include each section home first', () => {
+  const community = matchSection('/chat', '', nobody);
+  assert.deepEqual(community?.links[0], { href: '/community', label: 'Community' });
+  assert.equal(linkOn('/community', '', '/community'), true);
+  assert.equal(linkOn('/chat', '', '/community'), false);
+
+  const weather = matchSection('/mountain-weather', '', nobody);
+  assert.equal(weather?.label, 'Weather');
+  assert.deepEqual(weather?.links[0], { href: '/mountain-weather', label: 'Weather' });
+  assert.equal(linkOn('/mountain-weather', '', '/mountain-weather'), true);
+  assert.equal(linkOn('/mountain-weather/conditions', '', '/mountain-weather'), false);
+  assert.equal(linkOn('/mountain-weather/conditions', '', '/mountain-weather/conditions'), true);
+});
+
 test('fishing is its own section, outside community', () => {
   assert.equal(communitySection('/fishing'), false);
   assert.equal(communitySection('/fishing/stocking'), false);
@@ -106,6 +123,9 @@ test('fishing is its own section, outside community', () => {
   assert.equal(main?.id, 'fishing');
   assert.equal(main?.label, 'Fishing');
   assert.equal(main?.landing, false);
+  assert.deepEqual(main?.links[0], { href: '/fishing', label: 'Fishing' });
+  assert.equal(linkOn('/fishing', '', '/fishing'), true);
+  assert.equal(linkOn('/fishing/saltwater', '', '/fishing'), false);
   assert.equal(main?.links.some((link) => link.href === '/fishing/saltwater'), true);
   assert.equal(main?.links.some((link) => link.href === '/fishing/freshwater'), true);
   assert.equal(linkOn('/fishing', '', '/fishing/saltwater'), false);

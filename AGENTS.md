@@ -26,6 +26,7 @@ The framework repo is private. Cloud agents open it with `git clone --depth 1 ht
 - `npm run db:generate` (SQL from schema). Do **not** run `npm run db:migrate` on production; see `docs/environments.md`.
 
 ## Gotchas
+- **Git commits:** do not add `Co-authored-by` trailers. In cloud agent VMs, run `git config --local core.hooksPath .git/hooks` before committing so Cursor’s managed hooks do not append co-authors.
 - `DATABASE_URL` is the pooled Neon URL (`-pooler`); `DATABASE_URL_UNPOOLED` is the direct one.
 - **Read `docs/environments.md` before any DB, auth or preview work.** In short: Vercel previews and local dev use the Neon `preview` branch (its own data and auth rows in `neon_auth`), and only production uses `main`. Migrations from 0010 on are applied by hand with `IF NOT EXISTS` SQL. Cloud agents write the SQL file but don't apply it. Test with the standing `bqtester` account on preview only. Blob is still shared with live.
 - New sign-ups can read but can't post until approved on `/admin`; invite links skip that. `ADMIN_EMAIL` (comma-separated) are admins.

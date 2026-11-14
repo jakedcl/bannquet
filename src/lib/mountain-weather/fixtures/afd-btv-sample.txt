@@ -1,0 +1,136 @@
+
+000
+FXUS61 KBTV 132335
+AFDBTV
+
+Area Forecast Discussion
+National Weather Service Burlington VT
+635 PM EST Fri Nov 13 2026
+
+.WHAT HAS CHANGED...
+As of 202 PM EST Friday...
+
+No significant changes to the current forecast.
+
+&&
+
+.KEY MESSAGES...
+As of 202 PM EST Friday...
+
+1. Upslope snow showers will develop late tonight for the 
+northwest facing slopes of the Adirondacks and Greens, with some 
+possible Lake Champlain enhanced precipitation in the Champlain 
+Valley late Saturday into Sunday.
+
+2. Conditions are expected to remain dry with a warming trend 
+next week.
+
+&&
+
+.DISCUSSION...
+As of 202 PM EST Friday...
+
+KEY MESSAGE 1: Snow showers across southern Vermont will end this 
+afternoon with a brief lull in precipitation for this evening. 
+Clouds will remain as a reinforcing shortwave will shift south from 
+Quebec later tonight into tomorrow. Wrap around moisture associated 
+with the large upper level trough centered across our region will 
+provide enough moisture to sustain upslope snow showers by tomorrow 
+morning. As the shortwave dips into our area by tomorrow morning, 
+blocked flow and orographic lift will lead to stratiform snow 
+showers along our northwestern facing slopes in the northern 
+Adirondacks and central and northern Greens. As the core of the 
+shortwave passes through tomorrow early afternoon, our showery 
+activity will turn more convective as marginal instability develops, 
+allowing shower activity to survive the spine of the Greens into the 
+eastern Greens, and survive the northwest slopes of the Adirondacks 
+into the central northern Adirondacks. Snow showers will be 
+strongest along the spine of the Greens with 3 to 5 inches of more 
+powdery snow due to snow ratios around 10-15:1. Into the Adirondacks 
+2 to 4 inches is expected, with the highest amounts in the High 
+Peaks and northern Franklin County in New York between US-11 and 
+Saranac Lake. Snow levels look to initially hover around 1200ft agl, 
+but dynamical cooling could lead to snow level lowering down towards 
+500ft, especially by tomorrow night in coordination with diurnal 
+cooling. This could push some flakes into the eastern Champlain 
+Valley where a few tenths of an inch of wet snow are possible. While 
+snow amounts will be localized to the higher terrain, mountain 
+passes, and untreated roads may become slick at times. Moreover, 
+some localized power outages may be possible, but due to the drier 
+character of the snow, impacts will be limited. 
+
+As our snow turns more convective tomorrow afternoon into Saturday 
+night, Lake Champlain streamers downstream of Lake Champlain look to 
+develop as cold air aloft will be 10 degrees cooler than the current 
+lake temperatures. Precipitation enhancement will be possible in the 
+downstream regions of southern Chittenden and north and central 
+Addison Counties. Precipitation types along this corridor will be 
+mainly rain closest to the lake, with snow closer to the western 
+slopes of the Greens, but dynamical cooling could push precipitation 
+towards more snow closer to the lake at times. Accumulations look to 
+be light as precipitable water will only be around 3 to 4 tenths of 
+an inch. The position of any lake streamers are still somewhat 
+uncertain, and will be dependent on the prevailing wind at the time, 
+but it looks to be focused in an area between VT-22A and the
+spine of the Greens.
+
+Snow showers will lighten into Sunday, and taper off by Sunday 
+evening, departing the highest summits of the Greens and NEK last. 
+Solar heating, and gradual clearing will help to melt any snow in 
+the lower elevations by Monday, with a warming and drying trend 
+beginning early next week.
+
+KEY MESSAGE 2: Confidence remains high that pervasive ridging will 
+remain over the region next week keeping local weather dry and 
+promoting a warming trend. High temperatures are favored in the 50s 
+from Tuesday through Friday with lows ranging in the 20s to low 30s 
+through mid week, climbing to around 30 to upper 30s by the end of 
+the work week. Conditions for radiational cooling will be near 
+ideal, so typically colder hollows will be running several degrees 
+colder each morning.
+
+&&
+
+.AVIATION /00Z SATURDAY THROUGH WEDNESDAY/...
+Through 00Z Sunday...Mainly overcast skies continue, especially
+north and west. With a few exceptions, like KRUT, most locations
+have ceilings around 2500-4000 ft agl. Winds range from light
+and variable to north or northwest around 4-9 knots. Ceilings
+may lower some in the next few hours, but the main impacts will
+come as a secondary trough to our north approaches the region
+around 06z-14z, and then an upper low shifts south across the
+area about 16z-04z Sunday. This will result in intervals of
+showers across the area, with a few terminals cold enough for
+snow to mix in or precipitation to be all snow. Some convective
+elements are possible. Some graupel may be observed, as well as
+heavier some briefly heavy rates that could result in sharper
+drops in visibility. The greatest confidence of these impacts
+are at KSLK after about 16z. Otherwise, kept visibility impacts
+generally around 4-6SM. 
+
+Outlook...
+
+Saturday Night: Mainly MVFR, with local IFR possible. Chance
+SHSN, Chance SHRA.
+Sunday: Mainly MVFR, with areas VFR possible. Chance SHSN, Slight
+chance SHRA.
+Sunday Night: Mainly MVFR, with areas VFR possible. NO SIG WX.
+Monday: Mainly MVFR, with areas VFR possible. NO SIG WX.
+Monday Night: Mainly VFR, with local MVFR possible. NO SIG WX.
+Tuesday: VFR. NO SIG WX.
+Tuesday Night: VFR. NO SIG WX.
+Wednesday: VFR. NO SIG WX.
+
+&&
+
+.BTV WATCHES/WARNINGS/ADVISORIES...
+VT...None.
+NY...None.
+
+&&
+
+$$
+
+WHAT HAS CHANGED...Danzig
+DISCUSSION...Danzig/Boyd
+AVIATION...Haynes

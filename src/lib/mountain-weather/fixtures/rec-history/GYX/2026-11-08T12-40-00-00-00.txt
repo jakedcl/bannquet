@@ -1,0 +1,135 @@
+
+000
+SXUS41 KGYX 081240
+RECGYX
+
+Recreation Report for New Hampshire and western Maine
+National Weather Service Gray ME
+740 AM EST Sun Nov 8 2026
+
+MEZ007>009-NHZ002>004-082100-
+Elevations From 2500 Feet to 4000 Feet in Northern New Hampshire and
+the Western Maine Mountains-
+740 AM EST Sun Nov 8 2026
+
+...Recreation forecast for elevations between 2500 and 4000 feet in 
+northern New Hampshire and the western Maine mountains...
+
+.TODAY...Summits obscured. Snow likely with rain this morning. Highs
+in the upper 30s. Northwest winds 10 to 20 mph with gusts up to
+55 mph. Chance of precipitation 90 percent. 
+.TONIGHT...Summits obscured. A chance of snow after midnight. Lows
+in the mid 30s. West winds 10 to 20 mph with gusts up to 50 mph.
+Chance of snow 50 percent. 
+.MONDAY...Summits obscured in the morning, then summits in and out
+of clouds. A chance of rain. Highs around 40. Northwest winds 10 to
+20 mph with gusts up to 45 mph. Chance of rain 50 percent. 
+
+$$
+
+MEZ007>009-NHZ002>004-082100-
+Summits Above 4000 Feet in Northern New Hampshire and Western Maine-
+740 AM EST Sun Nov 8 2026
+
+...Recreation forecast for summits above 4000 feet in northern New
+Hampshire and western Maine...
+
+.TODAY...Summits obscured. Snow with a slight chance of sleet this
+morning. A slight chance of freezing rain. A slight chance of snow
+this afternoon. Highs in the mid 30s. Northwest winds 20 to 30 mph.
+At elevations above 5000 feet, northwest winds around 55 mph
+becoming west and decreasing to around 45 mph this afternoon. Gusts
+up to 75 mph. Chance of precipitation 90 percent. Wind chill values
+as low as 1 above. 
+.TONIGHT...Summits obscured. Lows in the lower 30s. West winds 20 to
+30 mph with gusts up to 65 mph. Wind chill values as low as 7 above.
+.MONDAY...Summits obscured in the morning, then summits in and out
+of clouds. A chance of rain and snow in the afternoon. Highs in the
+mid 30s. Northwest winds 20 to 30 mph with gusts up to 65 mph.
+Chance of precipitation 50 percent. Wind chill values as low as
+3 above. 
+
+$$
+
+NHZ011-015-082100-
+Summits of Mount Monadnock and North Pack Monadnock Mountain-
+740 AM EST Sun Nov 8 2026
+
+...Recreation forecast for summits of Mount Monadnock and North Pack
+Monadnock mountain...
+
+.TODAY...Summits in and out of clouds. Highs in the mid 40s. West
+winds 10 to 20 mph with gusts up to 35 mph. 
+.TONIGHT...Mostly cloudy in the evening, then becoming partly
+cloudy. Lows in the upper 30s. West winds 10 to 15 mph with gusts up
+to 25 mph. 
+.MONDAY...Mostly cloudy. A chance of rain in the afternoon. Highs in
+the upper 40s. West winds 10 to 15 mph with gusts up to 25 mph.
+Chance of rain 30 percent. 
+
+$$
+
+MEZ024-082100-
+Islands of Casco Bay Maine-
+740 AM EST Sun Nov 8 2026
+
+...Forecast for the Islands of Casco Bay Maine...
+
+.TODAY...Cloudy. Rain this morning, then a chance of rain this
+afternoon. Highs in the lower 50s. Northwest winds 10 to 20 mph with
+gusts up to 30 mph. Chance of rain 90 percent. 
+.TONIGHT...Partly cloudy in the evening, then becoming cloudy. Lows
+in the lower 40s. West winds around 10 mph in the evening becoming
+light and variable. 
+.MONDAY...Mostly cloudy. Highs in the mid 50s. Light and variable
+winds becoming west around 10 mph in the afternoon. 
+
+$$
+
+MEZ025-027-082100-
+Islands and Necks of the Mid Coast of Maine-
+740 AM EST Sun Nov 8 2026
+
+...Forecast for the Islands and Necks of the Mid Coast of Maine...
+
+.TODAY...Cloudy, rain. Highs around 50. Northwest winds 10 to 15 mph
+with gusts up to 30 mph. Chance of rain 90 percent. 
+.TONIGHT...Cloudy. Lows in the upper 30s. West winds around 10 mph
+in the evening becoming light and variable. 
+.MONDAY...Mostly cloudy. Highs in the mid 50s. Light and variable
+winds. 
+
+$$
+
+MEZ027-028-082100-
+Islands of Penobscot Bay Maine-
+740 AM EST Sun Nov 8 2026
+
+...Forecast for the Islands of Penobscot Bay Maine...
+
+.TODAY...Cloudy. Rain likely. Highs in the upper 40s. Northwest
+winds 10 to 20 mph with gusts up to 35 mph. Chance of rain
+70 percent. 
+.TONIGHT...Cloudy. Lows in the lower 40s. West winds 10 to 15 mph
+with gusts up to 25 mph. 
+.MONDAY...Mostly cloudy. A chance of rain in the morning. Highs in
+the lower 50s. Light and variable winds. Chance of rain 40 percent. 
+
+$$
+
+MEZ026-027-082100-
+Offshore Islands of Monhegan, Matinicus and Criehaven-
+740 AM EST Sun Nov 8 2026
+
+...Forecast for the Offshore Islands of Monhegan, Matinicus and
+Criehaven...
+
+.TODAY...Cloudy, rain. Highs around 50. Northwest winds 15 to 25 mph
+with gusts up to 35 mph. Chance of rain 90 percent. 
+.TONIGHT...Mostly cloudy. Lows in the mid 40s. West winds 10 to
+20 mph with gusts up to 30 mph. 
+.MONDAY...Mostly cloudy. Highs in the lower 50s. West winds 10 to
+15 mph. 
+
+$$
+

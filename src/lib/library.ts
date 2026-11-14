@@ -154,7 +154,6 @@ export type PhotoDetail = {
   takenOn: string | null;
   /** Eastern date it was added. */
   addedOn: string | null;
-  trips: Array<{ id: string; title: string }>;
   /** The uploader's own route that passes within 200 m, if any. */
   route: { id: string; title: string } | null;
   lat: number | null;
@@ -166,7 +165,7 @@ const NEAR_ROUTE_METERS = 200;
 /** `viewerId` keeps a route's hidden ends out of the nearby-route match. */
 export async function loadPhoto(id: string, viewerId: string | null): Promise<PhotoDetail | null> {
   const db = getDb();
-  const [result, tripResult, routeResult] = await Promise.all([
+  const [result, routeResult] = await Promise.all([
     db.execute(sql`
       select p.id::text as id, p.blob_url as url, p.caption, p.user_id, p.pin_id::text as pin_id,
         pin.title as pin_title,
@@ -179,13 +178,6 @@ export async function loadPhoto(id: string, viewerId: string | null): Promise<Ph
       left join users u on u.id = p.user_id
       left join pins pin on pin.id = p.pin_id
       where p.id = ${id}::uuid
-    `),
-    db.execute(sql`
-      select t.id::text as id, t.title
-      from trip_photos tp
-      join trips t on t.id = tp.trip_id
-      where tp.photo_id = ${id}::uuid
-      order by t.start_at desc nulls last
     `),
     db.execute(sql`
       select t.id::text as id, t.title
@@ -216,10 +208,6 @@ export async function loadPhoto(id: string, viewerId: string | null): Promise<Ph
     pinTitle: text(row.pin_title),
     takenOn: text(row.taken_on),
     addedOn: text(row.added_on),
-    trips: asRows(tripResult).flatMap((trip) => {
-      const tripId = text(trip.id);
-      return tripId ? [{ id: tripId, title: text(trip.title) ?? 'Trip' }] : [];
-    }),
     route: routeId ? { id: routeId, title: routeTitle(text(routeRow?.title)) } : null,
     lat: num(row.lat),
     lng: num(row.lng),

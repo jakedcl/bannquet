@@ -1,0 +1,449 @@
+{
+  "version": 1,
+  "places": {
+    "mount-marcy": {
+      "office": "BTV",
+      "bindReason": "api.weather.gov/points cwa=BTV gridId=BTV."
+    },
+    "whiteface-mountain": {
+      "office": "BTV",
+      "bindReason": "api.weather.gov/points cwa=BTV gridId=BTV."
+    },
+    "dix-mountain": {
+      "office": "BTV",
+      "bindReason": "api.weather.gov/points cwa=BTV gridId=BTV."
+    },
+    "algonquin-peak": {
+      "office": "BTV",
+      "bindReason": "api.weather.gov/points cwa=BTV gridId=BTV."
+    },
+    "mount-colden": {
+      "office": "BTV",
+      "bindReason": "api.weather.gov/points cwa=BTV gridId=BTV."
+    },
+    "mount-colvin": {
+      "office": "BTV",
+      "bindReason": "api.weather.gov/points cwa=BTV gridId=BTV."
+    },
+    "giant-mountain": {
+      "office": "BTV",
+      "bindReason": "api.weather.gov/points cwa=BTV gridId=BTV."
+    },
+    "santanoni-peak": {
+      "office": "BTV",
+      "bindReason": "api.weather.gov/points cwa=BTV gridId=BTV."
+    },
+    "cascade-mountain": {
+      "office": "BTV",
+      "bindReason": "api.weather.gov/points cwa=BTV gridId=BTV."
+    },
+    "mckenzie-mountain": {
+      "office": "BTV",
+      "bindReason": "api.weather.gov/points cwa=BTV gridId=BTV."
+    },
+    "mount-van-hoevenberg": {
+      "office": "BTV",
+      "bindReason": "api.weather.gov/points cwa=BTV gridId=BTV."
+    },
+    "keene-valley": {
+      "office": "BTV",
+      "bindReason": "api.weather.gov/points cwa=BTV gridId=BTV."
+    },
+    "lyon-mountain": {
+      "office": "BTV",
+      "bindReason": "api.weather.gov/points cwa=BTV gridId=BTV."
+    },
+    "ampersand-mountain": {
+      "office": "BTV",
+      "bindReason": "api.weather.gov/points cwa=BTV gridId=BTV."
+    },
+    "debar-mountain": {
+      "office": "BTV",
+      "bindReason": "api.weather.gov/points cwa=BTV gridId=BTV."
+    },
+    "st-regis-mountain": {
+      "office": "BTV",
+      "bindReason": "api.weather.gov/points cwa=BTV gridId=BTV."
+    },
+    "mount-arab": {
+      "office": "BTV",
+      "bindReason": "api.weather.gov/points cwa=BTV gridId=BTV."
+    },
+    "snowy-mountain": {
+      "office": "ALY",
+      "bindReason": "api.weather.gov/points cwa=ALY gridId=ALY."
+    },
+    "blue-mountain": {
+      "office": "ALY",
+      "bindReason": "api.weather.gov/points cwa=ALY gridId=ALY."
+    },
+    "pillsbury-mountain": {
+      "office": "ALY",
+      "bindReason": "api.weather.gov/points cwa=ALY gridId=ALY."
+    },
+    "gore-mountain": {
+      "office": "ALY",
+      "bindReason": "api.weather.gov/points cwa=ALY gridId=ALY."
+    },
+    "blue-ridge-mountain": {
+      "office": "BTV",
+      "bindReason": "api.weather.gov/points cwa=BTV gridId=BTV."
+    },
+    "fishing-brook-range": {
+      "office": "BTV",
+      "bindReason": "api.weather.gov/points cwa=BTV gridId=BTV."
+    },
+    "vanderwhacker-mountain": {
+      "office": "BTV",
+      "bindReason": "api.weather.gov/points cwa=BTV gridId=BTV."
+    },
+    "crane-mountain": {
+      "office": "ALY",
+      "bindReason": "api.weather.gov/points cwa=ALY gridId=ALY."
+    },
+    "hadley-mountain": {
+      "office": "ALY",
+      "bindReason": "api.weather.gov/points cwa=ALY gridId=ALY."
+    },
+    "black-mountain": {
+      "office": "ALY",
+      "bindReason": "api.weather.gov/points cwa=ALY gridId=ALY."
+    },
+    "pharaoh-mountain": {
+      "office": "BTV",
+      "bindReason": "api.weather.gov/points cwa=BTV gridId=BTV."
+    },
+    "prospect-mountain": {
+      "office": "ALY",
+      "bindReason": "api.weather.gov/points cwa=ALY gridId=ALY."
+    },
+    "slide-mountain": {
+      "office": "ALY",
+      "bindReason": "api.weather.gov/points cwa=ALY gridId=ALY."
+    },
+    "hunter-mountain": {
+      "office": "ALY",
+      "bindReason": "api.weather.gov/points cwa=ALY gridId=ALY."
+    },
+    "peekamoose-mountain": {
+      "office": "ALY",
+      "bindReason": "api.weather.gov/points cwa=ALY gridId=ALY."
+    },
+    "balsam-lake-mountain": {
+      "office": "ALY",
+      "bindReason": "api.weather.gov/points cwa=ALY gridId=ALY."
+    },
+    "panther-mountain": {
+      "office": "ALY",
+      "bindReason": "api.weather.gov/points cwa=ALY gridId=ALY."
+    },
+    "windham-high-peak": {
+      "office": "ALY",
+      "bindReason": "api.weather.gov/points cwa=ALY gridId=ALY."
+    },
+    "overlook-mountain": {
+      "office": "ALY",
+      "bindReason": "api.weather.gov/points cwa=ALY gridId=ALY."
+    },
+    "red-hill": {
+      "office": "ALY",
+      "bindReason": "api.weather.gov/points cwa=ALY gridId=ALY."
+    },
+    "mount-tremper": {
+      "office": "ALY",
+      "bindReason": "api.weather.gov/points cwa=ALY gridId=ALY."
+    },
+    "tannersville": {
+      "office": "ALY",
+      "bindReason": "api.weather.gov/points cwa=ALY gridId=ALY."
+    },
+    "gunks-ridge": {
+      "office": "ALY",
+      "bindReason": "api.weather.gov/points cwa=ALY gridId=ALY."
+    },
+    "thacher-park": {
+      "office": "ALY",
+      "bindReason": "api.weather.gov/points cwa=ALY gridId=ALY."
+    },
+    "jay-peak": {
+      "office": "BTV",
+      "bindReason": "api.weather.gov/points cwa=BTV gridId=BTV."
+    },
+    "belvidere-mountain": {
+      "office": "BTV",
+      "bindReason": "api.weather.gov/points cwa=BTV gridId=BTV."
+    },
+    "jay-village": {
+      "office": "BTV",
+      "bindReason": "api.weather.gov/points cwa=BTV gridId=BTV."
+    },
+    "mount-mansfield": {
+      "office": "BTV",
+      "bindReason": "api.weather.gov/points cwa=BTV gridId=BTV."
+    },
+    "smugglers-notch": {
+      "office": "BTV",
+      "bindReason": "api.weather.gov/points cwa=BTV gridId=BTV."
+    },
+    "stowe-town": {
+      "office": "BTV",
+      "bindReason": "api.weather.gov/points cwa=BTV gridId=BTV."
+    },
+    "camels-hump": {
+      "office": "BTV",
+      "bindReason": "api.weather.gov/points cwa=BTV gridId=BTV."
+    },
+    "mount-ellen": {
+      "office": "BTV",
+      "bindReason": "api.weather.gov/points cwa=BTV gridId=BTV."
+    },
+    "bread-loaf-mountain": {
+      "office": "BTV",
+      "bindReason": "api.weather.gov/points cwa=BTV gridId=BTV."
+    },
+    "mount-worcester": {
+      "office": "BTV",
+      "bindReason": "api.weather.gov/points cwa=BTV gridId=BTV."
+    },
+    "waterbury": {
+      "office": "BTV",
+      "bindReason": "api.weather.gov/points cwa=BTV gridId=BTV."
+    },
+    "signal-mountain": {
+      "office": "BTV",
+      "bindReason": "api.weather.gov/points cwa=BTV gridId=BTV."
+    },
+    "burke-mountain": {
+      "office": "BTV",
+      "bindReason": "api.weather.gov/points cwa=BTV gridId=BTV."
+    },
+    "monadnock-mountain": {
+      "office": "BTV",
+      "bindReason": "api.weather.gov/points cwa=BTV gridId=BTV."
+    },
+    "killington-peak": {
+      "office": "BTV",
+      "bindReason": "api.weather.gov/points cwa=BTV gridId=BTV."
+    },
+    "stratton-mountain": {
+      "office": "ALY",
+      "bindReason": "api.weather.gov/points cwa=ALY gridId=ALY."
+    },
+    "mount-equinox": {
+      "office": "ALY",
+      "bindReason": "api.weather.gov/points cwa=ALY gridId=ALY."
+    },
+    "dorset-mountain": {
+      "office": "BTV",
+      "bindReason": "api.weather.gov/points cwa=BTV gridId=BTV."
+    },
+    "haystack-mountain": {
+      "office": "ALY",
+      "bindReason": "api.weather.gov/points cwa=ALY gridId=ALY."
+    },
+    "ludlow-mountain": {
+      "office": "BTV",
+      "bindReason": "api.weather.gov/points cwa=BTV gridId=BTV."
+    },
+    "bromley-mountain": {
+      "office": "ALY",
+      "bindReason": "api.weather.gov/points cwa=ALY gridId=ALY."
+    },
+    "mount-ascutney": {
+      "office": "BTV",
+      "bindReason": "api.weather.gov/points cwa=BTV gridId=BTV."
+    },
+    "bald-mountain": {
+      "office": "ALY",
+      "bindReason": "api.weather.gov/points cwa=ALY gridId=ALY."
+    },
+    "manchester-vt": {
+      "office": "ALY",
+      "bindReason": "api.weather.gov/points cwa=ALY gridId=ALY."
+    },
+    "mount-washington": {
+      "office": "GYX",
+      "bindReason": "api.weather.gov/points cwa=GYX gridId=GYX."
+    },
+    "mount-adams": {
+      "office": "GYX",
+      "bindReason": "api.weather.gov/points cwa=GYX gridId=GYX."
+    },
+    "pinkham-notch": {
+      "office": "GYX",
+      "bindReason": "api.weather.gov/points cwa=GYX gridId=GYX."
+    },
+    "crawford-notch": {
+      "office": "GYX",
+      "bindReason": "api.weather.gov/points cwa=GYX gridId=GYX."
+    },
+    "baldface-mountain": {
+      "office": "GYX",
+      "bindReason": "api.weather.gov/points cwa=GYX gridId=GYX."
+    },
+    "mount-lafayette": {
+      "office": "GYX",
+      "bindReason": "api.weather.gov/points cwa=GYX gridId=GYX."
+    },
+    "mount-moosilauke": {
+      "office": "GYX",
+      "bindReason": "api.weather.gov/points cwa=GYX gridId=GYX."
+    },
+    "mount-osceola": {
+      "office": "GYX",
+      "bindReason": "api.weather.gov/points cwa=GYX gridId=GYX."
+    },
+    "cannon-mountain": {
+      "office": "GYX",
+      "bindReason": "api.weather.gov/points cwa=GYX gridId=GYX."
+    },
+    "kancamagus-pass": {
+      "office": "GYX",
+      "bindReason": "api.weather.gov/points cwa=GYX gridId=GYX."
+    },
+    "franconia-notch": {
+      "office": "GYX",
+      "bindReason": "api.weather.gov/points cwa=GYX gridId=GYX."
+    },
+    "rumney-crag": {
+      "office": "GYX",
+      "bindReason": "api.weather.gov/points cwa=GYX gridId=GYX."
+    },
+    "mount-monadnock": {
+      "office": "GYX",
+      "bindReason": "api.weather.gov/points cwa=GYX gridId=GYX."
+    },
+    "north-pack-monadnock": {
+      "office": "GYX",
+      "bindReason": "api.weather.gov/points cwa=GYX gridId=GYX."
+    },
+    "katahdin": {
+      "office": "CAR",
+      "bindReason": "api.weather.gov/points cwa=CAR gridId=CAR."
+    },
+    "katahdin-woods-and-waters": {
+      "office": "CAR",
+      "bindReason": "api.weather.gov/points cwa=CAR gridId=CAR."
+    },
+    "millinocket": {
+      "office": "CAR",
+      "bindReason": "api.weather.gov/points cwa=CAR gridId=CAR."
+    },
+    "white-cap-mountain": {
+      "office": "CAR",
+      "bindReason": "api.weather.gov/points cwa=CAR gridId=CAR."
+    },
+    "sugarloaf-mountain": {
+      "office": "GYX",
+      "bindReason": "api.weather.gov/points cwa=GYX gridId=GYX."
+    },
+    "bigelow": {
+      "office": "GYX",
+      "bindReason": "api.weather.gov/points cwa=GYX gridId=GYX."
+    },
+    "rangeley": {
+      "office": "GYX",
+      "bindReason": "api.weather.gov/points cwa=GYX gridId=GYX."
+    },
+    "deboullie-mountain": {
+      "office": "CAR",
+      "bindReason": "api.weather.gov/points cwa=CAR gridId=CAR."
+    },
+    "mars-hill-mountain": {
+      "office": "CAR",
+      "bindReason": "api.weather.gov/points cwa=CAR gridId=CAR."
+    },
+    "cadillac-mountain": {
+      "office": "CAR",
+      "bindReason": "api.weather.gov/points cwa=CAR gridId=CAR."
+    },
+    "bar-harbor": {
+      "office": "CAR",
+      "bindReason": "api.weather.gov/points cwa=CAR gridId=CAR."
+    }
+  },
+  "states": {
+    "ny": null,
+    "vt": null,
+    "nh": {
+      "office": "GYX",
+      "bindReason": "Every catalog New Hampshire place shares cwa GYX."
+    },
+    "me": null
+  },
+  "sections": {
+    "adirondack-high-peaks": {
+      "office": "BTV",
+      "bindReason": "Every place in Adirondack High Peaks shares cwa BTV."
+    },
+    "northern-adirondacks": {
+      "office": "BTV",
+      "bindReason": "Every place in Northern Adirondacks shares cwa BTV."
+    },
+    "catskill-mountains": {
+      "office": "ALY",
+      "bindReason": "Every place in Catskill Mountains shares cwa ALY."
+    },
+    "shawangunks": {
+      "office": "ALY",
+      "bindReason": "Every place in Shawangunks shares cwa ALY."
+    },
+    "thacher-park": {
+      "office": "ALY",
+      "bindReason": "Every place in Thacher Park shares cwa ALY."
+    },
+    "jay-peak": {
+      "office": "BTV",
+      "bindReason": "Every place in Jay Peak shares cwa BTV."
+    },
+    "northern-greens": {
+      "office": "BTV",
+      "bindReason": "Every place in Northern Greens shares cwa BTV."
+    },
+    "central-greens": {
+      "office": "BTV",
+      "bindReason": "Every place in Central Greens shares cwa BTV."
+    },
+    "northeast-kingdom": {
+      "office": "BTV",
+      "bindReason": "Every place in Northeast Kingdom shares cwa BTV."
+    },
+    "presidential-range": {
+      "office": "GYX",
+      "bindReason": "Every place in Presidential Range shares cwa GYX."
+    },
+    "franconia-pemi": {
+      "office": "GYX",
+      "bindReason": "Every place in Franconia & Pemi shares cwa GYX."
+    },
+    "rumney-climbing": {
+      "office": "GYX",
+      "bindReason": "Every place in Rumney Climbing shares cwa GYX."
+    },
+    "monadnock-region": {
+      "office": "GYX",
+      "bindReason": "Every place in Monadnock Region shares cwa GYX."
+    },
+    "baxter-state-park": {
+      "office": "CAR",
+      "bindReason": "Every place in Baxter State Park shares cwa CAR."
+    },
+    "mahoosucs-bigelow": {
+      "office": "GYX",
+      "bindReason": "Every place in Mahoosucs & Bigelow shares cwa GYX."
+    },
+    "northern-maine": {
+      "office": "CAR",
+      "bindReason": "Every place in Northern Maine shares cwa CAR."
+    },
+    "acadia": {
+      "office": "CAR",
+      "bindReason": "Every place in Acadia shares cwa CAR."
+    }
+  },
+  "unboundScopes": {
+    "central-southern-adirondacks": "Mixed cwa (ALY, BTV); no single-office bulletin block.",
+    "southern-greens": "Mixed cwa (BTV, ALY); no single-office bulletin block.",
+    "ny": "Catalog New York spans multiple CWAs; no state-wide bulletin block."
+  }
+}

@@ -7,6 +7,7 @@ export async function GET() {
     success: true,
     stats: report.stats,
     spots: report.spots,
+    glances: report.glances,
     attempted: report.attempted,
     succeeded: report.succeeded,
     failed: report.failed,

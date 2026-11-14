@@ -1,0 +1,143 @@
+
+000
+SXUS41 KGYX 100940
+RECGYX
+
+Recreation Report for New Hampshire and western Maine
+National Weather Service Gray ME
+440 AM EST Tue Nov 10 2026
+
+MEZ007>009-NHZ002>004-102100-
+Elevations From 2500 Feet to 4000 Feet in Northern New Hampshire and
+the Western Maine Mountains-
+440 AM EST Tue Nov 10 2026
+
+...Recreation forecast for elevations between 2500 and 4000 feet in 
+northern New Hampshire and the western Maine mountains...
+
+.TODAY...Summits obscured. Isolated snow showers this morning.
+Scattered rain showers and snow showers this afternoon. Highs around
+40. West winds around 20 mph decreasing to around 10 mph this
+afternoon. Gusts up to 50 mph. Chance of precipitation 50 percent. 
+.TONIGHT...Rain in the evening, then scattered rain showers and snow
+showers after midnight. Lows in the lower 30s. West winds 15 to
+25 mph with gusts up to 70 mph. Chance of precipitation near
+100 percent. Wind chill values as low as 16. 
+.VETERANS DAY...Summits obscured in the morning, then becoming
+cloudy. Highs in the mid 30s. Northwest winds 10 to 20 mph with
+gusts up to 55 mph. 
+
+$$
+
+MEZ007>009-NHZ002>004-102100-
+Summits Above 4000 Feet in Northern New Hampshire and Western Maine-
+440 AM EST Tue Nov 10 2026
+
+...Recreation forecast for summits above 4000 feet in northern New
+Hampshire and western Maine...
+
+.TODAY...Summits obscured. Scattered rain showers and isolated snow
+showers this afternoon. Highs in the upper 30s. Northwest winds
+around 25 mph becoming west around 15 mph this afternoon. At
+elevations above 5000 feet, west winds around 45 mph decreasing to
+around 20 mph this afternoon. Gusts up to 80 mph. Chance of
+precipitation 40 percent. Wind chill values as low as 3 above. 
+.TONIGHT...Summits obscured. Scattered rain showers in the evening.
+Scattered snow showers. Lows around 30...except in the mid 20s at
+elevations above 5000 feet. Northwest winds 30 to 40 mph. At
+elevations above 5000 feet, west winds around 60 mph becoming
+northwest and increasing to around 70 mph after midnight. Chance of
+precipitation 50 percent. Wind chill values as low as 2 above. 
+.VETERANS DAY...Summits obscured in the morning, then becoming
+cloudy. Scattered snow showers in the morning. Highs around 30.
+Northwest winds around 30 mph decreasing to around 15 mph in the
+afternoon. At elevations above 5000 feet, northwest winds around
+50 mph decreasing to around 25 mph in the afternoon. Gusts up to
+95 mph. Chance of snow 40 percent. Wind chill values as low as
+3 below in the morning. 
+
+$$
+
+NHZ011-015-102100-
+Summits of Mount Monadnock and North Pack Monadnock Mountain-
+440 AM EST Tue Nov 10 2026
+
+...Recreation forecast for summits of Mount Monadnock and North Pack
+Monadnock mountain...
+
+.TODAY...Cloudy. Highs in the upper 40s. West winds up to 10 mph
+with gusts up to 20 mph. 
+.TONIGHT...Mostly cloudy. Lows around 40. West winds 10 to 20 mph
+with gusts up to 35 mph. 
+.VETERANS DAY...Summits in and out of clouds in the morning, then
+becoming mostly cloudy. Highs in the upper 40s. Northwest winds up
+to 10 mph with gusts up to 20 mph. 
+
+$$
+
+MEZ024-102100-
+Islands of Casco Bay Maine-
+440 AM EST Tue Nov 10 2026
+
+...Forecast for the Islands of Casco Bay Maine...
+
+.TODAY...Mostly cloudy. Highs in the lower 50s. West winds up to
+10 mph. 
+.TONIGHT...Mostly cloudy in the evening, then clearing. Lows in the
+lower 40s. West winds 10 to 15 mph. 
+.VETERANS DAY...Partly sunny in the morning, then becoming mostly
+cloudy. Highs around 50. Northwest winds up to 10 mph with gusts up
+to 20 mph. 
+
+$$
+
+MEZ025-027-102100-
+Islands and Necks of the Mid Coast of Maine-
+440 AM EST Tue Nov 10 2026
+
+...Forecast for the Islands and Necks of the Mid Coast of Maine...
+
+.TODAY...Mostly cloudy. Highs in the lower 50s. West winds up to
+10 mph. 
+.TONIGHT...Mostly cloudy. Lows in the upper 30s. West winds up to
+10 mph with gusts up to 25 mph. 
+.VETERANS DAY...Partly sunny in the morning, then becoming mostly
+cloudy. Highs around 50. Northwest winds 10 to 15 mph with gusts up
+to 25 mph. 
+
+$$
+
+MEZ027-028-102100-
+Islands of Penobscot Bay Maine-
+440 AM EST Tue Nov 10 2026
+
+...Forecast for the Islands of Penobscot Bay Maine...
+
+.TODAY...Mostly cloudy. Highs in the lower 50s. West winds up to
+10 mph with gusts up to 20 mph. 
+.TONIGHT...Cloudy. Scattered showers in the evening. Lows around 40.
+West winds 10 to 15 mph with gusts up to 25 mph. Chance of rain
+30 percent. 
+.VETERANS DAY...Partly sunny in the morning, then becoming mostly
+cloudy. Highs around 50. Northwest winds 10 to 15 mph with gusts up
+to 25 mph. 
+
+$$
+
+MEZ026-027-102100-
+Offshore Islands of Monhegan, Matinicus and Criehaven-
+440 AM EST Tue Nov 10 2026
+
+...Forecast for the Offshore Islands of Monhegan, Matinicus and
+Criehaven...
+
+.TODAY...Mostly cloudy. Highs in the lower 50s. West winds 10 to
+15 mph with gusts up to 25 mph. 
+.TONIGHT...Mostly cloudy. Lows in the mid 40s. West winds 10 to
+20 mph with gusts up to 30 mph. 
+.VETERANS DAY...Mostly sunny in the morning, then becoming mostly
+cloudy. Highs in the upper 40s. Northwest winds 10 to 20 mph with
+gusts up to 30 mph. 
+
+$$
+

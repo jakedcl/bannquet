@@ -15,7 +15,6 @@ export function PhotoTags({ photo }: { photo: PhotoDetail }) {
       : photo.addedOn
         ? { key: 'date', label: `Added ${formatTripDate(photo.addedOn, 'long')}` }
         : null,
-    ...photo.trips.map((trip) => ({ key: `trip-${trip.id}`, label: `Trip: ${trip.title}`, href: `/trips/${trip.id}` })),
     photo.route ? { key: 'route', label: `Route: ${photo.route.title}`, href: `/routes/${photo.route.id}` } : null,
     photo.pinId ? { key: 'pin', label: `Pin: ${photo.pinTitle ?? 'Pin'}`, href: `/pins/${photo.pinId}` } : null,
   ].filter((tag): tag is Tag => Boolean(tag));

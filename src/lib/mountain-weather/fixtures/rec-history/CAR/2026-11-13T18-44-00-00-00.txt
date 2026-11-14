@@ -1,0 +1,194 @@
+
+000
+SXUS41 KCAR 131844
+RECCAR
+
+Recreational Forecast for Northern and Eastern Maine
+National Weather Service Caribou ME
+144 PM EST Fri Nov 13 2026
+
+MEZ004-140900-
+Top of Mount Katahdin-
+144 PM EST Fri Nov 13 2026
+
+...TOP OF MOUNT KATAHDIN (5268')...
+
+.TONIGHT...Cloudy. Isolated snow showers after midnight. Near steady
+temperature in the mid 20s. Northwest winds 10 to 20 mph. Chance of
+snow 20 percent. No lightning risk. 
+.SATURDAY...Mostly cloudy. Isolated snow showers in the morning.
+Scattered snow showers in the afternoon. Near steady temperature in
+the lower 20s. North winds 10 to 15 mph decreasing to up to 10 mph
+in the afternoon. Chance of snow 30 percent. No lightning risk. 
+
+$$
+
+MEZ005-140900-
+Katahdin Woods and Waters National Monument-
+144 PM EST Fri Nov 13 2026
+
+...KATAHDIN WOODS AND WATERS NATIONAL MONUMENT...
+
+.TONIGHT...Cloudy. Isolated snow showers after midnight. Near steady
+temperature in the lower 30s. Northwest winds up to 10 mph. Chance
+of snow 20 percent. No lightning risk. 
+.SATURDAY...Mostly cloudy. Isolated snow showers. Isolated rain
+showers in the afternoon. Highs in the upper 30s. Northwest winds up
+to 10 mph. Chance of precipitation 20 percent. No lightning risk. 
+
+$$
+
+MEZ029-140900-
+Top of Cadillac Mountain-
+144 PM EST Fri Nov 13 2026
+
+...TOP OF CADILLAC MOUNTAIN (1532')...
+
+.TONIGHT...Mostly cloudy. Lows in the upper 20s. Northwest winds up
+to 10 mph. No lightning risk. 
+.SATURDAY...Mostly cloudy. Highs in the lower 40s. Northwest winds
+up to 10 mph. No lightning risk. 
+
+$$
+
+MEZ002-140900-
+Top of Deboullie Mountain-
+144 PM EST Fri Nov 13 2026
+
+...TOP OF DEBOULLIE MOUNTAIN (1981')...
+
+.TONIGHT...Cloudy. Scattered snow showers early this evening, then
+isolated snow showers late this evening and early morning. Scattered
+snow showers late. Near steady temperature in the upper 20s.
+Northwest winds up to 10 mph. Chance of snow 30 percent. No
+lightning risk. 
+.SATURDAY...Cloudy. Isolated snow showers. Isolated rain showers in
+the afternoon. Highs in the mid 30s. North winds up to 10 mph.
+Chance of precipitation 20 percent. No lightning risk. 
+
+$$
+
+MEZ006-140900-
+Top of Mars Hill Mountain-
+144 PM EST Fri Nov 13 2026
+
+...TOP OF MARS HILL MOUNTAIN (1749')...
+
+.TONIGHT...Cloudy. Near steady temperature around 30. Northwest
+winds up to 10 mph. No lightning risk. 
+.SATURDAY...Cloudy. Isolated snow showers. Isolated rain showers in
+the afternoon. Highs in the mid 30s. Northwest winds up to 10 mph.
+Chance of precipitation 20 percent. No lightning risk. 
+
+$$
+
+MEZ010-140900-
+Top of White Cap Mountain-
+144 PM EST Fri Nov 13 2026
+
+...TOP OF WHITE CAP MOUNTAIN (3654')...
+
+.TONIGHT...Cloudy. Near steady temperature in the mid 20s. Northwest
+winds 10 to 20 mph. No lightning risk. 
+.SATURDAY...Mostly cloudy. Isolated snow showers. Highs in the upper
+20s. Northwest winds 10 to 15 mph shifting to the north up to 10 mph
+in the afternoon. Chance of snow 20 percent. No lightning risk. 
+
+$$
+
+MEZ010-140900-
+Moosehead Lake-
+144 PM EST Fri Nov 13 2026
+
+...MOOSEHEAD LAKE...
+
+.TONIGHT...Cloudy. Isolated snow showers after midnight. Lows in the
+upper 20s. Northwest winds 10 to 15 mph. Highest waves 1 foot.
+Chance of snow 20 percent. No lightning risk. Water temperature
+around 50 degrees Fahrenheit. 
+.SATURDAY...Cloudy. Isolated snow showers in the morning, then
+scattered snow and rain showers in the afternoon. Highs in the upper
+30s. Highest waves 1 foot. Northwest winds up to 10 mph. Chance of
+precipitation 30 percent. No lightning risk. Water temperature
+around 50 degrees Fahrenheit. 
+
+$$
+
+MEZ001-140900-
+Allagash Wilderness Waterway-
+144 PM EST Fri Nov 13 2026
+
+...ALLAGASH WILDERNESS WATERWAY...
+
+.TONIGHT...Cloudy. Scattered snow showers this evening. Isolated
+snow showers after midnight, then scattered snow showers late. Near
+steady temperature around 30. Light and variable winds. Chance of
+snow 30 percent. No lightning risk. 
+.SATURDAY...Cloudy. Scattered snow showers. Highs in the upper 30s.
+North winds up to 10 mph. Chance of snow 30 percent. No lightning
+risk. 
+
+$$
+
+MEZ030-140900-
+St Croix River-
+144 PM EST Fri Nov 13 2026
+
+...ST CROIX RIVER...
+
+.TONIGHT...Mostly cloudy. Lows in the mid 20s. Light and variable
+winds. No lightning risk. 
+.SATURDAY...Mostly cloudy. Highs in the lower 40s. Northwest winds
+up to 10 mph. No lightning risk. 
+
+$$
+
+MEZ030-140900-
+West Quoddy Head-
+144 PM EST Fri Nov 13 2026
+
+...WEST QUODDY HEAD...
+
+.TONIGHT...Mostly cloudy. Lows in the mid 30s. Northwest winds up to
+10 mph. No lightning risk. Water temperature around 51 degrees
+Fahrenheit. 
+.SATURDAY...Mostly cloudy. Highs in the lower 40s. Northwest winds
+up to 10 mph. No lightning risk. Water temperature around 51 degrees
+Fahrenheit. 
+
+$$
+
+MEZ004>006-010-011-031-140900-
+Upper Penobscot Watershed-
+144 PM EST Fri Nov 13 2026
+
+...UPPER PENOBSCOT WATERSHED...
+
+.TONIGHT...Cloudy. Lows in the upper 20s. Northwest winds up to
+10 mph. No lightning risk. 
+.SATURDAY...Mostly cloudy. Isolated snow showers. Isolated rain
+showers in the afternoon. Highs in the upper 30s. Northwest winds up
+to 10 mph. Chance of precipitation 20 percent. No lightning risk. 
+
+For current and forecast flow conditions for the Penobscot,see
+https://water.noaa.gov/wfo/car
+
+$$
+
+MEZ011-015-016-031-140900-
+Lower Penobscot Watershed-
+144 PM EST Fri Nov 13 2026
+
+...LOWER PENOBSCOT WATERSHED...
+
+.TONIGHT...Cloudy. Lows in the upper 20s. Northwest winds up to
+10 mph. No lightning risk. 
+.SATURDAY...Mostly cloudy. Isolated rain showers in the afternoon.
+Highs in the lower 40s. Northwest winds up to 10 mph. Chance of rain
+20 percent. No lightning risk. 
+
+For current and forecast flow conditions for the Penobscot,see
+https://water.noaa.gov/wfo/car
+
+$$
+

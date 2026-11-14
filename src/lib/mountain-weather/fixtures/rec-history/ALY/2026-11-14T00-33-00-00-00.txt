@@ -1,0 +1,237 @@
+
+000
+SXUS41 KALY 140033
+RECALY
+
+Recreational Forecast
+National Weather Service Albany NY
+733 PM EST Fri Nov 13 2026
+
+
+NYZ042-043-041-049>052-083-084-140500-
+Lake George-
+733 PM EST Fri Nov 13 2026
+
+...Lake George Recreational Forecast...
+
+.SATURDAY...
+Max Temperature...In the lower 40s. 
+Min Temperature...In the lower 30s. 
+Average Dew Points...In the upper 20s. 
+Minimum Humidity...65 TO 75 percent. 
+Wind...Northwest around 5 knots. 
+Weather...Dry. 
+Lightning...No Lightning expected. 
+
+.SATURDAY NIGHT...
+Max Temperature...In the lower 40s. 
+Min Temperature...In the mid 30s. 
+Average Dew Points...In the lower 30s. 
+Minimum Humidity...65 TO 75 percent. 
+Wind...Northwest around 5 knots. 
+Weather...Chance of rain showers. 
+Lightning...No Lightning expected. 
+
+
+.EXTENDED...
+.SUNDAY...Mostly cloudy. Lows in the mid 30s. Highs in the mid 40s. 
+.MONDAY...Partly cloudy. Lows in the lower 30s. Highs in the upper
+40s. 
+
+$$
+
+NYZ039-041-050-082-140500-
+Great Sacandaga Lake-
+733 PM EST Fri Nov 13 2026
+
+...Great Sacandaga Lake Recreational Forecast...
+
+.SATURDAY...
+Max Temperature...Around 40. 
+Min Temperature...In the lower 30s. 
+Average Dew Points...In the upper 20s. 
+Minimum Humidity...65 TO 75 percent. 
+Wind...Northwest 5 to 10 knots. 
+Weather...Dry. 
+Lightning...No Lightning expected. 
+
+.SATURDAY NIGHT...
+Max Temperature...Around 40. 
+Min Temperature...In the mid 30s. 
+Average Dew Points...In the lower 30s. 
+Minimum Humidity...65 TO 75 percent. 
+Wind...Northwest 5 to 10 knots. 
+Weather...Slight chance of rain showers. 
+Lightning...No Lightning expected. 
+
+
+.EXTENDED...
+.SUNDAY...Mostly cloudy. Lows in the mid 30s. Highs in the lower
+40s. 
+.MONDAY...Partly cloudy. Lows in the lower 30s. Highs in the upper
+40s. 
+
+$$
+
+NYZ032-033-082-038>043-048-049-083-084-140500-
+Southern Adirondacks-
+733 PM EST Fri Nov 13 2026
+
+...Southern Adirondacks Recreational Forecast for elevations above 2500 feet...
+
+.SATURDAY...
+Max Temperature...In the lower 30s. 
+Min Temperature...In the mid 20s. 
+Average Dew Points...In the mid 20s. 
+Minimum Humidity...75 TO 85 percent. 
+Wind...Northwest 5 to 10 knots. 
+Weather...Chance of snow showers. 
+Lightning...No Lightning expected. 
+
+.SATURDAY NIGHT...
+Max Temperature...In the lower 30s. 
+Min Temperature...In the upper 20s. 
+Average Dew Points...In the upper 20s. 
+Minimum Humidity...75 TO 85 percent. 
+Wind...Northwest 5 to 10 knots. 
+Weather...Snow showers likely. 
+Lightning...No Lightning expected. 
+
+
+.EXTENDED...
+.SUNDAY...Mostly cloudy. Chance of snow showers. Lows in the upper
+20s. Highs in the lower 30s. 
+.MONDAY...Partly cloudy. Lows in the upper 20s. Highs in the upper
+30s. 
+
+$$
+
+VTZ013-014-140500-
+Southern Green Mountains-
+733 PM EST Fri Nov 13 2026
+
+...Southern Green Mountains Recreational Forecast for elevations above 2000 feet...
+
+.SATURDAY...
+Max Temperature...In the lower 30s. 
+Min Temperature...In the mid 20s. 
+Average Dew Points...In the mid 20s. 
+Minimum Humidity...75 TO 85 percent. 
+Wind...Northwest up to 5 knots. 
+Weather...Dry. 
+Lightning...No Lightning expected. 
+
+.SATURDAY NIGHT...
+Max Temperature...In the lower 30s. 
+Min Temperature...In the upper 20s. 
+Average Dew Points...In the upper 20s. 
+Minimum Humidity...75 TO 85 percent. 
+Wind...Northwest 5 to 10 knots. 
+Weather...Chance of snow showers. 
+Lightning...No Lightning expected. 
+
+
+.EXTENDED...
+.SUNDAY...Mostly cloudy. Lows in the upper 20s. Highs in the mid
+30s. 
+.MONDAY...Partly cloudy. Lows in the mid 20s. Highs in the upper
+30s. 
+
+$$
+
+NYZ058-063-140500-
+Catskill Mountains-
+733 PM EST Fri Nov 13 2026
+
+...Eastern Catskills Recreational Forecast for elevations above 2000 feet...
+
+.SATURDAY...
+Max Temperature...In the lower 30s. 
+Min Temperature...In the lower 20s. 
+Average Dew Points...In the lower 20s. 
+Minimum Humidity...65 TO 75 percent. 
+Wind...Northwest 5 to 10 knots. 
+Weather...Dry. 
+Lightning...No Lightning expected. 
+
+.SATURDAY NIGHT...
+Max Temperature...In the lower 30s. 
+Min Temperature...In the mid 20s. 
+Average Dew Points...In the upper 20s. 
+Minimum Humidity...75 TO 85 percent. 
+Wind...Northwest around 10 knots. 
+Weather...Chance of snow showers. 
+Lightning...No Lightning expected. 
+
+
+.EXTENDED...
+.SUNDAY...Mostly cloudy. Lows in the mid 20s. Highs in the mid 30s. 
+.MONDAY...Partly cloudy. Lows in the mid 20s. Highs around 40. 
+
+$$
+
+MAZ001-025-140500-
+Berkshire Mountains-
+733 PM EST Fri Nov 13 2026
+
+...Berkshires Recreational Forecast for elevations above 2000 feet...
+
+.SATURDAY...
+Max Temperature...In the mid 30s. 
+Min Temperature...In the upper 20s. 
+Average Dew Points...In the mid 20s. 
+Minimum Humidity...65 TO 75 percent. 
+Wind...Northwest 5 to 10 knots. 
+Weather...Dry. 
+Lightning...No Lightning expected. 
+
+.SATURDAY NIGHT...
+Max Temperature...In the mid 30s. 
+Min Temperature...In the upper 20s. 
+Average Dew Points...In the upper 20s. 
+Minimum Humidity...75 TO 85 percent. 
+Wind...West 5 to 10 knots. 
+Weather...Chance of snow showers. 
+Lightning...No Lightning expected. 
+
+
+.EXTENDED...
+.SUNDAY...Mostly cloudy. Lows in the upper 20s. Highs in the upper
+30s. 
+.MONDAY...Partly cloudy. Lows in the upper 20s. Highs in the lower
+40s. 
+
+$$
+
+NYZ064-065-140500-
+Mid Hudson Valley-
+733 PM EST Fri Nov 13 2026
+
+...Mid Hudson River Recreational Forecast from Albany to Poughkeepsie...
+
+.SATURDAY...
+Max Temperature...In the mid 40s. 
+Min Temperature...Around 30. 
+Average Dew Points...In the upper 20s. 
+Minimum Humidity...55 TO 65 percent. 
+Wind...Northwest up to 5 knots. 
+Weather...Dry. 
+Lightning...No Lightning expected. 
+
+.SATURDAY NIGHT...
+Max Temperature...In the mid 40s. 
+Min Temperature...In the lower 30s. 
+Average Dew Points...In the lower 30s. 
+Minimum Humidity...55 TO 65 percent. 
+Wind...Northwest up to 5 knots. 
+Weather...Dry. 
+Lightning...No Lightning expected. 
+
+
+.EXTENDED...
+.SUNDAY...Partly cloudy. Lows around 30. Highs in the upper 40s. 
+.MONDAY...Mostly clear. Lows in the upper 20s. Highs in the lower
+50s. 
+
+
+$$

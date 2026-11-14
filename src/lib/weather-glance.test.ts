@@ -143,6 +143,14 @@ test('summit high and low use the next day pair', () => {
   ]), { high: 42, low: 28 });
 });
 
+test('summit high/low use today high and tonight low, not two daytime periods', () => {
+  assert.deepEqual(summitHighLow([
+    period({ name: 'Today', temperature: 23, isDaytime: true }),
+    period({ name: 'Tonight', temperature: 20, isDaytime: false }),
+    period({ name: 'Sunday', temperature: 18, isDaytime: true }),
+  ]), { high: 23, low: 20 });
+});
+
 test('wind text and gusts become miles per hour', () => {
   assert.equal(parseMph('15 to 25 mph'), 25);
   assert.equal(parseMph(''), null);

@@ -1,0 +1,117 @@
+
+000
+SXUS41 KGYX 100040
+RECGYX
+
+Recreation Report for New Hampshire and western Maine
+National Weather Service Gray ME
+740 PM EST Mon Nov 9 2026
+
+MEZ007>009-NHZ002>004-100900-
+Elevations From 2500 Feet to 4000 Feet in Northern New Hampshire and
+the Western Maine Mountains-
+740 PM EST Mon Nov 9 2026
+
+...Recreation forecast for elevations between 2500 and 4000 feet in 
+northern New Hampshire and the western Maine mountains...
+
+.TONIGHT...Summits obscured. A slight chance of rain and snow this
+evening. A slight chance of snow showers after midnight. Lows around
+30. Northwest winds 15 to 25 mph with gusts up to 65 mph. Chance of
+precipitation 20 percent. Wind chill values as low as 10 above. 
+.TUESDAY...Summits obscured. A chance of rain showers and snow
+showers in the afternoon. Highs in the upper 30s. West winds around
+20 mph becoming southwest around 10 mph in the afternoon. Gusts up
+to 50 mph. Chance of precipitation 50 percent. 
+
+$$
+
+MEZ007>009-NHZ002>004-100900-
+Summits Above 4000 Feet in Northern New Hampshire and Western Maine-
+740 PM EST Mon Nov 9 2026
+
+...Recreation forecast for summits above 4000 feet in northern New
+Hampshire and western Maine...
+
+.TONIGHT...Summits obscured. A chance of snow with a slight chance
+of rain this evening, then a slight chance of snow showers after
+midnight. Lows in the mid 20s. Northwest winds 30 to 40 mph...except
+northwest 50 to 60 mph at elevations above 5000 feet. Chance of
+precipitation 40 percent. Wind chill values as low as 2 above. 
+.TUESDAY...Summits obscured. A chance of snow showers in the
+afternoon. Highs in the mid 30s. Northwest winds around 25 mph
+becoming southwest around 15 mph in the afternoon. At elevations
+above 5000 feet, west winds around 45 mph decreasing to around
+20 mph in the afternoon. Gusts up to 80 mph. Chance of snow
+40 percent. Wind chill values as low as 1 above. 
+
+$$
+
+NHZ011-015-100900-
+Summits of Mount Monadnock and North Pack Monadnock Mountain-
+740 PM EST Mon Nov 9 2026
+
+...Recreation forecast for summits of Mount Monadnock and North Pack
+Monadnock mountain...
+
+.TONIGHT...Mostly cloudy. Lows in the upper 30s. Northwest winds
+10 to 20 mph with gusts up to 30 mph. 
+.TUESDAY...Cloudy. Highs in the upper 40s. West winds 10 to 15 mph
+with gusts up to 25 mph. 
+
+$$
+
+MEZ024-100900-
+Islands of Casco Bay Maine-
+740 PM EST Mon Nov 9 2026
+
+...Forecast for the Islands of Casco Bay Maine...
+
+.TONIGHT...Mostly cloudy. Lows in the lower 40s. Northwest winds
+around 10 mph this evening becoming light and variable. 
+.TUESDAY...Mostly cloudy. Highs in the lower 50s. West winds up to
+10 mph. 
+
+$$
+
+MEZ025-027-100900-
+Islands and Necks of the Mid Coast of Maine-
+740 PM EST Mon Nov 9 2026
+
+...Forecast for the Islands and Necks of the Mid Coast of Maine...
+
+.TONIGHT...Mostly cloudy. Lows in the upper 30s. Northwest winds
+around 10 mph this evening becoming light and variable. 
+.TUESDAY...Partly sunny in the morning, then becoming mostly cloudy.
+Highs around 50. West winds up to 10 mph. 
+
+$$
+
+MEZ027-028-100900-
+Islands of Penobscot Bay Maine-
+740 PM EST Mon Nov 9 2026
+
+...Forecast for the Islands of Penobscot Bay Maine...
+
+.TONIGHT...Mostly cloudy. Lows in the upper 30s. Northwest winds up
+to 10 mph with gusts up to 25 mph. 
+.TUESDAY...Mostly cloudy. Highs in the upper 40s. West winds up to
+10 mph with gusts up to 20 mph. 
+
+$$
+
+MEZ026-027-100900-
+Offshore Islands of Monhegan, Matinicus and Criehaven-
+740 PM EST Mon Nov 9 2026
+
+...Forecast for the Offshore Islands of Monhegan, Matinicus and
+Criehaven...
+
+.TONIGHT...Mostly cloudy this evening, then becoming partly cloudy.
+Lows in the lower 40s. Northwest winds 10 to 20 mph. 
+.TUESDAY...Partly sunny in the morning, then becoming mostly cloudy.
+Highs in the lower 50s. West winds 10 to 15 mph with gusts up to
+25 mph. 
+
+$$
+

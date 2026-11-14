@@ -7,12 +7,13 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { signOutAction } from '@/app/sign-in/actions';
 import { SubmitButton } from '@/components/ui/SubmitButton';
-import { viewerCanContribute } from '@/lib/membership';
 import {
   COMMUNITY_LINKS,
+  COMMUNITY_MENU_LINKS,
   FISHING_LINKS,
+  FISHING_MENU_LINKS,
   PEAK_FINDER_LINK,
-  UPLOAD_LINKS,
+  WEATHER_MENU_LINKS,
   communitySection,
   pathOn,
   settingsLinks,
@@ -28,7 +29,6 @@ import { activeTab, profileHref } from './nav';
 export type BarAccount = (NonNullable<NavAccount> & {
   displayName: string | null;
   pendingCount?: number;
-  notificationCount?: number;
 }) | null;
 
 function subscribe() {
@@ -48,7 +48,6 @@ function PendingBadge({ count }: { count?: number }) {
 export function TopBar({ account }: { account: BarAccount }) {
   const pathname = usePathname();
   const tab = activeTab(pathname, account);
-  const canUpload = viewerCanContribute(account);
   const [moreOn, setMoreOn] = useState<string | null>(null);
   const moreOpen = moreOn === pathname;
 
@@ -62,26 +61,22 @@ export function TopBar({ account }: { account: BarAccount }) {
         <div className="ml-auto hidden items-center gap-2 lg:flex">
           <nav aria-label="Main" className="flex items-center gap-2">
             <Link href="/" className={barLinkClass(tab === 'map')}>Map</Link>
-            <Link href="/trips" className={barLinkClass(tab === 'trips')}>Trips</Link>
-            <Link href="/mountain-weather" className={barLinkClass(tab === 'weather')}>Weather</Link>
             <Link href={PEAK_FINDER_LINK.href} className={barLinkClass(pathOn(pathname, PEAK_FINDER_LINK.href))}>Peak Finder</Link>
             <Menu label="Fishing" active={pathOn(pathname, '/fishing')}>
-              <MenuLinks links={[{ href: '/fishing', label: 'All fishing' }, ...FISHING_LINKS]} />
+              <MenuLinks links={FISHING_MENU_LINKS} />
             </Menu>
-            <Menu label="Community" active={tab === null && communitySection(pathname, account)}>
-              <MenuLinks links={COMMUNITY_LINKS} />
+            <Menu label="Community" active={communitySection(pathname, account)}>
+              <MenuLinks links={COMMUNITY_MENU_LINKS} />
+            </Menu>
+            <Menu label="Weather" active={pathOn(pathname, '/mountain-weather')}>
+              <MenuLinks links={WEATHER_MENU_LINKS} />
             </Menu>
           </nav>
-          {canUpload ? (
-            <Menu label="Upload" active={tab === 'upload'} align="right">
-              <MenuLinks links={UPLOAD_LINKS} />
-            </Menu>
-          ) : null}
           {account ? (
             <Menu
               align="right"
               active={tab === 'profile'}
-              label={<span className="flex items-center gap-2">Settings<PendingBadge count={account.pendingCount} /></span>}
+              label={<span className="flex items-center gap-2">Profile<PendingBadge count={account.pendingCount} /></span>}
             >
               <AccountRows account={account} rowClass={menuRowClass} />
             </Menu>
@@ -124,7 +119,6 @@ function AccountRows({ account, rowClass }: { account: NonNullable<BarAccount>; 
         <Link key={item.href} href={item.href} role="menuitem" className={rowClass}>
           {item.label}
           {item.href === '/admin' ? <PendingBadge count={account.pendingCount} /> : null}
-          {item.href === '/notifications' ? <PendingBadge count={account.notificationCount} /> : null}
         </Link>
       ))}
       <form action={signOutAction}>
@@ -171,19 +165,16 @@ function MoreSheet({ account, onClose }: { account: BarAccount; onClose: () => v
           <div>
             <p className="t-eyebrow mb-1">Community</p>
             <ListGroup>
-              {COMMUNITY_LINKS.filter((item) => item.href !== '/trips').map((item) => (
-                <ListRow
-                  key={item.href}
-                  href={item.href}
-                  title={item.label}
-                  trailing={item.href === '/notifications' ? <PendingBadge count={account?.notificationCount} /> : null}
-                />
+              <ListRow href="/community" title="Community" />
+              {COMMUNITY_LINKS.map((item) => (
+                <ListRow key={item.href} href={item.href} title={item.label} />
               ))}
             </ListGroup>
           </div>
           <div>
             <p className="t-eyebrow mb-1">Fishing</p>
             <ListGroup>
+              <ListRow href="/fishing" title="Fishing" />
               {FISHING_LINKS.map((item) => (
                 <ListRow key={item.href} href={item.href} title={item.label} />
               ))}

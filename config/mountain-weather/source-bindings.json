@@ -1,0 +1,1351 @@
+{
+  "version": 1,
+  "places": {
+    "mount-marcy": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Northern Adirondacks of New York",
+        "sectionMatches": [
+          "Northern Adirondacks of New York",
+          "Northern Adirondacks of New York and the Northern Green Mountains of Vermont",
+          "Vermont and Northern New York",
+          "Higher Summits Forecast for Vermont and Northern New York",
+          "Higher Summits Forecast for the Northern Adirondacks of New York"
+        ]
+      },
+      "avg": {
+        "office": "BTV",
+        "pointMatch": "Mount Marcy"
+      },
+      "balloon": {
+        "regionMatch": "the Northern Adirondacks of New York",
+        "bindReason": "Lake Placid bulletin city (Essex Co. NY, BTV WFO)."
+      }
+    },
+    "whiteface-mountain": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Northern Adirondacks of New York",
+        "sectionMatches": [
+          "Northern Adirondacks of New York",
+          "Northern Adirondacks of New York and the Northern Green Mountains of Vermont",
+          "Vermont and Northern New York",
+          "Higher Summits Forecast for Vermont and Northern New York",
+          "Higher Summits Forecast for the Northern Adirondacks of New York"
+        ]
+      },
+      "avg": {
+        "office": "BTV",
+        "pointMatch": "Whiteface Mountain"
+      },
+      "balloon": {
+        "regionMatch": "the Northern Adirondacks of New York",
+        "bindReason": "Lake Placid bulletin city (Essex Co. NY, BTV WFO)."
+      }
+    },
+    "dix-mountain": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Northern Adirondacks of New York",
+        "sectionMatches": [
+          "Northern Adirondacks of New York",
+          "Northern Adirondacks of New York and the Northern Green Mountains of Vermont",
+          "Vermont and Northern New York",
+          "Higher Summits Forecast for Vermont and Northern New York",
+          "Higher Summits Forecast for the Northern Adirondacks of New York"
+        ]
+      },
+      "avg": {
+        "office": "BTV",
+        "pointMatch": "Dix Mountain"
+      },
+      "balloon": {
+        "regionMatch": "the Northern Adirondacks of New York",
+        "bindReason": "Lake Placid bulletin city (Essex Co. NY, BTV WFO)."
+      }
+    },
+    "algonquin-peak": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Northern Adirondacks of New York",
+        "sectionMatches": [
+          "Northern Adirondacks of New York",
+          "Northern Adirondacks of New York and the Northern Green Mountains of Vermont",
+          "Vermont and Northern New York",
+          "Higher Summits Forecast for Vermont and Northern New York",
+          "Higher Summits Forecast for the Northern Adirondacks of New York"
+        ]
+      },
+      "avg": {
+        "office": "BTV",
+        "pointMatch": "Algonquin Peak"
+      },
+      "balloon": {
+        "regionMatch": "the Northern Adirondacks of New York",
+        "bindReason": "Lake Placid bulletin city (Essex Co. NY, BTV WFO)."
+      }
+    },
+    "mount-colden": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Northern Adirondacks of New York",
+        "sectionMatches": [
+          "Northern Adirondacks of New York",
+          "Northern Adirondacks of New York and the Northern Green Mountains of Vermont",
+          "Vermont and Northern New York",
+          "Higher Summits Forecast for Vermont and Northern New York",
+          "Higher Summits Forecast for the Northern Adirondacks of New York"
+        ]
+      },
+      "avg": {
+        "office": "BTV",
+        "pointMatch": "Mount Colden"
+      },
+      "balloon": {
+        "regionMatch": "the Northern Adirondacks of New York",
+        "bindReason": "Lake Placid bulletin city (Essex Co. NY, BTV WFO)."
+      }
+    },
+    "mount-colvin": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Northern Adirondacks of New York",
+        "sectionMatches": [
+          "Northern Adirondacks of New York",
+          "Northern Adirondacks of New York and the Northern Green Mountains of Vermont",
+          "Vermont and Northern New York",
+          "Higher Summits Forecast for Vermont and Northern New York",
+          "Higher Summits Forecast for the Northern Adirondacks of New York"
+        ]
+      },
+      "avg": {
+        "office": "BTV",
+        "pointMatch": "Mount Colvin"
+      },
+      "balloon": {
+        "regionMatch": "the Northern Adirondacks of New York",
+        "bindReason": "Lake Placid bulletin city (Keene, Essex Co. NY, BTV WFO)."
+      }
+    },
+    "giant-mountain": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Northern Adirondacks of New York",
+        "sectionMatches": [
+          "Northern Adirondacks of New York",
+          "Northern Adirondacks of New York and the Northern Green Mountains of Vermont",
+          "Vermont and Northern New York",
+          "Higher Summits Forecast for Vermont and Northern New York",
+          "Higher Summits Forecast for the Northern Adirondacks of New York"
+        ]
+      },
+      "balloon": {
+        "regionMatch": "the Northern Adirondacks of New York",
+        "bindReason": "Lake Placid bulletin city (Keene, Essex Co. NY, BTV WFO)."
+      }
+    },
+    "santanoni-peak": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Northern Adirondacks of New York",
+        "sectionMatches": [
+          "Northern Adirondacks of New York",
+          "Northern Adirondacks of New York and the Northern Green Mountains of Vermont",
+          "Vermont and Northern New York",
+          "Higher Summits Forecast for Vermont and Northern New York",
+          "Higher Summits Forecast for the Northern Adirondacks of New York"
+        ]
+      },
+      "balloon": {
+        "regionMatch": "the Northern Adirondacks of New York",
+        "bindReason": "Newcomb bulletin city (Essex Co. NY, BTV WFO)."
+      }
+    },
+    "cascade-mountain": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Northern Adirondacks of New York",
+        "sectionMatches": [
+          "Northern Adirondacks of New York",
+          "Northern Adirondacks of New York and the Northern Green Mountains of Vermont",
+          "Vermont and Northern New York",
+          "Higher Summits Forecast for Vermont and Northern New York",
+          "Higher Summits Forecast for the Northern Adirondacks of New York"
+        ]
+      },
+      "balloon": {
+        "regionMatch": "the Northern Adirondacks of New York",
+        "bindReason": "Lake Placid bulletin city (Keene, Essex Co. NY, BTV WFO)."
+      }
+    },
+    "mckenzie-mountain": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Northern Adirondacks of New York",
+        "sectionMatches": [
+          "Northern Adirondacks of New York",
+          "Northern Adirondacks of New York and the Northern Green Mountains of Vermont",
+          "Vermont and Northern New York",
+          "Higher Summits Forecast for Vermont and Northern New York",
+          "Higher Summits Forecast for the Northern Adirondacks of New York"
+        ]
+      },
+      "balloon": {
+        "regionMatch": "the Northern Adirondacks of New York",
+        "bindReason": "Saranac Lake bulletin city (Franklin Co. NY, BTV WFO)."
+      }
+    },
+    "mount-van-hoevenberg": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Northern Adirondacks of New York",
+        "sectionMatches": [
+          "Northern Adirondacks of New York",
+          "Northern Adirondacks of New York and the Northern Green Mountains of Vermont",
+          "Vermont and Northern New York",
+          "Higher Summits Forecast for Vermont and Northern New York",
+          "Higher Summits Forecast for the Northern Adirondacks of New York"
+        ]
+      },
+      "balloon": {
+        "regionMatch": "the Northern Adirondacks of New York",
+        "bindReason": "Lake Placid bulletin city (Essex Co. NY, BTV WFO)."
+      }
+    },
+    "keene-valley": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Northern Adirondacks of New York",
+        "sectionMatches": [
+          "Northern Adirondacks of New York",
+          "Northern Adirondacks of New York and the Northern Green Mountains of Vermont",
+          "Vermont and Northern New York",
+          "Higher Summits Forecast for Vermont and Northern New York",
+          "Higher Summits Forecast for the Northern Adirondacks of New York"
+        ]
+      },
+      "balloon": {
+        "regionMatch": "the Northern Adirondacks of New York",
+        "bindReason": "Lake Placid bulletin city (Keene, Essex Co. NY, BTV WFO)."
+      }
+    },
+    "lyon-mountain": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Northern Adirondacks of New York",
+        "sectionMatches": [
+          "Northern Adirondacks of New York",
+          "Northern Adirondacks of New York and the Northern Green Mountains of Vermont",
+          "Vermont and Northern New York",
+          "Higher Summits Forecast for Vermont and Northern New York",
+          "Higher Summits Forecast for the Northern Adirondacks of New York"
+        ]
+      },
+      "balloon": {
+        "regionMatch": "the Northern Adirondacks of New York",
+        "bindReason": "Dannemora bulletin city (Clinton Co. NY, BTV WFO)."
+      }
+    },
+    "ampersand-mountain": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Northern Adirondacks of New York",
+        "sectionMatches": [
+          "Northern Adirondacks of New York",
+          "Northern Adirondacks of New York and the Northern Green Mountains of Vermont",
+          "Vermont and Northern New York",
+          "Higher Summits Forecast for Vermont and Northern New York",
+          "Higher Summits Forecast for the Northern Adirondacks of New York"
+        ]
+      },
+      "balloon": {
+        "regionMatch": "the Northern Adirondacks of New York",
+        "bindReason": "Saranac Lake bulletin city (Franklin/Essex Co. NY, BTV WFO)."
+      }
+    },
+    "debar-mountain": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Northern Adirondacks of New York",
+        "sectionMatches": [
+          "Northern Adirondacks of New York",
+          "Northern Adirondacks of New York and the Northern Green Mountains of Vermont",
+          "Vermont and Northern New York",
+          "Higher Summits Forecast for Vermont and Northern New York",
+          "Higher Summits Forecast for the Northern Adirondacks of New York"
+        ]
+      },
+      "balloon": {
+        "regionMatch": "the Northern Adirondacks of New York",
+        "bindReason": "Saranac Lake bulletin city (Franklin Co. NY, BTV WFO)."
+      }
+    },
+    "st-regis-mountain": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Northern Adirondacks of New York",
+        "sectionMatches": [
+          "Northern Adirondacks of New York",
+          "Northern Adirondacks of New York and the Northern Green Mountains of Vermont",
+          "Vermont and Northern New York",
+          "Higher Summits Forecast for Vermont and Northern New York",
+          "Higher Summits Forecast for the Northern Adirondacks of New York"
+        ]
+      },
+      "balloon": {
+        "regionMatch": "the Northern Adirondacks of New York",
+        "bindReason": "Saranac Lake bulletin city (Franklin Co. NY, BTV WFO)."
+      }
+    },
+    "mount-arab": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Northern Adirondacks of New York",
+        "sectionMatches": [
+          "Northern Adirondacks of New York",
+          "Northern Adirondacks of New York and the Northern Green Mountains of Vermont",
+          "Vermont and Northern New York",
+          "Higher Summits Forecast for Vermont and Northern New York",
+          "Higher Summits Forecast for the Northern Adirondacks of New York"
+        ]
+      },
+      "balloon": {
+        "regionMatch": "the Northern Adirondacks of New York",
+        "bindReason": "Tupper Lake bulletin city (Franklin/St. Lawrence Co. NY, BTV WFO)."
+      }
+    },
+    "snowy-mountain": {
+      "rec": {
+        "office": "ALY",
+        "sectionMatch": "Southern Adirondacks",
+        "sectionMatches": [
+          "Southern Adirondacks",
+          "Southern Adirondacks Recreational Forecast"
+        ]
+      }
+    },
+    "blue-mountain": {
+      "rec": {
+        "office": "ALY",
+        "sectionMatch": "Southern Adirondacks",
+        "sectionMatches": [
+          "Southern Adirondacks",
+          "Southern Adirondacks Recreational Forecast"
+        ]
+      }
+    },
+    "pillsbury-mountain": {
+      "rec": {
+        "office": "ALY",
+        "sectionMatch": "Southern Adirondacks",
+        "sectionMatches": [
+          "Southern Adirondacks",
+          "Southern Adirondacks Recreational Forecast"
+        ]
+      }
+    },
+    "gore-mountain": {
+      "rec": {
+        "office": "ALY",
+        "sectionMatch": "Southern Adirondacks",
+        "sectionMatches": [
+          "Southern Adirondacks",
+          "Southern Adirondacks Recreational Forecast"
+        ]
+      }
+    },
+    "blue-ridge-mountain": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Northern Adirondacks of New York",
+        "sectionMatches": [
+          "Northern Adirondacks of New York",
+          "Northern Adirondacks of New York and the Northern Green Mountains of Vermont",
+          "Vermont and Northern New York",
+          "Higher Summits Forecast for Vermont and Northern New York",
+          "Higher Summits Forecast for the Northern Adirondacks of New York"
+        ]
+      }
+    },
+    "fishing-brook-range": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Northern Adirondacks of New York",
+        "sectionMatches": [
+          "Northern Adirondacks of New York",
+          "Northern Adirondacks of New York and the Northern Green Mountains of Vermont",
+          "Vermont and Northern New York",
+          "Higher Summits Forecast for Vermont and Northern New York",
+          "Higher Summits Forecast for the Northern Adirondacks of New York"
+        ]
+      }
+    },
+    "vanderwhacker-mountain": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Northern Adirondacks of New York",
+        "sectionMatches": [
+          "Northern Adirondacks of New York",
+          "Northern Adirondacks of New York and the Northern Green Mountains of Vermont",
+          "Vermont and Northern New York",
+          "Higher Summits Forecast for Vermont and Northern New York",
+          "Higher Summits Forecast for the Northern Adirondacks of New York"
+        ]
+      }
+    },
+    "crane-mountain": {
+      "rec": {
+        "office": "ALY",
+        "sectionMatch": "Southern Adirondacks",
+        "sectionMatches": [
+          "Southern Adirondacks",
+          "Southern Adirondacks Recreational Forecast"
+        ]
+      }
+    },
+    "hadley-mountain": {
+      "rec": {
+        "office": "ALY",
+        "sectionMatch": "Southern Adirondacks",
+        "sectionMatches": [
+          "Southern Adirondacks",
+          "Southern Adirondacks Recreational Forecast"
+        ]
+      }
+    },
+    "black-mountain": {
+      "rec": {
+        "office": "ALY",
+        "sectionMatch": "Southern Adirondacks",
+        "sectionMatches": [
+          "Southern Adirondacks",
+          "Southern Adirondacks Recreational Forecast"
+        ]
+      }
+    },
+    "pharaoh-mountain": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Northern Adirondacks of New York",
+        "sectionMatches": [
+          "Northern Adirondacks of New York",
+          "Northern Adirondacks of New York and the Northern Green Mountains of Vermont",
+          "Vermont and Northern New York",
+          "Higher Summits Forecast for Vermont and Northern New York",
+          "Higher Summits Forecast for the Northern Adirondacks of New York"
+        ]
+      }
+    },
+    "prospect-mountain": {
+      "rec": {
+        "office": "ALY",
+        "sectionMatch": "Southern Adirondacks",
+        "sectionMatches": [
+          "Southern Adirondacks",
+          "Southern Adirondacks Recreational Forecast"
+        ]
+      }
+    },
+    "slide-mountain": {
+      "rec": {
+        "office": "ALY",
+        "sectionMatch": "Eastern Catskills",
+        "sectionMatches": [
+          "Eastern Catskills",
+          "Eastern Catskills Recreational Forecast"
+        ]
+      }
+    },
+    "hunter-mountain": {
+      "rec": {
+        "office": "ALY",
+        "sectionMatch": "Eastern Catskills",
+        "sectionMatches": [
+          "Eastern Catskills",
+          "Eastern Catskills Recreational Forecast"
+        ]
+      }
+    },
+    "peekamoose-mountain": {
+      "rec": {
+        "office": "ALY",
+        "sectionMatch": "Eastern Catskills",
+        "sectionMatches": [
+          "Eastern Catskills",
+          "Eastern Catskills Recreational Forecast"
+        ]
+      }
+    },
+    "balsam-lake-mountain": {
+      "rec": {
+        "office": "ALY",
+        "sectionMatch": "Eastern Catskills",
+        "sectionMatches": [
+          "Eastern Catskills",
+          "Eastern Catskills Recreational Forecast"
+        ]
+      }
+    },
+    "panther-mountain": {
+      "rec": {
+        "office": "ALY",
+        "sectionMatch": "Eastern Catskills",
+        "sectionMatches": [
+          "Eastern Catskills",
+          "Eastern Catskills Recreational Forecast"
+        ]
+      }
+    },
+    "windham-high-peak": {
+      "rec": {
+        "office": "ALY",
+        "sectionMatch": "Eastern Catskills",
+        "sectionMatches": [
+          "Eastern Catskills",
+          "Eastern Catskills Recreational Forecast"
+        ]
+      }
+    },
+    "overlook-mountain": {
+      "rec": {
+        "office": "ALY",
+        "sectionMatch": "Eastern Catskills",
+        "sectionMatches": [
+          "Eastern Catskills",
+          "Eastern Catskills Recreational Forecast"
+        ]
+      }
+    },
+    "red-hill": {
+      "rec": {
+        "office": "ALY",
+        "sectionMatch": "Eastern Catskills",
+        "sectionMatches": [
+          "Eastern Catskills",
+          "Eastern Catskills Recreational Forecast"
+        ]
+      }
+    },
+    "mount-tremper": {
+      "rec": {
+        "office": "ALY",
+        "sectionMatch": "Eastern Catskills",
+        "sectionMatches": [
+          "Eastern Catskills",
+          "Eastern Catskills Recreational Forecast"
+        ]
+      }
+    },
+    "tannersville": {
+      "rec": {
+        "office": "ALY",
+        "sectionMatch": "Eastern Catskills",
+        "sectionMatches": [
+          "Eastern Catskills",
+          "Eastern Catskills Recreational Forecast"
+        ]
+      }
+    },
+    "gunks-ridge": {
+      "rec": {
+        "office": "ALY",
+        "sectionMatch": "Mid Hudson River",
+        "sectionMatches": [
+          "Mid Hudson River",
+          "Mid Hudson River Recreational Forecast"
+        ]
+      }
+    },
+    "thacher-park": {
+      "rec": {
+        "office": "ALY",
+        "sectionMatch": "Mid Hudson River",
+        "sectionMatches": [
+          "Mid Hudson River",
+          "Mid Hudson River Recreational Forecast"
+        ]
+      }
+    },
+    "jay-peak": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Northern Adirondacks of New York",
+        "sectionMatches": [
+          "Northern Adirondacks of New York",
+          "Northern Adirondacks of New York and the Northern Green Mountains of Vermont",
+          "Vermont and Northern New York",
+          "Higher Summits Forecast for Vermont and Northern New York",
+          "Higher Summits Forecast for the Northern Adirondacks of New York"
+        ]
+      },
+      "balloon": {
+        "regionMatch": "Central and Northeast Vermont",
+        "bindReason": "Newport/Derby bulletin cities (Orleans Co. VT, BTV WFO)."
+      }
+    },
+    "belvidere-mountain": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Northern Adirondacks of New York",
+        "sectionMatches": [
+          "Northern Adirondacks of New York",
+          "Northern Adirondacks of New York and the Northern Green Mountains of Vermont",
+          "Vermont and Northern New York",
+          "Higher Summits Forecast for Vermont and Northern New York",
+          "Higher Summits Forecast for the Northern Adirondacks of New York"
+        ]
+      },
+      "balloon": {
+        "regionMatch": "Central and Northeast Vermont",
+        "bindReason": "Newport bulletin city (Orleans Co. VT, BTV WFO)."
+      }
+    },
+    "jay-village": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Northern Adirondacks of New York",
+        "sectionMatches": [
+          "Northern Adirondacks of New York",
+          "Northern Adirondacks of New York and the Northern Green Mountains of Vermont",
+          "Vermont and Northern New York",
+          "Higher Summits Forecast for Vermont and Northern New York",
+          "Higher Summits Forecast for the Northern Adirondacks of New York"
+        ]
+      },
+      "balloon": {
+        "regionMatch": "Central and Northeast Vermont",
+        "bindReason": "Derby bulletin city (Orleans Co. VT, BTV WFO)."
+      }
+    },
+    "mount-mansfield": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Northern Green Mountains of Vermont",
+        "sectionMatches": [
+          "Northern Green Mountains of Vermont",
+          "Higher Summits Forecast for the Northern Green Mountains of Vermont",
+          "Vermont and Northern New York",
+          "Higher Summits Forecast for Vermont and Northern New York",
+          "Green Mountains of Vermont",
+          "Higher Summits Forecast for the Green Mountains of Vermont"
+        ]
+      },
+      "avg": {
+        "office": "BTV",
+        "pointMatch": "Smugglers Notch"
+      },
+      "balloon": {
+        "regionMatch": "Central and Northeast Vermont",
+        "bindReason": "Stowe bulletin city (Lamoille Co. VT, BTV WFO)."
+      }
+    },
+    "smugglers-notch": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Northern Green Mountains of Vermont",
+        "sectionMatches": [
+          "Northern Green Mountains of Vermont",
+          "Higher Summits Forecast for the Northern Green Mountains of Vermont",
+          "Vermont and Northern New York",
+          "Higher Summits Forecast for Vermont and Northern New York",
+          "Green Mountains of Vermont",
+          "Higher Summits Forecast for the Green Mountains of Vermont"
+        ]
+      },
+      "avg": {
+        "office": "BTV",
+        "pointMatch": "Smugglers Notch"
+      },
+      "balloon": {
+        "regionMatch": "Central and Northeast Vermont",
+        "bindReason": "Stowe bulletin city (Lamoille Co. VT, BTV WFO)."
+      }
+    },
+    "stowe-town": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Northern Green Mountains of Vermont",
+        "sectionMatches": [
+          "Northern Green Mountains of Vermont",
+          "Higher Summits Forecast for the Northern Green Mountains of Vermont",
+          "Vermont and Northern New York",
+          "Higher Summits Forecast for Vermont and Northern New York",
+          "Green Mountains of Vermont",
+          "Higher Summits Forecast for the Green Mountains of Vermont"
+        ]
+      },
+      "balloon": {
+        "regionMatch": "Central and Northeast Vermont",
+        "bindReason": "Stowe bulletin city (Lamoille Co. VT, BTV WFO)."
+      }
+    },
+    "camels-hump": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Green Mountains of Vermont",
+        "sectionMatches": [
+          "Green Mountains of Vermont",
+          "Higher Summits Forecast for the Green Mountains of Vermont",
+          "Vermont and Northern New York",
+          "Higher Summits Forecast for Vermont and Northern New York",
+          "Northern Green Mountains of Vermont",
+          "Higher Summits Forecast for the Northern Green Mountains of Vermont"
+        ]
+      },
+      "balloon": {
+        "regionMatch": "Central and Northeast Vermont",
+        "bindReason": "Waitsfield bulletin city (Washington Co. VT, BTV WFO)."
+      }
+    },
+    "mount-ellen": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Green Mountains of Vermont",
+        "sectionMatches": [
+          "Green Mountains of Vermont",
+          "Higher Summits Forecast for the Green Mountains of Vermont",
+          "Vermont and Northern New York",
+          "Higher Summits Forecast for Vermont and Northern New York",
+          "Northern Green Mountains of Vermont",
+          "Higher Summits Forecast for the Northern Green Mountains of Vermont"
+        ]
+      },
+      "balloon": {
+        "regionMatch": "Central and Northeast Vermont",
+        "bindReason": "Waitsfield bulletin city (Washington Co. VT, BTV WFO)."
+      }
+    },
+    "bread-loaf-mountain": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Green Mountains of Vermont",
+        "sectionMatches": [
+          "Green Mountains of Vermont",
+          "Higher Summits Forecast for the Green Mountains of Vermont",
+          "Vermont and Northern New York",
+          "Higher Summits Forecast for Vermont and Northern New York",
+          "Northern Green Mountains of Vermont",
+          "Higher Summits Forecast for the Northern Green Mountains of Vermont"
+        ]
+      },
+      "balloon": {
+        "regionMatch": "the Champlain Valley of Vermont and New York",
+        "bindReason": "Middlebury/Ripton bulletin cities (Addison Co. VT, BTV WFO)."
+      }
+    },
+    "mount-worcester": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Green Mountains of Vermont",
+        "sectionMatches": [
+          "Green Mountains of Vermont",
+          "Higher Summits Forecast for the Green Mountains of Vermont",
+          "Vermont and Northern New York",
+          "Higher Summits Forecast for Vermont and Northern New York",
+          "Northern Green Mountains of Vermont",
+          "Higher Summits Forecast for the Northern Green Mountains of Vermont"
+        ]
+      },
+      "balloon": {
+        "regionMatch": "Central and Northeast Vermont",
+        "bindReason": "Montpelier bulletin city (Worcester, Washington Co. VT, BTV WFO)."
+      }
+    },
+    "waterbury": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Green Mountains of Vermont",
+        "sectionMatches": [
+          "Green Mountains of Vermont",
+          "Higher Summits Forecast for the Green Mountains of Vermont",
+          "Vermont and Northern New York",
+          "Higher Summits Forecast for Vermont and Northern New York",
+          "Northern Green Mountains of Vermont",
+          "Higher Summits Forecast for the Northern Green Mountains of Vermont"
+        ]
+      },
+      "balloon": {
+        "regionMatch": "Central and Northeast Vermont",
+        "bindReason": "Montpelier bulletin city (Waterbury, Washington Co. VT, BTV WFO)."
+      }
+    },
+    "signal-mountain": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Northern Green Mountains of Vermont",
+        "sectionMatches": [
+          "Northern Green Mountains of Vermont",
+          "Higher Summits Forecast for the Northern Green Mountains of Vermont",
+          "Vermont and Northern New York",
+          "Higher Summits Forecast for Vermont and Northern New York",
+          "Green Mountains of Vermont",
+          "Higher Summits Forecast for the Green Mountains of Vermont"
+        ]
+      },
+      "balloon": {
+        "regionMatch": "Central and Northeast Vermont",
+        "bindReason": "Island Pond bulletin city (Essex Co. VT, BTV WFO)."
+      }
+    },
+    "burke-mountain": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Northern Green Mountains of Vermont",
+        "sectionMatches": [
+          "Northern Green Mountains of Vermont",
+          "Higher Summits Forecast for the Northern Green Mountains of Vermont",
+          "Vermont and Northern New York",
+          "Higher Summits Forecast for Vermont and Northern New York",
+          "Green Mountains of Vermont",
+          "Higher Summits Forecast for the Green Mountains of Vermont"
+        ]
+      },
+      "balloon": {
+        "regionMatch": "Central and Northeast Vermont",
+        "bindReason": "Newport bulletin city (Orleans Co. VT, BTV WFO)."
+      }
+    },
+    "monadnock-mountain": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Northern Green Mountains of Vermont",
+        "sectionMatches": [
+          "Northern Green Mountains of Vermont",
+          "Higher Summits Forecast for the Northern Green Mountains of Vermont",
+          "Vermont and Northern New York",
+          "Higher Summits Forecast for Vermont and Northern New York",
+          "Green Mountains of Vermont",
+          "Higher Summits Forecast for the Green Mountains of Vermont"
+        ]
+      },
+      "balloon": {
+        "regionMatch": "Central and Northeast Vermont",
+        "bindReason": "Bradford bulletin city (Orange Co. VT, BTV WFO)."
+      }
+    },
+    "killington-peak": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Southern Green Mountains of Vermont",
+        "sectionMatches": [
+          "Southern Green Mountains of Vermont",
+          "Higher Summits Forecast for the Southern Green Mountains of Vermont"
+        ]
+      },
+      "balloon": {
+        "regionMatch": "Southern Vermont",
+        "bindReason": "Killington bulletin city (Rutland Co. VT, BTV WFO)."
+      }
+    },
+    "stratton-mountain": {
+      "rec": {
+        "office": "ALY",
+        "sectionMatch": "Southern Green Mountains",
+        "sectionMatches": [
+          "Southern Green Mountains",
+          "Southern Green Mountains Recreational Forecast",
+          "Southern Green Mountains Recreational Forecast for elevations above 2000 feet",
+          "elevations above 2000 feet"
+        ]
+      }
+    },
+    "mount-equinox": {
+      "rec": {
+        "office": "ALY",
+        "sectionMatch": "Southern Green Mountains",
+        "sectionMatches": [
+          "Southern Green Mountains",
+          "Southern Green Mountains Recreational Forecast",
+          "Southern Green Mountains Recreational Forecast for elevations above 2000 feet",
+          "elevations above 2000 feet"
+        ]
+      }
+    },
+    "dorset-mountain": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Southern Green Mountains of Vermont",
+        "sectionMatches": [
+          "Southern Green Mountains of Vermont",
+          "Higher Summits Forecast for the Southern Green Mountains of Vermont"
+        ]
+      }
+    },
+    "haystack-mountain": {
+      "rec": {
+        "office": "ALY",
+        "sectionMatch": "Southern Green Mountains",
+        "sectionMatches": [
+          "Southern Green Mountains",
+          "Southern Green Mountains Recreational Forecast",
+          "Southern Green Mountains Recreational Forecast for elevations above 2000 feet",
+          "elevations above 2000 feet"
+        ]
+      }
+    },
+    "ludlow-mountain": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Southern Green Mountains of Vermont",
+        "sectionMatches": [
+          "Southern Green Mountains of Vermont",
+          "Higher Summits Forecast for the Southern Green Mountains of Vermont"
+        ]
+      },
+      "balloon": {
+        "regionMatch": "Southern Vermont",
+        "bindReason": "Ludlow bulletin city (Windsor Co. VT, BTV WFO)."
+      }
+    },
+    "bromley-mountain": {
+      "rec": {
+        "office": "ALY",
+        "sectionMatch": "Southern Green Mountains",
+        "sectionMatches": [
+          "Southern Green Mountains",
+          "Southern Green Mountains Recreational Forecast",
+          "Southern Green Mountains Recreational Forecast for elevations above 2000 feet",
+          "elevations above 2000 feet"
+        ]
+      }
+    },
+    "mount-ascutney": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Southern Green Mountains of Vermont",
+        "sectionMatches": [
+          "Southern Green Mountains of Vermont",
+          "Higher Summits Forecast for the Southern Green Mountains of Vermont"
+        ]
+      },
+      "balloon": {
+        "regionMatch": "Southern Vermont",
+        "bindReason": "Springfield bulletin city (Windsor Co. VT, BTV WFO)."
+      }
+    },
+    "bald-mountain": {
+      "rec": {
+        "office": "ALY",
+        "sectionMatch": "Southern Green Mountains",
+        "sectionMatches": [
+          "Southern Green Mountains",
+          "Southern Green Mountains Recreational Forecast",
+          "Southern Green Mountains Recreational Forecast for elevations above 2000 feet",
+          "elevations above 2000 feet"
+        ]
+      }
+    },
+    "manchester-vt": {
+      "rec": {
+        "office": "ALY",
+        "sectionMatch": "Southern Green Mountains",
+        "sectionMatches": [
+          "Southern Green Mountains",
+          "Southern Green Mountains Recreational Forecast",
+          "Southern Green Mountains Recreational Forecast for elevations above 2000 feet",
+          "elevations above 2000 feet"
+        ]
+      }
+    },
+    "mount-washington": {
+      "rec": [
+        {
+          "office": "GYX",
+          "sectionMatch": "Summits Above 4000 Feet",
+          "sectionMatches": [
+            "Summits Above 4000 Feet",
+            "summits above 4000 feet",
+            "Summits above 4000 feet in Northern New Hampshire"
+          ]
+        },
+        {
+          "office": "GYX",
+          "sectionMatch": "2500 Feet to 4000 Feet",
+          "sectionMatches": [
+            "2500 Feet to 4000 Feet",
+            "elevations between 2500 and 4000 feet",
+            "2500 feet to 4000 feet"
+          ],
+          "nearbyLabel": "Mid-elevation band (2,500–4,000 ft; GYX labels this Mount Adams)"
+        }
+      ],
+      "allLocations": [
+        {
+          "office": "GYX",
+          "loc": "MOUNT WASHINGTON"
+        },
+        {
+          "office": "GYX",
+          "loc": "MOUNT ADAMS",
+          "bandLabel": "Mid-elevation band (2,500–4,000 ft; GYX labels this Mount Adams)"
+        }
+      ],
+      "avg": [
+        {
+          "office": "GYX",
+          "pointMatch": "PRESIDENTIAL RANGE FORECAST AREA/MOUNT WASHINGTON"
+        },
+        {
+          "office": "GYX",
+          "pointMatch": "TUCKERMAN AND HUNTINGTON RAVINES"
+        }
+      ]
+    },
+    "mount-adams": {
+      "rec": [
+        {
+          "office": "GYX",
+          "sectionMatch": "Summits Above 4000 Feet",
+          "sectionMatches": [
+            "Summits Above 4000 Feet",
+            "summits above 4000 feet",
+            "Summits above 4000 feet in Northern New Hampshire"
+          ]
+        },
+        {
+          "office": "GYX",
+          "sectionMatch": "2500 Feet to 4000 Feet",
+          "sectionMatches": [
+            "2500 Feet to 4000 Feet",
+            "elevations between 2500 and 4000 feet",
+            "2500 feet to 4000 feet"
+          ],
+          "nearbyLabel": "Mid-elevation band (2,500–4,000 ft; GYX labels this Mount Adams)"
+        }
+      ],
+      "allLocations": [
+        {
+          "office": "GYX",
+          "loc": "MOUNT ADAMS",
+          "bandLabel": "Mid-elevation band (2,500–4,000 ft; GYX labels this Mount Adams)"
+        },
+        {
+          "office": "GYX",
+          "loc": "MOUNT WASHINGTON",
+          "bandLabel": "Summits above 4,000 ft (Mount Washington)"
+        }
+      ],
+      "avg": [
+        {
+          "office": "GYX",
+          "pointMatch": "PRESIDENTIAL RANGE FORECAST AREA/MOUNT WASHINGTON",
+          "nearbyLabel": "Presidential Range / Mount Washington AVG (6,288 ft); Adams also has REC 2,500–4,000 ft band and allLocations MOUNT ADAMS"
+        },
+        {
+          "office": "GYX",
+          "pointMatch": "TUCKERMAN AND HUNTINGTON RAVINES"
+        }
+      ]
+    },
+    "pinkham-notch": {
+      "rec": {
+        "office": "GYX",
+        "sectionMatch": "Summits Above 4000 Feet",
+        "sectionMatches": [
+          "Summits Above 4000 Feet",
+          "summits above 4000 feet",
+          "Summits above 4000 feet in Northern New Hampshire"
+        ]
+      },
+      "avg": {
+        "office": "GYX",
+        "pointMatch": "TUCKERMAN AND HUNTINGTON RAVINES"
+      }
+    },
+    "crawford-notch": {
+      "rec": {
+        "office": "GYX",
+        "sectionMatch": "Summits Above 4000 Feet",
+        "sectionMatches": [
+          "Summits Above 4000 Feet",
+          "summits above 4000 feet",
+          "Summits above 4000 feet in Northern New Hampshire"
+        ]
+      },
+      "avg": {
+        "office": "GYX",
+        "pointMatch": "CRAWFORD NOTCH AMC HIGHLAND CENTER"
+      }
+    },
+    "baldface-mountain": {
+      "rec": {
+        "office": "GYX",
+        "sectionMatch": "Summits Above 4000 Feet",
+        "sectionMatches": [
+          "Summits Above 4000 Feet",
+          "summits above 4000 feet",
+          "Summits above 4000 feet in Northern New Hampshire"
+        ]
+      },
+      "avg": {
+        "office": "GYX",
+        "pointMatch": "BALDFACE MOUNTAIN"
+      }
+    },
+    "mount-lafayette": {
+      "rec": {
+        "office": "GYX",
+        "sectionMatch": "Summits Above 4000 Feet",
+        "sectionMatches": [
+          "Summits Above 4000 Feet",
+          "summits above 4000 feet",
+          "Summits above 4000 feet in Northern New Hampshire"
+        ]
+      },
+      "avg": {
+        "office": "GYX",
+        "pointMatch": "FRANCONIA NOTCH/MOUNT LAFAYETTE",
+        "elevationNote": "4,000 ft (AVG point elevation, not Lafayette summit)"
+      }
+    },
+    "mount-moosilauke": {
+      "rec": {
+        "office": "GYX",
+        "sectionMatch": "Summits Above 4000 Feet",
+        "sectionMatches": [
+          "Summits Above 4000 Feet",
+          "summits above 4000 feet",
+          "Summits above 4000 feet in Northern New Hampshire"
+        ]
+      },
+      "avg": {
+        "office": "GYX",
+        "pointMatch": "MOUNT MOOSILAUKE"
+      }
+    },
+    "mount-osceola": {
+      "rec": {
+        "office": "GYX",
+        "sectionMatch": "Summits Above 4000 Feet",
+        "sectionMatches": [
+          "Summits Above 4000 Feet",
+          "summits above 4000 feet",
+          "Summits above 4000 feet in Northern New Hampshire"
+        ]
+      },
+      "avg": {
+        "office": "GYX",
+        "pointMatch": "MOUNT OSCEOLA"
+      }
+    },
+    "cannon-mountain": {
+      "rec": {
+        "office": "GYX",
+        "sectionMatch": "Summits Above 4000 Feet",
+        "sectionMatches": [
+          "Summits Above 4000 Feet",
+          "summits above 4000 feet",
+          "Summits above 4000 feet in Northern New Hampshire"
+        ]
+      },
+      "avg": {
+        "office": "GYX",
+        "pointMatch": "CANNON MOUNTAIN"
+      }
+    },
+    "kancamagus-pass": {
+      "rec": {
+        "office": "GYX",
+        "sectionMatch": "Summits Above 4000 Feet",
+        "sectionMatches": [
+          "Summits Above 4000 Feet",
+          "summits above 4000 feet",
+          "Summits above 4000 feet in Northern New Hampshire"
+        ]
+      },
+      "avg": {
+        "office": "GYX",
+        "pointMatch": "KANCAMAGUS HIGHWAY PASS"
+      }
+    },
+    "franconia-notch": {
+      "rec": {
+        "office": "GYX",
+        "sectionMatch": "Summits Above 4000 Feet",
+        "sectionMatches": [
+          "Summits Above 4000 Feet",
+          "summits above 4000 feet",
+          "Summits above 4000 feet in Northern New Hampshire"
+        ]
+      },
+      "avg": {
+        "office": "GYX",
+        "pointMatch": "FRANCONIA NOTCH/MOUNT LAFAYETTE",
+        "elevationNote": "4,000 ft (Franconia Notch / Lafayette AVG point)"
+      }
+    },
+    "rumney-crag": {
+      "rec": {
+        "office": "GYX",
+        "sectionMatch": "Summits Above 4000 Feet",
+        "sectionMatches": [
+          "Summits Above 4000 Feet",
+          "summits above 4000 feet",
+          "Summits above 4000 feet in Northern New Hampshire"
+        ]
+      }
+    },
+    "mount-monadnock": {
+      "rec": {
+        "office": "GYX",
+        "sectionMatch": "Summits of Mount Monadnock",
+        "sectionMatches": [
+          "Summits of Mount Monadnock",
+          "Mount Monadnock"
+        ]
+      },
+      "allLocations": {
+        "office": "GYX",
+        "loc": "MOUNT MONADNOCK"
+      }
+    },
+    "north-pack-monadnock": {
+      "rec": {
+        "office": "GYX",
+        "sectionMatch": "Summits of Mount Monadnock",
+        "sectionMatches": [
+          "Summits of Mount Monadnock",
+          "Mount Monadnock"
+        ]
+      },
+      "allLocations": {
+        "office": "GYX",
+        "loc": "NORTH PACK MONADNOCK"
+      }
+    },
+    "katahdin": {
+      "rec": {
+        "office": "CAR",
+        "sectionMatch": "TOP OF MOUNT KATAHDIN",
+        "sectionMatches": [
+          "TOP OF MOUNT KATAHDIN"
+        ]
+      },
+      "allLocations": {
+        "office": "CAR",
+        "loc": "MOUNT KATAHDIN"
+      }
+    },
+    "katahdin-woods-and-waters": {
+      "rec": {
+        "office": "CAR",
+        "sectionMatch": "KATAHDIN WOODS AND WATERS",
+        "sectionMatches": [
+          "KATAHDIN WOODS AND WATERS",
+          "KATAHDIN WOODS AND WATERS NATIONAL MONUMENT"
+        ]
+      },
+      "allLocations": {
+        "office": "CAR",
+        "loc": "KATAHDIN WOODS AND WATERS"
+      }
+    },
+    "millinocket": {
+      "rec": {
+        "office": "CAR",
+        "sectionMatch": "TOP OF MOUNT KATAHDIN",
+        "sectionMatches": [
+          "TOP OF MOUNT KATAHDIN"
+        ]
+      }
+    },
+    "white-cap-mountain": {
+      "rec": {
+        "office": "CAR",
+        "sectionMatch": "TOP OF WHITE CAP MOUNTAIN",
+        "sectionMatches": [
+          "TOP OF WHITE CAP MOUNTAIN"
+        ]
+      },
+      "allLocations": {
+        "office": "CAR",
+        "loc": "TOP OF WHITE CAP MOUNTAIN"
+      }
+    },
+    "sugarloaf-mountain": {
+      "rec": {
+        "office": "GYX",
+        "sectionMatch": "2500 Feet to 4000 Feet",
+        "sectionMatches": [
+          "2500 Feet to 4000 Feet",
+          "elevations between 2500 and 4000 feet",
+          "2500 feet to 4000 feet"
+        ]
+      },
+      "allLocations": {
+        "office": "GYX",
+        "loc": "SUGARLOAF MOUNTAIN"
+      }
+    },
+    "bigelow": {
+      "rec": {
+        "office": "GYX",
+        "sectionMatch": "2500 Feet to 4000 Feet",
+        "sectionMatches": [
+          "2500 Feet to 4000 Feet",
+          "elevations between 2500 and 4000 feet",
+          "2500 feet to 4000 feet"
+        ]
+      }
+    },
+    "rangeley": {
+      "rec": {
+        "office": "GYX",
+        "sectionMatch": "2500 Feet to 4000 Feet",
+        "sectionMatches": [
+          "2500 Feet to 4000 Feet",
+          "elevations between 2500 and 4000 feet",
+          "2500 feet to 4000 feet"
+        ]
+      }
+    },
+    "deboullie-mountain": {
+      "rec": {
+        "office": "CAR",
+        "sectionMatch": "TOP OF DEBOULLIE MOUNTAIN",
+        "sectionMatches": [
+          "TOP OF DEBOULLIE MOUNTAIN"
+        ]
+      },
+      "allLocations": {
+        "office": "CAR",
+        "loc": "TOP OF DEBOULLIE MOUNTAIN"
+      }
+    },
+    "mars-hill-mountain": {
+      "rec": {
+        "office": "CAR",
+        "sectionMatch": "TOP OF MARS HILL MOUNTAIN",
+        "sectionMatches": [
+          "TOP OF MARS HILL MOUNTAIN"
+        ]
+      },
+      "allLocations": {
+        "office": "CAR",
+        "loc": "TOP OF MARS HILL MOUNTAIN"
+      }
+    },
+    "cadillac-mountain": {
+      "rec": {
+        "office": "CAR",
+        "sectionMatch": "TOP OF CADILLAC MOUNTAIN",
+        "sectionMatches": [
+          "TOP OF CADILLAC MOUNTAIN"
+        ]
+      },
+      "allLocations": {
+        "office": "CAR",
+        "loc": "TOP OF CADILLAC MOUNTAIN"
+      }
+    },
+    "bar-harbor": {
+      "rec": {
+        "office": "CAR",
+        "sectionMatch": "TOP OF CADILLAC MOUNTAIN",
+        "sectionMatches": [
+          "TOP OF CADILLAC MOUNTAIN"
+        ]
+      }
+    }
+  }
+}

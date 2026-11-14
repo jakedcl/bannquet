@@ -1,0 +1,127 @@
+
+000
+SXUS41 KGYX 130640
+RECGYX
+
+Recreation Report for New Hampshire and western Maine
+National Weather Service Gray ME
+140 AM EST Fri Nov 13 2026
+
+MEZ007>009-NHZ002>004-132100-
+Elevations From 2500 Feet to 4000 Feet in Northern New Hampshire and
+the Western Maine Mountains-
+140 AM EST Fri Nov 13 2026
+
+...Recreation forecast for elevations between 2500 and 4000 feet in 
+northern New Hampshire and the western Maine mountains...
+
+.TODAY...Summits obscured. Highs in the lower 30s. North winds up to
+10 mph with gusts up to 30 mph. 
+.TONIGHT...Summits obscured. Lows in the mid 20s. Northwest winds
+10 to 15 mph with gusts up to 40 mph. 
+.SATURDAY...Summits obscured in the morning. A chance of snow in the
+afternoon. Highs in the lower 30s. Northwest winds up to 10 mph with
+gusts up to 30 mph. Chance of snow 50 percent. 
+
+$$
+
+MEZ007>009-NHZ002>004-132100-
+Summits Above 4000 Feet in Northern New Hampshire and Western Maine-
+140 AM EST Fri Nov 13 2026
+
+...Recreation forecast for summits above 4000 feet in northern New
+Hampshire and western Maine...
+
+.TODAY...Summits obscured. Highs in the upper 20s. North winds 10 to
+20 mph with gusts up to 45 mph. 
+.TONIGHT...Summits obscured. Lows in the lower 20s. Northwest winds
+15 to 25 mph with gusts up to 60 mph. Wind chill values as low as
+6 below. 
+.SATURDAY...Summits obscured in the morning. A chance of snow in the
+afternoon. Highs in the upper 20s...except in the lower 20s at
+elevations above 5000 feet. Northwest winds 10 to 20 mph with gusts
+up to 45 mph. Chance of snow 50 percent. 
+
+$$
+
+NHZ011-015-132100-
+Summits of Mount Monadnock and North Pack Monadnock Mountain-
+140 AM EST Fri Nov 13 2026
+
+...Recreation forecast for summits of Mount Monadnock and North Pack
+Monadnock mountain...
+
+.TODAY...Summits obscured. Snow this morning, then a chance of snow
+this afternoon. Highs in the mid 30s. North winds 10 to 15 mph with
+gusts up to 30 mph. Chance of snow 80 percent. 
+.TONIGHT...Cloudy. Lows in the upper 20s. Northwest winds 10 to
+15 mph with gusts up to 25 mph. 
+.SATURDAY...Mostly cloudy in the morning. Highs in the upper 30s.
+Northwest winds up to 10 mph with gusts up to 20 mph. 
+
+$$
+
+MEZ024-132100-
+Islands of Casco Bay Maine-
+140 AM EST Fri Nov 13 2026
+
+...Forecast for the Islands of Casco Bay Maine...
+
+.TODAY...Cloudy. A slight chance of rain. Highs in the mid 40s.
+North winds 10 to 15 mph with gusts up to 25 mph. Chance of rain
+20 percent. 
+.TONIGHT...Cloudy. Lows in the mid 30s. North winds up to 10 mph
+with gusts up to 20 mph. 
+.SATURDAY...Mostly cloudy in the morning. Highs in the mid 40s.
+Northwest winds up to 10 mph. 
+
+$$
+
+MEZ025-027-132100-
+Islands and Necks of the Mid Coast of Maine-
+140 AM EST Fri Nov 13 2026
+
+...Forecast for the Islands and Necks of the Mid Coast of Maine...
+
+.TODAY...Cloudy. A chance of rain this morning. Highs in the mid
+40s. North winds 10 to 15 mph with gusts up to 25 mph. Chance of
+rain 30 percent. 
+.TONIGHT...Cloudy. Lows in the upper 20s. North winds around 10 mph
+in the evening becoming light and variable. 
+.SATURDAY...Cloudy in the morning. Highs in the mid 40s. Northwest
+winds up to 10 mph. 
+
+$$
+
+MEZ027-028-132100-
+Islands of Penobscot Bay Maine-
+140 AM EST Fri Nov 13 2026
+
+...Forecast for the Islands of Penobscot Bay Maine...
+
+.TODAY...Cloudy. A chance of rain this morning, then a slight chance
+of rain this afternoon. Highs in the mid 40s. North winds 10 to
+15 mph with gusts up to 30 mph. Chance of rain 40 percent. 
+.TONIGHT...Cloudy. Lows in the lower 30s. North winds up to 10 mph
+with gusts up to 25 mph. 
+.SATURDAY...Cloudy in the morning. Highs in the mid 40s. Northwest
+winds up to 10 mph with gusts up to 20 mph. 
+
+$$
+
+MEZ026-027-132100-
+Offshore Islands of Monhegan, Matinicus and Criehaven-
+140 AM EST Fri Nov 13 2026
+
+...Forecast for the Offshore Islands of Monhegan, Matinicus and
+Criehaven...
+
+.TODAY...Cloudy. A chance of rain this morning, then a slight chance
+of rain this afternoon. Highs in the mid 40s. Northeast winds 10 to
+20 mph with gusts up to 30 mph. Chance of rain 50 percent. 
+.TONIGHT...Cloudy. Lows in the upper 30s. North winds 10 to 20 mph. 
+.SATURDAY...Cloudy in the morning. Highs in the mid 40s. Northwest
+winds 10 to 15 mph. 
+
+$$
+

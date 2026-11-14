@@ -1,0 +1,27 @@
+
+204 
+SXUS51 KBTV 102235
+HYDBTV
+
+Daily Hydrometeorological Data Summary
+National Weather Service Burlington VT
+535 PM EST Tue Feb 10 2026
+
+Station              Precip  Temperature   Present             Snow
+                     24 Hrs  Max Min Cur   Weather         New Total SWE
+...Vermont...
+...Addison County...
+Charlotte              0.01                                0.2   7        
+
+...Caledonia County...
+St Johnsbury           0.00   29  -1  29   Cloudy          0.0   14       
+
+...Essex County VT...
+Averill                                                                   
+
+...Lamoille County...
+Mount Mansfield               24   2  17                         71       
+
+$$
+
+

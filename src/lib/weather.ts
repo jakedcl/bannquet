@@ -1,18 +1,26 @@
 import { ForecastPeriod, ForecastSnippet, WeatherData, WeatherHazard } from '@/types/weather';
-import { DEFAULT_REGION, REGION_WEATHER_SECTIONS, RegionCode } from '@/lib/regions';
-import { outsideFetch } from '@/lib/outside-fetch';
-import { feelsLikeF, gridValueAt, windMphFromText } from '@/lib/feels-like';
+import { nwsApiFetch } from '@/lib/nws-api-fetch';
+import { logMountainWeatherSourceError } from '@/lib/mountain-weather/log-source-error';
+import { feelsLikeF, windMphFromText } from '@/lib/feels-like';
+import {
+  formatGridWeatherLayer,
+  gridElevationFt,
+  gridWeatherAtInstant,
+  humanizeWeatherToken,
+  type GridSeries,
+  type GridWeatherSeries,
+} from '@/lib/grid-series';
+import {
+  gridSeriesSamplesForKind,
+  normalizeGridScalar,
+  type GridScalarKind,
+} from '@/lib/mountain-weather/grid-display-units';
 
 const USER_AGENT = 'Bannquet-Weather-App (admin@bannquet.com)';
 
-export function getMountainsForRegion(region: RegionCode) {
-  const sections = REGION_WEATHER_SECTIONS[region] ?? REGION_WEATHER_SECTIONS[DEFAULT_REGION];
-  return sections.flatMap((section) => section.spots);
-}
-
 // Simple helper to fetch data
 async function fetchWeather<T = unknown>(url: string): Promise<T> {
-  const response = await outsideFetch(url, {
+  const response = await nwsApiFetch(url, {
     headers: {
       'User-Agent': USER_AGENT,
       Accept: 'application/geo+json',
@@ -27,30 +35,6 @@ async function fetchWeather<T = unknown>(url: string): Promise<T> {
   }
   
   return response.json() as Promise<T>;
-}
-
-type GridSeries = {
-  values?: { validTime: string; value: number | null }[];
-  uom?: string;
-};
-
-const UNIT_CONVERSIONS: Record<string, (value: number) => number> = {
-  'wmoUnit:degC': (value) => (value * 9) / 5 + 32,
-  'wmoUnit:km_h-1': (value) => value * 0.621371,
-  'wmoUnit:m_s-1': (value) => value * 2.23694,
-  'wmoUnit:m': (value) => value * 3.28084,
-  'wmoUnit:mm': (value) => value * 0.0393701,
-  'wmoUnit:cm': (value) => value * 0.393701,
-  'wmoUnit:km': (value) => value * 0.621371,
-};
-
-/** The grid value valid right now, in US units. */
-function normalizeValue(series?: GridSeries, now = Date.now()): number | null {
-  const value = gridValueAt(series?.values, now);
-  if (value === null) return null;
-  if (!series?.uom) return value;
-  const converter = UNIT_CONVERSIONS[series.uom];
-  return converter ? converter(value) : value;
 }
 
 type AlertFeature = {
@@ -83,7 +67,8 @@ async function fetchAlerts(lat: number, lon: number): Promise<WeatherHazard[]> {
       areaDesc: feature.properties?.areaDesc,
     }));
   } catch (error) {
-    console.error('Failed to fetch weather alerts:', error);
+    const msg = error instanceof Error ? error.message : String(error);
+    logMountainWeatherSourceError('nws-alerts', `https://api.weather.gov/alerts/active?point=${lat},${lon}`, msg);
     return [];
   }
 }
@@ -100,7 +85,9 @@ type PointResponse = {
 };
 
 type GridpointResponse = {
-  properties: Record<string, GridSeries>;
+  properties: Record<string, GridSeries> & {
+    elevation?: { value?: number | null; uom?: string; unitCode?: string };
+  };
 };
 
 type ForecastResponse = {
@@ -129,31 +116,58 @@ export async function getWeather(lat: number, lon: number): Promise<WeatherData>
   const dailyPeriods = Array.isArray(dailyData?.properties?.periods)
     ? dailyData.properties.periods
     : [];
-  const currentPeriod = hourlyPeriods[0];
+  const currentPeriod = hourlyPeriods[0] ?? null;
   const gridProps = gridData.properties;
-  
-  const temperatureF = currentPeriod.temperature;
-  const apparentTemperature = normalizeValue(gridProps.apparentTemperature);
-  const windChill = normalizeValue(gridProps.windChill);
-  const heatIndex = normalizeValue(gridProps.heatIndex);
-  const relativeHumidity = normalizeValue(gridProps.relativeHumidity);
-  const summitWind = normalizeValue(gridProps.windSpeed);
-  const windGust = normalizeValue(gridProps.windGust);
-  const snowLevel = normalizeValue(gridProps.snowLevel);
-  const snowAmount = normalizeValue(gridProps.snowfallAmount);
-  const iceAccumulation = normalizeValue(gridProps.iceAccumulation);
-  const visibility = normalizeValue(gridProps.visibility);
-  const ceilingHeight = normalizeValue(gridProps.ceilingHeight);
 
-  const feelsLike = feelsLikeF({
-    tempF: temperatureF,
-    windMph: windMphFromText(currentPeriod.windSpeed),
-    heatIndexF: heatIndex,
-  });
+  const temperatureF = typeof currentPeriod?.temperature === 'number' ? currentPeriod.temperature : null;
+  const gridNow = (series: GridSeries | undefined, kind: GridScalarKind) =>
+    normalizeGridScalar(series, kind);
+  const apparentTemperature = gridNow(gridProps.apparentTemperature, 'temperature');
+  const windChill = gridNow(gridProps.windChill, 'temperature');
+  const heatIndex = gridNow(gridProps.heatIndex, 'temperature');
+  const relativeHumidity = gridNow(gridProps.relativeHumidity, 'percent');
+  const summitWind = gridNow(gridProps.windSpeed, 'windSpeed');
+  const windGust = gridNow(gridProps.windGust, 'windSpeed');
+  const snowLevel = gridNow(gridProps.snowLevel, 'lengthFeet');
+  const snowAmount = gridNow(gridProps.snowfallAmount, 'precipInches');
+  const iceAccumulation = gridNow(gridProps.iceAccumulation, 'precipInches');
+  const visibility = gridNow(gridProps.visibility, 'visibility');
+  const dewpoint = gridNow(gridProps.dewpoint, 'temperature');
+  const skyCover = gridNow(gridProps.skyCover, 'percent');
+  const quantitativePrecipitation = gridNow(gridProps.quantitativePrecipitation, 'precipInches');
+  const probabilityOfThunderstorm = gridNow(gridProps.probabilityOfThunderstorm, 'percent');
+  const ceilingHeight = gridNow(gridProps.ceilingHeight, 'ceilingHeight');
+  const elevationFt = gridElevationFt(gridProps.elevation);
+  const gridExtras = {
+    elevationFt,
+    snowLevel: gridSeriesSamplesForKind(gridProps.snowLevel, 'lengthFeet'),
+    snowfallAmount: gridSeriesSamplesForKind(gridProps.snowfallAmount, 'precipInches'),
+    iceAccumulation: gridSeriesSamplesForKind(gridProps.iceAccumulation, 'precipInches'),
+    ceilingHeight: gridSeriesSamplesForKind(gridProps.ceilingHeight, 'ceilingHeight'),
+    dewpoint: gridSeriesSamplesForKind(gridProps.dewpoint, 'temperature'),
+    skyCover: gridSeriesSamplesForKind(gridProps.skyCover, 'percent'),
+    quantitativePrecipitation: gridSeriesSamplesForKind(gridProps.quantitativePrecipitation, 'precipInches'),
+    probabilityOfThunderstorm: gridSeriesSamplesForKind(gridProps.probabilityOfThunderstorm, 'percent'),
+  };
 
-  const hourlyForecast = mapForecastSlice(hourlyPeriods.slice(0, 8));
+  const precipRaw = currentPeriod?.probabilityOfPrecipitation?.value;
+  const precipitation = precipRaw === null || precipRaw === undefined ? null : precipRaw;
+
+  const feelsLike = temperatureF === null
+    ? null
+    : feelsLikeF({
+        tempF: temperatureF,
+        windMph: windMphFromText(currentPeriod?.windSpeed),
+        heatIndexF: heatIndex,
+      });
+
+  const weatherSeries = gridProps.weather as GridWeatherSeries | undefined;
+  const hourlyForecast = enrichHourlyWithGridWeather(
+    mapForecastSlice(hourlyPeriods, false, true),
+    weatherSeries,
+  );
   const dailyForecast = buildDailyHighLow(dailyPeriods, 7);
-  const forecastPeriods = mapForecastSlice(dailyPeriods.slice(0, 8));
+  const forecastPeriods = mapForecastSlice(dailyPeriods, false, true);
   
   return {
     temperature: temperatureF,
@@ -162,33 +176,60 @@ export async function getWeather(lat: number, lon: number): Promise<WeatherData>
     heatIndex,
     feelsLike,
     relativeHumidity,
-    conditions: [currentPeriod.shortForecast],
-    windSpeed: currentPeriod.windSpeed,
-    windDirection: currentPeriod.windDirection,
+    conditions: currentPeriod?.shortForecast ? [currentPeriod.shortForecast] : [],
+    windSpeed: currentPeriod?.windSpeed ?? null,
+    windDirection: currentPeriod?.windDirection ?? null,
     windGust,
     summitWind,
-    precipitation: currentPeriod.probabilityOfPrecipitation?.value ?? 0,
+    precipitation,
     snowLevel,
     snowAmount,
     iceAccumulation,
     visibility,
+    dewpoint,
+    skyCover,
+    quantitativePrecipitation,
+    probabilityOfThunderstorm,
     ceilingHeight,
+    gridExtras,
     hazards,
-    timestamp: currentPeriod.startTime,
-    icon: currentPeriod.icon,
+    timestamp: currentPeriod?.startTime ?? null,
+    icon: currentPeriod?.icon,
     hourlyForecast,
     dailyForecast,
     forecastPeriods,
   };
 }
 
-function mapForecastSlice(periods: ForecastPeriod[], compactName = false): ForecastSnippet[] {
-  return periods.map((period) => ({
+function enrichHourlyWithGridWeather(periods: ForecastSnippet[], weatherSeries?: GridWeatherSeries): ForecastSnippet[] {
+  return periods.map((period) => {
+    const layer = gridWeatherAtInstant(weatherSeries, period.startTime);
+    return {
+      ...period,
+      gridWeather: formatGridWeatherLayer(layer),
+      gridWeatherCoverage: humanizeWeatherToken(layer?.coverage),
+      gridWeatherType: humanizeWeatherToken(layer?.weather),
+      gridWeatherIntensity: humanizeWeatherToken(layer?.intensity),
+    };
+  });
+}
+
+function mapForecastSlice(
+  periods: ForecastPeriod[],
+  compactName = false,
+  fullHourly = false,
+): ForecastSnippet[] {
+  const slice = fullHourly ? periods : periods.slice(0, 8);
+  return slice.map((period) => ({
     name: compactName ? abbreviateName(period.name, period.startTime) : period.name,
     startTime: period.startTime,
     temperature: period.temperature,
     windSpeed: period.windSpeed,
+    windDirection: period.windDirection,
+    windGust: period.windGust ?? undefined,
     shortForecast: period.shortForecast,
+    detailedForecast: period.detailedForecast,
+    precipChance: period.probabilityOfPrecipitation?.value ?? null,
     isDaytime: period.isDaytime,
     icon: period.icon,
   }));

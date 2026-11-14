@@ -1,0 +1,128 @@
+
+000
+SXUS41 KGYX 111540
+RECGYX
+
+Recreation Report for New Hampshire and western Maine
+National Weather Service Gray ME
+1040 AM EST Wed Nov 11 2026
+
+MEZ007>009-NHZ002>004-120200-
+Elevations From 2500 Feet to 4000 Feet in Northern New Hampshire and
+the Western Maine Mountains-
+1040 AM EST Wed Nov 11 2026
+
+...Recreation forecast for elevations between 2500 and 4000 feet in 
+northern New Hampshire and the western Maine mountains...
+
+.REST OF TODAY...Summits obscured. Highs in the mid 30s. Northwest
+winds 10 to 15 mph with gusts up to 35 mph. 
+.TONIGHT...Summits obscured. Lows in the upper 20s. Northwest winds
+around 10 mph in the evening becoming light and variable. Gusts up
+to 25 mph. 
+.THURSDAY...Summits obscured. A chance of snow in the afternoon.
+Highs in the mid 30s. Light and variable winds. Chance of snow
+50 percent. 
+
+$$
+
+MEZ007>009-NHZ002>004-120200-
+Summits Above 4000 Feet in Northern New Hampshire and Western Maine-
+1040 AM EST Wed Nov 11 2026
+
+...Recreation forecast for summits above 4000 feet in northern New
+Hampshire and western Maine...
+
+.REST OF TODAY...Summits in and out of clouds late this morning,
+then summits becoming obscured. Highs around 30. Northwest winds
+15 to 25 mph with gusts up to 50 mph. Wind chill values as low as
+2 below. 
+.TONIGHT...Summits obscured. Lows in the mid 20s. Northwest winds
+10 to 15 mph with gusts up to 30 mph. 
+.THURSDAY...Summits obscured. A chance of snow in the afternoon.
+Highs in the lower 30s. Southeast winds up to 10 mph with gusts up
+to 20 mph. Chance of snow 50 percent. 
+
+$$
+
+NHZ011-015-120200-
+Summits of Mount Monadnock and North Pack Monadnock Mountain-
+1040 AM EST Wed Nov 11 2026
+
+...Recreation forecast for summits of Mount Monadnock and North Pack
+Monadnock mountain...
+
+.REST OF TODAY...Mostly sunny late this morning, then becoming
+mostly cloudy. Highs in the upper 40s. Northwest winds up to 10 mph.
+.TONIGHT...Cloudy. Lows in the mid 30s. Light and variable winds. 
+.THURSDAY...Summits obscured in the morning, then becoming cloudy. A
+chance of rain in the morning. Rain likely in the afternoon. Highs
+in the lower 40s. Light and variable winds becoming east around
+15 mph in the afternoon. Chance of rain 70 percent. 
+
+$$
+
+MEZ024-120200-
+Islands of Casco Bay Maine-
+1040 AM EST Wed Nov 11 2026
+
+...Forecast for the Islands of Casco Bay Maine...
+
+.REST OF TODAY...Partly sunny late this morning, then becoming
+mostly cloudy. Highs around 50. Northwest winds up to 10 mph with
+gusts up to 20 mph. 
+.TONIGHT...Mostly cloudy. Lows in the upper 30s. Light and variable
+winds. 
+.THURSDAY...Cloudy. A chance of rain in the afternoon. Highs in the
+upper 40s. Northeast winds 10 to 15 mph with gusts up to 25 mph.
+Chance of rain 40 percent. 
+
+$$
+
+MEZ025-027-120200-
+Islands and Necks of the Mid Coast of Maine-
+1040 AM EST Wed Nov 11 2026
+
+...Forecast for the Islands and Necks of the Mid Coast of Maine...
+
+.REST OF TODAY...Mostly cloudy. Highs in the upper 40s. Northwest
+winds up to 10 mph with gusts up to 25 mph. 
+.TONIGHT...Mostly cloudy. Lows in the mid 30s. Light and variable
+winds. 
+.THURSDAY...Cloudy. Highs in the upper 40s. East winds up to 10 mph
+with gusts up to 20 mph. 
+
+$$
+
+MEZ027-028-120200-
+Islands of Penobscot Bay Maine-
+1040 AM EST Wed Nov 11 2026
+
+...Forecast for the Islands of Penobscot Bay Maine...
+
+.REST OF TODAY...Mostly cloudy. Highs in the upper 40s. Northwest
+winds 10 to 15 mph with gusts up to 25 mph. 
+.TONIGHT...Mostly cloudy. Lows in the mid 30s. Northwest winds
+around 10 mph in the evening becoming light and variable. 
+.THURSDAY...Cloudy. Highs in the upper 40s. Light and variable winds
+becoming east around 10 mph in the afternoon. 
+
+$$
+
+MEZ026-027-120200-
+Offshore Islands of Monhegan, Matinicus and Criehaven-
+1040 AM EST Wed Nov 11 2026
+
+...Forecast for the Offshore Islands of Monhegan, Matinicus and
+Criehaven...
+
+.REST OF TODAY...Mostly cloudy late this morning, then becoming
+partly sunny. Highs in the upper 40s. Northwest winds 10 to 15 mph
+with gusts up to 25 mph. 
+.TONIGHT...Mostly cloudy. Lows around 40. Northwest winds around
+15 mph in the evening becoming light and variable. 
+.THURSDAY...Cloudy. Highs in the upper 40s. East winds 10 to 15 mph
+with gusts up to 25 mph. 
+
+$$
+

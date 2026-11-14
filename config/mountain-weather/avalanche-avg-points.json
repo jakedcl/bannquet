@@ -1,0 +1,149 @@
+{
+  "version": 1,
+  "points": [
+    {
+      "slug": "btv-algonquin-peak",
+      "office": "BTV",
+      "pointMatch": "Algonquin Peak",
+      "title": "Algonquin Peak",
+      "nearbyLabel": null,
+      "elevationNote": null,
+      "examplePlaceId": "algonquin-peak"
+    },
+    {
+      "slug": "gyx-baldface-mountain",
+      "office": "GYX",
+      "pointMatch": "BALDFACE MOUNTAIN",
+      "title": "BALDFACE MOUNTAIN",
+      "nearbyLabel": null,
+      "elevationNote": null,
+      "examplePlaceId": "baldface-mountain"
+    },
+    {
+      "slug": "gyx-cannon-mountain",
+      "office": "GYX",
+      "pointMatch": "CANNON MOUNTAIN",
+      "title": "CANNON MOUNTAIN",
+      "nearbyLabel": null,
+      "elevationNote": null,
+      "examplePlaceId": "cannon-mountain"
+    },
+    {
+      "slug": "gyx-crawford-notch-amc-highland-center",
+      "office": "GYX",
+      "pointMatch": "CRAWFORD NOTCH AMC HIGHLAND CENTER",
+      "title": "CRAWFORD NOTCH AMC HIGHLAND CENTER",
+      "nearbyLabel": null,
+      "elevationNote": null,
+      "examplePlaceId": "crawford-notch"
+    },
+    {
+      "slug": "btv-dix-mountain",
+      "office": "BTV",
+      "pointMatch": "Dix Mountain",
+      "title": "Dix Mountain",
+      "nearbyLabel": null,
+      "elevationNote": null,
+      "examplePlaceId": "dix-mountain"
+    },
+    {
+      "slug": "gyx-franconia-notch-mount-lafayette",
+      "office": "GYX",
+      "pointMatch": "FRANCONIA NOTCH/MOUNT LAFAYETTE",
+      "title": "FRANCONIA NOTCH/MOUNT LAFAYETTE",
+      "nearbyLabel": null,
+      "elevationNote": "4,000 ft (AVG point elevation, not Lafayette summit)",
+      "examplePlaceId": "mount-lafayette"
+    },
+    {
+      "slug": "gyx-kancamagus-highway-pass",
+      "office": "GYX",
+      "pointMatch": "KANCAMAGUS HIGHWAY PASS",
+      "title": "KANCAMAGUS HIGHWAY PASS",
+      "nearbyLabel": null,
+      "elevationNote": null,
+      "examplePlaceId": "kancamagus-pass"
+    },
+    {
+      "slug": "btv-mount-colden",
+      "office": "BTV",
+      "pointMatch": "Mount Colden",
+      "title": "Mount Colden",
+      "nearbyLabel": null,
+      "elevationNote": null,
+      "examplePlaceId": "mount-colden"
+    },
+    {
+      "slug": "btv-mount-colvin",
+      "office": "BTV",
+      "pointMatch": "Mount Colvin",
+      "title": "Mount Colvin",
+      "nearbyLabel": null,
+      "elevationNote": null,
+      "examplePlaceId": "mount-colvin"
+    },
+    {
+      "slug": "btv-mount-marcy",
+      "office": "BTV",
+      "pointMatch": "Mount Marcy",
+      "title": "Mount Marcy",
+      "nearbyLabel": null,
+      "elevationNote": null,
+      "examplePlaceId": "mount-marcy"
+    },
+    {
+      "slug": "gyx-mount-moosilauke",
+      "office": "GYX",
+      "pointMatch": "MOUNT MOOSILAUKE",
+      "title": "MOUNT MOOSILAUKE",
+      "nearbyLabel": null,
+      "elevationNote": null,
+      "examplePlaceId": "mount-moosilauke"
+    },
+    {
+      "slug": "gyx-mount-osceola",
+      "office": "GYX",
+      "pointMatch": "MOUNT OSCEOLA",
+      "title": "MOUNT OSCEOLA",
+      "nearbyLabel": null,
+      "elevationNote": null,
+      "examplePlaceId": "mount-osceola"
+    },
+    {
+      "slug": "gyx-presidential-range-forecast-area-mount-washington",
+      "office": "GYX",
+      "pointMatch": "PRESIDENTIAL RANGE FORECAST AREA/MOUNT WASHINGTON",
+      "title": "PRESIDENTIAL RANGE FORECAST AREA/MOUNT WASHINGTON",
+      "nearbyLabel": null,
+      "elevationNote": null,
+      "examplePlaceId": "mount-washington"
+    },
+    {
+      "slug": "btv-smugglers-notch",
+      "office": "BTV",
+      "pointMatch": "Smugglers Notch",
+      "title": "Smugglers Notch",
+      "nearbyLabel": "Smugglers Notch AVG (nearby; Essex County VT Monadnock naming is unrelated — NH Mount Monadnock has no BTV AVG point)",
+      "elevationNote": null,
+      "examplePlaceId": "mount-mansfield"
+    },
+    {
+      "slug": "gyx-tuckerman-and-huntington-ravines",
+      "office": "GYX",
+      "pointMatch": "TUCKERMAN AND HUNTINGTON RAVINES",
+      "title": "TUCKERMAN AND HUNTINGTON RAVINES",
+      "nearbyLabel": null,
+      "elevationNote": null,
+      "examplePlaceId": "mount-washington"
+    },
+    {
+      "slug": "btv-whiteface-mountain",
+      "office": "BTV",
+      "pointMatch": "Whiteface Mountain",
+      "title": "Whiteface Mountain",
+      "nearbyLabel": null,
+      "elevationNote": null,
+      "examplePlaceId": "whiteface-mountain"
+    }
+  ]
+}

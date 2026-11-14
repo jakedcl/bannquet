@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<forecasts>
+<forecast>
+<text>
+Hot Air Balloon Forecast
+National Weather Service Burlington VT
+
+For the Champlain Valley of Vermont and New York...
+Including the cities of Champlain, Plattsburgh, Port Henry, 
+Ticonderoga, Alburgh, South Hero, St. Albans, Swanton, 
+Burlington, Shelburne, Middlebury, Vergennes, Enosburg Falls, 
+Richford, Richmond, Underhill, Bristol, and Ripton
+406 PM EST Fri Nov 13 2026
+
+Date              11/13/26      Sat 11/14/26            Sun 11/15/26            Mon
+EST 3hrly        16 19 22 01 04 07 10 13 16 19 22 01 04 07 10 13 16 19 22 01 04 07
+UTC 3hrly        21 00 03 06 09 12 15 18 21 00 03 06 09 12 15 18 21 00 03 06 09 12
+
+Min/Max                         32          39          33          41          32
+Temp                35 34 34 34 32 37 39 38 36 35 35 34 33 39 41 40 38 37 36 35 32
+Sfc Wind Dir        NW NW NW NW  W  W NW NW NW NW NW NW NW NW NW NW NW NW NW NW NW
+Sfc Wind Spd         5  5  3  3  3  4  5  4  4  4  5  6  6  9  9  8  6  5  5  4  3
+
+500ft Wind Dir      NW NW  W  W  W  W NW NW NW NW NW NW NW NW NW NW NW NW NW NW NW
+500ft Wind Spd       6  5  4  4  3  3  4  4  4  4  6  7  7  9 10  9  9  8  6  6  5
+1kft Wind Dir       NW NW NW  W  W  W NW NW NW NW NW NW NW NW NW NW NW NW NW NW NW
+1kft Wind Spd        9  8  7  6  5  5  6  6  6  6 10 11 11 12 13 13 13 12 10  9  8
+3kft Wind Dir       NW NW NW NW NW NW NW NW NW  N  N  N NW NW NW NW NW NW NW NW NW
+3kft Wind Spd       15 13 13 12 11  9 11 13 14 15 18 19 18 18 18 21 20 17 15 16 15
+
+Clouds              OV OV OV OV OV OV OV OV OV BK BK BK BK BK BK BK BK BK BK BK BK
+PoP 6hr              0    20    30    70    80    50    30    20     5     5     0
+
+PERCENT COVERAGE AROUND LOCAL AREA: (OUT OF 100)
+Thunder              0  0  0  0  0  0  5  0  5  0  0  0  0  0  0  0  0  0  0  0  0
+
+SUNRISE AND SUNSET                                                    
+NOVEMBER 13 2026......SUNRISE   6:46 AM EST   SUNSET   4:27 PM EST     
+NOVEMBER 14 2026......SUNRISE   6:47 AM EST   SUNSET   4:26 PM EST     
+
+KBTV 131734Z 1318/1418 01008KT P6SM OVC020
+     FM140000 33006KT P6SM OVC025
+     FM140700 32005KT P6SM VCSH SCT008 OVC012 PROB30 1408/1412 6SM
+      -RASN BR
+     FM141400 30006KT P6SM -SHRA SCT008 OVC015
+
+
+Temp: 2m temperature. Heat Index: if &gt; 90 degrees. Wind Chill: if &lt; 40 degrees.
+Sfc: Surface. 500ft: 500 feet AGL. 1kft: 1000 ft AGL. 3kft: 3000 feet AGL. 
+Wind Dir: Wind direction. Wind Spd: Wind speed in knots. Wind Gst: Wind gust in knots.
+PoP 6hr: Probability of precipitation (0.01 inch or more) over a 6-hour period.
+
+NOTE: THIS FORECAST IS NOT ROUTINELY UPDATED OR AMENDED OUTSIDE OF SCHEDULED ISSUANCES.
+
+</text>
+</forecast>
+</forecasts>

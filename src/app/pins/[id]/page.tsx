@@ -4,7 +4,6 @@ import { notFound } from 'next/navigation';
 import PageWrapper from '@/components/ui/PageWrapper';
 import { MapCanvas } from '@/components/map/MapCanvas';
 import { DeletePinButton, PinForm } from '@/components/pins/PinForm';
-import { AddToTrip } from '@/components/library/AddToTrip';
 import { Pill } from '@/components/hub/Button';
 import { Button } from '@/components/hub/Button';
 import { Card } from '@/components/hub/Card';
@@ -16,7 +15,6 @@ import { canEditOwned } from '@/lib/membership';
 import { loadPin } from '@/lib/pins';
 import { PIN_KIND_LABELS, isPinKind } from '@/lib/pin-kinds';
 import { loadMapDataNear } from '@/lib/posts';
-import { listTripChoices, tripAttachHintForViewer, tripsForItem } from '@/lib/trips';
 import { formatTripDate } from '@/lib/utils';
 import { loadFailed } from '@/lib/load-error';
 import { HubPage } from '@/components/hub/Page';
@@ -27,13 +25,10 @@ const PIN_ID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 
 export default async function PinPage({
   params,
-  searchParams,
 }: {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ addTrip?: string }>;
 }) {
   const { id } = await params;
-  const { addTrip } = await searchParams;
   if (!PIN_ID.test(id)) notFound();
   if (!isDatabaseConfigured()) {
     return (
@@ -77,13 +72,6 @@ export default async function PinPage({
     actorId: viewer.id,
     ownerId: pin.createdBy,
   }));
-  const [tripChoices, attachedTrips, attachBlocked] = viewer && manage
-    ? await Promise.all([
-      listTripChoices().catch(() => []),
-      tripsForItem('pin', pin.id).catch(() => []),
-      tripAttachHintForViewer(viewer).catch(() => null),
-    ])
-    : [[], [], null];
   const data = await loadMapDataNear(viewer?.id ?? null, { lng: pin.lng, lat: pin.lat });
   const activity = pin.activity && isActivity(pin.activity) ? ACTIVITY_META[pin.activity].label : null;
   const category = isPinKind(pin.kind) ? PIN_KIND_LABELS[pin.kind] : 'Other';
@@ -152,16 +140,6 @@ export default async function PinPage({
               <DeletePinButton id={pin.id} adminPower={editAdminPower} />
             </div>
           </Card>
-        ) : null}
-        {manage ? (
-          <AddToTrip
-            kind="pin"
-            entityId={pin.id}
-            trips={tripChoices}
-            attached={attachedTrips}
-            startOpen={addTrip === '1'}
-            attachBlocked={attachBlocked}
-          />
         ) : null}
       </HubPage>
     </PageWrapper>
