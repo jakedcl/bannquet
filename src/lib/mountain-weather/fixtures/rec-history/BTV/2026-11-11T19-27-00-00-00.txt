@@ -1,0 +1,141 @@
+
+000
+SXUS41 KBTV 111927
+RECBTV
+
+Recreational Forecast
+National Weather Service Burlington VT
+227 PM EST Wed Nov 11 2026
+
+.The Forecast for the Northern Waters of Lake Champlain,
+including Malletts Bay, the Inland Sea, and Isle La Motte...
+
+.TONIGHT...North winds less than 10 knots. Mostly cloudy. Waves
+1 foot or less. 
+.THURSDAY...Light and variable winds, becoming north 5 to 10 knots.
+Mostly cloudy. A chance of rain. Waves 1 foot or less. 
+.THURSDAY NIGHT...North winds 10 to 15 knots. Mostly cloudy. A
+chance of rain and snow. Waves 1 foot or less. 
+.FRIDAY...North winds 10 to 15 knots. Mostly cloudy. Waves 1 to
+2 feet. 
+.FRIDAY NIGHT...North winds 5 to 15 knots with gusts to around
+30 knots. Cloudy. A chance of rain and snow overnight. Waves 1 to
+2 feet. 
+.SATURDAY...North winds 5 to 15 knots with gusts to around 30 knots,
+becoming northwest. Cloudy. A chance of rain and snow in the
+morning, then a chance of rain in the afternoon. Waves 1 foot or
+less. 
+.SATURDAY NIGHT...Northwest winds 5 to 10 knots. Mostly cloudy. A
+chance of rain in the evening. Waves 1 foot or less. 
+.SUNDAY...Northwest winds 5 to 10 knots. Mostly cloudy. Waves 1 foot
+or less. 
+.SUNDAY NIGHT...Northwest winds 5 to 10 knots. Mostly cloudy in the
+evening, then becoming partly cloudy. Waves 1 foot or less. 
+.MONDAY...Northwest winds less than 10 knots. Partly sunny. Waves
+1 foot or less. 
+
+&&
+
+.The Forecast for the Broad Waters of Lake Champlain,
+including Colchester Reef, Valcour Island, and Cumberland Bay...
+
+.TONIGHT...North winds 5 to 10 knots, becoming light and variable.
+Mostly cloudy. Waves 1 foot or less. 
+.THURSDAY...North winds 10 knots or less, increasing to 10 to
+15 knots. A chance of rain in the morning, then rain likely in the
+afternoon. Waves 1 to 2 feet. 
+.THURSDAY NIGHT...North winds 15 to 20 knots. Mostly cloudy. A
+chance of rain in the evening, then a chance of rain and snow
+overnight. Waves around 1 foot. 
+.FRIDAY...North winds 15 to 20 knots. Cloudy. Waves 1 to 2 feet. 
+.FRIDAY NIGHT...North winds 15 to 20 knots. Cloudy. A chance of rain
+and snow overnight. Waves 1 to 2 feet. 
+.SATURDAY...North winds 15 to 20 knots, becoming northwest 10 to
+15 knots. Cloudy. A chance of rain and snow in the morning, then a
+chance of rain in the afternoon. Waves 1 to 2 feet. 
+.SATURDAY NIGHT...Northwest winds 10 to 15 knots. Mostly cloudy. A
+chance of rain. Waves 1 foot or less. 
+.SUNDAY...Northwest winds 10 to 15 knots. Mostly cloudy. Waves
+1 foot or less. 
+.SUNDAY NIGHT...Northwest winds 5 to 10 knots. Mostly cloudy in the
+evening, then becoming partly cloudy. Waves 1 foot or less. 
+.MONDAY...Northwest winds 10 knots or less. Partly sunny. Waves
+1 foot or less. 
+
+&&
+
+.The Forecast for the Southern Waters of Lake Champlain,
+including Willsboro and Shelburne Bays, and Diamond Island...
+
+.TONIGHT...North winds less than 10 knots. Mostly cloudy. Waves
+1 foot or less. 
+.THURSDAY...North winds 10 knots or less. Rain likely. Waves 1 foot
+or less. 
+.THURSDAY NIGHT...North winds 10 to 15 knots. A chance of rain in
+the evening, then rain and snow overnight. Waves 1 foot or less. 
+.FRIDAY...North winds 15 to 20 knots, diminishing to 10 to 15 knots.
+Cloudy. A chance of rain and snow in the morning, then a chance of
+rain in the afternoon. Waves 1 to 2 feet. 
+.FRIDAY NIGHT...North winds 10 to 15 knots, increasing to 15 to
+20 knots. Cloudy. A chance of rain and snow overnight. Waves 1 to
+2 feet. 
+.SATURDAY...North winds 15 to 20 knots, becoming northwest 10 to
+15 knots. Mostly cloudy. A chance of rain and snow in the morning,
+then a chance of rain in the afternoon. Waves 1 to 2 feet. 
+.SATURDAY NIGHT...Northwest winds 5 to 15 knots. Mostly cloudy. A
+chance of rain in the evening, then a chance of rain and snow
+overnight. Waves 1 foot or less. 
+.SUNDAY...Northwest winds 5 to 15 knots. Mostly cloudy. Waves 1 foot
+or less. 
+.SUNDAY NIGHT...Northwest winds 5 to 10 knots. Mostly cloudy in the
+evening, then becoming partly cloudy. Waves 1 foot or less. 
+.MONDAY...Northwest winds 10 knots or less. Partly sunny. Waves
+nearly calm. 
+
+The ultraviolet index for Thursday will be a 0. This is in the low
+category.
+
+Latest Level and Temperature Data from Around Lake Champlain
+                                Level           Temperature
+USGS gage at Rouses Point NY    93.22 feet      47 degrees
+USGS gage at Burlington VT      93.29 feet      51 degrees
+USGS gage at Port Henry NY      93.03 feet      50 degrees
+
+
+&&
+
+.The Higher Summits Forecast for the Northern Adirondacks of New York
+and the Southern Green Mountains of Vermont...
+
+...WINTER WEATHER ADVISORY IN EFFECT FROM 10 AM THURSDAY TO 10 AM
+EST FRIDAY...
+
+.TONIGHT...Cloudy. A slight chance of snow after midnight. Lows
+around 30. Light winds. 
+.THURSDAY...Summits obscured in clouds. Snow. Snow accumulation of
+1 to 3 inches. Highs in the lower 30s. Light winds, becoming
+northeast around 10 mph in the afternoon. 
+.THURSDAY NIGHT...Summits obscured in clouds. Snow. Snow
+accumulation of 1 to 3 inches. Lows in the upper 20s. Northeast
+winds 10 to 15 mph with gusts up to 30 mph. 
+.FRIDAY...Summits obscured in clouds in the morning. A chance of
+snow in the morning. Snow accumulation around an inch. Highs in the
+lower 30s. North winds 10 to 15 mph with gusts up to 25 mph. 
+
+.The Higher Summits Forecast for the Northern Green Mountains of Vermont...
+
+.TONIGHT...Cloudy. Lows in the upper 20s. Light winds. 
+.THURSDAY...Summits in and out of clouds in the morning, then
+becoming obscured in clouds. A chance of snow in the morning, then
+snow likely in the afternoon. Snow accumulation around an inch.
+Highs in the lower 30s. Light winds, becoming northeast around
+10 mph in the afternoon. 
+.THURSDAY NIGHT...Summits obscured in clouds. A chance of snow until
+midnight, then snow likely after midnight. Snow accumulation around
+an inch. Lows in the upper 20s. Northeast winds 10 to 15 mph. 
+.FRIDAY...Summits obscured in clouds in the morning. A chance of
+snow. Snow accumulation up to 1 inch. Near steady temperature in the
+upper 20s. North winds 10 to 15 mph. 
+
+
+$$

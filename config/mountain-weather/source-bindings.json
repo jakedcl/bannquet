@@ -4,7 +4,14 @@
     "mount-marcy": {
       "rec": {
         "office": "BTV",
-        "sectionMatch": "Northern Adirondacks of New York"
+        "sectionMatch": "Northern Adirondacks of New York",
+        "sectionMatches": [
+          "Northern Adirondacks of New York",
+          "Northern Adirondacks of New York and the Northern Green Mountains of Vermont",
+          "Vermont and Northern New York",
+          "Higher Summits Forecast for Vermont and Northern New York",
+          "Higher Summits Forecast for the Northern Adirondacks of New York"
+        ]
       },
       "avg": {
         "office": "BTV",
@@ -18,7 +25,14 @@
     "whiteface-mountain": {
       "rec": {
         "office": "BTV",
-        "sectionMatch": "Northern Adirondacks of New York"
+        "sectionMatch": "Northern Adirondacks of New York",
+        "sectionMatches": [
+          "Northern Adirondacks of New York",
+          "Northern Adirondacks of New York and the Northern Green Mountains of Vermont",
+          "Vermont and Northern New York",
+          "Higher Summits Forecast for Vermont and Northern New York",
+          "Higher Summits Forecast for the Northern Adirondacks of New York"
+        ]
       },
       "avg": {
         "office": "BTV",
@@ -32,7 +46,14 @@
     "dix-mountain": {
       "rec": {
         "office": "BTV",
-        "sectionMatch": "Northern Adirondacks of New York"
+        "sectionMatch": "Northern Adirondacks of New York",
+        "sectionMatches": [
+          "Northern Adirondacks of New York",
+          "Northern Adirondacks of New York and the Northern Green Mountains of Vermont",
+          "Vermont and Northern New York",
+          "Higher Summits Forecast for Vermont and Northern New York",
+          "Higher Summits Forecast for the Northern Adirondacks of New York"
+        ]
       },
       "avg": {
         "office": "BTV",
@@ -46,7 +67,14 @@
     "algonquin-peak": {
       "rec": {
         "office": "BTV",
-        "sectionMatch": "Northern Adirondacks of New York"
+        "sectionMatch": "Northern Adirondacks of New York",
+        "sectionMatches": [
+          "Northern Adirondacks of New York",
+          "Northern Adirondacks of New York and the Northern Green Mountains of Vermont",
+          "Vermont and Northern New York",
+          "Higher Summits Forecast for Vermont and Northern New York",
+          "Higher Summits Forecast for the Northern Adirondacks of New York"
+        ]
       },
       "avg": {
         "office": "BTV",
@@ -60,7 +88,14 @@
     "mount-colden": {
       "rec": {
         "office": "BTV",
-        "sectionMatch": "Northern Adirondacks of New York"
+        "sectionMatch": "Northern Adirondacks of New York",
+        "sectionMatches": [
+          "Northern Adirondacks of New York",
+          "Northern Adirondacks of New York and the Northern Green Mountains of Vermont",
+          "Vermont and Northern New York",
+          "Higher Summits Forecast for Vermont and Northern New York",
+          "Higher Summits Forecast for the Northern Adirondacks of New York"
+        ]
       },
       "avg": {
         "office": "BTV",
@@ -74,7 +109,14 @@
     "mount-colvin": {
       "rec": {
         "office": "BTV",
-        "sectionMatch": "Northern Adirondacks of New York"
+        "sectionMatch": "Northern Adirondacks of New York",
+        "sectionMatches": [
+          "Northern Adirondacks of New York",
+          "Northern Adirondacks of New York and the Northern Green Mountains of Vermont",
+          "Vermont and Northern New York",
+          "Higher Summits Forecast for Vermont and Northern New York",
+          "Higher Summits Forecast for the Northern Adirondacks of New York"
+        ]
       },
       "avg": {
         "office": "BTV",
@@ -88,7 +130,14 @@
     "giant-mountain": {
       "rec": {
         "office": "BTV",
-        "sectionMatch": "Northern Adirondacks of New York"
+        "sectionMatch": "Northern Adirondacks of New York",
+        "sectionMatches": [
+          "Northern Adirondacks of New York",
+          "Northern Adirondacks of New York and the Northern Green Mountains of Vermont",
+          "Vermont and Northern New York",
+          "Higher Summits Forecast for Vermont and Northern New York",
+          "Higher Summits Forecast for the Northern Adirondacks of New York"
+        ]
       },
       "balloon": {
         "regionMatch": "the Northern Adirondacks of New York",
@@ -98,7 +147,14 @@
     "santanoni-peak": {
       "rec": {
         "office": "BTV",
-        "sectionMatch": "Northern Adirondacks of New York"
+        "sectionMatch": "Northern Adirondacks of New York",
+        "sectionMatches": [
+          "Northern Adirondacks of New York",
+          "Northern Adirondacks of New York and the Northern Green Mountains of Vermont",
+          "Vermont and Northern New York",
+          "Higher Summits Forecast for Vermont and Northern New York",
+          "Higher Summits Forecast for the Northern Adirondacks of New York"
+        ]
       },
       "balloon": {
         "regionMatch": "the Northern Adirondacks of New York",
@@ -108,7 +164,14 @@
     "cascade-mountain": {
       "rec": {
         "office": "BTV",
-        "sectionMatch": "Northern Adirondacks of New York"
+        "sectionMatch": "Northern Adirondacks of New York",
+        "sectionMatches": [
+          "Northern Adirondacks of New York",
+          "Northern Adirondacks of New York and the Northern Green Mountains of Vermont",
+          "Vermont and Northern New York",
+          "Higher Summits Forecast for Vermont and Northern New York",
+          "Higher Summits Forecast for the Northern Adirondacks of New York"
+        ]
       },
       "balloon": {
         "regionMatch": "the Northern Adirondacks of New York",
@@ -118,7 +181,14 @@
     "mckenzie-mountain": {
       "rec": {
         "office": "BTV",
-        "sectionMatch": "Northern Adirondacks of New York"
+        "sectionMatch": "Northern Adirondacks of New York",
+        "sectionMatches": [
+          "Northern Adirondacks of New York",
+          "Northern Adirondacks of New York and the Northern Green Mountains of Vermont",
+          "Vermont and Northern New York",
+          "Higher Summits Forecast for Vermont and Northern New York",
+          "Higher Summits Forecast for the Northern Adirondacks of New York"
+        ]
       },
       "balloon": {
         "regionMatch": "the Northern Adirondacks of New York",
@@ -128,7 +198,14 @@
     "mount-van-hoevenberg": {
       "rec": {
         "office": "BTV",
-        "sectionMatch": "Northern Adirondacks of New York"
+        "sectionMatch": "Northern Adirondacks of New York",
+        "sectionMatches": [
+          "Northern Adirondacks of New York",
+          "Northern Adirondacks of New York and the Northern Green Mountains of Vermont",
+          "Vermont and Northern New York",
+          "Higher Summits Forecast for Vermont and Northern New York",
+          "Higher Summits Forecast for the Northern Adirondacks of New York"
+        ]
       },
       "balloon": {
         "regionMatch": "the Northern Adirondacks of New York",
@@ -138,7 +215,14 @@
     "keene-valley": {
       "rec": {
         "office": "BTV",
-        "sectionMatch": "Northern Adirondacks of New York"
+        "sectionMatch": "Northern Adirondacks of New York",
+        "sectionMatches": [
+          "Northern Adirondacks of New York",
+          "Northern Adirondacks of New York and the Northern Green Mountains of Vermont",
+          "Vermont and Northern New York",
+          "Higher Summits Forecast for Vermont and Northern New York",
+          "Higher Summits Forecast for the Northern Adirondacks of New York"
+        ]
       },
       "balloon": {
         "regionMatch": "the Northern Adirondacks of New York",
@@ -149,6 +233,10 @@
       "rec": {
         "office": "ALY",
         "sectionMatch": "Southern Adirondacks",
+        "sectionMatches": [
+          "Southern Adirondacks",
+          "Southern Adirondacks Recreational Forecast"
+        ],
         "nearbyLabel": "KALY REC (Clinton Co. under Albany CWA)"
       },
       "balloon": {
@@ -159,7 +247,14 @@
     "ampersand-mountain": {
       "rec": {
         "office": "BTV",
-        "sectionMatch": "Northern Adirondacks of New York"
+        "sectionMatch": "Northern Adirondacks of New York",
+        "sectionMatches": [
+          "Northern Adirondacks of New York",
+          "Northern Adirondacks of New York and the Northern Green Mountains of Vermont",
+          "Vermont and Northern New York",
+          "Higher Summits Forecast for Vermont and Northern New York",
+          "Higher Summits Forecast for the Northern Adirondacks of New York"
+        ]
       },
       "balloon": {
         "regionMatch": "the Northern Adirondacks of New York",
@@ -169,7 +264,14 @@
     "debar-mountain": {
       "rec": {
         "office": "BTV",
-        "sectionMatch": "Northern Adirondacks of New York"
+        "sectionMatch": "Northern Adirondacks of New York",
+        "sectionMatches": [
+          "Northern Adirondacks of New York",
+          "Northern Adirondacks of New York and the Northern Green Mountains of Vermont",
+          "Vermont and Northern New York",
+          "Higher Summits Forecast for Vermont and Northern New York",
+          "Higher Summits Forecast for the Northern Adirondacks of New York"
+        ]
       },
       "balloon": {
         "regionMatch": "the Northern Adirondacks of New York",
@@ -179,7 +281,14 @@
     "st-regis-mountain": {
       "rec": {
         "office": "BTV",
-        "sectionMatch": "Northern Adirondacks of New York"
+        "sectionMatch": "Northern Adirondacks of New York",
+        "sectionMatches": [
+          "Northern Adirondacks of New York",
+          "Northern Adirondacks of New York and the Northern Green Mountains of Vermont",
+          "Vermont and Northern New York",
+          "Higher Summits Forecast for Vermont and Northern New York",
+          "Higher Summits Forecast for the Northern Adirondacks of New York"
+        ]
       },
       "balloon": {
         "regionMatch": "the Northern Adirondacks of New York",
@@ -189,7 +298,14 @@
     "mount-arab": {
       "rec": {
         "office": "BTV",
-        "sectionMatch": "Northern Adirondacks of New York"
+        "sectionMatch": "Northern Adirondacks of New York",
+        "sectionMatches": [
+          "Northern Adirondacks of New York",
+          "Northern Adirondacks of New York and the Northern Green Mountains of Vermont",
+          "Vermont and Northern New York",
+          "Higher Summits Forecast for Vermont and Northern New York",
+          "Higher Summits Forecast for the Northern Adirondacks of New York"
+        ]
       },
       "balloon": {
         "regionMatch": "the Northern Adirondacks of New York",
@@ -199,140 +315,245 @@
     "snowy-mountain": {
       "rec": {
         "office": "ALY",
-        "sectionMatch": "Southern Adirondacks"
+        "sectionMatch": "Southern Adirondacks",
+        "sectionMatches": [
+          "Southern Adirondacks",
+          "Southern Adirondacks Recreational Forecast"
+        ]
       }
     },
     "blue-mountain": {
       "rec": {
         "office": "ALY",
-        "sectionMatch": "Southern Adirondacks"
+        "sectionMatch": "Southern Adirondacks",
+        "sectionMatches": [
+          "Southern Adirondacks",
+          "Southern Adirondacks Recreational Forecast"
+        ]
       }
     },
     "pillsbury-mountain": {
       "rec": {
         "office": "GYX",
         "sectionMatch": "2500 Feet to 4000 Feet",
+        "sectionMatches": [
+          "2500 Feet to 4000 Feet",
+          "elevations between 2500 and 4000 feet",
+          "2500 feet to 4000 feet"
+        ],
         "nearbyLabel": "KGYX mid-elevation REC (Pillsbury under Gray CWA)"
       }
     },
     "gore-mountain": {
       "rec": {
         "office": "ALY",
-        "sectionMatch": "Southern Adirondacks"
+        "sectionMatch": "Southern Adirondacks",
+        "sectionMatches": [
+          "Southern Adirondacks",
+          "Southern Adirondacks Recreational Forecast"
+        ]
       }
     },
     "blue-ridge-mountain": {
       "rec": {
         "office": "BTV",
-        "sectionMatch": "Northern Adirondacks of New York"
+        "sectionMatch": "Northern Adirondacks of New York",
+        "sectionMatches": [
+          "Northern Adirondacks of New York",
+          "Northern Adirondacks of New York and the Northern Green Mountains of Vermont",
+          "Vermont and Northern New York",
+          "Higher Summits Forecast for Vermont and Northern New York",
+          "Higher Summits Forecast for the Northern Adirondacks of New York"
+        ]
       }
     },
     "fishing-brook-range": {
       "rec": {
         "office": "BTV",
-        "sectionMatch": "Northern Adirondacks of New York"
+        "sectionMatch": "Northern Adirondacks of New York",
+        "sectionMatches": [
+          "Northern Adirondacks of New York",
+          "Northern Adirondacks of New York and the Northern Green Mountains of Vermont",
+          "Vermont and Northern New York",
+          "Higher Summits Forecast for Vermont and Northern New York",
+          "Higher Summits Forecast for the Northern Adirondacks of New York"
+        ]
       }
     },
     "vanderwhacker-mountain": {
       "rec": {
         "office": "BTV",
-        "sectionMatch": "Northern Adirondacks of New York"
+        "sectionMatch": "Northern Adirondacks of New York",
+        "sectionMatches": [
+          "Northern Adirondacks of New York",
+          "Northern Adirondacks of New York and the Northern Green Mountains of Vermont",
+          "Vermont and Northern New York",
+          "Higher Summits Forecast for Vermont and Northern New York",
+          "Higher Summits Forecast for the Northern Adirondacks of New York"
+        ]
       }
     },
     "crane-mountain": {
       "rec": {
         "office": "ALY",
-        "sectionMatch": "Southern Adirondacks"
+        "sectionMatch": "Southern Adirondacks",
+        "sectionMatches": [
+          "Southern Adirondacks",
+          "Southern Adirondacks Recreational Forecast"
+        ]
       }
     },
     "hadley-mountain": {
       "rec": {
         "office": "ALY",
-        "sectionMatch": "Southern Adirondacks"
+        "sectionMatch": "Southern Adirondacks",
+        "sectionMatches": [
+          "Southern Adirondacks",
+          "Southern Adirondacks Recreational Forecast"
+        ]
       }
     },
     "black-mountain": {
       "rec": {
         "office": "ALY",
-        "sectionMatch": "Southern Adirondacks"
+        "sectionMatch": "Southern Adirondacks",
+        "sectionMatches": [
+          "Southern Adirondacks",
+          "Southern Adirondacks Recreational Forecast"
+        ]
       }
     },
     "pharaoh-mountain": {
       "rec": {
         "office": "BTV",
-        "sectionMatch": "Northern Adirondacks of New York"
+        "sectionMatch": "Northern Adirondacks of New York",
+        "sectionMatches": [
+          "Northern Adirondacks of New York",
+          "Northern Adirondacks of New York and the Northern Green Mountains of Vermont",
+          "Vermont and Northern New York",
+          "Higher Summits Forecast for Vermont and Northern New York",
+          "Higher Summits Forecast for the Northern Adirondacks of New York"
+        ]
       }
     },
     "prospect-mountain": {
       "rec": {
         "office": "ALY",
-        "sectionMatch": "Southern Adirondacks"
+        "sectionMatch": "Southern Adirondacks",
+        "sectionMatches": [
+          "Southern Adirondacks",
+          "Southern Adirondacks Recreational Forecast"
+        ]
       }
     },
     "slide-mountain": {
       "rec": {
         "office": "ALY",
-        "sectionMatch": "Eastern Catskills"
+        "sectionMatch": "Eastern Catskills",
+        "sectionMatches": [
+          "Eastern Catskills",
+          "Eastern Catskills Recreational Forecast"
+        ]
       }
     },
     "hunter-mountain": {
       "rec": {
         "office": "ALY",
-        "sectionMatch": "Eastern Catskills"
+        "sectionMatch": "Eastern Catskills",
+        "sectionMatches": [
+          "Eastern Catskills",
+          "Eastern Catskills Recreational Forecast"
+        ]
       }
     },
     "peekamoose-mountain": {
       "rec": {
         "office": "ALY",
-        "sectionMatch": "Eastern Catskills"
+        "sectionMatch": "Eastern Catskills",
+        "sectionMatches": [
+          "Eastern Catskills",
+          "Eastern Catskills Recreational Forecast"
+        ]
       }
     },
     "balsam-lake-mountain": {
       "rec": {
         "office": "ALY",
-        "sectionMatch": "Eastern Catskills"
+        "sectionMatch": "Eastern Catskills",
+        "sectionMatches": [
+          "Eastern Catskills",
+          "Eastern Catskills Recreational Forecast"
+        ]
       }
     },
     "panther-mountain": {
       "rec": {
         "office": "ALY",
-        "sectionMatch": "Eastern Catskills"
+        "sectionMatch": "Eastern Catskills",
+        "sectionMatches": [
+          "Eastern Catskills",
+          "Eastern Catskills Recreational Forecast"
+        ]
       }
     },
     "windham-high-peak": {
       "rec": {
         "office": "ALY",
-        "sectionMatch": "Eastern Catskills"
+        "sectionMatch": "Eastern Catskills",
+        "sectionMatches": [
+          "Eastern Catskills",
+          "Eastern Catskills Recreational Forecast"
+        ]
       }
     },
     "overlook-mountain": {
       "rec": {
         "office": "ALY",
-        "sectionMatch": "Eastern Catskills"
+        "sectionMatch": "Eastern Catskills",
+        "sectionMatches": [
+          "Eastern Catskills",
+          "Eastern Catskills Recreational Forecast"
+        ]
       }
     },
     "red-hill": {
       "rec": {
         "office": "ALY",
-        "sectionMatch": "Eastern Catskills"
+        "sectionMatch": "Eastern Catskills",
+        "sectionMatches": [
+          "Eastern Catskills",
+          "Eastern Catskills Recreational Forecast"
+        ]
       }
     },
     "mount-tremper": {
       "rec": {
         "office": "ALY",
-        "sectionMatch": "Eastern Catskills"
+        "sectionMatch": "Eastern Catskills",
+        "sectionMatches": [
+          "Eastern Catskills",
+          "Eastern Catskills Recreational Forecast"
+        ]
       }
     },
     "tannersville": {
       "rec": {
         "office": "ALY",
-        "sectionMatch": "Eastern Catskills"
+        "sectionMatch": "Eastern Catskills",
+        "sectionMatches": [
+          "Eastern Catskills",
+          "Eastern Catskills Recreational Forecast"
+        ]
       }
     },
     "gunks-ridge": {
       "rec": {
         "office": "ALY",
         "sectionMatch": "Mid Hudson River",
+        "sectionMatches": [
+          "Mid Hudson River",
+          "Mid Hudson River Recreational Forecast"
+        ],
         "nearbyLabel": "Mid Hudson Valley REC (nearby)"
       }
     },
@@ -340,13 +561,24 @@
       "rec": {
         "office": "ALY",
         "sectionMatch": "Mid Hudson River",
+        "sectionMatches": [
+          "Mid Hudson River",
+          "Mid Hudson River Recreational Forecast"
+        ],
         "nearbyLabel": "Mid Hudson Valley REC (nearby)"
       }
     },
     "jay-peak": {
       "rec": {
         "office": "BTV",
-        "sectionMatch": "Northern Adirondacks of New York"
+        "sectionMatch": "Northern Adirondacks of New York",
+        "sectionMatches": [
+          "Northern Adirondacks of New York",
+          "Northern Adirondacks of New York and the Northern Green Mountains of Vermont",
+          "Vermont and Northern New York",
+          "Higher Summits Forecast for Vermont and Northern New York",
+          "Higher Summits Forecast for the Northern Adirondacks of New York"
+        ]
       },
       "balloon": {
         "regionMatch": "Central and Northeast Vermont",
@@ -356,7 +588,14 @@
     "belvidere-mountain": {
       "rec": {
         "office": "BTV",
-        "sectionMatch": "Northern Adirondacks of New York"
+        "sectionMatch": "Northern Adirondacks of New York",
+        "sectionMatches": [
+          "Northern Adirondacks of New York",
+          "Northern Adirondacks of New York and the Northern Green Mountains of Vermont",
+          "Vermont and Northern New York",
+          "Higher Summits Forecast for Vermont and Northern New York",
+          "Higher Summits Forecast for the Northern Adirondacks of New York"
+        ]
       },
       "balloon": {
         "regionMatch": "Central and Northeast Vermont",
@@ -366,7 +605,14 @@
     "jay-village": {
       "rec": {
         "office": "BTV",
-        "sectionMatch": "Northern Adirondacks of New York"
+        "sectionMatch": "Northern Adirondacks of New York",
+        "sectionMatches": [
+          "Northern Adirondacks of New York",
+          "Northern Adirondacks of New York and the Northern Green Mountains of Vermont",
+          "Vermont and Northern New York",
+          "Higher Summits Forecast for Vermont and Northern New York",
+          "Higher Summits Forecast for the Northern Adirondacks of New York"
+        ]
       },
       "balloon": {
         "regionMatch": "Central and Northeast Vermont",
@@ -376,7 +622,15 @@
     "mount-mansfield": {
       "rec": {
         "office": "BTV",
-        "sectionMatch": "Northern Green Mountains of Vermont"
+        "sectionMatch": "Northern Green Mountains of Vermont",
+        "sectionMatches": [
+          "Northern Green Mountains of Vermont",
+          "Higher Summits Forecast for the Northern Green Mountains of Vermont",
+          "Vermont and Northern New York",
+          "Higher Summits Forecast for Vermont and Northern New York",
+          "Green Mountains of Vermont",
+          "Higher Summits Forecast for the Green Mountains of Vermont"
+        ]
       },
       "avg": {
         "office": "BTV",
@@ -391,7 +645,15 @@
     "smugglers-notch": {
       "rec": {
         "office": "BTV",
-        "sectionMatch": "Northern Green Mountains of Vermont"
+        "sectionMatch": "Northern Green Mountains of Vermont",
+        "sectionMatches": [
+          "Northern Green Mountains of Vermont",
+          "Higher Summits Forecast for the Northern Green Mountains of Vermont",
+          "Vermont and Northern New York",
+          "Higher Summits Forecast for Vermont and Northern New York",
+          "Green Mountains of Vermont",
+          "Higher Summits Forecast for the Green Mountains of Vermont"
+        ]
       },
       "avg": {
         "office": "BTV",
@@ -405,7 +667,15 @@
     "stowe-town": {
       "rec": {
         "office": "BTV",
-        "sectionMatch": "Northern Green Mountains of Vermont"
+        "sectionMatch": "Northern Green Mountains of Vermont",
+        "sectionMatches": [
+          "Northern Green Mountains of Vermont",
+          "Higher Summits Forecast for the Northern Green Mountains of Vermont",
+          "Vermont and Northern New York",
+          "Higher Summits Forecast for Vermont and Northern New York",
+          "Green Mountains of Vermont",
+          "Higher Summits Forecast for the Green Mountains of Vermont"
+        ]
       },
       "balloon": {
         "regionMatch": "Central and Northeast Vermont",
@@ -415,7 +685,15 @@
     "camels-hump": {
       "rec": {
         "office": "BTV",
-        "sectionMatch": "Green Mountains of Vermont"
+        "sectionMatch": "Green Mountains of Vermont",
+        "sectionMatches": [
+          "Green Mountains of Vermont",
+          "Higher Summits Forecast for the Green Mountains of Vermont",
+          "Vermont and Northern New York",
+          "Higher Summits Forecast for Vermont and Northern New York",
+          "Northern Green Mountains of Vermont",
+          "Higher Summits Forecast for the Northern Green Mountains of Vermont"
+        ]
       },
       "balloon": {
         "regionMatch": "Central and Northeast Vermont",
@@ -425,7 +703,15 @@
     "mount-ellen": {
       "rec": {
         "office": "BTV",
-        "sectionMatch": "Green Mountains of Vermont"
+        "sectionMatch": "Green Mountains of Vermont",
+        "sectionMatches": [
+          "Green Mountains of Vermont",
+          "Higher Summits Forecast for the Green Mountains of Vermont",
+          "Vermont and Northern New York",
+          "Higher Summits Forecast for Vermont and Northern New York",
+          "Northern Green Mountains of Vermont",
+          "Higher Summits Forecast for the Northern Green Mountains of Vermont"
+        ]
       },
       "balloon": {
         "regionMatch": "Central and Northeast Vermont",
@@ -435,7 +721,15 @@
     "bread-loaf-mountain": {
       "rec": {
         "office": "BTV",
-        "sectionMatch": "Green Mountains of Vermont"
+        "sectionMatch": "Green Mountains of Vermont",
+        "sectionMatches": [
+          "Green Mountains of Vermont",
+          "Higher Summits Forecast for the Green Mountains of Vermont",
+          "Vermont and Northern New York",
+          "Higher Summits Forecast for Vermont and Northern New York",
+          "Northern Green Mountains of Vermont",
+          "Higher Summits Forecast for the Northern Green Mountains of Vermont"
+        ]
       },
       "balloon": {
         "regionMatch": "the Champlain Valley of Vermont and New York",
@@ -445,7 +739,15 @@
     "mount-worcester": {
       "rec": {
         "office": "BTV",
-        "sectionMatch": "Green Mountains of Vermont"
+        "sectionMatch": "Green Mountains of Vermont",
+        "sectionMatches": [
+          "Green Mountains of Vermont",
+          "Higher Summits Forecast for the Green Mountains of Vermont",
+          "Vermont and Northern New York",
+          "Higher Summits Forecast for Vermont and Northern New York",
+          "Northern Green Mountains of Vermont",
+          "Higher Summits Forecast for the Northern Green Mountains of Vermont"
+        ]
       },
       "balloon": {
         "regionMatch": "Central and Northeast Vermont",
@@ -455,7 +757,15 @@
     "waterbury": {
       "rec": {
         "office": "BTV",
-        "sectionMatch": "Green Mountains of Vermont"
+        "sectionMatch": "Green Mountains of Vermont",
+        "sectionMatches": [
+          "Green Mountains of Vermont",
+          "Higher Summits Forecast for the Green Mountains of Vermont",
+          "Vermont and Northern New York",
+          "Higher Summits Forecast for Vermont and Northern New York",
+          "Northern Green Mountains of Vermont",
+          "Higher Summits Forecast for the Northern Green Mountains of Vermont"
+        ]
       },
       "balloon": {
         "regionMatch": "Central and Northeast Vermont",
@@ -465,7 +775,15 @@
     "signal-mountain": {
       "rec": {
         "office": "BTV",
-        "sectionMatch": "Northern Green Mountains of Vermont"
+        "sectionMatch": "Northern Green Mountains of Vermont",
+        "sectionMatches": [
+          "Northern Green Mountains of Vermont",
+          "Higher Summits Forecast for the Northern Green Mountains of Vermont",
+          "Vermont and Northern New York",
+          "Higher Summits Forecast for Vermont and Northern New York",
+          "Green Mountains of Vermont",
+          "Higher Summits Forecast for the Green Mountains of Vermont"
+        ]
       },
       "balloon": {
         "regionMatch": "Central and Northeast Vermont",
@@ -475,7 +793,15 @@
     "burke-mountain": {
       "rec": {
         "office": "BTV",
-        "sectionMatch": "Northern Green Mountains of Vermont"
+        "sectionMatch": "Northern Green Mountains of Vermont",
+        "sectionMatches": [
+          "Northern Green Mountains of Vermont",
+          "Higher Summits Forecast for the Northern Green Mountains of Vermont",
+          "Vermont and Northern New York",
+          "Higher Summits Forecast for Vermont and Northern New York",
+          "Green Mountains of Vermont",
+          "Higher Summits Forecast for the Green Mountains of Vermont"
+        ]
       },
       "balloon": {
         "regionMatch": "Central and Northeast Vermont",
@@ -485,7 +811,15 @@
     "monadnock-mountain": {
       "rec": {
         "office": "BTV",
-        "sectionMatch": "Northern Green Mountains of Vermont"
+        "sectionMatch": "Northern Green Mountains of Vermont",
+        "sectionMatches": [
+          "Northern Green Mountains of Vermont",
+          "Higher Summits Forecast for the Northern Green Mountains of Vermont",
+          "Vermont and Northern New York",
+          "Higher Summits Forecast for Vermont and Northern New York",
+          "Green Mountains of Vermont",
+          "Higher Summits Forecast for the Green Mountains of Vermont"
+        ]
       },
       "balloon": {
         "regionMatch": "Central and Northeast Vermont",
@@ -496,7 +830,11 @@
     "killington-peak": {
       "rec": {
         "office": "BTV",
-        "sectionMatch": "Southern Green Mountains of Vermont"
+        "sectionMatch": "Southern Green Mountains of Vermont",
+        "sectionMatches": [
+          "Southern Green Mountains of Vermont",
+          "Higher Summits Forecast for the Southern Green Mountains of Vermont"
+        ]
       },
       "balloon": {
         "regionMatch": "Southern Vermont",
@@ -507,6 +845,10 @@
       "rec": {
         "office": "ALY",
         "sectionMatch": "Southern Adirondacks",
+        "sectionMatches": [
+          "Southern Adirondacks",
+          "Southern Adirondacks Recreational Forecast"
+        ],
         "nearbyLabel": "KALY recreation band nearest southern Green peak"
       }
     },
@@ -514,26 +856,42 @@
       "rec": {
         "office": "ALY",
         "sectionMatch": "Southern Adirondacks",
+        "sectionMatches": [
+          "Southern Adirondacks",
+          "Southern Adirondacks Recreational Forecast"
+        ],
         "nearbyLabel": "KALY recreation band nearest southern Green peak"
       }
     },
     "dorset-mountain": {
       "rec": {
         "office": "BTV",
-        "sectionMatch": "Southern Green Mountains of Vermont"
+        "sectionMatch": "Southern Green Mountains of Vermont",
+        "sectionMatches": [
+          "Southern Green Mountains of Vermont",
+          "Higher Summits Forecast for the Southern Green Mountains of Vermont"
+        ]
       }
     },
     "haystack-mountain": {
       "rec": {
         "office": "ALY",
         "sectionMatch": "Southern Adirondacks",
+        "sectionMatches": [
+          "Southern Adirondacks",
+          "Southern Adirondacks Recreational Forecast"
+        ],
         "nearbyLabel": "KALY recreation band nearest southern Green peak"
       }
     },
     "ludlow-mountain": {
       "rec": {
         "office": "BTV",
-        "sectionMatch": "Southern Green Mountains of Vermont"
+        "sectionMatch": "Southern Green Mountains of Vermont",
+        "sectionMatches": [
+          "Southern Green Mountains of Vermont",
+          "Higher Summits Forecast for the Southern Green Mountains of Vermont"
+        ]
       },
       "balloon": {
         "regionMatch": "Southern Vermont",
@@ -544,13 +902,21 @@
       "rec": {
         "office": "ALY",
         "sectionMatch": "Southern Adirondacks",
+        "sectionMatches": [
+          "Southern Adirondacks",
+          "Southern Adirondacks Recreational Forecast"
+        ],
         "nearbyLabel": "KALY recreation band nearest southern Green peak"
       }
     },
     "mount-ascutney": {
       "rec": {
         "office": "BTV",
-        "sectionMatch": "Southern Green Mountains of Vermont"
+        "sectionMatch": "Southern Green Mountains of Vermont",
+        "sectionMatches": [
+          "Southern Green Mountains of Vermont",
+          "Higher Summits Forecast for the Southern Green Mountains of Vermont"
+        ]
       },
       "balloon": {
         "regionMatch": "Southern Vermont",
@@ -561,6 +927,10 @@
       "rec": {
         "office": "ALY",
         "sectionMatch": "Southern Adirondacks",
+        "sectionMatches": [
+          "Southern Adirondacks",
+          "Southern Adirondacks Recreational Forecast"
+        ],
         "nearbyLabel": "KALY recreation band nearest southern Green peak"
       }
     },
@@ -568,6 +938,10 @@
       "rec": {
         "office": "ALY",
         "sectionMatch": "Southern Adirondacks",
+        "sectionMatches": [
+          "Southern Adirondacks",
+          "Southern Adirondacks Recreational Forecast"
+        ],
         "nearbyLabel": "KALY recreation band nearest southern Green peak"
       }
     },
@@ -575,11 +949,21 @@
       "rec": [
         {
           "office": "GYX",
-          "sectionMatch": "Summits Above 4000 Feet"
+          "sectionMatch": "Summits Above 4000 Feet",
+          "sectionMatches": [
+            "Summits Above 4000 Feet",
+            "summits above 4000 feet",
+            "Summits above 4000 feet in Northern New Hampshire"
+          ]
         },
         {
           "office": "GYX",
           "sectionMatch": "2500 Feet to 4000 Feet",
+          "sectionMatches": [
+            "2500 Feet to 4000 Feet",
+            "elevations between 2500 and 4000 feet",
+            "2500 feet to 4000 feet"
+          ],
           "nearbyLabel": "Mid-elevation band (2,500–4,000 ft; GYX labels this Mount Adams)"
         }
       ],
@@ -609,11 +993,21 @@
       "rec": [
         {
           "office": "GYX",
-          "sectionMatch": "Summits Above 4000 Feet"
+          "sectionMatch": "Summits Above 4000 Feet",
+          "sectionMatches": [
+            "Summits Above 4000 Feet",
+            "summits above 4000 feet",
+            "Summits above 4000 feet in Northern New Hampshire"
+          ]
         },
         {
           "office": "GYX",
           "sectionMatch": "2500 Feet to 4000 Feet",
+          "sectionMatches": [
+            "2500 Feet to 4000 Feet",
+            "elevations between 2500 and 4000 feet",
+            "2500 feet to 4000 feet"
+          ],
           "nearbyLabel": "Mid-elevation band (2,500–4,000 ft; GYX labels this Mount Adams)"
         }
       ],
@@ -644,7 +1038,12 @@
     "pinkham-notch": {
       "rec": {
         "office": "GYX",
-        "sectionMatch": "Summits Above 4000 Feet"
+        "sectionMatch": "Summits Above 4000 Feet",
+        "sectionMatches": [
+          "Summits Above 4000 Feet",
+          "summits above 4000 feet",
+          "Summits above 4000 feet in Northern New Hampshire"
+        ]
       },
       "avg": {
         "office": "GYX",
@@ -654,7 +1053,12 @@
     "crawford-notch": {
       "rec": {
         "office": "GYX",
-        "sectionMatch": "Summits Above 4000 Feet"
+        "sectionMatch": "Summits Above 4000 Feet",
+        "sectionMatches": [
+          "Summits Above 4000 Feet",
+          "summits above 4000 feet",
+          "Summits above 4000 feet in Northern New Hampshire"
+        ]
       },
       "avg": {
         "office": "GYX",
@@ -664,7 +1068,12 @@
     "baldface-mountain": {
       "rec": {
         "office": "GYX",
-        "sectionMatch": "Summits Above 4000 Feet"
+        "sectionMatch": "Summits Above 4000 Feet",
+        "sectionMatches": [
+          "Summits Above 4000 Feet",
+          "summits above 4000 feet",
+          "Summits above 4000 feet in Northern New Hampshire"
+        ]
       },
       "avg": {
         "office": "GYX",
@@ -674,7 +1083,12 @@
     "mount-lafayette": {
       "rec": {
         "office": "GYX",
-        "sectionMatch": "Summits Above 4000 Feet"
+        "sectionMatch": "Summits Above 4000 Feet",
+        "sectionMatches": [
+          "Summits Above 4000 Feet",
+          "summits above 4000 feet",
+          "Summits above 4000 feet in Northern New Hampshire"
+        ]
       },
       "avg": {
         "office": "GYX",
@@ -685,7 +1099,12 @@
     "mount-moosilauke": {
       "rec": {
         "office": "GYX",
-        "sectionMatch": "Summits Above 4000 Feet"
+        "sectionMatch": "Summits Above 4000 Feet",
+        "sectionMatches": [
+          "Summits Above 4000 Feet",
+          "summits above 4000 feet",
+          "Summits above 4000 feet in Northern New Hampshire"
+        ]
       },
       "avg": {
         "office": "GYX",
@@ -695,7 +1114,12 @@
     "mount-osceola": {
       "rec": {
         "office": "GYX",
-        "sectionMatch": "Summits Above 4000 Feet"
+        "sectionMatch": "Summits Above 4000 Feet",
+        "sectionMatches": [
+          "Summits Above 4000 Feet",
+          "summits above 4000 feet",
+          "Summits above 4000 feet in Northern New Hampshire"
+        ]
       },
       "avg": {
         "office": "GYX",
@@ -705,7 +1129,12 @@
     "cannon-mountain": {
       "rec": {
         "office": "GYX",
-        "sectionMatch": "Summits Above 4000 Feet"
+        "sectionMatch": "Summits Above 4000 Feet",
+        "sectionMatches": [
+          "Summits Above 4000 Feet",
+          "summits above 4000 feet",
+          "Summits above 4000 feet in Northern New Hampshire"
+        ]
       },
       "avg": {
         "office": "GYX",
@@ -715,7 +1144,12 @@
     "kancamagus-pass": {
       "rec": {
         "office": "GYX",
-        "sectionMatch": "Summits Above 4000 Feet"
+        "sectionMatch": "Summits Above 4000 Feet",
+        "sectionMatches": [
+          "Summits Above 4000 Feet",
+          "summits above 4000 feet",
+          "Summits above 4000 feet in Northern New Hampshire"
+        ]
       },
       "avg": {
         "office": "GYX",
@@ -725,7 +1159,12 @@
     "franconia-notch": {
       "rec": {
         "office": "GYX",
-        "sectionMatch": "Summits Above 4000 Feet"
+        "sectionMatch": "Summits Above 4000 Feet",
+        "sectionMatches": [
+          "Summits Above 4000 Feet",
+          "summits above 4000 feet",
+          "Summits above 4000 feet in Northern New Hampshire"
+        ]
       },
       "avg": {
         "office": "GYX",
@@ -736,13 +1175,22 @@
     "rumney-crag": {
       "rec": {
         "office": "GYX",
-        "sectionMatch": "Summits Above 4000 Feet"
+        "sectionMatch": "Summits Above 4000 Feet",
+        "sectionMatches": [
+          "Summits Above 4000 Feet",
+          "summits above 4000 feet",
+          "Summits above 4000 feet in Northern New Hampshire"
+        ]
       }
     },
     "mount-monadnock": {
       "rec": {
         "office": "GYX",
-        "sectionMatch": "Summits of Mount Monadnock"
+        "sectionMatch": "Summits of Mount Monadnock",
+        "sectionMatches": [
+          "Summits of Mount Monadnock",
+          "Mount Monadnock"
+        ]
       },
       "allLocations": {
         "office": "GYX",
@@ -752,7 +1200,11 @@
     "north-pack-monadnock": {
       "rec": {
         "office": "GYX",
-        "sectionMatch": "Summits of Mount Monadnock"
+        "sectionMatch": "Summits of Mount Monadnock",
+        "sectionMatches": [
+          "Summits of Mount Monadnock",
+          "Mount Monadnock"
+        ]
       },
       "allLocations": {
         "office": "GYX",
@@ -762,7 +1214,10 @@
     "katahdin": {
       "rec": {
         "office": "CAR",
-        "sectionMatch": "TOP OF MOUNT KATAHDIN"
+        "sectionMatch": "TOP OF MOUNT KATAHDIN",
+        "sectionMatches": [
+          "TOP OF MOUNT KATAHDIN"
+        ]
       },
       "allLocations": {
         "office": "CAR",
@@ -772,7 +1227,11 @@
     "katahdin-woods-and-waters": {
       "rec": {
         "office": "CAR",
-        "sectionMatch": "KATAHDIN WOODS AND WATERS"
+        "sectionMatch": "KATAHDIN WOODS AND WATERS",
+        "sectionMatches": [
+          "KATAHDIN WOODS AND WATERS",
+          "KATAHDIN WOODS AND WATERS NATIONAL MONUMENT"
+        ]
       },
       "allLocations": {
         "office": "CAR",
@@ -783,13 +1242,19 @@
       "rec": {
         "office": "CAR",
         "sectionMatch": "TOP OF MOUNT KATAHDIN",
+        "sectionMatches": [
+          "TOP OF MOUNT KATAHDIN"
+        ],
         "nearbyLabel": "Katahdin summit REC (nearby)"
       }
     },
     "white-cap-mountain": {
       "rec": {
         "office": "CAR",
-        "sectionMatch": "TOP OF WHITE CAP MOUNTAIN"
+        "sectionMatch": "TOP OF WHITE CAP MOUNTAIN",
+        "sectionMatches": [
+          "TOP OF WHITE CAP MOUNTAIN"
+        ]
       },
       "allLocations": {
         "office": "CAR",
@@ -799,7 +1264,12 @@
     "sugarloaf-mountain": {
       "rec": {
         "office": "GYX",
-        "sectionMatch": "2500 Feet to 4000 Feet"
+        "sectionMatch": "2500 Feet to 4000 Feet",
+        "sectionMatches": [
+          "2500 Feet to 4000 Feet",
+          "elevations between 2500 and 4000 feet",
+          "2500 feet to 4000 feet"
+        ]
       },
       "allLocations": {
         "office": "GYX",
@@ -809,19 +1279,32 @@
     "bigelow": {
       "rec": {
         "office": "GYX",
-        "sectionMatch": "2500 Feet to 4000 Feet"
+        "sectionMatch": "2500 Feet to 4000 Feet",
+        "sectionMatches": [
+          "2500 Feet to 4000 Feet",
+          "elevations between 2500 and 4000 feet",
+          "2500 feet to 4000 feet"
+        ]
       }
     },
     "rangeley": {
       "rec": {
         "office": "GYX",
-        "sectionMatch": "2500 Feet to 4000 Feet"
+        "sectionMatch": "2500 Feet to 4000 Feet",
+        "sectionMatches": [
+          "2500 Feet to 4000 Feet",
+          "elevations between 2500 and 4000 feet",
+          "2500 feet to 4000 feet"
+        ]
       }
     },
     "deboullie-mountain": {
       "rec": {
         "office": "CAR",
-        "sectionMatch": "TOP OF DEBOULLIE MOUNTAIN"
+        "sectionMatch": "TOP OF DEBOULLIE MOUNTAIN",
+        "sectionMatches": [
+          "TOP OF DEBOULLIE MOUNTAIN"
+        ]
       },
       "allLocations": {
         "office": "CAR",
@@ -831,7 +1314,10 @@
     "mars-hill-mountain": {
       "rec": {
         "office": "CAR",
-        "sectionMatch": "TOP OF MARS HILL MOUNTAIN"
+        "sectionMatch": "TOP OF MARS HILL MOUNTAIN",
+        "sectionMatches": [
+          "TOP OF MARS HILL MOUNTAIN"
+        ]
       },
       "allLocations": {
         "office": "CAR",
@@ -841,7 +1327,10 @@
     "cadillac-mountain": {
       "rec": {
         "office": "CAR",
-        "sectionMatch": "TOP OF CADILLAC MOUNTAIN"
+        "sectionMatch": "TOP OF CADILLAC MOUNTAIN",
+        "sectionMatches": [
+          "TOP OF CADILLAC MOUNTAIN"
+        ]
       },
       "allLocations": {
         "office": "CAR",
@@ -852,6 +1341,9 @@
       "rec": {
         "office": "CAR",
         "sectionMatch": "TOP OF CADILLAC MOUNTAIN",
+        "sectionMatches": [
+          "TOP OF CADILLAC MOUNTAIN"
+        ],
         "nearbyLabel": "Cadillac summit REC (nearby)"
       }
     }

@@ -30,5 +30,6 @@ export type BalloonForecast = {
 export type BalloonPlaceSlice = {
   regionMatch: string;
   nearbyLabel: string | null;
+  matchedRegionTitle?: string;
   region: BalloonRegion;
 };

@@ -55,11 +55,6 @@ const AVG_BY_PLACE = {
 const MID_ELEVATION_BAND_LABEL =
   'Mid-elevation band (2,500–4,000 ft; GYX labels this Mount Adams)';
 
-const PRESIDENTIAL_REC_BANDS = [
-  { office: 'GYX', sectionMatch: 'Summits Above 4000 Feet' },
-  { office: 'GYX', sectionMatch: '2500 Feet to 4000 Feet', nearbyLabel: MID_ELEVATION_BAND_LABEL },
-];
-
 const ALL_LOCATIONS_BY_PLACE = {
   'mount-washington': [
     { office: 'GYX', loc: 'MOUNT WASHINGTON' },
@@ -146,17 +141,76 @@ function balloonForPlace(place) {
   };
 }
 
+/** Ordered REC section needles (most specific first). BTV alternates combined vs split summit headers. */
+const REC_MATCH = {
+  BTV_N_ADK: [
+    'Northern Adirondacks of New York',
+    'Northern Adirondacks of New York and the Northern Green Mountains of Vermont',
+    'Vermont and Northern New York',
+    'Higher Summits Forecast for Vermont and Northern New York',
+    'Higher Summits Forecast for the Northern Adirondacks of New York',
+  ],
+  BTV_N_GREENS: [
+    'Northern Green Mountains of Vermont',
+    'Higher Summits Forecast for the Northern Green Mountains of Vermont',
+    'Vermont and Northern New York',
+    'Higher Summits Forecast for Vermont and Northern New York',
+    'Green Mountains of Vermont',
+    'Higher Summits Forecast for the Green Mountains of Vermont',
+  ],
+  BTV_C_GREENS: [
+    'Green Mountains of Vermont',
+    'Higher Summits Forecast for the Green Mountains of Vermont',
+    'Vermont and Northern New York',
+    'Higher Summits Forecast for Vermont and Northern New York',
+    'Northern Green Mountains of Vermont',
+    'Higher Summits Forecast for the Northern Green Mountains of Vermont',
+  ],
+  BTV_S_GREENS: [
+    'Southern Green Mountains of Vermont',
+    'Higher Summits Forecast for the Southern Green Mountains of Vermont',
+  ],
+  ALY_S_ADK: ['Southern Adirondacks', 'Southern Adirondacks Recreational Forecast'],
+  ALY_E_CAT: ['Eastern Catskills', 'Eastern Catskills Recreational Forecast'],
+  ALY_M_HUD: ['Mid Hudson River', 'Mid Hudson River Recreational Forecast'],
+  ALY_S_GREENS: ['Southern Green Mountains', 'Southern Green Mountains Recreational Forecast'],
+  GYX_4000: [
+    'Summits Above 4000 Feet',
+    'summits above 4000 feet',
+    'Summits above 4000 feet in Northern New Hampshire',
+  ],
+  GYX_2500_4000: [
+    '2500 Feet to 4000 Feet',
+    'elevations between 2500 and 4000 feet',
+    '2500 feet to 4000 feet',
+  ],
+  GYX_MONADNOCK: ['Summits of Mount Monadnock', 'Mount Monadnock'],
+};
+
+function recBind(office, sectionMatch, sectionMatches, nearbyLabel) {
+  const ordered = [...new Set([sectionMatch, ...(sectionMatches ?? [])])];
+  return {
+    office,
+    sectionMatch,
+    sectionMatches: ordered,
+    ...(nearbyLabel ? { nearbyLabel } : {}),
+  };
+}
+
+function carSummit(sectionMatch, nearbyLabel) {
+  const alt = sectionMatch.replace(/\s*\([^)]*\)\s*$/, '').trim();
+  const matches = alt === sectionMatch ? [sectionMatch] : [sectionMatch, alt];
+  return recBind('CAR', sectionMatch, matches, nearbyLabel);
+}
+
+const PRESIDENTIAL_REC_BANDS = [
+  recBind('GYX', 'Summits Above 4000 Feet', REC_MATCH.GYX_4000),
+  recBind('GYX', '2500 Feet to 4000 Feet', REC_MATCH.GYX_2500_4000, MID_ELEVATION_BAND_LABEL),
+];
+
 const REC_PLACE_OVERRIDE = {
-  'pillsbury-mountain': {
-    office: 'GYX',
-    sectionMatch: '2500 Feet to 4000 Feet',
-    nearbyLabel: 'KGYX mid-elevation REC (Pillsbury under Gray CWA)',
-  },
-  'lyon-mountain': {
-    office: 'ALY',
-    sectionMatch: 'Southern Adirondacks',
-    nearbyLabel: 'KALY REC (Clinton Co. under Albany CWA)',
-  },
+  'pillsbury-mountain': recBind('GYX', '2500 Feet to 4000 Feet', REC_MATCH.GYX_2500_4000, 'KGYX mid-elevation REC (Pillsbury under Gray CWA)'),
+  'lyon-mountain': recBind('ALY', 'Southern Adirondacks', REC_MATCH.ALY_S_ADK, 'KALY REC (Clinton Co. under Albany CWA)'),
 };
 
 function recForPlace(place, sectionId, stateCode) {
@@ -165,78 +219,83 @@ function recForPlace(place, sectionId, stateCode) {
   const wfo = place.office;
 
   if (sectionId === 'southern-greens') {
-    if (wfo === 'BTV') return { office: 'BTV', sectionMatch: 'Southern Green Mountains of Vermont' };
+    if (wfo === 'BTV') return recBind('BTV', 'Southern Green Mountains of Vermont', REC_MATCH.BTV_S_GREENS);
     if (wfo === 'ALY') {
-      return {
-        office: 'ALY',
-        sectionMatch: 'Southern Adirondacks',
-        nearbyLabel: 'KALY recreation band nearest southern Green peak',
-      };
+      return recBind(
+        'ALY',
+        'Southern Adirondacks',
+        REC_MATCH.ALY_S_ADK,
+        'KALY recreation band nearest southern Green peak',
+      );
     }
     if (wfo === 'BOX') {
-      return { office: 'BOX', sectionMatch: 'Southern New England', nearbyLabel: 'KBOX REC (Stratton area)' };
+      return recBind('BOX', 'Southern New England', null, 'KBOX REC (Stratton area)');
     }
   }
   if (sectionId === 'catskill-mountains' || sectionId === 'shawangunks' || sectionId === 'thacher-park') {
     if (sectionId === 'shawangunks' || sectionId === 'thacher-park') {
-      return { office: 'ALY', sectionMatch: 'Mid Hudson River', nearbyLabel: 'Mid Hudson Valley REC (nearby)' };
+      return recBind('ALY', 'Mid Hudson River', REC_MATCH.ALY_M_HUD, 'Mid Hudson Valley REC (nearby)');
     }
-    return { office: 'ALY', sectionMatch: 'Eastern Catskills' };
+    return recBind('ALY', 'Eastern Catskills', REC_MATCH.ALY_E_CAT);
   }
   if (sectionId === 'central-southern-adirondacks' && place.office === 'ALY') {
-    return { office: 'ALY', sectionMatch: 'Southern Adirondacks' };
+    return recBind('ALY', 'Southern Adirondacks', REC_MATCH.ALY_S_ADK);
   }
   if (sectionId === 'monadnock-region') {
-    return { office: 'GYX', sectionMatch: 'Summits of Mount Monadnock' };
+    return recBind('GYX', 'Summits of Mount Monadnock', REC_MATCH.GYX_MONADNOCK);
   }
   if (sectionId === 'northern-greens' && wfo === 'BTV') {
-    return { office: 'BTV', sectionMatch: 'Northern Green Mountains of Vermont' };
+    return recBind('BTV', 'Northern Green Mountains of Vermont', REC_MATCH.BTV_N_GREENS);
   }
   if (sectionId === 'central-greens' && wfo === 'BTV') {
-    return { office: 'BTV', sectionMatch: 'Green Mountains of Vermont' };
+    return recBind('BTV', 'Green Mountains of Vermont', REC_MATCH.BTV_C_GREENS);
   }
   if (sectionId === 'northeast-kingdom' && wfo === 'BTV') {
-    return { office: 'BTV', sectionMatch: 'Northern Green Mountains of Vermont' };
+    return recBind('BTV', 'Northern Green Mountains of Vermont', REC_MATCH.BTV_N_GREENS);
   }
   if (wfo === 'BTV') {
-    return { office: 'BTV', sectionMatch: 'Northern Adirondacks of New York' };
+    return recBind('BTV', 'Northern Adirondacks of New York', REC_MATCH.BTV_N_ADK);
   }
   if (wfo === 'ALY') {
     if (sectionId === 'northern-adirondacks' || sectionId === 'adirondack-high-peaks') {
-      return {
-        office: 'ALY',
-        sectionMatch: 'Southern Adirondacks',
-        nearbyLabel: 'KALY REC band nearest northern Adirondack peak',
-      };
+      return recBind(
+        'ALY',
+        'Southern Adirondacks',
+        REC_MATCH.ALY_S_ADK,
+        'KALY REC band nearest northern Adirondack peak',
+      );
     }
     return null;
   }
   if (wfo === 'GYX' && sectionId === 'central-southern-adirondacks') {
-    return {
-      office: 'GYX',
-      sectionMatch: '2500 Feet to 4000 Feet',
-      nearbyLabel: 'KGYX REC nearest western Maine / northern NH band',
-    };
+    return recBind(
+      'GYX',
+      '2500 Feet to 4000 Feet',
+      REC_MATCH.GYX_2500_4000,
+      'KGYX REC nearest western Maine / northern NH band',
+    );
   }
   if (sectionId === 'presidential-range' || sectionId === 'franconia-pemi' || sectionId === 'rumney-climbing') {
-    return { office: 'GYX', sectionMatch: 'Summits Above 4000 Feet' };
+    return recBind('GYX', 'Summits Above 4000 Feet', REC_MATCH.GYX_4000);
   }
   if (sectionId === 'mahoosucs-bigelow') {
-    return { office: 'GYX', sectionMatch: '2500 Feet to 4000 Feet' };
+    return recBind('GYX', '2500 Feet to 4000 Feet', REC_MATCH.GYX_2500_4000);
   }
   if (sectionId === 'baxter-state-park') {
-    if (place.id === 'katahdin') return { office: 'CAR', sectionMatch: 'TOP OF MOUNT KATAHDIN' };
-    if (place.id === 'katahdin-woods-and-waters') return { office: 'CAR', sectionMatch: 'KATAHDIN WOODS AND WATERS' };
-    if (place.id === 'white-cap-mountain') return { office: 'CAR', sectionMatch: 'TOP OF WHITE CAP MOUNTAIN' };
-    return { office: 'CAR', sectionMatch: 'TOP OF MOUNT KATAHDIN', nearbyLabel: 'Katahdin summit REC (nearby)' };
+    if (place.id === 'katahdin') return carSummit('TOP OF MOUNT KATAHDIN');
+    if (place.id === 'katahdin-woods-and-waters') {
+      return recBind('CAR', 'KATAHDIN WOODS AND WATERS', ['KATAHDIN WOODS AND WATERS NATIONAL MONUMENT']);
+    }
+    if (place.id === 'white-cap-mountain') return carSummit('TOP OF WHITE CAP MOUNTAIN');
+    return carSummit('TOP OF MOUNT KATAHDIN', 'Katahdin summit REC (nearby)');
   }
   if (sectionId === 'northern-maine') {
-    if (place.id === 'deboullie-mountain') return { office: 'CAR', sectionMatch: 'TOP OF DEBOULLIE MOUNTAIN' };
-    if (place.id === 'mars-hill-mountain') return { office: 'CAR', sectionMatch: 'TOP OF MARS HILL MOUNTAIN' };
+    if (place.id === 'deboullie-mountain') return carSummit('TOP OF DEBOULLIE MOUNTAIN');
+    if (place.id === 'mars-hill-mountain') return carSummit('TOP OF MARS HILL MOUNTAIN');
   }
   if (sectionId === 'acadia') {
-    if (place.id === 'cadillac-mountain') return { office: 'CAR', sectionMatch: 'TOP OF CADILLAC MOUNTAIN' };
-    return { office: 'CAR', sectionMatch: 'TOP OF CADILLAC MOUNTAIN', nearbyLabel: 'Cadillac summit REC (nearby)' };
+    if (place.id === 'cadillac-mountain') return carSummit('TOP OF CADILLAC MOUNTAIN');
+    return carSummit('TOP OF CADILLAC MOUNTAIN', 'Cadillac summit REC (nearby)');
   }
   return null;
 }

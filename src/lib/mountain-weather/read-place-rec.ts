@@ -1,18 +1,106 @@
 import type { AllLocationsPlaceSlice } from '@/lib/mountain-weather/all-locations-types';
 import type { RecOffice, RecPlaceSlice } from '@/lib/mountain-weather/rec-types';
-import { pickRecSection } from '@/lib/mountain-weather/parse/rec';
+import { matchedRecHeaderLabel, pickRecSectionFromMatches } from '@/lib/mountain-weather/parse/rec';
 import { readAllLocationsIndex } from '@/lib/mountain-weather/readers/nws-all-locations';
-import { readRecBulletin } from '@/lib/mountain-weather/readers/nws-rec';
+import { readRecBulletinHistory } from '@/lib/mountain-weather/readers/nws-rec-history';
+import {
+  NWS_REC_ALY_DEF,
+  NWS_REC_BTV_DEF,
+  NWS_REC_CAR_DEF,
+  NWS_REC_GYX_DEF,
+} from '@/lib/mountain-weather/registry';
 import {
   sourceBindingForPlace,
   type AllLocationsPlaceBinding,
   type RecPlaceBinding,
 } from '@/lib/mountain-weather/source-bindings';
-import type { SourceResult } from '@/lib/mountain-weather/source-types';
+import type { SourceDef, SourceResult } from '@/lib/mountain-weather/source-types';
+
+const OFFICE_DEF: Record<'BTV' | 'ALY' | 'GYX' | 'CAR', SourceDef> = {
+  BTV: NWS_REC_BTV_DEF,
+  ALY: NWS_REC_ALY_DEF,
+  GYX: NWS_REC_GYX_DEF,
+  CAR: NWS_REC_CAR_DEF,
+};
+
+function recDef(office: RecOffice): SourceDef {
+  if (office in OFFICE_DEF) return OFFICE_DEF[office as keyof typeof OFFICE_DEF];
+  return {
+    id: `nws-${office.toLowerCase()}-rec`,
+    org: `National Weather Service ${office}`,
+    kind: 'forecast',
+    terms: 'reuse-ok',
+    url: `https://api.weather.gov/products/types/REC/locations/${office}`,
+    ttlSeconds: 1800,
+    expectedEveryHours: 6,
+  };
+}
 
 function asList<T>(raw: T | T[] | undefined): T[] {
   if (!raw) return [];
   return Array.isArray(raw) ? raw : [raw];
+}
+
+function sectionMatchesFor(binding: RecPlaceBinding): string[] {
+  if (binding.sectionMatches?.length) return binding.sectionMatches;
+  return [binding.sectionMatch];
+}
+
+function resolveRecBinding(
+  history: Awaited<ReturnType<typeof readRecBulletinHistory>>,
+  binding: RecPlaceBinding,
+): SourceResult<RecPlaceSlice> {
+  const def = recDef(binding.office);
+  if (history.status === 'error' || !history.data?.length) {
+    return {
+      status: 'error',
+      data: null,
+      issuedAt: history.issuedAt,
+      validFrom: null,
+      validTo: null,
+      sourceUrl: history.sourceUrl ?? def.url,
+      error: history.error,
+    };
+  }
+
+  const needles = sectionMatchesFor(binding);
+  const latestIssuance = history.data[0]?.issuanceTime ?? null;
+
+  for (let i = 0; i < history.data.length; i++) {
+    const entry = history.data[i];
+    const hit = pickRecSectionFromMatches(entry.bulletin, needles);
+    if (!hit) continue;
+
+    const headerLabel = matchedRecHeaderLabel(hit.section, hit.matched);
+    return {
+      status: history.status,
+      data: {
+        office: binding.office,
+        sectionMatch: needles[0],
+        sectionMatches: needles,
+        matchedSectionTitle: headerLabel,
+        nearbyLabel: binding.nearbyLabel ?? null,
+        section: hit.section,
+        issuanceTime: entry.issuanceTime,
+        productId: entry.productId,
+        latestIssuanceTime: latestIssuance,
+        notInLatestIssuance: i > 0,
+      },
+      issuedAt: entry.issuanceTime,
+      validFrom: null,
+      validTo: null,
+      sourceUrl: entry.sourceUrl,
+    };
+  }
+
+  return {
+    status: 'not-in-issuance',
+    data: null,
+    issuedAt: latestIssuance,
+    validFrom: null,
+    validTo: null,
+    sourceUrl: history.data[0]?.sourceUrl ?? def.url,
+  };
 }
 
 export async function readRecForPlace(placeId: string): Promise<SourceResult<RecPlaceSlice>[] | null> {
@@ -29,44 +117,11 @@ export async function readRecForPlace(placeId: string): Promise<SourceResult<Rec
   const out: SourceResult<RecPlaceSlice>[] = [];
 
   for (const [office, binds] of byOffice) {
-    const bulletin = await readRecBulletin(office);
-    if (bulletin.status === 'error' || !bulletin.data) {
-      for (const _bind of binds) {
-        out.push({ ...bulletin, data: null });
-      }
-      continue;
-    }
+    const def = recDef(office);
+    const history = await readRecBulletinHistory(office, def);
 
     for (const binding of binds) {
-      const section = pickRecSection(bulletin.data, binding.sectionMatch);
-      if (!section) {
-        out.push({
-          status: 'error',
-          data: null,
-          issuedAt: bulletin.issuedAt,
-          validFrom: null,
-          validTo: null,
-          sourceUrl: bulletin.sourceUrl,
-          error: `No REC section matching “${binding.sectionMatch}”`,
-        });
-        continue;
-      }
-
-      out.push({
-        status: bulletin.status,
-        data: {
-          office: binding.office,
-          sectionMatch: binding.sectionMatch,
-          nearbyLabel: binding.nearbyLabel ?? null,
-          section,
-          issuanceTime: bulletin.data.issuanceTime,
-          productId: bulletin.data.productId,
-        },
-        issuedAt: bulletin.issuedAt,
-        validFrom: null,
-        validTo: null,
-        sourceUrl: bulletin.sourceUrl,
-      });
+      out.push(resolveRecBinding(history, binding));
     }
   }
 
@@ -101,13 +156,12 @@ export async function readAllLocationsForPlace(
       const marker = file.data[binding.loc] ?? null;
       if (!marker) {
         out.push({
-          status: 'error',
+          status: 'not-in-issuance',
           data: null,
           issuedAt: file.issuedAt,
           validFrom: null,
           validTo: null,
           sourceUrl: file.sourceUrl,
-          error: `No allLocations marker for ${binding.loc}`,
         });
         continue;
       }

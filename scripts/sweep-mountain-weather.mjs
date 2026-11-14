@@ -29,6 +29,14 @@ const PATTERNS = [
   { name: 'Error: prefix', re: />\s*Error:/ },
 ];
 
+const UI_FAILURE_PATTERNS = [
+  { name: 'did not load', re: /did not load/gi },
+  { name: 'source error', re: /source error/gi },
+  { name: 'unavailable', re: />\s*[^<]{0,80}\(unavailable\)/gi },
+  { name: 'could not be parsed', re: /could not be parsed/gi },
+  { name: 'not in this issuance', re: /not in this issuance/gi },
+];
+
 function loadPlaces() {
   const raw = JSON.parse(fs.readFileSync(path.join(ROOT, 'config/mountain-weather/places.json'), 'utf8'));
   const routes = [];
@@ -77,11 +85,44 @@ async function fetchRoute(route) {
   }
 }
 
+function stripTags(html) {
+  return html.replace(/<script[\s\S]*?<\/script>/gi, ' ').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+}
+
+function nearestSectionTitle(html, index) {
+  const before = html.slice(Math.max(0, index - 4000), index);
+  const matches = [...before.matchAll(/title="([^"]+)"/g)];
+  return matches.length ? matches[matches.length - 1][1] : null;
+}
+
 function scanText(text) {
   const hits = [];
   for (const { name, re } of PATTERNS) {
     const m = text.match(re);
     if (m) hits.push({ pattern: name, sample: m[0] });
+  }
+  return hits;
+}
+
+function scanUiFailures(text, route) {
+  const plain = stripTags(text);
+  const hits = [];
+  for (const { name, re } of UI_FAILURE_PATTERNS) {
+    re.lastIndex = 0;
+    let m;
+    while ((m = re.exec(text))) {
+      const section = nearestSectionTitle(text, m.index);
+      const contextStart = Math.max(0, m.index - 120);
+      const contextEnd = Math.min(text.length, m.index + 160);
+      const context = stripTags(text.slice(contextStart, contextEnd)).slice(0, 200);
+      hits.push({
+        route,
+        pattern: name,
+        section: section ?? 'unknown section',
+        context,
+        plainSample: plain.includes(m[0]) ? m[0] : name,
+      });
+    }
   }
   return hits;
 }
@@ -97,7 +138,8 @@ async function main() {
       const route = routes[i];
       const row = await fetchRoute(route);
       const patternHits = row.text ? scanText(row.text) : [];
-      results.push({ ...row, patternHits });
+      const uiFailureHits = row.text ? scanUiFailures(row.text, route) : [];
+      results.push({ ...row, patternHits, uiFailureHits });
     }
   }
 
@@ -106,8 +148,63 @@ async function main() {
   results.sort((a, b) => a.route.localeCompare(b.route));
   const badStatus = results.filter((r) => r.status !== 200);
   const patternBad = results.filter((r) => r.patternHits.length > 0);
+  const uiFailures = results.flatMap((r) => r.uiFailureHits ?? []);
+  const uiFailureGroups = Object.groupBy?.(uiFailures, (h) => `${h.pattern}::${h.section}`) ?? {};
+  if (Object.keys(uiFailureGroups).length === 0) {
+    for (const hit of uiFailures) {
+      const key = `${hit.pattern}::${hit.section}`;
+      if (!uiFailureGroups[key]) uiFailureGroups[key] = [];
+      uiFailureGroups[key].push(hit);
+    }
+  }
 
-  console.log(JSON.stringify({ base: BASE, scanned: results.length, badStatus, patternBad }, null, 2));
+  const sourceErrorOnly = uiFailures.filter(
+    (h) => h.pattern === 'did not load' || h.pattern === 'source error' || h.pattern === 'could not be parsed',
+  );
+
+  const upstreamChecks = [];
+  const UA = 'Bannquet-Mountain-Weather-Sweep';
+  async function probe(url) {
+    try {
+      const res = await fetch(url, { headers: { 'User-Agent': UA, Accept: 'application/ld+json' } });
+      const snippet = res.ok ? (await res.text()).slice(0, 120) : '';
+      return { url, ok: res.ok, status: res.status, snippet };
+    } catch (err) {
+      return { url, ok: false, status: 0, error: err instanceof Error ? err.message : String(err) };
+    }
+  }
+
+  if (sourceErrorOnly.some((h) => /REC/i.test(h.section))) {
+    for (const office of ['BTV', 'ALY', 'GYX', 'CAR']) {
+      upstreamChecks.push(await probe(`https://api.weather.gov/products/types/REC/locations/${office}`));
+    }
+  }
+  if (sourceErrorOnly.some((h) => /balloon/i.test(h.section))) {
+    upstreamChecks.push(
+      await probe('https://forecast.weather.gov/xml/current_obs/balloon.xml'),
+    );
+  }
+
+  console.log(
+    JSON.stringify(
+      {
+        base: BASE,
+        scanned: results.length,
+        badStatus,
+        patternBad: patternBad.map((r) => ({ route: r.route, hits: r.patternHits })),
+        uiFailureSummary: Object.fromEntries(
+          Object.entries(uiFailureGroups).map(([key, rows]) => [
+            key,
+            { count: rows.length, routes: [...new Set(rows.map((r) => r.route))].slice(0, 8) },
+          ]),
+        ),
+        sourceErrors: sourceErrorOnly,
+        upstreamEvidence: upstreamChecks,
+      },
+      null,
+      2,
+    ),
+  );
 
   if (badStatus.length || patternBad.length) {
     process.exitCode = 1;

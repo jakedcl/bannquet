@@ -3,11 +3,28 @@ import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import test from 'node:test';
 import { parseAllLocationsXml } from '@/lib/mountain-weather/parse/all-locations';
-import { parseRecBulletin, pickRecSection } from '@/lib/mountain-weather/parse/rec';
+import { parseRecBulletin, pickRecSection, pickRecSectionFromMatches } from '@/lib/mountain-weather/parse/rec';
 import { defaultResumeHint } from '@/lib/mountain-weather/parse/seasonal-off';
 import { gridWeatherAtInstant, formatGridWeatherLayer } from '@/lib/grid-series';
 
 const FIX = path.resolve(process.cwd(), 'src/lib/mountain-weather/fixtures');
+
+test('pickRecSectionFromMatches falls back to combined Vermont and Northern New York header', () => {
+  const text = `
+.The Higher Summits Forecast for Vermont and Northern New York...
+.TODAY...Summits obscured. Highs in the upper 20s.
+.TONIGHT...Snow showers. Lows in the mid 20s.
+&&
+`;
+  const bulletin = parseRecBulletin(text, null, null);
+  const hit = pickRecSectionFromMatches(bulletin, [
+    'Northern Adirondacks of New York',
+    'Vermont and Northern New York',
+    'Higher Summits Forecast for Vermont and Northern New York',
+  ]);
+  assert.ok(hit);
+  assert.match(hit.matched, /Vermont and Northern New York/i);
+});
 
 test('REC parser finds BTV Northern Adirondacks section', () => {
   const text = readFileSync(path.join(FIX, 'rec-btv-sample.txt'), 'utf8');

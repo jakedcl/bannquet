@@ -1,0 +1,239 @@
+
+000
+SXUS41 KALY 090034
+RECALY
+
+Recreational Forecast
+National Weather Service Albany NY
+733 PM EST Sun Nov 8 2026
+
+
+NYZ042-043-041-049>052-083-084-090500-
+Lake George-
+733 PM EST Sun Nov 8 2026
+
+...Lake George Recreational Forecast...
+
+.MONDAY...
+Max Temperature...In the lower 50s. 
+Min Temperature...In the lower 40s. 
+Average Dew Points...In the lower 40s. 
+Minimum Humidity...65 TO 75 percent. 
+Wind...Southwest 5 to 10 knots. 
+Weather...Chance of rain showers. 
+Lightning...No Lightning expected. 
+
+.MONDAY NIGHT...
+Max Temperature...In the lower 50s. 
+Min Temperature...In the upper 30s. 
+Average Dew Points...In the upper 30s. 
+Minimum Humidity...65 TO 75 percent. 
+Wind...Northwest 5 to 15 knots. 
+Weather...Dry. 
+Lightning...No Lightning expected. 
+
+
+.EXTENDED...
+.TUESDAY...Mostly cloudy. Slight chance of showers. Lows in the
+upper 30s. Highs in the mid 50s. 
+.VETERANS DAY...Mostly cloudy. Lows in the upper 30s. Highs in the
+lower 50s. 
+
+$$
+
+NYZ039-041-050-082-090500-
+Great Sacandaga Lake-
+733 PM EST Sun Nov 8 2026
+
+...Great Sacandaga Lake Recreational Forecast...
+
+.MONDAY...
+Max Temperature...In the lower 50s. 
+Min Temperature...In the lower 40s. 
+Average Dew Points...In the lower 40s. 
+Minimum Humidity...75 TO 85 percent. 
+Wind...West 5 to 15 knots. 
+Weather...Rain showers likely. 
+Lightning...No Lightning expected. 
+
+.MONDAY NIGHT...
+Max Temperature...In the lower 50s. 
+Min Temperature...In the upper 30s. 
+Average Dew Points...In the upper 30s. 
+Minimum Humidity...65 TO 75 percent. 
+Wind...Northwest 5 to 15 knots. 
+Weather...Dry. 
+Lightning...No Lightning expected. 
+
+
+.EXTENDED...
+.TUESDAY...Mostly cloudy. Slight chance of showers. Lows in the
+upper 30s. Highs in the mid 50s. 
+.VETERANS DAY...Mostly cloudy. Lows in the upper 30s. Highs in the
+lower 50s. 
+
+$$
+
+NYZ032-033-082-038>043-048-049-083-084-090500-
+Southern Adirondacks-
+733 PM EST Sun Nov 8 2026
+
+...Southern Adirondacks Recreational Forecast for elevations above 2500 feet...
+
+.MONDAY...
+Max Temperature...In the lower 40s. 
+Min Temperature...In the mid 30s. 
+Average Dew Points...In the upper 30s. 
+Minimum Humidity...85 TO 95 percent. 
+Wind...West 5 to 10 knots. 
+Weather...Rain showers. 
+Lightning...No Lightning expected. 
+
+.MONDAY NIGHT...
+Max Temperature...In the lower 40s. 
+Min Temperature...In the lower 30s. 
+Average Dew Points...In the mid 30s. 
+Minimum Humidity...75 TO 85 percent. 
+Wind...Northwest 5 to 15 knots. 
+Weather...Chance of rain showers. 
+Lightning...No Lightning expected. 
+
+
+.EXTENDED...
+.TUESDAY...Mostly cloudy. Chance of showers. Lows in the lower 30s.
+Highs in the mid 40s. 
+.VETERANS DAY...Mostly cloudy. Chance of snow showers and slight
+chance of showers. Lows in the lower 30s. Highs in the lower 40s. 
+
+$$
+
+VTZ013-014-090500-
+Southern Green Mountains-
+733 PM EST Sun Nov 8 2026
+
+...Southern Green Mountains Recreational Forecast for elevations above 2000 feet...
+
+.MONDAY...
+Max Temperature...In the mid 40s. 
+Min Temperature...In the upper 30s. 
+Average Dew Points...In the upper 30s. 
+Minimum Humidity...85 TO 95 percent. 
+Wind...West 5 to 15 knots. 
+Weather...Rain showers likely. 
+Lightning...No Lightning expected. 
+
+.MONDAY NIGHT...
+Max Temperature...In the mid 40s. 
+Min Temperature...In the lower 30s. 
+Average Dew Points...In the mid 30s. 
+Minimum Humidity...75 TO 85 percent. 
+Wind...Northwest 10 to 15 knots. 
+Weather...Chance of rain showers. 
+Lightning...No Lightning expected. 
+
+
+.EXTENDED...
+.TUESDAY...Mostly cloudy. Slight chance of showers. Lows in the mid
+30s. Highs in the mid 40s. 
+.VETERANS DAY...Partly cloudy. Lows in the lower 30s. Highs in the
+mid 40s. 
+
+$$
+
+NYZ058-063-090500-
+Catskill Mountains-
+733 PM EST Sun Nov 8 2026
+
+...Eastern Catskills Recreational Forecast for elevations above 2000 feet...
+
+.MONDAY...
+Max Temperature...In the mid 40s. 
+Min Temperature...In the mid 30s. 
+Average Dew Points...In the mid 30s. 
+Minimum Humidity...75 TO 85 percent. 
+Wind...West 10 to 15 knots. 
+Weather...Chance of rain showers. 
+Lightning...No Lightning expected. 
+
+.MONDAY NIGHT...
+Max Temperature...In the mid 40s. 
+Min Temperature...Around 30. 
+Average Dew Points...In the mid 30s. 
+Minimum Humidity...75 TO 85 percent. 
+Wind...Northwest 10 to 15 knots. 
+Weather...Dry. 
+Lightning...No Lightning expected. 
+
+
+.EXTENDED...
+.TUESDAY...Partly cloudy. Lows around 30. Highs in the lower 50s. 
+.VETERANS DAY...Partly cloudy. Lows in the upper 20s. Highs in the
+lower 50s. 
+
+$$
+
+MAZ001-025-090500-
+Berkshire Mountains-
+733 PM EST Sun Nov 8 2026
+
+...Berkshires Recreational Forecast for elevations above 2000 feet...
+
+.MONDAY...
+Max Temperature...In the upper 40s. 
+Min Temperature...In the upper 30s. 
+Average Dew Points...In the upper 30s. 
+Minimum Humidity...75 TO 85 percent. 
+Wind...West 5 to 15 knots. 
+Weather...Chance of rain showers. 
+Lightning...No Lightning expected. 
+
+.MONDAY NIGHT...
+Max Temperature...In the upper 40s. 
+Min Temperature...In the mid 30s. 
+Average Dew Points...In the upper 30s. 
+Minimum Humidity...75 TO 85 percent. 
+Wind...Northwest 5 to 15 knots. 
+Weather...Chance of rain showers. 
+Lightning...No Lightning expected. 
+
+
+.EXTENDED...
+.TUESDAY...Mostly cloudy. Lows in the mid 30s. Highs in the lower
+50s. 
+.VETERANS DAY...Partly cloudy. Lows in the mid 30s. Highs around 50.
+
+$$
+
+NYZ064-065-090500-
+Mid Hudson Valley-
+733 PM EST Sun Nov 8 2026
+
+...Mid Hudson River Recreational Forecast from Albany to Poughkeepsie...
+
+.MONDAY...
+Max Temperature...In the upper 50s. 
+Min Temperature...Around 40. 
+Average Dew Points...In the upper 30s. 
+Minimum Humidity...55 TO 65 percent. 
+Wind...Southwest 5 to 10 knots. 
+Weather...Slight chance of rain showers. 
+Lightning...No Lightning expected. 
+
+.MONDAY NIGHT...
+Max Temperature...In the upper 50s. 
+Min Temperature...In the upper 30s. 
+Average Dew Points...In the upper 30s. 
+Minimum Humidity...55 TO 65 percent. 
+Wind...West up to 10 knots. 
+Weather...Dry. 
+Lightning...No Lightning expected. 
+
+
+.EXTENDED...
+.TUESDAY...Partly cloudy. Lows in the upper 30s. Highs in the lower
+60s. 
+.VETERANS DAY...Partly cloudy. Lows in the mid 30s. Highs in the
+lower 60s. 
+
+
+$$

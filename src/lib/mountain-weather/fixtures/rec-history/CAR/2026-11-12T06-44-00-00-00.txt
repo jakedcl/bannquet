@@ -1,0 +1,221 @@
+
+000
+SXUS41 KCAR 120644
+RECCAR
+
+Recreational Forecast for Northern and Eastern Maine
+National Weather Service Caribou ME
+144 AM EST Thu Nov 12 2026
+
+MEZ004-122100-
+Top of Mount Katahdin-
+144 AM EST Thu Nov 12 2026
+
+...TOP OF MOUNT KATAHDIN (5268')...
+
+.TODAY...Partly sunny. Highs in the upper 20s. West winds 10 to
+15 mph decreasing to up to 10 mph this afternoon. Wind chills around
+5 above. No lightning risk. 
+.TONIGHT...Partly cloudy in the evening, then mostly cloudy. Cold
+with lows around 19. North winds up to 10 mph shifting to the
+northeast 10 to 15 mph after midnight. No lightning risk. 
+.FRIDAY...Mostly cloudy. Highs in the mid 20s. Northeast winds 15 to
+20 mph. Wind chills around 8 above. No lightning risk. 
+
+$$
+
+MEZ005-122100-
+Katahdin Woods and Waters National Monument-
+144 AM EST Thu Nov 12 2026
+
+...KATAHDIN WOODS AND WATERS NATIONAL MONUMENT...
+
+.TODAY...Partly sunny. Highs in the lower 40s. Northwest winds up to
+10 mph. No lightning risk. 
+.TONIGHT...Partly cloudy. Lows in the mid 20s. Northwest winds up to
+10 mph. No lightning risk. 
+.FRIDAY...Mostly cloudy. Highs in the upper 30s. North winds 10 to
+15 mph. No lightning risk. 
+
+$$
+
+MEZ029-122100-
+Top of Cadillac Mountain-
+144 AM EST Thu Nov 12 2026
+
+...TOP OF CADILLAC MOUNTAIN (1532')...
+
+.TODAY...Partly sunny until late afternoon, then mostly cloudy.
+Highs in the lower 40s. West winds up to 10 mph shifting to the
+north this afternoon. No lightning risk. 
+.TONIGHT...Cloudy. A chance of rain and snow in the evening, then
+snow likely after midnight. Snow accumulation around an inch. Breezy
+with lows in the upper 20s. East winds 10 to 20 mph shifting to the
+northeast 15 to 30 mph after midnight. Chance of precipitation
+60 percent. Wind chills around 19. No lightning risk. 
+.FRIDAY...Cloudy. A chance of snow in the morning. A chance of rain.
+Breezy with highs around 40. Northeast winds 20 to 30 mph. Chance of
+precipitation 50 percent. Wind chills around 14 in the morning. No
+lightning risk. 
+
+$$
+
+MEZ002-122100-
+Top of Deboullie Mountain-
+144 AM EST Thu Nov 12 2026
+
+...TOP OF DEBOULLIE MOUNTAIN (1981')...
+
+.TODAY...Partly sunny. Highs in the mid 30s. West winds up to
+10 mph. No lightning risk. 
+.TONIGHT...Partly cloudy. Cold with lows around 20. Northwest winds
+up to 10 mph. No lightning risk. 
+.FRIDAY...Mostly cloudy. Highs in the mid 30s. Northwest winds up to
+10 mph shifting to the north 10 to 15 mph in the afternoon. No
+lightning risk. 
+
+$$
+
+MEZ006-122100-
+Top of Mars Hill Mountain-
+144 AM EST Thu Nov 12 2026
+
+...TOP OF MARS HILL MOUNTAIN (1749')...
+
+.TODAY...Partly sunny. Highs in the upper 30s. West winds 10 to
+15 mph. No lightning risk. 
+.TONIGHT...Partly cloudy. Lows in the lower 20s. Northwest winds up
+to 10 mph. No lightning risk. 
+.FRIDAY...Mostly cloudy. Highs in the mid 30s. North winds 10 to
+15 mph. No lightning risk. 
+
+$$
+
+MEZ010-122100-
+Top of White Cap Mountain-
+144 AM EST Thu Nov 12 2026
+
+...TOP OF WHITE CAP MOUNTAIN (3654')...
+
+.TODAY...Partly sunny. Highs around 30. West winds 10 to 15 mph
+shifting to the northwest up to 10 mph this afternoon. No lightning
+risk. 
+.TONIGHT...Mostly cloudy. Near steady temperature in the mid 20s.
+Northeast winds 10 to 20 mph. No lightning risk. 
+.FRIDAY...Mostly cloudy. A slight chance of snow in the morning.
+Highs in the upper 20s. Northeast winds 10 to 20 mph. Chance of snow
+20 percent. No lightning risk. 
+
+$$
+
+MEZ010-122100-
+Moosehead Lake-
+144 AM EST Thu Nov 12 2026
+
+...MOOSEHEAD LAKE...
+
+.TODAY...Partly sunny until late afternoon, then mostly cloudy.
+Highs around 40. Northwest winds up to 10 mph. Highest waves 1 foot.
+No lightning risk. Water temperature around 50 degrees Fahrenheit. 
+.TONIGHT...Mostly cloudy. Lows in the mid 20s. Highest waves 1 foot.
+North winds up to 10 mph. No lightning risk. Water temperature
+around 50 degrees Fahrenheit. 
+.FRIDAY...Mostly cloudy. Highs in the upper 30s. Highest waves
+1 foot. North winds 10 to 15 mph. No lightning risk. Water
+temperature around 50 degrees Fahrenheit. 
+
+$$
+
+MEZ001-122100-
+Allagash Wilderness Waterway-
+144 AM EST Thu Nov 12 2026
+
+...ALLAGASH WILDERNESS WATERWAY...
+
+.TODAY...Partly sunny. Highs around 40. West winds up to 10 mph. No
+lightning risk. 
+.TONIGHT...Partly cloudy. Cold with lows around 19. Light and
+variable winds. No lightning risk. 
+.FRIDAY...Mostly cloudy. Highs in the upper 30s. North winds up to
+10 mph. No lightning risk. 
+
+$$
+
+MEZ030-122100-
+St Croix River-
+144 AM EST Thu Nov 12 2026
+
+...ST CROIX RIVER...
+
+.TODAY...Partly sunny. Highs in the lower 40s. Northwest winds up to
+10 mph. No lightning risk. 
+.TONIGHT...Mostly cloudy. A slight chance of snow after midnight.
+Lows in the mid 20s. North winds up to 10 mph. Chance of snow
+20 percent. No lightning risk. 
+.FRIDAY...Cloudy. A slight chance of snow in the morning. A slight
+chance of rain in the afternoon. Highs around 40. North winds up to
+10 mph increasing to 10 to 15 mph in the afternoon. Chance of
+precipitation 20 percent. No lightning risk. 
+
+$$
+
+MEZ030-122100-
+West Quoddy Head-
+144 AM EST Thu Nov 12 2026
+
+...WEST QUODDY HEAD...
+
+.TODAY...Mostly cloudy early this morning, then partly sunny. Highs
+in the mid 40s. Northwest winds up to 10 mph. No lightning risk.
+Water temperature around 51 degrees Fahrenheit. 
+.TONIGHT...Cloudy. A chance of rain. Lows in the mid 30s. Northeast
+winds up to 10 mph increasing to 10 to 20 mph after midnight. Chance
+of rain 50 percent. No lightning risk. Water temperature around
+51 degrees Fahrenheit. 
+.FRIDAY...Cloudy. Rain likely, mainly in the morning. Highs in the
+lower 40s. Northeast winds 15 to 20 mph. Chance of rain 60 percent.
+No lightning risk. Water temperature around 51 degrees Fahrenheit. 
+
+$$
+
+MEZ004>006-010-011-031-122100-
+Upper Penobscot Watershed-
+144 AM EST Thu Nov 12 2026
+
+...UPPER PENOBSCOT WATERSHED...
+
+.TODAY...Partly sunny. Highs in the lower 40s. Northwest winds up to
+10 mph. No lightning risk. 
+.TONIGHT...Mostly cloudy. A slight chance of snow after midnight.
+Lows in the mid 20s. North winds up to 10 mph. Chance of snow
+20 percent. No lightning risk. 
+.FRIDAY...Mostly cloudy. A slight chance of snow in the morning.
+Highs in the upper 30s. North winds 10 to 15 mph. Chance of snow
+20 percent. No lightning risk. 
+
+For current and forecast flow conditions for the Penobscot,see
+https://water.noaa.gov/wfo/car
+
+$$
+
+MEZ011-015-016-031-122100-
+Lower Penobscot Watershed-
+144 AM EST Thu Nov 12 2026
+
+...LOWER PENOBSCOT WATERSHED...
+
+.TODAY...Partly sunny. Highs in the mid 40s. Northwest winds up to
+10 mph. No lightning risk. 
+.TONIGHT...Mostly cloudy. A slight chance of snow in the evening,
+then a chance of snow after midnight. Lows in the upper 20s.
+Northeast winds up to 10 mph shifting to the north after midnight.
+Chance of snow 40 percent. No lightning risk. 
+.FRIDAY...Cloudy. A chance of snow in the morning, then a slight
+chance of rain in the afternoon. Highs around 40. North winds 10 to
+15 mph. Chance of precipitation 40 percent. No lightning risk. 
+
+For current and forecast flow conditions for the Penobscot,see
+https://water.noaa.gov/wfo/car
+
+$$
+

@@ -18,7 +18,12 @@ export function mergeFreshness<T, R extends { status: SourceStatus; data: T | nu
   freshness: ReturnType<typeof freshnessFromIssued>,
   result: R,
 ): R {
-  if (result.status === 'error' || result.status === 'link-only' || result.status === 'seasonal-off') {
+  if (
+    result.status === 'error' ||
+    result.status === 'link-only' ||
+    result.status === 'seasonal-off' ||
+    result.status === 'not-in-issuance'
+  ) {
     return result;
   }
   if (freshness === 'stale' && result.data) {

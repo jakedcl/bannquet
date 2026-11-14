@@ -143,10 +143,24 @@ function parseRegionBlock(block: string): BalloonRegion | null {
 }
 
 export function parseBalloonXml(xml: string): BalloonForecast {
+  const trimmed = xml.trim();
+  if (!trimmed || /<forecasts>\s*<\/forecasts>/i.test(trimmed)) {
+    return { regions: [] };
+  }
   const blocks = splitForecastBlocks(xml);
   const regions = blocks.map(parseRegionBlock).filter((r): r is BalloonRegion => r !== null);
-  if (regions.length === 0) throw new Error('No balloon regions in XML');
   return { regions };
+}
+
+export function pickBalloonRegionFromMatches(
+  bulletin: BalloonForecast,
+  regionMatches: string[],
+): { region: BalloonRegion; matched: string } | null {
+  for (const match of regionMatches) {
+    const region = pickBalloonRegion(bulletin, match);
+    if (region) return { region, matched: region.regionTitle };
+  }
+  return null;
 }
 
 export function pickBalloonRegion(bulletin: BalloonForecast, regionMatch: string): BalloonRegion | null {

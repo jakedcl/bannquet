@@ -1,0 +1,190 @@
+
+000
+SXUS41 KCAR 111844
+RECCAR
+
+Recreational Forecast for Northern and Eastern Maine
+National Weather Service Caribou ME
+144 PM EST Wed Nov 11 2026
+
+MEZ004-120900-
+Top of Mount Katahdin-
+144 PM EST Wed Nov 11 2026
+
+...TOP OF MOUNT KATAHDIN (5268')...
+
+.TONIGHT...Partly cloudy and cold. Near steady temperature in the
+lower 20s. Northwest winds 10 to 25 mph. Wind chills around 6 above.
+No lightning risk. 
+.THURSDAY...Partly sunny. Highs in the upper 20s. West winds 10 to
+15 mph shifting to the northwest up to 10 mph in the afternoon. Wind
+chills around 11. No lightning risk. 
+
+$$
+
+MEZ005-120900-
+Katahdin Woods and Waters National Monument-
+144 PM EST Wed Nov 11 2026
+
+...KATAHDIN WOODS AND WATERS NATIONAL MONUMENT...
+
+.TONIGHT...Partly cloudy. Cooler with lows in the mid 20s. West
+winds up to 10 mph. No lightning risk. 
+.THURSDAY...Partly sunny. Highs in the lower 40s. Temperature
+falling into the mid 30s in the afternoon. Northwest winds up to
+10 mph. No lightning risk. 
+
+$$
+
+MEZ029-120900-
+Top of Cadillac Mountain-
+144 PM EST Wed Nov 11 2026
+
+...TOP OF CADILLAC MOUNTAIN (1532')...
+
+.TONIGHT...Mostly clear, then partly cloudy late this evening and
+early morning, then mostly cloudy. Lows in the lower 30s. Northwest
+winds 10 to 15 mph decreasing to up to 10 mph after midnight. No
+lightning risk. 
+.THURSDAY...Partly sunny in the morning, then mostly cloudy. Highs
+in the lower 40s. North winds up to 10 mph. No lightning risk. 
+
+$$
+
+MEZ002-120900-
+Top of Deboullie Mountain-
+144 PM EST Wed Nov 11 2026
+
+...TOP OF DEBOULLIE MOUNTAIN (1981')...
+
+.TONIGHT...Partly cloudy until early morning, then clearing. Cold
+with lows around 20. West winds 10 to 15 mph. No lightning risk. 
+.THURSDAY...Partly sunny. Highs in the mid 30s. Temperature falling
+into the lower 30s in the afternoon. West winds up to 10 mph. No
+lightning risk. 
+
+$$
+
+MEZ006-120900-
+Top of Mars Hill Mountain-
+144 PM EST Wed Nov 11 2026
+
+...TOP OF MARS HILL MOUNTAIN (1749')...
+
+.TONIGHT...Partly cloudy this evening, then mostly clear. Cooler
+with lows in the lower 20s. West winds 10 to 15 mph. No lightning
+risk. 
+.THURSDAY...Sunny in the morning, then partly sunny. Highs in the
+upper 30s. Temperature falling into the lower 30s in the afternoon.
+West winds up to 10 mph shifting to the northwest up to 15 mph in
+the afternoon. No lightning risk. 
+
+$$
+
+MEZ010-120900-
+Top of White Cap Mountain-
+144 PM EST Wed Nov 11 2026
+
+...TOP OF WHITE CAP MOUNTAIN (3654')...
+
+.TONIGHT...Partly cloudy. Near steady temperature in the mid 20s.
+Northwest winds 10 to 20 mph. No lightning risk. 
+.THURSDAY...Partly sunny. Highs around 30. Temperature falling into
+the mid 20s in the afternoon. Northwest winds 10 to 15 mph
+decreasing to up to 10 mph in the afternoon. No lightning risk. 
+
+$$
+
+MEZ010-120900-
+Moosehead Lake-
+144 PM EST Wed Nov 11 2026
+
+...MOOSEHEAD LAKE...
+
+.TONIGHT...Partly cloudy early this evening, then mostly cloudy.
+Cooler with lows in the mid 20s. Northwest winds 10 to 15 mph
+decreasing to up to 10 mph after midnight. Highest waves 1 foot. No
+lightning risk. Water temperature around 50 degrees Fahrenheit. 
+.THURSDAY...Partly sunny. Highs in the upper 30s. Highest waves
+1 foot. Northwest winds up to 10 mph. No lightning risk. Water
+temperature around 50 degrees Fahrenheit. 
+
+$$
+
+MEZ001-120900-
+Allagash Wilderness Waterway-
+144 PM EST Wed Nov 11 2026
+
+...ALLAGASH WILDERNESS WATERWAY...
+
+.TONIGHT...Mostly cloudy early this evening, then partly cloudy.
+Colder with lows around 19. West winds up to 10 mph. No lightning
+risk. 
+.THURSDAY...Mostly sunny in the morning, then mostly cloudy. Highs
+in the upper 30s. Temperature falling into the mid 30s in the
+afternoon. West winds up to 10 mph. No lightning risk. 
+
+$$
+
+MEZ030-120900-
+St Croix River-
+144 PM EST Wed Nov 11 2026
+
+...ST CROIX RIVER...
+
+.TONIGHT...Mostly clear early this evening, then partly cloudy.
+Cooler with lows in the lower 20s. Light and variable winds. No
+lightning risk. 
+.THURSDAY...Partly sunny. Highs in the lower 40s. Light and variable
+winds. No lightning risk. 
+
+$$
+
+MEZ030-120900-
+West Quoddy Head-
+144 PM EST Wed Nov 11 2026
+
+...WEST QUODDY HEAD...
+
+.TONIGHT...Partly cloudy. Lows in the mid 30s. Northwest winds up to
+10 mph. No lightning risk. Water temperature around 51 degrees
+Fahrenheit. 
+.THURSDAY...Partly sunny. Highs in the mid 40s. Northwest winds up
+to 10 mph. No lightning risk. Water temperature around 51 degrees
+Fahrenheit. 
+
+$$
+
+MEZ004>006-010-011-031-120900-
+Upper Penobscot Watershed-
+144 PM EST Wed Nov 11 2026
+
+...UPPER PENOBSCOT WATERSHED...
+
+.TONIGHT...Partly cloudy. Cooler with lows in the lower 20s. West
+winds up to 10 mph. No lightning risk. 
+.THURSDAY...Partly sunny. Highs in the lower 40s. West winds up to
+10 mph. No lightning risk. 
+
+For current and forecast flow conditions for the Penobscot,see
+https://water.noaa.gov/wfo/car
+
+$$
+
+MEZ011-015-016-031-120900-
+Lower Penobscot Watershed-
+144 PM EST Wed Nov 11 2026
+
+...LOWER PENOBSCOT WATERSHED...
+
+.TONIGHT...Partly cloudy until early morning, then mostly cloudy.
+Cooler with lows in the mid 20s. West winds up to 10 mph. No
+lightning risk. 
+.THURSDAY...Partly sunny. Highs in the mid 40s. Northwest winds up
+to 10 mph. No lightning risk. 
+
+For current and forecast flow conditions for the Penobscot,see
+https://water.noaa.gov/wfo/car
+
+$$
+

@@ -13,6 +13,7 @@ export type AvgPlaceBinding = {
 export type RecPlaceBinding = {
   office: RecOffice;
   sectionMatch: string;
+  sectionMatches?: string[];
   nearbyLabel?: string;
 };
 
@@ -24,6 +25,7 @@ export type AllLocationsPlaceBinding = {
 
 export type BalloonPlaceBinding = {
   regionMatch: string;
+  regionMatches?: string[];
   nearbyLabel?: string;
   /** Set in source-bindings.json from build script; audit trail for explicit balloon city coverage. */
   bindReason?: string;

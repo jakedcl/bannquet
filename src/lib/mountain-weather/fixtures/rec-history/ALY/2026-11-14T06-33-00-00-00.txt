@@ -1,0 +1,238 @@
+
+000
+SXUS41 KALY 140633
+RECALY
+
+Recreational Forecast
+National Weather Service Albany NY
+133 AM EST Sat Nov 14 2026
+
+
+NYZ042-043-041-049>052-083-084-150500-
+Lake George-
+133 AM EST Sat Nov 14 2026
+
+...Lake George Recreational Forecast...
+
+.TODAY...
+Max Temperature...In the lower 40s. 
+Min Temperature... 
+Average Dew Points...Around 30. 
+Minimum Humidity...65 TO 75 percent. 
+Wind...Northwest 5 to 10 knots. 
+Weather...Slight chance of rain showers and snow showers. 
+Lightning...No Lightning expected. 
+
+.TONIGHT...
+Max Temperature... 
+Min Temperature...In the lower 30s. 
+Average Dew Points...In the lower 30s. 
+Minimum Humidity...75 TO 85 percent. 
+Wind...Northwest 5 to 10 knots. 
+Weather...Slight chance of rain showers and snow showers. 
+Lightning...No Lightning expected. 
+
+
+.EXTENDED...
+.SUNDAY...Mostly cloudy. Lows in the lower 30s. Highs in the mid
+40s. 
+.MONDAY...Partly cloudy. Lows in the lower 30s. Highs in the upper
+40s. 
+
+$$
+
+NYZ039-041-050-082-150500-
+Great Sacandaga Lake-
+133 AM EST Sat Nov 14 2026
+
+...Great Sacandaga Lake Recreational Forecast...
+
+.TODAY...
+Max Temperature...In the upper 30s. 
+Min Temperature... 
+Average Dew Points...Around 30. 
+Minimum Humidity...75 TO 85 percent. 
+Wind...Northwest 5 to 10 knots. 
+Weather...Slight chance of rain showers and snow showers. 
+Lightning...No Lightning expected. 
+
+.TONIGHT...
+Max Temperature... 
+Min Temperature...In the lower 30s. 
+Average Dew Points...In the lower 30s. 
+Minimum Humidity...75 TO 85 percent. 
+Wind...Northwest 5 to 10 knots. 
+Weather...Slight chance of rain showers and snow showers. 
+Lightning...No Lightning expected. 
+
+
+.EXTENDED...
+.SUNDAY...Mostly cloudy. Lows in the lower 30s. Highs in the lower
+40s. 
+.MONDAY...Partly cloudy. Lows in the lower 30s. Highs in the mid
+40s. 
+
+$$
+
+NYZ032-033-082-038>043-048-049-083-084-150500-
+Southern Adirondacks-
+133 AM EST Sat Nov 14 2026
+
+...Southern Adirondacks Recreational Forecast for elevations above 2500 feet...
+
+.TODAY...
+Max Temperature...In the lower 30s. 
+Min Temperature... 
+Average Dew Points...In the mid 20s. 
+Minimum Humidity...75 TO 85 percent. 
+Wind...Northwest 5 to 10 knots. 
+Weather...Snow showers likely. 
+Lightning...No Lightning expected. 
+
+.TONIGHT...
+Max Temperature... 
+Min Temperature...In the upper 20s. 
+Average Dew Points...In the mid 20s. 
+Minimum Humidity...75 TO 85 percent. 
+Wind...Northwest 5 to 15 knots. 
+Weather...Snow showers likely. 
+Lightning...No Lightning expected. 
+
+
+.EXTENDED...
+.SUNDAY...Mostly cloudy. Lows in the upper 20s. Highs in the lower
+30s. 
+.MONDAY...Partly cloudy. Lows in the upper 20s. Highs in the mid
+30s. 
+
+$$
+
+VTZ013-014-150500-
+Southern Green Mountains-
+133 AM EST Sat Nov 14 2026
+
+...Southern Green Mountains Recreational Forecast for elevations above 2000 feet...
+
+.TODAY...
+Max Temperature...In the lower 30s. 
+Min Temperature... 
+Average Dew Points...In the mid 20s. 
+Minimum Humidity...75 TO 85 percent. 
+Wind...Northwest up to 5 knots. 
+Weather...Chance of snow showers. 
+Lightning...No Lightning expected. 
+
+.TONIGHT...
+Max Temperature... 
+Min Temperature...In the mid 20s. 
+Average Dew Points...In the upper 20s. 
+Minimum Humidity...85 TO 95 percent. 
+Wind...Northwest up to 10 knots. 
+Weather...Chance of snow showers. 
+Lightning...No Lightning expected. 
+
+
+.EXTENDED...
+.SUNDAY...Mostly cloudy. Lows in the mid 20s. Highs in the mid 30s. 
+.MONDAY...Partly cloudy. Lows in the mid 20s. Highs in the upper
+30s. 
+
+$$
+
+NYZ058-063-150500-
+Catskill Mountains-
+133 AM EST Sat Nov 14 2026
+
+...Eastern Catskills Recreational Forecast for elevations above 2000 feet...
+
+.TODAY...
+Max Temperature...In the lower 30s. 
+Min Temperature... 
+Average Dew Points...In the mid 20s. 
+Minimum Humidity...75 TO 85 percent. 
+Wind...Northwest 5 to 15 knots. 
+Weather...Chance of snow showers. 
+Lightning...No Lightning expected. 
+
+.TONIGHT...
+Max Temperature... 
+Min Temperature...In the lower 20s. 
+Average Dew Points...In the mid 20s. 
+Minimum Humidity...85 TO 95 percent. 
+Wind...Northwest 5 to 15 knots. 
+Weather...Chance of snow showers. 
+Lightning...No Lightning expected. 
+
+
+.EXTENDED...
+.SUNDAY...Mostly cloudy. Lows in the lower 20s. Highs in the mid
+30s. 
+.MONDAY...Partly cloudy. Lows in the lower 20s. Highs in the upper
+30s. 
+
+$$
+
+MAZ001-025-150500-
+Berkshire Mountains-
+133 AM EST Sat Nov 14 2026
+
+...Berkshires Recreational Forecast for elevations above 2000 feet...
+
+.TODAY...
+Max Temperature...In the mid 30s. 
+Min Temperature... 
+Average Dew Points...In the upper 20s. 
+Minimum Humidity...75 TO 85 percent. 
+Wind...Northwest up to 10 knots. 
+Weather...Chance of snow showers. 
+Lightning...No Lightning expected. 
+
+.TONIGHT...
+Max Temperature... 
+Min Temperature...In the upper 20s. 
+Average Dew Points...Around 30. 
+Minimum Humidity...85 TO 95 percent. 
+Wind...Northwest 5 to 15 knots. 
+Weather...Chance of snow showers. 
+Lightning...No Lightning expected. 
+
+
+.EXTENDED...
+.SUNDAY...Mostly cloudy. Lows in the upper 20s. Highs in the upper
+30s. 
+.MONDAY...Partly cloudy. Lows in the mid 20s. Highs around 40. 
+
+$$
+
+NYZ064-065-150500-
+Mid Hudson Valley-
+133 AM EST Sat Nov 14 2026
+
+...Mid Hudson River Recreational Forecast from Albany to Poughkeepsie...
+
+.TODAY...
+Max Temperature...In the lower 40s. 
+Min Temperature... 
+Average Dew Points...Around 30. 
+Minimum Humidity...65 TO 75 percent. 
+Wind...Northwest up to 5 knots. 
+Weather...Dry. 
+Lightning...No Lightning expected. 
+
+.TONIGHT...
+Max Temperature... 
+Min Temperature...In the upper 20s. 
+Average Dew Points...In the lower 30s. 
+Minimum Humidity...75 TO 85 percent. 
+Wind...West up to 5 knots. 
+Weather...Dry. 
+Lightning...No Lightning expected. 
+
+
+.EXTENDED...
+.SUNDAY...Partly cloudy. Lows in the upper 20s. Highs in the upper
+40s. 
+.MONDAY...Mostly clear. Lows in the mid 20s. Highs in the lower 50s.
+
+
+$$

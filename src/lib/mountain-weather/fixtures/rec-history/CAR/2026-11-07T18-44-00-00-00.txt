@@ -1,0 +1,210 @@
+
+000
+SXUS41 KCAR 071844
+RECCAR
+
+Recreational Forecast for Northern and Eastern Maine
+National Weather Service Caribou ME
+144 PM EST Sat Nov 7 2026
+
+MEZ004-080900-
+Top of Mount Katahdin-
+144 PM EST Sat Nov 7 2026
+
+...TOP OF MOUNT KATAHDIN (5268')...
+
+.TONIGHT...Cloudy, rain. Snow late. Little or no snow accumulation.
+Breezy with lows around 30. Northeast winds 20 to 30 mph. Chance of
+precipitation 90 percent. No lightning risk. 
+.SUNDAY...Cloudy. Rain likely in the morning. Snow. Little or no
+snow accumulation. Windy with highs in the lower 30s. North winds
+20 to 35 mph. Chance of precipitation 80 percent. Wind chills around
+15. No lightning risk. 
+
+$$
+
+MEZ005-080900-
+Katahdin Woods and Waters National Monument-
+144 PM EST Sat Nov 7 2026
+
+...KATAHDIN WOODS AND WATERS NATIONAL MONUMENT...
+
+.TONIGHT...Cloudy, rain. Near steady temperature in the lower 40s.
+North winds 10 to 15 mph. Chance of rain 90 percent. No lightning
+risk. 
+.SUNDAY...Cloudy. Areas of fog in the morning. Rain. Highs in the
+lower 40s. Northwest winds 10 to 20 mph. Chance of rain 90 percent.
+No lightning risk. 
+
+$$
+
+MEZ029-080900-
+Top of Cadillac Mountain-
+144 PM EST Sat Nov 7 2026
+
+...TOP OF CADILLAC MOUNTAIN (1532')...
+
+.TONIGHT...Cloudy. Rain early this evening, then a chance of rain
+late this evening and overnight. Patchy fog late. Lows in the mid
+40s. Northeast winds 10 to 20 mph shifting to the west 10 to 15 mph
+after midnight. Chance of rain 80 percent. No lightning risk. 
+.SUNDAY...Mostly cloudy. Areas of fog in the morning. Rain. Highs in
+the upper 40s. Temperature falling into the mid 40s in the
+afternoon. West winds 10 to 20 mph. Chance of rain 80 percent. No
+lightning risk. 
+
+$$
+
+MEZ002-080900-
+Top of Deboullie Mountain-
+144 PM EST Sat Nov 7 2026
+
+...TOP OF DEBOULLIE MOUNTAIN (1981')...
+
+.TONIGHT...Cloudy, rain. Snow late. Patchy fog late. Little or no
+snow accumulation. Near steady temperature in the mid 30s. Northeast
+winds 15 to 20 mph. Chance of precipitation 90 percent. No lightning
+risk. 
+.SUNDAY...Cloudy. Patchy fog in the morning. Rain and snow in the
+morning, then a chance of rain with a slight chance of snow in the
+afternoon. Little or no snow accumulation. Highs in the upper 30s.
+Northwest winds 10 to 20 mph. Chance of precipitation 80 percent. No
+lightning risk. 
+
+$$
+
+MEZ006-080900-
+Top of Mars Hill Mountain-
+144 PM EST Sat Nov 7 2026
+
+...TOP OF MARS HILL MOUNTAIN (1749')...
+
+.TONIGHT...Cloudy, rain. Near steady temperature in the lower 40s.
+Northeast winds 15 to 20 mph. Chance of rain 90 percent. No
+lightning risk. 
+.SUNDAY...Cloudy. Rain likely. Highs in the lower 40s. Northwest
+winds 15 to 25 mph. Chance of rain 70 percent. No lightning risk. 
+
+$$
+
+MEZ010-080900-
+Top of White Cap Mountain-
+144 PM EST Sat Nov 7 2026
+
+...TOP OF WHITE CAP MOUNTAIN (3654')...
+
+.TONIGHT...Cloudy, rain, breezy with lows in the mid 30s. Northeast
+winds 20 to 30 mph. Chance of rain near 100 percent. Lightning risk
+is limited. 
+.SUNDAY...Cloudy. Rain and snow. Little or no snow accumulation.
+Breezy. Near steady temperature in the lower 30s. Northwest winds
+20 to 30 mph. Chance of precipitation 80 percent. Wind chills around
+19. No lightning risk. 
+
+$$
+
+MEZ010-080900-
+Moosehead Lake-
+144 PM EST Sat Nov 7 2026
+
+...MOOSEHEAD LAKE...
+
+.TONIGHT...Cloudy, rain. Patchy fog late this evening and overnight.
+Lows in the mid 30s. North winds 10 to 20 mph. Highest waves around
+2 feet. Chance of rain 90 percent. Lightning risk is limited. Water
+temperature around 51 degrees Fahrenheit. 
+.SUNDAY...Cloudy. Patchy fog in the morning. Rain and snow in the
+morning, then a chance of rain in the afternoon. Highs in the lower
+40s. Highest waves around 2 feet. Northwest winds 10 to 25 mph.
+Chance of precipitation 80 percent. No lightning risk. Water
+temperature around 51 degrees Fahrenheit. 
+
+$$
+
+MEZ001-080900-
+Allagash Wilderness Waterway-
+144 PM EST Sat Nov 7 2026
+
+...ALLAGASH WILDERNESS WATERWAY...
+
+.TONIGHT...Cloudy, rain. Snow late. Areas of fog late. Little or no
+snow accumulation. Lows in the lower 30s. Northeast winds 10 to
+15 mph. Chance of precipitation 90 percent. No lightning risk. 
+.SUNDAY...Cloudy. Areas of fog in the morning. Rain and snow likely
+in the morning, then a chance of rain in the afternoon. Little or no
+snow accumulation. Highs around 40. Northwest winds 10 to 15 mph.
+Chance of precipitation 70 percent. No lightning risk. 
+
+$$
+
+MEZ030-080900-
+St Croix River-
+144 PM EST Sat Nov 7 2026
+
+...ST CROIX RIVER...
+
+.TONIGHT...Cloudy, rain. Areas of fog late. Lows around 40.
+Northeast winds 10 to 15 mph decreasing to up to 10 mph after
+midnight. Chance of rain near 100 percent. No lightning risk. 
+.SUNDAY...Cloudy. Areas of fog in the morning. Rain likely. Highs in
+the upper 40s. North winds up to 10 mph shifting to the northwest
+10 to 15 mph in the afternoon. Chance of rain 70 percent. No
+lightning risk. 
+
+$$
+
+MEZ030-080900-
+West Quoddy Head-
+144 PM EST Sat Nov 7 2026
+
+...WEST QUODDY HEAD...
+
+.TONIGHT...Cloudy. Patchy fog this evening, then areas of fog after
+midnight. Rain, mainly this evening. Near steady temperature in the
+lower 50s. East winds 10 to 20 mph shifting to the southeast up to
+10 mph after midnight. Chance of rain near 100 percent. No lightning
+risk. Water temperature around 51 degrees Fahrenheit. 
+.SUNDAY...Cloudy. Areas of fog in the morning. Rain likely. Near
+steady temperature around 50. Southwest winds 10 to 15 mph shifting
+to the west 10 to 20 mph in the afternoon. Chance of rain
+70 percent. No lightning risk. Water temperature around 51 degrees
+Fahrenheit. 
+
+$$
+
+MEZ004>006-010-011-031-080900-
+Upper Penobscot Watershed-
+144 PM EST Sat Nov 7 2026
+
+...UPPER PENOBSCOT WATERSHED...
+
+.TONIGHT...Cloudy, rain. Patchy fog after midnight. Lows in the
+upper 30s. North winds 10 to 20 mph. Chance of rain near
+100 percent. Lightning risk is limited. 
+.SUNDAY...Cloudy. Areas of fog in the morning. Rain. Highs in the
+mid 40s. Northwest winds 10 to 20 mph. Chance of rain 90 percent. No
+lightning risk. 
+
+For current and forecast flow conditions for the Penobscot,see
+https://water.noaa.gov/wfo/car
+
+$$
+
+MEZ011-015-016-031-080900-
+Lower Penobscot Watershed-
+144 PM EST Sat Nov 7 2026
+
+...LOWER PENOBSCOT WATERSHED...
+
+.TONIGHT...Cloudy. Patchy fog. Rain. Lows around 40. North winds
+10 to 20 mph. Chance of rain near 100 percent. Lightning risk is
+limited. 
+.SUNDAY...Mostly cloudy. Areas of fog in the morning. Rain. Highs in
+the upper 40s. Northwest winds 10 to 20 mph. Chance of rain
+90 percent. No lightning risk. 
+
+For current and forecast flow conditions for the Penobscot,see
+https://water.noaa.gov/wfo/car
+
+$$
+

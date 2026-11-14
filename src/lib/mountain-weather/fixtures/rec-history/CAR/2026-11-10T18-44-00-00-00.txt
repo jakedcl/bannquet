@@ -1,0 +1,226 @@
+
+000
+SXUS41 KCAR 101844
+RECCAR
+
+Recreational Forecast for Northern and Eastern Maine
+National Weather Service Caribou ME
+144 PM EST Tue Nov 10 2026
+
+MEZ004-110900-
+Top of Mount Katahdin-
+144 PM EST Tue Nov 10 2026
+
+...TOP OF MOUNT KATAHDIN (5268')...
+
+.TONIGHT...Cloudy. Widespread snow showers, mainly this evening.
+Snow accumulation around an inch. Lows in the lower 20s. West winds
+10 to 25 mph. Chance of snow near 100 percent. Wind chills around
+10 above. No lightning risk. 
+.VETERANS DAY...Mostly cloudy. Scattered snow showers, mainly in the
+morning. Near steady temperature in the lower 20s. Northwest winds
+15 to 25 mph. Chance of snow 30 percent. Wind chills around 7 above.
+No lightning risk. 
+
+$$
+
+MEZ005-110900-
+Katahdin Woods and Waters National Monument-
+144 PM EST Tue Nov 10 2026
+
+...KATAHDIN WOODS AND WATERS NATIONAL MONUMENT...
+
+.TONIGHT...Cloudy. Widespread rain showers this evening, then
+scattered rain showers after midnight. Scattered snow showers late.
+Little or no snow accumulation. Near steady temperature in the mid
+30s. Light and variable winds becoming northwest up to 10 mph after
+midnight. Chance of precipitation near 100 percent. No lightning
+risk. 
+.VETERANS DAY...Mostly cloudy. Scattered rain and snow showers,
+mainly in the morning. Highs in the upper 30s. Northwest winds 10 to
+15 mph. Chance of precipitation 30 percent. No lightning risk. 
+
+$$
+
+MEZ029-110900-
+Top of Cadillac Mountain-
+144 PM EST Tue Nov 10 2026
+
+...TOP OF CADILLAC MOUNTAIN (1532')...
+
+.TONIGHT...Partly cloudy, then mostly cloudy late this evening and
+early morning, then partly cloudy. Scattered showers this evening.
+Isolated showers after midnight. Lows around 40. West winds 10 to
+20 mph. Chance of rain 40 percent. No lightning risk. 
+.VETERANS DAY...Partly sunny. Highs in the mid 40s. Northwest winds
+10 to 20 mph. No lightning risk. 
+
+$$
+
+MEZ002-110900-
+Top of Deboullie Mountain-
+144 PM EST Tue Nov 10 2026
+
+...TOP OF DEBOULLIE MOUNTAIN (1981')...
+
+.TONIGHT...Mostly cloudy. Scattered snow showers. Near steady
+temperature in the lower 30s. West winds up to 10 mph shifting to
+the northwest 10 to 15 mph after midnight. Chance of snow
+50 percent. No lightning risk. 
+.VETERANS DAY...Mostly cloudy. Scattered snow showers. Highs in the
+mid 30s. Northwest winds 10 to 15 mph. Chance of snow 30 percent. No
+lightning risk. 
+
+$$
+
+MEZ006-110900-
+Top of Mars Hill Mountain-
+144 PM EST Tue Nov 10 2026
+
+...TOP OF MARS HILL MOUNTAIN (1749')...
+
+.TONIGHT...Cloudy. Scattered rain and snow showers early this
+evening, then numerous rain and snow showers late this evening and
+early morning. Scattered snow and rain showers late. Little or no
+snow accumulation. Near steady temperature in the lower 30s.
+Southwest winds up to 10 mph shifting to the northwest 10 to 15 mph
+after midnight. Chance of precipitation 60 percent. No lightning
+risk. 
+.VETERANS DAY...Partly sunny in the morning, then mostly cloudy.
+Scattered snow showers in the morning. Isolated rain showers.
+Isolated snow showers in the afternoon. Highs in the upper 30s.
+Northwest winds 10 to 20 mph. Chance of precipitation 30 percent. No
+lightning risk. 
+
+$$
+
+MEZ010-110900-
+Top of White Cap Mountain-
+144 PM EST Tue Nov 10 2026
+
+...TOP OF WHITE CAP MOUNTAIN (3654')...
+
+.TONIGHT...Cloudy. Widespread snow showers this evening. Numerous
+rain showers late this evening, then scattered snow showers after
+midnight. Snow accumulation around an inch. Lows in the upper 20s.
+Southwest winds 10 to 15 mph shifting to the northwest 15 to 25 mph
+after midnight. Chance of precipitation 90 percent. Wind chills
+around 16. No lightning risk. 
+.VETERANS DAY...Mostly cloudy. Isolated snow showers. Near steady
+temperature in the upper 20s. Northwest winds 15 to 25 mph. Chance
+of snow 20 percent. No lightning risk. 
+
+$$
+
+MEZ010-110900-
+Moosehead Lake-
+144 PM EST Tue Nov 10 2026
+
+...MOOSEHEAD LAKE...
+
+.TONIGHT...Cloudy. Widespread rain showers this evening, then
+scattered rain showers after midnight. Isolated rain showers late.
+Lows in the mid 30s. Southwest winds up to 10 mph increasing to
+northwest 10 to 20 mph after midnight. Highest waves around 2 feet.
+Chance of rain 90 percent. No lightning risk. Water temperature
+around 50 degrees Fahrenheit. 
+.VETERANS DAY...Mostly cloudy. Highs in the upper 30s. Highest waves
+1 foot. Northwest winds 10 to 20 mph. No lightning risk. Water
+temperature around 50 degrees Fahrenheit. 
+
+$$
+
+MEZ001-110900-
+Allagash Wilderness Waterway-
+144 PM EST Tue Nov 10 2026
+
+...ALLAGASH WILDERNESS WATERWAY...
+
+.TONIGHT...Cloudy. Numerous rain and snow showers this evening, then
+scattered rain showers after midnight. Scattered snow showers after
+midnight. Little or no snow accumulation. Near steady temperature in
+the lower 30s. Light and variable winds becoming northwest up to
+10 mph after midnight. Chance of precipitation 70 percent. No
+lightning risk. 
+.VETERANS DAY...Mostly cloudy. Scattered snow and rain showers.
+Highs in the upper 30s. Temperature falling into the lower 30s in
+the afternoon. West winds up to 10 mph. Chance of precipitation
+50 percent. No lightning risk. 
+
+$$
+
+MEZ030-110900-
+St Croix River-
+144 PM EST Tue Nov 10 2026
+
+...ST CROIX RIVER...
+
+.TONIGHT...Mostly cloudy. Numerous rain showers, mainly this
+evening. Near steady temperature in the upper 30s. Light and
+variable winds becoming northwest up to 10 mph after midnight.
+Chance of rain 70 percent. No lightning risk. 
+.VETERANS DAY...Partly sunny in the morning, then mostly cloudy.
+Isolated showers. Highs in the mid 40s. Northwest winds up to
+10 mph. Chance of rain 20 percent. No lightning risk. 
+
+$$
+
+MEZ030-110900-
+West Quoddy Head-
+144 PM EST Tue Nov 10 2026
+
+...WEST QUODDY HEAD...
+
+.TONIGHT...Mostly cloudy. Isolated showers early this evening, then
+numerous showers late this evening and early morning. Isolated
+showers late. Near steady temperature in the mid 40s. West winds up
+to 10 mph. Chance of rain 60 percent. No lightning risk. Water
+temperature around 51 degrees Fahrenheit. 
+.VETERANS DAY...Mostly cloudy in the morning, then partly sunny.
+Isolated showers in the morning. Highs in the mid 40s. Northwest
+winds 10 to 15 mph. Chance of rain 20 percent. No lightning risk.
+Water temperature around 51 degrees Fahrenheit. 
+
+$$
+
+MEZ004>006-010-011-031-110900-
+Upper Penobscot Watershed-
+144 PM EST Tue Nov 10 2026
+
+...UPPER PENOBSCOT WATERSHED...
+
+.TONIGHT...Cloudy. Widespread rain showers this evening, then
+scattered rain showers after midnight. Isolated rain showers late.
+Near steady temperature in the upper 30s. Light and variable winds
+becoming northwest up to 15 mph after midnight. Chance of rain near
+100 percent. No lightning risk. 
+.VETERANS DAY...Mostly cloudy. Isolated snow showers in the morning.
+Isolated rain showers. Highs in the lower 40s. Temperature falling
+into the upper 30s in the afternoon. Northwest winds 10 to 15 mph.
+Chance of precipitation 20 percent. No lightning risk. 
+
+For current and forecast flow conditions for the Penobscot,see
+https://water.noaa.gov/wfo/car
+
+$$
+
+MEZ011-015-016-031-110900-
+Lower Penobscot Watershed-
+144 PM EST Tue Nov 10 2026
+
+...LOWER PENOBSCOT WATERSHED...
+
+.TONIGHT...Mostly cloudy. Scattered showers, mainly this evening.
+Near steady temperature around 40. South winds up to 10 mph shifting
+to the west after midnight. Chance of rain 50 percent. No lightning
+risk. 
+.VETERANS DAY...Partly sunny. Isolated showers. Highs in the mid
+40s. Temperature falling into the lower 40s in the afternoon.
+Northwest winds 10 to 20 mph. Chance of rain 20 percent. No
+lightning risk. 
+
+For current and forecast flow conditions for the Penobscot,see
+https://water.noaa.gov/wfo/car
+
+$$
+

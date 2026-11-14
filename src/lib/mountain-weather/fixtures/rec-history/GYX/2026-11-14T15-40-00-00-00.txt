@@ -1,0 +1,137 @@
+
+000
+SXUS41 KGYX 141540
+RECGYX
+
+Recreation Report for New Hampshire and western Maine
+National Weather Service Gray ME
+1040 AM EST Sat Nov 14 2026
+
+MEZ007>009-NHZ002>004-150200-
+Elevations From 2500 Feet to 4000 Feet in Northern New Hampshire and
+the Western Maine Mountains-
+1040 AM EST Sat Nov 14 2026
+
+...Recreation forecast for elevations between 2500 and 4000 feet in 
+northern New Hampshire and the western Maine mountains...
+
+.REST OF TODAY...Summits obscured. A chance of snow showers late
+this morning, then snow showers likely this afternoon. Highs in the
+lower 30s. Northwest winds up to 10 mph with gusts up to 25 mph.
+Chance of snow 70 percent. 
+.TONIGHT...Summits obscured. A chance of snow showers. Lows in the
+upper 20s. Northwest winds 10 to 15 mph with gusts up to 40 mph.
+Chance of snow 50 percent. 
+.SUNDAY...Summits obscured. A chance of snow showers in the morning.
+Highs in the lower 30s. Northwest winds 10 to 20 mph with gusts up
+to 50 mph. Chance of snow 40 percent. 
+
+$$
+
+MEZ007>009-NHZ002>004-150200-
+Summits Above 4000 Feet in Northern New Hampshire and Western Maine-
+1040 AM EST Sat Nov 14 2026
+
+...Recreation forecast for summits above 4000 feet in northern New
+Hampshire and western Maine...
+
+.REST OF TODAY...Summits obscured. A chance of snow showers late
+this morning, then snow showers likely this afternoon. Highs in the
+upper 20s. Northwest winds 10 to 15 mph with gusts up to 30 mph.
+Chance of snow 70 percent. 
+.TONIGHT...Summits obscured. A chance of snow showers. Lows in the
+mid 20s...except around 20 at elevations above 5000 feet. Northwest
+winds around 20 mph increasing to around 30 mph after midnight.
+Gusts up to 65 mph. Chance of snow 50 percent. Wind chill values as
+low as 8 below after midnight. 
+.SUNDAY...Summits obscured. A chance of snow showers. Highs around
+30...except in the mid 20s at elevations above 5000 feet. Northwest
+winds 15 to 25 mph. At elevations above 5000 feet, northwest winds
+around 35 mph increasing to around 45 mph in the afternoon. Chance
+of snow 40 percent. Wind chill values as low as 10 below. 
+
+$$
+
+NHZ011-015-150200-
+Summits of Mount Monadnock and North Pack Monadnock Mountain-
+1040 AM EST Sat Nov 14 2026
+
+...Recreation forecast for summits of Mount Monadnock and North Pack
+Monadnock mountain...
+
+.REST OF TODAY...Mostly cloudy. A slight chance of snow showers this
+afternoon. Highs in the upper 30s. Northwest winds up to 10 mph.
+Chance of snow 20 percent. 
+.TONIGHT...Mostly cloudy. Lows around 30. Northwest winds 10 to
+15 mph with gusts up to 25 mph. 
+.SUNDAY...Mostly cloudy. Highs in the upper 30s. Northwest winds
+10 to 15 mph with gusts up to 25 mph. 
+
+$$
+
+MEZ024-150200-
+Islands of Casco Bay Maine-
+1040 AM EST Sat Nov 14 2026
+
+...Forecast for the Islands of Casco Bay Maine...
+
+.REST OF TODAY...Mostly cloudy. A slight chance of showers this
+afternoon. Highs in the mid 40s. Light and variable winds. Chance of
+rain 20 percent. 
+.TONIGHT...Mostly cloudy. Lows in the mid 30s. Light and variable
+winds becoming northwest around 10 mph after midnight. 
+.SUNDAY...Partly sunny in the morning, then becoming mostly cloudy.
+Highs in the upper 40s. Northwest winds 10 to 15 mph with gusts up
+to 25 mph. 
+
+$$
+
+MEZ025-027-150200-
+Islands and Necks of the Mid Coast of Maine-
+1040 AM EST Sat Nov 14 2026
+
+...Forecast for the Islands and Necks of the Mid Coast of Maine...
+
+.REST OF TODAY...Mostly cloudy. A slight chance of showers this
+afternoon. Highs in the mid 40s. Light and variable winds. Chance of
+rain 20 percent. 
+.TONIGHT...Mostly cloudy. Lows in the upper 20s. Light and variable
+winds. 
+.SUNDAY...Partly sunny in the morning, then becoming mostly cloudy.
+Highs in the mid 40s. Northwest winds 10 to 15 mph with gusts up to
+25 mph. 
+
+$$
+
+MEZ027-028-150200-
+Islands of Penobscot Bay Maine-
+1040 AM EST Sat Nov 14 2026
+
+...Forecast for the Islands of Penobscot Bay Maine...
+
+.REST OF TODAY...Mostly cloudy. Highs in the mid 40s. Light and
+variable winds. 
+.TONIGHT...Cloudy. Lows in the lower 30s. Light and variable winds
+becoming northwest around 10 mph after midnight. 
+.SUNDAY...Mostly cloudy. Highs in the mid 40s. Northwest winds 10 to
+15 mph with gusts up to 25 mph. 
+
+$$
+
+MEZ026-027-150200-
+Offshore Islands of Monhegan, Matinicus and Criehaven-
+1040 AM EST Sat Nov 14 2026
+
+...Forecast for the Offshore Islands of Monhegan, Matinicus and
+Criehaven...
+
+.REST OF TODAY...Mostly cloudy. A slight chance of showers this
+afternoon. Highs in the mid 40s. Northwest winds up to 10 mph.
+Chance of rain 20 percent. 
+.TONIGHT...Mostly cloudy. Lows in the upper 30s. Northwest winds
+10 to 15 mph with gusts up to 25 mph. 
+.SUNDAY...Partly sunny in the morning, then becoming mostly cloudy.
+Highs in the mid 40s. Northwest winds 10 to 20 mph. 
+
+$$
+

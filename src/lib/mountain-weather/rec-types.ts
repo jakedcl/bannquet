@@ -28,9 +28,16 @@ export type RecBulletin = {
 
 export type RecPlaceSlice = {
   office: RecOffice;
+  /** Primary binding label (first of sectionMatches). */
   sectionMatch: string;
+  sectionMatches: string[];
+  /** Needle that matched in the bulletin. */
+  matchedSectionTitle: string;
   nearbyLabel: string | null;
   section: RecSection;
   issuanceTime: string | null;
   productId: string | null;
+  /** Latest REC product issuance time for this office (may differ from `issuanceTime` when using a prior bulletin). */
+  latestIssuanceTime: string | null;
+  notInLatestIssuance: boolean;
 };

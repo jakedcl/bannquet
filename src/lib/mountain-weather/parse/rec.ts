@@ -91,3 +91,21 @@ export function pickRecSection(bulletin: RecBulletin, sectionMatch: string): Rec
   if (exact) return exact;
   return bulletin.sections.find((s) => normalizeSearch(s.ellipsisTitle, s.zoneHeader, s.theTitle).includes(needle)) ?? null;
 }
+
+export function pickRecSectionFromMatches(
+  bulletin: RecBulletin,
+  sectionMatches: string[],
+): { section: RecSection; matched: string } | null {
+  for (const match of sectionMatches) {
+    const section = pickRecSection(bulletin, match);
+    if (section) {
+      const title = section.theTitle ?? section.ellipsisTitle ?? section.zoneHeader ?? match;
+      return { section, matched: title.includes(match) ? title : match };
+    }
+  }
+  return null;
+}
+
+export function matchedRecHeaderLabel(section: RecSection, matchedNeedle: string): string {
+  return section.theTitle ?? section.ellipsisTitle ?? section.zoneHeader ?? matchedNeedle;
+}

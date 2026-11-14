@@ -14,7 +14,7 @@ export type SourceDef = {
   season?: 'winter' | 'summer';
 };
 
-export type SourceStatus = 'ok' | 'stale' | 'seasonal-off' | 'link-only' | 'error';
+export type SourceStatus = 'ok' | 'stale' | 'seasonal-off' | 'link-only' | 'not-in-issuance' | 'error';
 
 export type SourceResult<T> = {
   status: SourceStatus;

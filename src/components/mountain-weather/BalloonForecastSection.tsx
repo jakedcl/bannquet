@@ -1,4 +1,5 @@
 import { CollapsibleSection } from '@/components/mountain-weather/CollapsibleSection';
+import { NotInIssuanceNote } from '@/components/mountain-weather/NotInIssuanceNote';
 import { SourceErrorNote } from '@/components/mountain-weather/SourceErrorNote';
 import type { BalloonCell, BalloonPlaceSlice, BalloonRow } from '@/lib/mountain-weather/balloon-types';
 import { defaultResumeHint } from '@/lib/mountain-weather/parse/seasonal-off';
@@ -39,6 +40,24 @@ export function BalloonForecastSection({ result }: { result: SourceResult<Balloo
   const def = NWS_BTV_BALLOON_DEF;
   const stale = result.status === 'stale' ? ' · stale' : '';
 
+  if (result.status === 'not-in-issuance') {
+    return (
+      <CollapsibleSection title="Ridge / balloon wind forecast" subtitle={`${def.org} · not in this issuance${stale}`}>
+        <NotInIssuanceNote
+          label="Ridge / balloon wind forecast"
+          href={result.sourceUrl ?? def.url}
+          latestIssuanceEt={formatEt(result.issuedAt)}
+        />
+        <p className="text-xs text-gray-700">
+          {def.org} ·{' '}
+          <a href={def.url} className="font-bold underline" target="_blank" rel="noopener noreferrer">
+            Source
+          </a>
+        </p>
+      </CollapsibleSection>
+    );
+  }
+
   if (result.status === 'error' || !result.data) {
     return (
       <CollapsibleSection title="Ridge / balloon wind forecast" subtitle={`${def.org} (unavailable)${stale}`}>
@@ -53,13 +72,13 @@ export function BalloonForecastSection({ result }: { result: SourceResult<Balloo
     );
   }
 
-  const { region, regionMatch, nearbyLabel } = result.data;
+  const { region, regionMatch, nearbyLabel, matchedRegionTitle } = result.data;
   const seasonal = result.status === 'seasonal-off';
 
   return (
     <CollapsibleSection
       title="Ridge / balloon wind forecast"
-      subtitle={`${def.org} · ${region.regionTitle}${nearbyLabel ? ` · ${nearbyLabel}` : ''}${seasonal ? ' · off season' : ''}${stale}`}
+      subtitle={`${def.org} · ${matchedRegionTitle ?? region.regionTitle}${nearbyLabel ? ` · ${nearbyLabel}` : ''}${seasonal ? ' · off season' : ''}${stale}`}
       defaultOpen={!seasonal}
     >
       <div className="space-y-3 text-sm">

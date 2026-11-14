@@ -1,0 +1,240 @@
+
+000
+SXUS41 KALY 071833
+RECALY
+
+Recreational Forecast
+National Weather Service Albany NY
+133 PM EST Sat Nov 7 2026
+
+
+NYZ042-043-041-049>052-083-084-080500-
+Lake George-
+133 PM EST Sat Nov 7 2026
+
+...Lake George Recreational Forecast...
+
+.TODAY...
+Max Temperature...In the lower 50s. 
+Min Temperature...Around 50. 
+Average Dew Points...In the upper 40s. 
+Minimum Humidity...85 TO 95 percent. 
+Wind...Northeast up to 10 knots. 
+Weather...Rain showers likely. 
+Lightning...No Lightning expected. 
+
+.TONIGHT...
+Max Temperature...In the lower 50s. 
+Min Temperature...In the lower 40s. 
+Average Dew Points...In the mid 40s. 
+Minimum Humidity...85 TO 95 percent. 
+Wind...North around 5 knots. 
+Weather...Rain showers. 
+Lightning...No Lightning expected. 
+
+
+.EXTENDED...
+.SUNDAY...Mostly cloudy. Lows in the lower 40s. Highs in the lower
+50s. 
+.MONDAY...Mostly cloudy. Chance of showers. Lows in the lower 40s.
+Highs in the lower 50s. 
+
+$$
+
+NYZ039-041-050-082-080500-
+Great Sacandaga Lake-
+133 PM EST Sat Nov 7 2026
+
+...Great Sacandaga Lake Recreational Forecast...
+
+.TODAY...
+Max Temperature...Around 50. 
+Min Temperature...In the upper 40s. 
+Average Dew Points...In the upper 40s. 
+Minimum Humidity...85 TO 95 percent. 
+Wind...Northwest up to 5 knots. 
+Weather...Chance of rain showers. 
+Lightning...No Lightning expected. 
+
+.TONIGHT...
+Max Temperature...Around 50. 
+Min Temperature...In the lower 40s. 
+Average Dew Points...In the lower 40s. 
+Minimum Humidity...85 TO 95 percent. 
+Wind...Northwest 5 to 10 knots. 
+Weather...Rain showers. 
+Lightning...No Lightning expected. 
+
+
+.EXTENDED...
+.SUNDAY...Mostly cloudy. Showers likely. Lows in the lower 40s.
+Highs in the lower 50s. 
+.MONDAY...Mostly cloudy. Showers likely. Lows around 40. Highs in
+the lower 50s. 
+
+$$
+
+NYZ032-033-082-038>043-048-049-083-084-080500-
+Southern Adirondacks-
+133 PM EST Sat Nov 7 2026
+
+...Southern Adirondacks Recreational Forecast for elevations above 2500 feet...
+
+.TODAY...
+Max Temperature...In the mid 40s. 
+Min Temperature...In the mid 40s. 
+Average Dew Points...In the mid 40s. 
+Minimum Humidity...85 TO 95 percent. 
+Wind...North up to 5 knots. 
+Weather...Chance of rain showers. 
+Lightning...No Lightning expected. 
+
+.TONIGHT...
+Max Temperature...In the mid 40s. 
+Min Temperature...In the mid 30s. 
+Average Dew Points...In the upper 30s. 
+Minimum Humidity...85 TO 95 percent. 
+Wind...Northwest 5 to 15 knots. 
+Weather...Rain showers. 
+Lightning...No Lightning expected. 
+
+
+.EXTENDED...
+.SUNDAY...Mostly cloudy. Chance of showers. Lows in the mid 30s.
+Highs in the mid 40s. 
+.MONDAY...Mostly cloudy. Showers and chance of snow showers. Lows in
+the lower 30s. Highs in the lower 40s. 
+
+$$
+
+VTZ013-014-080500-
+Southern Green Mountains-
+133 PM EST Sat Nov 7 2026
+
+...Southern Green Mountains Recreational Forecast for elevations above 2000 feet...
+
+.TODAY...
+Max Temperature...Around 50. 
+Min Temperature...In the upper 40s. 
+Average Dew Points...In the upper 40s. 
+Minimum Humidity...85 TO 95 percent. 
+Wind...Northeast up to 5 knots. 
+Weather...Chance of rain showers. 
+Lightning...No Lightning expected. 
+
+.TONIGHT...
+Max Temperature...Around 50. 
+Min Temperature...In the mid 30s. 
+Average Dew Points...In the lower 40s. 
+Minimum Humidity...85 TO 95 percent. 
+Wind...Northwest up to 15 knots. 
+Weather...Rain showers. 
+Lightning...No Lightning expected. 
+
+
+.EXTENDED...
+.SUNDAY...Mostly cloudy. Showers likely. Lows in the mid 30s. Highs
+in the mid 40s. 
+.MONDAY...Mostly cloudy. Showers. Lows in the mid 30s. Highs in the
+lower 40s. 
+
+$$
+
+NYZ058-063-080500-
+Catskill Mountains-
+133 PM EST Sat Nov 7 2026
+
+...Eastern Catskills Recreational Forecast for elevations above 2000 feet...
+
+.TODAY...
+Max Temperature...In the mid 40s. 
+Min Temperature...In the lower 40s. 
+Average Dew Points...In the lower 40s. 
+Minimum Humidity...85 TO 95 percent. 
+Wind...Northwest up to 10 knots. 
+Weather...Rain showers likely. 
+Lightning...No Lightning expected. 
+
+.TONIGHT...
+Max Temperature...In the mid 40s. 
+Min Temperature...In the mid 30s. 
+Average Dew Points...In the mid 30s. 
+Minimum Humidity...75 TO 85 percent. 
+Wind...Northwest 10 to 20 knots. 
+Weather...Chance of rain showers. 
+Lightning...No Lightning expected. 
+
+
+.EXTENDED...
+.SUNDAY...Partly cloudy. Lows in the mid 30s. Highs in the upper
+40s. 
+.MONDAY...Partly cloudy. Chance of showers. Lows in the lower 30s.
+Highs in the mid 40s. 
+
+$$
+
+MAZ001-025-080500-
+Berkshire Mountains-
+133 PM EST Sat Nov 7 2026
+
+...Berkshires Recreational Forecast for elevations above 2000 feet...
+
+.TODAY...
+Max Temperature...In the lower 50s. 
+Min Temperature...In the upper 40s. 
+Average Dew Points...In the upper 40s. 
+Minimum Humidity...85 TO 95 percent. 
+Wind...Northwest up to 5 knots. 
+Weather...Chance of rain showers and patchy fog. 
+Lightning...No Lightning expected. 
+
+.TONIGHT...
+Max Temperature...In the lower 50s. 
+Min Temperature...In the upper 30s. 
+Average Dew Points...In the lower 40s. 
+Minimum Humidity...75 TO 85 percent. 
+Wind...Northwest 5 to 15 knots. 
+Weather...Rain showers. 
+Lightning...No Lightning expected. 
+
+
+.EXTENDED...
+.SUNDAY...Mostly cloudy. Chance of showers. Lows in the upper 30s.
+Highs in the upper 40s. 
+.MONDAY...Mostly cloudy. Showers. Lows in the mid 30s. Highs in the
+upper 40s. 
+
+$$
+
+NYZ064-065-080500-
+Mid Hudson Valley-
+133 PM EST Sat Nov 7 2026
+
+...Mid Hudson River Recreational Forecast from Albany to Poughkeepsie...
+
+.TODAY...
+Max Temperature...In the upper 50s. 
+Min Temperature...In the upper 40s. 
+Average Dew Points...Around 50. 
+Minimum Humidity...85 TO 95 percent. 
+Wind...North up to 5 knots. 
+Weather...Chance of rain showers and patchy fog. 
+Lightning...No Lightning expected. 
+
+.TONIGHT...
+Max Temperature...In the upper 50s. 
+Min Temperature...In the lower 40s. 
+Average Dew Points...In the lower 40s. 
+Minimum Humidity...65 TO 75 percent. 
+Wind...Northwest up to 5 knots. 
+Weather...Rain showers likely. 
+Lightning...No Lightning expected. 
+
+
+.EXTENDED...
+.SUNDAY...Partly cloudy. Lows in the lower 40s. Highs around 60. 
+.MONDAY...Partly cloudy. Lows in the upper 30s. Highs in the upper
+50s. 
+
+
+$$

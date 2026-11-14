@@ -1,4 +1,5 @@
 import { CollapsibleSection } from '@/components/mountain-weather/CollapsibleSection';
+import { NotInIssuanceNote } from '@/components/mountain-weather/NotInIssuanceNote';
 import { SourceErrorNote } from '@/components/mountain-weather/SourceErrorNote';
 import type { RecPlaceSlice } from '@/lib/mountain-weather/rec-types';
 import type { SourceResult } from '@/lib/mountain-weather/source-types';
@@ -48,6 +49,18 @@ function RecBlock({ result }: { result: SourceResult<RecPlaceSlice> }) {
   const def = result.data ? recSourceDef(result.data.office) : null;
   const stale = result.status === 'stale' ? ' · stale' : '';
 
+  if (result.status === 'not-in-issuance') {
+    return (
+      <CollapsibleSection title="Recreation forecast (REC)" subtitle={`${def?.org ?? 'NWS'} · not in this issuance${stale}`}>
+        <NotInIssuanceNote
+          label="Recreation forecast (REC)"
+          href={result.sourceUrl ?? def?.url ?? 'https://api.weather.gov/'}
+          latestIssuanceEt={formatEt(result.issuedAt)}
+        />
+      </CollapsibleSection>
+    );
+  }
+
   if (result.status === 'error' || !result.data) {
     return (
       <CollapsibleSection
@@ -64,14 +77,22 @@ function RecBlock({ result }: { result: SourceResult<RecPlaceSlice> }) {
 
   const data = result.data;
   const section = data.section;
-  const title = section.ellipsisTitle ?? section.theTitle ?? section.zoneHeader ?? data.sectionMatch;
+  const title = data.matchedSectionTitle ?? section.theTitle ?? section.ellipsisTitle ?? section.zoneHeader ?? data.sectionMatch;
 
   return (
     <CollapsibleSection
       title="Recreation forecast (REC)"
-      subtitle={`${def?.org} · ${title}${data.nearbyLabel ? ` · ${data.nearbyLabel}` : ''}${stale}`}
+      subtitle={`${def?.org} · ${title}${data.nearbyLabel ? ` · ${data.nearbyLabel}` : ''}${data.notInLatestIssuance ? ' · prior issuance' : ''}${stale}`}
       defaultOpen
     >
+      {data.notInLatestIssuance ? (
+        <p className="mb-2 text-xs text-gray-700">
+          Not in latest bulletin ({formatEt(data.latestIssuanceTime)} ET). Showing{' '}
+          {formatEt(result.issuedAt)} ET instead. Matched header: {data.matchedSectionTitle}
+        </p>
+      ) : (
+        <p className="mb-2 text-xs text-gray-700">Matched header: {data.matchedSectionTitle}</p>
+      )}
       <div className="space-y-3 text-sm">
         {section.zoneHeader ? <p className="text-xs font-bold uppercase text-gray-700">{section.zoneHeader}</p> : null}
         {section.periods.length > 0 ? (

@@ -1,0 +1,269 @@
+
+000
+SXUS41 KCAR 080644
+RECCAR
+
+Recreational Forecast for Northern and Eastern Maine
+National Weather Service Caribou ME
+144 AM EST Sun Nov 8 2026
+
+MEZ004-082100-
+Top of Mount Katahdin-
+144 AM EST Sun Nov 8 2026
+
+...TOP OF MOUNT KATAHDIN (5268')...
+
+.TODAY...Cloudy. Patchy fog this morning. Widespread snow and rain
+showers, mainly this morning. Little or no snow accumulation. Windy
+with highs in the mid 30s. North winds 20 to 35 mph. Chance of
+precipitation near 100 percent. Wind chills around 12. No lightning
+risk. 
+.TONIGHT...Mostly cloudy in the evening, then partly cloudy.
+Isolated snow showers. Isolated rain showers after midnight. Patchy
+fog after midnight. Very windy with lows in the upper 20s. Northwest
+winds 25 to 40 mph becoming west 15 to 25 mph after midnight. Chance
+of precipitation 20 percent. Wind chills around 15. No lightning
+risk. 
+.MONDAY...Mostly cloudy. Isolated snow showers. Near steady
+temperature in the upper 20s. West winds 15 to 20 mph. Chance of
+snow 20 percent. No lightning risk. 
+
+$$
+
+MEZ005-082100-
+Katahdin Woods and Waters National Monument-
+144 AM EST Sun Nov 8 2026
+
+...KATAHDIN WOODS AND WATERS NATIONAL MONUMENT...
+
+.TODAY...Cloudy. Patchy fog. Widespread showers this morning.
+Scattered showers this afternoon. Near steady temperature around 40.
+Northwest winds 10 to 20 mph. Chance of rain 90 percent. No
+lightning risk. 
+.TONIGHT...Mostly cloudy in the evening, then partly cloudy.
+Scattered rain showers, mainly in the evening. Patchy fog after
+midnight. Lows in the mid 30s. Northwest winds 10 to 20 mph becoming
+southwest up to 10 mph after midnight. Chance of rain 30 percent. No
+lightning risk. 
+.MONDAY...Partly sunny in the morning, then mostly cloudy. Isolated
+rain showers. Highs in the mid 40s. Southwest winds up to 10 mph
+shifting to the west in the afternoon. Chance of rain 20 percent. No
+lightning risk. 
+
+$$
+
+MEZ029-082100-
+Top of Cadillac Mountain-
+144 AM EST Sun Nov 8 2026
+
+...TOP OF CADILLAC MOUNTAIN (1532')...
+
+.TODAY...Mostly cloudy. Patchy fog early this morning. Widespread
+showers until late afternoon. Isolated showers late. Cooler with
+highs in the upper 40s. Temperature falling into the lower 40s this
+afternoon. Northwest winds 10 to 20 mph. Chance of rain 90 percent.
+No lightning risk. 
+.TONIGHT...Partly cloudy in the evening, then mostly clear. Isolated
+showers after midnight. Near steady temperature in the lower 40s.
+West winds 10 to 20 mph. Chance of rain 20 percent. No lightning
+risk. 
+.MONDAY...Partly sunny. Scattered showers in the morning. Highs
+around 50. West winds up to 10 mph increasing to 10 to 15 mph in the
+afternoon. Chance of rain 30 percent. No lightning risk. 
+
+$$
+
+MEZ002-082100-
+Top of Deboullie Mountain-
+144 AM EST Sun Nov 8 2026
+
+...TOP OF DEBOULLIE MOUNTAIN (1981')...
+
+.TODAY...Cloudy. Widespread rain showers. Patchy fog late this
+morning and afternoon. Near steady temperature in the mid 30s. North
+winds 10 to 20 mph. Chance of rain 80 percent. No lightning risk. 
+.TONIGHT...Cloudy. Patchy fog. Scattered rain showers. Isolated snow
+showers after midnight. Near steady temperature in the mid 30s. West
+winds 10 to 20 mph. Chance of precipitation 40 percent. No lightning
+risk. 
+.MONDAY...Mostly cloudy. Patchy fog in the morning. Isolated snow
+showers in the morning. Scattered rain showers. Highs around 40.
+West winds 10 to 15 mph. Chance of precipitation 30 percent. No
+lightning risk. 
+
+$$
+
+MEZ006-082100-
+Top of Mars Hill Mountain-
+144 AM EST Sun Nov 8 2026
+
+...TOP OF MARS HILL MOUNTAIN (1749')...
+
+.TODAY...Cloudy. Widespread rain showers. Patchy fog late this
+morning and early afternoon. Near steady temperature around 40.
+North winds 15 to 25 mph. Chance of rain 80 percent. No lightning
+risk. 
+.TONIGHT...Mostly cloudy. Scattered rain showers, mainly in the
+evening. Breezy with lows in the lower 30s. Northwest winds 20 to
+30 mph becoming west 10 to 20 mph after midnight. Chance of rain
+40 percent. No lightning risk. 
+.MONDAY...Mostly cloudy. Scattered rain showers. Highs in the lower
+40s. West winds 10 to 15 mph. Chance of rain 30 percent. No
+lightning risk. 
+
+$$
+
+MEZ010-082100-
+Top of White Cap Mountain-
+144 AM EST Sun Nov 8 2026
+
+...TOP OF WHITE CAP MOUNTAIN (3654')...
+
+.TODAY...Cloudy. Patchy fog. Widespread rain showers this morning.
+Widespread snow showers late this morning, then scattered rain and
+snow showers this afternoon. Little or no snow accumulation. Breezy
+with highs in the mid 30s. Northwest winds 20 to 30 mph. Chance of
+precipitation near 100 percent. Wind chills around 18. No lightning
+risk. 
+.TONIGHT...Mostly cloudy in the evening, then partly cloudy. Patchy
+fog. Isolated rain and snow showers after midnight. Windy. Near
+steady temperature in the lower 30s. Northwest winds 20 to 35 mph
+shifting to the west 15 to 25 mph after midnight. Chance of
+precipitation 20 percent. Wind chills around 20. No lightning risk. 
+.MONDAY...Mostly cloudy. Isolated snow showers in the morning.
+Isolated rain showers. Near steady temperature in the mid 30s. West
+winds 10 to 20 mph. Chance of precipitation 20 percent. No lightning
+risk. 
+
+$$
+
+MEZ010-082100-
+Moosehead Lake-
+144 AM EST Sun Nov 8 2026
+
+...MOOSEHEAD LAKE...
+
+.TODAY...Cloudy. Patchy fog this morning. Widespread rain showers
+until late afternoon. Scattered rain showers late. Near steady
+temperature in the upper 30s. Northwest winds 10 to 20 mph. Highest
+waves around 2 feet. Chance of rain 90 percent. No lightning risk.
+Water temperature around 51 degrees Fahrenheit. 
+.TONIGHT...Mostly cloudy in the evening, then partly cloudy. Patchy
+fog after midnight. Isolated rain showers after midnight. Lows in
+the mid 30s. Highest waves around 2 feet. West winds 10 to 20 mph.
+Chance of rain 20 percent. No lightning risk. Water temperature
+around 51 degrees Fahrenheit. 
+.MONDAY...Mostly cloudy. Scattered rain showers, mainly in the
+morning. Highs in the mid 40s. Highest waves 1 foot. West winds
+10 to 15 mph. Chance of rain 30 percent. No lightning risk. Water
+temperature around 51 degrees Fahrenheit. 
+
+$$
+
+MEZ001-082100-
+Allagash Wilderness Waterway-
+144 AM EST Sun Nov 8 2026
+
+...ALLAGASH WILDERNESS WATERWAY...
+
+.TODAY...Cloudy. Patchy fog. Widespread rain showers until late
+afternoon. Scattered rain showers late. Highs in the upper 30s.
+Northwest winds 10 to 15 mph. Chance of rain 90 percent. No
+lightning risk. 
+.TONIGHT...Mostly cloudy. Patchy fog. Isolated rain showers in the
+evening. Scattered rain showers with isolated snow showers after
+midnight. Near steady temperature in the mid 30s. Northwest winds up
+to 15 mph shifting to the west after midnight. Chance of
+precipitation 30 percent. No lightning risk. 
+.MONDAY...Mostly cloudy. Scattered rain showers. Highs in the mid
+40s. West winds up to 10 mph. Chance of rain 30 percent. No
+lightning risk. 
+
+$$
+
+MEZ030-082100-
+St Croix River-
+144 AM EST Sun Nov 8 2026
+
+...ST CROIX RIVER...
+
+.TODAY...Cloudy. Patchy fog. Widespread showers. Highs in the upper
+40s. North winds up to 10 mph shifting to the northwest 10 to 15 mph
+this afternoon. Chance of rain 90 percent. No lightning risk. 
+.TONIGHT...Mostly cloudy. Patchy fog in the evening. Scattered rain
+showers in the evening. Lows in the mid 30s. West winds 10 to 15 mph
+shifting to the southwest after midnight. Chance of rain 30 percent.
+No lightning risk. 
+.MONDAY...Partly sunny in the morning, then mostly cloudy. Isolated
+showers in the morning. Highs around 50. West winds up to 10 mph.
+Chance of rain 20 percent. No lightning risk. 
+
+$$
+
+MEZ030-082100-
+West Quoddy Head-
+144 AM EST Sun Nov 8 2026
+
+...WEST QUODDY HEAD...
+
+.TODAY...Cloudy. Patchy fog until late afternoon. Scattered showers
+early this morning. Numerous showers late this morning and
+afternoon. Near steady temperature around 50. South winds 10 to
+15 mph shifting to the west 10 to 20 mph this afternoon. Chance of
+rain 70 percent. No lightning risk. Water temperature around
+51 degrees Fahrenheit. 
+.TONIGHT...Mostly cloudy in the evening, then partly cloudy. Near
+steady temperature in the mid 40s. West winds 10 to 20 mph. No
+lightning risk. Water temperature around 51 degrees Fahrenheit. 
+.MONDAY...Partly sunny. Isolated showers. Highs in the lower 50s.
+West winds up to 10 mph. Chance of rain 20 percent. No lightning
+risk. Water temperature around 51 degrees Fahrenheit. 
+
+$$
+
+MEZ004>006-010-011-031-082100-
+Upper Penobscot Watershed-
+144 AM EST Sun Nov 8 2026
+
+...UPPER PENOBSCOT WATERSHED...
+
+.TODAY...Cloudy. Patchy fog. Widespread rain showers this morning.
+Scattered rain showers this afternoon. Near steady temperature in
+the lower 40s. Northwest winds 10 to 20 mph. Chance of rain near
+100 percent. No lightning risk. 
+.TONIGHT...Mostly cloudy in the evening, then partly cloudy.
+Isolated rain showers. Patchy fog after midnight. Lows in the mid
+30s. West winds 10 to 15 mph shifting to the southwest after
+midnight. Chance of rain 20 percent. No lightning risk. 
+.MONDAY...Partly sunny in the morning, then mostly cloudy. Isolated
+rain showers. Highs in the upper 40s. Southwest winds up to 10 mph
+shifting to the west 10 to 15 mph in the afternoon. Chance of rain
+20 percent. No lightning risk. 
+
+For current and forecast flow conditions for the Penobscot,see
+https://water.noaa.gov/wfo/car
+
+$$
+
+MEZ011-015-016-031-082100-
+Lower Penobscot Watershed-
+144 AM EST Sun Nov 8 2026
+
+...LOWER PENOBSCOT WATERSHED...
+
+.TODAY...Cloudy. Patchy fog until late afternoon. Widespread showers
+until late afternoon, then scattered showers late. Near steady
+temperature in the mid 40s. Northwest winds 10 to 20 mph. Chance of
+rain near 100 percent. No lightning risk. 
+.TONIGHT...Mostly cloudy in the evening, then partly cloudy. Lows in
+the mid 30s. West winds 10 to 15 mph shifting to the southwest up to
+10 mph after midnight. No lightning risk. 
+.MONDAY...Mostly cloudy. Isolated rain showers. Highs in the lower
+50s. Southwest winds up to 10 mph shifting to the west 10 to 15 mph
+in the afternoon. Chance of rain 20 percent. No lightning risk. 
+
+For current and forecast flow conditions for the Penobscot,see
+https://water.noaa.gov/wfo/car
+
+$$
+

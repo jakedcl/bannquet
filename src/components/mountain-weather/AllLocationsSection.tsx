@@ -1,4 +1,5 @@
 import { CollapsibleSection } from '@/components/mountain-weather/CollapsibleSection';
+import { NotInIssuanceNote } from '@/components/mountain-weather/NotInIssuanceNote';
 import { SourceErrorNote } from '@/components/mountain-weather/SourceErrorNote';
 import type { AllLocationsPlaceSlice } from '@/lib/mountain-weather/all-locations-types';
 import { defaultResumeHint } from '@/lib/mountain-weather/parse/seasonal-off';
@@ -30,6 +31,21 @@ function AllLocationsBlock({ result }: { result: SourceResult<AllLocationsPlaceS
   const def = result.data ? OFFICE_DEF[result.data.office] : null;
   const stale = result.status === 'stale' ? ' · stale' : '';
   const seasonal = result.status === 'seasonal-off';
+
+  if (result.status === 'not-in-issuance') {
+    return (
+      <CollapsibleSection
+        title="allLocations narrative"
+        subtitle={def ? `${def.org} · not in this issuance${stale}` : 'allLocations not in this issuance'}
+      >
+        <NotInIssuanceNote
+          label="allLocations narrative"
+          href={result.sourceUrl ?? def?.url ?? 'https://www.weather.gov/'}
+          latestIssuanceEt={formatEt(result.issuedAt)}
+        />
+      </CollapsibleSection>
+    );
+  }
 
   if (result.status === 'error' || !result.data) {
     return (
