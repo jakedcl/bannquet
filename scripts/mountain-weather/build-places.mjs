@@ -21,15 +21,15 @@ const SECTION_SLUGS = {
   'Jay Peak': 'jay-peak',
   'Northern Greens': 'northern-greens',
   'Central Greens': 'central-greens',
-  'Northeast Kingdom (new)': 'northeast-kingdom',
+  'Northeast Kingdom': 'northeast-kingdom',
   'Southern Greens': 'southern-greens',
   'Presidential Range': 'presidential-range',
   'Franconia & Pemi': 'franconia-pemi',
   'Rumney Climbing': 'rumney-climbing',
-  'Monadnock Region (new)': 'monadnock-region',
+  'Monadnock Region': 'monadnock-region',
   'Baxter State Park': 'baxter-state-park',
   'Mahoosucs & Bigelow': 'mahoosucs-bigelow',
-  'Northern Maine (new)': 'northern-maine',
+  'Northern Maine': 'northern-maine',
   'Acadia': 'acadia',
 };
 

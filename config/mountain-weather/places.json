@@ -587,7 +587,7 @@
         },
         {
           "id": "northeast-kingdom",
-          "title": "Northeast Kingdom (new)",
+          "title": "Northeast Kingdom",
           "places": [
             {
               "id": "signal-mountain",
@@ -873,7 +873,7 @@
         },
         {
           "id": "monadnock-region",
-          "title": "Monadnock Region (new)",
+          "title": "Monadnock Region",
           "places": [
             {
               "id": "mount-monadnock",
@@ -987,7 +987,7 @@
         },
         {
           "id": "northern-maine",
-          "title": "Northern Maine (new)",
+          "title": "Northern Maine",
           "places": [
             {
               "id": "deboullie-mountain",

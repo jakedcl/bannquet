@@ -20,6 +20,13 @@ export type StateGlance = {
   regions: RegionGlance[];
 };
 
+export type SectionGlanceGroup = {
+  sectionId: string;
+  title: string;
+  href: string;
+  places: HubGlance[];
+};
+
 async function mapPool<T, R>(items: T[], limit: number, fn: (item: T) => Promise<R>): Promise<R[]> {
   const results = new Array<R>(items.length);
   let next = 0;
@@ -107,18 +114,23 @@ export async function loadPlaceGlances(
   });
 }
 
-export async function loadAllPlaceGlancesForState(
+export async function loadStatePlaceGlancesGrouped(
   stateCode: MountainStateCode,
   now = new Date(),
-): Promise<HubGlance[]> {
+): Promise<SectionGlanceGroup[]> {
   const state = MOUNTAIN_STATES.find((entry) => entry.code === stateCode);
   if (!state) return [];
-  const jobs = state.sections.flatMap((section) =>
-    section.places.map((place) => ({ sectionId: section.id, place })),
-  );
-  return mapPool(jobs, POOL, async ({ sectionId, place }) => {
-    const result = await readNwsGridBaseline(place);
-    const href = mountainWeatherPath(stateCode, sectionId, place.id);
-    return hubGlanceFromBaseline(result, { title: place.name, href }, now);
+  return mapPool(state.sections, POOL, async (section) => {
+    const places = await mapPool(section.places, POOL, async (place) => {
+      const result = await readNwsGridBaseline(place);
+      const href = mountainWeatherPath(stateCode, section.id, place.id);
+      return hubGlanceFromBaseline(result, { title: place.name, href }, now);
+    });
+    return {
+      sectionId: section.id,
+      title: section.title,
+      href: mountainWeatherPath(stateCode, section.id),
+      places,
+    };
   });
 }

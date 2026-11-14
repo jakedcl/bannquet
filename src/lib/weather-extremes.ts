@@ -98,5 +98,3 @@ export async function loadWeatherExtremes(): Promise<ExtremeReport & { glances?:
     failed: report.failed,
   };
 }
-
-export { feelsLikeF };

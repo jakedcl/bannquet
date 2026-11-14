@@ -19,6 +19,9 @@ function EventList({ title, rows }: { title: string; rows: UsnoTimedEvent[] }) {
 }
 
 export function SkySection({ data }: { data: PlaceSkyData }) {
+  if (data.bundle.status === 'error' && data.days.length === 0) {
+    return null;
+  }
   return (
     <CollapsibleSection title="Sun &amp; moon" subtitle={`USNO RSTT · ${USNO_RSTT_ONEDAY_DEF.org} · times in ET`} defaultOpen={false}>
       {data.bundle.status === 'error' ? (

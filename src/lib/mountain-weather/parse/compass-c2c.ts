@@ -26,24 +26,10 @@ export type CompassEss = {
   windSpeed: number | null;
 };
 
-export type CompassCamera = {
-  id: string;
-  name: string;
-  lat: number;
-  lon: number;
-  status: string | null;
-  imageUrl: string | null;
-};
-
 function compassCoord(raw: unknown): number | null {
   const n = Number(raw);
   if (!Number.isFinite(n)) return null;
   return n / 1_000_000;
-}
-
-function one<T>(value: T | T[] | undefined): T | undefined {
-  if (Array.isArray(value)) return value[0];
-  return value;
 }
 
 const FUTURE_SLACK_MS = 30 * 60 * 1000;
@@ -130,16 +116,6 @@ export function resolveCompassTimestamp(
   };
 }
 
-/** @deprecated use resolveCompassTimestamp */
-export function compassTimestampToEtLabel(raw: string | null): { iso: string | null; etLabel: string | null; note: string } {
-  const resolved = resolveCompassTimestamp(raw, new Date(), false);
-  return {
-    iso: resolved.instant?.toISOString() ?? null,
-    etLabel: resolved.etLabel,
-    note: resolved.note,
-  };
-}
-
 export function parseCompassEssXml(text: string): CompassEss[] {
   const parser = new XMLParser({ ignoreAttributes: false, removeNSPrefix: true });
   const doc = parser.parse(text) as { status?: { essData?: { net?: { ess?: unknown } } } };
@@ -170,28 +146,4 @@ export function parseCompassEssXml(text: string): CompassEss[] {
       };
     })
     .filter((row): row is CompassEss => Boolean(row && row.id));
-}
-
-export function parseCompassCctvXml(text: string): CompassCamera[] {
-  const parser = new XMLParser({ ignoreAttributes: false, removeNSPrefix: true });
-  const doc = parser.parse(text) as { status?: { cctvSnapshotData?: { net?: { cctv?: unknown } } } };
-  const rows = one(doc.status?.cctvSnapshotData?.net?.cctv as unknown[] | Record<string, unknown> | undefined);
-  const list = rows ? (Array.isArray(rows) ? rows : [rows]) : [];
-  return list
-    .map((row) => {
-      const r = row as Record<string, unknown>;
-      const lat = compassCoord(r.lat);
-      const lon = compassCoord(r.lon);
-      if (lat === null || lon === null) return null;
-      const snap = one(r.snapshot as Record<string, unknown> | Record<string, unknown>[] | undefined) as Record<string, unknown> | undefined;
-      return {
-        id: String(r.id ?? (r as Record<string, unknown>)['@_id'] ?? ''),
-        name: String(r.name ?? ''),
-        lat,
-        lon,
-        status: r.status != null ? String(r.status) : null,
-        imageUrl: snap?.imageURL != null ? String(snap.imageURL) : snap?.imageUrl != null ? String(snap.imageUrl) : null,
-      };
-    })
-    .filter((row): row is CompassCamera => Boolean(row && row.id));
 }

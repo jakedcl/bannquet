@@ -63,7 +63,7 @@ export default function WeatherTicker() {
       ) : error || stats.length === 0 ? (
         <p className="px-3 pb-3 pt-2 text-xs font-bold uppercase tracking-wider text-white/80">{error ?? 'No stats yet.'}</p>
       ) : (
-        <ul className="grid gap-px px-3 pb-3 pt-2 sm:grid-cols-3 sm:gap-3">
+        <ul className="grid min-w-0 gap-px px-3 pb-3 pt-2 sm:grid-cols-3 sm:gap-3">
           {stats.map((stat) => (
             <li
               key={`${stat.label}-${stat.location}`}

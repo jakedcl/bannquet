@@ -51,12 +51,7 @@ function SnowImageGrid({
 
 function MeasuredBlock({ data }: { data: PlaceSnowData }) {
   if (!data.measured.length) {
-    return (
-      <CollapsibleSection title="Nearest measured snow" subtitle="NOHRSC · no bound stations">
-        <p className="text-sm text-gray-700">No nearby station snow-depth binding for this place.</p>
-        <p className="text-xs text-gray-700">{snowMeasuredRuleSummary()}</p>
-      </CollapsibleSection>
-    );
+    return null;
   }
   return (
     <CollapsibleSection title="Nearest measured snow" subtitle="NOHRSC / CoCoRaHS station table" defaultOpen>
@@ -150,8 +145,8 @@ export function SnowSection({ data }: { data: PlaceSnowData }) {
         </CollapsibleSection>
       ) : null}
       <MeasuredBlock data={data} />
+      {data.pns ? (
       <CollapsibleSection title={`Storm reports · PNS (${data.office})`} subtitle={pnsDef.org}>
-        {data.pns ? (
           <>
             {data.pns.parseReliable ? (
               <ul className="space-y-1 text-xs">
@@ -175,12 +170,10 @@ export function SnowSection({ data }: { data: PlaceSnowData }) {
               </a>
             </p>
           </>
-        ) : (
-          <p className="text-sm font-bold">PNS not available.</p>
-        )}
       </CollapsibleSection>
+      ) : null}
+      {data.lsrSnow.length ? (
       <CollapsibleSection title={`LSR snowfall (14d, ${data.office})`} subtitle={lsrDef.org}>
-        {data.lsrSnow.length ? (
           <ul className="space-y-1 text-xs">
             {data.lsrSnow.slice(0, 25).map((e) => (
               <li key={e.id}>
@@ -189,15 +182,13 @@ export function SnowSection({ data }: { data: PlaceSnowData }) {
               </li>
             ))}
           </ul>
-        ) : (
-          <p className="text-sm text-gray-700">No snow LSR reports in the last 14 days for this WFO (distinct from zero snow).</p>
-        )}
         <p className="text-xs text-gray-700">
           <a href={lsrDef.url} className="font-bold underline" target="_blank" rel="noopener noreferrer">
             IEM LSR GeoJSON source
           </a>
         </p>
       </CollapsibleSection>
+      ) : null}
     </>
   );
 }

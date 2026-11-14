@@ -3,7 +3,6 @@ import Link from 'next/link';
 import PageWrapper from '@/components/ui/PageWrapper';
 import { LargeTitle } from '@/components/hub/SectionHeader';
 import { Card } from '@/components/hub/Card';
-import { ListGroup, ListRow } from '@/components/hub/ListRow';
 import { MoreSourcesSection } from '@/components/mountain-weather/MoreSourcesSection';
 import { WeatherGlanceList } from '@/components/weather/WeatherGlanceList';
 import {
@@ -18,7 +17,7 @@ import {
   bulletinOfficesForState,
   readBulletinsForOffices,
 } from '@/lib/mountain-weather/read-scope-bulletins';
-import { loadAllPlaceGlancesForState } from '@/lib/weather-hub';
+import { loadStatePlaceGlancesGrouped } from '@/lib/weather-hub';
 
 export const dynamic = 'force-dynamic';
 
@@ -40,8 +39,8 @@ export default async function MountainStatePage({ params }: { params: Promise<{ 
   if (!entry) notFound();
 
   const bulletinOffices = bulletinOfficesForState(stateCode);
-  const [glances, moreSources, bulletins] = await Promise.all([
-    loadAllPlaceGlancesForState(stateCode),
+  const [sections, moreSources, bulletins] = await Promise.all([
+    loadStatePlaceGlancesGrouped(stateCode),
     Promise.resolve(moreSourcesForState(stateCode)),
     readBulletinsForOffices(bulletinOffices),
   ]);
@@ -54,21 +53,22 @@ export default async function MountainStatePage({ params }: { params: Promise<{ 
         </p>
         <LargeTitle title={entry.name} />
         <ScopeBulletinsSection bundles={bulletins} />
-        <Card title="Places" padded={false}>
-          <p className="border-b border-[#5c3a1e]/20 px-3 py-2 text-xs text-gray-700">NWS grid via shared baseline reader (same cache as place pages).</p>
-          <WeatherGlanceList items={glances} />
-        </Card>
-        <Card title="Sections" padded={false}>
-          <ListGroup bare>
-            {entry.sections.map((section) => (
-              <ListRow
-                key={section.id}
-                href={mountainWeatherPath(stateCode, section.id)}
-                title={section.title}
-                subtitle={`${section.places.length} places`}
-              />
+        <Card title="Places by section" padded={false}>
+          <p className="border-b border-[#5c3a1e]/20 px-3 py-2 text-xs text-gray-700">
+            One NWS baseline line per catalog place (same cache as place pages).
+          </p>
+          <div className="divide-y divide-[#5c3a1e]/15">
+            {sections.map((group) => (
+              <section key={group.sectionId} className="min-w-0">
+                <h2 className="bg-[#f4ebd8] px-3 py-2 text-sm font-bold">
+                  <Link href={group.href} className="underline">
+                    {group.title}
+                  </Link>
+                </h2>
+                <WeatherGlanceList items={group.places} />
+              </section>
             ))}
-          </ListGroup>
+          </div>
         </Card>
         <MoreSourcesSection groups={moreSources} />
       </div>

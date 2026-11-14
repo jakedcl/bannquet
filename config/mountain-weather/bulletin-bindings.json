@@ -406,7 +406,7 @@
     },
     "northeast-kingdom": {
       "office": "BTV",
-      "bindReason": "Every place in Northeast Kingdom (new) shares cwa BTV."
+      "bindReason": "Every place in Northeast Kingdom shares cwa BTV."
     },
     "presidential-range": {
       "office": "GYX",
@@ -422,7 +422,7 @@
     },
     "monadnock-region": {
       "office": "GYX",
-      "bindReason": "Every place in Monadnock Region (new) shares cwa GYX."
+      "bindReason": "Every place in Monadnock Region shares cwa GYX."
     },
     "baxter-state-park": {
       "office": "CAR",
@@ -434,7 +434,7 @@
     },
     "northern-maine": {
       "office": "CAR",
-      "bindReason": "Every place in Northern Maine (new) shares cwa CAR."
+      "bindReason": "Every place in Northern Maine shares cwa CAR."
     },
     "acadia": {
       "office": "CAR",
