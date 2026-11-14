@@ -13,6 +13,10 @@ import { GOES19_NE_GEOCOLOR_DEF, GOES19_NE_GLM_DEF } from '@/lib/mountain-weathe
 import { NWS_ALERTS_ACTIVE_NE_DEF } from '@/lib/mountain-weather/readers/nws-alerts-active-ne';
 import { SPC_CONVECTIVE_OUTLOOK_DEF } from '@/lib/mountain-weather/readers/spc-convective-outlook';
 import { NWS_ZONE_GEOJSON_DEF } from '@/lib/mountain-weather/readers/nws-zone-geometry';
+import { USNO_RSTT_ONEDAY_DEF } from '@/lib/mountain-weather/readers/usno-rstt-oneday';
+import { USDM_COUNTY_DROUGHT_DEF } from '@/lib/mountain-weather/readers/usdm-county-drought';
+import { COMPASS_NE_ESS_DEF } from '@/lib/mountain-weather/readers/compass-ne-ess';
+import { AIRNOW_AQI_DEF } from '@/lib/mountain-weather/readers/airnow-aqi';
 
 export const NWS_GRID_BASELINE_DEF: SourceDef = {
   id: 'nws-grid-baseline',
@@ -319,5 +323,9 @@ export const SOURCE_REGISTRY: Record<string, SourceDef> = {
   [NWS_ALERTS_ACTIVE_NE_DEF.id]: NWS_ALERTS_ACTIVE_NE_DEF,
   [SPC_CONVECTIVE_OUTLOOK_DEF.id]: SPC_CONVECTIVE_OUTLOOK_DEF,
   [NWS_ZONE_GEOJSON_DEF.id]: NWS_ZONE_GEOJSON_DEF,
+  [USNO_RSTT_ONEDAY_DEF.id]: USNO_RSTT_ONEDAY_DEF,
+  [USDM_COUNTY_DROUGHT_DEF.id]: USDM_COUNTY_DROUGHT_DEF,
+  [COMPASS_NE_ESS_DEF.id]: COMPASS_NE_ESS_DEF,
+  [AIRNOW_AQI_DEF.id]: AIRNOW_AQI_DEF,
   ...stationRegistry,
 };
