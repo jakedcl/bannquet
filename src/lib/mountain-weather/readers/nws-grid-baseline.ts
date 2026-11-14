@@ -39,7 +39,7 @@ function readerFor(placeId: string, lat: number, lon: number) {
   let reader = readers.get(key);
   if (!reader) {
     reader = cachedSourceRead({
-      cacheKey: ['nws-grid-baseline', placeId, String(lat), String(lon)],
+      cacheKey: ['nws-grid-baseline', 'grid-elev-unitCode-v1', placeId, String(lat), String(lon)],
       def: NWS_GRID_BASELINE_DEF,
       read: () => loadBaseline(lat, lon),
     });

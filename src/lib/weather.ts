@@ -86,7 +86,7 @@ type PointResponse = {
 
 type GridpointResponse = {
   properties: Record<string, GridSeries> & {
-    elevation?: { value?: number | null; uom?: string };
+    elevation?: { value?: number | null; uom?: string; unitCode?: string };
   };
 };
 
