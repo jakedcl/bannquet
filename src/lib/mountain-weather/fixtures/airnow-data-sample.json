@@ -1,0 +1,42 @@
+[
+  {
+    "Latitude": 44.2605,
+    "Longitude": -72.5754,
+    "UTC": "2026-11-14T16:00:00",
+    "Parameter": "PM25",
+    "Unit": "UG/M3",
+    "AQI": 38,
+    "Category": { "Name": "Good" },
+    "SiteName": "Waterbury"
+  },
+  {
+    "Latitude": 44.4759,
+    "Longitude": -73.2121,
+    "UTC": "2026-11-14T16:00:00",
+    "Parameter": "PM25",
+    "Unit": "UG/M3",
+    "AQI": 52,
+    "Category": { "Name": "Moderate" },
+    "SiteName": "Burlington"
+  },
+  {
+    "Latitude": 44.2605,
+    "Longitude": -72.5754,
+    "UTC": "2026-11-14T16:00:00",
+    "Parameter": "OZONE",
+    "Unit": "PPB",
+    "AQI": 44,
+    "Category": { "Name": "Good" },
+    "SiteName": "Waterbury"
+  },
+  {
+    "Latitude": 44.4759,
+    "Longitude": -73.2121,
+    "UTC": "2026-11-14T16:00:00",
+    "Parameter": "OZONE",
+    "Unit": "PPB",
+    "AQI": 61,
+    "Category": { "Name": "Moderate" },
+    "SiteName": "Burlington"
+  }
+]

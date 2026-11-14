@@ -25,7 +25,6 @@ Branch: `lurk/site-overhaul-01d6` · PR [#54](https://github.com/jakedcl/bannque
 - Baxter conditions parse (Google Doc)
 - Compass nearest cameras (no lat/lon in C2C snapshot feed)
 - Nautical/astronomical twilight (not on USNO `rstt/oneday`)
-- Live AirNow without `AIRNOW_API_KEY`
 - Forecast-based rows on ticker/conditions extremes (measured only)
 
 ## Unbound places (no M10 station binding)
@@ -47,7 +46,6 @@ Branch: `lurk/site-overhaul-01d6` · PR [#54](https://github.com/jakedcl/bannque
 
 See [mountain-weather-final-pass.md](./mountain-weather-final-pass.md). Highlights:
 
-- **`AIRNOW_API_KEY`**  
 - **M17**  
 - Migrations **0028** (preview), **0024–0028** (prod)  
 - **Merge PR #54**

@@ -4,7 +4,6 @@ Mountain weather M1–M16 and cosmetic pass are on `lurk/site-overhaul-01d6`. Th
 
 ## Open for Jake
 
-- **`AIRNOW_API_KEY`:** Ground section is link-only until a key is set in Vercel env.
 - **Station bindings (3 unbound NY places):** `snowy-mountain`, `blue-mountain`, `pillsbury-mountain` — no M10 observation binding yet.
 - **DB migrations:** Apply **0028** on **preview**; on **prod** apply **0024–0028** manually per `docs/environments.md` (not part of weather branch merge).
 - **Merge:** Review PR #54 and merge when satisfied.
@@ -12,6 +11,7 @@ Mountain weather M1–M16 and cosmetic pass are on `lurk/site-overhaul-01d6`. Th
 
 ## Done (for reference)
 
+- **AirNow:** Ground section uses one cached `GET /aq/data/` Northeast bbox (PM25 + OZONE, 2 h window, `verbose=1`) instead of retired latLong endpoints.
 - Bald Mountain (VT) GNIS / ALY coords aligned.
 - `mtn-points.xml` office vs CWA documented in AGENTS-style bindings (e.g. Lyon Mountain BTV XML under KALY cwa).
 - Northeast Kingdom, Monadnock Region, Northern Maine section titles (removed “(new)”).

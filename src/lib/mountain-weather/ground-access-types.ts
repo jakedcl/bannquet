@@ -2,6 +2,7 @@ import type { SourceResult } from '@/lib/mountain-weather/source-types';
 import type { MoreSourceLink } from '@/lib/mountain-weather/more-sources';
 import type { CompassEssFields } from '@/lib/mountain-weather/parse/compass-ess-units';
 import type { CompassTimestampInterpretation } from '@/lib/mountain-weather/parse/compass-c2c';
+import type { AirNowPlaceObservation } from '@/lib/mountain-weather/parse/airnow-data';
 
 export type GroundLink = MoreSourceLink & { id: string };
 
@@ -59,7 +60,8 @@ export type PlaceGroundData = {
   drought: SourceResult<CountyDroughtRow | null>;
   compassEss: SourceResult<CompassEssRow | null>;
   compassCamera: SourceResult<CompassCameraRow | null>;
-  airNow: SourceResult<{ aqi: number; category: string; parameter: string; observedAt: string } | null>;
+  airNow: SourceResult<AirNowPlaceObservation | null>;
   airQualityNote: string;
   airNowLink: string;
+  airNowKeyConfigured: boolean;
 };

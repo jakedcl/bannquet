@@ -19,7 +19,8 @@ export const GROUND_ACCESS_NOTES = {
   dec: 'NY DEC trail pages block scripted access (403); links only.',
   compassCameras:
     'Compass cctvSnapshotData has no latitude/longitude in the public C2C feed, so nearest cameras are not bound by distance; use state 511 links.',
-  airnow: 'Air quality data needs an AirNow key (AIRNOW_API_KEY). Without it we show only a link to airnow.gov.',
+  airnow:
+    'AirNow uses one cached /aq/data/ request for the Northeast bbox (last 2 hours); each place shows the nearest PM2.5 and ozone monitors. Without AIRNOW_API_KEY we show only a link to airnow.gov.',
 } as const;
 
 function emptyCompass(): SourceResult<CompassEssRow | null> {
@@ -120,8 +121,9 @@ export async function readPlaceGround(
     readAirNowCurrent(place.lat, place.lon),
   ]);
 
-  const airQualityNote = process.env.AIRNOW_API_KEY?.trim()
-    ? 'AirNow current observation when the API key is configured.'
+  const airNowKeyConfigured = Boolean(process.env.AIRNOW_API_KEY?.trim());
+  const airQualityNote = airNowKeyConfigured
+    ? 'AirNow PM2.5 and ozone from the nearest regional monitors (distant when over 25 mi).'
     : GROUND_ACCESS_NOTES.airnow;
 
   return {
@@ -139,5 +141,6 @@ export async function readPlaceGround(
     airNow,
     airQualityNote,
     airNowLink: 'https://www.airnow.gov/',
+    airNowKeyConfigured,
   };
 }

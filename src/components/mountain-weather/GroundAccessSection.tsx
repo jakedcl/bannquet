@@ -100,16 +100,31 @@ export function GroundAccessSection({ data }: { data: PlaceGroundData }) {
       </SubBlock>
 
       <SubBlock title="Air quality">
-        {data.airNow.data ? (
-          <p className="text-sm font-bold">
-            {data.airNow.data.parameter} AQI {data.airNow.data.aqi} ({data.airNow.data.category})
-          </p>
+        {data.airNow.status === 'error' ? (
+          <p className="text-sm text-gray-700">AirNow unavailable ({data.airNow.error ?? 'error'}).</p>
+        ) : data.airNow.data?.parameters.length ? (
+          <div className="space-y-3">
+            {data.airNow.data.parameters.map((row) => (
+              <div key={row.parameter}>
+                <p className="text-sm font-bold">
+                  {row.displayParameter} AQI {row.aqi} ({row.category})
+                  {row.distant ? ' · distant monitor' : ''}
+                </p>
+                <p className="text-xs text-gray-700">
+                  {row.siteName ? `${row.siteName} · ` : ''}
+                  {row.distanceMi} mi · {row.ageMinutes} min ago
+                </p>
+              </div>
+            ))}
+          </div>
         ) : (
           <p className="text-sm">
             <a href={data.airNowLink} className="font-bold underline" target="_blank" rel="noopener noreferrer">
               AirNow.gov
             </a>{' '}
-            (no live AQI without API key)
+            {data.airNowKeyConfigured
+              ? '(no monitors in regional feed for this point)'
+              : '(no live AQI without API key)'}
           </p>
         )}
       </SubBlock>
