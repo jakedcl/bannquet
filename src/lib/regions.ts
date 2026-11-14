@@ -194,18 +194,6 @@ export const REGION_MAP_CONFIG: Record<string, MapRegionConfig> = Object.fromEnt
   loaded.regions.map((region) => [region.code, region.map]),
 );
 
-export const REGION_WEATHER_SECTIONS: Record<string, WeatherSection[]> = Object.fromEntries(
-  loaded.regions.map((region) => [region.code, region.sections]),
-);
-
 export const isRegionCode = (value: string | null | undefined): value is RegionCode => {
   return !!value && REGIONS.includes(value);
-};
-
-export const getRegionWeatherSections = (region: RegionCode): WeatherSection[] => {
-  return REGION_WEATHER_SECTIONS[region] ?? REGION_WEATHER_SECTIONS[DEFAULT_REGION];
-};
-
-export const getRegionWeatherSpots = (region: RegionCode): WeatherSpot[] => {
-  return getRegionWeatherSections(region).flatMap((section) => section.spots);
 };

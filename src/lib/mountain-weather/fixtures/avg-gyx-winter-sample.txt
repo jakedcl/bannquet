@@ -1,0 +1,236 @@
+
+000
+FWUS41 KGYX 132130
+AVGGYX
+
+AVALANCHE WEATHER GUIDANCE
+NATIONAL WEATHER SERVICE GRAY ME
+430 PM EST FRI NOV 13 2026
+
+
+...PRESIDENTIAL RANGE FORECAST AREA/MOUNT WASHINGTON (6,288 FT)...
+
+DATE                                   SATURDAY 11/14/26                       SUNDAY 11/15/26
+TIME (LT)          19   22   01   04   07   10   13   16   19   22   01   04   07   10   13   16   19
+                   7P   10P  1A   4A   7A   10A  1P   4P   7P   10P  1A   4A   7A   10A  1P   4P   7P   
+
+CLOUD COVER        OV   OV   OV   OV   OV   OV   OV   OV   OV   OV   OV   OV   OV   OV   OV   OV   OV
+CLOUD COVER (%)    90   90   85   85   85   80   85   85   85   85   85   85   75   80   85   85   85
+TEMPERATURE        18   18   18   18   18   17   18   17   20   20   21   19   19   17   18   17   21
+MIN/MAX TEMP                           16                  20                  17                  21
+WIND CHILL         -5   -3   -3   -3   -2   -1    1    0    2    1    0   -4   -5   -7   -6   -8   -5
+WIND DIR           NW   NW    W   NW   NW   NW   NW   NW   NW   NW   NW   NW   NW   NW   NW   NW   NW
+WIND (MPH)         46   37   35   34   31   23   21   19   27   31   41   50   55   50   50   56   74
+WIND GUST (MPH)                                                                                    94
+PRECIP PROB (%)     0    0    0    5   20   10   30   50   30   30   30    5   40   50   40   30   20
+PRECIP TYPE                             S         S    S    S    S    S         S    S    S    S    S
+6 HOUR QPF                 0.00      0.00      0.00      0.01      0.01      0.01      0.01      0.01
+6 HOUR SNOW                 0.0       0.0       0.0       0.2       0.2       0.2       0.2       0.2
+6 HOUR ICE                 0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+SNOW LEVEL (KFT)  0.3  0.1  0.2  0.4  0.5  0.8  1.2  1.4  1.2  1.0  0.8  0.6  0.6  0.8  1.1  1.2  1.2
+SNOW RATIO (:1)    15   16   16   17   17   17   17   17   17   17   17   17   17   17   16   14   13
+SNOW DENSITY (%)    6    6    6    5    5    5    5    5    5    5    5    5    5    5    6    7    7
+
+
+...FRANCONIA NOTCH/MOUNT LAFAYETTE (4000 FT)...
+
+DATE                                   SATURDAY 11/14/26                       SUNDAY 11/15/26
+TIME (LT)          19   22   01   04   07   10   13   16   19   22   01   04   07   10   13   16   19
+                   7P   10P  1A   4A   7A   10A  1P   4P   7P   10P  1A   4A   7A   10A  1P   4P   7P   
+
+CLOUD COVER        OV   OV   OV   OV   OV   OV   OV   OV   OV   OV   OV   OV   OV   OV   OV   OV   OV
+CLOUD COVER (%)    90   95   85   95   95   95   90   90   90   90   90   90   90   90   90   90   85
+TEMPERATURE        28   27   27   27   26   25   27   27   29   29   30   29   28   26   27   27   30
+MIN/MAX TEMP                           25                  29                  27                  30
+WIND CHILL         17   17   17   17   18   16   19   20   21   20   20   18   17   14   15   16   18
+WIND DIR           NW   NW   NW   NW   NW   NW   NW   NW   NW   NW   NW   NW   NW   NW   NW   NW   NW
+WIND (MPH)         13   10   10   10    8    8    8    6    8    9   11   13   13   13   14   13   17
+WIND GUST (MPH)                                                                                      
+PRECIP PROB (%)     0    0    0    0   30   10   30   70   30   30   20    5   50   50   40   30   20
+PRECIP TYPE                             S         S    S    S    S    S         S    S    S    S    S
+6 HOUR QPF                 0.00      0.00      0.00      0.02      0.01      0.02      0.01      0.01
+6 HOUR SNOW                 0.0       0.0       0.0       0.3       0.2       0.3       0.2       0.2
+6 HOUR ICE                 0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+SNOW LEVEL (KFT)  0.3  0.1  0.2  0.4  0.5  0.8  1.3  1.4  1.2  1.1  0.9  0.7  0.7  0.9  1.1  1.3  1.2
+SNOW RATIO (:1)    14   14   15   16   16   16   15   15   15   16   16   16   16   16   15   14   13
+SNOW DENSITY (%)    7    7    6    6    6    6    6    6    6    6    6    6    6    6    6    7    7
+
+
+...TUCKERMAN AND HUNTINGTON RAVINES (4500 FT)...
+
+DATE                                   SATURDAY 11/14/26                       SUNDAY 11/15/26
+TIME (LT)          19   22   01   04   07   10   13   16   19   22   01   04   07   10   13   16   19
+                   7P   10P  1A   4A   7A   10A  1P   4P   7P   10P  1A   4A   7A   10A  1P   4P   7P   
+
+CLOUD COVER        OV   OV   OV   OV   OV   OV   OV   OV   OV   OV   OV   OV   BK   BK   OV   OV   OV
+CLOUD COVER (%)    90   90   80   80   80   75   80   85   80   80   80   75   65   70   70   80   75
+TEMPERATURE        32   31   30   29   29   32   34   33   33   33   32   30   30   32   33   32   34
+MIN/MAX TEMP                           27                  35                  28                  34
+WIND CHILL         21   21   20   19   19   24   27   26   25   24   22   18   18   20   22   20   21
+WIND DIR           NW   NW   NW   NW   NW   NW   NW   NW   NW   NW   NW   NW   NW   NW   NW   NW   NW
+WIND (MPH)         16   13   12   12   11    9    9    8   10   11   13   17   18   18   18   19   25
+WIND GUST (MPH)                                                                                      
+PRECIP PROB (%)     0    0    0    0   20   10   30   40   30   30   30    5   40   40   30   20   20
+PRECIP TYPE                             S         S    S    S    S    S         S    S    S    S    S
+6 HOUR QPF                 0.00      0.00      0.00      0.01      0.01      0.01      0.01      0.00
+6 HOUR SNOW                 0.0       0.0       0.0       0.2       0.2       0.2       0.2       0.0
+6 HOUR ICE                 0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+SNOW LEVEL (KFT)  0.3  0.1  0.2  0.4  0.5  0.8  1.3  1.3  1.2  1.0  0.8  0.6  0.6  0.8  1.1  1.2  1.1
+SNOW RATIO (:1)    13   14   14   15   16   16   15   15   15   16   16   16   16   16   15   13   12
+SNOW DENSITY (%)    7    7    7    6    6    6    6    6    6    6    6    6    6    6    6    7    8
+
+
+...CRAWFORD NOTCH AMC HIGHLAND CENTER (1900 FT)...
+
+DATE                                   SATURDAY 11/14/26                       SUNDAY 11/15/26
+TIME (LT)          19   22   01   04   07   10   13   16   19   22   01   04   07   10   13   16   19
+                   7P   10P  1A   4A   7A   10A  1P   4P   7P   10P  1A   4A   7A   10A  1P   4P   7P   
+
+CLOUD COVER        OV   OV   OV   OV   OV   OV   OV   OV   OV   OV   OV   OV   OV   OV   OV   OV   OV
+CLOUD COVER (%)    90   90   85   90   90   85   85   85   85   85   85   85   85   80   85   85   80
+TEMPERATURE        30   29   28   27   27   29   31   32   32   31   31   30   29   30   31   31   32
+MIN/MAX TEMP                           26                  33                  28                  32
+WIND CHILL         20   20   19   18   19   21   23   26   26   24   22   20   18   19   20   20   20
+WIND DIR           NW   NW   NW   NW   NW   NW   NW   NW   NW   NW   NW   NW   NW   NW   NW   NW   NW
+WIND (MPH)         12   10    9    9    8    8    9    6    6    8   10   12   13   14   17   16   18
+WIND GUST (MPH)                                                                                      
+PRECIP PROB (%)     0    0    0    5   30   10   40   60   30   30   20    5   50   50   40   30   20
+PRECIP TYPE                             S         S    S    S    S    S         S    S    S    S    S
+6 HOUR QPF                 0.00      0.00      0.00      0.01      0.01      0.03      0.01      0.01
+6 HOUR SNOW                 0.0       0.0       0.0       0.1       0.2       0.5       0.2       0.1
+6 HOUR ICE                 0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+SNOW LEVEL (KFT)  0.3  0.1  0.2  0.4  0.5  0.8  1.2  1.4  1.2  1.0  0.9  0.7  0.6  0.9  1.1  1.3  1.2
+SNOW RATIO (:1)    14   14   14   15   16   16   14   13   14   15   15   15   16   15   14   13   12
+SNOW DENSITY (%)    7    7    7    6    6    6    7    7    7    6    6    6    6    6    7    7    8
+
+
+...KANCAMAGUS HIGHWAY PASS (2855 FT)...
+
+DATE                                   SATURDAY 11/14/26                       SUNDAY 11/15/26
+TIME (LT)          19   22   01   04   07   10   13   16   19   22   01   04   07   10   13   16   19
+                   7P   10P  1A   4A   7A   10A  1P   4P   7P   10P  1A   4A   7A   10A  1P   4P   7P   
+
+CLOUD COVER        OV   OV   OV   OV   OV   OV   OV   OV   OV   OV   OV   BK   BK   BK   OV   OV   OV
+CLOUD COVER (%)    90   85   80   85   75   80   80   85   85   85   80   65   60   65   70   70   75
+TEMPERATURE        30   29   27   27   27   30   32   31   31   31   30   29   29   30   31   30   32
+MIN/MAX TEMP                           27                  33                  29                  32
+WIND CHILL         22   21   20   20   20   23   26        25   24   22   20   19   20   21   20   21
+WIND DIR           NW   NW   NW   NW   NW   NW   NW   NW    W   NW   NW   NW   NW   NW   NW   NW   NW
+WIND (MPH)          9    8    6    6    6    6    6    4    5    6    9   10   11   12   12   12   16
+WIND GUST (MPH)                                                                                      
+PRECIP PROB (%)     0    0    0    0   10    5   20   40   20   10   20   10   30   30   20   10    5
+PRECIP TYPE                                       S    S    S         S         S    S    S          
+6 HOUR QPF                 0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+6 HOUR SNOW                 0.0       0.0       0.0       0.0       0.0       0.0       0.0       0.0
+6 HOUR ICE                 0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+SNOW LEVEL (KFT)  0.4  0.2  0.2  0.4  0.5  0.9  1.3  1.4  1.2  1.0  0.8  0.6  0.6  0.9  1.1  1.2  1.1
+SNOW RATIO (:1)    13   14   14   15   15   14   14   13   14   14   14   15   15   15   14   12   11
+SNOW DENSITY (%)    7    7    7    6    6    7    7    7    7    7    7    6    6    6    7    8    9
+
+
+...MOUNT OSCEOLA (4340 FT)...
+
+DATE                                   SATURDAY 11/14/26                       SUNDAY 11/15/26
+TIME (LT)          19   22   01   04   07   10   13   16   19   22   01   04   07   10   13   16   19
+                   7P   10P  1A   4A   7A   10A  1P   4P   7P   10P  1A   4A   7A   10A  1P   4P   7P   
+
+CLOUD COVER        OV   OV   OV   OV   OV   OV   OV   OV   OV   OV   OV   BK   BK   BK   OV   OV   OV
+CLOUD COVER (%)    90   85   80   85   75   80   80   85   85   85   80   70   65   70   75   75   80
+TEMPERATURE        28   28   26   26   26   27   29   27   29   30   29   28   27   27   28   27   30
+MIN/MAX TEMP                           25                  30                  27                  31
+WIND CHILL         15   16   14   14   15   18   20   20   19   19   17   15   14   14   16   14   14
+WIND DIR           NW   NW   NW   NW   NW   NW   NW   NW   NW   NW   NW   NW   NW   NW   NW   NW   NW
+WIND (MPH)         18   16   14   13   11    9    9    6   11   13   17   19   19   18   17   19   32
+WIND GUST (MPH)                                                                                    50
+PRECIP PROB (%)     0    0    0    0   10   10   20   40   30   10   20   10   30   30   20   10   10
+PRECIP TYPE                                       S    S    S         S         S    S    S          
+6 HOUR QPF                 0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+6 HOUR SNOW                 0.0       0.0       0.0       0.0       0.0       0.0       0.0       0.0
+6 HOUR ICE                 0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+SNOW LEVEL (KFT)  0.4  0.2  0.2  0.4  0.5  0.9  1.3  1.4  1.2  1.0  0.8  0.7  0.7  0.9  1.1  1.3  1.1
+SNOW RATIO (:1)    14   14   14   16   16   16   14   14   14   15   16   16   16   16   15   13   12
+SNOW DENSITY (%)    7    7    7    6    6    6    7    7    7    6    6    6    6    6    6    7    8
+
+
+...CANNON MOUNTAIN (4080 FT)...
+
+DATE                                   SATURDAY 11/14/26                       SUNDAY 11/15/26
+TIME (LT)          19   22   01   04   07   10   13   16   19   22   01   04   07   10   13   16   19
+                   7P   10P  1A   4A   7A   10A  1P   4P   7P   10P  1A   4A   7A   10A  1P   4P   7P   
+
+CLOUD COVER        OV   OV   OV   OV   OV   OV   OV   OV   OV   OV   OV   OV   OV   OV   OV   OV   OV
+CLOUD COVER (%)    90   90   85   95   90   90   90   85   90   90   90   90   85   90   90   85   85
+TEMPERATURE        29   28   28   28   27   25   27   27   30   30   30   29   28   27   27   27   30
+MIN/MAX TEMP                           26                  31                  28                  30
+WIND CHILL         17   17   17   18   18   16   19   20   21   20   19   17   16   15   15   15   17
+WIND DIR           NW   NW   NW   NW   NW   NW   NW   NW   NW   NW   NW   NW   NW   NW   NW   NW   NW
+WIND (MPH)         17   13   12   11    9    8    8    6   10   11   14   17   17   14   16   16   21
+WIND GUST (MPH)                                                                                      
+PRECIP PROB (%)     0    0    0    0   30   10   30   70   30   30   20    5   40   40   40   30   20
+PRECIP TYPE                             S         S    S    S    S    S         S    S    S    S    S
+6 HOUR QPF                 0.00      0.00      0.00      0.01      0.01      0.01      0.01      0.00
+6 HOUR SNOW                 0.0       0.0       0.0       0.2       0.2       0.2       0.2       0.0
+6 HOUR ICE                 0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+SNOW LEVEL (KFT)  0.3  0.1  0.2  0.3  0.5  0.8  1.3  1.4  1.3  1.1  0.9  0.7  0.6  0.9  1.1  1.3  1.2
+SNOW RATIO (:1)    14   15   15   16   16   16   15   15   15   16   16   17   17   16   15   14   13
+SNOW DENSITY (%)    7    6    6    6    6    6    6    6    6    6    6    5    5    6    6    7    7
+
+
+...BALDFACE MOUNTAIN (3547 FT)...
+
+DATE                                   SATURDAY 11/14/26                       SUNDAY 11/15/26
+TIME (LT)          19   22   01   04   07   10   13   16   19   22   01   04   07   10   13   16   19
+                   7P   10P  1A   4A   7A   10A  1P   4P   7P   10P  1A   4A   7A   10A  1P   4P   7P   
+
+CLOUD COVER        OV   OV   OV   OV   OV   BK   OV   OV   OV   BK   BK   BK   SC   BK   BK   BK   BK
+CLOUD COVER (%)    90   85   85   70   80   70   75   75   75   60   65   55   35   50   50   55   50
+TEMPERATURE        32   32   31   29   28   33   36   34   33   33   33   30   30   33   35   34   34
+MIN/MAX TEMP                           28                  36                  30                  36
+WIND CHILL         24   26   25                                 27   26   21   20   24   26   26   25
+WIND DIR           NW   NW   NW   NW   NW   NW   NW   NW   NW   NW   NW   NW   NW   NW   NW   NW   NW
+WIND (MPH)          9    6    5    4    4    4    5    3    4    6    8   10   11   12   12   10   13
+WIND GUST (MPH)                                                                                      
+PRECIP PROB (%)     0    0    0    0    5    5   10   20   20   30   20    5   10   10   10    5    0
+PRECIP TYPE                                            S    S    S    S                              
+6 HOUR QPF                 0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+6 HOUR SNOW                 0.0       0.0       0.0       0.0       0.0       0.0       0.0       0.0
+6 HOUR ICE                 0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+SNOW LEVEL (KFT)  0.4  0.2  0.2  0.3  0.4  0.9  1.3  1.4  1.2  1.0  0.8  0.6  0.6  0.8  1.1  1.2  1.1
+SNOW RATIO (:1)    11   12   13   14   14   12   11   11   11   12   13   14   14   14   11   10    9
+SNOW DENSITY (%)    9    8    7    7    7    8    9    9    9    8    7    7    7    7    9   10   11
+
+
+...MOUNT MOOSILAUKE (4802 FT)...
+
+DATE                                   SATURDAY 11/14/26                       SUNDAY 11/15/26
+TIME (LT)          19   22   01   04   07   10   13   16   19   22   01   04   07   10   13   16   19
+                   7P   10P  1A   4A   7A   10A  1P   4P   7P   10P  1A   4A   7A   10A  1P   4P   7P   
+
+CLOUD COVER        OV   OV   OV   OV   OV   OV   OV   OV   OV   OV   OV   OV   OV   OV   OV   OV   OV
+CLOUD COVER (%)    90   90   90   95   90   95   90   85   90   85   85   85   80   90   90   90   90
+TEMPERATURE        28   28   27   27   27   26   27   27   28   30   29   29   28   26   27   27   29
+MIN/MAX TEMP                           26                  28                  27                  30
+WIND CHILL         16   17   16   17   17   18   19   20   19   20   17   17   16   14   16   16   16
+WIND DIR            N    N   NW   NW   NW   NW   NW   NW    N   NW   NW   NW   NW   NW   NW   NW   NW
+WIND (MPH)         17   13   12   11   10    8    8    6    9   12   16   17   17   14   13   13   20
+WIND GUST (MPH)                                                                                      
+PRECIP PROB (%)     0    0    0    0   20   10   30   60   30   10   10    5   20   30   20   10   10
+PRECIP TYPE                             S         S    S    S                   S    S    S          
+6 HOUR QPF                 0.00      0.00      0.00      0.01      0.01      0.01      0.00      0.00
+6 HOUR SNOW                 0.0       0.0       0.0       0.2       0.2       0.2       0.0       0.0
+6 HOUR ICE                 0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+SNOW LEVEL (KFT)  0.3  0.1  0.2  0.3  0.5  0.8  1.3  1.4  1.3  1.1  1.0  0.7  0.7  1.0  1.2  1.3  1.2
+SNOW RATIO (:1)    14   14   15   16   16   16   15   15   15   16   16   17   17   16   15   13   12
+SNOW DENSITY (%)    7    7    6    6    6    6    6    6    6    6    6    5    5    6    6    7    8
+
+$$
+
+--- PRECIP TYPE CODES ---
+
+CODE   TYPE
+ T     THUNDERSTORMS
+ R     RAIN
+ S     SNOW
+ I     SLEET
+ Z     FREEZING RAIN
+

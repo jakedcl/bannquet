@@ -4,7 +4,6 @@ import PageWrapper from '@/components/ui/PageWrapper';
 import { MapCanvas } from '@/components/map/MapCanvas';
 import { ConfirmDelete } from '@/components/delete/ConfirmDelete';
 import { RouteTitleForm } from '@/components/routes/RouteTitleForm';
-import { AddToTrip } from '@/components/library/AddToTrip';
 import { Card } from '@/components/hub/Card';
 import { deleteRouteAction } from '@/app/library/actions';
 import { getViewer } from '@/app/sign-in/actions';
@@ -17,7 +16,6 @@ import { seesWholeRoute } from '@/lib/route-privacy';
 import { canEditOwned } from '@/lib/membership';
 import { loadMapDataNear } from '@/lib/posts';
 import { adminPowerActing, adminPowerLabel } from '@/lib/admin-ui';
-import { listTripChoices, tripAttachHintForViewer, tripsForItem } from '@/lib/trips';
 import { loadFailed } from '@/lib/load-error';
 import { formatTripDate } from '@/lib/utils';
 import { HubPage } from '@/components/hub/Page';
@@ -28,13 +26,10 @@ const ID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 export default async function RoutePage({
   params,
-  searchParams,
 }: {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ addTrip?: string }>;
 }) {
   const { id } = await params;
-  const { addTrip } = await searchParams;
   if (!ID.test(id)) notFound();
   if (!isDatabaseConfigured()) {
     return (
@@ -74,13 +69,6 @@ export default async function RoutePage({
     actorId: viewer.id,
     ownerId: route.userId,
   }));
-  const [tripChoices, attachedTrips, attachBlocked] = viewer && manage
-    ? await Promise.all([
-      listTripChoices().catch(() => []),
-      tripsForItem('route', route.id).catch(() => []),
-      tripAttachHintForViewer(viewer).catch(() => null),
-    ])
-    : [[], [], null];
   const deleteAdminPower = Boolean(viewer && adminPowerActing({
     role: viewer.role,
     actorId: viewer.id,
@@ -128,16 +116,6 @@ export default async function RoutePage({
           <div className="h-80 min-h-[420px] overflow-hidden bg-white retro-box">
             <MapCanvas points={map.points} lines={map.lines} focus={{ lng: route.lng, lat: route.lat, zoom: 12 }} />
           </div>
-        ) : null}
-        {manage ? (
-          <AddToTrip
-            kind="route"
-            entityId={route.id}
-            trips={tripChoices}
-            attached={attachedTrips}
-            startOpen={addTrip === '1'}
-            attachBlocked={attachBlocked}
-          />
         ) : null}
         {manage && viewer ? (
           <Card title="Manage">

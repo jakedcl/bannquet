@@ -69,9 +69,6 @@ export async function createPinAction(
   }
   const created: DraftItem[] = [{ kind: 'pin', id, label: parsed.fields.title, thumb: null }];
   if (formData.get('inline') === '1') return { created };
-  const next = String(formData.get('next') ?? '');
-  if (next === 'existing') redirect(`/pins/${id}?addTrip=1`);
-  if (next === 'new') redirect(`/upload?kind=trip&pin=${id}`);
   redirect(`/pins/${id}`);
 }
 

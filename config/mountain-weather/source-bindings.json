@@ -1,0 +1,859 @@
+{
+  "version": 1,
+  "places": {
+    "mount-marcy": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Northern Adirondacks of New York"
+      },
+      "avg": {
+        "office": "BTV",
+        "pointMatch": "Mount Marcy"
+      },
+      "balloon": {
+        "regionMatch": "the Northern Adirondacks of New York",
+        "bindReason": "Lake Placid bulletin city (Essex Co. NY, BTV WFO)."
+      }
+    },
+    "whiteface-mountain": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Northern Adirondacks of New York"
+      },
+      "avg": {
+        "office": "BTV",
+        "pointMatch": "Whiteface Mountain"
+      },
+      "balloon": {
+        "regionMatch": "the Northern Adirondacks of New York",
+        "bindReason": "Lake Placid bulletin city (Essex Co. NY, BTV WFO)."
+      }
+    },
+    "dix-mountain": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Northern Adirondacks of New York"
+      },
+      "avg": {
+        "office": "BTV",
+        "pointMatch": "Dix Mountain"
+      },
+      "balloon": {
+        "regionMatch": "the Northern Adirondacks of New York",
+        "bindReason": "Lake Placid bulletin city (Essex Co. NY, BTV WFO)."
+      }
+    },
+    "algonquin-peak": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Northern Adirondacks of New York"
+      },
+      "avg": {
+        "office": "BTV",
+        "pointMatch": "Algonquin Peak"
+      },
+      "balloon": {
+        "regionMatch": "the Northern Adirondacks of New York",
+        "bindReason": "Lake Placid bulletin city (Essex Co. NY, BTV WFO)."
+      }
+    },
+    "mount-colden": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Northern Adirondacks of New York"
+      },
+      "avg": {
+        "office": "BTV",
+        "pointMatch": "Mount Colden"
+      },
+      "balloon": {
+        "regionMatch": "the Northern Adirondacks of New York",
+        "bindReason": "Lake Placid bulletin city (Essex Co. NY, BTV WFO)."
+      }
+    },
+    "mount-colvin": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Northern Adirondacks of New York"
+      },
+      "avg": {
+        "office": "BTV",
+        "pointMatch": "Mount Colvin"
+      },
+      "balloon": {
+        "regionMatch": "the Northern Adirondacks of New York",
+        "bindReason": "Lake Placid bulletin city (Keene, Essex Co. NY, BTV WFO)."
+      }
+    },
+    "giant-mountain": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Northern Adirondacks of New York"
+      },
+      "balloon": {
+        "regionMatch": "the Northern Adirondacks of New York",
+        "bindReason": "Lake Placid bulletin city (Keene, Essex Co. NY, BTV WFO)."
+      }
+    },
+    "santanoni-peak": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Northern Adirondacks of New York"
+      },
+      "balloon": {
+        "regionMatch": "the Northern Adirondacks of New York",
+        "bindReason": "Newcomb bulletin city (Essex Co. NY, BTV WFO)."
+      }
+    },
+    "cascade-mountain": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Northern Adirondacks of New York"
+      },
+      "balloon": {
+        "regionMatch": "the Northern Adirondacks of New York",
+        "bindReason": "Lake Placid bulletin city (Keene, Essex Co. NY, BTV WFO)."
+      }
+    },
+    "mckenzie-mountain": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Northern Adirondacks of New York"
+      },
+      "balloon": {
+        "regionMatch": "the Northern Adirondacks of New York",
+        "bindReason": "Saranac Lake bulletin city (Franklin Co. NY, BTV WFO)."
+      }
+    },
+    "mount-van-hoevenberg": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Northern Adirondacks of New York"
+      },
+      "balloon": {
+        "regionMatch": "the Northern Adirondacks of New York",
+        "bindReason": "Lake Placid bulletin city (Essex Co. NY, BTV WFO)."
+      }
+    },
+    "keene-valley": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Northern Adirondacks of New York"
+      },
+      "balloon": {
+        "regionMatch": "the Northern Adirondacks of New York",
+        "bindReason": "Lake Placid bulletin city (Keene, Essex Co. NY, BTV WFO)."
+      }
+    },
+    "lyon-mountain": {
+      "rec": {
+        "office": "ALY",
+        "sectionMatch": "Southern Adirondacks",
+        "nearbyLabel": "KALY REC (Clinton Co. under Albany CWA)"
+      },
+      "balloon": {
+        "regionMatch": "the Northern Adirondacks of New York",
+        "bindReason": "Dannemora bulletin city (Clinton Co. NY, BTV WFO)."
+      }
+    },
+    "ampersand-mountain": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Northern Adirondacks of New York"
+      },
+      "balloon": {
+        "regionMatch": "the Northern Adirondacks of New York",
+        "bindReason": "Saranac Lake bulletin city (Franklin/Essex Co. NY, BTV WFO)."
+      }
+    },
+    "debar-mountain": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Northern Adirondacks of New York"
+      },
+      "balloon": {
+        "regionMatch": "the Northern Adirondacks of New York",
+        "bindReason": "Saranac Lake bulletin city (Franklin Co. NY, BTV WFO)."
+      }
+    },
+    "st-regis-mountain": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Northern Adirondacks of New York"
+      },
+      "balloon": {
+        "regionMatch": "the Northern Adirondacks of New York",
+        "bindReason": "Saranac Lake bulletin city (Franklin Co. NY, BTV WFO)."
+      }
+    },
+    "mount-arab": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Northern Adirondacks of New York"
+      },
+      "balloon": {
+        "regionMatch": "the Northern Adirondacks of New York",
+        "bindReason": "Tupper Lake bulletin city (Franklin/St. Lawrence Co. NY, BTV WFO)."
+      }
+    },
+    "snowy-mountain": {
+      "rec": {
+        "office": "ALY",
+        "sectionMatch": "Southern Adirondacks"
+      }
+    },
+    "blue-mountain": {
+      "rec": {
+        "office": "ALY",
+        "sectionMatch": "Southern Adirondacks"
+      }
+    },
+    "pillsbury-mountain": {
+      "rec": {
+        "office": "GYX",
+        "sectionMatch": "2500 Feet to 4000 Feet",
+        "nearbyLabel": "KGYX mid-elevation REC (Pillsbury under Gray CWA)"
+      }
+    },
+    "gore-mountain": {
+      "rec": {
+        "office": "ALY",
+        "sectionMatch": "Southern Adirondacks"
+      }
+    },
+    "blue-ridge-mountain": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Northern Adirondacks of New York"
+      }
+    },
+    "fishing-brook-range": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Northern Adirondacks of New York"
+      }
+    },
+    "vanderwhacker-mountain": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Northern Adirondacks of New York"
+      }
+    },
+    "crane-mountain": {
+      "rec": {
+        "office": "ALY",
+        "sectionMatch": "Southern Adirondacks"
+      }
+    },
+    "hadley-mountain": {
+      "rec": {
+        "office": "ALY",
+        "sectionMatch": "Southern Adirondacks"
+      }
+    },
+    "black-mountain": {
+      "rec": {
+        "office": "ALY",
+        "sectionMatch": "Southern Adirondacks"
+      }
+    },
+    "pharaoh-mountain": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Northern Adirondacks of New York"
+      }
+    },
+    "prospect-mountain": {
+      "rec": {
+        "office": "ALY",
+        "sectionMatch": "Southern Adirondacks"
+      }
+    },
+    "slide-mountain": {
+      "rec": {
+        "office": "ALY",
+        "sectionMatch": "Eastern Catskills"
+      }
+    },
+    "hunter-mountain": {
+      "rec": {
+        "office": "ALY",
+        "sectionMatch": "Eastern Catskills"
+      }
+    },
+    "peekamoose-mountain": {
+      "rec": {
+        "office": "ALY",
+        "sectionMatch": "Eastern Catskills"
+      }
+    },
+    "balsam-lake-mountain": {
+      "rec": {
+        "office": "ALY",
+        "sectionMatch": "Eastern Catskills"
+      }
+    },
+    "panther-mountain": {
+      "rec": {
+        "office": "ALY",
+        "sectionMatch": "Eastern Catskills"
+      }
+    },
+    "windham-high-peak": {
+      "rec": {
+        "office": "ALY",
+        "sectionMatch": "Eastern Catskills"
+      }
+    },
+    "overlook-mountain": {
+      "rec": {
+        "office": "ALY",
+        "sectionMatch": "Eastern Catskills"
+      }
+    },
+    "red-hill": {
+      "rec": {
+        "office": "ALY",
+        "sectionMatch": "Eastern Catskills"
+      }
+    },
+    "mount-tremper": {
+      "rec": {
+        "office": "ALY",
+        "sectionMatch": "Eastern Catskills"
+      }
+    },
+    "tannersville": {
+      "rec": {
+        "office": "ALY",
+        "sectionMatch": "Eastern Catskills"
+      }
+    },
+    "gunks-ridge": {
+      "rec": {
+        "office": "ALY",
+        "sectionMatch": "Mid Hudson River",
+        "nearbyLabel": "Mid Hudson Valley REC (nearby)"
+      }
+    },
+    "thacher-park": {
+      "rec": {
+        "office": "ALY",
+        "sectionMatch": "Mid Hudson River",
+        "nearbyLabel": "Mid Hudson Valley REC (nearby)"
+      }
+    },
+    "jay-peak": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Northern Adirondacks of New York"
+      },
+      "balloon": {
+        "regionMatch": "Central and Northeast Vermont",
+        "bindReason": "Newport/Derby bulletin cities (Orleans Co. VT, BTV WFO)."
+      }
+    },
+    "belvidere-mountain": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Northern Adirondacks of New York"
+      },
+      "balloon": {
+        "regionMatch": "Central and Northeast Vermont",
+        "bindReason": "Newport bulletin city (Orleans Co. VT, BTV WFO)."
+      }
+    },
+    "jay-village": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Northern Adirondacks of New York"
+      },
+      "balloon": {
+        "regionMatch": "Central and Northeast Vermont",
+        "bindReason": "Derby bulletin city (Orleans Co. VT, BTV WFO)."
+      }
+    },
+    "mount-mansfield": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Northern Green Mountains of Vermont"
+      },
+      "avg": {
+        "office": "BTV",
+        "pointMatch": "Smugglers Notch",
+        "nearbyLabel": "Smugglers Notch AVG (nearby; Essex County VT Monadnock naming is unrelated — NH Mount Monadnock has no BTV AVG point)"
+      },
+      "balloon": {
+        "regionMatch": "Central and Northeast Vermont",
+        "bindReason": "Stowe bulletin city (Lamoille Co. VT, BTV WFO)."
+      }
+    },
+    "smugglers-notch": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Northern Green Mountains of Vermont"
+      },
+      "avg": {
+        "office": "BTV",
+        "pointMatch": "Smugglers Notch"
+      },
+      "balloon": {
+        "regionMatch": "Central and Northeast Vermont",
+        "bindReason": "Stowe bulletin city (Lamoille Co. VT, BTV WFO)."
+      }
+    },
+    "stowe-town": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Northern Green Mountains of Vermont"
+      },
+      "balloon": {
+        "regionMatch": "Central and Northeast Vermont",
+        "bindReason": "Stowe bulletin city (Lamoille Co. VT, BTV WFO)."
+      }
+    },
+    "camels-hump": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Green Mountains of Vermont"
+      },
+      "balloon": {
+        "regionMatch": "Central and Northeast Vermont",
+        "bindReason": "Waitsfield bulletin city (Washington Co. VT, BTV WFO)."
+      }
+    },
+    "mount-ellen": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Green Mountains of Vermont"
+      },
+      "balloon": {
+        "regionMatch": "Central and Northeast Vermont",
+        "bindReason": "Waitsfield bulletin city (Washington Co. VT, BTV WFO)."
+      }
+    },
+    "bread-loaf-mountain": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Green Mountains of Vermont"
+      },
+      "balloon": {
+        "regionMatch": "the Champlain Valley of Vermont and New York",
+        "bindReason": "Middlebury/Ripton bulletin cities (Addison Co. VT, BTV WFO)."
+      }
+    },
+    "mount-worcester": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Green Mountains of Vermont"
+      },
+      "balloon": {
+        "regionMatch": "Central and Northeast Vermont",
+        "bindReason": "Montpelier bulletin city (Worcester, Washington Co. VT, BTV WFO)."
+      }
+    },
+    "waterbury": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Green Mountains of Vermont"
+      },
+      "balloon": {
+        "regionMatch": "Central and Northeast Vermont",
+        "bindReason": "Montpelier bulletin city (Waterbury, Washington Co. VT, BTV WFO)."
+      }
+    },
+    "signal-mountain": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Northern Green Mountains of Vermont"
+      },
+      "balloon": {
+        "regionMatch": "Central and Northeast Vermont",
+        "bindReason": "Island Pond bulletin city (Essex Co. VT, BTV WFO)."
+      }
+    },
+    "burke-mountain": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Northern Green Mountains of Vermont"
+      },
+      "balloon": {
+        "regionMatch": "Central and Northeast Vermont",
+        "bindReason": "Newport bulletin city (Orleans Co. VT, BTV WFO)."
+      }
+    },
+    "monadnock-mountain": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Northern Green Mountains of Vermont"
+      },
+      "balloon": {
+        "regionMatch": "Central and Northeast Vermont",
+        "bindReason": "Bradford bulletin city (Essex Co. VT, BTV WFO).",
+        "nearbyLabel": "Essex County VT Monadnock only — NH Mount Monadnock is GYX, not this balloon product."
+      }
+    },
+    "killington-peak": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Southern Green Mountains of Vermont"
+      },
+      "balloon": {
+        "regionMatch": "Southern Vermont",
+        "bindReason": "Killington bulletin city (Rutland Co. VT, BTV WFO)."
+      }
+    },
+    "stratton-mountain": {
+      "rec": {
+        "office": "ALY",
+        "sectionMatch": "Southern Adirondacks",
+        "nearbyLabel": "KALY recreation band nearest southern Green peak"
+      }
+    },
+    "mount-equinox": {
+      "rec": {
+        "office": "ALY",
+        "sectionMatch": "Southern Adirondacks",
+        "nearbyLabel": "KALY recreation band nearest southern Green peak"
+      }
+    },
+    "dorset-mountain": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Southern Green Mountains of Vermont"
+      }
+    },
+    "haystack-mountain": {
+      "rec": {
+        "office": "ALY",
+        "sectionMatch": "Southern Adirondacks",
+        "nearbyLabel": "KALY recreation band nearest southern Green peak"
+      }
+    },
+    "ludlow-mountain": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Southern Green Mountains of Vermont"
+      },
+      "balloon": {
+        "regionMatch": "Southern Vermont",
+        "bindReason": "Ludlow bulletin city (Windsor Co. VT, BTV WFO)."
+      }
+    },
+    "bromley-mountain": {
+      "rec": {
+        "office": "ALY",
+        "sectionMatch": "Southern Adirondacks",
+        "nearbyLabel": "KALY recreation band nearest southern Green peak"
+      }
+    },
+    "mount-ascutney": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Southern Green Mountains of Vermont"
+      },
+      "balloon": {
+        "regionMatch": "Southern Vermont",
+        "bindReason": "Springfield bulletin city (Windsor Co. VT, BTV WFO)."
+      }
+    },
+    "bald-mountain": {
+      "rec": {
+        "office": "ALY",
+        "sectionMatch": "Southern Adirondacks",
+        "nearbyLabel": "KALY recreation band nearest southern Green peak"
+      }
+    },
+    "manchester-vt": {
+      "rec": {
+        "office": "ALY",
+        "sectionMatch": "Southern Adirondacks",
+        "nearbyLabel": "KALY recreation band nearest southern Green peak"
+      }
+    },
+    "mount-washington": {
+      "rec": [
+        {
+          "office": "GYX",
+          "sectionMatch": "Summits Above 4000 Feet"
+        },
+        {
+          "office": "GYX",
+          "sectionMatch": "2500 Feet to 4000 Feet",
+          "nearbyLabel": "Mid-elevation band (2,500–4,000 ft; GYX labels this Mount Adams)"
+        }
+      ],
+      "allLocations": [
+        {
+          "office": "GYX",
+          "loc": "MOUNT WASHINGTON"
+        },
+        {
+          "office": "GYX",
+          "loc": "MOUNT ADAMS",
+          "bandLabel": "Mid-elevation band (2,500–4,000 ft; GYX labels this Mount Adams)"
+        }
+      ],
+      "avg": [
+        {
+          "office": "GYX",
+          "pointMatch": "PRESIDENTIAL RANGE FORECAST AREA/MOUNT WASHINGTON"
+        },
+        {
+          "office": "GYX",
+          "pointMatch": "TUCKERMAN AND HUNTINGTON RAVINES"
+        }
+      ]
+    },
+    "mount-adams": {
+      "rec": [
+        {
+          "office": "GYX",
+          "sectionMatch": "Summits Above 4000 Feet"
+        },
+        {
+          "office": "GYX",
+          "sectionMatch": "2500 Feet to 4000 Feet",
+          "nearbyLabel": "Mid-elevation band (2,500–4,000 ft; GYX labels this Mount Adams)"
+        }
+      ],
+      "allLocations": [
+        {
+          "office": "GYX",
+          "loc": "MOUNT ADAMS",
+          "bandLabel": "Mid-elevation band (2,500–4,000 ft; GYX labels this Mount Adams)"
+        },
+        {
+          "office": "GYX",
+          "loc": "MOUNT WASHINGTON",
+          "bandLabel": "Summits above 4,000 ft (Mount Washington)"
+        }
+      ],
+      "avg": [
+        {
+          "office": "GYX",
+          "pointMatch": "PRESIDENTIAL RANGE FORECAST AREA/MOUNT WASHINGTON",
+          "nearbyLabel": "Presidential Range / Mount Washington AVG (6,288 ft); Adams also has REC 2,500–4,000 ft band and allLocations MOUNT ADAMS"
+        },
+        {
+          "office": "GYX",
+          "pointMatch": "TUCKERMAN AND HUNTINGTON RAVINES"
+        }
+      ]
+    },
+    "pinkham-notch": {
+      "rec": {
+        "office": "GYX",
+        "sectionMatch": "Summits Above 4000 Feet"
+      },
+      "avg": {
+        "office": "GYX",
+        "pointMatch": "TUCKERMAN AND HUNTINGTON RAVINES"
+      }
+    },
+    "crawford-notch": {
+      "rec": {
+        "office": "GYX",
+        "sectionMatch": "Summits Above 4000 Feet"
+      },
+      "avg": {
+        "office": "GYX",
+        "pointMatch": "CRAWFORD NOTCH AMC HIGHLAND CENTER"
+      }
+    },
+    "baldface-mountain": {
+      "rec": {
+        "office": "GYX",
+        "sectionMatch": "Summits Above 4000 Feet"
+      },
+      "avg": {
+        "office": "GYX",
+        "pointMatch": "BALDFACE MOUNTAIN"
+      }
+    },
+    "mount-lafayette": {
+      "rec": {
+        "office": "GYX",
+        "sectionMatch": "Summits Above 4000 Feet"
+      },
+      "avg": {
+        "office": "GYX",
+        "pointMatch": "FRANCONIA NOTCH/MOUNT LAFAYETTE",
+        "elevationNote": "4,000 ft (AVG point elevation, not Lafayette summit)"
+      }
+    },
+    "mount-moosilauke": {
+      "rec": {
+        "office": "GYX",
+        "sectionMatch": "Summits Above 4000 Feet"
+      },
+      "avg": {
+        "office": "GYX",
+        "pointMatch": "MOUNT MOOSILAUKE"
+      }
+    },
+    "mount-osceola": {
+      "rec": {
+        "office": "GYX",
+        "sectionMatch": "Summits Above 4000 Feet"
+      },
+      "avg": {
+        "office": "GYX",
+        "pointMatch": "MOUNT OSCEOLA"
+      }
+    },
+    "cannon-mountain": {
+      "rec": {
+        "office": "GYX",
+        "sectionMatch": "Summits Above 4000 Feet"
+      },
+      "avg": {
+        "office": "GYX",
+        "pointMatch": "CANNON MOUNTAIN"
+      }
+    },
+    "kancamagus-pass": {
+      "rec": {
+        "office": "GYX",
+        "sectionMatch": "Summits Above 4000 Feet"
+      },
+      "avg": {
+        "office": "GYX",
+        "pointMatch": "KANCAMAGUS HIGHWAY PASS"
+      }
+    },
+    "franconia-notch": {
+      "rec": {
+        "office": "GYX",
+        "sectionMatch": "Summits Above 4000 Feet"
+      },
+      "avg": {
+        "office": "GYX",
+        "pointMatch": "FRANCONIA NOTCH/MOUNT LAFAYETTE",
+        "elevationNote": "4,000 ft (Franconia Notch / Lafayette AVG point)"
+      }
+    },
+    "rumney-crag": {
+      "rec": {
+        "office": "GYX",
+        "sectionMatch": "Summits Above 4000 Feet"
+      }
+    },
+    "mount-monadnock": {
+      "rec": {
+        "office": "GYX",
+        "sectionMatch": "Summits of Mount Monadnock"
+      },
+      "allLocations": {
+        "office": "GYX",
+        "loc": "MOUNT MONADNOCK"
+      }
+    },
+    "north-pack-monadnock": {
+      "rec": {
+        "office": "GYX",
+        "sectionMatch": "Summits of Mount Monadnock"
+      },
+      "allLocations": {
+        "office": "GYX",
+        "loc": "NORTH PACK MONADNOCK"
+      }
+    },
+    "katahdin": {
+      "rec": {
+        "office": "CAR",
+        "sectionMatch": "TOP OF MOUNT KATAHDIN"
+      },
+      "allLocations": {
+        "office": "CAR",
+        "loc": "MOUNT KATAHDIN"
+      }
+    },
+    "katahdin-woods-and-waters": {
+      "rec": {
+        "office": "CAR",
+        "sectionMatch": "KATAHDIN WOODS AND WATERS"
+      },
+      "allLocations": {
+        "office": "CAR",
+        "loc": "KATAHDIN WOODS AND WATERS"
+      }
+    },
+    "millinocket": {
+      "rec": {
+        "office": "CAR",
+        "sectionMatch": "TOP OF MOUNT KATAHDIN",
+        "nearbyLabel": "Katahdin summit REC (nearby)"
+      }
+    },
+    "white-cap-mountain": {
+      "rec": {
+        "office": "CAR",
+        "sectionMatch": "TOP OF WHITE CAP MOUNTAIN"
+      },
+      "allLocations": {
+        "office": "CAR",
+        "loc": "TOP OF WHITE CAP MOUNTAIN"
+      }
+    },
+    "sugarloaf-mountain": {
+      "rec": {
+        "office": "GYX",
+        "sectionMatch": "2500 Feet to 4000 Feet"
+      },
+      "allLocations": {
+        "office": "GYX",
+        "loc": "SUGARLOAF MOUNTAIN"
+      }
+    },
+    "bigelow": {
+      "rec": {
+        "office": "GYX",
+        "sectionMatch": "2500 Feet to 4000 Feet"
+      }
+    },
+    "rangeley": {
+      "rec": {
+        "office": "GYX",
+        "sectionMatch": "2500 Feet to 4000 Feet"
+      }
+    },
+    "deboullie-mountain": {
+      "rec": {
+        "office": "CAR",
+        "sectionMatch": "TOP OF DEBOULLIE MOUNTAIN"
+      },
+      "allLocations": {
+        "office": "CAR",
+        "loc": "TOP OF DEBOULLIE MOUNTAIN"
+      }
+    },
+    "mars-hill-mountain": {
+      "rec": {
+        "office": "CAR",
+        "sectionMatch": "TOP OF MARS HILL MOUNTAIN"
+      },
+      "allLocations": {
+        "office": "CAR",
+        "loc": "TOP OF MARS HILL MOUNTAIN"
+      }
+    },
+    "cadillac-mountain": {
+      "rec": {
+        "office": "CAR",
+        "sectionMatch": "TOP OF CADILLAC MOUNTAIN"
+      },
+      "allLocations": {
+        "office": "CAR",
+        "loc": "TOP OF CADILLAC MOUNTAIN"
+      }
+    },
+    "bar-harbor": {
+      "rec": {
+        "office": "CAR",
+        "sectionMatch": "TOP OF CADILLAC MOUNTAIN",
+        "nearbyLabel": "Cadillac summit REC (nearby)"
+      }
+    }
+  }
+}

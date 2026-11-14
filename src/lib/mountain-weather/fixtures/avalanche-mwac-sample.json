@@ -1,0 +1,57 @@
+{
+  "id": 2355,
+  "published_time": "2026-04-08T06:00:00-04:00",
+  "expires_time": "2026-04-09T06:00:00-04:00",
+  "bottom_line": "Avoid steep terrain near cliff bands.",
+  "danger": [
+    {
+      "lower": 3000,
+      "upper": 6288,
+      "danger_level": 2,
+      "danger": "moderate",
+      "color": "#f89406",
+      "valid_day": "current",
+      "name": "Presidential Range"
+    },
+    {
+      "lower": 0,
+      "upper": 3000,
+      "danger_level": 1,
+      "danger": "low",
+      "color": "#00ff00",
+      "valid_day": "current",
+      "name": "Below treeline"
+    }
+  ],
+  "forecast_avalanche_problems": [
+    {
+      "problem_type": "wind_slab",
+      "name": "Wind Slab",
+      "likelihood": "likely",
+      "size": "small",
+      "location": [
+        { "aspect": "N", "elevation": "U" },
+        { "aspect": "NE", "elevation": "U" }
+      ],
+      "comment": "Recent wind transport on lee slopes.",
+      "roseData": { "north": 2, "northeast": 2 }
+    }
+  ],
+  "weather_data": {
+    "summary": "Winds decreasing. Light snow showers.",
+    "temperature": 12,
+    "wind_speed": 45,
+    "wind_direction": "NW"
+  },
+  "off_season": false,
+  "forecast_zone": [
+    {
+      "name": "Presidential Range",
+      "state": "NH"
+    }
+  ],
+  "avalanche_center": {
+    "id": "MWAC",
+    "name": "Mount Washington Avalanche Center"
+  }
+}

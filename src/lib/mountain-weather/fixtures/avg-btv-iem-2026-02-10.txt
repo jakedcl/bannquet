@@ -1,0 +1,53 @@
+
+646 
+FWUS41 KBTV 102240
+AVGBTV
+
+Avalanche Weather Guidance
+National Weather Service Burlington VT
+539 PM EST Tue Feb 10 2026
+
+
+...Smugglers Notch, VT (3370 ft)...
+
+Date                                   Wednesday 02/11/26                      Thursday 02/12/26
+Time (LT)          19   22   01   04   07   10   13   16   19   22   01   04   07   10   13   16   19
+                   7p   10p  1a   4a   7a   10a  1p   4p   7p   10p  1a   4a   7a   10a  1p   4p   7p   
+
+Cloud Cover        OV   OV   OV   OV   OV   OV   OV   OV   OV   OV   OV   OV   OV   BK   SC   SC   SC
+Cloud Cover (%)   100   90   85   85   80   75   85   90   85   85   85   85   80   60   50   35   35
+Temperature        20   21   21   20   18   17   18   15   14   15   13   11    9   11   14   12    7
+Min/Max Temp                           17                  20                   9                  14
+Wind Dir            S    S   SW    W    W   NW   NW   NW   NW   NW   NW   NW   NW   NW   NW   NW   NW
+Wind (mph)         16   14   13   12   11   10   11   13   14   13   14   14   14   14   14   14   12
+Wind Gust (mph)                                                                                      
+Precip Prob (%)   100   80   40   40   30   30   50   80   70   50   30   20   10   10    5    5   10
+Precip Type         S    S    S    S    S    S    S    S    S    S    S    S                         
+6 Hour QPF                 0.28      0.08      0.03      0.14      0.06      0.03      0.00      0.00
+12 Hour QPF                          0.36                0.17                0.09                0.00
+ Low End QPF                         0.11                0.05                0.01                0.00
+ High End QPF                        0.53                0.20                0.11                0.03
+6 Hour Snow                 4.3       1.3       0.6       2.7       1.1       0.6       0.0       0.0
+12 Hour Snow                          5.6                 3.3                 1.7                 0.0
+ Low End Snow                         1.3                 0.8                 0.1                 0.0
+ High End Snow                        8.0                 4.0                 2.0                 0.6
+6 Hour Ice                 0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+Snow Ratio (:1)    15   15   17   17   18   18   19   19   19   19   19   19   21   21   20   20   18
+
+Date                    Fri 02/13/26        Sat 02/14/26        Sun 02/15/26        Mon 02/16/26        Tue 02/17/26
+Time (LT)          01   07   13   19   01   07   13   19   01   07   13   19   01   07   13   19   01   07   13   19
+                   1a   7a   1p   7p   1a   7a   1p   7p   1a   7a   1p   7p   1a   7a   1p   7p   1a   7a   1p   7p   
+
+Cloud Cover        SC   BK   BK   OV   OV   OV   BK   SC   SC   SC   BK   OV   OV   OV   OV   OV   OV   OV   OV   OV
+Cloud Cover (%)    45   50   50   75   85   80   50   35   30   35   60   80   85   85   85   85   85   80   80   80
+Temperature         6    4   19   12   14   13   19   16   10    8   24   20   20   20   26   25   22   20   26   23
+Min/Max Temp             4        19        10        21         7        27        19        29        20        29
+Wind Dir           NW    W    W   SW    S    W    W   NW    W    S    S    S   SE   SE   SW    W    W    W    W    W
+Wind (mph)          8    6    9   14   17   14   12   14   11   10    8   14   17   14   11   17   16   14   13   18
+Wind Gust (mph)                                                                                                     
+Precip Prob (%)    10    5   20   60   50   20   30   10    5    0   10   20   30   40   40   30   20   10   20   30
+Precip Type                   S    S    S    S    S                        S    S    S    S    S    S         S    S
+12 Hour QPF           0.00      0.00
+12 Hour Snow           0.0       0.0
+12 Hour Ice           0.00      0.00
+Snow Ratio (:1)    18   18   18   MM   MM   MM   MM   MM   MM   MM   MM

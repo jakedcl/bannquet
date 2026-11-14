@@ -1,0 +1,1043 @@
+{
+  "version": 1,
+  "states": [
+    {
+      "code": "ny",
+      "name": "New York",
+      "sections": [
+        {
+          "id": "adirondack-high-peaks",
+          "title": "Adirondack High Peaks",
+          "places": [
+            {
+              "id": "mount-marcy",
+              "name": "Mount Marcy",
+              "lat": 44.1128,
+              "lon": -73.9237,
+              "elevationFt": 5344,
+              "office": "BTV",
+              "isBase": false,
+              "gridId": "BTV"
+            },
+            {
+              "id": "whiteface-mountain",
+              "name": "Whiteface Mountain",
+              "lat": 44.3659,
+              "lon": -73.9031,
+              "elevationFt": 4867,
+              "office": "BTV",
+              "isBase": false,
+              "gridId": "BTV"
+            },
+            {
+              "id": "dix-mountain",
+              "name": "Dix Mountain",
+              "lat": 44.0822,
+              "lon": -73.7865,
+              "elevationFt": 4857,
+              "office": "BTV",
+              "isBase": false,
+              "gridId": "BTV"
+            },
+            {
+              "id": "algonquin-peak",
+              "name": "Algonquin Peak",
+              "lat": 44.1435,
+              "lon": -73.9867,
+              "elevationFt": 5114,
+              "office": "BTV",
+              "isBase": false,
+              "gridId": "BTV"
+            },
+            {
+              "id": "mount-colden",
+              "name": "Mount Colden",
+              "lat": 44.127,
+              "lon": -73.9599,
+              "elevationFt": 4715,
+              "office": "BTV",
+              "isBase": false,
+              "gridId": "BTV"
+            },
+            {
+              "id": "mount-colvin",
+              "name": "Mount Colvin",
+              "lat": 44.094,
+              "lon": -73.8346,
+              "elevationFt": 4080,
+              "office": "BTV",
+              "isBase": false,
+              "gridId": "BTV"
+            },
+            {
+              "id": "giant-mountain",
+              "name": "Giant Mountain",
+              "lat": 44.1611,
+              "lon": -73.7202,
+              "elevationFt": 4627,
+              "office": "BTV",
+              "isBase": false,
+              "gridId": "BTV"
+            },
+            {
+              "id": "santanoni-peak",
+              "name": "Santanoni Peak",
+              "lat": 44.0823,
+              "lon": -74.131,
+              "elevationFt": 4607,
+              "office": "BTV",
+              "isBase": false,
+              "gridId": "BTV"
+            },
+            {
+              "id": "cascade-mountain",
+              "name": "Cascade Mountain",
+              "lat": 44.2187,
+              "lon": -73.8601,
+              "elevationFt": 4098,
+              "office": "BTV",
+              "isBase": false,
+              "gridId": "BTV"
+            },
+            {
+              "id": "mckenzie-mountain",
+              "name": "McKenzie Mountain",
+              "lat": 44.3363,
+              "lon": -74.0321,
+              "elevationFt": 3822,
+              "office": "BTV",
+              "isBase": false,
+              "gridId": "BTV"
+            },
+            {
+              "id": "mount-van-hoevenberg",
+              "name": "Mount Van Hoevenberg",
+              "lat": 44.21,
+              "lon": -73.9297,
+              "elevationFt": 2939,
+              "office": "BTV",
+              "isBase": false,
+              "gridId": "BTV"
+            },
+            {
+              "id": "keene-valley",
+              "name": "Keene Valley",
+              "lat": 44.1898,
+              "lon": -73.786,
+              "elevationFt": 1030,
+              "office": "BTV",
+              "isBase": true,
+              "gridId": "BTV"
+            }
+          ]
+        },
+        {
+          "id": "northern-adirondacks",
+          "title": "Northern Adirondacks",
+          "places": [
+            {
+              "id": "lyon-mountain",
+              "name": "Lyon Mountain",
+              "lat": 44.7037,
+              "lon": -73.8646,
+              "elevationFt": 3829,
+              "office": "BTV",
+              "isBase": false,
+              "gridId": "BTV"
+            },
+            {
+              "id": "ampersand-mountain",
+              "name": "Ampersand Mountain",
+              "lat": 44.2345,
+              "lon": -74.2023,
+              "elevationFt": 3352,
+              "office": "BTV",
+              "isBase": false,
+              "gridId": "BTV"
+            },
+            {
+              "id": "debar-mountain",
+              "name": "Debar Mountain",
+              "lat": 44.6033,
+              "lon": -74.2202,
+              "elevationFt": 3317,
+              "office": "BTV",
+              "isBase": false,
+              "gridId": "BTV"
+            },
+            {
+              "id": "st-regis-mountain",
+              "name": "St. Regis Mountain",
+              "lat": 44.4086,
+              "lon": -74.3296,
+              "elevationFt": 2838,
+              "office": "BTV",
+              "isBase": false,
+              "gridId": "BTV"
+            },
+            {
+              "id": "mount-arab",
+              "name": "Mount Arab",
+              "lat": 44.2039,
+              "lon": -74.5843,
+              "elevationFt": 2533,
+              "office": "BTV",
+              "isBase": false,
+              "gridId": "BTV"
+            }
+          ]
+        },
+        {
+          "id": "central-southern-adirondacks",
+          "title": "Central and Southern Adirondacks",
+          "places": [
+            {
+              "id": "snowy-mountain",
+              "name": "Snowy Mountain",
+              "lat": 43.7002,
+              "lon": -74.3868,
+              "elevationFt": 3899,
+              "office": "ALY",
+              "isBase": false,
+              "gridId": "ALY"
+            },
+            {
+              "id": "blue-mountain",
+              "name": "Blue Mountain",
+              "lat": 43.8724,
+              "lon": -74.401,
+              "elevationFt": 3750,
+              "office": "ALY",
+              "isBase": false,
+              "gridId": "ALY"
+            },
+            {
+              "id": "pillsbury-mountain",
+              "name": "Pillsbury Mountain",
+              "lat": 43.5815,
+              "lon": -74.5109,
+              "elevationFt": 3597,
+              "office": "ALY",
+              "isBase": false,
+              "gridId": "ALY"
+            },
+            {
+              "id": "gore-mountain",
+              "name": "Gore Mountain",
+              "lat": 43.6733,
+              "lon": -74.0485,
+              "elevationFt": 3563,
+              "office": "ALY",
+              "isBase": false,
+              "gridId": "ALY"
+            },
+            {
+              "id": "blue-ridge-mountain",
+              "name": "Blue Ridge Mountain",
+              "lat": 43.9246,
+              "lon": -73.8151,
+              "elevationFt": 3465,
+              "office": "BTV",
+              "isBase": false,
+              "gridId": "BTV"
+            },
+            {
+              "id": "fishing-brook-range",
+              "name": "Fishing Brook Range",
+              "lat": 43.9183,
+              "lon": -74.3201,
+              "elevationFt": 3400,
+              "office": "BTV",
+              "isBase": false,
+              "gridId": "BTV"
+            },
+            {
+              "id": "vanderwhacker-mountain",
+              "name": "Vanderwhacker Mountain",
+              "lat": 43.8981,
+              "lon": -74.096,
+              "elevationFt": 3389,
+              "office": "BTV",
+              "isBase": false,
+              "gridId": "BTV"
+            },
+            {
+              "id": "crane-mountain",
+              "name": "Crane Mountain",
+              "lat": 43.545,
+              "lon": -73.9623,
+              "elevationFt": 3254,
+              "office": "ALY",
+              "isBase": false,
+              "gridId": "ALY"
+            },
+            {
+              "id": "hadley-mountain",
+              "name": "Hadley Mountain",
+              "lat": 43.3801,
+              "lon": -73.9702,
+              "elevationFt": 2651,
+              "office": "ALY",
+              "isBase": false,
+              "gridId": "ALY"
+            },
+            {
+              "id": "black-mountain",
+              "name": "Black Mountain",
+              "lat": 43.6068,
+              "lon": -73.5311,
+              "elevationFt": 2640,
+              "office": "ALY",
+              "isBase": false,
+              "gridId": "ALY"
+            },
+            {
+              "id": "pharaoh-mountain",
+              "name": "Pharaoh Mountain",
+              "lat": 43.8184,
+              "lon": -73.6579,
+              "elevationFt": 2533,
+              "office": "BTV",
+              "isBase": false,
+              "gridId": "BTV"
+            },
+            {
+              "id": "prospect-mountain",
+              "name": "Prospect Mountain",
+              "lat": 43.4248,
+              "lon": -73.7457,
+              "elevationFt": 2030,
+              "office": "ALY",
+              "isBase": false,
+              "gridId": "ALY"
+            }
+          ]
+        },
+        {
+          "id": "catskill-mountains",
+          "title": "Catskill Mountains",
+          "places": [
+            {
+              "id": "slide-mountain",
+              "name": "Slide Mountain",
+              "lat": 41.9992,
+              "lon": -74.3858,
+              "elevationFt": 4180,
+              "office": "ALY",
+              "isBase": false,
+              "gridId": "ALY"
+            },
+            {
+              "id": "hunter-mountain",
+              "name": "Hunter Mountain",
+              "lat": 42.1777,
+              "lon": -74.2303,
+              "elevationFt": 4040,
+              "office": "ALY",
+              "isBase": false,
+              "gridId": "ALY"
+            },
+            {
+              "id": "peekamoose-mountain",
+              "name": "Peekamoose Mountain",
+              "lat": 41.9531,
+              "lon": -74.3981,
+              "elevationFt": 3843,
+              "office": "ALY",
+              "isBase": false,
+              "gridId": "ALY"
+            },
+            {
+              "id": "balsam-lake-mountain",
+              "name": "Balsam Lake Mountain",
+              "lat": 42.0455,
+              "lon": -74.5946,
+              "elevationFt": 3730,
+              "office": "ALY",
+              "isBase": false,
+              "gridId": "ALY"
+            },
+            {
+              "id": "panther-mountain",
+              "name": "Panther Mountain",
+              "lat": 42.0565,
+              "lon": -74.3946,
+              "elevationFt": 3720,
+              "office": "ALY",
+              "isBase": false,
+              "gridId": "ALY"
+            },
+            {
+              "id": "windham-high-peak",
+              "name": "Windham High Peak",
+              "lat": 42.3148,
+              "lon": -74.1431,
+              "elevationFt": 3524,
+              "office": "ALY",
+              "isBase": false,
+              "gridId": "ALY"
+            },
+            {
+              "id": "overlook-mountain",
+              "name": "Overlook Mountain",
+              "lat": 42.0851,
+              "lon": -74.0932,
+              "elevationFt": 3136,
+              "office": "ALY",
+              "isBase": false,
+              "gridId": "ALY"
+            },
+            {
+              "id": "red-hill",
+              "name": "Red Hill",
+              "lat": 41.924,
+              "lon": -74.5174,
+              "elevationFt": 2986,
+              "office": "ALY",
+              "isBase": false,
+              "gridId": "ALY"
+            },
+            {
+              "id": "mount-tremper",
+              "name": "Mount Tremper",
+              "lat": 42.0744,
+              "lon": -74.2778,
+              "elevationFt": 2740,
+              "office": "ALY",
+              "isBase": false,
+              "gridId": "ALY"
+            },
+            {
+              "id": "tannersville",
+              "name": "Tannersville",
+              "lat": 42.1957,
+              "lon": -74.1338,
+              "elevationFt": 1900,
+              "office": "ALY",
+              "isBase": true,
+              "gridId": "ALY"
+            }
+          ]
+        },
+        {
+          "id": "shawangunks",
+          "title": "Shawangunks",
+          "places": [
+            {
+              "id": "gunks-ridge",
+              "name": "Gunks Ridge",
+              "lat": 41.7361,
+              "lon": -74.2361,
+              "elevationFt": 2240,
+              "office": "ALY",
+              "isBase": true,
+              "gridId": "ALY"
+            }
+          ]
+        },
+        {
+          "id": "thacher-park",
+          "title": "Thacher Park",
+          "places": [
+            {
+              "id": "thacher-park",
+              "name": "Thacher State Park",
+              "lat": 42.652,
+              "lon": -74.0083,
+              "elevationFt": 1300,
+              "office": "ALY",
+              "isBase": true,
+              "gridId": "ALY"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "code": "vt",
+      "name": "Vermont",
+      "sections": [
+        {
+          "id": "jay-peak",
+          "title": "Jay Peak",
+          "places": [
+            {
+              "id": "jay-peak",
+              "name": "Jay Peak",
+              "lat": 44.9241,
+              "lon": -72.5257,
+              "elevationFt": 3858,
+              "office": "BTV",
+              "isBase": false,
+              "gridId": "BTV"
+            },
+            {
+              "id": "belvidere-mountain",
+              "name": "Belvidere Mountain",
+              "lat": 44.773,
+              "lon": -72.5509,
+              "elevationFt": 3340,
+              "office": "BTV",
+              "isBase": false,
+              "gridId": "BTV"
+            },
+            {
+              "id": "jay-village",
+              "name": "Jay Village",
+              "lat": 44.9476,
+              "lon": -72.4371,
+              "elevationFt": 1100,
+              "office": "BTV",
+              "isBase": true,
+              "gridId": "BTV"
+            }
+          ]
+        },
+        {
+          "id": "northern-greens",
+          "title": "Northern Greens",
+          "places": [
+            {
+              "id": "mount-mansfield",
+              "name": "Mount Mansfield",
+              "lat": 44.5437,
+              "lon": -72.8143,
+              "elevationFt": 4393,
+              "office": "BTV",
+              "isBase": false,
+              "gridId": "BTV"
+            },
+            {
+              "id": "smugglers-notch",
+              "name": "Smugglers Notch",
+              "lat": 44.5553,
+              "lon": -72.7957,
+              "elevationFt": 3370,
+              "office": "BTV",
+              "isBase": true,
+              "gridId": "BTV"
+            },
+            {
+              "id": "stowe-town",
+              "name": "Stowe",
+              "lat": 44.4653,
+              "lon": -72.6846,
+              "elevationFt": 1040,
+              "office": "BTV",
+              "isBase": true,
+              "gridId": "BTV"
+            }
+          ]
+        },
+        {
+          "id": "central-greens",
+          "title": "Central Greens",
+          "places": [
+            {
+              "id": "camels-hump",
+              "name": "Camel's Hump",
+              "lat": 44.3195,
+              "lon": -72.8863,
+              "elevationFt": 4083,
+              "office": "BTV",
+              "isBase": false,
+              "gridId": "BTV"
+            },
+            {
+              "id": "mount-ellen",
+              "name": "Mount Ellen",
+              "lat": 44.1601,
+              "lon": -72.9288,
+              "elevationFt": 4083,
+              "office": "BTV",
+              "isBase": false,
+              "gridId": "BTV"
+            },
+            {
+              "id": "bread-loaf-mountain",
+              "name": "Bread Loaf Mountain",
+              "lat": 44.0022,
+              "lon": -72.9416,
+              "elevationFt": 3835,
+              "office": "BTV",
+              "isBase": false,
+              "gridId": "BTV"
+            },
+            {
+              "id": "mount-worcester",
+              "name": "Mount Worcester",
+              "lat": 44.4432,
+              "lon": -72.5917,
+              "elevationFt": 3293,
+              "office": "BTV",
+              "isBase": false,
+              "gridId": "BTV"
+            },
+            {
+              "id": "waterbury",
+              "name": "Bolton / Waterbury",
+              "lat": 44.3378,
+              "lon": -72.7562,
+              "elevationFt": 600,
+              "office": "BTV",
+              "isBase": true,
+              "gridId": "BTV"
+            }
+          ]
+        },
+        {
+          "id": "northeast-kingdom",
+          "title": "Northeast Kingdom",
+          "places": [
+            {
+              "id": "signal-mountain",
+              "name": "Signal Mountain",
+              "lat": 44.2062,
+              "lon": -72.3253,
+              "elevationFt": 3370,
+              "office": "BTV",
+              "isBase": false,
+              "gridId": "BTV"
+            },
+            {
+              "id": "burke-mountain",
+              "name": "Burke Mountain",
+              "lat": 44.5706,
+              "lon": -71.8929,
+              "elevationFt": 3267,
+              "office": "BTV",
+              "isBase": false,
+              "gridId": "BTV"
+            },
+            {
+              "id": "monadnock-mountain",
+              "name": "Monadnock Mountain",
+              "lat": 44.8974,
+              "lon": -71.5445,
+              "elevationFt": 3148,
+              "office": "BTV",
+              "isBase": false,
+              "gridId": "BTV"
+            }
+          ]
+        },
+        {
+          "id": "southern-greens",
+          "title": "Southern Greens",
+          "places": [
+            {
+              "id": "killington-peak",
+              "name": "Killington Peak",
+              "lat": 43.6045,
+              "lon": -72.8201,
+              "elevationFt": 4235,
+              "office": "BTV",
+              "isBase": false,
+              "gridId": "BTV"
+            },
+            {
+              "id": "stratton-mountain",
+              "name": "Stratton Mountain",
+              "lat": 43.0863,
+              "lon": -72.9249,
+              "elevationFt": 3940,
+              "office": "ALY",
+              "isBase": false,
+              "gridId": "ALY"
+            },
+            {
+              "id": "mount-equinox",
+              "name": "Mount Equinox",
+              "lat": 43.1659,
+              "lon": -73.1174,
+              "elevationFt": 3840,
+              "office": "ALY",
+              "isBase": false,
+              "gridId": "ALY"
+            },
+            {
+              "id": "dorset-mountain",
+              "name": "Dorset Mountain",
+              "lat": 43.3092,
+              "lon": -73.0282,
+              "elevationFt": 3760,
+              "office": "BTV",
+              "isBase": false,
+              "gridId": "BTV"
+            },
+            {
+              "id": "haystack-mountain",
+              "name": "Haystack Mountain",
+              "lat": 42.9138,
+              "lon": -72.9191,
+              "elevationFt": 3445,
+              "office": "ALY",
+              "isBase": false,
+              "gridId": "ALY"
+            },
+            {
+              "id": "ludlow-mountain",
+              "name": "Ludlow Mountain",
+              "lat": 43.4041,
+              "lon": -72.7515,
+              "elevationFt": 3320,
+              "office": "BTV",
+              "isBase": false,
+              "gridId": "BTV"
+            },
+            {
+              "id": "bromley-mountain",
+              "name": "Bromley Mountain",
+              "lat": 43.2276,
+              "lon": -72.9394,
+              "elevationFt": 3263,
+              "office": "ALY",
+              "isBase": false,
+              "gridId": "ALY"
+            },
+            {
+              "id": "mount-ascutney",
+              "name": "Mount Ascutney",
+              "lat": 43.4437,
+              "lon": -72.4546,
+              "elevationFt": 3140,
+              "office": "BTV",
+              "isBase": false,
+              "gridId": "BTV"
+            },
+            {
+              "id": "bald-mountain",
+              "name": "Bald Mountain",
+              "lat": 42.9221,
+              "lon": -73.1437,
+              "elevationFt": 2857,
+              "office": "ALY",
+              "isBase": false,
+              "gridId": "ALY"
+            },
+            {
+              "id": "manchester-vt",
+              "name": "Manchester",
+              "lat": 43.1637,
+              "lon": -73.0723,
+              "elevationFt": 900,
+              "office": "ALY",
+              "isBase": true,
+              "gridId": "ALY"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "code": "nh",
+      "name": "New Hampshire",
+      "sections": [
+        {
+          "id": "presidential-range",
+          "title": "Presidential Range",
+          "places": [
+            {
+              "id": "mount-washington",
+              "name": "Mount Washington",
+              "lat": 44.2706,
+              "lon": -71.3033,
+              "elevationFt": 6288,
+              "office": "GYX",
+              "isBase": false,
+              "gridId": "GYX"
+            },
+            {
+              "id": "mount-adams",
+              "name": "Mount Adams",
+              "lat": 44.3207,
+              "lon": -71.2915,
+              "elevationFt": 5799,
+              "office": "GYX",
+              "isBase": false,
+              "gridId": "GYX"
+            },
+            {
+              "id": "pinkham-notch",
+              "name": "Pinkham Notch",
+              "lat": 44.2576,
+              "lon": -71.2537,
+              "elevationFt": 2017,
+              "office": "GYX",
+              "isBase": true,
+              "gridId": "GYX"
+            },
+            {
+              "id": "crawford-notch",
+              "name": "Crawford Notch",
+              "lat": 44.167,
+              "lon": -71.3759,
+              "elevationFt": 1900,
+              "office": "GYX",
+              "isBase": true,
+              "gridId": "GYX"
+            },
+            {
+              "id": "baldface-mountain",
+              "name": "Baldface Mountain",
+              "lat": 44.243,
+              "lon": -71.0873,
+              "elevationFt": 3547,
+              "office": "GYX",
+              "isBase": false,
+              "gridId": "GYX"
+            }
+          ]
+        },
+        {
+          "id": "franconia-pemi",
+          "title": "Franconia & Pemi",
+          "places": [
+            {
+              "id": "mount-lafayette",
+              "name": "Mount Lafayette",
+              "lat": 44.1608,
+              "lon": -71.6445,
+              "elevationFt": 5249,
+              "office": "GYX",
+              "isBase": false,
+              "gridId": "GYX"
+            },
+            {
+              "id": "mount-moosilauke",
+              "name": "Mount Moosilauke",
+              "lat": 44.0245,
+              "lon": -71.8309,
+              "elevationFt": 4802,
+              "office": "GYX",
+              "isBase": false,
+              "gridId": "GYX"
+            },
+            {
+              "id": "mount-osceola",
+              "name": "Mount Osceola",
+              "lat": 44.0015,
+              "lon": -71.5359,
+              "elevationFt": 4340,
+              "office": "GYX",
+              "isBase": false,
+              "gridId": "GYX"
+            },
+            {
+              "id": "cannon-mountain",
+              "name": "Cannon Mountain",
+              "lat": 44.1566,
+              "lon": -71.6988,
+              "elevationFt": 4080,
+              "office": "GYX",
+              "isBase": false,
+              "gridId": "GYX"
+            },
+            {
+              "id": "kancamagus-pass",
+              "name": "Kancamagus Pass",
+              "lat": 44.0251,
+              "lon": -71.4926,
+              "elevationFt": 2855,
+              "office": "GYX",
+              "isBase": true,
+              "gridId": "GYX"
+            },
+            {
+              "id": "franconia-notch",
+              "name": "Franconia Notch",
+              "lat": 44.1526,
+              "lon": -71.6795,
+              "elevationFt": 1940,
+              "office": "GYX",
+              "isBase": true,
+              "gridId": "GYX"
+            }
+          ]
+        },
+        {
+          "id": "rumney-climbing",
+          "title": "Rumney Climbing",
+          "places": [
+            {
+              "id": "rumney-crag",
+              "name": "Rumney Crags",
+              "lat": 43.8054,
+              "lon": -71.8126,
+              "elevationFt": 1400,
+              "office": "GYX",
+              "isBase": true,
+              "gridId": "GYX"
+            }
+          ]
+        },
+        {
+          "id": "monadnock-region",
+          "title": "Monadnock Region",
+          "places": [
+            {
+              "id": "mount-monadnock",
+              "name": "Mount Monadnock",
+              "lat": 42.8614,
+              "lon": -72.108,
+              "elevationFt": 3165,
+              "office": "GYX",
+              "isBase": false,
+              "gridId": "GYX"
+            },
+            {
+              "id": "north-pack-monadnock",
+              "name": "North Pack Monadnock",
+              "lat": 42.886,
+              "lon": -71.8658,
+              "elevationFt": 2276,
+              "office": "GYX",
+              "isBase": false,
+              "gridId": "GYX"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "code": "me",
+      "name": "Maine",
+      "sections": [
+        {
+          "id": "baxter-state-park",
+          "title": "Baxter State Park",
+          "places": [
+            {
+              "id": "katahdin",
+              "name": "Katahdin",
+              "lat": 45.9043,
+              "lon": -68.9214,
+              "elevationFt": 5268,
+              "office": "CAR",
+              "isBase": false,
+              "gridId": "CAR"
+            },
+            {
+              "id": "katahdin-woods-and-waters",
+              "name": "Katahdin Woods and Waters",
+              "lat": 45.898,
+              "lon": -68.55,
+              "elevationFt": 1200,
+              "office": "CAR",
+              "isBase": true,
+              "gridId": "CAR"
+            },
+            {
+              "id": "millinocket",
+              "name": "Millinocket",
+              "lat": 45.6573,
+              "lon": -68.7098,
+              "elevationFt": 400,
+              "office": "CAR",
+              "isBase": true,
+              "gridId": "CAR"
+            },
+            {
+              "id": "white-cap-mountain",
+              "name": "White Cap Mountain",
+              "lat": 45.5547,
+              "lon": -69.2462,
+              "elevationFt": 3654,
+              "office": "CAR",
+              "isBase": false,
+              "gridId": "CAR"
+            }
+          ]
+        },
+        {
+          "id": "mahoosucs-bigelow",
+          "title": "Mahoosucs & Bigelow",
+          "places": [
+            {
+              "id": "sugarloaf-mountain",
+              "name": "Sugarloaf Mountain",
+              "lat": 45.0317,
+              "lon": -70.3133,
+              "elevationFt": 4237,
+              "office": "GYX",
+              "isBase": false,
+              "gridId": "GYX"
+            },
+            {
+              "id": "bigelow",
+              "name": "Bigelow Mountain",
+              "lat": 45.1469,
+              "lon": -70.288,
+              "elevationFt": 4150,
+              "office": "GYX",
+              "isBase": false,
+              "gridId": "GYX"
+            },
+            {
+              "id": "rangeley",
+              "name": "Rangeley",
+              "lat": 44.9665,
+              "lon": -70.6428,
+              "elevationFt": 1518,
+              "office": "GYX",
+              "isBase": true,
+              "gridId": "GYX"
+            }
+          ]
+        },
+        {
+          "id": "northern-maine",
+          "title": "Northern Maine",
+          "places": [
+            {
+              "id": "deboullie-mountain",
+              "name": "Deboullie Mountain",
+              "lat": 46.9704,
+              "lon": -68.8763,
+              "elevationFt": 1981,
+              "office": "CAR",
+              "isBase": false,
+              "gridId": "CAR"
+            },
+            {
+              "id": "mars-hill-mountain",
+              "name": "Mars Hill Mountain",
+              "lat": 46.5211,
+              "lon": -67.8138,
+              "elevationFt": 1749,
+              "office": "CAR",
+              "isBase": false,
+              "gridId": "CAR"
+            }
+          ]
+        },
+        {
+          "id": "acadia",
+          "title": "Acadia",
+          "places": [
+            {
+              "id": "cadillac-mountain",
+              "name": "Cadillac Mountain",
+              "lat": 44.3513,
+              "lon": -68.2265,
+              "elevationFt": 1530,
+              "office": "CAR",
+              "isBase": false,
+              "gridId": "CAR"
+            },
+            {
+              "id": "bar-harbor",
+              "name": "Bar Harbor",
+              "lat": 44.3876,
+              "lon": -68.2039,
+              "elevationFt": 150,
+              "office": "CAR",
+              "isBase": true,
+              "gridId": "CAR"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

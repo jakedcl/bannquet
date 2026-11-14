@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import { mountainWeatherRedirects } from "./src/lib/mountain-weather/redirects";
 import { securityHeaderRules } from "./src/lib/security-headers";
 
 const nextConfig: NextConfig = {
@@ -27,18 +28,24 @@ const nextConfig: NextConfig = {
   },
   async redirects() {
     return [
+      ...mountainWeatherRedirects(),
       { source: "/studio", destination: "/admin", permanent: false },
       { source: "/studio/:path*", destination: "/admin", permanent: false },
       { source: "/hikers/:username", destination: "/user/:username", permanent: false },
+      { source: "/conditions", destination: "/mountain-weather/conditions", permanent: false },
+      { source: "/routes", destination: "/map", permanent: false },
+      { source: "/pins", destination: "/map", permanent: false },
       { source: "/weather", destination: "/mountain-weather", permanent: false },
       { source: "/weather/:path*", destination: "/mountain-weather", permanent: false },
-      { source: "/trips/new", destination: "/upload?kind=trip", permanent: false },
-      { source: "/trip-reports/new", destination: "/upload?kind=trip", permanent: false },
-      { source: "/trip-reports/:path*", destination: "/trips", permanent: false },
-      { source: "/trip-reports", destination: "/trips", permanent: false },
-      { source: "/posts/new", destination: "/upload?kind=trip", permanent: false },
-      { source: "/posts/:path*", destination: "/trips", permanent: false },
-      { source: "/posts", destination: "/trips", permanent: false },
+      { source: "/trips/new", destination: "/upload?kind=post", permanent: false },
+      { source: "/trips/:path*", destination: "/posts", permanent: false },
+      { source: "/trips", destination: "/posts", permanent: false },
+      { source: "/trip-reports/new", destination: "/upload?kind=post", permanent: false },
+      { source: "/trip-reports/:path*", destination: "/posts", permanent: false },
+      { source: "/trip-reports", destination: "/posts", permanent: false },
+      { source: "/posts/new", destination: "/upload?kind=post", permanent: false },
+      { source: "/notifications", destination: "/community", permanent: false },
+      { source: "/notifications/:path*", destination: "/community", permanent: false },
       { source: "/peak-finder/sw.js", destination: "/sw-peak-finder.js", permanent: false },
     ];
   },

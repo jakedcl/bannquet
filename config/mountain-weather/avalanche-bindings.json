@@ -1,0 +1,153 @@
+{
+  "version": 2,
+  "geometryFetchedAt": "2026-11-14T06:40:47.357Z",
+  "ruleSummary": "MWAC and NYSAC bindings from point-in-polygon on cached avalanche.org map-layer geometry (2026-11-14), plus explicit exceptions: pinkham-notch (MWAC trailhead outside polygon). AVG subpages from source-bindings (16 points).",
+  "exceptions": {
+    "pinkham-notch": {
+      "centers": [
+        "MWAC"
+      ],
+      "bindReason": "Trailhead for the MWAC forecast area (just outside the zone). Explicit exception — coordinates are outside the cached MWAC map-layer polygon."
+    }
+  },
+  "pipAudit": {
+    "MWAC": [
+      "mount-washington",
+      "mount-adams",
+      "crawford-notch"
+    ],
+    "NYSAC": [
+      "mount-marcy",
+      "whiteface-mountain",
+      "dix-mountain",
+      "algonquin-peak",
+      "mount-colden",
+      "mount-colvin",
+      "giant-mountain",
+      "santanoni-peak",
+      "cascade-mountain",
+      "mckenzie-mountain",
+      "mount-van-hoevenberg",
+      "keene-valley",
+      "ampersand-mountain"
+    ]
+  },
+  "centers": {
+    "MWAC": {
+      "id": "MWAC",
+      "name": "Mount Washington Avalanche Center",
+      "mapLayerUrl": "https://api.avalanche.org/v2/public/products/map-layer/MWAC",
+      "org": "MWAC (USFS)"
+    },
+    "NYSAC": {
+      "id": "NYSAC",
+      "name": "NY DEC Adirondack avalanche guidance",
+      "mapLayerUrl": "https://api.avalanche.org/v2/public/products/map-layer/NYSAC",
+      "org": "NY DEC"
+    }
+  },
+  "places": {
+    "mount-marcy": {
+      "centers": [
+        "NYSAC"
+      ],
+      "bindReason": "Inside NYSAC map-layer polygon (point-in-polygon vs geometry cached 2026-11-14)."
+    },
+    "whiteface-mountain": {
+      "centers": [
+        "NYSAC"
+      ],
+      "bindReason": "Inside NYSAC map-layer polygon (point-in-polygon vs geometry cached 2026-11-14)."
+    },
+    "dix-mountain": {
+      "centers": [
+        "NYSAC"
+      ],
+      "bindReason": "Inside NYSAC map-layer polygon (point-in-polygon vs geometry cached 2026-11-14)."
+    },
+    "algonquin-peak": {
+      "centers": [
+        "NYSAC"
+      ],
+      "bindReason": "Inside NYSAC map-layer polygon (point-in-polygon vs geometry cached 2026-11-14)."
+    },
+    "mount-colden": {
+      "centers": [
+        "NYSAC"
+      ],
+      "bindReason": "Inside NYSAC map-layer polygon (point-in-polygon vs geometry cached 2026-11-14)."
+    },
+    "mount-colvin": {
+      "centers": [
+        "NYSAC"
+      ],
+      "bindReason": "Inside NYSAC map-layer polygon (point-in-polygon vs geometry cached 2026-11-14)."
+    },
+    "giant-mountain": {
+      "centers": [
+        "NYSAC"
+      ],
+      "bindReason": "Inside NYSAC map-layer polygon (point-in-polygon vs geometry cached 2026-11-14)."
+    },
+    "santanoni-peak": {
+      "centers": [
+        "NYSAC"
+      ],
+      "bindReason": "Inside NYSAC map-layer polygon (point-in-polygon vs geometry cached 2026-11-14)."
+    },
+    "cascade-mountain": {
+      "centers": [
+        "NYSAC"
+      ],
+      "bindReason": "Inside NYSAC map-layer polygon (point-in-polygon vs geometry cached 2026-11-14)."
+    },
+    "mckenzie-mountain": {
+      "centers": [
+        "NYSAC"
+      ],
+      "bindReason": "Inside NYSAC map-layer polygon (point-in-polygon vs geometry cached 2026-11-14)."
+    },
+    "mount-van-hoevenberg": {
+      "centers": [
+        "NYSAC"
+      ],
+      "bindReason": "Inside NYSAC map-layer polygon (point-in-polygon vs geometry cached 2026-11-14)."
+    },
+    "keene-valley": {
+      "centers": [
+        "NYSAC"
+      ],
+      "bindReason": "Inside NYSAC map-layer polygon (point-in-polygon vs geometry cached 2026-11-14)."
+    },
+    "ampersand-mountain": {
+      "centers": [
+        "NYSAC"
+      ],
+      "bindReason": "Inside NYSAC map-layer polygon (point-in-polygon vs geometry cached 2026-11-14)."
+    },
+    "mount-washington": {
+      "centers": [
+        "MWAC"
+      ],
+      "bindReason": "Inside MWAC map-layer polygon (point-in-polygon vs geometry cached 2026-11-14)."
+    },
+    "mount-adams": {
+      "centers": [
+        "MWAC"
+      ],
+      "bindReason": "Inside MWAC map-layer polygon (point-in-polygon vs geometry cached 2026-11-14)."
+    },
+    "crawford-notch": {
+      "centers": [
+        "MWAC"
+      ],
+      "bindReason": "Inside MWAC map-layer polygon (point-in-polygon vs geometry cached 2026-11-14)."
+    },
+    "pinkham-notch": {
+      "centers": [
+        "MWAC"
+      ],
+      "bindReason": "Trailhead for the MWAC forecast area (just outside the zone). Explicit exception — coordinates are outside the cached MWAC map-layer polygon."
+    }
+  }
+}

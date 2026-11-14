@@ -26,28 +26,52 @@ export interface WeatherHazard {
   areaDesc?: string;
 }
 
+export type GridValueSample = {
+  validTime: string;
+  value: number | null;
+  label: string;
+};
+
+export type GridExtras = {
+  /** NWS grid cell elevation in feet, when the API provides it. */
+  elevationFt: number | null;
+  snowLevel: GridValueSample[];
+  snowfallAmount: GridValueSample[];
+  iceAccumulation: GridValueSample[];
+  ceilingHeight: GridValueSample[];
+  dewpoint: GridValueSample[];
+  skyCover: GridValueSample[];
+  quantitativePrecipitation: GridValueSample[];
+  probabilityOfThunderstorm: GridValueSample[];
+};
+
 export interface WeatherData {
-  temperature: number;
+  temperature: number | null;
   apparentTemperature?: number | null;
   windChill?: number | null;
   heatIndex?: number | null;
   /** Shared rule in `src/lib/feels-like.ts`, same as the live banner. */
-  feelsLike: number;
+  feelsLike: number | null;
   relativeHumidity?: number | null;
   conditions: string[];
-  windSpeed: string;
-  windDirection: string;
+  windSpeed: string | null;
+  windDirection: string | null;
   windGust?: number | null;
   summitWind?: number | null;
-  precipitation: number;
+  precipitation: number | null;
   snowLevel?: number | null;
   snowAmount?: number | null;
   iceAccumulation?: number | null;
   visibility?: number | null;
+  dewpoint?: number | null;
   skyCover?: number | null;
+  quantitativePrecipitation?: number | null;
+  probabilityOfThunderstorm?: number | null;
   ceilingHeight?: number | null;
+  gridExtras?: GridExtras | null;
   hazards: WeatherHazard[];
-  timestamp: string;
+  /** Start time of the current hourly period; null when the API sends none. */
+  timestamp: string | null;
   icon?: string;
   hourlyForecast?: ForecastSnippet[];
   dailyForecast?: ForecastSnippet[];
@@ -60,7 +84,16 @@ export type ForecastSnippet = {
   startTime: string;
   temperature: number;
   windSpeed?: string;
+  windDirection?: string;
+  windGust?: string;
   shortForecast?: string;
+  detailedForecast?: string;
+  precipChance?: number | null;
+  /** NWS grid weather layer (coverage, type, intensity) for this hour. */
+  gridWeather?: string | null;
+  gridWeatherCoverage?: string | null;
+  gridWeatherType?: string | null;
+  gridWeatherIntensity?: string | null;
   isDaytime?: boolean;
   icon?: string;
   secondaryTemp?: number;
@@ -90,6 +123,7 @@ export type ForecastPeriod = {
   temperatureTrend: string | null;
   windSpeed: string;
   windDirection: string;
+  windGust?: string | null;
   icon: string;
   shortForecast: string;
   detailedForecast: string;

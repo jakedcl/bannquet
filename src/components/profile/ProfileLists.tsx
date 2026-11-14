@@ -8,7 +8,7 @@ import type { DataColumn } from '@/components/ui/DataTable';
 import { deletePhotoAction, deleteRouteAction } from '@/app/library/actions';
 import { deletePeakRowAction } from '@/app/peaks/actions';
 import { deletePinAction } from '@/app/pins/actions';
-import { deleteTripAction } from '@/app/trips/actions';
+import { deletePostAction } from '@/app/posts/actions';
 import { ACTIVITY_META, isActivity } from '@/lib/activities';
 import { PIN_KIND_LABELS, isPinKind } from '@/lib/pin-kinds';
 import { formatFeetGain, formatMiles } from '@/lib/gpx';
@@ -261,39 +261,33 @@ export function PhotoGrid({
   );
 }
 
-export function TripRows({
-  trips,
+export function PostRows({
+  posts,
   manage,
   collapsed = false,
   viewer,
   ownerId,
 }: {
-  trips: Array<{ id: string; title: string; tripDate: string | null; activity?: string | null }>;
+  posts: Array<{ id: string; title: string; createdAt: string }>;
   manage: boolean;
   collapsed?: boolean;
   viewer?: ProfileManageViewer | null;
   ownerId?: string;
 }) {
   const adminDelete = manage && ownerId ? deleteAsAdmin(viewer, ownerId) : false;
-  const columns: DataColumn<(typeof trips)[number]>[] = [
+  const columns: DataColumn<(typeof posts)[number]>[] = [
     {
       id: 'title',
-      header: 'Trip',
+      header: 'Post',
       sticky: true,
       sortValue: (row) => row.title,
-      cell: (row) => <Link href={`/trips/${row.id}`} className="font-bold underline">{row.title}</Link>,
+      cell: (row) => <Link href={`/posts/${row.id}`} className="font-bold underline">{row.title}</Link>,
     },
     {
       id: 'date',
-      header: 'Date',
-      sortValue: (row) => row.tripDate,
-      cell: (row) => formatTripDate(row.tripDate),
-    },
-    {
-      id: 'activity',
-      header: 'Activity',
-      sortValue: (row) => activityLabel(row.activity),
-      cell: (row) => activityLabel(row.activity) ?? '—',
+      header: 'Posted',
+      sortValue: (row) => row.createdAt,
+      cell: (row) => formatTripDate(row.createdAt.slice(0, 10)),
     },
   ];
   if (manage) {
@@ -304,10 +298,10 @@ export function TripRows({
       cell: (row) => (
         <Trash>
           <ConfirmDelete
-            action={deleteTripAction}
-            confirm="Delete this trip?"
+            action={deletePostAction}
+            confirm="Delete this post?"
             adminPower={adminDelete}
-            label={adminDelete ? adminPowerLabel('Delete trip').ariaLabel : undefined}
+            label={adminDelete ? adminPowerLabel('Delete post').ariaLabel : undefined}
             fields={{ id: row.id }}
           />
         </Trash>
@@ -316,14 +310,13 @@ export function TripRows({
   }
   return (
     <BrowseTable
-      rows={trips}
+      rows={posts}
       columns={columns}
       rowKey={(row) => row.id}
-      empty="No trips yet."
+      empty="No posts yet."
       defaultSort={{ id: 'date', dir: 'desc' }}
-      placeholder="Trip name"
-      searchText={(row) => `${row.title} ${activityLabel(row.activity) ?? ''}`}
-      facets={[{ id: 'activity', label: 'Activity', value: (row) => activityLabel(row.activity) }]}
+      placeholder="Post title"
+      searchText={(row) => row.title}
       collapsed={collapsed}
     />
   );
@@ -395,39 +388,3 @@ export function PeakRows({
   );
 }
 
-export function GearRows({
-  items,
-  collapsed = false,
-}: {
-  items: Array<{ id: string; name: string; qty: number }>;
-  collapsed?: boolean;
-}) {
-  const columns: DataColumn<(typeof items)[number]>[] = [
-    {
-      id: 'name',
-      header: 'Item',
-      sticky: true,
-      sortValue: (row) => row.name,
-      cell: (row) => <Link href={`/gear/${row.id}`} className="font-bold underline">{row.name}</Link>,
-    },
-    {
-      id: 'qty',
-      header: 'Qty',
-      align: 'right',
-      sortValue: (row) => row.qty,
-      cell: (row) => String(row.qty),
-    },
-  ];
-  return (
-    <BrowseTable
-      rows={items}
-      columns={columns}
-      rowKey={(row) => row.id}
-      empty="No gear yet."
-      defaultSort={{ id: 'name', dir: 'asc' }}
-      placeholder="Gear name"
-      searchText={(row) => row.name}
-      collapsed={collapsed}
-    />
-  );
-}

@@ -1,0 +1,1739 @@
+{
+  "version": 1,
+  "generatedNote": "Summit coordinates from USGS GNIS (carto.nationalmap.gov geonames MapServer). BTV/ALY mtnFcst XML used to disambiguate homonyms.",
+  "flaggedIds": [
+    "katahdin-woods-and-waters"
+  ],
+  "places": {
+    "mount-marcy": {
+      "lat": 44.1128,
+      "lon": -73.9237,
+      "gnisId": 973357,
+      "gnisName": "Mount Marcy",
+      "gnisFeatureClass": "Summit",
+      "county": "Essex",
+      "source": "usgs-gnis-national-map",
+      "matchReason": "single-after-filter",
+      "mtnFcstCheck": {
+        "office": "BTV",
+        "loc": "MOUNT MARCY",
+        "lat": 44.1125,
+        "lon": -73.923889,
+        "status": "mtnFcst-ok"
+      },
+      "previous": {
+        "lat": 44.1128,
+        "lon": -73.9237
+      },
+      "flagged": false
+    },
+    "whiteface-mountain": {
+      "lat": 44.3659,
+      "lon": -73.9031,
+      "gnisId": 973364,
+      "gnisName": "Whiteface Mountain",
+      "gnisFeatureClass": "Summit",
+      "county": "Essex",
+      "source": "usgs-gnis-national-map",
+      "matchReason": "single-after-filter",
+      "mtnFcstCheck": {
+        "office": "BTV",
+        "loc": "WHITEFACE MOUNTAIN",
+        "lat": 44.36571,
+        "lon": -73.902926,
+        "status": "mtnFcst-ok"
+      },
+      "previous": {
+        "lat": 44.3659,
+        "lon": -73.9031
+      },
+      "flagged": false
+    },
+    "dix-mountain": {
+      "lat": 44.0822,
+      "lon": -73.7865,
+      "gnisId": 973347,
+      "gnisName": "Dix Mountain",
+      "gnisFeatureClass": "Summit",
+      "county": "Essex",
+      "source": "usgs-gnis-national-map",
+      "matchReason": "single-after-filter",
+      "mtnFcstCheck": {
+        "office": "BTV",
+        "loc": "DIX MOUNTAIN",
+        "lat": 44.082222,
+        "lon": -73.786389,
+        "status": "mtnFcst-ok"
+      },
+      "previous": {
+        "lat": 44.0822,
+        "lon": -73.7865
+      },
+      "flagged": false
+    },
+    "algonquin-peak": {
+      "lat": 44.1435,
+      "lon": -73.9867,
+      "gnisId": 973340,
+      "gnisName": "Algonquin Peak",
+      "gnisFeatureClass": "Summit",
+      "county": "Essex",
+      "source": "usgs-gnis-national-map",
+      "matchReason": "single-after-filter",
+      "mtnFcstCheck": null,
+      "previous": {
+        "lat": 44.1435,
+        "lon": -73.9867
+      },
+      "flagged": false
+    },
+    "mount-colden": {
+      "lat": 44.127,
+      "lon": -73.9599,
+      "gnisId": 947091,
+      "gnisName": "Mount Colden",
+      "gnisFeatureClass": "Summit",
+      "county": "Essex",
+      "source": "usgs-gnis-national-map",
+      "matchReason": "single-after-filter",
+      "mtnFcstCheck": null,
+      "previous": {
+        "lat": 44.127,
+        "lon": -73.9599
+      },
+      "flagged": false
+    },
+    "mount-colvin": {
+      "lat": 44.094,
+      "lon": -73.8346,
+      "gnisId": 947211,
+      "gnisName": "Mount Colvin",
+      "gnisFeatureClass": "Summit",
+      "county": "Essex",
+      "source": "usgs-gnis-national-map",
+      "matchReason": "single-after-filter",
+      "mtnFcstCheck": null,
+      "previous": {
+        "lat": 44.094,
+        "lon": -73.8346
+      },
+      "flagged": false
+    },
+    "giant-mountain": {
+      "lat": 44.1611,
+      "lon": -73.7202,
+      "gnisId": 2611110,
+      "gnisName": "Giant Mountain",
+      "gnisFeatureClass": "Summit",
+      "county": "Essex",
+      "source": "usgs-gnis-national-map",
+      "matchReason": "single-after-filter",
+      "mtnFcstCheck": {
+        "office": "BTV",
+        "loc": "GIANT MOUNTAIN",
+        "lat": 44.161111,
+        "lon": -73.72,
+        "status": "mtnFcst-ok"
+      },
+      "previous": {
+        "lat": 44.1611,
+        "lon": -73.7202
+      },
+      "flagged": false
+    },
+    "santanoni-peak": {
+      "lat": 44.0823,
+      "lon": -74.131,
+      "gnisId": 964468,
+      "gnisName": "Santanoni Peak",
+      "gnisFeatureClass": "Summit",
+      "county": "Essex",
+      "source": "usgs-gnis-national-map",
+      "matchReason": "single-after-filter",
+      "mtnFcstCheck": {
+        "office": "BTV",
+        "loc": "SANTANONI PEAK",
+        "lat": 44.0825,
+        "lon": -74.131167,
+        "status": "mtnFcst-ok"
+      },
+      "previous": {
+        "lat": 44.0823,
+        "lon": -74.131
+      },
+      "flagged": false
+    },
+    "cascade-mountain": {
+      "lat": 44.2187,
+      "lon": -73.8601,
+      "gnisId": 945952,
+      "gnisName": "Cascade Mountain",
+      "gnisFeatureClass": "Summit",
+      "county": "Essex",
+      "source": "usgs-gnis-national-map",
+      "matchReason": "single-after-filter",
+      "mtnFcstCheck": {
+        "office": "BTV",
+        "loc": "CASCADE MOUNTAIN",
+        "lat": 44.218611,
+        "lon": -73.860556,
+        "status": "mtnFcst-ok"
+      },
+      "previous": {
+        "lat": 44.2187,
+        "lon": -73.8601
+      },
+      "flagged": false
+    },
+    "mckenzie-mountain": {
+      "lat": 44.3363,
+      "lon": -74.0321,
+      "gnisId": 956798,
+      "gnisName": "McKenzie Mountain",
+      "gnisFeatureClass": "Summit",
+      "county": "Essex",
+      "source": "usgs-gnis-national-map",
+      "matchReason": "single-after-filter",
+      "mtnFcstCheck": {
+        "office": "BTV",
+        "loc": "MCKENZIE MOUNTAIN",
+        "lat": 44.336159,
+        "lon": -74.032095,
+        "status": "mtnFcst-ok"
+      },
+      "previous": {
+        "lat": 44.3363,
+        "lon": -74.0321
+      },
+      "flagged": false
+    },
+    "mount-van-hoevenberg": {
+      "lat": 44.21,
+      "lon": -73.9297,
+      "gnisId": 968416,
+      "gnisName": "Mount Van Hoevenberg",
+      "gnisFeatureClass": "Summit",
+      "county": "Essex",
+      "source": "usgs-gnis-national-map",
+      "matchReason": "single-after-filter",
+      "mtnFcstCheck": {
+        "office": "BTV",
+        "loc": "MOUNT VAN HOEVENBERG",
+        "lat": 44.21,
+        "lon": -73.92936,
+        "status": "mtnFcst-ok"
+      },
+      "previous": {
+        "lat": 44.21,
+        "lon": -73.9297
+      },
+      "flagged": false
+    },
+    "keene-valley": {
+      "lat": 44.1898,
+      "lon": -73.786,
+      "gnisId": 954432,
+      "gnisName": "Keene Valley",
+      "gnisFeatureClass": "Populated Place",
+      "county": "Essex",
+      "source": "usgs-gnis-national-map",
+      "matchReason": "single-after-filter",
+      "mtnFcstCheck": null,
+      "previous": {
+        "lat": 44.1898,
+        "lon": -73.786
+      },
+      "flagged": false
+    },
+    "lyon-mountain": {
+      "lat": 44.7037,
+      "lon": -73.8646,
+      "gnisId": 956195,
+      "gnisName": "Lyon Mountain",
+      "gnisFeatureClass": "Summit",
+      "county": "Clinton",
+      "source": "usgs-gnis-national-map",
+      "matchReason": "single-after-filter",
+      "mtnFcstCheck": {
+        "office": "BTV",
+        "loc": "LYON MOUNTAIN",
+        "lat": 44.703654,
+        "lon": -73.864588,
+        "status": "mtnFcst-ok"
+      },
+      "previous": {
+        "lat": 44.7037,
+        "lon": -73.8646
+      },
+      "flagged": false
+    },
+    "ampersand-mountain": {
+      "lat": 44.2345,
+      "lon": -74.2023,
+      "gnisId": 942090,
+      "gnisName": "Ampersand Mountain",
+      "gnisFeatureClass": "Summit",
+      "county": "Franklin",
+      "source": "usgs-gnis-national-map",
+      "matchReason": "single-after-filter",
+      "mtnFcstCheck": {
+        "office": "BTV",
+        "loc": "AMPERSAND MOUNTAIN",
+        "lat": 44.251165,
+        "lon": -74.18627,
+        "status": "mtnFcst-drift"
+      },
+      "previous": {
+        "lat": 44.2345,
+        "lon": -74.2023
+      },
+      "flagged": false
+    },
+    "debar-mountain": {
+      "lat": 44.6033,
+      "lon": -74.2202,
+      "gnisId": 948153,
+      "gnisName": "Debar Mountain",
+      "gnisFeatureClass": "Summit",
+      "county": "Franklin",
+      "source": "usgs-gnis-national-map",
+      "matchReason": "single-after-filter",
+      "mtnFcstCheck": {
+        "office": "BTV",
+        "loc": "DEBAR MOUNTAIN",
+        "lat": 44.603363,
+        "lon": -74.220414,
+        "status": "mtnFcst-ok"
+      },
+      "previous": {
+        "lat": 44.6033,
+        "lon": -74.2202
+      },
+      "flagged": false
+    },
+    "st-regis-mountain": {
+      "lat": 44.4086,
+      "lon": -74.3296,
+      "gnisId": 964192,
+      "gnisName": "Saint Regis Mountain",
+      "gnisFeatureClass": "Summit",
+      "county": "Franklin",
+      "source": "usgs-gnis-national-map",
+      "matchReason": "single-after-filter",
+      "mtnFcstCheck": {
+        "office": "BTV",
+        "loc": "ST. REGIS MOUNTAIN",
+        "lat": 44.40839,
+        "lon": -74.329606,
+        "status": "mtnFcst-ok"
+      },
+      "previous": {
+        "lat": 44.4086,
+        "lon": -74.3296
+      },
+      "flagged": false
+    },
+    "mount-arab": {
+      "lat": 44.2039,
+      "lon": -74.5843,
+      "gnisId": 975898,
+      "gnisName": "Arab Mountain",
+      "gnisFeatureClass": "Summit",
+      "county": "St. Lawrence",
+      "source": "usgs-gnis-national-map",
+      "matchReason": "single-after-filter",
+      "mtnFcstCheck": {
+        "office": "BTV",
+        "loc": "MOUNT ARAB",
+        "lat": 44.204227,
+        "lon": -74.585174,
+        "status": "mtnFcst-ok"
+      },
+      "previous": {
+        "lat": 44.2039,
+        "lon": -74.5843
+      },
+      "flagged": false
+    },
+    "snowy-mountain": {
+      "lat": 43.7002,
+      "lon": -74.3868,
+      "gnisId": 965586,
+      "gnisName": "Snowy Mountain",
+      "gnisFeatureClass": "Summit",
+      "county": "Hamilton",
+      "source": "usgs-gnis-national-map",
+      "matchReason": "single-after-filter",
+      "mtnFcstCheck": {
+        "office": "ALY",
+        "loc": "SNOWY MOUNTAIN",
+        "lat": 43.7003,
+        "lon": -74.386,
+        "status": "mtnFcst-ok"
+      },
+      "previous": {
+        "lat": 43.7002,
+        "lon": -74.3868
+      },
+      "flagged": false
+    },
+    "blue-mountain": {
+      "lat": 43.8724,
+      "lon": -74.401,
+      "gnisId": 944317,
+      "gnisName": "Blue Mountain",
+      "gnisFeatureClass": "Summit",
+      "county": "Hamilton",
+      "source": "usgs-gnis-national-map",
+      "matchReason": "single-after-filter",
+      "mtnFcstCheck": {
+        "office": "ALY",
+        "loc": "BLUE MOUNTAIN",
+        "lat": 43.8725,
+        "lon": -74.4011,
+        "status": "mtnFcst-ok"
+      },
+      "previous": {
+        "lat": 43.8724,
+        "lon": -74.401
+      },
+      "flagged": false
+    },
+    "pillsbury-mountain": {
+      "lat": 43.5815,
+      "lon": -74.5109,
+      "gnisId": 960405,
+      "gnisName": "Pillsbury Mountain",
+      "gnisFeatureClass": "Summit",
+      "county": "Hamilton",
+      "source": "usgs-gnis-national-map",
+      "matchReason": "single-after-filter",
+      "mtnFcstCheck": {
+        "office": "ALY",
+        "loc": "PILLSBURY MOUNTAIN",
+        "lat": 43.5815,
+        "lon": -74.5113,
+        "status": "mtnFcst-ok"
+      },
+      "previous": {
+        "lat": 43.5815,
+        "lon": -74.5109
+      },
+      "flagged": false
+    },
+    "gore-mountain": {
+      "lat": 43.6733,
+      "lon": -74.0485,
+      "gnisId": 951389,
+      "gnisName": "Gore Mountain",
+      "gnisFeatureClass": "Summit",
+      "county": "Warren",
+      "source": "usgs-gnis-national-map",
+      "matchReason": "single-after-filter",
+      "mtnFcstCheck": {
+        "office": "ALY",
+        "loc": "GORE MOUNTAIN",
+        "lat": 43.6732,
+        "lon": -74.0478,
+        "status": "mtnFcst-ok"
+      },
+      "previous": {
+        "lat": 43.6733,
+        "lon": -74.0485
+      },
+      "flagged": false
+    },
+    "blue-ridge-mountain": {
+      "lat": 43.9246,
+      "lon": -73.8151,
+      "gnisId": 944331,
+      "gnisName": "Blue Ridge Mountain",
+      "gnisFeatureClass": "Summit",
+      "county": "Essex",
+      "source": "usgs-gnis-national-map",
+      "matchReason": "mtnFcst-nearest",
+      "mtnFcstCheck": {
+        "office": "BTV",
+        "loc": "BLUE RIDGE MOUNTAIN",
+        "lat": 43.924635,
+        "lon": -73.815508,
+        "status": "mtnFcst-ok"
+      },
+      "previous": {
+        "lat": 43.9246,
+        "lon": -73.8151
+      },
+      "flagged": false
+    },
+    "fishing-brook-range": {
+      "lat": 43.9183,
+      "lon": -74.3201,
+      "gnisId": 950173,
+      "gnisName": "Fishing Brook Range",
+      "gnisFeatureClass": "Ridge",
+      "county": "Essex",
+      "source": "usgs-gnis-national-map",
+      "matchReason": "single-after-filter",
+      "mtnFcstCheck": {
+        "office": "BTV",
+        "loc": "FISHING BROOK RANGE",
+        "lat": 43.917928,
+        "lon": -74.31839,
+        "status": "mtnFcst-ok"
+      },
+      "previous": {
+        "lat": 43.9183,
+        "lon": -74.3201
+      },
+      "flagged": false
+    },
+    "vanderwhacker-mountain": {
+      "lat": 43.8981,
+      "lon": -74.096,
+      "gnisId": 968463,
+      "gnisName": "Vanderwhacker Mountain",
+      "gnisFeatureClass": "Summit",
+      "county": "Essex",
+      "source": "usgs-gnis-national-map",
+      "matchReason": "single-after-filter",
+      "mtnFcstCheck": {
+        "office": "BTV",
+        "loc": "VANDERWHACKER MOUNTAIN",
+        "lat": 43.898396,
+        "lon": -74.095978,
+        "status": "mtnFcst-ok"
+      },
+      "previous": {
+        "lat": 43.8981,
+        "lon": -74.096
+      },
+      "flagged": false
+    },
+    "crane-mountain": {
+      "lat": 43.545,
+      "lon": -73.9623,
+      "gnisId": 947697,
+      "gnisName": "Crane Mountain",
+      "gnisFeatureClass": "Summit",
+      "county": "Warren",
+      "source": "usgs-gnis-national-map",
+      "matchReason": "single-after-filter",
+      "mtnFcstCheck": {
+        "office": "ALY",
+        "loc": "CRANE MOUNTAIN",
+        "lat": 43.5445,
+        "lon": -73.9623,
+        "status": "mtnFcst-ok"
+      },
+      "previous": {
+        "lat": 43.545,
+        "lon": -73.9623
+      },
+      "flagged": false
+    },
+    "hadley-mountain": {
+      "lat": 43.3801,
+      "lon": -73.9702,
+      "gnisId": 951977,
+      "gnisName": "Hadley Mountain",
+      "gnisFeatureClass": "Summit",
+      "county": "Saratoga",
+      "source": "usgs-gnis-national-map",
+      "matchReason": "single-after-filter",
+      "mtnFcstCheck": {
+        "office": "ALY",
+        "loc": "HADLEY MOUNTAIN",
+        "lat": 43.3812,
+        "lon": -73.969,
+        "status": "mtnFcst-ok"
+      },
+      "previous": {
+        "lat": 43.3801,
+        "lon": -73.9702
+      },
+      "flagged": false
+    },
+    "black-mountain": {
+      "lat": 43.6068,
+      "lon": -73.5311,
+      "gnisId": 944147,
+      "gnisName": "Black Mountain",
+      "gnisFeatureClass": "Summit",
+      "county": "Washington",
+      "source": "usgs-gnis-national-map",
+      "matchReason": "single-after-filter",
+      "mtnFcstCheck": {
+        "office": "ALY",
+        "loc": "BLACK MOUNTAIN",
+        "lat": 43.6064,
+        "lon": -73.531,
+        "status": "mtnFcst-ok"
+      },
+      "previous": {
+        "lat": 43.5729,
+        "lon": -74.1386
+      },
+      "flagged": false
+    },
+    "pharaoh-mountain": {
+      "lat": 43.8184,
+      "lon": -73.6579,
+      "gnisId": 960270,
+      "gnisName": "Pharaoh Mountain",
+      "gnisFeatureClass": "Summit",
+      "county": "Essex",
+      "source": "usgs-gnis-national-map",
+      "matchReason": "single-after-filter",
+      "mtnFcstCheck": {
+        "office": "BTV",
+        "loc": "PHARAOH MOUNTAIN",
+        "lat": 43.818395,
+        "lon": -73.658182,
+        "status": "mtnFcst-ok"
+      },
+      "previous": {
+        "lat": 43.8184,
+        "lon": -73.6579
+      },
+      "flagged": false
+    },
+    "prospect-mountain": {
+      "lat": 43.4248,
+      "lon": -73.7457,
+      "gnisId": 961186,
+      "gnisName": "Prospect Mountain",
+      "gnisFeatureClass": "Summit",
+      "county": "Warren",
+      "source": "usgs-gnis-national-map",
+      "matchReason": "single-after-filter",
+      "mtnFcstCheck": {
+        "office": "ALY",
+        "loc": "PROSPECT MOUNTAIN",
+        "lat": 43.425,
+        "lon": -73.7452,
+        "status": "mtnFcst-ok"
+      },
+      "previous": {
+        "lat": 43.4248,
+        "lon": -73.7457
+      },
+      "flagged": false
+    },
+    "slide-mountain": {
+      "lat": 41.9992,
+      "lon": -74.3858,
+      "gnisId": 975759,
+      "gnisName": "Slide Mountain",
+      "gnisFeatureClass": "Summit",
+      "county": "Ulster",
+      "source": "usgs-gnis-national-map",
+      "matchReason": "single-after-filter",
+      "mtnFcstCheck": {
+        "office": "ALY",
+        "loc": "SLIDE MOUNTAIN",
+        "lat": 41.9986,
+        "lon": -74.3864,
+        "status": "mtnFcst-ok"
+      },
+      "previous": {
+        "lat": 41.9992,
+        "lon": -74.3858
+      },
+      "flagged": false
+    },
+    "hunter-mountain": {
+      "lat": 42.1777,
+      "lon": -74.2303,
+      "gnisId": 973354,
+      "gnisName": "Hunter Mountain",
+      "gnisFeatureClass": "Summit",
+      "county": "Greene",
+      "source": "usgs-gnis-national-map",
+      "matchReason": "single-after-filter",
+      "mtnFcstCheck": {
+        "office": "ALY",
+        "loc": "HUNTER MOUNTAIN",
+        "lat": 42.1778,
+        "lon": -74.2304,
+        "status": "mtnFcst-ok"
+      },
+      "previous": {
+        "lat": 42.1777,
+        "lon": -74.2303
+      },
+      "flagged": false
+    },
+    "peekamoose-mountain": {
+      "lat": 41.9531,
+      "lon": -74.3981,
+      "gnisId": 973358,
+      "gnisName": "Peekamoose Mountain",
+      "gnisFeatureClass": "Summit",
+      "county": "Ulster",
+      "source": "usgs-gnis-national-map",
+      "matchReason": "single-after-filter",
+      "mtnFcstCheck": {
+        "office": "ALY",
+        "loc": "PEEKAMOOSE MOUNTAIN",
+        "lat": 41.953,
+        "lon": -74.3982,
+        "status": "mtnFcst-ok"
+      },
+      "previous": {
+        "lat": 41.9531,
+        "lon": -74.3981
+      },
+      "flagged": false
+    },
+    "balsam-lake-mountain": {
+      "lat": 42.0455,
+      "lon": -74.5946,
+      "gnisId": 942952,
+      "gnisName": "Balsam Lake Mountain",
+      "gnisFeatureClass": "Summit",
+      "county": "Ulster",
+      "source": "usgs-gnis-national-map",
+      "matchReason": "single-after-filter",
+      "mtnFcstCheck": {
+        "office": "ALY",
+        "loc": "BALSAM LAKE MOUNTAIN",
+        "lat": 42.0457,
+        "lon": -74.5945,
+        "status": "mtnFcst-ok"
+      },
+      "previous": {
+        "lat": 42.0455,
+        "lon": -74.5946
+      },
+      "flagged": false
+    },
+    "panther-mountain": {
+      "lat": 42.0565,
+      "lon": -74.3946,
+      "gnisId": 959820,
+      "gnisName": "Panther Mountain",
+      "gnisFeatureClass": "Summit",
+      "county": "Ulster",
+      "source": "usgs-gnis-national-map",
+      "matchReason": "single-after-filter",
+      "mtnFcstCheck": {
+        "office": "ALY",
+        "loc": "PANTHER MOUNTAIN",
+        "lat": 42.0564,
+        "lon": -74.395,
+        "status": "mtnFcst-ok"
+      },
+      "previous": {
+        "lat": 42.0565,
+        "lon": -74.3946
+      },
+      "flagged": false
+    },
+    "windham-high-peak": {
+      "lat": 42.3148,
+      "lon": -74.1431,
+      "gnisId": 971464,
+      "gnisName": "Windham High Peak",
+      "gnisFeatureClass": "Summit",
+      "county": "Greene",
+      "source": "usgs-gnis-national-map",
+      "matchReason": "single-after-filter",
+      "mtnFcstCheck": {
+        "office": "ALY",
+        "loc": "WINDHAM HIGH PEAK",
+        "lat": 42.3148,
+        "lon": -74.1432,
+        "status": "mtnFcst-ok"
+      },
+      "previous": {
+        "lat": 42.3148,
+        "lon": -74.1431
+      },
+      "flagged": false
+    },
+    "overlook-mountain": {
+      "lat": 42.0851,
+      "lon": -74.0932,
+      "gnisId": 959659,
+      "gnisName": "Overlook Mountain",
+      "gnisFeatureClass": "Summit",
+      "county": "Ulster",
+      "source": "usgs-gnis-national-map",
+      "matchReason": "single-after-filter",
+      "mtnFcstCheck": {
+        "office": "ALY",
+        "loc": "OVERLOOK MOUNTAIN",
+        "lat": 42.0851,
+        "lon": -74.0932,
+        "status": "mtnFcst-ok"
+      },
+      "previous": {
+        "lat": 42.0851,
+        "lon": -74.0932
+      },
+      "flagged": false
+    },
+    "red-hill": {
+      "lat": 41.924,
+      "lon": -74.5174,
+      "gnisId": 962287,
+      "gnisName": "Red Hill",
+      "gnisFeatureClass": "Summit",
+      "county": "Ulster",
+      "source": "usgs-gnis-national-map",
+      "matchReason": "single-after-filter",
+      "mtnFcstCheck": {
+        "office": "ALY",
+        "loc": "RED HILL",
+        "lat": 41.9242,
+        "lon": -74.5178,
+        "status": "mtnFcst-ok"
+      },
+      "previous": {
+        "lat": 41.924,
+        "lon": -74.5174
+      },
+      "flagged": false
+    },
+    "mount-tremper": {
+      "lat": 42.0744,
+      "lon": -74.2778,
+      "gnisId": 967788,
+      "gnisName": "Tremper Mountain",
+      "gnisFeatureClass": "Summit",
+      "county": "Ulster",
+      "source": "usgs-gnis-national-map",
+      "matchReason": "single-after-filter",
+      "mtnFcstCheck": {
+        "office": "ALY",
+        "loc": "MOUNT TREMPER",
+        "lat": 42.0742,
+        "lon": -74.2775,
+        "status": "mtnFcst-ok"
+      },
+      "previous": {
+        "lat": 42.0744,
+        "lon": -74.2778
+      },
+      "flagged": false
+    },
+    "tannersville": {
+      "lat": 42.1957,
+      "lon": -74.1338,
+      "gnisId": 967045,
+      "gnisName": "Tannersville",
+      "gnisFeatureClass": "Populated Place",
+      "county": "Greene",
+      "source": "usgs-gnis-national-map",
+      "matchReason": "single-after-filter",
+      "mtnFcstCheck": null,
+      "previous": {
+        "lat": 42.1957,
+        "lon": -74.1338
+      },
+      "flagged": false
+    },
+    "gunks-ridge": {
+      "lat": 41.7361,
+      "lon": -74.2361,
+      "source": "config/weather-regions.json",
+      "gnisId": null,
+      "flagged": false,
+      "note": "No unambiguous GNIS feature; legacy mountain-weather spot coords.",
+      "previous": {
+        "lat": 41.7361,
+        "lon": -74.2361
+      }
+    },
+    "thacher-park": {
+      "lat": 42.652,
+      "lon": -74.0083,
+      "source": "config/weather-regions.json",
+      "gnisId": null,
+      "flagged": false,
+      "note": "No unambiguous GNIS feature; legacy mountain-weather spot coords.",
+      "previous": {
+        "lat": 42.652,
+        "lon": -74.0083
+      }
+    },
+    "jay-peak": {
+      "lat": 44.9241,
+      "lon": -72.5257,
+      "gnisId": 1457995,
+      "gnisName": "Jay Peak",
+      "gnisFeatureClass": "Summit",
+      "county": "Orleans",
+      "source": "usgs-gnis-national-map",
+      "matchReason": "single-after-filter",
+      "mtnFcstCheck": {
+        "office": "BTV",
+        "loc": "JAY PEAK",
+        "lat": 44.924167,
+        "lon": -72.525667,
+        "status": "mtnFcst-ok"
+      },
+      "previous": {
+        "lat": 44.9241,
+        "lon": -72.5257
+      },
+      "flagged": false
+    },
+    "belvidere-mountain": {
+      "lat": 44.773,
+      "lon": -72.5509,
+      "gnisId": 1456387,
+      "gnisName": "Belvidere Mountain",
+      "gnisFeatureClass": "Summit",
+      "county": "Orleans",
+      "source": "usgs-gnis-national-map",
+      "matchReason": "single-after-filter",
+      "mtnFcstCheck": {
+        "office": "BTV",
+        "loc": "BELVIDERE MOUNTAIN",
+        "lat": 44.773382,
+        "lon": -72.551503,
+        "status": "mtnFcst-ok"
+      },
+      "previous": {
+        "lat": 44.773,
+        "lon": -72.5509
+      },
+      "flagged": false
+    },
+    "jay-village": {
+      "lat": 44.9476,
+      "lon": -72.4371,
+      "gnisId": 1457991,
+      "gnisName": "Jay",
+      "gnisFeatureClass": "Populated Place",
+      "county": "Orleans",
+      "source": "usgs-gnis-national-map",
+      "matchReason": "single-after-filter",
+      "mtnFcstCheck": null,
+      "previous": {
+        "lat": 44.9476,
+        "lon": -72.4371
+      },
+      "flagged": false
+    },
+    "mount-mansfield": {
+      "lat": 44.5437,
+      "lon": -72.8143,
+      "gnisId": 1461774,
+      "gnisName": "Mount Mansfield",
+      "gnisFeatureClass": "Summit",
+      "county": "Chittenden",
+      "source": "usgs-gnis-national-map",
+      "matchReason": "mtnFcst-nearest",
+      "mtnFcstCheck": {
+        "office": "BTV",
+        "loc": "MOUNT MANSFIELD",
+        "lat": 44.543611,
+        "lon": -72.814167,
+        "status": "mtnFcst-ok"
+      },
+      "previous": {
+        "lat": 44.5437,
+        "lon": -72.8143
+      },
+      "flagged": false
+    },
+    "smugglers-notch": {
+      "lat": 44.5553,
+      "lon": -72.7957,
+      "gnisId": 1459550,
+      "gnisName": "Smugglers Notch",
+      "gnisFeatureClass": "Gap",
+      "county": "Lamoille",
+      "source": "usgs-gnis-national-map",
+      "matchReason": "single-after-filter",
+      "mtnFcstCheck": null,
+      "previous": {
+        "lat": 44.5553,
+        "lon": -72.7957
+      },
+      "flagged": false
+    },
+    "stowe-town": {
+      "lat": 44.4653,
+      "lon": -72.6846,
+      "gnisId": 1459745,
+      "gnisName": "Stowe",
+      "gnisFeatureClass": "Populated Place",
+      "county": "Lamoille",
+      "source": "usgs-gnis-national-map",
+      "matchReason": "single-after-filter",
+      "mtnFcstCheck": null,
+      "previous": {
+        "lat": 44.4653,
+        "lon": -72.6846
+      },
+      "flagged": false
+    },
+    "camels-hump": {
+      "lat": 44.3195,
+      "lon": -72.8863,
+      "gnisId": 1456724,
+      "gnisName": "Camels Hump",
+      "gnisFeatureClass": "Summit",
+      "county": "Washington",
+      "source": "usgs-gnis-national-map",
+      "matchReason": "single-after-filter",
+      "mtnFcstCheck": {
+        "office": "BTV",
+        "loc": "CAMELS HUMP",
+        "lat": 44.319667,
+        "lon": -72.886667,
+        "status": "mtnFcst-ok"
+      },
+      "previous": {
+        "lat": 44.3195,
+        "lon": -72.8863
+      },
+      "flagged": false
+    },
+    "mount-ellen": {
+      "lat": 44.1601,
+      "lon": -72.9288,
+      "gnisId": 1460843,
+      "gnisName": "Mount Ellen",
+      "gnisFeatureClass": "Summit",
+      "county": "Washington",
+      "source": "usgs-gnis-national-map",
+      "matchReason": "single-after-filter",
+      "mtnFcstCheck": {
+        "office": "BTV",
+        "loc": "MOUNT ELLEN",
+        "lat": 44.159833,
+        "lon": -72.92883,
+        "status": "mtnFcst-ok"
+      },
+      "previous": {
+        "lat": 44.1601,
+        "lon": -72.9288
+      },
+      "flagged": false
+    },
+    "bread-loaf-mountain": {
+      "lat": 44.0022,
+      "lon": -72.9416,
+      "gnisId": 1460656,
+      "gnisName": "Bread Loaf Mountain",
+      "gnisFeatureClass": "Summit",
+      "county": "Addison",
+      "source": "usgs-gnis-national-map",
+      "matchReason": "single-after-filter",
+      "mtnFcstCheck": null,
+      "previous": {
+        "lat": 44.0022,
+        "lon": -72.9416
+      },
+      "flagged": false
+    },
+    "mount-worcester": {
+      "lat": 44.4432,
+      "lon": -72.5917,
+      "gnisId": 1458586,
+      "gnisName": "Mount Worcester",
+      "gnisFeatureClass": "Summit",
+      "county": "Washington",
+      "source": "usgs-gnis-national-map",
+      "matchReason": "single-after-filter",
+      "mtnFcstCheck": {
+        "office": "BTV",
+        "loc": "MOUNT WORCESTER",
+        "lat": 44.443555,
+        "lon": -72.591734,
+        "status": "mtnFcst-ok"
+      },
+      "previous": {
+        "lat": 44.4432,
+        "lon": -72.5917
+      },
+      "flagged": false
+    },
+    "waterbury": {
+      "lat": 44.3378,
+      "lon": -72.7562,
+      "gnisId": 1460075,
+      "gnisName": "Waterbury",
+      "gnisFeatureClass": "Populated Place",
+      "county": "Washington",
+      "source": "usgs-gnis-national-map",
+      "matchReason": "single-after-filter",
+      "mtnFcstCheck": null,
+      "previous": {
+        "lat": 44.3378,
+        "lon": -72.7562
+      },
+      "flagged": false
+    },
+    "signal-mountain": {
+      "lat": 44.2062,
+      "lon": -72.3253,
+      "gnisId": 1459506,
+      "gnisName": "Signal Mountain",
+      "gnisFeatureClass": "Summit",
+      "county": "Caledonia",
+      "source": "usgs-gnis-national-map",
+      "matchReason": "single-after-filter",
+      "mtnFcstCheck": null,
+      "previous": {
+        "lat": 44.2062,
+        "lon": -72.3253
+      },
+      "flagged": false
+    },
+    "burke-mountain": {
+      "lat": 44.5706,
+      "lon": -71.8929,
+      "gnisId": 1456661,
+      "gnisName": "Burke Mountain",
+      "gnisFeatureClass": "Summit",
+      "county": "Caledonia",
+      "source": "usgs-gnis-national-map",
+      "matchReason": "single-after-filter",
+      "mtnFcstCheck": {
+        "office": "BTV",
+        "loc": "BURKE MOUNTAIN",
+        "lat": 44.570833,
+        "lon": -71.893167,
+        "status": "mtnFcst-ok"
+      },
+      "previous": {
+        "lat": 44.5706,
+        "lon": -71.8929
+      },
+      "flagged": false
+    },
+    "monadnock-mountain": {
+      "lat": 44.8974,
+      "lon": -71.5445,
+      "gnisId": 1458515,
+      "gnisName": "Monadnock Mountain",
+      "gnisFeatureClass": "Summit",
+      "county": "Essex",
+      "source": "usgs-gnis-national-map",
+      "matchReason": "single-after-filter",
+      "mtnFcstCheck": {
+        "office": "BTV",
+        "loc": "MONADNOCK MOUNTAIN",
+        "lat": 44.8975,
+        "lon": -71.544444,
+        "status": "mtnFcst-ok"
+      },
+      "previous": {
+        "lat": 44.8974,
+        "lon": -71.5445
+      },
+      "flagged": false
+    },
+    "killington-peak": {
+      "lat": 43.6045,
+      "lon": -72.8201,
+      "gnisId": 1458086,
+      "gnisName": "Killington Peak",
+      "gnisFeatureClass": "Summit",
+      "county": "Rutland",
+      "source": "usgs-gnis-national-map",
+      "matchReason": "single-after-filter",
+      "mtnFcstCheck": {
+        "office": "BTV",
+        "loc": "KILLINGTON PEAK",
+        "lat": 43.60444,
+        "lon": -72.82,
+        "status": "mtnFcst-ok"
+      },
+      "previous": {
+        "lat": 43.6045,
+        "lon": -72.8201
+      },
+      "flagged": false
+    },
+    "stratton-mountain": {
+      "lat": 43.0863,
+      "lon": -72.9249,
+      "gnisId": 1461479,
+      "gnisName": "Stratton Mountain",
+      "gnisFeatureClass": "Summit",
+      "county": "Windham",
+      "source": "usgs-gnis-national-map",
+      "matchReason": "single-after-filter",
+      "mtnFcstCheck": {
+        "office": "ALY",
+        "loc": "STRATTON MOUNTAIN",
+        "lat": 43.0862,
+        "lon": -72.9252,
+        "status": "mtnFcst-ok"
+      },
+      "previous": {
+        "lat": 43.0863,
+        "lon": -72.9249
+      },
+      "flagged": false
+    },
+    "mount-equinox": {
+      "lat": 43.1659,
+      "lon": -73.1174,
+      "gnisId": 1461816,
+      "gnisName": "Equinox Mountain",
+      "gnisFeatureClass": "Summit",
+      "county": "Bennington",
+      "source": "usgs-gnis-national-map",
+      "matchReason": "single-after-filter",
+      "mtnFcstCheck": {
+        "office": "ALY",
+        "loc": "MOUNT EQUINOX",
+        "lat": 43.166,
+        "lon": -73.1176,
+        "status": "mtnFcst-ok"
+      },
+      "previous": {
+        "lat": 43.1659,
+        "lon": -73.1174
+      },
+      "flagged": false
+    },
+    "dorset-mountain": {
+      "lat": 43.3092,
+      "lon": -73.0282,
+      "gnisId": 1460797,
+      "gnisName": "Dorset Mountain",
+      "gnisFeatureClass": "Summit",
+      "county": "Rutland",
+      "source": "usgs-gnis-national-map",
+      "matchReason": "mtnFcst-nearest",
+      "mtnFcstCheck": {
+        "office": "BTV",
+        "loc": "DORSET MOUNTAIN",
+        "lat": 43.309333,
+        "lon": -73.028167,
+        "status": "mtnFcst-ok"
+      },
+      "previous": {
+        "lat": 43.3092,
+        "lon": -73.0282
+      },
+      "flagged": false
+    },
+    "haystack-mountain": {
+      "lat": 42.9138,
+      "lon": -72.9191,
+      "gnisId": 1460977,
+      "gnisName": "Haystack Mountain",
+      "gnisFeatureClass": "Summit",
+      "county": "Windham",
+      "source": "usgs-gnis-national-map",
+      "matchReason": "single-after-filter",
+      "mtnFcstCheck": {
+        "office": "ALY",
+        "loc": "HAYSTACK MOUNTAIN",
+        "lat": 42.9137,
+        "lon": -72.9193,
+        "status": "mtnFcst-ok"
+      },
+      "previous": {
+        "lat": 42.9138,
+        "lon": -72.9191
+      },
+      "flagged": false
+    },
+    "ludlow-mountain": {
+      "lat": 43.4041,
+      "lon": -72.7515,
+      "gnisId": 1461105,
+      "gnisName": "Ludlow Mountain",
+      "gnisFeatureClass": "Summit",
+      "county": "Rutland",
+      "source": "usgs-gnis-national-map",
+      "matchReason": "mtnFcst-nearest",
+      "mtnFcstCheck": {
+        "office": "BTV",
+        "loc": "LUDLOW MOUNTAIN",
+        "lat": 43.403961,
+        "lon": -72.751487,
+        "status": "mtnFcst-ok"
+      },
+      "previous": {
+        "lat": 43.4041,
+        "lon": -72.7515
+      },
+      "flagged": false
+    },
+    "bromley-mountain": {
+      "lat": 43.2276,
+      "lon": -72.9394,
+      "gnisId": 1460667,
+      "gnisName": "Bromley Mountain",
+      "gnisFeatureClass": "Summit",
+      "county": "Bennington",
+      "source": "usgs-gnis-national-map",
+      "matchReason": "single-after-filter",
+      "mtnFcstCheck": {
+        "office": "ALY",
+        "loc": "BROMLEY MOUNTAIN",
+        "lat": 43.2278,
+        "lon": -72.9386,
+        "status": "mtnFcst-ok"
+      },
+      "previous": {
+        "lat": 43.2276,
+        "lon": -72.9394
+      },
+      "flagged": false
+    },
+    "mount-ascutney": {
+      "lat": 43.4437,
+      "lon": -72.4546,
+      "gnisId": 1461813,
+      "gnisName": "Mount Ascutney",
+      "gnisFeatureClass": "Summit",
+      "county": "Windsor",
+      "source": "usgs-gnis-national-map",
+      "matchReason": "single-after-filter",
+      "mtnFcstCheck": {
+        "office": "BTV",
+        "loc": "MOUNT ASCUTNEY",
+        "lat": 43.445068,
+        "lon": -72.453504,
+        "status": "mtnFcst-ok"
+      },
+      "previous": {
+        "lat": 43.4437,
+        "lon": -72.4546
+      },
+      "flagged": false
+    },
+    "bald-mountain": {
+      "lat": 42.9221,
+      "lon": -73.1437,
+      "gnisId": 1460546,
+      "gnisName": "Bald Mountain",
+      "gnisFeatureClass": "Summit",
+      "county": "Bennington",
+      "source": "usgs-gnis-national-map",
+      "matchReason": "mtnFcst-nearest",
+      "mtnFcstCheck": {
+        "office": "ALY",
+        "loc": "BALD MOUNTAIN",
+        "lat": 42.9219,
+        "lon": -73.1436,
+        "status": "mtnFcst-ok"
+      },
+      "previous": {
+        "lat": 42.9221,
+        "lon": -73.1437
+      },
+      "flagged": false
+    },
+    "manchester-vt": {
+      "lat": 43.1637,
+      "lon": -73.0723,
+      "gnisId": 1461117,
+      "gnisName": "Manchester",
+      "gnisFeatureClass": "Populated Place",
+      "county": "Bennington",
+      "source": "usgs-gnis-national-map",
+      "matchReason": "single-after-filter",
+      "mtnFcstCheck": null,
+      "previous": {
+        "lat": 43.1637,
+        "lon": -73.0723
+      },
+      "flagged": false
+    },
+    "mount-washington": {
+      "lat": 44.2706,
+      "lon": -71.3033,
+      "gnisId": 871352,
+      "gnisName": "Mount Washington",
+      "gnisFeatureClass": "Summit",
+      "county": "Coos",
+      "source": "usgs-gnis-national-map",
+      "matchReason": "single-after-filter",
+      "mtnFcstCheck": null,
+      "previous": {
+        "lat": 44.2706,
+        "lon": -71.3033
+      },
+      "flagged": false
+    },
+    "mount-adams": {
+      "lat": 44.3207,
+      "lon": -71.2915,
+      "gnisId": 871380,
+      "gnisName": "Mount Adams",
+      "gnisFeatureClass": "Summit",
+      "county": "Coos",
+      "source": "usgs-gnis-national-map",
+      "matchReason": "single-after-filter",
+      "mtnFcstCheck": null,
+      "previous": {
+        "lat": 44.3207,
+        "lon": -71.2915
+      },
+      "flagged": false
+    },
+    "pinkham-notch": {
+      "lat": 44.2576,
+      "lon": -71.2537,
+      "gnisId": 872508,
+      "gnisName": "Pinkham Notch",
+      "gnisFeatureClass": "Gap",
+      "county": "Coos",
+      "source": "usgs-gnis-national-map",
+      "matchReason": "single-after-filter",
+      "mtnFcstCheck": null,
+      "previous": {
+        "lat": 44.2576,
+        "lon": -71.2537
+      },
+      "flagged": false
+    },
+    "crawford-notch": {
+      "lat": 44.167,
+      "lon": -71.3759,
+      "gnisId": 871738,
+      "gnisName": "Crawford Notch",
+      "gnisFeatureClass": "Valley",
+      "county": "Carroll",
+      "source": "usgs-gnis-national-map",
+      "matchReason": "single-after-filter",
+      "mtnFcstCheck": null,
+      "previous": {
+        "lat": 44.167,
+        "lon": -71.3759
+      },
+      "flagged": false
+    },
+    "baldface-mountain": {
+      "lat": 44.243,
+      "lon": -71.0873,
+      "gnisId": 872388,
+      "gnisName": "North Baldface",
+      "gnisFeatureClass": "Summit",
+      "county": "Coos",
+      "source": "usgs-gnis-national-map",
+      "matchReason": "single-after-filter",
+      "mtnFcstCheck": null,
+      "previous": {
+        "lat": 44.243,
+        "lon": -71.0873
+      },
+      "flagged": false
+    },
+    "mount-lafayette": {
+      "lat": 44.1608,
+      "lon": -71.6445,
+      "gnisId": 872150,
+      "gnisName": "Mount Lafayette",
+      "gnisFeatureClass": "Summit",
+      "county": "Grafton",
+      "source": "usgs-gnis-national-map",
+      "matchReason": "single-after-filter",
+      "mtnFcstCheck": null,
+      "previous": {
+        "lat": 44.1608,
+        "lon": -71.6445
+      },
+      "flagged": false
+    },
+    "mount-moosilauke": {
+      "lat": 44.0245,
+      "lon": -71.8309,
+      "gnisId": 872324,
+      "gnisName": "Mount Moosilauke",
+      "gnisFeatureClass": "Summit",
+      "county": "Grafton",
+      "source": "usgs-gnis-national-map",
+      "matchReason": "single-after-filter",
+      "mtnFcstCheck": null,
+      "previous": {
+        "lat": 44.0245,
+        "lon": -71.8309
+      },
+      "flagged": false
+    },
+    "mount-osceola": {
+      "lat": 44.0015,
+      "lon": -71.5359,
+      "gnisId": 872440,
+      "gnisName": "Mount Osceola",
+      "gnisFeatureClass": "Summit",
+      "county": "Grafton",
+      "source": "usgs-gnis-national-map",
+      "matchReason": "single-after-filter",
+      "mtnFcstCheck": null,
+      "previous": {
+        "lat": 44.0015,
+        "lon": -71.5359
+      },
+      "flagged": false
+    },
+    "cannon-mountain": {
+      "lat": 44.1566,
+      "lon": -71.6988,
+      "gnisId": 873192,
+      "gnisName": "Cannon Mountain",
+      "gnisFeatureClass": "Summit",
+      "county": "Grafton",
+      "source": "usgs-gnis-national-map",
+      "matchReason": "single-after-filter",
+      "mtnFcstCheck": null,
+      "previous": {
+        "lat": 44.1566,
+        "lon": -71.6988
+      },
+      "flagged": false
+    },
+    "kancamagus-pass": {
+      "lat": 44.0251,
+      "lon": -71.4926,
+      "gnisId": 872120,
+      "gnisName": "Kancamagus Pass",
+      "gnisFeatureClass": "Gap",
+      "county": "Grafton",
+      "source": "usgs-gnis-national-map",
+      "matchReason": "single-after-filter",
+      "mtnFcstCheck": null,
+      "previous": {
+        "lat": 44.0251,
+        "lon": -71.4926
+      },
+      "flagged": false
+    },
+    "franconia-notch": {
+      "lat": 44.1526,
+      "lon": -71.6795,
+      "gnisId": 871907,
+      "gnisName": "Franconia Notch",
+      "gnisFeatureClass": "Gap",
+      "county": "Grafton",
+      "source": "usgs-gnis-national-map",
+      "matchReason": "single-after-filter",
+      "mtnFcstCheck": null,
+      "previous": {
+        "lat": 44.1526,
+        "lon": -71.6795
+      },
+      "flagged": false
+    },
+    "rumney-crag": {
+      "lat": 43.8054,
+      "lon": -71.8126,
+      "gnisId": 872591,
+      "gnisName": "Rumney",
+      "gnisFeatureClass": "Populated Place",
+      "county": "Grafton",
+      "source": "usgs-gnis-national-map",
+      "matchReason": "single-after-filter",
+      "mtnFcstCheck": null,
+      "previous": {
+        "lat": 43.8054,
+        "lon": -71.8126
+      },
+      "flagged": false
+    },
+    "mount-monadnock": {
+      "lat": 42.8614,
+      "lon": -72.108,
+      "gnisId": 868516,
+      "gnisName": "Monadnock Mountain",
+      "gnisFeatureClass": "Summit",
+      "county": "Cheshire",
+      "source": "usgs-gnis-national-map",
+      "matchReason": "single-after-filter",
+      "mtnFcstCheck": null,
+      "previous": {
+        "lat": 42.8614,
+        "lon": -72.108
+      },
+      "flagged": false
+    },
+    "north-pack-monadnock": {
+      "lat": 42.886,
+      "lon": -71.8658,
+      "gnisId": 868801,
+      "gnisName": "North Pack Monadnock Mountain",
+      "gnisFeatureClass": "Summit",
+      "county": "Hillsborough",
+      "source": "usgs-gnis-national-map",
+      "matchReason": "single-after-filter",
+      "mtnFcstCheck": null,
+      "previous": {
+        "lat": 42.886,
+        "lon": -71.8658
+      },
+      "flagged": false
+    },
+    "katahdin": {
+      "lat": 45.9043,
+      "lon": -68.9214,
+      "gnisId": 579940,
+      "gnisName": "Mount Katahdin",
+      "gnisFeatureClass": "Summit",
+      "county": "Piscataquis",
+      "source": "usgs-gnis-national-map",
+      "matchReason": "single-after-filter",
+      "mtnFcstCheck": null,
+      "previous": {
+        "lat": 45.9043,
+        "lon": -68.9214
+      },
+      "flagged": false
+    },
+    "katahdin-woods-and-waters": {
+      "lat": 45.898,
+      "lon": -68.55,
+      "source": "unchanged-flagged",
+      "flagged": true,
+      "gnisQueryName": "Katahdin Woods and Waters",
+      "candidates": []
+    },
+    "millinocket": {
+      "lat": 45.6573,
+      "lon": -68.7098,
+      "gnisId": 571390,
+      "gnisName": "Millinocket",
+      "gnisFeatureClass": "Populated Place",
+      "county": "Penobscot",
+      "source": "usgs-gnis-national-map",
+      "matchReason": "single-after-filter",
+      "mtnFcstCheck": null,
+      "previous": {
+        "lat": 45.6573,
+        "lon": -68.7098
+      },
+      "flagged": false
+    },
+    "white-cap-mountain": {
+      "lat": 45.5547,
+      "lon": -69.2462,
+      "gnisId": 578345,
+      "gnisName": "White Cap Mountain",
+      "gnisFeatureClass": "Summit",
+      "county": "Piscataquis",
+      "source": "usgs-gnis-national-map",
+      "matchReason": "single-after-filter",
+      "mtnFcstCheck": null,
+      "previous": {
+        "lat": 45.5547,
+        "lon": -69.2462
+      },
+      "flagged": false
+    },
+    "sugarloaf-mountain": {
+      "lat": 45.0317,
+      "lon": -70.3133,
+      "gnisId": 576507,
+      "gnisName": "Sugarloaf Mountain",
+      "gnisFeatureClass": "Summit",
+      "county": "Franklin",
+      "source": "usgs-gnis-national-map",
+      "matchReason": "single-after-filter",
+      "mtnFcstCheck": null,
+      "previous": {
+        "lat": 45.0317,
+        "lon": -70.3133
+      },
+      "flagged": false
+    },
+    "bigelow": {
+      "lat": 45.1469,
+      "lon": -70.288,
+      "gnisId": 578186,
+      "gnisName": "West Peak",
+      "gnisFeatureClass": "Summit",
+      "county": "Somerset",
+      "source": "usgs-gnis-national-map",
+      "matchReason": "single-after-filter",
+      "mtnFcstCheck": null,
+      "previous": {
+        "lat": 45.1469,
+        "lon": -70.288
+      },
+      "flagged": false
+    },
+    "rangeley": {
+      "lat": 44.9665,
+      "lon": -70.6428,
+      "gnisId": 574038,
+      "gnisName": "Rangeley",
+      "gnisFeatureClass": "Populated Place",
+      "county": "Franklin",
+      "source": "usgs-gnis-national-map",
+      "matchReason": "single-after-filter",
+      "mtnFcstCheck": null,
+      "previous": {
+        "lat": 44.9665,
+        "lon": -70.6428
+      },
+      "flagged": false
+    },
+    "deboullie-mountain": {
+      "lat": 46.9704,
+      "lon": -68.8763,
+      "gnisId": 564932,
+      "gnisName": "Deboullie Mountain",
+      "gnisFeatureClass": "Summit",
+      "county": "Aroostook",
+      "source": "usgs-gnis-national-map",
+      "matchReason": "single-after-filter",
+      "mtnFcstCheck": null,
+      "previous": {
+        "lat": 46.9704,
+        "lon": -68.8763
+      },
+      "flagged": false
+    },
+    "mars-hill-mountain": {
+      "lat": 46.5211,
+      "lon": -67.8138,
+      "gnisId": 570798,
+      "gnisName": "Mars Hill",
+      "gnisFeatureClass": "Summit",
+      "county": "Aroostook",
+      "source": "usgs-gnis-national-map",
+      "matchReason": "single-after-filter",
+      "mtnFcstCheck": null,
+      "previous": {
+        "lat": 46.5211,
+        "lon": -67.8138
+      },
+      "flagged": false
+    },
+    "cadillac-mountain": {
+      "lat": 44.3513,
+      "lon": -68.2265,
+      "gnisId": 563337,
+      "gnisName": "Cadillac Mountain",
+      "gnisFeatureClass": "Summit",
+      "county": "Hancock",
+      "source": "usgs-gnis-national-map",
+      "matchReason": "single-after-filter",
+      "mtnFcstCheck": null,
+      "previous": {
+        "lat": 44.3513,
+        "lon": -68.2265
+      },
+      "flagged": false
+    },
+    "bar-harbor": {
+      "lat": 44.3876,
+      "lon": -68.2039,
+      "gnisId": 561569,
+      "gnisName": "Bar Harbor",
+      "gnisFeatureClass": "Populated Place",
+      "county": "Hancock",
+      "source": "usgs-gnis-national-map",
+      "matchReason": "single-after-filter",
+      "mtnFcstCheck": null,
+      "previous": {
+        "lat": 44.3876,
+        "lon": -68.2039
+      },
+      "flagged": false
+    }
+  }
+}

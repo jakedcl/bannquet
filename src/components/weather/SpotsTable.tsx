@@ -14,45 +14,39 @@ export function SpotsTable({ spots }: { spots: ExtremeSpot[] }) {
       cell: (row) => `${row.mountain}, ${row.state}`,
     },
     {
+      id: 'station',
+      header: 'Station',
+      sortValue: (row) => row.stationId ?? '',
+      cell: (row) => row.stationId ?? '—',
+    },
+    {
+      id: 'age',
+      header: 'Age',
+      align: 'right',
+      sortValue: (row) => row.ageMinutes ?? 99999,
+      cell: (row) => (row.ageMinutes == null ? '—' : `${row.ageMinutes} min`),
+    },
+    {
       id: 'now',
-      header: 'Now',
+      header: 'Temp',
       align: 'right',
       sortValue: (row) => row.temperature,
       cell: (row) => `${row.temperature}°F`,
-    },
-    {
-      id: 'low',
-      header: 'Low',
-      align: 'right',
-      sortValue: (row) => row.minTemperature,
-      cell: (row) => `${row.minTemperature}°F`,
-    },
-    {
-      id: 'high',
-      header: 'High',
-      align: 'right',
-      sortValue: (row) => row.maxTemperature,
-      cell: (row) => `${row.maxTemperature}°F`,
     },
     {
       id: 'wind',
       header: 'Wind',
       align: 'right',
       sortValue: (row) => row.windSpeed,
-      cell: (row) => `${row.windSpeed} mph`,
+      cell: (row) =>
+        row.windGust > row.windSpeed ? `${row.windSpeed} mph · gust ${row.windGust}` : `${row.windSpeed} mph`,
     },
     {
       id: 'chill',
-      header: 'Wind chill',
+      header: 'Feels like',
       align: 'right',
       sortValue: (row) => row.windChill,
       cell: (row) => `${row.windChill}°F`,
-    },
-    {
-      id: 'snow',
-      header: 'Snow',
-      sortValue: (row) => (row.isSnowing ? 1 : 0),
-      cell: (row) => (row.isSnowing ? 'Yes' : 'No'),
     },
   ];
 
@@ -64,11 +58,8 @@ export function SpotsTable({ spots }: { spots: ExtremeSpot[] }) {
       empty="No spots came back."
       defaultSort={{ id: 'spot', dir: 'asc' }}
       placeholder="Spot or state"
-      searchText={(row) => `${row.mountain} ${row.state}`}
-      facets={[
-        { id: 'state', label: 'State', value: (row) => row.state },
-        { id: 'snow', label: 'Snow', value: (row) => (row.isSnowing ? 'Snowing' : 'Clear') },
-      ]}
+      searchText={(row) => `${row.mountain} ${row.state} ${row.stationId ?? ''}`}
+      facets={[{ id: 'state', label: 'State', value: (row) => row.state }]}
       collapsed
     />
   );

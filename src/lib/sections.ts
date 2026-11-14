@@ -1,4 +1,13 @@
-import { REGION_OPTIONS, isRegionCode } from '@/lib/regions';
+import {
+  getMountainPlace,
+  getMountainSection,
+  getMountainState,
+  isMountainStateSlug,
+  resolveMountainStateSlug,
+  type MountainStateCode,
+} from '@/lib/mountain-weather/places';
+import { mountainStateSlug, mountainWeatherPath } from '@/lib/mountain-weather/slugs';
+import { REGION_OPTIONS } from '@/lib/regions';
 
 export type NavLink = {
   href: string;
@@ -20,46 +29,58 @@ export const PEAK_FINDER_LINK: NavLink = { href: '/peak-finder', label: 'Peak Fi
 export const COMMUNITY_LINKS: NavLink[] = [
   { href: '/chat', label: 'Chat' },
   { href: '/peaks', label: 'Peaks' },
-  { href: '/trips', label: 'Trips' },
-  { href: '/gear', label: 'Gear' },
+  { href: '/posts', label: 'Posts' },
+  { href: '/routes', label: 'Routes' },
+  { href: '/pins', label: 'Pins' },
   { href: '/photos', label: 'Photos' },
   { href: '/members', label: 'Members' },
-  { href: '/notifications', label: 'Notifications' },
 ];
 
-export const WEATHER_LINKS: NavLink[] = REGION_OPTIONS.map((option) => ({
-  href: `/mountain-weather?state=${option.code}`,
-  label: option.label,
-}));
+/** Desktop community menu: section home first, then sub-pages. */
+export const COMMUNITY_MENU_LINKS: NavLink[] = [
+  { href: '/community', label: 'Community' },
+  ...COMMUNITY_LINKS,
+];
+
+export const WEATHER_LINKS: NavLink[] = [
+  { href: '/mountain-weather/conditions', label: 'Conditions' },
+  ...REGION_OPTIONS.map((option) => ({
+    href: mountainWeatherPath(option.code as MountainStateCode),
+    label: option.label,
+  })),
+];
+
+/** Desktop weather menu: dashboard and conditions first, then state sub-pages. */
+export const WEATHER_MENU_LINKS: NavLink[] = [
+  { href: '/mountain-weather', label: 'Weather' },
+  { href: '/mountain-weather/conditions', label: 'Conditions' },
+  ...REGION_OPTIONS.map((option) => ({
+    href: mountainWeatherPath(option.code as MountainStateCode),
+    label: option.label,
+  })),
+];
 
 export const UPLOAD_LINKS: NavLink[] = [
-  { href: '/upload?kind=trip', label: 'Trip' },
+  { href: '/upload?kind=post', label: 'Post' },
   { href: '/upload?kind=route', label: 'Route' },
   { href: '/upload?kind=pin', label: 'Pin' },
   { href: '/upload?kind=photo', label: 'Photo' },
 ];
 
-const COMMUNITY_ROOTS = ['/community', '/chat', '/peaks', '/trips', '/gear', '/photos', '/members', '/notifications'];
+const COMMUNITY_ROOTS = ['/community', '/chat', '/peaks', '/posts', '/photos', '/members', '/routes', '/pins'];
 
 const COMMUNITY_PAGES: Record<string, string> = {
   '/chat': 'Chat',
   '/peaks': 'Peaks',
-  '/trips': 'Trips',
-  '/gear': 'Gear',
+  '/posts': 'Posts',
   '/photos': 'Photos',
+  '/routes': 'Routes',
+  '/pins': 'Pins',
   '/members': 'Members',
-  '/notifications': 'Notifications',
-};
-
-const STATE_NAMES: Record<string, string> = {
-  ny: 'New York',
-  vt: 'Vermont',
-  nh: 'New Hampshire',
-  me: 'Maine',
 };
 
 const PROFILE_LISTS: Record<string, string> = {
-  trips: 'Trips',
+  posts: 'Posts',
   routes: 'Routes',
   pins: 'Pins',
   photos: 'Photos',
@@ -79,6 +100,12 @@ export type PageTrail = {
 export const FISHING_LINKS: NavLink[] = [
   { href: '/fishing/saltwater', label: 'Saltwater' },
   { href: '/fishing/freshwater', label: 'Freshwater' },
+];
+
+/** Desktop fishing menu: section home first, then sub-pages. */
+export const FISHING_MENU_LINKS: NavLink[] = [
+  { href: '/fishing', label: 'Fishing' },
+  ...FISHING_LINKS,
 ];
 
 export type HomeAction = {
@@ -114,7 +141,15 @@ export function linkOn(pathname: string, search: string, href: string): boolean 
   if (path === '/members' && pathname.startsWith('/user/')) return true;
   if (path === '/fishing') return pathname === '/fishing';
   if (path === '/fishing/freshwater') return pathname === path || /^\/fishing\/\d+$/.test(pathname);
-  if (!query) return pathOn(pathname, path);
+  if (path === '/community' && !query) return pathname === '/community';
+  if (path === '/mountain-weather' && !query) return pathname === '/mountain-weather';
+  if (!query) {
+    const stateTail = path.startsWith('/mountain-weather/') ? path.slice('/mountain-weather/'.length) : '';
+    if (stateTail && !stateTail.includes('/') && isMountainStateSlug(stateTail)) {
+      return pathname === path;
+    }
+    return pathOn(pathname, path);
+  }
   if (pathname !== path) return false;
   const want = new URLSearchParams(query);
   const have = new URLSearchParams(search.startsWith('?') ? search.slice(1) : search);
@@ -151,7 +186,6 @@ function fishingCurrent(pathname: string): string | null {
 export function settingsLinks(account: NavAccount): NavLink[] {
   const links: NavLink[] = [];
   if (account?.handle) links.push({ href: `/user/${account.handle}`, label: 'Profile' });
-  if (account && account.role !== 'pending') links.push({ href: '/notifications', label: 'Notifications' });
   links.push({ href: '/account', label: 'Account', hidden: true });
   if (account?.role === 'admin') links.push({ href: '/admin', label: 'Admin' });
   return links;
@@ -205,17 +239,20 @@ export function pageTrail(pathname: string, search: string, account: NavAccount,
     return { parentHref: profileHref, crumbs };
   }
 
-  if (/^\/trips\/[^/]+$/.test(pathname)) {
+  if (/^\/posts\/[^/]+$/.test(pathname)) {
     return {
-      parentHref: '/trips',
-      crumbs: communityTrail('/trips', 'Trips', named(pathname, 'Trip', leaf)),
+      parentHref: '/posts',
+      crumbs: communityTrail('/posts', 'Posts', named(pathname, 'Post', leaf)),
     };
   }
 
-  if (/^\/gear\/[^/]+$/.test(pathname)) {
+  if (pathname === '/mountain-weather/conditions') {
     return {
-      parentHref: '/gear',
-      crumbs: communityTrail('/gear', 'Gear', named(pathname, 'Gear', leaf)),
+      parentHref: '/mountain-weather',
+      crumbs: [
+        { href: '/mountain-weather', label: 'Mountain Weather' },
+        { href: '/mountain-weather/conditions', label: 'Conditions' },
+      ],
     };
   }
 
@@ -283,16 +320,6 @@ export function pageTrail(pathname: string, search: string, account: NavAccount,
     };
   }
 
-  if (pathname === '/conditions') {
-    return {
-      parentHref: '/mountain-weather',
-      crumbs: [
-        { href: '/mountain-weather', label: 'Mountain Weather' },
-        { href: '/conditions', label: 'Conditions' },
-      ],
-    };
-  }
-
   if (pathname === '/community') {
     return { parentHref: '/', crumbs: [{ href: '/community', label: 'Community' }] };
   }
@@ -305,18 +332,68 @@ export function pageTrail(pathname: string, search: string, account: NavAccount,
   }
 
   if (pathname === '/mountain-weather') {
-    const requested = new URLSearchParams(search).get('state');
-    if (!isRegionCode(requested)) {
-      return { parentHref: '/', crumbs: [{ href: '/mountain-weather', label: 'Mountain Weather' }] };
+    return { parentHref: '/', crumbs: [{ href: '/mountain-weather', label: 'Mountain Weather' }] };
+  }
+
+  const mountainPlace = pathname.match(/^\/mountain-weather\/([^/]+)\/([^/]+)\/([^/]+)$/);
+  if (mountainPlace) {
+    const [, stateSegment, sectionId, placeId] = mountainPlace;
+    const stateCode = resolveMountainStateSlug(stateSegment);
+    if (stateCode) {
+      const state = getMountainState(stateCode);
+      const section = getMountainSection(stateCode, sectionId);
+      const place = getMountainPlace(stateCode, sectionId, placeId);
+      if (state && section && place) {
+        const stateSlug = mountainStateSlug(stateCode);
+        return {
+          parentHref: `/mountain-weather/${stateSlug}/${sectionId}`,
+          crumbs: [
+            { href: '/mountain-weather', label: 'Mountain Weather' },
+            { href: `/mountain-weather/${stateSlug}`, label: state.name },
+            { href: `/mountain-weather/${stateSlug}/${sectionId}`, label: section.title },
+            { href: pathname, label: leaf ?? place.name },
+          ],
+        };
+      }
     }
-    const name = STATE_NAMES[requested] ?? requested.toUpperCase();
-    return {
-      parentHref: '/mountain-weather',
-      crumbs: [
-        { href: '/mountain-weather', label: 'Mountain Weather' },
-        { href: `/mountain-weather?state=${requested}`, label: name },
-      ],
-    };
+  }
+
+  const mountainSection = pathname.match(/^\/mountain-weather\/([^/]+)\/([^/]+)$/);
+  if (mountainSection) {
+    const [, stateSegment, sectionId] = mountainSection;
+    const stateCode = resolveMountainStateSlug(stateSegment);
+    if (stateCode) {
+      const state = getMountainState(stateCode);
+      const section = getMountainSection(stateCode, sectionId);
+      if (state && section) {
+        const stateSlug = mountainStateSlug(stateCode);
+        return {
+          parentHref: `/mountain-weather/${stateSlug}`,
+          crumbs: [
+            { href: '/mountain-weather', label: 'Mountain Weather' },
+            { href: `/mountain-weather/${stateSlug}`, label: state.name },
+            { href: pathname, label: section.title },
+          ],
+        };
+      }
+    }
+  }
+
+  const mountainState = pathname.match(/^\/mountain-weather\/([^/]+)$/);
+  if (mountainState) {
+    const stateCode = resolveMountainStateSlug(mountainState[1]);
+    if (stateCode) {
+      const state = getMountainState(stateCode);
+      if (state) {
+        return {
+          parentHref: '/mountain-weather',
+          crumbs: [
+            { href: '/mountain-weather', label: 'Mountain Weather' },
+            { href: pathname, label: state.name },
+          ],
+        };
+      }
+    }
   }
 
   if (pathname === '/fishing') {
@@ -388,7 +465,7 @@ export function matchSection(pathname: string, search: string, account: NavAccou
       id: 'fishing',
       href: '/fishing',
       label: 'Fishing',
-      links: FISHING_LINKS,
+      links: FISHING_MENU_LINKS,
       landing: false,
     };
   }
@@ -398,17 +475,17 @@ export function matchSection(pathname: string, search: string, account: NavAccou
       id: 'community',
       href: '/community',
       label: 'Community',
-      links: COMMUNITY_LINKS,
+      links: COMMUNITY_MENU_LINKS,
       landing: false,
     };
   }
 
-  if (pathOn(pathname, '/mountain-weather') || pathname === '/conditions') {
+  if (pathOn(pathname, '/mountain-weather')) {
     return {
       id: 'weather',
       href: '/mountain-weather',
-      label: 'Mountain Weather',
-      links: WEATHER_LINKS,
+      label: 'Weather',
+      links: WEATHER_MENU_LINKS,
       landing: false,
     };
   }
