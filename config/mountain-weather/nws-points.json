@@ -928,13 +928,14 @@
       "productOffice": "GYX"
     },
     "bigelow": {
-      "lat": 44.6014,
-      "lon": -70.9022,
+      "lat": 45.1469,
+      "lon": -70.288,
       "cwa": "GYX",
       "gridId": "GYX",
       "forecastOffice": "GYX",
-      "county": "https://api.weather.gov/zones/county/MEC017",
-      "relativeLocation": "Berlin",
+      "forecastZone": "https://api.weather.gov/zones/forecast/MEZ009",
+      "county": "https://api.weather.gov/zones/county/MEC025",
+      "relativeLocation": "Kingfield",
       "productOffice": "GYX"
     },
     "rangeley": {

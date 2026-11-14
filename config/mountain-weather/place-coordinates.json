@@ -939,6 +939,7 @@
       "lon": -72.7957,
       "gnisId": 1459550,
       "gnisName": "Smugglers Notch",
+      "gnisFeatureClass": "Gap",
       "county": "Lamoille",
       "source": "usgs-gnis-national-map",
       "flagged": false,
@@ -1609,13 +1610,16 @@
       "flagged": false
     },
     "bigelow": {
-      "lat": 44.6014,
-      "lon": -70.9022,
-      "gnisId": 578185,
+      "lat": 45.1469,
+      "lon": -70.288,
+      "gnisId": 578186,
       "gnisName": "West Peak",
-      "county": "Oxford",
+      "county": "Somerset",
+      "gnisFeatureClass": "Summit",
       "source": "usgs-gnis-national-map",
+      "matchReason": "gnis-feature-pin",
       "flagged": false,
+      "note": "Bigelow Range high point (West Peak), not Oxford Co. West Peak",
       "previous": {
         "lat": 45.1634,
         "lon": -70.3009

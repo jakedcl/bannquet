@@ -48,7 +48,7 @@ const GNIS_NAME = {
   'smugglers-notch': 'Smugglers Notch',
   'mount-equinox': 'Mount Equinox',
   'mount-monadnock': 'Mount Monadnock',
-  bigelow: 'West Peak', // ME — filtered to Oxford / Franklin in COUNTY_ONLY
+  bigelow: 'West Peak',
   katahdin: 'Mount Katahdin',
   'gunks-ridge': 'Shawangunk Mountains',
   'thacher-park': 'Thacher State Park',
@@ -85,7 +85,7 @@ const COUNTY_ONLY = {
   'debar-mountain': ['Franklin'],
   'mount-arab': ['St. Lawrence'],
   'blue-ridge-mountain': ['Hamilton', 'Essex'],
-  bigelow: ['Oxford', 'Franklin'],
+  bigelow: ['Somerset', 'Franklin'],
   'mars-hill-mountain': ['Aroostook'],
   waterbury: ['Washington'],
   'jay-village': ['Orleans'],
@@ -103,7 +103,7 @@ const GNIS_FEATURE_ID = {
   'mars-hill-mountain': 570798,
   waterbury: 1460075,
   'jay-village': 1457991,
-  bigelow: 578185,
+  bigelow: 578186,
 };
 
 /** No reliable GNIS summit — keep weather-regions.json coords (documented legacy). */

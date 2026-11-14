@@ -1,0 +1,770 @@
+{
+  "version": 1,
+  "toleranceFt": 200,
+  "note": "sampledElevationFt is USGS EPQS at places.json lat/lon (terrain under GNIS summit pin); compare to catalog elevationFt.",
+  "mismatches": [],
+  "places": {
+    "mount-marcy": {
+      "catalogElevationFt": 5344,
+      "sampledElevationFt": 5343,
+      "deltaFt": -1,
+      "withinTolerance": true,
+      "source": "usgs-epqs-at-coords",
+      "gnisId": 973357,
+      "gnisFeatureClass": "Summit"
+    },
+    "whiteface-mountain": {
+      "catalogElevationFt": 4867,
+      "sampledElevationFt": 4861,
+      "deltaFt": -6,
+      "withinTolerance": true,
+      "source": "usgs-epqs-at-coords",
+      "gnisId": 973364,
+      "gnisFeatureClass": "Summit"
+    },
+    "dix-mountain": {
+      "catalogElevationFt": 4857,
+      "sampledElevationFt": 4855,
+      "deltaFt": -2,
+      "withinTolerance": true,
+      "source": "usgs-epqs-at-coords",
+      "gnisId": 973347,
+      "gnisFeatureClass": "Summit"
+    },
+    "algonquin-peak": {
+      "catalogElevationFt": 5114,
+      "sampledElevationFt": 5110,
+      "deltaFt": -4,
+      "withinTolerance": true,
+      "source": "usgs-epqs-at-coords",
+      "gnisId": 973340,
+      "gnisFeatureClass": "Summit"
+    },
+    "mount-colden": {
+      "catalogElevationFt": 4715,
+      "sampledElevationFt": 4706,
+      "deltaFt": -9,
+      "withinTolerance": true,
+      "source": "usgs-epqs-at-coords",
+      "gnisId": 947091,
+      "gnisFeatureClass": "Summit"
+    },
+    "mount-colvin": {
+      "catalogElevationFt": 4080,
+      "sampledElevationFt": 4055,
+      "deltaFt": -25,
+      "withinTolerance": true,
+      "source": "usgs-epqs-at-coords",
+      "gnisId": 947211,
+      "gnisFeatureClass": "Summit"
+    },
+    "giant-mountain": {
+      "catalogElevationFt": 4627,
+      "sampledElevationFt": 4627,
+      "deltaFt": 0,
+      "withinTolerance": true,
+      "source": "usgs-epqs-at-coords",
+      "gnisId": 2611110,
+      "gnisFeatureClass": "Summit"
+    },
+    "santanoni-peak": {
+      "catalogElevationFt": 4607,
+      "sampledElevationFt": 4599,
+      "deltaFt": -8,
+      "withinTolerance": true,
+      "source": "usgs-epqs-at-coords",
+      "gnisId": 964468,
+      "gnisFeatureClass": "Summit"
+    },
+    "cascade-mountain": {
+      "catalogElevationFt": 4098,
+      "sampledElevationFt": 4091,
+      "deltaFt": -7,
+      "withinTolerance": true,
+      "source": "usgs-epqs-at-coords",
+      "gnisId": 945952,
+      "gnisFeatureClass": "Summit"
+    },
+    "mckenzie-mountain": {
+      "catalogElevationFt": 3822,
+      "sampledElevationFt": 3859,
+      "deltaFt": 37,
+      "withinTolerance": true,
+      "source": "usgs-epqs-at-coords",
+      "gnisId": 956798,
+      "gnisFeatureClass": "Summit"
+    },
+    "mount-van-hoevenberg": {
+      "catalogElevationFt": 2939,
+      "sampledElevationFt": 2928,
+      "deltaFt": -11,
+      "withinTolerance": true,
+      "source": "usgs-epqs-at-coords",
+      "gnisId": 968416,
+      "gnisFeatureClass": "Summit"
+    },
+    "keene-valley": {
+      "skipped": true,
+      "reason": "not a pinned GNIS summit",
+      "catalogElevationFt": 1030,
+      "gnisId": 954432,
+      "gnisFeatureClass": "Populated Place"
+    },
+    "lyon-mountain": {
+      "catalogElevationFt": 3829,
+      "sampledElevationFt": 3827,
+      "deltaFt": -2,
+      "withinTolerance": true,
+      "source": "usgs-epqs-at-coords",
+      "gnisId": 956195,
+      "gnisFeatureClass": "Summit"
+    },
+    "ampersand-mountain": {
+      "catalogElevationFt": 3352,
+      "sampledElevationFt": 3311,
+      "deltaFt": -41,
+      "withinTolerance": true,
+      "source": "usgs-epqs-at-coords",
+      "gnisId": 942090,
+      "gnisFeatureClass": "Summit"
+    },
+    "debar-mountain": {
+      "catalogElevationFt": 3317,
+      "sampledElevationFt": 3293,
+      "deltaFt": -24,
+      "withinTolerance": true,
+      "source": "usgs-epqs-at-coords",
+      "gnisId": 948153,
+      "gnisFeatureClass": "Summit"
+    },
+    "st-regis-mountain": {
+      "catalogElevationFt": 2838,
+      "sampledElevationFt": 2875,
+      "deltaFt": 37,
+      "withinTolerance": true,
+      "source": "usgs-epqs-at-coords",
+      "gnisId": 964192,
+      "gnisFeatureClass": "Summit"
+    },
+    "mount-arab": {
+      "catalogElevationFt": 2533,
+      "sampledElevationFt": 2544,
+      "deltaFt": 11,
+      "withinTolerance": true,
+      "source": "usgs-epqs-at-coords",
+      "gnisId": 975898,
+      "gnisFeatureClass": "Summit"
+    },
+    "snowy-mountain": {
+      "catalogElevationFt": 3899,
+      "sampledElevationFt": 3896,
+      "deltaFt": -3,
+      "withinTolerance": true,
+      "source": "usgs-epqs-at-coords",
+      "gnisId": 965586,
+      "gnisFeatureClass": "Summit"
+    },
+    "blue-mountain": {
+      "catalogElevationFt": 3750,
+      "sampledElevationFt": 3760,
+      "deltaFt": 10,
+      "withinTolerance": true,
+      "source": "usgs-epqs-at-coords",
+      "gnisId": 944317,
+      "gnisFeatureClass": "Summit"
+    },
+    "pillsbury-mountain": {
+      "catalogElevationFt": 3597,
+      "sampledElevationFt": 3600,
+      "deltaFt": 3,
+      "withinTolerance": true,
+      "source": "usgs-epqs-at-coords",
+      "gnisId": 960405,
+      "gnisFeatureClass": "Summit"
+    },
+    "gore-mountain": {
+      "catalogElevationFt": 3563,
+      "sampledElevationFt": 3582,
+      "deltaFt": 19,
+      "withinTolerance": true,
+      "source": "usgs-epqs-at-coords",
+      "gnisId": 951389,
+      "gnisFeatureClass": "Summit"
+    },
+    "blue-ridge-mountain": {
+      "catalogElevationFt": 3465,
+      "sampledElevationFt": 3468,
+      "deltaFt": 3,
+      "withinTolerance": true,
+      "source": "usgs-epqs-at-coords",
+      "gnisId": 944331,
+      "gnisFeatureClass": "Summit"
+    },
+    "fishing-brook-range": {
+      "skipped": true,
+      "reason": "not a pinned GNIS summit",
+      "catalogElevationFt": 3400,
+      "gnisId": 950173,
+      "gnisFeatureClass": "Ridge"
+    },
+    "vanderwhacker-mountain": {
+      "catalogElevationFt": 3389,
+      "sampledElevationFt": 3382,
+      "deltaFt": -7,
+      "withinTolerance": true,
+      "source": "usgs-epqs-at-coords",
+      "gnisId": 968463,
+      "gnisFeatureClass": "Summit"
+    },
+    "crane-mountain": {
+      "catalogElevationFt": 3254,
+      "sampledElevationFt": 3234,
+      "deltaFt": -20,
+      "withinTolerance": true,
+      "source": "usgs-epqs-at-coords",
+      "gnisId": 947697,
+      "gnisFeatureClass": "Summit"
+    },
+    "hadley-mountain": {
+      "catalogElevationFt": 2651,
+      "sampledElevationFt": 2635,
+      "deltaFt": -16,
+      "withinTolerance": true,
+      "source": "usgs-epqs-at-coords",
+      "gnisId": 951977,
+      "gnisFeatureClass": "Summit"
+    },
+    "black-mountain": {
+      "skipped": true,
+      "reason": "excluded pending final-pass",
+      "gnisId": 944146
+    },
+    "pharaoh-mountain": {
+      "catalogElevationFt": 2533,
+      "sampledElevationFt": 2549,
+      "deltaFt": 16,
+      "withinTolerance": true,
+      "source": "usgs-epqs-at-coords",
+      "gnisId": 960270,
+      "gnisFeatureClass": "Summit"
+    },
+    "prospect-mountain": {
+      "catalogElevationFt": 2030,
+      "sampledElevationFt": 2025,
+      "deltaFt": -5,
+      "withinTolerance": true,
+      "source": "usgs-epqs-at-coords",
+      "gnisId": 961186,
+      "gnisFeatureClass": "Summit"
+    },
+    "slide-mountain": {
+      "catalogElevationFt": 4180,
+      "sampledElevationFt": 4179,
+      "deltaFt": -1,
+      "withinTolerance": true,
+      "source": "usgs-epqs-at-coords",
+      "gnisId": 975759,
+      "gnisFeatureClass": "Summit"
+    },
+    "hunter-mountain": {
+      "catalogElevationFt": 4040,
+      "sampledElevationFt": 4030,
+      "deltaFt": -10,
+      "withinTolerance": true,
+      "source": "usgs-epqs-at-coords",
+      "gnisId": 973354,
+      "gnisFeatureClass": "Summit"
+    },
+    "peekamoose-mountain": {
+      "catalogElevationFt": 3843,
+      "sampledElevationFt": 3815,
+      "deltaFt": -28,
+      "withinTolerance": true,
+      "source": "usgs-epqs-at-coords",
+      "gnisId": 973358,
+      "gnisFeatureClass": "Summit"
+    },
+    "balsam-lake-mountain": {
+      "catalogElevationFt": 3730,
+      "sampledElevationFt": 3729,
+      "deltaFt": -1,
+      "withinTolerance": true,
+      "source": "usgs-epqs-at-coords",
+      "gnisId": 942952,
+      "gnisFeatureClass": "Summit"
+    },
+    "panther-mountain": {
+      "catalogElevationFt": 3720,
+      "sampledElevationFt": 3713,
+      "deltaFt": -7,
+      "withinTolerance": true,
+      "source": "usgs-epqs-at-coords",
+      "gnisId": 959820,
+      "gnisFeatureClass": "Summit"
+    },
+    "windham-high-peak": {
+      "catalogElevationFt": 3524,
+      "sampledElevationFt": 3518,
+      "deltaFt": -6,
+      "withinTolerance": true,
+      "source": "usgs-epqs-at-coords",
+      "gnisId": 971464,
+      "gnisFeatureClass": "Summit"
+    },
+    "overlook-mountain": {
+      "catalogElevationFt": 3136,
+      "sampledElevationFt": 3138,
+      "deltaFt": 2,
+      "withinTolerance": true,
+      "source": "usgs-epqs-at-coords",
+      "gnisId": 959659,
+      "gnisFeatureClass": "Summit"
+    },
+    "red-hill": {
+      "catalogElevationFt": 2986,
+      "sampledElevationFt": 2979,
+      "deltaFt": -7,
+      "withinTolerance": true,
+      "source": "usgs-epqs-at-coords",
+      "gnisId": 962287,
+      "gnisFeatureClass": "Summit"
+    },
+    "mount-tremper": {
+      "catalogElevationFt": 2740,
+      "sampledElevationFt": 2728,
+      "deltaFt": -12,
+      "withinTolerance": true,
+      "source": "usgs-epqs-at-coords",
+      "gnisId": 967788,
+      "gnisFeatureClass": "Summit"
+    },
+    "tannersville": {
+      "skipped": true,
+      "reason": "not a pinned GNIS summit",
+      "catalogElevationFt": 1900,
+      "gnisId": 967045,
+      "gnisFeatureClass": "Populated Place"
+    },
+    "gunks-ridge": {
+      "skipped": true,
+      "reason": "not a pinned GNIS summit",
+      "catalogElevationFt": 2240,
+      "gnisId": null,
+      "gnisFeatureClass": null
+    },
+    "thacher-park": {
+      "skipped": true,
+      "reason": "not a pinned GNIS summit",
+      "catalogElevationFt": 1300,
+      "gnisId": null,
+      "gnisFeatureClass": null
+    },
+    "jay-peak": {
+      "catalogElevationFt": 3858,
+      "sampledElevationFt": 3847,
+      "deltaFt": -11,
+      "withinTolerance": true,
+      "source": "usgs-epqs-at-coords",
+      "gnisId": 1457995,
+      "gnisFeatureClass": "Summit"
+    },
+    "belvidere-mountain": {
+      "catalogElevationFt": 3340,
+      "sampledElevationFt": 3343,
+      "deltaFt": 3,
+      "withinTolerance": true,
+      "source": "usgs-epqs-at-coords",
+      "gnisId": 1456387,
+      "gnisFeatureClass": "Summit"
+    },
+    "jay-village": {
+      "skipped": true,
+      "reason": "not a pinned GNIS summit",
+      "catalogElevationFt": 1100,
+      "gnisId": 1457991,
+      "gnisFeatureClass": null
+    },
+    "mount-mansfield": {
+      "catalogElevationFt": 4393,
+      "sampledElevationFt": 4388,
+      "deltaFt": -5,
+      "withinTolerance": true,
+      "source": "usgs-epqs-at-coords",
+      "gnisId": 1461774,
+      "gnisFeatureClass": "Summit"
+    },
+    "smugglers-notch": {
+      "skipped": true,
+      "reason": "not a pinned GNIS summit",
+      "catalogElevationFt": 3370,
+      "gnisId": 1459550,
+      "gnisFeatureClass": "Gap"
+    },
+    "stowe-town": {
+      "skipped": true,
+      "reason": "not a pinned GNIS summit",
+      "catalogElevationFt": 1040,
+      "gnisId": 1459745,
+      "gnisFeatureClass": "Populated Place"
+    },
+    "camels-hump": {
+      "catalogElevationFt": 4083,
+      "sampledElevationFt": 4073,
+      "deltaFt": -10,
+      "withinTolerance": true,
+      "source": "usgs-epqs-at-coords",
+      "gnisId": 1456724,
+      "gnisFeatureClass": "Summit"
+    },
+    "mount-ellen": {
+      "catalogElevationFt": 4083,
+      "sampledElevationFt": 4079,
+      "deltaFt": -4,
+      "withinTolerance": true,
+      "source": "usgs-epqs-at-coords",
+      "gnisId": 1460843,
+      "gnisFeatureClass": "Summit"
+    },
+    "bread-loaf-mountain": {
+      "catalogElevationFt": 3835,
+      "sampledElevationFt": 3814,
+      "deltaFt": -21,
+      "withinTolerance": true,
+      "source": "usgs-epqs-at-coords",
+      "gnisId": 1460656,
+      "gnisFeatureClass": "Summit"
+    },
+    "mount-worcester": {
+      "catalogElevationFt": 3293,
+      "sampledElevationFt": 3289,
+      "deltaFt": -4,
+      "withinTolerance": true,
+      "source": "usgs-epqs-at-coords",
+      "gnisId": 1458586,
+      "gnisFeatureClass": "Summit"
+    },
+    "waterbury": {
+      "skipped": true,
+      "reason": "not a pinned GNIS summit",
+      "catalogElevationFt": 600,
+      "gnisId": 1460075,
+      "gnisFeatureClass": null
+    },
+    "signal-mountain": {
+      "catalogElevationFt": 3370,
+      "sampledElevationFt": 3355,
+      "deltaFt": -15,
+      "withinTolerance": true,
+      "source": "usgs-epqs-at-coords",
+      "gnisId": 1459506,
+      "gnisFeatureClass": "Summit"
+    },
+    "burke-mountain": {
+      "catalogElevationFt": 3267,
+      "sampledElevationFt": 3260,
+      "deltaFt": -7,
+      "withinTolerance": true,
+      "source": "usgs-epqs-at-coords",
+      "gnisId": 1456661,
+      "gnisFeatureClass": "Summit"
+    },
+    "monadnock-mountain": {
+      "catalogElevationFt": 3148,
+      "sampledElevationFt": 3137,
+      "deltaFt": -11,
+      "withinTolerance": true,
+      "source": "usgs-epqs-at-coords",
+      "gnisId": 1458515,
+      "gnisFeatureClass": "Summit"
+    },
+    "killington-peak": {
+      "catalogElevationFt": 4235,
+      "sampledElevationFt": 4205,
+      "deltaFt": -30,
+      "withinTolerance": true,
+      "source": "usgs-epqs-at-coords",
+      "gnisId": 1458086,
+      "gnisFeatureClass": "Summit"
+    },
+    "stratton-mountain": {
+      "catalogElevationFt": 3940,
+      "sampledElevationFt": 3941,
+      "deltaFt": 1,
+      "withinTolerance": true,
+      "source": "usgs-epqs-at-coords",
+      "gnisId": 1461479,
+      "gnisFeatureClass": "Summit"
+    },
+    "mount-equinox": {
+      "skipped": true,
+      "reason": "not a pinned GNIS summit",
+      "catalogElevationFt": 3840,
+      "gnisId": 1461816,
+      "gnisFeatureClass": null
+    },
+    "dorset-mountain": {
+      "catalogElevationFt": 3760,
+      "sampledElevationFt": 3767,
+      "deltaFt": 7,
+      "withinTolerance": true,
+      "source": "usgs-epqs-at-coords",
+      "gnisId": 1460797,
+      "gnisFeatureClass": "Summit"
+    },
+    "haystack-mountain": {
+      "catalogElevationFt": 3445,
+      "sampledElevationFt": 3441,
+      "deltaFt": -4,
+      "withinTolerance": true,
+      "source": "usgs-epqs-at-coords",
+      "gnisId": 1460977,
+      "gnisFeatureClass": "Summit"
+    },
+    "ludlow-mountain": {
+      "catalogElevationFt": 3320,
+      "sampledElevationFt": 3340,
+      "deltaFt": 20,
+      "withinTolerance": true,
+      "source": "usgs-epqs-at-coords",
+      "gnisId": 1461105,
+      "gnisFeatureClass": "Summit"
+    },
+    "bromley-mountain": {
+      "catalogElevationFt": 3263,
+      "sampledElevationFt": 3273,
+      "deltaFt": 10,
+      "withinTolerance": true,
+      "source": "usgs-epqs-at-coords",
+      "gnisId": 1460667,
+      "gnisFeatureClass": "Summit"
+    },
+    "mount-ascutney": {
+      "catalogElevationFt": 3140,
+      "sampledElevationFt": 3143,
+      "deltaFt": 3,
+      "withinTolerance": true,
+      "source": "usgs-epqs-at-coords",
+      "gnisId": 1461813,
+      "gnisFeatureClass": "Summit"
+    },
+    "bald-mountain": {
+      "catalogElevationFt": 2857,
+      "sampledElevationFt": 2848,
+      "deltaFt": -9,
+      "withinTolerance": true,
+      "source": "usgs-epqs-at-coords",
+      "gnisId": 1460546,
+      "gnisFeatureClass": "Summit"
+    },
+    "manchester-vt": {
+      "skipped": true,
+      "reason": "not a pinned GNIS summit",
+      "catalogElevationFt": 900,
+      "gnisId": 1461117,
+      "gnisFeatureClass": "Populated Place"
+    },
+    "mount-washington": {
+      "catalogElevationFt": 6288,
+      "sampledElevationFt": 6274,
+      "deltaFt": -14,
+      "withinTolerance": true,
+      "source": "usgs-epqs-at-coords",
+      "gnisId": 871352,
+      "gnisFeatureClass": "Summit"
+    },
+    "mount-adams": {
+      "catalogElevationFt": 5799,
+      "sampledElevationFt": 5785,
+      "deltaFt": -14,
+      "withinTolerance": true,
+      "source": "usgs-epqs-at-coords",
+      "gnisId": 871380,
+      "gnisFeatureClass": "Summit"
+    },
+    "pinkham-notch": {
+      "skipped": true,
+      "reason": "not a pinned GNIS summit",
+      "catalogElevationFt": 2017,
+      "gnisId": 872508,
+      "gnisFeatureClass": null
+    },
+    "crawford-notch": {
+      "skipped": true,
+      "reason": "not a pinned GNIS summit",
+      "catalogElevationFt": 1900,
+      "gnisId": 871738,
+      "gnisFeatureClass": null
+    },
+    "baldface-mountain": {
+      "catalogElevationFt": 3547,
+      "sampledElevationFt": 3581,
+      "deltaFt": 34,
+      "withinTolerance": true,
+      "source": "usgs-epqs-at-coords",
+      "gnisId": 872388,
+      "gnisFeatureClass": "Summit"
+    },
+    "mount-lafayette": {
+      "catalogElevationFt": 5249,
+      "sampledElevationFt": 5238,
+      "deltaFt": -11,
+      "withinTolerance": true,
+      "source": "usgs-epqs-at-coords",
+      "gnisId": 872150,
+      "gnisFeatureClass": "Summit"
+    },
+    "mount-moosilauke": {
+      "catalogElevationFt": 4802,
+      "sampledElevationFt": 4795,
+      "deltaFt": -7,
+      "withinTolerance": true,
+      "source": "usgs-epqs-at-coords",
+      "gnisId": 872324,
+      "gnisFeatureClass": "Summit"
+    },
+    "mount-osceola": {
+      "catalogElevationFt": 4340,
+      "sampledElevationFt": 4325,
+      "deltaFt": -15,
+      "withinTolerance": true,
+      "source": "usgs-epqs-at-coords",
+      "gnisId": 872440,
+      "gnisFeatureClass": "Summit"
+    },
+    "cannon-mountain": {
+      "catalogElevationFt": 4080,
+      "sampledElevationFt": 4077,
+      "deltaFt": -3,
+      "withinTolerance": true,
+      "source": "usgs-epqs-at-coords",
+      "gnisId": 873192,
+      "gnisFeatureClass": "Summit"
+    },
+    "kancamagus-pass": {
+      "skipped": true,
+      "reason": "not a pinned GNIS summit",
+      "catalogElevationFt": 2855,
+      "gnisId": 872120,
+      "gnisFeatureClass": null
+    },
+    "franconia-notch": {
+      "skipped": true,
+      "reason": "not a pinned GNIS summit",
+      "catalogElevationFt": 1940,
+      "gnisId": 871907,
+      "gnisFeatureClass": null
+    },
+    "rumney-crag": {
+      "skipped": true,
+      "reason": "not a pinned GNIS summit",
+      "catalogElevationFt": 1400,
+      "gnisId": 872591,
+      "gnisFeatureClass": "Populated Place"
+    },
+    "mount-monadnock": {
+      "skipped": true,
+      "reason": "not a pinned GNIS summit",
+      "catalogElevationFt": 3165,
+      "gnisId": 868516,
+      "gnisFeatureClass": null
+    },
+    "north-pack-monadnock": {
+      "catalogElevationFt": 2276,
+      "sampledElevationFt": 2253,
+      "deltaFt": -23,
+      "withinTolerance": true,
+      "source": "usgs-epqs-at-coords",
+      "gnisId": 868801,
+      "gnisFeatureClass": "Summit"
+    },
+    "katahdin": {
+      "catalogElevationFt": 5268,
+      "sampledElevationFt": 5256,
+      "deltaFt": -12,
+      "withinTolerance": true,
+      "source": "usgs-epqs-at-coords",
+      "gnisId": 579940,
+      "gnisFeatureClass": "Summit"
+    },
+    "katahdin-woods-and-waters": {
+      "skipped": true,
+      "reason": "not a pinned GNIS summit",
+      "catalogElevationFt": 1200,
+      "gnisId": null,
+      "gnisFeatureClass": null
+    },
+    "millinocket": {
+      "skipped": true,
+      "reason": "not a pinned GNIS summit",
+      "catalogElevationFt": 400,
+      "gnisId": 571390,
+      "gnisFeatureClass": "Populated Place"
+    },
+    "white-cap-mountain": {
+      "catalogElevationFt": 3654,
+      "sampledElevationFt": 3646,
+      "deltaFt": -8,
+      "withinTolerance": true,
+      "source": "usgs-epqs-at-coords",
+      "gnisId": 578345,
+      "gnisFeatureClass": "Summit"
+    },
+    "sugarloaf-mountain": {
+      "catalogElevationFt": 4237,
+      "sampledElevationFt": 4230,
+      "deltaFt": -7,
+      "withinTolerance": true,
+      "source": "usgs-epqs-at-coords",
+      "gnisId": 576507,
+      "gnisFeatureClass": "Summit"
+    },
+    "bigelow": {
+      "catalogElevationFt": 4150,
+      "sampledElevationFt": 4127,
+      "deltaFt": -23,
+      "withinTolerance": true,
+      "source": "usgs-epqs-at-coords",
+      "gnisId": 578186,
+      "gnisFeatureClass": "Summit"
+    },
+    "rangeley": {
+      "skipped": true,
+      "reason": "not a pinned GNIS summit",
+      "catalogElevationFt": 1518,
+      "gnisId": 574038,
+      "gnisFeatureClass": "Populated Place"
+    },
+    "deboullie-mountain": {
+      "catalogElevationFt": 1981,
+      "sampledElevationFt": 1932,
+      "deltaFt": -49,
+      "withinTolerance": true,
+      "source": "usgs-epqs-at-coords",
+      "gnisId": 564932,
+      "gnisFeatureClass": "Summit"
+    },
+    "mars-hill-mountain": {
+      "skipped": true,
+      "reason": "not a pinned GNIS summit",
+      "catalogElevationFt": 1749,
+      "gnisId": 570798,
+      "gnisFeatureClass": null
+    },
+    "cadillac-mountain": {
+      "catalogElevationFt": 1530,
+      "sampledElevationFt": 1527,
+      "deltaFt": -3,
+      "withinTolerance": true,
+      "source": "usgs-epqs-at-coords",
+      "gnisId": 563337,
+      "gnisFeatureClass": "Summit"
+    },
+    "bar-harbor": {
+      "skipped": true,
+      "reason": "not a pinned GNIS summit",
+      "catalogElevationFt": 150,
+      "gnisId": 561569,
+      "gnisFeatureClass": "Populated Place"
+    }
+  }
+}
