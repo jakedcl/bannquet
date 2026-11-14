@@ -10,6 +10,17 @@ import path from 'node:path';
 const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
 const BASE = process.env.SWEEP_BASE_URL ?? `http://127.0.0.1:${process.env.PORT ?? '3099'}`;
 const CONCURRENCY = Number(process.env.SWEEP_CONCURRENCY ?? 4);
+const BYPASS_SECRET =
+  process.env.VERCEL_AUTOMATION_BYPASS_SECRET ??
+  process.env.SWEEP_VERCEL_BYPASS_SECRET ??
+  '';
+const BYPASS_HEADER = process.env.SWEEP_VERCEL_BYPASS_HEADER ?? 'x-vercel-protection-bypass';
+
+function sweepHeaders() {
+  const headers = { Accept: 'text/html' };
+  if (BYPASS_SECRET) headers[BYPASS_HEADER] = BYPASS_SECRET;
+  return headers;
+}
 
 const STATE_SLUGS = {
   ny: 'new-york',
@@ -77,7 +88,7 @@ function collectRoutes() {
 async function fetchRoute(route) {
   const url = `${BASE}${route}`;
   try {
-    const res = await fetch(url, { headers: { Accept: 'text/html' }, redirect: 'follow' });
+    const res = await fetch(url, { headers: sweepHeaders(), redirect: 'follow' });
     const text = await res.text();
     return { route, status: res.status, text };
   } catch (err) {
@@ -209,11 +220,17 @@ async function main() {
     );
   }
 
+  const pageSizes = results.map((r) => ({ route: r.route, bytes: r.text?.length ?? 0 }));
+  const tinyPages = pageSizes.filter((p) => p.bytes > 0 && p.bytes < 50_000);
+
   console.log(
     JSON.stringify(
       {
         base: BASE,
+        bypassHeader: BYPASS_SECRET ? BYPASS_HEADER : null,
         scanned: results.length,
+        tinyPageCount: tinyPages.length,
+        tinyPagesSample: tinyPages.slice(0, 12),
         badStatus,
         patternBad: patternBad.map((r) => ({ route: r.route, hits: r.patternHits })),
         uiFailureSummary: Object.fromEntries(

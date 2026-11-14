@@ -1,5 +1,6 @@
 import { unstable_cache } from 'next/cache';
 import { nwsApiFetch } from '@/lib/nws-api-fetch';
+import { logMountainWeatherSourceError } from '@/lib/mountain-weather/log-source-error';
 import type { SourceDef, SourceResult } from '@/lib/mountain-weather/source-types';
 
 const USER_AGENT = 'Bannquet-Weather-App (admin@bannquet.com)';
@@ -30,7 +31,9 @@ export async function fetchSourceBody(
     }, timeoutMs);
     const sourceUrl = response.url || url;
     if (!response.ok) {
-      return { ok: false, error: `HTTP ${response.status}`, httpStatus: response.status, sourceUrl };
+      const errMsg = `HTTP ${response.status}`;
+      logMountainWeatherSourceError('fetch', sourceUrl, errMsg);
+      return { ok: false, error: errMsg, httpStatus: response.status, sourceUrl };
     }
     const text = await response.text();
     const issuedAt = response.headers.get('last-modified');
@@ -38,9 +41,11 @@ export async function fetchSourceBody(
     const fetchedAt = dateHdr ? new Date(dateHdr).toISOString() : new Date().toISOString();
     return { ok: true, text, issuedAt, fetchedAt, httpStatus: response.status, sourceUrl };
   } catch (err) {
+    const errMsg = err instanceof Error ? err.message : String(err);
+    logMountainWeatherSourceError('fetch', url, errMsg);
     return {
       ok: false,
-      error: err instanceof Error ? err.message : String(err),
+      error: errMsg,
       httpStatus: null,
       sourceUrl: url,
     };
@@ -76,6 +81,8 @@ export function buildSourceResult<T>(input: {
     };
   } catch (err) {
     const detail = err instanceof Error ? err.message : String(err);
+    const errMsg = `Source data could not be parsed: ${detail}`;
+    logMountainWeatherSourceError('parse', input.fetched.sourceUrl, errMsg);
     return {
       status: 'error',
       data: null,
@@ -83,20 +90,10 @@ export function buildSourceResult<T>(input: {
       validFrom: null,
       validTo: null,
       sourceUrl: input.fetched.sourceUrl,
-      error: `Source data could not be parsed: ${detail}`,
+      error: errMsg,
     };
   }
 }
-
-class CachedSourceReadError<T> extends Error {
-  constructor(public result: SourceResult<T>) {
-    super(result.error ?? 'source read error');
-    this.name = 'CachedSourceReadError';
-  }
-}
-
-const ERROR_RESULT_CACHE_TTL_MS = 60_000;
-const errorResultCache = new Map<string, { expires: number; result: SourceResult<unknown> }>();
 
 /** Cached parsed source; one entry per cache key (never stores raw gridpoint JSON). */
 export function cachedSourceRead<T>(options: {
@@ -105,48 +102,15 @@ export function cachedSourceRead<T>(options: {
   resolveUrl?: () => string;
   read: () => Promise<SourceResult<T>>;
 }): () => Promise<SourceResult<T>> {
-  const cacheKeyStr = options.cacheKey.join('|');
-  const cachedSuccess = unstable_cache(
-    async () => {
-      const result = await options.read();
-      if (result.status === 'error') {
-        throw new CachedSourceReadError(result);
-      }
-      if (result.status === 'not-in-issuance') {
-        return result;
-      }
-      return result;
-    },
-    options.cacheKey,
-    { revalidate: options.def.ttlSeconds, tags: [options.def.id] },
-  );
-
-  return async (): Promise<SourceResult<T>> => {
-    const cachedErr = errorResultCache.get(cacheKeyStr);
-    if (cachedErr && cachedErr.expires > Date.now()) {
-      return cachedErr.result as SourceResult<T>;
+  const wrapped = async (): Promise<SourceResult<T>> => {
+    const result = await options.read();
+    if (result.status === 'error' && result.error) {
+      logMountainWeatherSourceError(options.def.id, result.sourceUrl ?? options.def.url, result.error);
     }
-
-    try {
-      const result = await cachedSuccess();
-      errorResultCache.delete(cacheKeyStr);
-      return result;
-    } catch (err) {
-      if (err instanceof CachedSourceReadError) {
-        errorResultCache.set(cacheKeyStr, {
-          expires: Date.now() + ERROR_RESULT_CACHE_TTL_MS,
-          result: err.result,
-        });
-        return err.result;
-      }
-      const fresh = await options.read();
-      if (fresh.status === 'error') {
-        errorResultCache.set(cacheKeyStr, {
-          expires: Date.now() + ERROR_RESULT_CACHE_TTL_MS,
-          result: fresh,
-        });
-      }
-      return fresh;
-    }
+    return result;
   };
+  return unstable_cache(wrapped, options.cacheKey, {
+    revalidate: options.def.ttlSeconds,
+    tags: [options.def.id],
+  });
 }

@@ -1,5 +1,6 @@
 import { ForecastPeriod, ForecastSnippet, WeatherData, WeatherHazard } from '@/types/weather';
 import { nwsApiFetch } from '@/lib/nws-api-fetch';
+import { logMountainWeatherSourceError } from '@/lib/mountain-weather/log-source-error';
 import { feelsLikeF, windMphFromText } from '@/lib/feels-like';
 import {
   formatGridWeatherLayer,
@@ -66,7 +67,8 @@ async function fetchAlerts(lat: number, lon: number): Promise<WeatherHazard[]> {
       areaDesc: feature.properties?.areaDesc,
     }));
   } catch (error) {
-    console.error('Failed to fetch weather alerts:', error);
+    const msg = error instanceof Error ? error.message : String(error);
+    logMountainWeatherSourceError('nws-alerts', `https://api.weather.gov/alerts/active?point=${lat},${lon}`, msg);
     return [];
   }
 }
