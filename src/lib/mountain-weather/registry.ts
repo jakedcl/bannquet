@@ -184,6 +184,51 @@ export const NWS_BTV_BALLOON_DEF: SourceDef = {
   expectedEveryHours: 6,
 };
 
+const AFD_BULLETIN_BASE = {
+  kind: 'official' as const,
+  terms: 'reuse-ok' as const,
+  ttlSeconds: 1800,
+  expectedEveryHours: 12,
+};
+
+export const NWS_AFD_BTV_DEF: SourceDef = {
+  id: 'nws-btv-afd',
+  org: 'National Weather Service Burlington',
+  ...AFD_BULLETIN_BASE,
+  url: 'https://api.weather.gov/products/types/AFD/locations/BTV',
+};
+
+export const NWS_AFD_ALY_DEF: SourceDef = {
+  id: 'nws-aly-afd',
+  org: 'National Weather Service Albany',
+  ...AFD_BULLETIN_BASE,
+  url: 'https://api.weather.gov/products/types/AFD/locations/ALY',
+};
+
+export const NWS_AFD_GYX_DEF: SourceDef = {
+  id: 'nws-gyx-afd',
+  org: 'National Weather Service Gray',
+  ...AFD_BULLETIN_BASE,
+  url: 'https://api.weather.gov/products/types/AFD/locations/GYX',
+};
+
+export const NWS_AFD_CAR_DEF: SourceDef = {
+  id: 'nws-car-afd',
+  org: 'National Weather Service Caribou',
+  ...AFD_BULLETIN_BASE,
+  url: 'https://api.weather.gov/products/types/AFD/locations/CAR',
+};
+
+export const NWS_HWO_BTV_DEF: SourceDef = {
+  id: 'nws-btv-hwo',
+  org: 'National Weather Service Burlington',
+  kind: 'official',
+  terms: 'reuse-ok',
+  url: 'https://api.weather.gov/products/types/HWO/locations/BTV',
+  ttlSeconds: 1800,
+  expectedEveryHours: 24,
+};
+
 export const NWS_MTN_ALY_ENHANCED_DEF: SourceDef = {
   id: 'nws-aly-mtn-enhanced',
   org: 'National Weather Service Albany',
@@ -214,4 +259,9 @@ export const SOURCE_REGISTRY: Record<string, SourceDef> = {
   [NWS_RR2_BTV_DEF.id]: NWS_RR2_BTV_DEF,
   [NWS_STATION_MMNV1_DEF.id]: NWS_STATION_MMNV1_DEF,
   [NWS_BTV_BALLOON_DEF.id]: NWS_BTV_BALLOON_DEF,
+  [NWS_AFD_BTV_DEF.id]: NWS_AFD_BTV_DEF,
+  [NWS_AFD_ALY_DEF.id]: NWS_AFD_ALY_DEF,
+  [NWS_AFD_GYX_DEF.id]: NWS_AFD_GYX_DEF,
+  [NWS_AFD_CAR_DEF.id]: NWS_AFD_CAR_DEF,
+  [NWS_HWO_BTV_DEF.id]: NWS_HWO_BTV_DEF,
 };

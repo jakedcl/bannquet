@@ -1,0 +1,458 @@
+{
+  "version": 1,
+  "places": {
+    "mount-marcy": {
+      "office": "BTV",
+      "bindReason": "Catalog place.office BTV (CWA matches county assignment in places.json)."
+    },
+    "whiteface-mountain": {
+      "office": "BTV",
+      "bindReason": "Catalog place.office BTV (CWA matches county assignment in places.json)."
+    },
+    "dix-mountain": {
+      "office": "BTV",
+      "bindReason": "Catalog place.office BTV (CWA matches county assignment in places.json)."
+    },
+    "algonquin-peak": {
+      "office": "BTV",
+      "bindReason": "Catalog place.office BTV (CWA matches county assignment in places.json)."
+    },
+    "mount-colden": {
+      "office": "BTV",
+      "bindReason": "Catalog place.office BTV (CWA matches county assignment in places.json)."
+    },
+    "mount-colvin": {
+      "office": "BTV",
+      "bindReason": "Catalog place.office BTV (CWA matches county assignment in places.json)."
+    },
+    "giant-mountain": {
+      "office": "BTV",
+      "bindReason": "Catalog place.office BTV (CWA matches county assignment in places.json)."
+    },
+    "santanoni-peak": {
+      "office": "BTV",
+      "bindReason": "Catalog place.office BTV (CWA matches county assignment in places.json)."
+    },
+    "cascade-mountain": {
+      "office": "BTV",
+      "bindReason": "Catalog place.office BTV (CWA matches county assignment in places.json)."
+    },
+    "mckenzie-mountain": {
+      "office": "BTV",
+      "bindReason": "Catalog place.office BTV (CWA matches county assignment in places.json)."
+    },
+    "mount-van-hoevenberg": {
+      "office": "BTV",
+      "bindReason": "Catalog place.office BTV (CWA matches county assignment in places.json)."
+    },
+    "keene-valley": {
+      "office": "BTV",
+      "bindReason": "Catalog place.office BTV (CWA matches county assignment in places.json)."
+    },
+    "lyon-mountain": {
+      "office": "BTV",
+      "bindReason": "Catalog place.office BTV (CWA matches county assignment in places.json)."
+    },
+    "ampersand-mountain": {
+      "office": "BTV",
+      "bindReason": "Catalog place.office BTV (CWA matches county assignment in places.json)."
+    },
+    "debar-mountain": {
+      "office": "BTV",
+      "bindReason": "Catalog place.office BTV (CWA matches county assignment in places.json)."
+    },
+    "st-regis-mountain": {
+      "office": "BTV",
+      "bindReason": "Catalog place.office BTV (CWA matches county assignment in places.json)."
+    },
+    "mount-arab": {
+      "office": "BTV",
+      "bindReason": "Catalog place.office BTV (CWA matches county assignment in places.json)."
+    },
+    "snowy-mountain": {
+      "office": "ALY",
+      "bindReason": "Catalog place.office ALY (CWA matches county assignment in places.json)."
+    },
+    "blue-mountain": {
+      "office": "ALY",
+      "bindReason": "Catalog place.office ALY (CWA matches county assignment in places.json)."
+    },
+    "pillsbury-mountain": {
+      "office": "BTV",
+      "bindReason": "Catalog place.office BTV (CWA matches county assignment in places.json)."
+    },
+    "gore-mountain": {
+      "office": "BTV",
+      "bindReason": "Catalog place.office BTV (CWA matches county assignment in places.json)."
+    },
+    "blue-ridge-mountain": {
+      "office": "BTV",
+      "bindReason": "Catalog place.office BTV (CWA matches county assignment in places.json)."
+    },
+    "fishing-brook-range": {
+      "office": "BTV",
+      "bindReason": "Catalog place.office BTV (CWA matches county assignment in places.json)."
+    },
+    "vanderwhacker-mountain": {
+      "office": "BTV",
+      "bindReason": "Catalog place.office BTV (CWA matches county assignment in places.json)."
+    },
+    "crane-mountain": {
+      "office": "BTV",
+      "bindReason": "Catalog place.office BTV (CWA matches county assignment in places.json)."
+    },
+    "hadley-mountain": {
+      "office": "BTV",
+      "bindReason": "Catalog place.office BTV (CWA matches county assignment in places.json)."
+    },
+    "black-mountain": {
+      "office": "BTV",
+      "bindReason": "Catalog place.office BTV (CWA matches county assignment in places.json)."
+    },
+    "pharaoh-mountain": {
+      "office": "BTV",
+      "bindReason": "Catalog place.office BTV (CWA matches county assignment in places.json)."
+    },
+    "prospect-mountain": {
+      "office": "BTV",
+      "bindReason": "Catalog place.office BTV (CWA matches county assignment in places.json)."
+    },
+    "slide-mountain": {
+      "office": "ALY",
+      "bindReason": "Catalog place.office ALY (CWA matches county assignment in places.json)."
+    },
+    "hunter-mountain": {
+      "office": "ALY",
+      "bindReason": "Catalog place.office ALY (CWA matches county assignment in places.json)."
+    },
+    "peekamoose-mountain": {
+      "office": "ALY",
+      "bindReason": "Catalog place.office ALY (CWA matches county assignment in places.json)."
+    },
+    "balsam-lake-mountain": {
+      "office": "ALY",
+      "bindReason": "Catalog place.office ALY (CWA matches county assignment in places.json)."
+    },
+    "panther-mountain": {
+      "office": "ALY",
+      "bindReason": "Catalog place.office ALY (CWA matches county assignment in places.json)."
+    },
+    "windham-high-peak": {
+      "office": "ALY",
+      "bindReason": "Catalog place.office ALY (CWA matches county assignment in places.json)."
+    },
+    "overlook-mountain": {
+      "office": "ALY",
+      "bindReason": "Catalog place.office ALY (CWA matches county assignment in places.json)."
+    },
+    "red-hill": {
+      "office": "ALY",
+      "bindReason": "Catalog place.office ALY (CWA matches county assignment in places.json)."
+    },
+    "mount-tremper": {
+      "office": "ALY",
+      "bindReason": "Catalog place.office ALY (CWA matches county assignment in places.json)."
+    },
+    "tannersville": {
+      "office": "ALY",
+      "bindReason": "Catalog place.office ALY (CWA matches county assignment in places.json)."
+    },
+    "gunks-ridge": {
+      "office": "ALY",
+      "bindReason": "Mid-Hudson / Catskills CWA (KALY), not KBTV."
+    },
+    "thacher-park": {
+      "office": "ALY",
+      "bindReason": "Capital District CWA (KALY), not KBTV."
+    },
+    "jay-peak": {
+      "office": "BTV",
+      "bindReason": "Catalog place.office BTV (CWA matches county assignment in places.json)."
+    },
+    "belvidere-mountain": {
+      "office": "BTV",
+      "bindReason": "Catalog place.office BTV (CWA matches county assignment in places.json)."
+    },
+    "jay-village": {
+      "office": "BTV",
+      "bindReason": "Catalog place.office BTV (CWA matches county assignment in places.json)."
+    },
+    "mount-mansfield": {
+      "office": "BTV",
+      "bindReason": "Catalog place.office BTV (CWA matches county assignment in places.json)."
+    },
+    "smugglers-notch": {
+      "office": "BTV",
+      "bindReason": "Catalog place.office BTV (CWA matches county assignment in places.json)."
+    },
+    "stowe-town": {
+      "office": "BTV",
+      "bindReason": "Catalog place.office BTV (CWA matches county assignment in places.json)."
+    },
+    "camels-hump": {
+      "office": "BTV",
+      "bindReason": "Catalog place.office BTV (CWA matches county assignment in places.json)."
+    },
+    "mount-ellen": {
+      "office": "BTV",
+      "bindReason": "Catalog place.office BTV (CWA matches county assignment in places.json)."
+    },
+    "bread-loaf-mountain": {
+      "office": "BTV",
+      "bindReason": "Catalog place.office BTV (CWA matches county assignment in places.json)."
+    },
+    "mount-worcester": {
+      "office": "BTV",
+      "bindReason": "Catalog place.office BTV (CWA matches county assignment in places.json)."
+    },
+    "waterbury": {
+      "office": "BTV",
+      "bindReason": "Catalog place.office BTV (CWA matches county assignment in places.json)."
+    },
+    "signal-mountain": {
+      "office": "BTV",
+      "bindReason": "Catalog place.office BTV (CWA matches county assignment in places.json)."
+    },
+    "burke-mountain": {
+      "office": "BTV",
+      "bindReason": "Catalog place.office BTV (CWA matches county assignment in places.json)."
+    },
+    "monadnock-mountain": {
+      "office": "BTV",
+      "bindReason": "Catalog place.office BTV (CWA matches county assignment in places.json)."
+    },
+    "killington-peak": {
+      "office": "BTV",
+      "bindReason": "Catalog place.office BTV (CWA matches county assignment in places.json)."
+    },
+    "stratton-mountain": {
+      "office": "BTV",
+      "bindReason": "Catalog place.office BTV (CWA matches county assignment in places.json)."
+    },
+    "mount-equinox": {
+      "office": "BTV",
+      "bindReason": "Catalog place.office BTV (CWA matches county assignment in places.json)."
+    },
+    "dorset-mountain": {
+      "office": "BTV",
+      "bindReason": "Catalog place.office BTV (CWA matches county assignment in places.json)."
+    },
+    "haystack-mountain": {
+      "office": "BTV",
+      "bindReason": "Catalog place.office BTV (CWA matches county assignment in places.json)."
+    },
+    "ludlow-mountain": {
+      "office": "BTV",
+      "bindReason": "Catalog place.office BTV (CWA matches county assignment in places.json)."
+    },
+    "bromley-mountain": {
+      "office": "BTV",
+      "bindReason": "Catalog place.office BTV (CWA matches county assignment in places.json)."
+    },
+    "mount-ascutney": {
+      "office": "BTV",
+      "bindReason": "Catalog place.office BTV (CWA matches county assignment in places.json)."
+    },
+    "bald-mountain": {
+      "office": "BTV",
+      "bindReason": "Catalog place.office BTV (CWA matches county assignment in places.json)."
+    },
+    "manchester-vt": {
+      "office": "BTV",
+      "bindReason": "Catalog place.office BTV (CWA matches county assignment in places.json)."
+    },
+    "mount-washington": {
+      "office": "GYX",
+      "bindReason": "Catalog place.office GYX (CWA matches county assignment in places.json)."
+    },
+    "mount-adams": {
+      "office": "GYX",
+      "bindReason": "Catalog place.office GYX (CWA matches county assignment in places.json)."
+    },
+    "pinkham-notch": {
+      "office": "GYX",
+      "bindReason": "Catalog place.office GYX (CWA matches county assignment in places.json)."
+    },
+    "crawford-notch": {
+      "office": "GYX",
+      "bindReason": "Catalog place.office GYX (CWA matches county assignment in places.json)."
+    },
+    "baldface-mountain": {
+      "office": "GYX",
+      "bindReason": "Catalog place.office GYX (CWA matches county assignment in places.json)."
+    },
+    "mount-lafayette": {
+      "office": "GYX",
+      "bindReason": "Catalog place.office GYX (CWA matches county assignment in places.json)."
+    },
+    "mount-moosilauke": {
+      "office": "GYX",
+      "bindReason": "Catalog place.office GYX (CWA matches county assignment in places.json)."
+    },
+    "mount-osceola": {
+      "office": "GYX",
+      "bindReason": "Catalog place.office GYX (CWA matches county assignment in places.json)."
+    },
+    "cannon-mountain": {
+      "office": "GYX",
+      "bindReason": "Catalog place.office GYX (CWA matches county assignment in places.json)."
+    },
+    "kancamagus-pass": {
+      "office": "GYX",
+      "bindReason": "Catalog place.office GYX (CWA matches county assignment in places.json)."
+    },
+    "franconia-notch": {
+      "office": "GYX",
+      "bindReason": "Catalog place.office GYX (CWA matches county assignment in places.json)."
+    },
+    "rumney-crag": {
+      "office": "GYX",
+      "bindReason": "Catalog place.office GYX (CWA matches county assignment in places.json)."
+    },
+    "mount-monadnock": {
+      "office": "GYX",
+      "bindReason": "Catalog place.office GYX (CWA matches county assignment in places.json)."
+    },
+    "north-pack-monadnock": {
+      "office": "GYX",
+      "bindReason": "Catalog place.office GYX (CWA matches county assignment in places.json)."
+    },
+    "katahdin": {
+      "office": "CAR",
+      "bindReason": "Catalog place.office CAR (CWA matches county assignment in places.json)."
+    },
+    "katahdin-woods-and-waters": {
+      "office": "CAR",
+      "bindReason": "Catalog place.office CAR (CWA matches county assignment in places.json)."
+    },
+    "millinocket": {
+      "office": "CAR",
+      "bindReason": "Catalog place.office CAR (CWA matches county assignment in places.json)."
+    },
+    "white-cap-mountain": {
+      "office": "CAR",
+      "bindReason": "Catalog place.office CAR (CWA matches county assignment in places.json)."
+    },
+    "sugarloaf-mountain": {
+      "office": "CAR",
+      "bindReason": "Catalog place.office CAR (CWA matches county assignment in places.json)."
+    },
+    "bigelow": {
+      "office": "CAR",
+      "bindReason": "Catalog place.office CAR (CWA matches county assignment in places.json)."
+    },
+    "rangeley": {
+      "office": "CAR",
+      "bindReason": "Catalog place.office CAR (CWA matches county assignment in places.json)."
+    },
+    "deboullie-mountain": {
+      "office": "CAR",
+      "bindReason": "Catalog place.office CAR (CWA matches county assignment in places.json)."
+    },
+    "mars-hill-mountain": {
+      "office": "CAR",
+      "bindReason": "Catalog place.office CAR (CWA matches county assignment in places.json)."
+    },
+    "cadillac-mountain": {
+      "office": "CAR",
+      "bindReason": "Catalog place.office CAR (CWA matches county assignment in places.json)."
+    },
+    "bar-harbor": {
+      "office": "CAR",
+      "bindReason": "Catalog place.office CAR (CWA matches county assignment in places.json)."
+    }
+  },
+  "states": {
+    "vt": {
+      "office": "BTV",
+      "bindReason": "All catalog VT peaks are in KBTV; HWO covers Vermont zones."
+    },
+    "nh": {
+      "office": "GYX",
+      "bindReason": "All catalog NH peaks are in KGYX."
+    },
+    "me": {
+      "office": "CAR",
+      "bindReason": "All catalog ME peaks are in KCAR."
+    },
+    "ny": null
+  },
+  "sections": {
+    "adirondack-high-peaks": {
+      "office": "BTV",
+      "bindReason": "Section is entirely KBTV (Essex/Franklin ADK)."
+    },
+    "northern-adirondacks": {
+      "office": "BTV",
+      "bindReason": "Section is entirely KBTV."
+    },
+    "jay-peak": {
+      "office": "BTV",
+      "bindReason": "Section is entirely KBTV (NEK / Orleans)."
+    },
+    "northern-greens": {
+      "office": "BTV",
+      "bindReason": "Section is entirely KBTV."
+    },
+    "central-greens": {
+      "office": "BTV",
+      "bindReason": "Section is entirely KBTV."
+    },
+    "northeast-kingdom": {
+      "office": "BTV",
+      "bindReason": "Section is entirely KBTV (NEK)."
+    },
+    "southern-greens": {
+      "office": "BTV",
+      "bindReason": "Section is entirely KBTV (Rutland/Windsor/etc.)."
+    },
+    "catskill-mountains": {
+      "office": "ALY",
+      "bindReason": "Section is entirely KALY."
+    },
+    "shawangunks": {
+      "office": "ALY",
+      "bindReason": "Single place; CWA KALY (override from catalog BTV)."
+    },
+    "thacher-park": {
+      "office": "ALY",
+      "bindReason": "Single place; CWA KALY."
+    },
+    "presidential-range": {
+      "office": "GYX",
+      "bindReason": "Section is entirely KGYX."
+    },
+    "franconia-pemi": {
+      "office": "GYX",
+      "bindReason": "Section is entirely KGYX."
+    },
+    "rumney-climbing": {
+      "office": "GYX",
+      "bindReason": "Section is entirely KGYX."
+    },
+    "monadnock-region": {
+      "office": "GYX",
+      "bindReason": "Section is entirely KGYX."
+    },
+    "baxter-state-park": {
+      "office": "CAR",
+      "bindReason": "Section is entirely KCAR."
+    },
+    "mahoosucs-bigelow": {
+      "office": "CAR",
+      "bindReason": "Section is entirely KCAR."
+    },
+    "northern-maine": {
+      "office": "CAR",
+      "bindReason": "Section is entirely KCAR."
+    },
+    "acadia": {
+      "office": "CAR",
+      "bindReason": "Section is entirely KCAR."
+    }
+  },
+  "unboundScopes": {
+    "central-southern-adirondacks": "Mixed KBTV and KALY peaks in one section; no single office covers the whole section.",
+    "ny": "Catalog NY spans KBTV and KALY; no state-wide bulletin block."
+  }
+}

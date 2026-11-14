@@ -23,7 +23,10 @@ import { moreSourcesForPlace } from '@/lib/mountain-weather/more-sources';
 import { mountainWeatherPath } from '@/lib/mountain-weather/slugs';
 import { readAvgForPlace } from '@/lib/mountain-weather/read-place-avg';
 import { readAllLocationsForPlace, readRecForPlace } from '@/lib/mountain-weather/read-place-rec';
+import { BulletinsSection } from '@/components/mountain-weather/BulletinsSection';
+import { bulletinOfficeForPlace } from '@/lib/mountain-weather/bulletin-bindings';
 import { readBalloonForPlace } from '@/lib/mountain-weather/read-place-balloon';
+import { readOfficeBulletins } from '@/lib/mountain-weather/read-office-bulletins';
 import { readMansfieldPack } from '@/lib/mountain-weather/read-mansfield-pack';
 import { readMtnPointForPlace } from '@/lib/mountain-weather/read-mtn-point';
 import { readNwsGridBaseline } from '@/lib/mountain-weather/readers/nws-grid-baseline';
@@ -44,7 +47,10 @@ export default async function MountainPlacePage({
   const place = getMountainPlace(stateCode, sectionId, placeId);
   if (!stateEntry || !section || !place) notFound();
 
-  const [baseline, mtnPoint, rec, avg, allLocations, mansfieldPack, balloon] = await Promise.all([
+  const bulletinBinding = bulletinOfficeForPlace(place.id);
+  const bulletinOffice = bulletinBinding?.office ?? null;
+
+  const [baseline, mtnPoint, rec, avg, allLocations, mansfieldPack, balloon, bulletins] = await Promise.all([
     readNwsGridBaseline(place),
     readMtnPointForPlace(place.id),
     readRecForPlace(place.id),
@@ -52,6 +58,7 @@ export default async function MountainPlacePage({
     readAllLocationsForPlace(place.id),
     readMansfieldPack(place.id),
     readBalloonForPlace(place.id),
+    bulletinOffice ? readOfficeBulletins(bulletinOffice) : Promise.resolve(null),
   ]);
   const moreSources = moreSourcesForPlace(stateCode, sectionId, place);
 
@@ -83,6 +90,7 @@ export default async function MountainPlacePage({
           })()}
           NWS {place.office} · {place.lat.toFixed(4)}, {place.lon.toFixed(4)}
         </p>
+        <BulletinsSection bundle={bulletins} />
         <MountainForecastSection result={mtnPoint} placeName={place.name} />
         <RecForecastSection results={rec} />
         <AvgForecastSection results={avg} />
