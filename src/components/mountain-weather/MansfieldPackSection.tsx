@@ -1,4 +1,5 @@
 import { CollapsibleSection } from '@/components/mountain-weather/CollapsibleSection';
+import { SourceErrorNote } from '@/components/mountain-weather/SourceErrorNote';
 import type { MansfieldPackData } from '@/lib/mountain-weather/read-mansfield-pack';
 import { mansfieldPackSourceDefs } from '@/lib/mountain-weather/read-mansfield-pack';
 import { defaultResumeHint } from '@/lib/mountain-weather/parse/seasonal-off';
@@ -72,7 +73,7 @@ function PackBlock<T>({
   if (result.status === 'error' || !result.data) {
     return (
       <CollapsibleSection title={title} subtitle={`${def.org} (unavailable)${stale}`}>
-        <p className="text-sm font-bold">{result.error ?? `${title} did not load.`}</p>
+        <SourceErrorNote label={title} href={result.sourceUrl ?? def.url} />
         <Footer def={def} issuedAt={result.issuedAt} sourceUrl={result.sourceUrl} />
       </CollapsibleSection>
     );

@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import { CollapsibleSection } from '@/components/mountain-weather/CollapsibleSection';
+import { SourceErrorNote } from '@/components/mountain-weather/SourceErrorNote';
 import type { BaselineForecast } from '@/lib/mountain-weather/baseline-forecast';
 import type { SourceResult } from '@/lib/mountain-weather/source-types';
 import type { ForecastSnippet, GridValueSample } from '@/types/weather';
@@ -17,7 +18,7 @@ export function BasicForecastSection({
   if (result.status === 'error' || !result.data) {
     return (
       <CollapsibleSection title="Basic forecast" subtitle={`Source: ${NWS_GRID_BASELINE_DEF.org} (unavailable)`}>
-        <p className="text-sm font-bold">{result.error ?? 'Forecast did not load.'}</p>
+        <SourceErrorNote label="Basic forecast" href={result.sourceUrl ?? NWS_GRID_BASELINE_DEF.url} />
       </CollapsibleSection>
     );
   }

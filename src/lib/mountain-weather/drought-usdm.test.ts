@@ -1,6 +1,21 @@
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+import path from 'node:path';
 import test from 'node:test';
 import { parseUsdmCountyLatest } from '@/lib/mountain-weather/parse/drought-usdm';
+
+const FIX = path.resolve(process.cwd(), 'src/lib/mountain-weather/fixtures');
+
+test('parseUsdmCountyLatest reads NDMC JSON fixture', () => {
+  const text = readFileSync(path.join(FIX, 'usdm-county-sample.json'), 'utf8');
+  const row = parseUsdmCountyLatest(text, '36031');
+  assert.equal(row?.mapDate, '2025-11-11');
+  assert.equal(row?.dominant, 'D1');
+});
+
+test('parseUsdmCountyLatest rejects CSV bodies', () => {
+  assert.throws(() => parseUsdmCountyLatest('MapDate,fips,county\n', '36031'), /CSV/);
+});
 
 test('parseUsdmCountyLatest picks newest map week', () => {
   const text = JSON.stringify([

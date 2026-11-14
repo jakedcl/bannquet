@@ -33,7 +33,7 @@ function readerFor(fips: string) {
       def: USDM_COUNTY_DROUGHT_DEF,
       read: async () =>
         buildSourceResult({
-          fetched: await fetchSourceBody(sourceUrl),
+          fetched: await fetchSourceBody(sourceUrl, 12_000, { accept: 'application/json' }),
           parse: (text) => parseUsdmCountyLatest(text, fips),
         }),
     });

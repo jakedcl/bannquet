@@ -1,4 +1,5 @@
 import { CollapsibleSection } from '@/components/mountain-weather/CollapsibleSection';
+import { SourceErrorNote } from '@/components/mountain-weather/SourceErrorNote';
 import type { AvgCell, AvgDateGrid, AvgPlaceSlice } from '@/lib/mountain-weather/avg-types';
 import { defaultResumeHint } from '@/lib/mountain-weather/parse/seasonal-off';
 import { NWS_AVG_BTV_DEF, NWS_AVG_GYX_DEF } from '@/lib/mountain-weather/registry';
@@ -82,7 +83,7 @@ function AvgBlock({ result }: { result: SourceResult<AvgPlaceSlice> }) {
         title="Avalanche weather guidance (AVG)"
         subtitle={def ? `${def.org} (unavailable)${stale}` : 'AVG unavailable'}
       >
-        <p className="text-sm font-bold">{result.error ?? 'AVG did not load.'}</p>
+        <SourceErrorNote label="AVG recreation points" href={result.sourceUrl ?? def?.url ?? 'https://www.weather.gov/'} />
       </CollapsibleSection>
     );
   }

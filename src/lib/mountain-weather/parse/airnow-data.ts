@@ -49,13 +49,39 @@ function normalizeParameter(raw: string): string {
   return raw.trim().toUpperCase().replace(/\s+/g, '');
 }
 
+const EPA_AQI_CATEGORY: Record<number, string> = {
+  1: 'Good',
+  2: 'Moderate',
+  3: 'Unhealthy for Sensitive Groups',
+  4: 'Unhealthy',
+  5: 'Very Unhealthy',
+  6: 'Hazardous',
+};
+
+function categoryFromNumber(value: number): string | null {
+  const rounded = Math.round(value);
+  return EPA_AQI_CATEGORY[rounded] ?? null;
+}
+
 function categoryLabel(raw: unknown): string {
   if (raw == null) return 'Unknown';
-  if (typeof raw === 'string') return raw;
-  if (typeof raw === 'number') return String(raw);
-  if (typeof raw === 'object' && raw !== null && 'Name' in raw) {
-    const name = (raw as { Name?: unknown }).Name;
-    if (typeof name === 'string') return name;
+  if (typeof raw === 'number') return categoryFromNumber(raw) ?? String(raw);
+  if (typeof raw === 'string') {
+    const trimmed = raw.trim();
+    if (/^\d+$/.test(trimmed)) {
+      const named = categoryFromNumber(Number(trimmed));
+      if (named) return named;
+    }
+    if (trimmed) return trimmed;
+  }
+  if (typeof raw === 'object' && raw !== null) {
+    const o = raw as Record<string, unknown>;
+    if (typeof o.Name === 'string' && o.Name.trim()) return o.Name.trim();
+    if (typeof o.name === 'string' && o.name.trim()) return o.name.trim();
+    if (typeof o.Number === 'number') {
+      const named = categoryFromNumber(o.Number);
+      if (named) return named;
+    }
   }
   return 'Unknown';
 }
@@ -114,6 +140,8 @@ export function parseAirNowDataRows(text: string): AirNowDataRow[] {
     if (lat == null || lon == null || aqi == null || !utc || !parameter) continue;
     const unit = pickString(o, ['Unit', 'unit']);
     const siteName = pickString(o, ['SiteName', 'siteName', 'Site', 'site']);
+    const categoryRaw =
+      o.Category ?? o.category ?? o.CategoryName ?? o.categoryName ?? o.AQICategory ?? o.aqiCategory;
     out.push({
       lat,
       lon,
@@ -121,7 +149,7 @@ export function parseAirNowDataRows(text: string): AirNowDataRow[] {
       parameter: normalizeParameter(parameter),
       unit,
       aqi: Math.round(aqi),
-      category: categoryLabel(o.Category ?? o.category),
+      category: categoryLabel(categoryRaw),
       siteName,
     });
   }

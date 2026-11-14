@@ -1,4 +1,5 @@
 import { CollapsibleSection } from '@/components/mountain-weather/CollapsibleSection';
+import { SourceErrorNote } from '@/components/mountain-weather/SourceErrorNote';
 import type { BalloonCell, BalloonPlaceSlice, BalloonRow } from '@/lib/mountain-weather/balloon-types';
 import { defaultResumeHint } from '@/lib/mountain-weather/parse/seasonal-off';
 import { NWS_BTV_BALLOON_DEF } from '@/lib/mountain-weather/registry';
@@ -41,7 +42,7 @@ export function BalloonForecastSection({ result }: { result: SourceResult<Balloo
   if (result.status === 'error' || !result.data) {
     return (
       <CollapsibleSection title="Ridge / balloon wind forecast" subtitle={`${def.org} (unavailable)${stale}`}>
-        <p className="text-sm font-bold">{result.error ?? 'Balloon forecast did not load.'}</p>
+        <SourceErrorNote label="Balloon wind forecast" href={result.sourceUrl ?? def.url} />
         <p className="text-xs text-gray-700">
           {def.org} · {def.kind} ·{' '}
           <a href={result.sourceUrl} className="font-bold underline" target="_blank" rel="noopener noreferrer">

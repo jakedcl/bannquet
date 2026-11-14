@@ -1,4 +1,5 @@
 import { CollapsibleSection } from '@/components/mountain-weather/CollapsibleSection';
+import { SourceErrorNote } from '@/components/mountain-weather/SourceErrorNote';
 import { buildMtnDisplay, fmtMtnAmount, fmtMtnLightning } from '@/lib/mountain-weather/mtn-display';
 import type { MtnPointBundle } from '@/lib/mountain-weather/mtn-point-types';
 import { windDirFromDegrees } from '@/lib/mountain-weather/parse/mtn-sky';
@@ -55,7 +56,7 @@ export function MountainForecastSection({
         title="Mountain forecast"
         subtitle={source ? `${source.org} (unavailable)${stale}` : 'Mountain point forecast unavailable'}
       >
-        <p className="text-sm font-bold">{result.error ?? 'Mountain point forecast did not load.'}</p>
+        <SourceErrorNote label="Mountain forecast" href={result.sourceUrl ?? NWS_MTN_BTV_STANDARD_DEF.url} />
       </CollapsibleSection>
     );
   }

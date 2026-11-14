@@ -15,12 +15,16 @@ type FetchOk = {
 };
 type FetchErr = { ok: false; error: string; httpStatus?: number | null; sourceUrl: string };
 
-export async function fetchSourceBody(url: string, timeoutMs = 8_000): Promise<FetchOk | FetchErr> {
+export async function fetchSourceBody(
+  url: string,
+  timeoutMs = 8_000,
+  options?: { accept?: string },
+): Promise<FetchOk | FetchErr> {
   try {
     const response = await outsideFetch(url, {
       headers: {
         'User-Agent': USER_AGENT,
-        Accept: 'application/json, application/geo+json, application/xml, text/plain, */*',
+        Accept: options?.accept ?? 'application/json, application/geo+json, application/xml, text/plain, */*',
       },
       next: { revalidate: 0 },
     }, timeoutMs);
@@ -78,7 +82,7 @@ export function buildSourceResult<T>(input: {
       validFrom: null,
       validTo: null,
       sourceUrl: input.fetched.sourceUrl,
-      error: err instanceof Error ? err.message : 'Parse failed',
+      error: 'Source data could not be parsed',
     };
   }
 }

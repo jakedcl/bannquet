@@ -55,6 +55,22 @@ test('pickAirNowForPlace marks monitors beyond 25 mi as distant', () => {
   assert.ok(place.parameters.every((p) => p.distant));
 });
 
+test('categoryLabel maps EPA category numbers to names', () => {
+  const text = JSON.stringify([
+    {
+      Latitude: 44.2,
+      Longitude: -73.5,
+      UTC: '2026-11-14T16:00:00',
+      Parameter: 'OZONE',
+      AQI: 16,
+      Category: 1,
+      SiteName: 'Test Peak',
+    },
+  ]);
+  const rows = parseAirNowDataRows(text);
+  assert.equal(rows[0].category, 'Good');
+});
+
 test('airNowQueryHourRange uses UTC hour buckets', () => {
   const now = new Date('2026-11-14T16:45:00Z');
   const range = airNowQueryHourRange(2, now);

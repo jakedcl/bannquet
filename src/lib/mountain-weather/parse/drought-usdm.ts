@@ -25,7 +25,11 @@ function worstCategory(row: ApiRow): CountyDroughtRow['dominant'] {
 }
 
 export function parseUsdmCountyLatest(text: string, fips: string): CountyDroughtRow | null {
-  const rows = JSON.parse(text) as ApiRow[];
+  const trimmed = text.trim();
+  if (trimmed.startsWith('MapDate') || (trimmed.includes('mapDate') && !trimmed.startsWith('[') && !trimmed.startsWith('{'))) {
+    throw new Error('USDM county API returned CSV instead of JSON');
+  }
+  const rows = JSON.parse(trimmed) as ApiRow[];
   if (!Array.isArray(rows) || rows.length === 0) return null;
   const sorted = [...rows].sort((a, b) => Date.parse(b.mapDate) - Date.parse(a.mapDate));
   const row = sorted.find((r) => r.fips === fips) ?? sorted[0];

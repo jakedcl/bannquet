@@ -1,4 +1,5 @@
 import { CollapsibleSection } from '@/components/mountain-weather/CollapsibleSection';
+import { SourceErrorNote } from '@/components/mountain-weather/SourceErrorNote';
 import type { RecPlaceSlice } from '@/lib/mountain-weather/rec-types';
 import type { SourceResult } from '@/lib/mountain-weather/source-types';
 import type { RecOffice } from '@/lib/mountain-weather/rec-types';
@@ -53,7 +54,10 @@ function RecBlock({ result }: { result: SourceResult<RecPlaceSlice> }) {
         title="Recreation forecast (REC)"
         subtitle={def ? `${def.org} (unavailable)${stale}` : 'REC unavailable'}
       >
-        <p className="text-sm font-bold">{result.error ?? 'Recreation forecast did not load.'}</p>
+        <SourceErrorNote
+          label="Recreation forecast (REC)"
+          href={result.sourceUrl ?? (def?.url ?? 'https://api.weather.gov/')}
+        />
       </CollapsibleSection>
     );
   }

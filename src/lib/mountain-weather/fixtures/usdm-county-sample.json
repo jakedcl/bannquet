@@ -1,0 +1,17 @@
+[
+  {
+    "mapDate": "2025-11-11T00:00:00",
+    "fips": "36031",
+    "county": "Essex County",
+    "state": "NY",
+    "none": 0,
+    "d0": 100,
+    "d1": 82.14,
+    "d2": 0,
+    "d3": 0,
+    "d4": 0,
+    "validStart": "2025-11-11T00:00:00",
+    "validEnd": "2025-11-17T23:59:59",
+    "statisticFormatID": 1
+  }
+]

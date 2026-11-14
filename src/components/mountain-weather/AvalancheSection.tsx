@@ -1,4 +1,5 @@
 import { CollapsibleSection } from '@/components/mountain-weather/CollapsibleSection';
+import { SourceErrorNote } from '@/components/mountain-weather/SourceErrorNote';
 import { AvgForecastSection } from '@/components/mountain-weather/AvgForecastSection';
 import type { AvalancheDangerBand, AvalancheProblem, AvalancheProductBundle } from '@/lib/mountain-weather/avalanche-types';
 import type { PlaceAvalancheData } from '@/lib/mountain-weather/read-place-avalanche';
@@ -115,7 +116,7 @@ function CenterBlock({ result }: { result: SourceResult<AvalancheProductBundle> 
       defaultOpen={result.status === 'ok'}
     >
       {result.status === 'error' && !data ? (
-        <p className="text-sm font-bold">{result.error ?? 'Avalanche forecast did not load.'}</p>
+        <SourceErrorNote label="Avalanche forecast" href={result.sourceUrl ?? 'https://www.avalanche.org/'} />
       ) : data ? (
         <div className="space-y-3 text-sm">
           {(result.status === 'seasonal-off' || data.offSeason) && (

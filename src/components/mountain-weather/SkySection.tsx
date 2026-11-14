@@ -1,4 +1,5 @@
 import { CollapsibleSection } from '@/components/mountain-weather/CollapsibleSection';
+import { SourceErrorNote } from '@/components/mountain-weather/SourceErrorNote';
 import type { PlaceSkyData, UsnoTimedEvent } from '@/lib/mountain-weather/sky-types';
 import { USNO_RSTT_ONEDAY_DEF } from '@/lib/mountain-weather/readers/usno-rstt-oneday';
 
@@ -25,7 +26,7 @@ export function SkySection({ data }: { data: PlaceSkyData }) {
   return (
     <CollapsibleSection title="Sun &amp; moon" subtitle={`USNO RSTT · ${USNO_RSTT_ONEDAY_DEF.org} · times in ET`} defaultOpen={false}>
       {data.bundle.status === 'error' ? (
-        <p className="text-sm font-bold text-red-800">USNO sky data did not load: {data.bundle.error}</p>
+        <SourceErrorNote label="USNO sky data" href={data.bundle.sourceUrl ?? USNO_RSTT_ONEDAY_DEF.url} />
       ) : null}
       <p className="text-xs text-gray-700">{data.horizonNote}</p>
       <p className="text-xs text-gray-700">{data.apiNote}</p>

@@ -1,4 +1,5 @@
 import { CollapsibleSection } from '@/components/mountain-weather/CollapsibleSection';
+import { SourceErrorNote } from '@/components/mountain-weather/SourceErrorNote';
 import type { AllLocationsPlaceSlice } from '@/lib/mountain-weather/all-locations-types';
 import { defaultResumeHint } from '@/lib/mountain-weather/parse/seasonal-off';
 import {
@@ -36,7 +37,7 @@ function AllLocationsBlock({ result }: { result: SourceResult<AllLocationsPlaceS
         title="allLocations narrative"
         subtitle={def ? `${def.org} (unavailable)${stale}` : 'allLocations unavailable'}
       >
-        <p className="text-sm font-bold">{result.error ?? 'allLocations did not load.'}</p>
+        <SourceErrorNote label="allLocations narrative" href={result.sourceUrl ?? def?.url ?? 'https://www.weather.gov/'} />
       </CollapsibleSection>
     );
   }

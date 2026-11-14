@@ -1,4 +1,5 @@
 import { CollapsibleSection } from '@/components/mountain-weather/CollapsibleSection';
+import { SourceErrorNote } from '@/components/mountain-weather/SourceErrorNote';
 import { MapImageGrid } from '@/components/mountain-weather/MapImageGrid';
 import { MapRemoteImage } from '@/components/mountain-weather/MapRemoteImage';
 import { MountainWeatherPlacesMap } from '@/components/mountain-weather/MountainWeatherPlacesMap';
@@ -60,7 +61,7 @@ export function MapsSection({ data, place }: MapsSectionProps) {
           {ALERTS_DEF.org} · {alertBundle?.alerts.length ?? 0} for NY/VT/NH/ME · {alertBundle?.mapGeoJson.features.length ?? 0} polygons on map
         </p>
         {data.alerts.status === 'error' ? (
-          <p className="text-sm font-bold text-red-800">Alerts did not load: {data.alerts.error}</p>
+          <SourceErrorNote label="NWS active alerts" href={data.alerts.sourceUrl ?? ALERTS_DEF.url} />
         ) : null}
         {alertBundle && alertBundle.alerts.length === 0 ? (
           <p className="text-sm">No active alerts in NY, VT, NH, or ME right now.</p>

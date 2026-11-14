@@ -1,4 +1,5 @@
 import { CollapsibleSection } from '@/components/mountain-weather/CollapsibleSection';
+import { SourceErrorNote } from '@/components/mountain-weather/SourceErrorNote';
 import type { FzlPlaceSlice, FzlRadat } from '@/lib/mountain-weather/fzl-types';
 import { NWS_FZL_ALY_DEF, NWS_FZL_GYX_DEF } from '@/lib/mountain-weather/registry';
 import type { SourceResult } from '@/lib/mountain-weather/source-types';
@@ -72,7 +73,7 @@ export function FzlForecastSection({ result }: { result: SourceResult<FzlPlaceSl
   if (result.status === 'error' || !result.data) {
     return (
       <CollapsibleSection title="Freezing level (FZL / RADAT)" subtitle={`${def?.org ?? 'NWS'} (unavailable)${stale}`}>
-        <p className="text-sm font-bold">{result.error ?? 'FZL did not load.'}</p>
+        <SourceErrorNote label="Freezing level (FZL)" href={result.sourceUrl ?? def?.url ?? 'https://api.weather.gov/'} />
         {def ? (
           <p className="text-xs text-gray-700">
             <a href={def.url} className="font-bold underline" target="_blank" rel="noopener noreferrer">

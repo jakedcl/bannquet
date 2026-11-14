@@ -1,4 +1,5 @@
 import { CollapsibleSection } from '@/components/mountain-weather/CollapsibleSection';
+import { SourceErrorNote } from '@/components/mountain-weather/SourceErrorNote';
 import type { PlaceGroundData } from '@/lib/mountain-weather/ground-access-types';
 import { GROUND_ACCESS_NOTES } from '@/lib/mountain-weather/read-place-ground';
 import { USDM_COUNTY_DROUGHT_DEF } from '@/lib/mountain-weather/readers/usdm-county-drought';
@@ -30,7 +31,7 @@ export function GroundAccessSection({ data }: { data: PlaceGroundData }) {
 
       <SubBlock title="County drought (U.S. Drought Monitor)">
         {data.drought.status === 'error' ? (
-          <p className="text-sm text-red-800">{data.drought.error}</p>
+          <SourceErrorNote label="County drought" href={data.drought.sourceUrl ?? USDM_COUNTY_DROUGHT_DEF.url} />
         ) : data.drought.data ? (
           <dl className="grid gap-1 text-sm sm:grid-cols-2">
             <Field label="County" value={`${data.drought.data.county}, ${data.drought.data.state}`} />
@@ -55,7 +56,10 @@ export function GroundAccessSection({ data }: { data: PlaceGroundData }) {
 
       <SubBlock title="Nearest NE Compass road weather (ESS)">
         {data.compassEss.status === 'error' ? (
-          <p className="text-sm font-bold text-amber-950">{data.compassEss.error}</p>
+          <SourceErrorNote
+            label="Compass ESS"
+            href={data.compassEss.sourceUrl ?? 'https://nec-por.ne-compass.com/NEC.XmlDataPortal/api/c2c'}
+          />
         ) : data.compassEss.data ? (
           <div>
             <p className="font-bold">{data.compassEss.data.name}</p>
@@ -101,7 +105,7 @@ export function GroundAccessSection({ data }: { data: PlaceGroundData }) {
 
       <SubBlock title="Air quality">
         {data.airNow.status === 'error' ? (
-          <p className="text-sm text-gray-700">AirNow unavailable ({data.airNow.error ?? 'error'}).</p>
+          <SourceErrorNote label="AirNow air quality" href={data.airNowLink} />
         ) : data.airNow.data?.parameters.length ? (
           <div className="space-y-3">
             {data.airNow.data.parameters.map((row) => (

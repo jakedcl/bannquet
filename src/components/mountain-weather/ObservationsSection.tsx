@@ -1,4 +1,5 @@
 import { CollapsibleSection } from '@/components/mountain-weather/CollapsibleSection';
+import { SourceErrorNote } from '@/components/mountain-weather/SourceErrorNote';
 import type { PlaceObservationsData, StationObservationBlock } from '@/lib/mountain-weather/read-place-observations';
 import type { PlaceStationObservationBinding } from '@/lib/mountain-weather/station-bindings';
 import type { SourceDef } from '@/lib/mountain-weather/source-types';
@@ -95,7 +96,7 @@ function StationBlock({
       ) : null}
       <p className="text-xs text-gray-600">{binding.bindReason}</p>
       {result.status === 'error' || !result.data ? (
-        <p className="text-sm font-bold">{result.error ?? 'Observation did not load.'}</p>
+        <SourceErrorNote label="Weather observation" href={result.sourceUrl ?? 'https://api.weather.gov/'} />
       ) : (
         <>
           {(() => {
@@ -141,7 +142,7 @@ function AsrcBlock({
   return (
     <CollapsibleSection title="Whiteface summit timelapse (ASRC)" subtitle={`${def.org} · measured`} defaultOpen>
       {result.status === 'error' || !result.data ? (
-        <p className="text-sm font-bold">{result.error ?? 'Timelapse unavailable.'}</p>
+        <SourceErrorNote label="Whiteface timelapse" href={result.sourceUrl ?? ASRC_WHITEFACE_TIMELAPSE_DEF.url} />
       ) : (
         <>
           <video

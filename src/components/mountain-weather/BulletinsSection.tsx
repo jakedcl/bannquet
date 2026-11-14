@@ -1,4 +1,5 @@
 import { CollapsibleSection } from '@/components/mountain-weather/CollapsibleSection';
+import { SourceErrorNote } from '@/components/mountain-weather/SourceErrorNote';
 import type { OfficeBulletinBundle } from '@/lib/mountain-weather/read-office-bulletins';
 import type { NwsTextProduct } from '@/lib/mountain-weather/bulletin-types';
 import type { MountainWfo } from '@/lib/mountain-weather/nws-office';
@@ -35,7 +36,7 @@ function ProductBlock({
   if (result.status === 'error' || !result.data) {
     return (
       <CollapsibleSection title={title} subtitle={`${def.org} (unavailable)${stale}`}>
-        <p className="text-sm font-bold">{result.error ?? `${title} did not load.`}</p>
+        <SourceErrorNote label={title} href={result.sourceUrl ?? def.url} />
         <p className="text-xs text-gray-700">
           <a href={def.url} className="font-bold underline" target="_blank" rel="noopener noreferrer">
             Latest via API

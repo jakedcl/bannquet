@@ -1,4 +1,6 @@
+import sourceBindings from '../../../config/mountain-weather/source-bindings.json';
 import type { MountainPlace } from '@/lib/mountain-weather/places';
+import { countyFipsForPlace } from '@/lib/mountain-weather/place-county-fips';
 import type { MountainStateCode } from '@/lib/mountain-weather/slugs';
 
 export type MoreSourceLink = {
@@ -358,8 +360,22 @@ function baseCatalog(ctx: CatalogContext): MoreSourceEntry[] {
       { id: 'pns', scope: 'place', org: `NWS ${place.office}`, label: 'Storm totals (PNS)', href: `https://api.weather.gov/products/types/PNS/locations/${place.office}/latest`, mode: 'link', offices: [place.office] },
       { id: 'cpc', scope: 'place', org: 'CPC', label: '6–10 and 8–14 day outlooks', href: 'https://www.cpc.ncep.noaa.gov/products/predictions/610day/', mode: 'link' },
       { id: 'spc', scope: 'place', org: 'SPC', label: 'Convective outlooks', href: 'https://www.spc.noaa.gov/products/outlook/', mode: 'link' },
-      { id: 'airnow', scope: 'place', org: 'EPA AirNow', label: 'Air quality', href: 'https://www.airnow.gov/', mode: 'link' },
-      { id: 'drought', scope: 'place', org: 'NDMC', label: 'U.S. Drought Monitor', href: 'https://droughtmonitor.unl.edu/', mode: 'link' },
+      {
+        id: 'airnow',
+        scope: 'place',
+        org: 'EPA AirNow',
+        label: 'Air quality (PM2.5 & ozone)',
+        href: 'https://www.airnow.gov/',
+        mode: 'link',
+      },
+      {
+        id: 'drought',
+        scope: 'place',
+        org: 'NDMC',
+        label: 'County drought (U.S. Drought Monitor)',
+        href: 'https://droughtmonitor.unl.edu/',
+        mode: 'link',
+      },
       { id: 'wfas', scope: 'place', org: 'USFS', label: 'Wildland Fire Assessment System', href: 'https://www.wfas.net/', mode: 'link' },
       { id: 'ncei', scope: 'place', org: 'NCEI', label: 'Climate Data Online', href: 'https://www.ncei.noaa.gov/cdo-web/', mode: 'link' },
     );
@@ -387,11 +403,56 @@ function matchesScope(entry: MoreSourceEntry, pageScope: MoreSourceScope, ctx: C
   return matchesContext(entry, ctx);
 }
 
+const UI_WHEN_INGESTED = new Set([
+  'usno',
+  'drought',
+  'airnow',
+  'alerts-point',
+  'radar-ne',
+  'goes-color',
+  'goes-glm',
+  'nohrsc-stations',
+  'nohrsc-map',
+  'whiteface-cam',
+  'kmwn-series',
+  'mmnv1-timeseries',
+  'gyx-alllocations',
+  'rec-summits',
+  'btv-balloon-xml',
+  'aly-fzl',
+  'gyx-fzl',
+]);
+
+function applyIngestedModes(entries: MoreSourceEntry[], ctx: CatalogContext): MoreSourceEntry[] {
+  const airnowKey = Boolean(process.env.AIRNOW_API_KEY?.trim());
+  const fips = ctx.place ? countyFipsForPlace(ctx.place.id) : null;
+  const binding = ctx.place
+    ? (sourceBindings as { places: Record<string, { balloon?: unknown; rec?: unknown }> }).places[ctx.place.id]
+    : null;
+  const office = ctx.place?.office;
+  return entries.map((entry) => {
+    let mode = entry.mode;
+    if (UI_WHEN_INGESTED.has(entry.id)) mode = 'ui';
+    if (entry.id === 'airnow' && !airnowKey) mode = 'link';
+    if (entry.id === 'drought' && !fips) mode = 'link';
+    if (entry.id === 'btv-balloon-xml' && !binding?.balloon) mode = 'link';
+    if (entry.id === 'aly-fzl' && office !== 'ALY') mode = 'link';
+    if (entry.id === 'gyx-fzl' && office !== 'GYX') mode = 'link';
+    if (entry.id.startsWith('rec-') && office && entry.id === `rec-${office}` && ctx.place) mode = 'ui';
+    if (entry.id === 'whiteface-cam' && ctx.place?.id !== 'whiteface-mountain') mode = 'link';
+    if (entry.id === 'kmwn-series' && ctx.place?.id !== 'mount-washington') mode = 'link';
+    if (entry.id === 'mmnv1-timeseries' && ctx.place?.id !== 'mount-mansfield') mode = 'link';
+    return { ...entry, mode };
+  });
+}
+
 function groupEntries(entries: MoreSourceEntry[]): MoreSourceGroups {
   const strip = entries.map(({ id: _id, scope: _s, states: _st, sections: _sec, offices: _o, placeIds: _p, ...link }) => link);
   const unique = new Map<string, MoreSourceLink>();
   for (const link of strip) {
-    unique.set(`${link.org}:${link.href}`, link);
+    const key = `${link.org}:${link.href}`;
+    const prev = unique.get(key);
+    if (!prev || (link.mode === 'ui' && prev.mode === 'link')) unique.set(key, link);
   }
   const links = [...unique.values()];
 
@@ -410,7 +471,10 @@ function select(pageScope: MoreSourceScope, ctx: CatalogContext): MoreSourceGrou
 
 export function moreSourcesForPlace(stateCode: MountainStateCode, sectionId: string, place: MountainPlace): MoreSourceGroups {
   const ctx = { stateCode, sectionId, place };
-  const matched = baseCatalog(ctx).filter((entry) => matchesContext(entry, ctx));
+  const matched = applyIngestedModes(
+    baseCatalog(ctx).filter((entry) => matchesContext(entry, ctx)),
+    ctx,
+  );
   return groupEntries(matched);
 }
 
