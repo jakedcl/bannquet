@@ -6,7 +6,7 @@ import type { SourceResult } from '@/lib/mountain-weather/source-types';
 import { countyFipsForPlace } from '@/lib/mountain-weather/place-county-fips';
 import { readUsdmCountyDrought } from '@/lib/mountain-weather/readers/usdm-county-drought';
 import { compassNetworkForState, readCompassNeEss } from '@/lib/mountain-weather/readers/compass-ne-ess';
-import { compassTimestampToEtLabel } from '@/lib/mountain-weather/parse/compass-c2c';
+import { resolveCompassTimestamp } from '@/lib/mountain-weather/parse/compass-c2c';
 import { milesBetween } from '@/lib/mountain-weather/geo-miles';
 import { readAirNowCurrent } from '@/lib/mountain-weather/readers/airnow-aqi';
 
@@ -41,10 +41,21 @@ async function nearestCompassEss(
   const network = compassNetworkForState(state);
   if (!network) return emptyCompass();
   const bundle = await readCompassNeEss(network);
-  if (bundle.status !== 'ok' || !bundle.data?.length) {
+  if (bundle.status === 'error') {
     return { ...bundle, data: null };
   }
-  const ranked = bundle.data
+  if (!bundle.data?.stations.length) {
+    return {
+      status: 'ok',
+      data: null,
+      issuedAt: bundle.issuedAt,
+      validFrom: null,
+      validTo: null,
+      sourceUrl: bundle.sourceUrl,
+    };
+  }
+  const fetchAt = new Date(bundle.data.fetchAt);
+  const ranked = bundle.data.stations
     .map((row) => ({ row, distanceMi: milesBetween(lat, lon, row.lat, row.lon) }))
     .filter((x) => x.distanceMi <= COMPASS_MAX_MI)
     .sort((a, b) => a.distanceMi - b.distanceMi);
@@ -59,7 +70,7 @@ async function nearestCompassEss(
       sourceUrl: bundle.sourceUrl,
     };
   }
-  const ts = compassTimestampToEtLabel(best.row.timestampRaw);
+  const ts = resolveCompassTimestamp(best.row.timestampRaw, fetchAt, bundle.data.liveConfirmed);
   return {
     status: 'ok',
     data: {
@@ -70,12 +81,15 @@ async function nearestCompassEss(
       distanceMi: Math.round(best.distanceMi * 10) / 10,
       distant: best.distanceMi > DISTANT_MI,
       roadSurfaceCond: best.row.roadSurfaceCond,
+      precipType: best.row.precipType,
       airTempF: best.row.airTempF,
       pavementTempF: best.row.pavementTempF,
       windSpeed: best.row.windSpeed,
       windDir: best.row.windDir,
-      observedAt: ts.iso,
+      fields: best.row.fields,
+      observedAt: ts.instant?.toISOString() ?? null,
       observedAtEt: ts.etLabel,
+      timestampInterpretation: ts.interpretation,
       timestampNote: ts.note,
       sourceUrl: bundle.sourceUrl,
     },

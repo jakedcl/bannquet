@@ -55,7 +55,7 @@ export function GroundAccessSection({ data }: { data: PlaceGroundData }) {
 
       <SubBlock title="Nearest NE Compass road weather (ESS)">
         {data.compassEss.status === 'error' ? (
-          <p className="text-sm text-red-800">{data.compassEss.error}</p>
+          <p className="text-sm font-bold text-amber-950">{data.compassEss.error}</p>
         ) : data.compassEss.data ? (
           <div>
             <p className="font-bold">{data.compassEss.data.name}</p>
@@ -69,17 +69,27 @@ export function GroundAccessSection({ data }: { data: PlaceGroundData }) {
             ) : null}
             <dl className="mt-2 grid gap-1 text-sm sm:grid-cols-2">
               <Field label="Road surface" value={data.compassEss.data.roadSurfaceCond ?? '—'} />
-              <Field label="Air temp (as reported)" value={data.compassEss.data.airTempF?.toString() ?? '—'} />
-              <Field label="Pavement temp" value={data.compassEss.data.pavementTempF?.toString() ?? '—'} />
+              <Field label="Precip type" value={data.compassEss.data.precipType ?? '—'} />
+              <Field label="Air temp" value={data.compassEss.data.fields.airTemp.display ?? '—'} />
+              <Field label="Pavement temp" value={data.compassEss.data.fields.pavementTemp.display ?? '—'} />
+              <Field label="Dew point" value={data.compassEss.data.fields.dewPoint.display ?? '—'} />
+              <Field label="Visibility" value={data.compassEss.data.fields.visibility.display ?? '—'} />
+              <Field label="Wind" value={data.compassEss.data.fields.windSpeed.display ?? '—'} />
+              <Field label="Wind dir" value={data.compassEss.data.windDir ?? '—'} />
+              <Field label="Pressure" value={data.compassEss.data.fields.barometricPressure.display ?? '—'} />
               <Field
-                label="Wind"
+                label="Observed"
                 value={
-                  data.compassEss.data.windSpeed != null
-                    ? `${data.compassEss.data.windSpeed} · ${data.compassEss.data.windDir ?? '—'}`
-                    : '—'
+                  data.compassEss.data.observedAtEt ??
+                  (data.compassEss.data.timestampInterpretation === 'rejected-future' ? 'Suppressed (future)' : '—')
                 }
+                className="sm:col-span-2"
               />
-              <Field label="Observed (ET)" value={data.compassEss.data.observedAtEt ?? '—'} className="sm:col-span-2" />
+              <Field
+                label="Timestamp rule"
+                value={data.compassEss.data.timestampInterpretation}
+                className="sm:col-span-2"
+              />
             </dl>
             <p className="text-xs text-gray-700">{data.compassEss.data.timestampNote}</p>
           </div>

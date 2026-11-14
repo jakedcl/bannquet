@@ -4,8 +4,16 @@ import type { SourceDef, SourceResult } from '@/lib/mountain-weather/source-type
 
 const USER_AGENT = 'Bannquet-Weather-App (admin@bannquet.com)';
 
-type FetchOk = { ok: true; text: string; issuedAt: string | null; sourceUrl: string };
-type FetchErr = { ok: false; error: string; sourceUrl: string };
+type FetchOk = {
+  ok: true;
+  text: string;
+  issuedAt: string | null;
+  /** HTTP Date header when present, else fetch wall time (UTC). */
+  fetchedAt?: string;
+  httpStatus?: number;
+  sourceUrl: string;
+};
+type FetchErr = { ok: false; error: string; httpStatus?: number | null; sourceUrl: string };
 
 export async function fetchSourceBody(url: string, timeoutMs = 8_000): Promise<FetchOk | FetchErr> {
   try {
@@ -18,15 +26,18 @@ export async function fetchSourceBody(url: string, timeoutMs = 8_000): Promise<F
     }, timeoutMs);
     const sourceUrl = response.url || url;
     if (!response.ok) {
-      return { ok: false, error: `HTTP ${response.status}`, sourceUrl };
+      return { ok: false, error: `HTTP ${response.status}`, httpStatus: response.status, sourceUrl };
     }
     const text = await response.text();
     const issuedAt = response.headers.get('last-modified');
-    return { ok: true, text, issuedAt, sourceUrl };
+    const dateHdr = response.headers.get('date');
+    const fetchedAt = dateHdr ? new Date(dateHdr).toISOString() : new Date().toISOString();
+    return { ok: true, text, issuedAt, fetchedAt, httpStatus: response.status, sourceUrl };
   } catch (err) {
     return {
       ok: false,
       error: err instanceof Error ? err.message : String(err),
+      httpStatus: null,
       sourceUrl: url,
     };
   }

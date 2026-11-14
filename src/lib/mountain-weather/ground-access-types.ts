@@ -1,5 +1,7 @@
 import type { SourceResult } from '@/lib/mountain-weather/source-types';
 import type { MoreSourceLink } from '@/lib/mountain-weather/more-sources';
+import type { CompassEssFields } from '@/lib/mountain-weather/parse/compass-ess-units';
+import type { CompassTimestampInterpretation } from '@/lib/mountain-weather/parse/compass-c2c';
 
 export type GroundLink = MoreSourceLink & { id: string };
 
@@ -27,12 +29,15 @@ export type CompassEssRow = {
   distanceMi: number;
   distant: boolean;
   roadSurfaceCond: string | null;
+  precipType: string | null;
   airTempF: number | null;
   pavementTempF: number | null;
   windSpeed: number | null;
   windDir: string | null;
+  fields: CompassEssFields;
   observedAt: string | null;
   observedAtEt: string | null;
+  timestampInterpretation: CompassTimestampInterpretation;
   timestampNote: string;
   sourceUrl: string;
 };

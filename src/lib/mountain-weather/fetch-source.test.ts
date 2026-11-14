@@ -4,7 +4,7 @@ import { buildSourceResult } from '@/lib/mountain-weather/fetch-source';
 
 test('buildSourceResult isolates fetch failures', () => {
   const result = buildSourceResult({
-    fetched: { ok: false, error: 'HTTP 503', sourceUrl: 'https://example.test' },
+    fetched: { ok: false, error: 'HTTP 503', httpStatus: 503, sourceUrl: 'https://example.test' },
     parse: () => ({ value: 1 }),
   });
   assert.equal(result.status, 'error');
@@ -14,7 +14,7 @@ test('buildSourceResult isolates fetch failures', () => {
 
 test('buildSourceResult isolates parse failures', () => {
   const result = buildSourceResult({
-    fetched: { ok: true, text: 'bad', issuedAt: null, sourceUrl: 'https://example.test' },
+    fetched: { ok: true, text: 'bad', issuedAt: null, fetchedAt: '2025-01-01T00:00:00.000Z', httpStatus: 200, sourceUrl: 'https://example.test' },
     parse: () => {
       throw new Error('bad xml');
     },
@@ -25,7 +25,7 @@ test('buildSourceResult isolates parse failures', () => {
 
 test('buildSourceResult returns parsed data on success', () => {
   const result = buildSourceResult({
-    fetched: { ok: true, text: '{"a":1}', issuedAt: 'Wed, 01 Jan 2025 00:00:00 GMT', sourceUrl: 'https://example.test' },
+    fetched: { ok: true, text: '{"a":1}', issuedAt: 'Wed, 01 Jan 2025 00:00:00 GMT', fetchedAt: '2025-01-01T00:00:00.000Z', httpStatus: 200, sourceUrl: 'https://example.test' },
     parse: () => ({ a: 1 }),
   });
   assert.equal(result.status, 'ok');
