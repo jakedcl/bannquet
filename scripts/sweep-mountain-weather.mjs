@@ -15,11 +15,19 @@ const BYPASS_SECRET =
   process.env.SWEEP_VERCEL_BYPASS_SECRET ??
   '';
 const BYPASS_HEADER = process.env.SWEEP_VERCEL_BYPASS_HEADER ?? 'x-vercel-protection-bypass';
+const SHARE_TOKEN = process.env.SWEEP_VERCEL_SHARE ?? '';
 
 function sweepHeaders() {
   const headers = { Accept: 'text/html' };
   if (BYPASS_SECRET) headers[BYPASS_HEADER] = BYPASS_SECRET;
   return headers;
+}
+
+function sweepUrl(route) {
+  const base = `${BASE}${route}`;
+  if (!SHARE_TOKEN) return base;
+  const sep = base.includes('?') ? '&' : '?';
+  return `${base}${sep}_vercel_share=${encodeURIComponent(SHARE_TOKEN)}`;
 }
 
 const STATE_SLUGS = {
@@ -86,7 +94,7 @@ function collectRoutes() {
 }
 
 async function fetchRoute(route) {
-  const url = `${BASE}${route}`;
+  const url = sweepUrl(route);
   try {
     const res = await fetch(url, { headers: sweepHeaders(), redirect: 'follow' });
     const text = await res.text();
@@ -228,6 +236,7 @@ async function main() {
       {
         base: BASE,
         bypassHeader: BYPASS_SECRET ? BYPASS_HEADER : null,
+        shareQuery: SHARE_TOKEN ? '_vercel_share' : null,
         scanned: results.length,
         tinyPageCount: tinyPages.length,
         tinyPagesSample: tinyPages.slice(0, 12),
