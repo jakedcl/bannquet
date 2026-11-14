@@ -11,6 +11,8 @@ import { NOHRSC_STATION_SNOWDEPTH_DEF } from '@/lib/mountain-weather/readers/noh
 import { NWS_RIDGE_NE_MOSAIC_DEF } from '@/lib/mountain-weather/readers/nws-ridge-radar';
 import { GOES19_NE_GEOCOLOR_DEF, GOES19_NE_GLM_DEF } from '@/lib/mountain-weather/readers/goes-19-ne';
 import { NWS_ALERTS_ACTIVE_NE_DEF } from '@/lib/mountain-weather/readers/nws-alerts-active-ne';
+import { SPC_CONVECTIVE_OUTLOOK_DEF } from '@/lib/mountain-weather/readers/spc-convective-outlook';
+import { NWS_ZONE_GEOJSON_DEF } from '@/lib/mountain-weather/readers/nws-zone-geometry';
 
 export const NWS_GRID_BASELINE_DEF: SourceDef = {
   id: 'nws-grid-baseline',
@@ -315,5 +317,7 @@ export const SOURCE_REGISTRY: Record<string, SourceDef> = {
   [GOES19_NE_GEOCOLOR_DEF.id]: GOES19_NE_GEOCOLOR_DEF,
   [GOES19_NE_GLM_DEF.id]: GOES19_NE_GLM_DEF,
   [NWS_ALERTS_ACTIVE_NE_DEF.id]: NWS_ALERTS_ACTIVE_NE_DEF,
+  [SPC_CONVECTIVE_OUTLOOK_DEF.id]: SPC_CONVECTIVE_OUTLOOK_DEF,
+  [NWS_ZONE_GEOJSON_DEF.id]: NWS_ZONE_GEOJSON_DEF,
   ...stationRegistry,
 };

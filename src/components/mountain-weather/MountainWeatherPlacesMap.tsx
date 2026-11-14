@@ -14,12 +14,12 @@ const MapShell = forwardRef<HTMLDivElement>(function MapShell(_, ref) {
 
 type Props = {
   pins: PlaceMapPin[];
-  alertPins?: NwsAlertsBundle['mapPins'];
+  alertMap?: NwsAlertsBundle | null;
   focus?: { lat: number; lon: number; zoom?: number } | null;
   className?: string;
 };
 
-export function MountainWeatherPlacesMap({ pins, alertPins = [], focus, className }: Props) {
+export function MountainWeatherPlacesMap({ pins, alertMap, focus, className }: Props) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<MlMap | null>(null);
 
@@ -36,6 +36,45 @@ export function MountainWeatherPlacesMap({ pins, alertPins = [], focus, classNam
     mapRef.current = map;
 
     map.on('load', () => {
+      if (alertMap?.mapGeoJson.features.length) {
+        map.addSource('nws-alerts', { type: 'geojson', data: alertMap.mapGeoJson });
+        map.addLayer({
+          id: 'nws-alerts-fill',
+          type: 'fill',
+          source: 'nws-alerts',
+          paint: {
+            'fill-color': ['get', 'color'],
+            'fill-opacity': 0.35,
+          },
+        });
+        map.addLayer({
+          id: 'nws-alerts-line',
+          type: 'line',
+          source: 'nws-alerts',
+          paint: {
+            'line-color': ['get', 'color'],
+            'line-width': 2,
+          },
+        });
+        map.on('click', 'nws-alerts-fill', (event) => {
+          const feature = event.features?.[0];
+          if (!feature) return;
+          const props = feature.properties as { event?: string; validLabel?: string; headline?: string };
+          new Popup()
+            .setLngLat(event.lngLat)
+            .setHTML(
+              `<div class="text-sm"><strong>${props.event ?? 'Alert'}</strong><br/>${props.headline ?? ''}<br/><span class="text-xs">${props.validLabel ?? ''}</span></div>`,
+            )
+            .addTo(map);
+        });
+        map.on('mouseenter', 'nws-alerts-fill', () => {
+          map.getCanvas().style.cursor = 'pointer';
+        });
+        map.on('mouseleave', 'nws-alerts-fill', () => {
+          map.getCanvas().style.cursor = '';
+        });
+      }
+
       const placesGeo: GeoJSON.FeatureCollection = {
         type: 'FeatureCollection',
         features: pins.map((pin) => ({
@@ -71,24 +110,6 @@ export function MountainWeatherPlacesMap({ pins, alertPins = [], focus, classNam
         filter: ['!', ['has', 'point_count']],
         paint: { 'circle-color': '#8b4513', 'circle-radius': 6, 'circle-stroke-width': 1, 'circle-stroke-color': '#fff' },
       });
-
-      if (alertPins.length) {
-        const alertsGeo: GeoJSON.FeatureCollection = {
-          type: 'FeatureCollection',
-          features: alertPins.map((row) => ({
-            type: 'Feature',
-            properties: { event: row.event, headline: row.headline, ends: row.ends },
-            geometry: { type: 'Point', coordinates: [row.lon, row.lat] },
-          })),
-        };
-        map.addSource('nws-alerts', { type: 'geojson', data: alertsGeo });
-        map.addLayer({
-          id: 'nws-alerts',
-          type: 'circle',
-          source: 'nws-alerts',
-          paint: { 'circle-color': '#c62828', 'circle-radius': 5, 'circle-stroke-color': '#fff', 'circle-stroke-width': 1 },
-        });
-      }
 
       map.on('click', 'mw-places-point', (event) => {
         const feature = event.features?.[0];
@@ -128,13 +149,23 @@ export function MountainWeatherPlacesMap({ pins, alertPins = [], focus, classNam
       map.remove();
       mapRef.current = null;
     };
-  }, [pins, alertPins, focus]);
+  }, [pins, alertMap, focus]);
 
   return (
     <div className={className}>
       <p className="mb-2 text-xs text-gray-700">
-        Basemap: OpenFreeMap (OSM). Peaks use the same NWS gridpoint reader as place pages. Red alert dots are point geometries only (NY, VT, NH, ME).
+        Basemap: OpenFreeMap (OSM). Active NWS alerts are filled polygons (alert geometry or forecast-zone polygons from api.weather.gov/zones). Pin data matches place-page baselines.
       </p>
+      {alertMap?.legend.length ? (
+        <ul className="mb-2 flex flex-wrap gap-2 text-[10px]">
+          {alertMap.legend.map((row) => (
+            <li key={row.event} className="flex items-center gap-1 border border-[#5c3a1e]/30 bg-white px-1.5 py-0.5">
+              <span className="inline-block h-2.5 w-2.5 border border-black/20" style={{ background: row.color }} />
+              {row.event}
+            </li>
+          ))}
+        </ul>
+      ) : null}
       <MapShell ref={containerRef} />
     </div>
   );

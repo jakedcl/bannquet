@@ -5,6 +5,7 @@ import { readNwsGridBaseline } from '@/lib/mountain-weather/readers/nws-grid-bas
 import { readNwsRidgeNeMosaic, readNwsRidgeSiteLoop } from '@/lib/mountain-weather/readers/nws-ridge-radar';
 import { readGoes19NeGeocolor, readGoes19NeGlm } from '@/lib/mountain-weather/readers/goes-19-ne';
 import { readNwsAlertsActiveNe } from '@/lib/mountain-weather/readers/nws-alerts-active-ne';
+import { readSpcConvectiveOutlookImages } from '@/lib/mountain-weather/readers/spc-convective-outlook';
 import type { MapsHubData, OutlookLink, PlaceMapPin, PlaceMapsData } from '@/lib/mountain-weather/map-types';
 import { mountainWeatherPath, type MountainStateCode } from '@/lib/mountain-weather/slugs';
 import { radarSiteForOffice } from '@/lib/mountain-weather/radar-sites';
@@ -32,12 +33,6 @@ export const MAP_OUTLOOK_LINKS: OutlookLink[] = [
     id: 'spc-outlook',
     label: 'Storm Prediction Center convective outlooks',
     href: 'https://www.spc.noaa.gov/products/outlook/',
-    org: 'SPC',
-  },
-  {
-    id: 'spc-day1',
-    label: 'SPC Day 1 categorical outlook (image)',
-    href: 'https://www.spc.noaa.gov/products/outlook/day1otlk.gif',
     org: 'SPC',
   },
   {
@@ -77,12 +72,13 @@ async function loadPlacePin(
 
 async function loadSharedLayers(place?: MountainPlace | null): Promise<Omit<PlaceMapsData, 'pins'>> {
   const siteId = place ? radarSiteForOffice(place.office) : null;
-  const [mosaic, site, goes, glm, alerts] = await Promise.all([
+  const [mosaic, site, goes, glm, alerts, spc] = await Promise.all([
     readNwsRidgeNeMosaic(),
     siteId ? readNwsRidgeSiteLoop(siteId) : Promise.resolve(null),
     readGoes19NeGeocolor(),
     readGoes19NeGlm(),
     readNwsAlertsActiveNe(),
+    readSpcConvectiveOutlookImages(),
   ]);
 
   return {
@@ -93,6 +89,7 @@ async function loadSharedLayers(place?: MountainPlace | null): Promise<Omit<Plac
     goesGlm: assetFromResult(glm),
     alerts,
     outlooks: MAP_OUTLOOK_LINKS,
+    spcImages: spc.status === 'ok' && spc.data ? spc.data : [],
   };
 }
 

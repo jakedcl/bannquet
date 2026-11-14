@@ -1,6 +1,8 @@
 import { cachedSourceRead, fetchSourceBody } from '@/lib/mountain-weather/fetch-source';
 import type { NwsAlertsBundle, NwsAlertSummary } from '@/lib/mountain-weather/map-types';
 import type { SourceDef, SourceResult } from '@/lib/mountain-weather/source-types';
+import { colorForAlertEvent } from '@/lib/mountain-weather/alert-map-colors';
+import { polygonsFromGeometry, readNwsZoneGeometry } from '@/lib/mountain-weather/readers/nws-zone-geometry';
 
 export const NWS_ALERTS_ACTIVE_NE_DEF: SourceDef = {
   id: 'nws-alerts-active-ne',
@@ -13,29 +15,22 @@ export const NWS_ALERTS_ACTIVE_NE_DEF: SourceDef = {
 };
 
 const STATES = ['NY', 'VT', 'NH', 'ME'] as const;
-
 type GeoFeature = {
   id?: string;
-  geometry?: { type: string; coordinates?: unknown };
+  geometry?: GeoJSON.Geometry | null;
   properties?: {
     id?: string;
     event?: string;
     severity?: string;
     headline?: string;
     ends?: string;
+    onset?: string;
+    effective?: string;
+    expires?: string;
     areaDesc?: string;
     geocode?: { UGC?: string[]; SAME?: string[] };
   };
 };
-
-function alertCentroid(geometry: GeoFeature['geometry']): { lat: number; lon: number } | null {
-  if (!geometry) return null;
-  if (geometry.type === 'Point' && Array.isArray(geometry.coordinates)) {
-    const [lon, lat] = geometry.coordinates as number[];
-    if (Number.isFinite(lat) && Number.isFinite(lon)) return { lat, lon };
-  }
-  return null;
-}
 
 function featureInStates(feature: GeoFeature): boolean {
   const ugc = feature.properties?.geocode?.UGC ?? [];
@@ -45,19 +40,82 @@ function featureInStates(feature: GeoFeature): boolean {
 function summaryFromFeature(feature: GeoFeature): NwsAlertSummary {
   const props = feature.properties ?? {};
   return {
-    id: props.id ?? feature.id ?? `${props.event ?? 'alert'}-${props.geocode?.SAME?.[0] ?? feature.id ?? 'unknown'}`,
+    id: props.id ?? feature.id ?? `${props.event ?? 'alert'}-${props.geocode?.SAME?.[0] ?? 'unknown'}`,
     event: props.event ?? 'Alert',
     severity: props.severity ?? null,
     headline: props.headline ?? null,
-    ends: props.ends ?? null,
+    ends: props.ends ?? props.expires ?? null,
     areaDesc: props.areaDesc ?? null,
+    effective: props.effective ?? null,
+    expires: props.expires ?? props.ends ?? null,
+    onset: props.onset ?? null,
   };
 }
 
-function parseAlerts(text: string): NwsAlertsBundle {
+function validLabel(summary: NwsAlertSummary): string {
+  const from = summary.effective ?? summary.onset;
+  const to = summary.expires ?? summary.ends;
+  if (from && to) return `${from} – ${to}`;
+  if (from) return `from ${from}`;
+  if (to) return `until ${to}`;
+  return 'Valid times not published';
+}
+
+function geometryIsDrawable(geometry: GeoJSON.Geometry | null | undefined): geometry is GeoJSON.Polygon | GeoJSON.MultiPolygon {
+  return geometry?.type === 'Polygon' || geometry?.type === 'MultiPolygon';
+}
+
+async function geometryForFeature(feature: GeoFeature): Promise<GeoJSON.Polygon | GeoJSON.MultiPolygon | GeoJSON.Point | null> {
+  const geometry = feature.geometry ?? null;
+  if (geometryIsDrawable(geometry)) return geometry;
+  if (geometry?.type === 'Point') return geometry;
+
+  const zones = [...new Set(feature.properties?.geocode?.UGC ?? [])].filter((z) => /^[A-Z]{2}[CZ]/.test(z));
+  if (zones.length === 0) return null;
+
+  const polygons: GeoJSON.Polygon[] = [];
+  for (const zoneId of zones) {
+    const res = await readNwsZoneGeometry(zoneId);
+    if (res.status === 'ok' && res.data) polygons.push(...polygonsFromGeometry(res.data));
+  }
+  if (polygons.length === 0) return null;
+  if (polygons.length === 1) return polygons[0];
+  return { type: 'MultiPolygon', coordinates: polygons.map((p) => p.coordinates) };
+}
+
+async function enrichFeatures(features: GeoFeature[]): Promise<GeoJSON.FeatureCollection> {
+  const out: GeoJSON.Feature[] = [];
+  for (const feature of features) {
+    const summary = summaryFromFeature(feature);
+    const geometry = await geometryForFeature(feature);
+    if (!geometry) continue;
+    out.push({
+      type: 'Feature',
+      id: summary.id,
+      properties: {
+        ...summary,
+        color: colorForAlertEvent(summary.event),
+        validLabel: validLabel(summary),
+      },
+      geometry,
+    });
+  }
+  return { type: 'FeatureCollection', features: out };
+}
+
+function legendFromFeatures(features: GeoJSON.Feature[]): Array<{ event: string; color: string }> {
+  const seen = new Map<string, string>();
+  for (const f of features) {
+    const event = String(f.properties?.event ?? 'Alert');
+  const color = String(f.properties?.color ?? colorForAlertEvent(event));
+    if (!seen.has(event)) seen.set(event, color);
+  }
+  return [...seen.entries()].map(([event, color]) => ({ event, color }));
+}
+
+function parseSummaries(text: string): NwsAlertSummary[] {
   const body = JSON.parse(text) as { features?: GeoFeature[] };
   const alerts: NwsAlertSummary[] = [];
-  const mapPins: NwsAlertsBundle['mapPins'] = [];
   const seen = new Set<string>();
   for (const feature of body.features ?? []) {
     if (!featureInStates(feature)) continue;
@@ -65,10 +123,13 @@ function parseAlerts(text: string): NwsAlertsBundle {
     if (seen.has(summary.id)) continue;
     seen.add(summary.id);
     alerts.push(summary);
-    const center = alertCentroid(feature.geometry);
-    if (center) mapPins.push({ ...summary, lat: center.lat, lon: center.lon });
   }
-  return { alerts, mapPins };
+  return alerts;
+}
+
+function rawFeatures(text: string): GeoFeature[] {
+  const body = JSON.parse(text) as { features?: GeoFeature[] };
+  return (body.features ?? []).filter(featureInStates);
 }
 
 async function loadAlerts(): Promise<SourceResult<NwsAlertsBundle>> {
@@ -88,25 +149,33 @@ async function loadAlerts(): Promise<SourceResult<NwsAlertsBundle>> {
       error: err && !err.ok ? err.error : 'No alert feeds responded',
     };
   }
+
   const mergedAlerts: NwsAlertSummary[] = [];
-  const mergedPins: NwsAlertsBundle['mapPins'] = [];
+  const raw: GeoFeature[] = [];
   const seen = new Set<string>();
   let issuedAt: string | null = null;
   for (const part of okParts) {
     if (part.issuedAt && !issuedAt) issuedAt = part.issuedAt;
-    const chunk = parseAlerts(part.text);
-    for (const row of chunk.alerts) {
+    for (const row of parseSummaries(part.text)) {
       if (seen.has(row.id)) continue;
       seen.add(row.id);
       mergedAlerts.push(row);
     }
-    for (const pin of chunk.mapPins) {
-      if (!mergedPins.some((p) => p.id === pin.id)) mergedPins.push(pin);
+    for (const feature of rawFeatures(part.text)) {
+      const id = summaryFromFeature(feature).id;
+      if (raw.some((f) => summaryFromFeature(f).id === id)) continue;
+      raw.push(feature);
     }
   }
+
+  const mapGeoJson = await enrichFeatures(raw);
   return {
     status: 'ok',
-    data: { alerts: mergedAlerts, mapPins: mergedPins },
+    data: {
+      alerts: mergedAlerts,
+      mapGeoJson,
+      legend: legendFromFeatures(mapGeoJson.features),
+    },
     issuedAt,
     validFrom: null,
     validTo: null,

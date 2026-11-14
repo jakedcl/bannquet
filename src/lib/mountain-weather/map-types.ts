@@ -24,11 +24,20 @@ export type NwsAlertSummary = {
   headline: string | null;
   ends: string | null;
   areaDesc: string | null;
+  effective: string | null;
+  expires: string | null;
+  onset: string | null;
 };
 
 export type NwsAlertsBundle = {
   alerts: NwsAlertSummary[];
-  mapPins: Array<NwsAlertSummary & { lat: number; lon: number }>;
+  mapGeoJson: GeoJSON.FeatureCollection;
+  legend: Array<{ event: string; color: string }>;
+};
+
+export type SpcOutlookImage = MapImageAsset & {
+  pageUrl: string;
+  httpOk: boolean;
 };
 
 export type PlaceMapPin = HubGlance & {
@@ -45,6 +54,7 @@ export type PlaceMapsData = {
   goesGlm: MapImageAsset | null;
   alerts: SourceResult<NwsAlertsBundle>;
   outlooks: OutlookLink[];
+  spcImages: SpcOutlookImage[];
   pins?: PlaceMapPin[];
 };
 
