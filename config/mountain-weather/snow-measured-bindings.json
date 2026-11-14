@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "catalogBuiltAt": "2026-11-14T07:22:05.131Z",
+  "catalogBuiltAt": "2026-11-14T10:01:24.673Z",
   "nohrscLatestToken": "2026111406",
   "ruleSummary": "Measured snow bindings follow M10 observation rules: summit only within 1 mi and 500 ft or pinned KMWN/A4090/A3672/MMNV1; base/valley stations must not sit more than 250 ft above the place; nearby-higher for high summits (e.g. MWN/KMWN at Pinkham/Stowe). Station elevation uses USGS EPQS when NOHRSC table elevation differs by >200 ft. Station catalog is the union of NOHRSC Northeast snowdepth tables over the last 7 days. Runtime shows the latest table row per bound station or “no report in the last 7 days.”",
   "places": {
@@ -1862,38 +1862,38 @@
     "black-mountain": {
       "measured": [
         {
-          "stationId": "NCKN6",
-          "source": "NOHRSC",
-          "network": "NOHRSC",
-          "stationName": "NORTH CREEK 5 SE",
-          "lat": 43.6611,
-          "lon": -73.8969,
-          "stationElevationFt": 879,
+          "stationId": "NY-WR-21",
+          "source": "COCORAHS",
+          "network": "CoCoRaHS",
+          "stationName": "BRANT LAKE 1.7 ENE, NY",
+          "lat": 43.68223,
+          "lon": -73.71838,
+          "stationElevationFt": 1257,
           "elevationSource": "NOHRSC table",
-          "nohrscElevationFt": 879,
+          "nohrscElevationFt": 1257,
           "epqsElevationFt": null,
-          "distanceMi": 13.5,
-          "elevationDiffFt": -1761,
+          "distanceMi": 10.7,
+          "elevationDiffFt": -1383,
           "kind": "valley",
           "element": "snowdepth",
-          "bindReason": "NOHRSC · 13.5 mi. Auto: nearest qualifying NOHRSC/CoCoRaHS snowdepth in catalog."
+          "bindReason": "CoCoRaHS · 10.7 mi. Auto: nearest qualifying NOHRSC/CoCoRaHS snowdepth in catalog."
         },
         {
-          "stationId": "INDN6",
-          "source": "NOHRSC",
-          "network": "NOHRSC",
-          "stationName": "INDIAN LAKE",
-          "lat": 43.755,
-          "lon": -74.2756,
-          "stationElevationFt": 1650,
+          "stationId": "NY-WR-17",
+          "source": "COCORAHS",
+          "network": "CoCoRaHS",
+          "stationName": "LAKE GEORGE 1.0 N, NY",
+          "lat": 43.4403,
+          "lon": -73.7126,
+          "stationElevationFt": 591,
           "elevationSource": "NOHRSC table",
-          "nohrscElevationFt": 1650,
+          "nohrscElevationFt": 591,
           "epqsElevationFt": null,
-          "distanceMi": 14.3,
-          "elevationDiffFt": -990,
+          "distanceMi": 14.7,
+          "elevationDiffFt": -2049,
           "kind": "valley",
           "element": "snowdepth",
-          "bindReason": "NOHRSC · 14.3 mi. Auto: nearest qualifying NOHRSC/CoCoRaHS snowdepth in catalog."
+          "bindReason": "CoCoRaHS · 14.7 mi. Auto: nearest qualifying NOHRSC/CoCoRaHS snowdepth in catalog."
         },
         {
           "stationId": "NY-WR-10",
@@ -1906,28 +1906,28 @@
           "elevationSource": "NOHRSC table",
           "nohrscElevationFt": 682,
           "epqsElevationFt": null,
-          "distanceMi": 16.9,
+          "distanceMi": 15.3,
           "elevationDiffFt": -1958,
           "kind": "valley",
           "element": "snowdepth",
-          "bindReason": "CoCoRaHS · 16.9 mi. Auto: nearest qualifying NOHRSC/CoCoRaHS snowdepth in catalog."
+          "bindReason": "CoCoRaHS · 15.3 mi. Auto: nearest qualifying NOHRSC/CoCoRaHS snowdepth in catalog."
         },
         {
-          "stationId": "NY-HM-10",
-          "source": "COCORAHS",
-          "network": "CoCoRaHS",
-          "stationName": "LAKE PLEASANT 2.3 WSW, NY",
-          "lat": 43.4549,
-          "lon": -74.45287,
-          "stationElevationFt": 1759,
+          "stationId": "NCKN6",
+          "source": "NOHRSC",
+          "network": "NOHRSC",
+          "stationName": "NORTH CREEK 5 SE",
+          "lat": 43.6611,
+          "lon": -73.8969,
+          "stationElevationFt": 879,
           "elevationSource": "NOHRSC table",
-          "nohrscElevationFt": 1759,
+          "nohrscElevationFt": 879,
           "epqsElevationFt": null,
-          "distanceMi": 17.7,
-          "elevationDiffFt": -881,
+          "distanceMi": 18.7,
+          "elevationDiffFt": -1761,
           "kind": "valley",
           "element": "snowdepth",
-          "bindReason": "CoCoRaHS · 17.7 mi. Auto: nearest qualifying NOHRSC/CoCoRaHS snowdepth in catalog."
+          "bindReason": "NOHRSC · 18.7 mi. Auto: nearest qualifying NOHRSC/CoCoRaHS snowdepth in catalog."
         }
       ]
     },
@@ -7193,35 +7193,35 @@
     },
     {
       "placeId": "black-mountain",
-      "stationId": "NCKN6",
-      "network": "NOHRSC",
+      "stationId": "NY-WR-21",
+      "network": "CoCoRaHS",
       "kind": "valley",
-      "distanceMi": 13.5,
-      "elevationDiffFt": -1761
+      "distanceMi": 10.7,
+      "elevationDiffFt": -1383
     },
     {
       "placeId": "black-mountain",
-      "stationId": "INDN6",
-      "network": "NOHRSC",
+      "stationId": "NY-WR-17",
+      "network": "CoCoRaHS",
       "kind": "valley",
-      "distanceMi": 14.3,
-      "elevationDiffFt": -990
+      "distanceMi": 14.7,
+      "elevationDiffFt": -2049
     },
     {
       "placeId": "black-mountain",
       "stationId": "NY-WR-10",
       "network": "CoCoRaHS",
       "kind": "valley",
-      "distanceMi": 16.9,
+      "distanceMi": 15.3,
       "elevationDiffFt": -1958
     },
     {
       "placeId": "black-mountain",
-      "stationId": "NY-HM-10",
-      "network": "CoCoRaHS",
+      "stationId": "NCKN6",
+      "network": "NOHRSC",
       "kind": "valley",
-      "distanceMi": 17.7,
-      "elevationDiffFt": -881
+      "distanceMi": 18.7,
+      "elevationDiffFt": -1761
     },
     {
       "placeId": "pharaoh-mountain",

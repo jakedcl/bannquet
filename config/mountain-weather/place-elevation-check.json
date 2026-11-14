@@ -235,9 +235,13 @@
       "gnisFeatureClass": "Summit"
     },
     "black-mountain": {
-      "skipped": true,
-      "reason": "excluded pending final-pass",
-      "gnisId": 944146
+      "catalogElevationFt": 2640,
+      "sampledElevationFt": 2654,
+      "deltaFt": 14,
+      "withinTolerance": true,
+      "source": "usgs-epqs-at-coords",
+      "gnisId": 944147,
+      "gnisFeatureClass": "Summit"
     },
     "pharaoh-mountain": {
       "catalogElevationFt": 2533,
@@ -382,7 +386,7 @@
       "reason": "not a pinned GNIS summit",
       "catalogElevationFt": 1100,
       "gnisId": 1457991,
-      "gnisFeatureClass": null
+      "gnisFeatureClass": "Populated Place"
     },
     "mount-mansfield": {
       "catalogElevationFt": 4393,
@@ -448,7 +452,7 @@
       "reason": "not a pinned GNIS summit",
       "catalogElevationFt": 600,
       "gnisId": 1460075,
-      "gnisFeatureClass": null
+      "gnisFeatureClass": "Populated Place"
     },
     "signal-mountain": {
       "catalogElevationFt": 3370,
@@ -496,11 +500,13 @@
       "gnisFeatureClass": "Summit"
     },
     "mount-equinox": {
-      "skipped": true,
-      "reason": "not a pinned GNIS summit",
       "catalogElevationFt": 3840,
+      "sampledElevationFt": 3835,
+      "deltaFt": -5,
+      "withinTolerance": true,
+      "source": "usgs-epqs-at-coords",
       "gnisId": 1461816,
-      "gnisFeatureClass": null
+      "gnisFeatureClass": "Summit"
     },
     "dorset-mountain": {
       "catalogElevationFt": 3760,
@@ -586,14 +592,14 @@
       "reason": "not a pinned GNIS summit",
       "catalogElevationFt": 2017,
       "gnisId": 872508,
-      "gnisFeatureClass": null
+      "gnisFeatureClass": "Gap"
     },
     "crawford-notch": {
       "skipped": true,
       "reason": "not a pinned GNIS summit",
       "catalogElevationFt": 1900,
       "gnisId": 871738,
-      "gnisFeatureClass": null
+      "gnisFeatureClass": "Valley"
     },
     "baldface-mountain": {
       "catalogElevationFt": 3547,
@@ -645,14 +651,14 @@
       "reason": "not a pinned GNIS summit",
       "catalogElevationFt": 2855,
       "gnisId": 872120,
-      "gnisFeatureClass": null
+      "gnisFeatureClass": "Gap"
     },
     "franconia-notch": {
       "skipped": true,
       "reason": "not a pinned GNIS summit",
       "catalogElevationFt": 1940,
       "gnisId": 871907,
-      "gnisFeatureClass": null
+      "gnisFeatureClass": "Gap"
     },
     "rumney-crag": {
       "skipped": true,
@@ -662,11 +668,13 @@
       "gnisFeatureClass": "Populated Place"
     },
     "mount-monadnock": {
-      "skipped": true,
-      "reason": "not a pinned GNIS summit",
       "catalogElevationFt": 3165,
+      "sampledElevationFt": 3167,
+      "deltaFt": 2,
+      "withinTolerance": true,
+      "source": "usgs-epqs-at-coords",
       "gnisId": 868516,
-      "gnisFeatureClass": null
+      "gnisFeatureClass": "Summit"
     },
     "north-pack-monadnock": {
       "catalogElevationFt": 2276,
@@ -744,11 +752,13 @@
       "gnisFeatureClass": "Summit"
     },
     "mars-hill-mountain": {
-      "skipped": true,
-      "reason": "not a pinned GNIS summit",
       "catalogElevationFt": 1749,
+      "sampledElevationFt": 1738,
+      "deltaFt": -11,
+      "withinTolerance": true,
+      "source": "usgs-epqs-at-coords",
       "gnisId": 570798,
-      "gnisFeatureClass": null
+      "gnisFeatureClass": "Summit"
     },
     "cadillac-mountain": {
       "catalogElevationFt": 1530,

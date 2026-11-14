@@ -17,6 +17,16 @@ test('REC parser finds BTV Northern Adirondacks section', () => {
   assert.ok(section.periods.some((p) => p.name.includes('TONIGHT')));
 });
 
+test('REC parser finds BTV Northern Green and Southern Green bands in split bulletin', () => {
+  const text = readFileSync(path.join(FIX, 'rec-btv-sample.txt'), 'utf8');
+  const bulletin = parseRecBulletin(text, '2026-11-13T18:23:00+00:00', 'test');
+  const northern = pickRecSection(bulletin, 'Northern Green Mountains of Vermont');
+  assert.ok(northern);
+  const southern = pickRecSection(bulletin, 'Southern Green Mountains of Vermont');
+  assert.ok(southern);
+  assert.ok(southern.theTitle?.includes('Southern Green'));
+});
+
 test('REC parser finds GYX summits above 4000 in embedded sample', () => {
   const text = `
 MEZ007>009-NHZ002>004-140900-

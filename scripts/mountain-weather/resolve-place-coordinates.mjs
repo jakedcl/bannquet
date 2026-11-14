@@ -69,7 +69,7 @@ const COUNTY_ONLY = {
   'crane-mountain': ['Warren'],
   'prospect-mountain': ['Warren'],
   'gore-mountain': ['Warren'],
-  'black-mountain': ['Warren'],
+  'black-mountain': ['Washington'],
   'panther-mountain': ['Ulster'],
   'red-hill': ['Ulster'],
   'bread-loaf-mountain': ['Addison'],
@@ -104,6 +104,7 @@ const GNIS_FEATURE_ID = {
   waterbury: 1460075,
   'jay-village': 1457991,
   bigelow: 578186,
+  'black-mountain': 944147,
 };
 
 /** No reliable GNIS summit — keep weather-regions.json coords (documented legacy). */

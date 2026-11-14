@@ -47,9 +47,6 @@ Branch: `lurk/site-overhaul-01d6` · PR [#54](https://github.com/jakedcl/bannque
 
 See [mountain-weather-final-pass.md](./mountain-weather-final-pass.md). Highlights:
 
-- **Black Mountain:** Lake George vs Warren County peak?  
-- **Mount Ellen:** BTV zone question  
-- **Bread Loaf, Signal, Burke, Monadnock (VT + NH):** preview sanity check  
 - **`AIRNOW_API_KEY`**  
 - **M17**  
 - Migrations **0028** (preview), **0024–0028** (prod)  

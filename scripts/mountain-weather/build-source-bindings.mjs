@@ -189,19 +189,14 @@ function recForPlace(place, sectionId, stateCode) {
   if (sectionId === 'monadnock-region') {
     return { office: 'GYX', sectionMatch: 'Summits of Mount Monadnock' };
   }
-  if (sectionId === 'northeast-kingdom') {
-    const band = {
-      office: 'BTV',
-      sectionMatch: 'Northern Adirondacks of New York',
-    };
-    if (place.id === 'monadnock-mountain') {
-      return {
-        ...band,
-        nearbyLabel:
-          'BTV combined Northern Adirondacks / Northern Greens band (Essex County VT Monadnock; not NH Mount Monadnock)',
-      };
-    }
-    return band;
+  if (sectionId === 'northern-greens' && wfo === 'BTV') {
+    return { office: 'BTV', sectionMatch: 'Northern Green Mountains of Vermont' };
+  }
+  if (sectionId === 'central-greens' && wfo === 'BTV') {
+    return { office: 'BTV', sectionMatch: 'Green Mountains of Vermont' };
+  }
+  if (sectionId === 'northeast-kingdom' && wfo === 'BTV') {
+    return { office: 'BTV', sectionMatch: 'Northern Green Mountains of Vermont' };
   }
   if (wfo === 'BTV') {
     return { office: 'BTV', sectionMatch: 'Northern Adirondacks of New York' };

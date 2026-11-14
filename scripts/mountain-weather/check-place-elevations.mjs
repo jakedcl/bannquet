@@ -15,7 +15,7 @@ const TOLERANCE_FT = 200;
 const USER_AGENT = 'Bannquet-Elevation-Check/1.0';
 
 /** Catalog ids excluded from elevation tolerance (documented in mountain-weather-final-pass.md). */
-const ELEVATION_CHECK_SKIP_IDS = new Set(['black-mountain']);
+const ELEVATION_CHECK_SKIP_IDS = new Set([]);
 
 function listPlaces() {
   const places = JSON.parse(fs.readFileSync(placesPath, 'utf8'));

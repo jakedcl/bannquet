@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "fetchedAt": "2026-11-14T07:22:05.126Z",
+  "fetchedAt": "2026-11-14T10:01:24.668Z",
   "reportToken": "2026111406",
   "sourceUrl": "https://www.nohrsc.noaa.gov/nsa/discussions_text/Northeast/snowdepth/202611/snowdepth_2026111406_e.txt",
   "stations": [
@@ -385,7 +385,7 @@
       "lon": -72.8333,
       "nohrscElevationFt": 2287,
       "element": "snowdepth",
-      "reportTimeUtc": "2026-11-14 05",
+      "reportTimeUtc": "2026-11-14 06",
       "amountIn": 2,
       "source": "NOHRSC"
     },
@@ -748,7 +748,7 @@
       "lon": -72.0333,
       "nohrscElevationFt": 1404,
       "element": "snowdepth",
-      "reportTimeUtc": "2026-11-14 05",
+      "reportTimeUtc": "2026-11-14 06",
       "amountIn": 1,
       "source": "NOHRSC"
     },
@@ -3916,7 +3916,7 @@
       "lon": -73.0333,
       "nohrscElevationFt": 2375,
       "element": "snowdepth",
-      "reportTimeUtc": "2026-11-14 05",
+      "reportTimeUtc": "2026-11-14 06",
       "amountIn": 0,
       "source": "NOHRSC"
     },

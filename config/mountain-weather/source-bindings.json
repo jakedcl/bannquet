@@ -376,7 +376,7 @@
     "mount-mansfield": {
       "rec": {
         "office": "BTV",
-        "sectionMatch": "Northern Adirondacks of New York"
+        "sectionMatch": "Northern Green Mountains of Vermont"
       },
       "avg": {
         "office": "BTV",
@@ -391,7 +391,7 @@
     "smugglers-notch": {
       "rec": {
         "office": "BTV",
-        "sectionMatch": "Northern Adirondacks of New York"
+        "sectionMatch": "Northern Green Mountains of Vermont"
       },
       "avg": {
         "office": "BTV",
@@ -405,7 +405,7 @@
     "stowe-town": {
       "rec": {
         "office": "BTV",
-        "sectionMatch": "Northern Adirondacks of New York"
+        "sectionMatch": "Northern Green Mountains of Vermont"
       },
       "balloon": {
         "regionMatch": "Central and Northeast Vermont",
@@ -415,7 +415,7 @@
     "camels-hump": {
       "rec": {
         "office": "BTV",
-        "sectionMatch": "Northern Adirondacks of New York"
+        "sectionMatch": "Green Mountains of Vermont"
       },
       "balloon": {
         "regionMatch": "Central and Northeast Vermont",
@@ -425,7 +425,7 @@
     "mount-ellen": {
       "rec": {
         "office": "BTV",
-        "sectionMatch": "Northern Adirondacks of New York"
+        "sectionMatch": "Green Mountains of Vermont"
       },
       "balloon": {
         "regionMatch": "Central and Northeast Vermont",
@@ -435,7 +435,7 @@
     "bread-loaf-mountain": {
       "rec": {
         "office": "BTV",
-        "sectionMatch": "Northern Adirondacks of New York"
+        "sectionMatch": "Green Mountains of Vermont"
       },
       "balloon": {
         "regionMatch": "the Champlain Valley of Vermont and New York",
@@ -445,7 +445,7 @@
     "mount-worcester": {
       "rec": {
         "office": "BTV",
-        "sectionMatch": "Northern Adirondacks of New York"
+        "sectionMatch": "Green Mountains of Vermont"
       },
       "balloon": {
         "regionMatch": "Central and Northeast Vermont",
@@ -455,7 +455,7 @@
     "waterbury": {
       "rec": {
         "office": "BTV",
-        "sectionMatch": "Northern Adirondacks of New York"
+        "sectionMatch": "Green Mountains of Vermont"
       },
       "balloon": {
         "regionMatch": "Central and Northeast Vermont",
@@ -465,7 +465,7 @@
     "signal-mountain": {
       "rec": {
         "office": "BTV",
-        "sectionMatch": "Northern Adirondacks of New York"
+        "sectionMatch": "Northern Green Mountains of Vermont"
       },
       "balloon": {
         "regionMatch": "Central and Northeast Vermont",
@@ -475,7 +475,7 @@
     "burke-mountain": {
       "rec": {
         "office": "BTV",
-        "sectionMatch": "Northern Adirondacks of New York"
+        "sectionMatch": "Northern Green Mountains of Vermont"
       },
       "balloon": {
         "regionMatch": "Central and Northeast Vermont",
@@ -485,8 +485,7 @@
     "monadnock-mountain": {
       "rec": {
         "office": "BTV",
-        "sectionMatch": "Northern Adirondacks of New York",
-        "nearbyLabel": "BTV combined Northern Adirondacks / Northern Greens band (Essex County VT Monadnock; not NH Mount Monadnock)"
+        "sectionMatch": "Northern Green Mountains of Vermont"
       },
       "balloon": {
         "regionMatch": "Central and Northeast Vermont",

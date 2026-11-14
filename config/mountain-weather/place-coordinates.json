@@ -1,7 +1,9 @@
 {
   "version": 1,
   "generatedNote": "Summit coordinates from USGS GNIS (carto.nationalmap.gov geonames MapServer). BTV/ALY mtnFcst XML used to disambiguate homonyms.",
-  "flaggedIds": [],
+  "flaggedIds": [
+    "katahdin-woods-and-waters"
+  ],
   "places": {
     "mount-marcy": {
       "lat": 44.1128,
@@ -42,8 +44,8 @@
         "status": "mtnFcst-ok"
       },
       "previous": {
-        "lat": 44.3658,
-        "lon": -73.9026
+        "lat": 44.3659,
+        "lon": -73.9031
       },
       "flagged": false
     },
@@ -64,8 +66,8 @@
         "status": "mtnFcst-ok"
       },
       "previous": {
-        "lat": 44.0825,
-        "lon": -73.7572
+        "lat": 44.0822,
+        "lon": -73.7865
       },
       "flagged": false
     },
@@ -80,8 +82,8 @@
       "matchReason": "single-after-filter",
       "mtnFcstCheck": null,
       "previous": {
-        "lat": 44.1567,
-        "lon": -73.9857
+        "lat": 44.1435,
+        "lon": -73.9867
       },
       "flagged": false
     },
@@ -96,8 +98,8 @@
       "matchReason": "single-after-filter",
       "mtnFcstCheck": null,
       "previous": {
-        "lat": 44.1342,
-        "lon": -73.9419
+        "lat": 44.127,
+        "lon": -73.9599
       },
       "flagged": false
     },
@@ -112,8 +114,8 @@
       "matchReason": "single-after-filter",
       "mtnFcstCheck": null,
       "previous": {
-        "lat": 44.0947,
-        "lon": -73.8947
+        "lat": 44.094,
+        "lon": -73.8346
       },
       "flagged": false
     },
@@ -134,8 +136,8 @@
         "status": "mtnFcst-ok"
       },
       "previous": {
-        "lat": 44.1596,
-        "lon": -73.7203
+        "lat": 44.1611,
+        "lon": -73.7202
       },
       "flagged": false
     },
@@ -156,8 +158,8 @@
         "status": "mtnFcst-ok"
       },
       "previous": {
-        "lat": 44.0961,
-        "lon": -74.1319
+        "lat": 44.0823,
+        "lon": -74.131
       },
       "flagged": false
     },
@@ -178,8 +180,8 @@
         "status": "mtnFcst-ok"
       },
       "previous": {
-        "lat": 44.1953,
-        "lon": -73.8747
+        "lat": 44.2187,
+        "lon": -73.8601
       },
       "flagged": false
     },
@@ -200,8 +202,8 @@
         "status": "mtnFcst-ok"
       },
       "previous": {
-        "lat": 44.4328,
-        "lon": -74.0956
+        "lat": 44.3363,
+        "lon": -74.0321
       },
       "flagged": false
     },
@@ -222,8 +224,8 @@
         "status": "mtnFcst-ok"
       },
       "previous": {
-        "lat": 44.2408,
-        "lon": -73.8328
+        "lat": 44.21,
+        "lon": -73.9297
       },
       "flagged": false
     },
@@ -238,8 +240,8 @@
       "matchReason": "single-after-filter",
       "mtnFcstCheck": null,
       "previous": {
-        "lat": 44.1962,
-        "lon": -73.7871
+        "lat": 44.1898,
+        "lon": -73.786
       },
       "flagged": false
     },
@@ -260,8 +262,8 @@
         "status": "mtnFcst-ok"
       },
       "previous": {
-        "lat": 42.2311,
-        "lon": -73.5204
+        "lat": 44.7037,
+        "lon": -73.8646
       },
       "flagged": false
     },
@@ -282,8 +284,8 @@
         "status": "mtnFcst-drift"
       },
       "previous": {
-        "lat": 44.2346,
-        "lon": -74.2027
+        "lat": 44.2345,
+        "lon": -74.2023
       },
       "flagged": false
     },
@@ -304,8 +306,8 @@
         "status": "mtnFcst-ok"
       },
       "previous": {
-        "lat": 44.6034,
-        "lon": -74.2204
+        "lat": 44.6033,
+        "lon": -74.2202
       },
       "flagged": false
     },
@@ -326,8 +328,8 @@
         "status": "mtnFcst-ok"
       },
       "previous": {
-        "lat": 44.4078,
-        "lon": -74.2525
+        "lat": 44.4086,
+        "lon": -74.3296
       },
       "flagged": false
     },
@@ -348,8 +350,8 @@
         "status": "mtnFcst-ok"
       },
       "previous": {
-        "lat": 44.3114,
-        "lon": -74.4417
+        "lat": 44.2039,
+        "lon": -74.5843
       },
       "flagged": false
     },
@@ -371,7 +373,7 @@
       },
       "previous": {
         "lat": 43.7002,
-        "lon": -74.3867
+        "lon": -74.3868
       },
       "flagged": false
     },
@@ -392,8 +394,8 @@
         "status": "mtnFcst-ok"
       },
       "previous": {
-        "lat": 41.2723,
-        "lon": -73.9026
+        "lat": 43.8724,
+        "lon": -74.401
       },
       "flagged": false
     },
@@ -414,8 +416,8 @@
         "status": "mtnFcst-ok"
       },
       "previous": {
-        "lat": 43.5732,
-        "lon": -71.8724
+        "lat": 43.5815,
+        "lon": -74.5109
       },
       "flagged": false
     },
@@ -436,8 +438,8 @@
         "status": "mtnFcst-ok"
       },
       "previous": {
-        "lat": 43.673,
-        "lon": -74.0489
+        "lat": 43.6733,
+        "lon": -74.0485
       },
       "flagged": false
     },
@@ -458,8 +460,8 @@
         "status": "mtnFcst-ok"
       },
       "previous": {
-        "lat": 43.6781,
-        "lon": -72.9021
+        "lat": 43.9246,
+        "lon": -73.8151
       },
       "flagged": false
     },
@@ -480,8 +482,8 @@
         "status": "mtnFcst-ok"
       },
       "previous": {
-        "lat": 43.8936,
-        "lon": -74.3186
+        "lat": 43.9183,
+        "lon": -74.3201
       },
       "flagged": false
     },
@@ -502,7 +504,7 @@
         "status": "mtnFcst-ok"
       },
       "previous": {
-        "lat": 43.8984,
+        "lat": 43.8981,
         "lon": -74.096
       },
       "flagged": false
@@ -524,8 +526,8 @@
         "status": "mtnFcst-ok"
       },
       "previous": {
-        "lat": 43.6216,
-        "lon": -71.9012
+        "lat": 43.545,
+        "lon": -73.9623
       },
       "flagged": false
     },
@@ -546,18 +548,18 @@
         "status": "mtnFcst-ok"
       },
       "previous": {
-        "lat": 43.3812,
-        "lon": -73.969
+        "lat": 43.3801,
+        "lon": -73.9702
       },
       "flagged": false
     },
     "black-mountain": {
-      "lat": 43.5729,
-      "lon": -74.1386,
-      "gnisId": 944146,
+      "lat": 43.6068,
+      "lon": -73.5311,
+      "gnisId": 944147,
       "gnisName": "Black Mountain",
       "gnisFeatureClass": "Summit",
-      "county": "Warren",
+      "county": "Washington",
       "source": "usgs-gnis-national-map",
       "matchReason": "single-after-filter",
       "mtnFcstCheck": {
@@ -565,11 +567,11 @@
         "loc": "BLACK MOUNTAIN",
         "lat": 43.6064,
         "lon": -73.531,
-        "status": "mtnFcst-drift"
+        "status": "mtnFcst-ok"
       },
       "previous": {
-        "lat": 41.2847,
-        "lon": -74.0405
+        "lat": 43.5729,
+        "lon": -74.1386
       },
       "flagged": false
     },
@@ -591,7 +593,7 @@
       },
       "previous": {
         "lat": 43.8184,
-        "lon": -73.6582
+        "lon": -73.6579
       },
       "flagged": false
     },
@@ -612,8 +614,8 @@
         "status": "mtnFcst-ok"
       },
       "previous": {
-        "lat": 41.4729,
-        "lon": -72.9707
+        "lat": 43.4248,
+        "lon": -73.7457
       },
       "flagged": false
     },
@@ -635,7 +637,7 @@
       },
       "previous": {
         "lat": 41.9992,
-        "lon": -74.3859
+        "lon": -74.3858
       },
       "flagged": false
     },
@@ -656,8 +658,8 @@
         "status": "mtnFcst-ok"
       },
       "previous": {
-        "lat": 42.202,
-        "lon": -74.2132
+        "lat": 42.1777,
+        "lon": -74.2303
       },
       "flagged": false
     },
@@ -679,7 +681,7 @@
       },
       "previous": {
         "lat": 41.9531,
-        "lon": -74.3982
+        "lon": -74.3981
       },
       "flagged": false
     },
@@ -700,8 +702,8 @@
         "status": "mtnFcst-ok"
       },
       "previous": {
-        "lat": 42.0459,
-        "lon": -74.594
+        "lat": 42.0455,
+        "lon": -74.5946
       },
       "flagged": false
     },
@@ -722,8 +724,8 @@
         "status": "mtnFcst-ok"
       },
       "previous": {
-        "lat": 41.1868,
-        "lon": -74.0863
+        "lat": 42.0565,
+        "lon": -74.3946
       },
       "flagged": false
     },
@@ -745,7 +747,7 @@
       },
       "previous": {
         "lat": 42.3148,
-        "lon": -74.1433
+        "lon": -74.1431
       },
       "flagged": false
     },
@@ -788,8 +790,8 @@
         "status": "mtnFcst-ok"
       },
       "previous": {
-        "lat": 41.6773,
-        "lon": -72.6056
+        "lat": 41.924,
+        "lon": -74.5174
       },
       "flagged": false
     },
@@ -810,8 +812,8 @@
         "status": "mtnFcst-ok"
       },
       "previous": {
-        "lat": 42.0417,
-        "lon": -74.2833
+        "lat": 42.0744,
+        "lon": -74.2778
       },
       "flagged": false
     },
@@ -826,8 +828,8 @@
       "matchReason": "single-after-filter",
       "mtnFcstCheck": null,
       "previous": {
-        "lat": 42.1959,
-        "lon": -74.1307
+        "lat": 42.1957,
+        "lon": -74.1338
       },
       "flagged": false
     },
@@ -836,8 +838,8 @@
       "lon": -74.2361,
       "source": "config/weather-regions.json",
       "gnisId": null,
-      "note": "Shawangunk escarpment (no single GNIS pin)",
       "flagged": false,
+      "note": "No unambiguous GNIS feature; legacy mountain-weather spot coords.",
       "previous": {
         "lat": 41.7361,
         "lon": -74.2361
@@ -848,8 +850,8 @@
       "lon": -74.0083,
       "source": "config/weather-regions.json",
       "gnisId": null,
-      "note": "Thacher State Park legacy spot",
       "flagged": false,
+      "note": "No unambiguous GNIS feature; legacy mountain-weather spot coords.",
       "previous": {
         "lat": 42.652,
         "lon": -74.0083
@@ -872,8 +874,8 @@
         "status": "mtnFcst-ok"
       },
       "previous": {
-        "lat": 44.9239,
-        "lon": -72.5316
+        "lat": 44.9241,
+        "lon": -72.5257
       },
       "flagged": false
     },
@@ -894,7 +896,7 @@
         "status": "mtnFcst-ok"
       },
       "previous": {
-        "lat": 44.7732,
+        "lat": 44.773,
         "lon": -72.5509
       },
       "flagged": false
@@ -904,13 +906,16 @@
       "lon": -72.4371,
       "gnisId": 1457991,
       "gnisName": "Jay",
+      "gnisFeatureClass": "Populated Place",
       "county": "Orleans",
       "source": "usgs-gnis-national-map",
-      "flagged": false,
+      "matchReason": "single-after-filter",
+      "mtnFcstCheck": null,
       "previous": {
-        "lat": 44.9376,
-        "lon": -72.4512
-      }
+        "lat": 44.9476,
+        "lon": -72.4371
+      },
+      "flagged": false
     },
     "mount-mansfield": {
       "lat": 44.5437,
@@ -929,8 +934,8 @@
         "status": "mtnFcst-ok"
       },
       "previous": {
-        "lat": 44.5439,
-        "lon": -72.8151
+        "lat": 44.5437,
+        "lon": -72.8143
       },
       "flagged": false
     },
@@ -942,11 +947,13 @@
       "gnisFeatureClass": "Gap",
       "county": "Lamoille",
       "source": "usgs-gnis-national-map",
-      "flagged": false,
+      "matchReason": "single-after-filter",
+      "mtnFcstCheck": null,
       "previous": {
-        "lat": 44.554,
-        "lon": -72.786
-      }
+        "lat": 44.5553,
+        "lon": -72.7957
+      },
+      "flagged": false
     },
     "stowe-town": {
       "lat": 44.4653,
@@ -959,8 +966,8 @@
       "matchReason": "single-after-filter",
       "mtnFcstCheck": null,
       "previous": {
-        "lat": 44.4654,
-        "lon": -72.6874
+        "lat": 44.4653,
+        "lon": -72.6846
       },
       "flagged": false
     },
@@ -981,8 +988,8 @@
         "status": "mtnFcst-ok"
       },
       "previous": {
-        "lat": 44.3194,
-        "lon": -72.8853
+        "lat": 44.3195,
+        "lon": -72.8863
       },
       "flagged": false
     },
@@ -1004,7 +1011,7 @@
       },
       "previous": {
         "lat": 44.1601,
-        "lon": -72.9289
+        "lon": -72.9288
       },
       "flagged": false
     },
@@ -1019,8 +1026,8 @@
       "matchReason": "single-after-filter",
       "mtnFcstCheck": null,
       "previous": {
-        "lat": 41.8262,
-        "lon": -73.3847
+        "lat": 44.0022,
+        "lon": -72.9416
       },
       "flagged": false
     },
@@ -1041,8 +1048,8 @@
         "status": "mtnFcst-ok"
       },
       "previous": {
-        "lat": 44.4431,
-        "lon": -72.5915
+        "lat": 44.4432,
+        "lon": -72.5917
       },
       "flagged": false
     },
@@ -1051,13 +1058,16 @@
       "lon": -72.7562,
       "gnisId": 1460075,
       "gnisName": "Waterbury",
+      "gnisFeatureClass": "Populated Place",
       "county": "Washington",
       "source": "usgs-gnis-national-map",
-      "flagged": false,
+      "matchReason": "single-after-filter",
+      "mtnFcstCheck": null,
       "previous": {
-        "lat": 44.337,
+        "lat": 44.3378,
         "lon": -72.7562
-      }
+      },
+      "flagged": false
     },
     "signal-mountain": {
       "lat": 44.2062,
@@ -1070,8 +1080,8 @@
       "matchReason": "single-after-filter",
       "mtnFcstCheck": null,
       "previous": {
-        "lat": 43.4134,
-        "lon": -74.7038
+        "lat": 44.2062,
+        "lon": -72.3253
       },
       "flagged": false
     },
@@ -1092,8 +1102,8 @@
         "status": "mtnFcst-ok"
       },
       "previous": {
-        "lat": 44.5705,
-        "lon": -71.8928
+        "lat": 44.5706,
+        "lon": -71.8929
       },
       "flagged": false
     },
@@ -1114,8 +1124,8 @@
         "status": "mtnFcst-ok"
       },
       "previous": {
-        "lat": 44.8973,
-        "lon": -71.5448
+        "lat": 44.8974,
+        "lon": -71.5445
       },
       "flagged": false
     },
@@ -1137,7 +1147,7 @@
       },
       "previous": {
         "lat": 43.6045,
-        "lon": -72.8205
+        "lon": -72.8201
       },
       "flagged": false
     },
@@ -1158,8 +1168,8 @@
         "status": "mtnFcst-ok"
       },
       "previous": {
-        "lat": 42.6801,
-        "lon": -72.401
+        "lat": 43.0863,
+        "lon": -72.9249
       },
       "flagged": false
     },
@@ -1168,13 +1178,22 @@
       "lon": -73.1174,
       "gnisId": 1461816,
       "gnisName": "Equinox Mountain",
+      "gnisFeatureClass": "Summit",
       "county": "Bennington",
       "source": "usgs-gnis-national-map",
-      "flagged": false,
+      "matchReason": "single-after-filter",
+      "mtnFcstCheck": {
+        "office": "ALY",
+        "loc": "MOUNT EQUINOX",
+        "lat": 43.166,
+        "lon": -73.1176,
+        "status": "mtnFcst-ok"
+      },
       "previous": {
-        "lat": 43.1228,
-        "lon": -73.1765
-      }
+        "lat": 43.1659,
+        "lon": -73.1174
+      },
+      "flagged": false
     },
     "dorset-mountain": {
       "lat": 43.3092,
@@ -1193,7 +1212,7 @@
         "status": "mtnFcst-ok"
       },
       "previous": {
-        "lat": 43.3093,
+        "lat": 43.3092,
         "lon": -73.0282
       },
       "flagged": false
@@ -1215,8 +1234,8 @@
         "status": "mtnFcst-ok"
       },
       "previous": {
-        "lat": 42.0048,
-        "lon": -73.2084
+        "lat": 42.9138,
+        "lon": -72.9191
       },
       "flagged": false
     },
@@ -1237,7 +1256,7 @@
         "status": "mtnFcst-ok"
       },
       "previous": {
-        "lat": 43.404,
+        "lat": 43.4041,
         "lon": -72.7515
       },
       "flagged": false
@@ -1259,8 +1278,8 @@
         "status": "mtnFcst-ok"
       },
       "previous": {
-        "lat": 43.2277,
-        "lon": -72.9396
+        "lat": 43.2276,
+        "lon": -72.9394
       },
       "flagged": false
     },
@@ -1281,8 +1300,8 @@
         "status": "mtnFcst-ok"
       },
       "previous": {
-        "lat": 43.4331,
-        "lon": -72.4365
+        "lat": 43.4437,
+        "lon": -72.4546
       },
       "flagged": false
     },
@@ -1303,8 +1322,8 @@
         "status": "mtnFcst-ok"
       },
       "previous": {
-        "lat": 41.1326,
-        "lon": -73.3618
+        "lat": 42.9221,
+        "lon": -73.1437
       },
       "flagged": false
     },
@@ -1319,8 +1338,8 @@
       "matchReason": "single-after-filter",
       "mtnFcstCheck": null,
       "previous": {
-        "lat": 43.1638,
-        "lon": -73.0729
+        "lat": 43.1637,
+        "lon": -73.0723
       },
       "flagged": false
     },
@@ -1351,8 +1370,8 @@
       "matchReason": "single-after-filter",
       "mtnFcstCheck": null,
       "previous": {
-        "lat": 44.3197,
-        "lon": -71.2914
+        "lat": 44.3207,
+        "lon": -71.2915
       },
       "flagged": false
     },
@@ -1361,26 +1380,32 @@
       "lon": -71.2537,
       "gnisId": 872508,
       "gnisName": "Pinkham Notch",
+      "gnisFeatureClass": "Gap",
       "county": "Coos",
       "source": "usgs-gnis-national-map",
-      "flagged": false,
+      "matchReason": "single-after-filter",
+      "mtnFcstCheck": null,
       "previous": {
-        "lat": 44.2556,
-        "lon": -71.2512
-      }
+        "lat": 44.2576,
+        "lon": -71.2537
+      },
+      "flagged": false
     },
     "crawford-notch": {
       "lat": 44.167,
       "lon": -71.3759,
       "gnisId": 871738,
       "gnisName": "Crawford Notch",
+      "gnisFeatureClass": "Valley",
       "county": "Carroll",
       "source": "usgs-gnis-national-map",
-      "flagged": false,
+      "matchReason": "single-after-filter",
+      "mtnFcstCheck": null,
       "previous": {
-        "lat": 44.165,
-        "lon": -71.395
-      }
+        "lat": 44.167,
+        "lon": -71.3759
+      },
+      "flagged": false
     },
     "baldface-mountain": {
       "lat": 44.243,
@@ -1393,8 +1418,8 @@
       "matchReason": "single-after-filter",
       "mtnFcstCheck": null,
       "previous": {
-        "lat": 43.4409,
-        "lon": -74.7888
+        "lat": 44.243,
+        "lon": -71.0873
       },
       "flagged": false
     },
@@ -1409,8 +1434,8 @@
       "matchReason": "single-after-filter",
       "mtnFcstCheck": null,
       "previous": {
-        "lat": 44.1606,
-        "lon": -71.645
+        "lat": 44.1608,
+        "lon": -71.6445
       },
       "flagged": false
     },
@@ -1425,8 +1450,8 @@
       "matchReason": "single-after-filter",
       "mtnFcstCheck": null,
       "previous": {
-        "lat": 44.0234,
-        "lon": -71.8314
+        "lat": 44.0245,
+        "lon": -71.8309
       },
       "flagged": false
     },
@@ -1441,8 +1466,8 @@
       "matchReason": "single-after-filter",
       "mtnFcstCheck": null,
       "previous": {
-        "lat": 44.0016,
-        "lon": -71.536
+        "lat": 44.0015,
+        "lon": -71.5359
       },
       "flagged": false
     },
@@ -1457,8 +1482,8 @@
       "matchReason": "single-after-filter",
       "mtnFcstCheck": null,
       "previous": {
-        "lat": 44.1567,
-        "lon": -71.6986
+        "lat": 44.1566,
+        "lon": -71.6988
       },
       "flagged": false
     },
@@ -1467,26 +1492,32 @@
       "lon": -71.4926,
       "gnisId": 872120,
       "gnisName": "Kancamagus Pass",
+      "gnisFeatureClass": "Gap",
       "county": "Grafton",
       "source": "usgs-gnis-national-map",
-      "flagged": false,
+      "matchReason": "single-after-filter",
+      "mtnFcstCheck": null,
       "previous": {
-        "lat": 44.053,
-        "lon": -71.418
-      }
+        "lat": 44.0251,
+        "lon": -71.4926
+      },
+      "flagged": false
     },
     "franconia-notch": {
       "lat": 44.1526,
       "lon": -71.6795,
       "gnisId": 871907,
       "gnisName": "Franconia Notch",
+      "gnisFeatureClass": "Gap",
       "county": "Grafton",
       "source": "usgs-gnis-national-map",
-      "flagged": false,
+      "matchReason": "single-after-filter",
+      "mtnFcstCheck": null,
       "previous": {
-        "lat": 44.1489,
-        "lon": -71.6826
-      }
+        "lat": 44.1526,
+        "lon": -71.6795
+      },
+      "flagged": false
     },
     "rumney-crag": {
       "lat": 43.8054,
@@ -1499,7 +1530,7 @@
       "matchReason": "single-after-filter",
       "mtnFcstCheck": null,
       "previous": {
-        "lat": 43.8098,
+        "lat": 43.8054,
         "lon": -71.8126
       },
       "flagged": false
@@ -1509,13 +1540,16 @@
       "lon": -72.108,
       "gnisId": 868516,
       "gnisName": "Monadnock Mountain",
+      "gnisFeatureClass": "Summit",
       "county": "Cheshire",
       "source": "usgs-gnis-national-map",
-      "flagged": false,
+      "matchReason": "single-after-filter",
+      "mtnFcstCheck": null,
       "previous": {
-        "lat": 42.8605,
-        "lon": -72.1087
-      }
+        "lat": 42.8614,
+        "lon": -72.108
+      },
+      "flagged": false
     },
     "north-pack-monadnock": {
       "lat": 42.886,
@@ -1528,8 +1562,8 @@
       "matchReason": "single-after-filter",
       "mtnFcstCheck": null,
       "previous": {
-        "lat": 42.897,
-        "lon": -71.871
+        "lat": 42.886,
+        "lon": -71.8658
       },
       "flagged": false
     },
@@ -1544,22 +1578,18 @@
       "matchReason": "single-after-filter",
       "mtnFcstCheck": null,
       "previous": {
-        "lat": 45.9044,
-        "lon": -68.9217
+        "lat": 45.9043,
+        "lon": -68.9214
       },
       "flagged": false
     },
     "katahdin-woods-and-waters": {
       "lat": 45.898,
       "lon": -68.55,
-      "source": "build-places COORD_OVERRIDES",
-      "gnisId": null,
-      "note": "Area base — no GNIS summit",
-      "flagged": false,
-      "previous": {
-        "lat": 45.898,
-        "lon": -68.55
-      }
+      "source": "unchanged-flagged",
+      "flagged": true,
+      "gnisQueryName": "Katahdin Woods and Waters",
+      "candidates": []
     },
     "millinocket": {
       "lat": 45.6573,
@@ -1572,7 +1602,7 @@
       "matchReason": "single-after-filter",
       "mtnFcstCheck": null,
       "previous": {
-        "lat": 45.657,
+        "lat": 45.6573,
         "lon": -68.7098
       },
       "flagged": false
@@ -1588,7 +1618,7 @@
       "matchReason": "single-after-filter",
       "mtnFcstCheck": null,
       "previous": {
-        "lat": 45.5548,
+        "lat": 45.5547,
         "lon": -69.2462
       },
       "flagged": false
@@ -1605,7 +1635,7 @@
       "mtnFcstCheck": null,
       "previous": {
         "lat": 45.0317,
-        "lon": -70.3117
+        "lon": -70.3133
       },
       "flagged": false
     },
@@ -1614,16 +1644,16 @@
       "lon": -70.288,
       "gnisId": 578186,
       "gnisName": "West Peak",
-      "county": "Somerset",
       "gnisFeatureClass": "Summit",
+      "county": "Somerset",
       "source": "usgs-gnis-national-map",
-      "matchReason": "gnis-feature-pin",
-      "flagged": false,
-      "note": "Bigelow Range high point (West Peak), not Oxford Co. West Peak",
+      "matchReason": "single-after-filter",
+      "mtnFcstCheck": null,
       "previous": {
-        "lat": 45.1634,
-        "lon": -70.3009
-      }
+        "lat": 45.1469,
+        "lon": -70.288
+      },
+      "flagged": false
     },
     "rangeley": {
       "lat": 44.9665,
@@ -1636,8 +1666,8 @@
       "matchReason": "single-after-filter",
       "mtnFcstCheck": null,
       "previous": {
-        "lat": 44.9917,
-        "lon": -70.6645
+        "lat": 44.9665,
+        "lon": -70.6428
       },
       "flagged": false
     },
@@ -1652,8 +1682,8 @@
       "matchReason": "single-after-filter",
       "mtnFcstCheck": null,
       "previous": {
-        "lat": 46.9706,
-        "lon": -68.8759
+        "lat": 46.9704,
+        "lon": -68.8763
       },
       "flagged": false
     },
@@ -1662,13 +1692,16 @@
       "lon": -67.8138,
       "gnisId": 570798,
       "gnisName": "Mars Hill",
+      "gnisFeatureClass": "Summit",
       "county": "Aroostook",
       "source": "usgs-gnis-national-map",
-      "flagged": false,
+      "matchReason": "single-after-filter",
+      "mtnFcstCheck": null,
       "previous": {
-        "lat": 46.5214,
-        "lon": -67.8136
-      }
+        "lat": 46.5211,
+        "lon": -67.8138
+      },
+      "flagged": false
     },
     "cadillac-mountain": {
       "lat": 44.3513,
@@ -1681,8 +1714,8 @@
       "matchReason": "single-after-filter",
       "mtnFcstCheck": null,
       "previous": {
-        "lat": 44.3516,
-        "lon": -68.2221
+        "lat": 44.3513,
+        "lon": -68.2265
       },
       "flagged": false
     },

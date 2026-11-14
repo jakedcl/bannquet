@@ -290,14 +290,14 @@
       "productOffice": "ALY"
     },
     "black-mountain": {
-      "lat": 43.5729,
-      "lon": -74.1386,
+      "lat": 43.6068,
+      "lon": -73.5311,
       "cwa": "ALY",
       "gridId": "ALY",
       "forecastOffice": "ALY",
-      "forecastZone": "https://api.weather.gov/zones/forecast/NYZ042",
-      "county": "https://api.weather.gov/zones/county/NYC113",
-      "relativeLocation": "Speculator",
+      "forecastZone": "https://api.weather.gov/zones/forecast/NYZ043",
+      "county": "https://api.weather.gov/zones/county/NYC115",
+      "relativeLocation": "Bolton Landing",
       "productOffice": "ALY"
     },
     "pharaoh-mountain": {
