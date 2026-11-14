@@ -1,0 +1,2169 @@
+{
+  "version": 1,
+  "generatedAt": "2026-11-14T06:11:00.376Z",
+  "ruleSummary": "Nearest ASOS/METAR-style NWS station with same state and WFO as the place; summit slot only within 20 km when station elevation is within 900 ft of catalog summit elevation (or higher). Optional valley slot is the nearest qualifying station at least 700 ft lower (up to 95 km). Manual summit pins for KMWN and MMNV1. MMNV1 is shown only in the Mansfield pack, not duplicated here. Places with no qualifying station within radius have no observation block.",
+  "stations": {
+    "KSLK": {
+      "id": "KSLK",
+      "name": "Saranac Lake, Adirondack Regional Airport",
+      "lat": 44.39306,
+      "lon": -74.20278,
+      "elevationFt": 1663,
+      "state": "NY",
+      "office": "BTV"
+    },
+    "A4090": {
+      "id": "A4090",
+      "name": "Whiteface Mtn",
+      "lat": 44.3647,
+      "lon": -73.9017,
+      "elevationFt": 4662,
+      "state": "NY",
+      "office": "BTV"
+    },
+    "KLKP": {
+      "id": "KLKP",
+      "name": "Lake Placid Airport",
+      "lat": 44.26448,
+      "lon": -73.96187,
+      "elevationFt": 1747,
+      "state": "NY",
+      "office": "BTV"
+    },
+    "G0968": {
+      "id": "G0968",
+      "name": "GW0968 Lake Placid",
+      "lat": 44.28617,
+      "lon": -73.97733,
+      "elevationFt": 1890,
+      "state": "NY",
+      "office": "BTV"
+    },
+    "E7899": {
+      "id": "E7899",
+      "name": "EW7899 Saranac",
+      "lat": 44.63983,
+      "lon": -73.7385,
+      "elevationFt": 815,
+      "state": "NY",
+      "office": "BTV"
+    },
+    "G5014": {
+      "id": "G5014",
+      "name": "GW5014 SARANAC LAKE",
+      "lat": 44.32317,
+      "lon": -74.145,
+      "elevationFt": 1611,
+      "state": "NY",
+      "office": "BTV"
+    },
+    "E4918": {
+      "id": "E4918",
+      "name": "EW4918 Tupper Lake",
+      "lat": 44.23683,
+      "lon": -74.479,
+      "elevationFt": 1549,
+      "state": "NY",
+      "office": "BTV"
+    },
+    "A4091": {
+      "id": "A4091",
+      "name": "Piseco Lake",
+      "lat": 43.4556,
+      "lon": -74.515,
+      "elevationFt": 1719,
+      "state": "NY",
+      "office": "ALY"
+    },
+    "C9192": {
+      "id": "C9192",
+      "name": "CW9192 Inlet",
+      "lat": 43.75083,
+      "lon": -74.79417,
+      "elevationFt": 1719,
+      "state": "NY",
+      "office": "ALY"
+    },
+    "D2199": {
+      "id": "D2199",
+      "name": "DW2199 Bolton Landing",
+      "lat": 43.6,
+      "lon": -73.63,
+      "elevationFt": 319,
+      "state": "NY",
+      "office": "ALY"
+    },
+    "F4844": {
+      "id": "F4844",
+      "name": "FW4844 Loch Muller",
+      "lat": 43.85267,
+      "lon": -73.88083,
+      "elevationFt": 1721,
+      "state": "NY",
+      "office": "BTV"
+    },
+    "G7904": {
+      "id": "G7904",
+      "name": "GW7904 LAKE GEORGE",
+      "lat": 43.45767,
+      "lon": -73.6505,
+      "elevationFt": 1053,
+      "state": "NY",
+      "office": "ALY"
+    },
+    "F9326": {
+      "id": "F9326",
+      "name": "FW9326 Northville",
+      "lat": 43.18167,
+      "lon": -74.13533,
+      "elevationFt": 781,
+      "state": "NY",
+      "office": "ALY"
+    },
+    "G0385": {
+      "id": "G0385",
+      "name": "GW0385 Port Henry",
+      "lat": 44.04267,
+      "lon": -73.45567,
+      "elevationFt": 93,
+      "state": "NY",
+      "office": "BTV"
+    },
+    "FVYN6": {
+      "id": "FVYN6",
+      "name": "BISCUIT BROOK ABOVE PIGEON BROOK AT FROST VALLEY",
+      "lat": 41.99611,
+      "lon": -74.50028,
+      "elevationFt": 2142,
+      "state": "NY",
+      "office": "ALY"
+    },
+    "E1865": {
+      "id": "E1865",
+      "name": "EW1865 Hunter",
+      "lat": 42.2,
+      "lon": -74.2,
+      "elevationFt": 1600,
+      "state": "NY",
+      "office": "ALY"
+    },
+    "ALAN6": {
+      "id": "ALAN6",
+      "name": "ESOPUS CREEK AT ALLABEN",
+      "lat": 42.11694,
+      "lon": -74.38056,
+      "elevationFt": 1013,
+      "state": "NY",
+      "office": "ALY"
+    },
+    "G1612": {
+      "id": "G1612",
+      "name": "GW1612 EAST DURHAM",
+      "lat": 42.3725,
+      "lon": -74.09567,
+      "elevationFt": 640,
+      "state": "NY",
+      "office": "ALY"
+    },
+    "MRNN6": {
+      "id": "MRNN6",
+      "name": "ESOPUS CREEK AT MOUNT MARION",
+      "lat": 42.03778,
+      "lon": -73.9725,
+      "elevationFt": 137,
+      "state": "NY",
+      "office": "ALY"
+    },
+    "F1784": {
+      "id": "F1784",
+      "name": "FW1784 Kerhonkson",
+      "lat": 41.832,
+      "lon": -74.3015,
+      "elevationFt": 897,
+      "state": "NY",
+      "office": "ALY"
+    },
+    "CHIN6": {
+      "id": "CHIN6",
+      "name": "STONY CLOVE CREEK AT CHICHESTER",
+      "lat": 42.10194,
+      "lon": -74.31083,
+      "elevationFt": 984,
+      "state": "NY",
+      "office": "ALY"
+    },
+    "G2393": {
+      "id": "G2393",
+      "name": "GW2393 Kerhonkson",
+      "lat": 41.72867,
+      "lon": -74.23683,
+      "elevationFt": 1704,
+      "state": "NY",
+      "office": "ALY"
+    },
+    "APBN6": {
+      "id": "APBN6",
+      "name": "ALBANY PINE BUSH",
+      "lat": 42.71969,
+      "lon": -73.86433,
+      "elevationFt": 346,
+      "state": "NY",
+      "office": "ALY"
+    },
+    "NTYV1": {
+      "id": "NTYV1",
+      "name": "MISSISQUOI RIVER NEAR NORTH TROY 2SSE",
+      "lat": 44.9728,
+      "lon": -72.3858,
+      "elevationFt": 560,
+      "state": "VT",
+      "office": "BTV"
+    },
+    "LEDV1": {
+      "id": "LEDV1",
+      "name": "MT. NORRIS RESERVATION AT LAKE EDEN",
+      "lat": 44.72417,
+      "lon": -72.495,
+      "elevationFt": 1292,
+      "state": "VT",
+      "office": "BTV"
+    },
+    "MMNV1": {
+      "id": "MMNV1",
+      "name": "NEPP SITE AT MOUNT MANSFIELD NEAR STOWE 8WNW",
+      "lat": 44.52472,
+      "lon": -72.81528,
+      "elevationFt": 3891,
+      "state": "VT",
+      "office": "BTV"
+    },
+    "KMPV": {
+      "id": "KMPV",
+      "name": "Barre / Montpelier, Knapp State Airport",
+      "lat": 44.20472,
+      "lon": -72.56611,
+      "elevationFt": 1165,
+      "state": "VT",
+      "office": "BTV"
+    },
+    "E2573": {
+      "id": "E2573",
+      "name": "EW2573 Hanksville",
+      "lat": 44.26217,
+      "lon": -72.9845,
+      "elevationFt": 1656,
+      "state": "VT",
+      "office": "BTV"
+    },
+    "G5033": {
+      "id": "G5033",
+      "name": "GW5033 STARKSBORO",
+      "lat": 44.1695,
+      "lon": -73.02133,
+      "elevationFt": 1444,
+      "state": "VT",
+      "office": "BTV"
+    },
+    "K6B0": {
+      "id": "K6B0",
+      "name": "Middlebury State Airport",
+      "lat": 43.9848,
+      "lon": -73.0959,
+      "elevationFt": 489,
+      "state": "VT",
+      "office": "BTV"
+    },
+    "UVM06": {
+      "id": "UVM06",
+      "name": "Mt. Mansfield (East)",
+      "lat": 44.519,
+      "lon": -72.798,
+      "elevationFt": 2877,
+      "state": "VT",
+      "office": "BTV"
+    },
+    "F8108": {
+      "id": "F8108",
+      "name": "FW8108 Worcester",
+      "lat": 44.36668,
+      "lon": -72.54171,
+      "elevationFt": 1060,
+      "state": "VT",
+      "office": "BTV"
+    },
+    "WRSV1": {
+      "id": "WRSV1",
+      "name": "WATERBURY RESERVOIR NEAR WATERBURY 3NNW",
+      "lat": 44.38167,
+      "lon": -72.77028,
+      "elevationFt": 570,
+      "state": "VT",
+      "office": "BTV"
+    },
+    "E3614": {
+      "id": "E3614",
+      "name": "EW3614 West Topsham",
+      "lat": 44.16083,
+      "lon": -72.30833,
+      "elevationFt": 1639,
+      "state": "VT",
+      "office": "BTV"
+    },
+    "LSC02": {
+      "id": "LSC02",
+      "name": "EW7405 Granby",
+      "lat": 44.58317,
+      "lon": -71.77867,
+      "elevationFt": 1485,
+      "state": "VT",
+      "office": "BTV"
+    },
+    "NLHV1": {
+      "id": "NLHV1",
+      "name": "NULHEGAN",
+      "lat": 44.76722,
+      "lon": -71.70139,
+      "elevationFt": 1245,
+      "state": "VT",
+      "office": "BTV"
+    },
+    "F8716": {
+      "id": "F8716",
+      "name": "FW8716 Killington",
+      "lat": 43.616,
+      "lon": -72.77467,
+      "elevationFt": 7907,
+      "state": "VT",
+      "office": "BTV"
+    },
+    "OTQV1": {
+      "id": "OTQV1",
+      "name": "OTTAUQUECHEE RIVER NEAR WEST BRIDGEWATER 2NNW",
+      "lat": 43.62222,
+      "lon": -72.75944,
+      "elevationFt": 1187,
+      "state": "VT",
+      "office": "BTV"
+    },
+    "F5837": {
+      "id": "F5837",
+      "name": "FW5837 West Dover",
+      "lat": 42.9555,
+      "lon": -72.82033,
+      "elevationFt": 7438,
+      "state": "VT",
+      "office": "ALY"
+    },
+    "E1683": {
+      "id": "E1683",
+      "name": "EW1683 Stratton Mountain          VT US",
+      "lat": 43.12733,
+      "lon": -72.86933,
+      "elevationFt": 2271,
+      "state": "VT",
+      "office": "ALY"
+    },
+    "F6618": {
+      "id": "F6618",
+      "name": "FW6618 Arlington",
+      "lat": 43.10617,
+      "lon": -73.139,
+      "elevationFt": 828,
+      "state": "VT",
+      "office": "ALY"
+    },
+    "LSC06": {
+      "id": "LSC06",
+      "name": "FW1245 Danby",
+      "lat": 43.33107,
+      "lon": -73.04978,
+      "elevationFt": 1400,
+      "state": "VT",
+      "office": "BTV"
+    },
+    "D3212": {
+      "id": "D3212",
+      "name": "DW3212 West Dover",
+      "lat": 42.9445,
+      "lon": -72.889,
+      "elevationFt": 2106,
+      "state": "VT",
+      "office": "ALY"
+    },
+    "D8397": {
+      "id": "D8397",
+      "name": "DW8397 Weston",
+      "lat": 43.27,
+      "lon": -72.78,
+      "elevationFt": 1477,
+      "state": "VT",
+      "office": "BTV"
+    },
+    "D8675": {
+      "id": "D8675",
+      "name": "DW8675 Weathersfield",
+      "lat": 43.397,
+      "lon": -72.479,
+      "elevationFt": 1182,
+      "state": "VT",
+      "office": "BTV"
+    },
+    "WFRV1": {
+      "id": "WFRV1",
+      "name": "WOODFORD STATE PARK",
+      "lat": 42.89142,
+      "lon": -73.0393,
+      "elevationFt": 2317,
+      "state": "VT",
+      "office": "ALY"
+    },
+    "KDDH": {
+      "id": "KDDH",
+      "name": "Bennington Morse State Airport",
+      "lat": 42.89355,
+      "lon": -73.2486,
+      "elevationFt": 827,
+      "state": "VT",
+      "office": "ALY"
+    },
+    "KMWN": {
+      "id": "KMWN",
+      "name": "Mount Washington",
+      "lat": 44.27086,
+      "lon": -71.30337,
+      "elevationFt": 6262,
+      "state": "NH",
+      "office": "GYX"
+    },
+    "OSLN3": {
+      "id": "OSLN3",
+      "name": "OSSIPEE LAKE",
+      "lat": 44.33806,
+      "lon": -71.27444,
+      "elevationFt": 4192,
+      "state": "NH",
+      "office": "GYX"
+    },
+    "BLTN3": {
+      "id": "BLTN3",
+      "name": "SACO RIVER AT BARTLETT",
+      "lat": 44.08389,
+      "lon": -71.28556,
+      "elevationFt": 688,
+      "state": "NH",
+      "office": "GYX"
+    },
+    "E3811": {
+      "id": "E3811",
+      "name": "EW3811 Jackson",
+      "lat": 44.20533,
+      "lon": -71.19867,
+      "elevationFt": 1662,
+      "state": "NH",
+      "office": "GYX"
+    },
+    "NHFN1": {
+      "id": "NHFN1",
+      "name": "LaFayette",
+      "lat": 44.14301,
+      "lon": -71.68218,
+      "elevationFt": 1775,
+      "state": "NH",
+      "office": "GYX"
+    },
+    "LICN3": {
+      "id": "LICN3",
+      "name": "NEPP SITE AT LINCOLN",
+      "lat": 44.0425,
+      "lon": -71.6725,
+      "elevationFt": 875,
+      "state": "NH",
+      "office": "GYX"
+    },
+    "G7912": {
+      "id": "G7912",
+      "name": "GW7912 CAMPTON",
+      "lat": 43.85817,
+      "lon": -71.59633,
+      "elevationFt": 6562,
+      "state": "NH",
+      "office": "GYX"
+    },
+    "WVVN3": {
+      "id": "WVVN3",
+      "name": "NEPP SITE AT WATERVILLE VALLEY",
+      "lat": 43.94583,
+      "lon": -71.51083,
+      "elevationFt": 1445,
+      "state": "NH",
+      "office": "GYX"
+    },
+    "K1P1": {
+      "id": "K1P1",
+      "name": "Plymouth Municipal Airport",
+      "lat": 43.77714,
+      "lon": -71.75598,
+      "elevationFt": 502,
+      "state": "NH",
+      "office": "GYX"
+    },
+    "MACN3": {
+      "id": "MACN3",
+      "name": "NUBANUSIT BROOK AT MACDOWELL DAM NEAR PETERBOROUGH",
+      "lat": 42.89278,
+      "lon": -71.98722,
+      "elevationFt": 964,
+      "state": "NH",
+      "office": "GYX"
+    },
+    "LYNN3": {
+      "id": "LYNN3",
+      "name": "LYNDEBOROUGH 3SW",
+      "lat": 42.88528,
+      "lon": -71.81361,
+      "elevationFt": 835,
+      "state": "NH",
+      "office": "GYX"
+    },
+    "KMLT": {
+      "id": "KMLT",
+      "name": "Millinocket, Millinocket Municipal Airport",
+      "lat": 45.64778,
+      "lon": -68.69194,
+      "elevationFt": 407,
+      "state": "ME",
+      "office": "CAR"
+    },
+    "GRNM1": {
+      "id": "GRNM1",
+      "name": "EAST BRANCH PENOBSCOT RIVER AT GRINDSTONE",
+      "lat": 45.73028,
+      "lon": -68.58944,
+      "elevationFt": 324,
+      "state": "ME",
+      "office": "CAR"
+    },
+    "KKJM1": {
+      "id": "KKJM1",
+      "name": "KOKADJO",
+      "lat": 45.67278,
+      "lon": -69.44639,
+      "elevationFt": 1227,
+      "state": "ME",
+      "office": "CAR"
+    },
+    "G4192": {
+      "id": "G4192",
+      "name": "GW4192 RANGELEY",
+      "lat": 44.935,
+      "lon": -70.50933,
+      "elevationFt": 3999,
+      "state": "ME",
+      "office": "GYX"
+    },
+    "B219": {
+      "id": "B219",
+      "name": "CARRABASSETT",
+      "lat": 45.08533,
+      "lon": -70.21633,
+      "elevationFt": 885,
+      "state": "ME",
+      "office": "GYX"
+    },
+    "K8B0": {
+      "id": "K8B0",
+      "name": "Steven A Bean Municipal Airport",
+      "lat": 44.99,
+      "lon": -70.6623,
+      "elevationFt": 1808,
+      "state": "ME",
+      "office": "GYX"
+    },
+    "FOXM1": {
+      "id": "FOXM1",
+      "name": "NEPP SITE AT FOX BROOK CAMP GROUND OFF ROCKY BROOK ROAD NEAR PORTAGE 19WNW",
+      "lat": 46.80611,
+      "lon": -68.83944,
+      "elevationFt": 902,
+      "state": "ME",
+      "office": "CAR"
+    },
+    "E6643": {
+      "id": "E6643",
+      "name": "EW6643 Monticello",
+      "lat": 46.35917,
+      "lon": -67.883,
+      "elevationFt": 2218,
+      "state": "ME",
+      "office": "CAR"
+    },
+    "WFDM1": {
+      "id": "WFDM1",
+      "name": "NEPP SITE AT WESTFIELD",
+      "lat": 46.59694,
+      "lon": -67.93167,
+      "elevationFt": 495,
+      "state": "ME",
+      "office": "CAR"
+    },
+    "A3672": {
+      "id": "A3672",
+      "name": "Bar Harbor - Cadillac Mtn.",
+      "lat": 44.35167,
+      "lon": -68.22722,
+      "elevationFt": 1493,
+      "state": "ME",
+      "office": "CAR"
+    },
+    "E7164": {
+      "id": "E7164",
+      "name": "EW7164 Bar Harbor",
+      "lat": 44.37367,
+      "lon": -68.20467,
+      "elevationFt": 212,
+      "state": "ME",
+      "office": "CAR"
+    },
+    "ATGM1": {
+      "id": "ATGM1",
+      "name": "Bar Harbor",
+      "lat": 44.3917,
+      "lon": -68.205,
+      "elevationFt": 20,
+      "state": "ME",
+      "office": "CAR"
+    }
+  },
+  "places": {
+    "mount-marcy": {
+      "asrcTimelapse": true,
+      "observations": [
+        {
+          "stationId": "KSLK",
+          "kind": "valley",
+          "stationName": "Saranac Lake, Adirondack Regional Airport",
+          "stationElevationFt": 1663,
+          "distanceMi": 23.8,
+          "elevationDiffFt": 3681,
+          "bindReason": "Manual valley/nearby METAR pin for Mount Marcy.",
+          "hideFromObservationsSection": false
+        }
+      ]
+    },
+    "whiteface-mountain": {
+      "asrcTimelapse": true,
+      "observations": [
+        {
+          "stationId": "A4090",
+          "kind": "summit",
+          "stationName": "Whiteface Mtn",
+          "stationElevationFt": 4662,
+          "distanceMi": 0.1,
+          "elevationDiffFt": 205,
+          "bindReason": "A4090 (4,662 ft station elev) is 0.1 mi from Whiteface Mountain; same WFO BTV and state NY; station is 205 ft lower than catalog. Summit slot: elevation within 900 ft of 4,867 ft catalog.",
+          "hideFromObservationsSection": false
+        },
+        {
+          "stationId": "KSLK",
+          "kind": "valley",
+          "stationName": "Saranac Lake, Adirondack Regional Airport",
+          "stationElevationFt": 1663,
+          "distanceMi": 14.9,
+          "elevationDiffFt": 3204,
+          "bindReason": "Manual valley/nearby METAR pin for Whiteface Mountain.",
+          "hideFromObservationsSection": false
+        }
+      ]
+    },
+    "dix-mountain": {
+      "asrcTimelapse": false,
+      "observations": [
+        {
+          "stationId": "KLKP",
+          "kind": "valley",
+          "stationName": "Lake Placid Airport",
+          "stationElevationFt": 1747,
+          "distanceMi": 15.3,
+          "elevationDiffFt": 3110,
+          "bindReason": "KLKP (1,747 ft station elev) is 15.3 mi from Dix Mountain; same WFO BTV and state NY; station is 3,110 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "hideFromObservationsSection": false
+        }
+      ]
+    },
+    "algonquin-peak": {
+      "asrcTimelapse": true,
+      "observations": [
+        {
+          "stationId": "KLKP",
+          "kind": "valley",
+          "stationName": "Lake Placid Airport",
+          "stationElevationFt": 1747,
+          "distanceMi": 8.4,
+          "elevationDiffFt": 3367,
+          "bindReason": "KLKP (1,747 ft station elev) is 8.4 mi from Algonquin Peak; same WFO BTV and state NY; station is 3,367 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "hideFromObservationsSection": false
+        }
+      ]
+    },
+    "mount-colden": {
+      "asrcTimelapse": true,
+      "observations": [
+        {
+          "stationId": "KLKP",
+          "kind": "valley",
+          "stationName": "Lake Placid Airport",
+          "stationElevationFt": 1747,
+          "distanceMi": 9.5,
+          "elevationDiffFt": 2968,
+          "bindReason": "KLKP (1,747 ft station elev) is 9.5 mi from Mount Colden; same WFO BTV and state NY; station is 2,968 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "hideFromObservationsSection": false
+        }
+      ]
+    },
+    "mount-colvin": {
+      "asrcTimelapse": false,
+      "observations": [
+        {
+          "stationId": "KLKP",
+          "kind": "valley",
+          "stationName": "Lake Placid Airport",
+          "stationElevationFt": 1747,
+          "distanceMi": 13.4,
+          "elevationDiffFt": 2333,
+          "bindReason": "KLKP (1,747 ft station elev) is 13.4 mi from Mount Colvin; same WFO BTV and state NY; station is 2,333 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "hideFromObservationsSection": false
+        }
+      ]
+    },
+    "giant-mountain": {
+      "asrcTimelapse": false,
+      "observations": [
+        {
+          "stationId": "KLKP",
+          "kind": "valley",
+          "stationName": "Lake Placid Airport",
+          "stationElevationFt": 1747,
+          "distanceMi": 13.9,
+          "elevationDiffFt": 2880,
+          "bindReason": "KLKP (1,747 ft station elev) is 13.9 mi from Giant Mountain; same WFO BTV and state NY; station is 2,880 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "hideFromObservationsSection": false
+        }
+      ]
+    },
+    "santanoni-peak": {
+      "asrcTimelapse": false,
+      "observations": [
+        {
+          "stationId": "KLKP",
+          "kind": "valley",
+          "stationName": "Lake Placid Airport",
+          "stationElevationFt": 1747,
+          "distanceMi": 15.1,
+          "elevationDiffFt": 2860,
+          "bindReason": "KLKP (1,747 ft station elev) is 15.1 mi from Santanoni Peak; same WFO BTV and state NY; station is 2,860 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "hideFromObservationsSection": false
+        }
+      ]
+    },
+    "cascade-mountain": {
+      "asrcTimelapse": false,
+      "observations": [
+        {
+          "stationId": "A4090",
+          "kind": "summit",
+          "stationName": "Whiteface Mtn",
+          "stationElevationFt": 4662,
+          "distanceMi": 10.3,
+          "elevationDiffFt": -564,
+          "bindReason": "A4090 (4,662 ft station elev) is 10.3 mi from Cascade Mountain; same WFO BTV and state NY; station is 564 ft higher than catalog. Summit slot: elevation within 900 ft of 4,098 ft catalog.",
+          "hideFromObservationsSection": false
+        },
+        {
+          "stationId": "KLKP",
+          "kind": "valley",
+          "stationName": "Lake Placid Airport",
+          "stationElevationFt": 1747,
+          "distanceMi": 5.9,
+          "elevationDiffFt": 2351,
+          "bindReason": "KLKP (1,747 ft station elev) is 5.9 mi from Cascade Mountain; same WFO BTV and state NY; station is 2,351 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "hideFromObservationsSection": false
+        }
+      ]
+    },
+    "mckenzie-mountain": {
+      "asrcTimelapse": false,
+      "observations": [
+        {
+          "stationId": "A4090",
+          "kind": "summit",
+          "stationName": "Whiteface Mtn",
+          "stationElevationFt": 4662,
+          "distanceMi": 6.7,
+          "elevationDiffFt": -840,
+          "bindReason": "A4090 (4,662 ft station elev) is 6.7 mi from McKenzie Mountain; same WFO BTV and state NY; station is 840 ft higher than catalog. Summit slot: elevation within 900 ft of 3,822 ft catalog.",
+          "hideFromObservationsSection": false
+        },
+        {
+          "stationId": "G0968",
+          "kind": "valley",
+          "stationName": "GW0968 Lake Placid",
+          "stationElevationFt": 1890,
+          "distanceMi": 4.4,
+          "elevationDiffFt": 1932,
+          "bindReason": "G0968 (1,890 ft station elev) is 4.4 mi from McKenzie Mountain; same WFO BTV and state NY; station is 1,932 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "hideFromObservationsSection": false
+        }
+      ]
+    },
+    "mount-van-hoevenberg": {
+      "asrcTimelapse": false,
+      "observations": [
+        {
+          "stationId": "A4090",
+          "kind": "summit",
+          "stationName": "Whiteface Mtn",
+          "stationElevationFt": 4662,
+          "distanceMi": 10.8,
+          "elevationDiffFt": -1723,
+          "bindReason": "A4090 (4,662 ft station elev) is 10.8 mi from Mount Van Hoevenberg; same WFO BTV and state NY; station is 1,723 ft higher than catalog. Summit slot: elevation within 900 ft of 2,939 ft catalog.",
+          "hideFromObservationsSection": false
+        },
+        {
+          "stationId": "KLKP",
+          "kind": "valley",
+          "stationName": "Lake Placid Airport",
+          "stationElevationFt": 1747,
+          "distanceMi": 4.1,
+          "elevationDiffFt": 1192,
+          "bindReason": "KLKP (1,747 ft station elev) is 4.1 mi from Mount Van Hoevenberg; same WFO BTV and state NY; station is 1,192 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "hideFromObservationsSection": false
+        }
+      ]
+    },
+    "keene-valley": {
+      "asrcTimelapse": false,
+      "observations": [
+        {
+          "stationId": "KLKP",
+          "kind": "base",
+          "stationName": "Lake Placid Airport",
+          "stationElevationFt": 1747,
+          "distanceMi": 10.1,
+          "elevationDiffFt": -717,
+          "bindReason": "KLKP (1,747 ft station elev) is 10.1 mi from Keene Valley; same WFO BTV and state NY; station is 717 ft higher than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "hideFromObservationsSection": false
+        }
+      ]
+    },
+    "lyon-mountain": {
+      "asrcTimelapse": false,
+      "observations": [
+        {
+          "stationId": "E7899",
+          "kind": "valley",
+          "stationName": "EW7899 Saranac",
+          "stationElevationFt": 815,
+          "distanceMi": 7.6,
+          "elevationDiffFt": 3014,
+          "bindReason": "E7899 (815 ft station elev) is 7.6 mi from Lyon Mountain; same WFO BTV and state NY; station is 3,014 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "hideFromObservationsSection": false
+        }
+      ]
+    },
+    "ampersand-mountain": {
+      "asrcTimelapse": false,
+      "observations": [
+        {
+          "stationId": "G5014",
+          "kind": "valley",
+          "stationName": "GW5014 SARANAC LAKE",
+          "stationElevationFt": 1611,
+          "distanceMi": 6.8,
+          "elevationDiffFt": 1741,
+          "bindReason": "G5014 (1,611 ft station elev) is 6.8 mi from Ampersand Mountain; same WFO BTV and state NY; station is 1,741 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "hideFromObservationsSection": false
+        }
+      ]
+    },
+    "debar-mountain": {
+      "asrcTimelapse": false,
+      "observations": [
+        {
+          "stationId": "KSLK",
+          "kind": "valley",
+          "stationName": "Saranac Lake, Adirondack Regional Airport",
+          "stationElevationFt": 1663,
+          "distanceMi": 14.6,
+          "elevationDiffFt": 1654,
+          "bindReason": "KSLK (1,663 ft station elev) is 14.6 mi from Debar Mountain; same WFO BTV and state NY; station is 1,654 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "hideFromObservationsSection": false
+        }
+      ]
+    },
+    "st-regis-mountain": {
+      "asrcTimelapse": false,
+      "observations": [
+        {
+          "stationId": "KSLK",
+          "kind": "valley",
+          "stationName": "Saranac Lake, Adirondack Regional Airport",
+          "stationElevationFt": 1663,
+          "distanceMi": 6.4,
+          "elevationDiffFt": 1175,
+          "bindReason": "KSLK (1,663 ft station elev) is 6.4 mi from St. Regis Mountain; same WFO BTV and state NY; station is 1,175 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "hideFromObservationsSection": false
+        }
+      ]
+    },
+    "mount-arab": {
+      "asrcTimelapse": false,
+      "observations": [
+        {
+          "stationId": "E4918",
+          "kind": "valley",
+          "stationName": "EW4918 Tupper Lake",
+          "stationElevationFt": 1549,
+          "distanceMi": 5.7,
+          "elevationDiffFt": 984,
+          "bindReason": "E4918 (1,549 ft station elev) is 5.7 mi from Mount Arab; same WFO BTV and state NY; station is 984 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "hideFromObservationsSection": false
+        }
+      ]
+    },
+    "snowy-mountain": {
+      "asrcTimelapse": false,
+      "observations": [
+        {
+          "stationId": "A4091",
+          "kind": "valley",
+          "stationName": "Piseco Lake",
+          "stationElevationFt": 1719,
+          "distanceMi": 18.1,
+          "elevationDiffFt": 2180,
+          "bindReason": "A4091 (1,719 ft station elev) is 18.1 mi from Snowy Mountain; same WFO ALY and state NY; station is 2,180 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "hideFromObservationsSection": false
+        }
+      ]
+    },
+    "blue-mountain": {
+      "asrcTimelapse": false,
+      "observations": [
+        {
+          "stationId": "C9192",
+          "kind": "valley",
+          "stationName": "CW9192 Inlet",
+          "stationElevationFt": 1719,
+          "distanceMi": 21.3,
+          "elevationDiffFt": 2031,
+          "bindReason": "C9192 (1,719 ft station elev) is 21.3 mi from Blue Mountain; same WFO ALY and state NY; station is 2,031 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "hideFromObservationsSection": false
+        }
+      ]
+    },
+    "pillsbury-mountain": {
+      "asrcTimelapse": false,
+      "observations": [
+        {
+          "stationId": "A4091",
+          "kind": "valley",
+          "stationName": "Piseco Lake",
+          "stationElevationFt": 1719,
+          "distanceMi": 8.7,
+          "elevationDiffFt": 1878,
+          "bindReason": "A4091 (1,719 ft station elev) is 8.7 mi from Pillsbury Mountain; same WFO ALY and state NY; station is 1,878 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "hideFromObservationsSection": false
+        }
+      ]
+    },
+    "gore-mountain": {
+      "asrcTimelapse": false,
+      "observations": [
+        {
+          "stationId": "D2199",
+          "kind": "valley",
+          "stationName": "DW2199 Bolton Landing",
+          "stationElevationFt": 319,
+          "distanceMi": 21.5,
+          "elevationDiffFt": 3244,
+          "bindReason": "D2199 (319 ft station elev) is 21.5 mi from Gore Mountain; same WFO ALY and state NY; station is 3,244 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "hideFromObservationsSection": false
+        }
+      ]
+    },
+    "blue-ridge-mountain": {
+      "asrcTimelapse": false,
+      "observations": [
+        {
+          "stationId": "F4844",
+          "kind": "valley",
+          "stationName": "FW4844 Loch Muller",
+          "stationElevationFt": 1721,
+          "distanceMi": 6,
+          "elevationDiffFt": 1744,
+          "bindReason": "F4844 (1,721 ft station elev) is 6.0 mi from Blue Ridge Mountain; same WFO BTV and state NY; station is 1,744 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "hideFromObservationsSection": false
+        }
+      ]
+    },
+    "fishing-brook-range": {
+      "asrcTimelapse": false,
+      "observations": [
+        {
+          "stationId": "F4844",
+          "kind": "valley",
+          "stationName": "FW4844 Loch Muller",
+          "stationElevationFt": 1721,
+          "distanceMi": 22.3,
+          "elevationDiffFt": 1679,
+          "bindReason": "F4844 (1,721 ft station elev) is 22.3 mi from Fishing Brook Range; same WFO BTV and state NY; station is 1,679 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "hideFromObservationsSection": false
+        }
+      ]
+    },
+    "vanderwhacker-mountain": {
+      "asrcTimelapse": false,
+      "observations": [
+        {
+          "stationId": "F4844",
+          "kind": "valley",
+          "stationName": "FW4844 Loch Muller",
+          "stationElevationFt": 1721,
+          "distanceMi": 11.2,
+          "elevationDiffFt": 1668,
+          "bindReason": "F4844 (1,721 ft station elev) is 11.2 mi from Vanderwhacker Mountain; same WFO BTV and state NY; station is 1,668 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "hideFromObservationsSection": false
+        }
+      ]
+    },
+    "crane-mountain": {
+      "asrcTimelapse": false,
+      "observations": [
+        {
+          "stationId": "G7904",
+          "kind": "valley",
+          "stationName": "GW7904 LAKE GEORGE",
+          "stationElevationFt": 1053,
+          "distanceMi": 16.8,
+          "elevationDiffFt": 2201,
+          "bindReason": "G7904 (1,053 ft station elev) is 16.8 mi from Crane Mountain; same WFO ALY and state NY; station is 2,201 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "hideFromObservationsSection": false
+        }
+      ]
+    },
+    "hadley-mountain": {
+      "asrcTimelapse": false,
+      "observations": [
+        {
+          "stationId": "F9326",
+          "kind": "valley",
+          "stationName": "FW9326 Northville",
+          "stationElevationFt": 781,
+          "distanceMi": 16,
+          "elevationDiffFt": 1870,
+          "bindReason": "F9326 (781 ft station elev) is 16.0 mi from Hadley Mountain; same WFO ALY and state NY; station is 1,870 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "hideFromObservationsSection": false
+        }
+      ]
+    },
+    "black-mountain": {
+      "asrcTimelapse": false,
+      "observations": [
+        {
+          "stationId": "A4091",
+          "kind": "valley",
+          "stationName": "Piseco Lake",
+          "stationElevationFt": 1719,
+          "distanceMi": 20.5,
+          "elevationDiffFt": 921,
+          "bindReason": "A4091 (1,719 ft station elev) is 20.5 mi from Black Mountain; same WFO ALY and state NY; station is 921 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "hideFromObservationsSection": false
+        }
+      ]
+    },
+    "pharaoh-mountain": {
+      "asrcTimelapse": false,
+      "observations": [
+        {
+          "stationId": "F4844",
+          "kind": "summit",
+          "stationName": "FW4844 Loch Muller",
+          "stationElevationFt": 1721,
+          "distanceMi": 11.4,
+          "elevationDiffFt": 812,
+          "bindReason": "F4844 (1,721 ft station elev) is 11.4 mi from Pharaoh Mountain; same WFO BTV and state NY; station is 812 ft lower than catalog. Summit slot: elevation within 900 ft of 2,533 ft catalog.",
+          "hideFromObservationsSection": false
+        },
+        {
+          "stationId": "G0385",
+          "kind": "valley",
+          "stationName": "GW0385 Port Henry",
+          "stationElevationFt": 93,
+          "distanceMi": 18.5,
+          "elevationDiffFt": 2440,
+          "bindReason": "G0385 (93 ft station elev) is 18.5 mi from Pharaoh Mountain; same WFO BTV and state NY; station is 2,440 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "hideFromObservationsSection": false
+        }
+      ]
+    },
+    "prospect-mountain": {
+      "asrcTimelapse": false,
+      "observations": [
+        {
+          "stationId": "G7904",
+          "kind": "valley",
+          "stationName": "GW7904 LAKE GEORGE",
+          "stationElevationFt": 1053,
+          "distanceMi": 5.3,
+          "elevationDiffFt": 977,
+          "bindReason": "G7904 (1,053 ft station elev) is 5.3 mi from Prospect Mountain; same WFO ALY and state NY; station is 977 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "hideFromObservationsSection": false
+        }
+      ]
+    },
+    "slide-mountain": {
+      "asrcTimelapse": false,
+      "observations": [
+        {
+          "stationId": "FVYN6",
+          "kind": "valley",
+          "stationName": "BISCUIT BROOK ABOVE PIGEON BROOK AT FROST VALLEY",
+          "stationElevationFt": 2142,
+          "distanceMi": 5.9,
+          "elevationDiffFt": 2038,
+          "bindReason": "FVYN6 (2,142 ft station elev) is 5.9 mi from Slide Mountain; same WFO ALY and state NY; station is 2,038 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "hideFromObservationsSection": false
+        }
+      ]
+    },
+    "hunter-mountain": {
+      "asrcTimelapse": false,
+      "observations": [
+        {
+          "stationId": "E1865",
+          "kind": "valley",
+          "stationName": "EW1865 Hunter",
+          "stationElevationFt": 1600,
+          "distanceMi": 2.2,
+          "elevationDiffFt": 2440,
+          "bindReason": "E1865 (1,600 ft station elev) is 2.2 mi from Hunter Mountain; same WFO ALY and state NY; station is 2,440 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "hideFromObservationsSection": false
+        }
+      ]
+    },
+    "peekamoose-mountain": {
+      "asrcTimelapse": false,
+      "observations": [
+        {
+          "stationId": "FVYN6",
+          "kind": "valley",
+          "stationName": "BISCUIT BROOK ABOVE PIGEON BROOK AT FROST VALLEY",
+          "stationElevationFt": 2142,
+          "distanceMi": 6,
+          "elevationDiffFt": 1701,
+          "bindReason": "FVYN6 (2,142 ft station elev) is 6.0 mi from Peekamoose Mountain; same WFO ALY and state NY; station is 1,701 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "hideFromObservationsSection": false
+        }
+      ]
+    },
+    "balsam-lake-mountain": {
+      "asrcTimelapse": false,
+      "observations": [
+        {
+          "stationId": "FVYN6",
+          "kind": "valley",
+          "stationName": "BISCUIT BROOK ABOVE PIGEON BROOK AT FROST VALLEY",
+          "stationElevationFt": 2142,
+          "distanceMi": 5.9,
+          "elevationDiffFt": 1588,
+          "bindReason": "FVYN6 (2,142 ft station elev) is 5.9 mi from Balsam Lake Mountain; same WFO ALY and state NY; station is 1,588 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "hideFromObservationsSection": false
+        }
+      ]
+    },
+    "panther-mountain": {
+      "asrcTimelapse": false,
+      "observations": [
+        {
+          "stationId": "ALAN6",
+          "kind": "valley",
+          "stationName": "ESOPUS CREEK AT ALLABEN",
+          "stationElevationFt": 1013,
+          "distanceMi": 4.2,
+          "elevationDiffFt": 2707,
+          "bindReason": "ALAN6 (1,013 ft station elev) is 4.2 mi from Panther Mountain; same WFO ALY and state NY; station is 2,707 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "hideFromObservationsSection": false
+        }
+      ]
+    },
+    "windham-high-peak": {
+      "asrcTimelapse": false,
+      "observations": [
+        {
+          "stationId": "G1612",
+          "kind": "valley",
+          "stationName": "GW1612 EAST DURHAM",
+          "stationElevationFt": 640,
+          "distanceMi": 4.7,
+          "elevationDiffFt": 2884,
+          "bindReason": "G1612 (640 ft station elev) is 4.7 mi from Windham High Peak; same WFO ALY and state NY; station is 2,884 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "hideFromObservationsSection": false
+        }
+      ]
+    },
+    "overlook-mountain": {
+      "asrcTimelapse": false,
+      "observations": [
+        {
+          "stationId": "MRNN6",
+          "kind": "valley",
+          "stationName": "ESOPUS CREEK AT MOUNT MARION",
+          "stationElevationFt": 137,
+          "distanceMi": 7,
+          "elevationDiffFt": 2999,
+          "bindReason": "MRNN6 (137 ft station elev) is 7.0 mi from Overlook Mountain; same WFO ALY and state NY; station is 2,999 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "hideFromObservationsSection": false
+        }
+      ]
+    },
+    "red-hill": {
+      "asrcTimelapse": false,
+      "observations": [
+        {
+          "stationId": "FVYN6",
+          "kind": "summit",
+          "stationName": "BISCUIT BROOK ABOVE PIGEON BROOK AT FROST VALLEY",
+          "stationElevationFt": 2142,
+          "distanceMi": 5.1,
+          "elevationDiffFt": 844,
+          "bindReason": "FVYN6 (2,142 ft station elev) is 5.1 mi from Red Hill; same WFO ALY and state NY; station is 844 ft lower than catalog. Summit slot: elevation within 900 ft of 2,986 ft catalog.",
+          "hideFromObservationsSection": false
+        },
+        {
+          "stationId": "F1784",
+          "kind": "valley",
+          "stationName": "FW1784 Kerhonkson",
+          "stationElevationFt": 897,
+          "distanceMi": 12.8,
+          "elevationDiffFt": 2089,
+          "bindReason": "F1784 (897 ft station elev) is 12.8 mi from Red Hill; same WFO ALY and state NY; station is 2,089 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "hideFromObservationsSection": false
+        }
+      ]
+    },
+    "mount-tremper": {
+      "asrcTimelapse": false,
+      "observations": [
+        {
+          "stationId": "CHIN6",
+          "kind": "valley",
+          "stationName": "STONY CLOVE CREEK AT CHICHESTER",
+          "stationElevationFt": 984,
+          "distanceMi": 2.5,
+          "elevationDiffFt": 1756,
+          "bindReason": "CHIN6 (984 ft station elev) is 2.5 mi from Mount Tremper; same WFO ALY and state NY; station is 1,756 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "hideFromObservationsSection": false
+        }
+      ]
+    },
+    "tannersville": {
+      "asrcTimelapse": false,
+      "observations": [
+        {
+          "stationId": "E1865",
+          "kind": "base",
+          "stationName": "EW1865 Hunter",
+          "stationElevationFt": 1600,
+          "distanceMi": 3.4,
+          "elevationDiffFt": 300,
+          "bindReason": "E1865 (1,600 ft station elev) is 3.4 mi from Tannersville; same WFO ALY and state NY; station is 300 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "hideFromObservationsSection": false
+        }
+      ]
+    },
+    "gunks-ridge": {
+      "asrcTimelapse": false,
+      "observations": [
+        {
+          "stationId": "G2393",
+          "kind": "base",
+          "stationName": "GW2393 Kerhonkson",
+          "stationElevationFt": 1704,
+          "distanceMi": 0.5,
+          "elevationDiffFt": 536,
+          "bindReason": "G2393 (1,704 ft station elev) is 0.5 mi from Gunks Ridge; same WFO ALY and state NY; station is 536 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "hideFromObservationsSection": false
+        }
+      ]
+    },
+    "thacher-park": {
+      "asrcTimelapse": false,
+      "observations": [
+        {
+          "stationId": "APBN6",
+          "kind": "base",
+          "stationName": "ALBANY PINE BUSH",
+          "stationElevationFt": 346,
+          "distanceMi": 8.7,
+          "elevationDiffFt": 954,
+          "bindReason": "APBN6 (346 ft station elev) is 8.7 mi from Thacher State Park; same WFO ALY and state NY; station is 954 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "hideFromObservationsSection": false
+        }
+      ]
+    },
+    "jay-peak": {
+      "asrcTimelapse": false,
+      "observations": [
+        {
+          "stationId": "NTYV1",
+          "kind": "valley",
+          "stationName": "MISSISQUOI RIVER NEAR NORTH TROY 2SSE",
+          "stationElevationFt": 560,
+          "distanceMi": 7.6,
+          "elevationDiffFt": 3298,
+          "bindReason": "NTYV1 (560 ft station elev) is 7.6 mi from Jay Peak; same WFO BTV and state VT; station is 3,298 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "hideFromObservationsSection": false
+        }
+      ]
+    },
+    "belvidere-mountain": {
+      "asrcTimelapse": false,
+      "observations": [
+        {
+          "stationId": "LEDV1",
+          "kind": "valley",
+          "stationName": "MT. NORRIS RESERVATION AT LAKE EDEN",
+          "stationElevationFt": 1292,
+          "distanceMi": 4.3,
+          "elevationDiffFt": 2048,
+          "bindReason": "LEDV1 (1,292 ft station elev) is 4.3 mi from Belvidere Mountain; same WFO BTV and state VT; station is 2,048 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "hideFromObservationsSection": false
+        }
+      ]
+    },
+    "jay-village": {
+      "asrcTimelapse": false,
+      "observations": [
+        {
+          "stationId": "NTYV1",
+          "kind": "base",
+          "stationName": "MISSISQUOI RIVER NEAR NORTH TROY 2SSE",
+          "stationElevationFt": 560,
+          "distanceMi": 3.1,
+          "elevationDiffFt": 540,
+          "bindReason": "NTYV1 (560 ft station elev) is 3.1 mi from Jay Village; same WFO BTV and state VT; station is 540 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "hideFromObservationsSection": false
+        }
+      ]
+    },
+    "mount-mansfield": {
+      "asrcTimelapse": false,
+      "observations": [
+        {
+          "stationId": "MMNV1",
+          "kind": "summit",
+          "stationName": "NEPP SITE AT MOUNT MANSFIELD NEAR STOWE 8WNW",
+          "stationElevationFt": 3891,
+          "distanceMi": 1.3,
+          "elevationDiffFt": 502,
+          "bindReason": "Manual summit pin: NWS station metadata at api.weather.gov/stations/MMNV1.",
+          "hideFromObservationsSection": true
+        },
+        {
+          "stationId": "KMPV",
+          "kind": "valley",
+          "stationName": "Barre / Montpelier, Knapp State Airport",
+          "stationElevationFt": 1165,
+          "distanceMi": 26.4,
+          "elevationDiffFt": 3228,
+          "bindReason": "Manual valley/nearby METAR pin for Mount Mansfield.",
+          "hideFromObservationsSection": false
+        }
+      ]
+    },
+    "smugglers-notch": {
+      "asrcTimelapse": false,
+      "observations": [
+        {
+          "stationId": "MMNV1",
+          "kind": "base",
+          "stationName": "NEPP SITE AT MOUNT MANSFIELD NEAR STOWE 8WNW",
+          "stationElevationFt": 3891,
+          "distanceMi": 2.3,
+          "elevationDiffFt": -521,
+          "bindReason": "MMNV1 (3,891 ft station elev) is 2.3 mi from Smugglers Notch; same WFO BTV and state VT; station is 521 ft higher than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "hideFromObservationsSection": false
+        }
+      ]
+    },
+    "stowe-town": {
+      "asrcTimelapse": false,
+      "observations": [
+        {
+          "stationId": "KMPV",
+          "kind": "valley",
+          "stationName": "Barre / Montpelier, Knapp State Airport",
+          "stationElevationFt": 1165,
+          "distanceMi": 18.9,
+          "elevationDiffFt": -125,
+          "bindReason": "Manual valley/nearby METAR pin for Stowe.",
+          "hideFromObservationsSection": false
+        }
+      ]
+    },
+    "camels-hump": {
+      "asrcTimelapse": false,
+      "observations": [
+        {
+          "stationId": "E2573",
+          "kind": "valley",
+          "stationName": "EW2573 Hanksville",
+          "stationElevationFt": 1656,
+          "distanceMi": 6.3,
+          "elevationDiffFt": 2427,
+          "bindReason": "E2573 (1,656 ft station elev) is 6.3 mi from Camel's Hump; same WFO BTV and state VT; station is 2,427 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "hideFromObservationsSection": false
+        }
+      ]
+    },
+    "mount-ellen": {
+      "asrcTimelapse": false,
+      "observations": [
+        {
+          "stationId": "G5033",
+          "kind": "valley",
+          "stationName": "GW5033 STARKSBORO",
+          "stationElevationFt": 1444,
+          "distanceMi": 4.6,
+          "elevationDiffFt": 2639,
+          "bindReason": "G5033 (1,444 ft station elev) is 4.6 mi from Mount Ellen; same WFO BTV and state VT; station is 2,639 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "hideFromObservationsSection": false
+        }
+      ]
+    },
+    "bread-loaf-mountain": {
+      "asrcTimelapse": false,
+      "observations": [
+        {
+          "stationId": "K6B0",
+          "kind": "valley",
+          "stationName": "Middlebury State Airport",
+          "stationElevationFt": 489,
+          "distanceMi": 7.8,
+          "elevationDiffFt": 3346,
+          "bindReason": "K6B0 (489 ft station elev) is 7.8 mi from Bread Loaf Mountain; same WFO BTV and state VT; station is 3,346 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "hideFromObservationsSection": false
+        }
+      ]
+    },
+    "mount-worcester": {
+      "asrcTimelapse": false,
+      "observations": [
+        {
+          "stationId": "UVM06",
+          "kind": "summit",
+          "stationName": "Mt. Mansfield (East)",
+          "stationElevationFt": 2877,
+          "distanceMi": 11.4,
+          "elevationDiffFt": 416,
+          "bindReason": "UVM06 (2,877 ft station elev) is 11.4 mi from Mount Worcester; same WFO BTV and state VT; station is 416 ft lower than catalog. Summit slot: elevation within 900 ft of 3,293 ft catalog.",
+          "hideFromObservationsSection": false
+        },
+        {
+          "stationId": "F8108",
+          "kind": "valley",
+          "stationName": "FW8108 Worcester",
+          "stationElevationFt": 1060,
+          "distanceMi": 5.8,
+          "elevationDiffFt": 2233,
+          "bindReason": "F8108 (1,060 ft station elev) is 5.8 mi from Mount Worcester; same WFO BTV and state VT; station is 2,233 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "hideFromObservationsSection": false
+        }
+      ]
+    },
+    "waterbury": {
+      "asrcTimelapse": false,
+      "observations": [
+        {
+          "stationId": "WRSV1",
+          "kind": "base",
+          "stationName": "WATERBURY RESERVOIR NEAR WATERBURY 3NNW",
+          "stationElevationFt": 570,
+          "distanceMi": 3.1,
+          "elevationDiffFt": 30,
+          "bindReason": "WRSV1 (570 ft station elev) is 3.1 mi from Bolton / Waterbury; same WFO BTV and state VT; station is 30 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "hideFromObservationsSection": false
+        }
+      ]
+    },
+    "signal-mountain": {
+      "asrcTimelapse": false,
+      "observations": [
+        {
+          "stationId": "E3614",
+          "kind": "valley",
+          "stationName": "EW3614 West Topsham",
+          "stationElevationFt": 1639,
+          "distanceMi": 3.2,
+          "elevationDiffFt": 1731,
+          "bindReason": "E3614 (1,639 ft station elev) is 3.2 mi from Signal Mountain; same WFO BTV and state VT; station is 1,731 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "hideFromObservationsSection": false
+        }
+      ]
+    },
+    "burke-mountain": {
+      "asrcTimelapse": false,
+      "observations": [
+        {
+          "stationId": "LSC02",
+          "kind": "valley",
+          "stationName": "EW7405 Granby",
+          "stationElevationFt": 1485,
+          "distanceMi": 5.7,
+          "elevationDiffFt": 1782,
+          "bindReason": "LSC02 (1,485 ft station elev) is 5.7 mi from Burke Mountain; same WFO BTV and state VT; station is 1,782 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "hideFromObservationsSection": false
+        }
+      ]
+    },
+    "monadnock-mountain": {
+      "asrcTimelapse": false,
+      "observations": [
+        {
+          "stationId": "NLHV1",
+          "kind": "valley",
+          "stationName": "NULHEGAN",
+          "stationElevationFt": 1245,
+          "distanceMi": 11.8,
+          "elevationDiffFt": 1903,
+          "bindReason": "NLHV1 (1,245 ft station elev) is 11.8 mi from Monadnock Mountain; same WFO BTV and state VT; station is 1,903 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "hideFromObservationsSection": false
+        }
+      ]
+    },
+    "killington-peak": {
+      "asrcTimelapse": false,
+      "observations": [
+        {
+          "stationId": "F8716",
+          "kind": "summit",
+          "stationName": "FW8716 Killington",
+          "stationElevationFt": 7907,
+          "distanceMi": 2.4,
+          "elevationDiffFt": -3672,
+          "bindReason": "F8716 (7,907 ft station elev) is 2.4 mi from Killington Peak; same WFO BTV and state VT; station is 3,672 ft higher than catalog. Summit slot: elevation within 900 ft of 4,235 ft catalog.",
+          "hideFromObservationsSection": false
+        },
+        {
+          "stationId": "OTQV1",
+          "kind": "valley",
+          "stationName": "OTTAUQUECHEE RIVER NEAR WEST BRIDGEWATER 2NNW",
+          "stationElevationFt": 1187,
+          "distanceMi": 3.3,
+          "elevationDiffFt": 3048,
+          "bindReason": "OTQV1 (1,187 ft station elev) is 3.3 mi from Killington Peak; same WFO BTV and state VT; station is 3,048 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "hideFromObservationsSection": false
+        }
+      ]
+    },
+    "stratton-mountain": {
+      "asrcTimelapse": false,
+      "observations": [
+        {
+          "stationId": "F5837",
+          "kind": "summit",
+          "stationName": "FW5837 West Dover",
+          "stationElevationFt": 7438,
+          "distanceMi": 10.5,
+          "elevationDiffFt": -3498,
+          "bindReason": "F5837 (7,438 ft station elev) is 10.5 mi from Stratton Mountain; same WFO ALY and state VT; station is 3,498 ft higher than catalog. Summit slot: elevation within 900 ft of 3,940 ft catalog.",
+          "hideFromObservationsSection": false
+        },
+        {
+          "stationId": "E1683",
+          "kind": "valley",
+          "stationName": "EW1683 Stratton Mountain          VT US",
+          "stationElevationFt": 2271,
+          "distanceMi": 4,
+          "elevationDiffFt": 1669,
+          "bindReason": "E1683 (2,271 ft station elev) is 4.0 mi from Stratton Mountain; same WFO ALY and state VT; station is 1,669 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "hideFromObservationsSection": false
+        }
+      ]
+    },
+    "mount-equinox": {
+      "asrcTimelapse": false,
+      "observations": [
+        {
+          "stationId": "F6618",
+          "kind": "valley",
+          "stationName": "FW6618 Arlington",
+          "stationElevationFt": 828,
+          "distanceMi": 4.3,
+          "elevationDiffFt": 3012,
+          "bindReason": "F6618 (828 ft station elev) is 4.3 mi from Mount Equinox; same WFO ALY and state VT; station is 3,012 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "hideFromObservationsSection": false
+        }
+      ]
+    },
+    "dorset-mountain": {
+      "asrcTimelapse": false,
+      "observations": [
+        {
+          "stationId": "LSC06",
+          "kind": "valley",
+          "stationName": "FW1245 Danby",
+          "stationElevationFt": 1400,
+          "distanceMi": 1.9,
+          "elevationDiffFt": 2360,
+          "bindReason": "LSC06 (1,400 ft station elev) is 1.9 mi from Dorset Mountain; same WFO BTV and state VT; station is 2,360 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "hideFromObservationsSection": false
+        }
+      ]
+    },
+    "haystack-mountain": {
+      "asrcTimelapse": false,
+      "observations": [
+        {
+          "stationId": "F5837",
+          "kind": "summit",
+          "stationName": "FW5837 West Dover",
+          "stationElevationFt": 7438,
+          "distanceMi": 5.8,
+          "elevationDiffFt": -3993,
+          "bindReason": "F5837 (7,438 ft station elev) is 5.8 mi from Haystack Mountain; same WFO ALY and state VT; station is 3,993 ft higher than catalog. Summit slot: elevation within 900 ft of 3,445 ft catalog.",
+          "hideFromObservationsSection": false
+        },
+        {
+          "stationId": "D3212",
+          "kind": "valley",
+          "stationName": "DW3212 West Dover",
+          "stationElevationFt": 2106,
+          "distanceMi": 2.6,
+          "elevationDiffFt": 1339,
+          "bindReason": "D3212 (2,106 ft station elev) is 2.6 mi from Haystack Mountain; same WFO ALY and state VT; station is 1,339 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "hideFromObservationsSection": false
+        }
+      ]
+    },
+    "ludlow-mountain": {
+      "asrcTimelapse": false,
+      "observations": [
+        {
+          "stationId": "D8397",
+          "kind": "valley",
+          "stationName": "DW8397 Weston",
+          "stationElevationFt": 1477,
+          "distanceMi": 9.4,
+          "elevationDiffFt": 1843,
+          "bindReason": "D8397 (1,477 ft station elev) is 9.4 mi from Ludlow Mountain; same WFO BTV and state VT; station is 1,843 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "hideFromObservationsSection": false
+        }
+      ]
+    },
+    "bromley-mountain": {
+      "asrcTimelapse": false,
+      "observations": [
+        {
+          "stationId": "E1683",
+          "kind": "valley",
+          "stationName": "EW1683 Stratton Mountain          VT US",
+          "stationElevationFt": 2271,
+          "distanceMi": 7.8,
+          "elevationDiffFt": 992,
+          "bindReason": "E1683 (2,271 ft station elev) is 7.8 mi from Bromley Mountain; same WFO ALY and state VT; station is 992 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "hideFromObservationsSection": false
+        }
+      ]
+    },
+    "mount-ascutney": {
+      "asrcTimelapse": false,
+      "observations": [
+        {
+          "stationId": "D8675",
+          "kind": "valley",
+          "stationName": "DW8675 Weathersfield",
+          "stationElevationFt": 1182,
+          "distanceMi": 3.5,
+          "elevationDiffFt": 1958,
+          "bindReason": "D8675 (1,182 ft station elev) is 3.5 mi from Mount Ascutney; same WFO BTV and state VT; station is 1,958 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "hideFromObservationsSection": false
+        }
+      ]
+    },
+    "bald-mountain": {
+      "asrcTimelapse": false,
+      "observations": [
+        {
+          "stationId": "WFRV1",
+          "kind": "summit",
+          "stationName": "WOODFORD STATE PARK",
+          "stationElevationFt": 2317,
+          "distanceMi": 5.7,
+          "elevationDiffFt": 540,
+          "bindReason": "WFRV1 (2,317 ft station elev) is 5.7 mi from Bald Mountain; same WFO ALY and state VT; station is 540 ft lower than catalog. Summit slot: elevation within 900 ft of 2,857 ft catalog.",
+          "hideFromObservationsSection": false
+        },
+        {
+          "stationId": "KDDH",
+          "kind": "valley",
+          "stationName": "Bennington Morse State Airport",
+          "stationElevationFt": 827,
+          "distanceMi": 5.7,
+          "elevationDiffFt": 2030,
+          "bindReason": "KDDH (827 ft station elev) is 5.7 mi from Bald Mountain; same WFO ALY and state VT; station is 2,030 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "hideFromObservationsSection": false
+        }
+      ]
+    },
+    "manchester-vt": {
+      "asrcTimelapse": false,
+      "observations": [
+        {
+          "stationId": "F6618",
+          "kind": "base",
+          "stationName": "FW6618 Arlington",
+          "stationElevationFt": 828,
+          "distanceMi": 5.2,
+          "elevationDiffFt": 72,
+          "bindReason": "F6618 (828 ft station elev) is 5.2 mi from Manchester; same WFO ALY and state VT; station is 72 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "hideFromObservationsSection": false
+        }
+      ]
+    },
+    "mount-washington": {
+      "asrcTimelapse": false,
+      "observations": [
+        {
+          "stationId": "KMWN",
+          "kind": "summit",
+          "stationName": "Mount Washington",
+          "stationElevationFt": 6262,
+          "distanceMi": 0,
+          "elevationDiffFt": 26,
+          "bindReason": "Manual summit pin: NWS station metadata at api.weather.gov/stations/KMWN.",
+          "hideFromObservationsSection": false
+        },
+        {
+          "stationId": "OSLN3",
+          "kind": "valley",
+          "stationName": "OSSIPEE LAKE",
+          "stationElevationFt": 4192,
+          "distanceMi": 4.9,
+          "elevationDiffFt": 2096,
+          "bindReason": "OSLN3 (4,192 ft station elev) is 4.9 mi from Mount Washington; same WFO GYX and state NH; station is 2,096 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "hideFromObservationsSection": false
+        }
+      ]
+    },
+    "mount-adams": {
+      "asrcTimelapse": false,
+      "observations": [
+        {
+          "stationId": "KMWN",
+          "kind": "summit",
+          "stationName": "Mount Washington",
+          "stationElevationFt": 6262,
+          "distanceMi": 3.5,
+          "elevationDiffFt": -463,
+          "bindReason": "KMWN (6,262 ft station elev) is 3.5 mi from Mount Adams; same WFO GYX and state NH; station is 463 ft higher than catalog. Summit slot: elevation within 900 ft of 5,799 ft catalog.",
+          "hideFromObservationsSection": false
+        },
+        {
+          "stationId": "OSLN3",
+          "kind": "valley",
+          "stationName": "OSSIPEE LAKE",
+          "stationElevationFt": 4192,
+          "distanceMi": 1.5,
+          "elevationDiffFt": 1607,
+          "bindReason": "OSLN3 (4,192 ft station elev) is 1.5 mi from Mount Adams; same WFO GYX and state NH; station is 1,607 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "hideFromObservationsSection": false
+        }
+      ]
+    },
+    "pinkham-notch": {
+      "asrcTimelapse": false,
+      "observations": [
+        {
+          "stationId": "KMWN",
+          "kind": "base",
+          "stationName": "Mount Washington",
+          "stationElevationFt": 6262,
+          "distanceMi": 2.6,
+          "elevationDiffFt": -4245,
+          "bindReason": "KMWN (6,262 ft station elev) is 2.6 mi from Pinkham Notch; same WFO GYX and state NH; station is 4,245 ft higher than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "hideFromObservationsSection": false
+        }
+      ]
+    },
+    "crawford-notch": {
+      "asrcTimelapse": false,
+      "observations": [
+        {
+          "stationId": "BLTN3",
+          "kind": "base",
+          "stationName": "SACO RIVER AT BARTLETT",
+          "stationElevationFt": 688,
+          "distanceMi": 7.3,
+          "elevationDiffFt": 1212,
+          "bindReason": "BLTN3 (688 ft station elev) is 7.3 mi from Crawford Notch; same WFO GYX and state NH; station is 1,212 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "hideFromObservationsSection": false
+        }
+      ]
+    },
+    "baldface-mountain": {
+      "asrcTimelapse": false,
+      "observations": [
+        {
+          "stationId": "E3811",
+          "kind": "valley",
+          "stationName": "EW3811 Jackson",
+          "stationElevationFt": 1662,
+          "distanceMi": 6.1,
+          "elevationDiffFt": 1885,
+          "bindReason": "E3811 (1,662 ft station elev) is 6.1 mi from Baldface Mountain; same WFO GYX and state NH; station is 1,885 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "hideFromObservationsSection": false
+        }
+      ]
+    },
+    "mount-lafayette": {
+      "asrcTimelapse": false,
+      "observations": [
+        {
+          "stationId": "NHFN1",
+          "kind": "valley",
+          "stationName": "LaFayette",
+          "stationElevationFt": 1775,
+          "distanceMi": 2.2,
+          "elevationDiffFt": 3474,
+          "bindReason": "NHFN1 (1,775 ft station elev) is 2.2 mi from Mount Lafayette; same WFO GYX and state NH; station is 3,474 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "hideFromObservationsSection": false
+        }
+      ]
+    },
+    "mount-moosilauke": {
+      "asrcTimelapse": false,
+      "observations": [
+        {
+          "stationId": "LICN3",
+          "kind": "valley",
+          "stationName": "NEPP SITE AT LINCOLN",
+          "stationElevationFt": 875,
+          "distanceMi": 8,
+          "elevationDiffFt": 3927,
+          "bindReason": "LICN3 (875 ft station elev) is 8.0 mi from Mount Moosilauke; same WFO GYX and state NH; station is 3,927 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "hideFromObservationsSection": false
+        }
+      ]
+    },
+    "mount-osceola": {
+      "asrcTimelapse": false,
+      "observations": [
+        {
+          "stationId": "G7912",
+          "kind": "summit",
+          "stationName": "GW7912 CAMPTON",
+          "stationElevationFt": 6562,
+          "distanceMi": 10.3,
+          "elevationDiffFt": -2222,
+          "bindReason": "G7912 (6,562 ft station elev) is 10.3 mi from Mount Osceola; same WFO GYX and state NH; station is 2,222 ft higher than catalog. Summit slot: elevation within 900 ft of 4,340 ft catalog.",
+          "hideFromObservationsSection": false
+        },
+        {
+          "stationId": "WVVN3",
+          "kind": "valley",
+          "stationName": "NEPP SITE AT WATERVILLE VALLEY",
+          "stationElevationFt": 1445,
+          "distanceMi": 4,
+          "elevationDiffFt": 2895,
+          "bindReason": "WVVN3 (1,445 ft station elev) is 4.0 mi from Mount Osceola; same WFO GYX and state NH; station is 2,895 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "hideFromObservationsSection": false
+        }
+      ]
+    },
+    "cannon-mountain": {
+      "asrcTimelapse": false,
+      "observations": [
+        {
+          "stationId": "NHFN1",
+          "kind": "valley",
+          "stationName": "LaFayette",
+          "stationElevationFt": 1775,
+          "distanceMi": 1.2,
+          "elevationDiffFt": 2305,
+          "bindReason": "NHFN1 (1,775 ft station elev) is 1.2 mi from Cannon Mountain; same WFO GYX and state NH; station is 2,305 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "hideFromObservationsSection": false
+        }
+      ]
+    },
+    "kancamagus-pass": {
+      "asrcTimelapse": false,
+      "observations": [
+        {
+          "stationId": "WVVN3",
+          "kind": "base",
+          "stationName": "NEPP SITE AT WATERVILLE VALLEY",
+          "stationElevationFt": 1445,
+          "distanceMi": 5.6,
+          "elevationDiffFt": 1410,
+          "bindReason": "WVVN3 (1,445 ft station elev) is 5.6 mi from Kancamagus Pass; same WFO GYX and state NH; station is 1,410 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "hideFromObservationsSection": false
+        }
+      ]
+    },
+    "franconia-notch": {
+      "asrcTimelapse": false,
+      "observations": [
+        {
+          "stationId": "NHFN1",
+          "kind": "base",
+          "stationName": "LaFayette",
+          "stationElevationFt": 1775,
+          "distanceMi": 0.7,
+          "elevationDiffFt": 165,
+          "bindReason": "NHFN1 (1,775 ft station elev) is 0.7 mi from Franconia Notch; same WFO GYX and state NH; station is 165 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "hideFromObservationsSection": false
+        }
+      ]
+    },
+    "rumney-crag": {
+      "asrcTimelapse": false,
+      "observations": [
+        {
+          "stationId": "K1P1",
+          "kind": "base",
+          "stationName": "Plymouth Municipal Airport",
+          "stationElevationFt": 502,
+          "distanceMi": 3.4,
+          "elevationDiffFt": 898,
+          "bindReason": "K1P1 (502 ft station elev) is 3.4 mi from Rumney Crags; same WFO GYX and state NH; station is 898 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "hideFromObservationsSection": false
+        }
+      ]
+    },
+    "mount-monadnock": {
+      "asrcTimelapse": false,
+      "observations": [
+        {
+          "stationId": "MACN3",
+          "kind": "valley",
+          "stationName": "NUBANUSIT BROOK AT MACDOWELL DAM NEAR PETERBOROUGH",
+          "stationElevationFt": 964,
+          "distanceMi": 6.5,
+          "elevationDiffFt": 2201,
+          "bindReason": "MACN3 (964 ft station elev) is 6.5 mi from Mount Monadnock; same WFO GYX and state NH; station is 2,201 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "hideFromObservationsSection": false
+        }
+      ]
+    },
+    "north-pack-monadnock": {
+      "asrcTimelapse": false,
+      "observations": [
+        {
+          "stationId": "LYNN3",
+          "kind": "valley",
+          "stationName": "LYNDEBOROUGH 3SW",
+          "stationElevationFt": 835,
+          "distanceMi": 2.6,
+          "elevationDiffFt": 1441,
+          "bindReason": "LYNN3 (835 ft station elev) is 2.6 mi from North Pack Monadnock; same WFO GYX and state NH; station is 1,441 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "hideFromObservationsSection": false
+        }
+      ]
+    },
+    "katahdin": {
+      "asrcTimelapse": false,
+      "observations": [
+        {
+          "stationId": "KMLT",
+          "kind": "valley",
+          "stationName": "Millinocket, Millinocket Municipal Airport",
+          "stationElevationFt": 407,
+          "distanceMi": 20.9,
+          "elevationDiffFt": 4861,
+          "bindReason": "Manual valley/nearby METAR pin for Katahdin.",
+          "hideFromObservationsSection": false
+        }
+      ]
+    },
+    "katahdin-woods-and-waters": {
+      "asrcTimelapse": false,
+      "observations": [
+        {
+          "stationId": "GRNM1",
+          "kind": "base",
+          "stationName": "EAST BRANCH PENOBSCOT RIVER AT GRINDSTONE",
+          "stationElevationFt": 324,
+          "distanceMi": 11.7,
+          "elevationDiffFt": 876,
+          "bindReason": "GRNM1 (324 ft station elev) is 11.7 mi from Katahdin Woods and Waters; same WFO CAR and state ME; station is 876 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "hideFromObservationsSection": false
+        }
+      ]
+    },
+    "millinocket": {
+      "asrcTimelapse": false,
+      "observations": [
+        {
+          "stationId": "KMLT",
+          "kind": "valley",
+          "stationName": "Millinocket, Millinocket Municipal Airport",
+          "stationElevationFt": 407,
+          "distanceMi": 1.1,
+          "elevationDiffFt": -7,
+          "bindReason": "Manual valley/nearby METAR pin for Millinocket.",
+          "hideFromObservationsSection": false
+        }
+      ]
+    },
+    "white-cap-mountain": {
+      "asrcTimelapse": false,
+      "observations": [
+        {
+          "stationId": "KKJM1",
+          "kind": "valley",
+          "stationName": "KOKADJO",
+          "stationElevationFt": 1227,
+          "distanceMi": 12.7,
+          "elevationDiffFt": 2427,
+          "bindReason": "KKJM1 (1,227 ft station elev) is 12.7 mi from White Cap Mountain; same WFO CAR and state ME; station is 2,427 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "hideFromObservationsSection": false
+        }
+      ]
+    },
+    "sugarloaf-mountain": {
+      "asrcTimelapse": false,
+      "observations": [
+        {
+          "stationId": "G4192",
+          "kind": "summit",
+          "stationName": "GW4192 RANGELEY",
+          "stationElevationFt": 3999,
+          "distanceMi": 11.7,
+          "elevationDiffFt": 238,
+          "bindReason": "G4192 (3,999 ft station elev) is 11.7 mi from Sugarloaf Mountain; same WFO GYX and state ME; station is 238 ft lower than catalog. Summit slot: elevation within 900 ft of 4,237 ft catalog.",
+          "hideFromObservationsSection": false
+        },
+        {
+          "stationId": "B219",
+          "kind": "valley",
+          "stationName": "CARRABASSETT",
+          "stationElevationFt": 885,
+          "distanceMi": 6,
+          "elevationDiffFt": 3352,
+          "bindReason": "B219 (885 ft station elev) is 6.0 mi from Sugarloaf Mountain; same WFO GYX and state ME; station is 3,352 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "hideFromObservationsSection": false
+        }
+      ]
+    },
+    "bigelow": {
+      "asrcTimelapse": false,
+      "observations": [
+        {
+          "stationId": "B219",
+          "kind": "valley",
+          "stationName": "CARRABASSETT",
+          "stationElevationFt": 885,
+          "distanceMi": 5.5,
+          "elevationDiffFt": 3265,
+          "bindReason": "B219 (885 ft station elev) is 5.5 mi from Bigelow Mountain; same WFO GYX and state ME; station is 3,265 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "hideFromObservationsSection": false
+        }
+      ]
+    },
+    "rangeley": {
+      "asrcTimelapse": false,
+      "observations": [
+        {
+          "stationId": "K8B0",
+          "kind": "base",
+          "stationName": "Steven A Bean Municipal Airport",
+          "stationElevationFt": 1808,
+          "distanceMi": 1.9,
+          "elevationDiffFt": -290,
+          "bindReason": "K8B0 (1,808 ft station elev) is 1.9 mi from Rangeley; same WFO GYX and state ME; station is 290 ft higher than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "hideFromObservationsSection": false
+        }
+      ]
+    },
+    "deboullie-mountain": {
+      "asrcTimelapse": false,
+      "observations": [
+        {
+          "stationId": "FOXM1",
+          "kind": "valley",
+          "stationName": "NEPP SITE AT FOX BROOK CAMP GROUND OFF ROCKY BROOK ROAD NEAR PORTAGE 19WNW",
+          "stationElevationFt": 902,
+          "distanceMi": 11.5,
+          "elevationDiffFt": 1079,
+          "bindReason": "FOXM1 (902 ft station elev) is 11.5 mi from Deboullie Mountain; same WFO CAR and state ME; station is 1,079 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "hideFromObservationsSection": false
+        }
+      ]
+    },
+    "mars-hill-mountain": {
+      "asrcTimelapse": false,
+      "observations": [
+        {
+          "stationId": "E6643",
+          "kind": "summit",
+          "stationName": "EW6643 Monticello",
+          "stationElevationFt": 2218,
+          "distanceMi": 11.7,
+          "elevationDiffFt": -469,
+          "bindReason": "E6643 (2,218 ft station elev) is 11.7 mi from Mars Hill Mountain; same WFO CAR and state ME; station is 469 ft higher than catalog. Summit slot: elevation within 900 ft of 1,749 ft catalog.",
+          "hideFromObservationsSection": false
+        },
+        {
+          "stationId": "WFDM1",
+          "kind": "valley",
+          "stationName": "NEPP SITE AT WESTFIELD",
+          "stationElevationFt": 495,
+          "distanceMi": 7.7,
+          "elevationDiffFt": 1254,
+          "bindReason": "WFDM1 (495 ft station elev) is 7.7 mi from Mars Hill Mountain; same WFO CAR and state ME; station is 1,254 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "hideFromObservationsSection": false
+        }
+      ]
+    },
+    "cadillac-mountain": {
+      "asrcTimelapse": false,
+      "observations": [
+        {
+          "stationId": "A3672",
+          "kind": "summit",
+          "stationName": "Bar Harbor - Cadillac Mtn.",
+          "stationElevationFt": 1493,
+          "distanceMi": 0,
+          "elevationDiffFt": 37,
+          "bindReason": "A3672 (1,493 ft station elev) is 0.0 mi from Cadillac Mountain; same WFO CAR and state ME; station is 37 ft lower than catalog. Summit slot: elevation within 900 ft of 1,530 ft catalog.",
+          "hideFromObservationsSection": false
+        },
+        {
+          "stationId": "E7164",
+          "kind": "valley",
+          "stationName": "EW7164 Bar Harbor",
+          "stationElevationFt": 212,
+          "distanceMi": 1.9,
+          "elevationDiffFt": 1318,
+          "bindReason": "E7164 (212 ft station elev) is 1.9 mi from Cadillac Mountain; same WFO CAR and state ME; station is 1,318 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "hideFromObservationsSection": false
+        }
+      ]
+    },
+    "bar-harbor": {
+      "asrcTimelapse": false,
+      "observations": [
+        {
+          "stationId": "ATGM1",
+          "kind": "base",
+          "stationName": "Bar Harbor",
+          "stationElevationFt": 20,
+          "distanceMi": 0.3,
+          "elevationDiffFt": 130,
+          "bindReason": "ATGM1 (20 ft station elev) is 0.3 mi from Bar Harbor; same WFO CAR and state ME; station is 130 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "hideFromObservationsSection": false
+        }
+      ]
+    }
+  }
+}

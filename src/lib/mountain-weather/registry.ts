@@ -1,4 +1,7 @@
 import type { SourceDef } from '@/lib/mountain-weather/source-types';
+import { allBoundStationIds } from '@/lib/mountain-weather/station-bindings';
+import { nwsStationSourceDef } from '@/lib/mountain-weather/readers/nws-station';
+import { ASRC_WHITEFACE_TIMELAPSE_DEF } from '@/lib/mountain-weather/readers/asrc-whiteface-timelapse';
 
 export const NWS_GRID_BASELINE_DEF: SourceDef = {
   id: 'nws-grid-baseline',
@@ -259,6 +262,12 @@ export const NWS_MTN_ALY_ENHANCED_DEF: SourceDef = {
   expectedEveryHours: 6,
 };
 
+const stationRegistry: Record<string, SourceDef> = {};
+for (const stationId of allBoundStationIds()) {
+  const def = nwsStationSourceDef(stationId);
+  stationRegistry[def.id] = def;
+}
+
 export const SOURCE_REGISTRY: Record<string, SourceDef> = {
   [NWS_GRID_BASELINE_DEF.id]: NWS_GRID_BASELINE_DEF,
   [NWS_MTN_BTV_STANDARD_DEF.id]: NWS_MTN_BTV_STANDARD_DEF,
@@ -286,4 +295,6 @@ export const SOURCE_REGISTRY: Record<string, SourceDef> = {
   [NWS_AFD_GYX_DEF.id]: NWS_AFD_GYX_DEF,
   [NWS_AFD_CAR_DEF.id]: NWS_AFD_CAR_DEF,
   [NWS_HWO_BTV_DEF.id]: NWS_HWO_BTV_DEF,
+  [ASRC_WHITEFACE_TIMELAPSE_DEF.id]: ASRC_WHITEFACE_TIMELAPSE_DEF,
+  ...stationRegistry,
 };

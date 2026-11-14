@@ -195,12 +195,43 @@ function baseCatalog(ctx: CatalogContext): MoreSourceEntry[] {
         id: 'whiteface-cam',
         scope: 'place',
         org: 'UAlbany ASRC',
-        label: 'Whiteface timelapse',
-        href: 'https://www.albany.edu/asrc/',
+        label: 'Whiteface summit dashboard and timelapse',
+        href: 'https://whiteface.asrc.albany.edu/',
         mode: 'link',
         states: ['ny'],
         placeIds: ['whiteface-mountain'],
       });
+    }
+    if (place.id === 'mount-washington') {
+      entries.push(
+        {
+          id: 'kmwn-series',
+          scope: 'place',
+          org: 'NWS',
+          label: 'KMWN observation time series',
+          href: 'https://www.weather.gov/wrh/timeseries?site=KMWN',
+          mode: 'link',
+          placeIds: ['mount-washington'],
+        },
+        {
+          id: 'gyx-climate',
+          scope: 'place',
+          org: 'NWS Gray',
+          label: 'Mount Washington climate (CF6; no product id in API)',
+          href: 'https://www.weather.gov/gyx/climate',
+          mode: 'link',
+          placeIds: ['mount-washington'],
+        },
+        {
+          id: 'mwobs-mesonet',
+          scope: 'place',
+          org: 'MWOBS',
+          label: 'Regional mesonet (link only)',
+          href: 'https://mountwashington.org/weather/mount-washington-regional-mesonet/',
+          mode: 'link',
+          placeIds: ['mount-washington'],
+        },
+      );
     }
     if (place.id === 'mount-washington' || place.id === 'mount-adams') {
       entries.push(

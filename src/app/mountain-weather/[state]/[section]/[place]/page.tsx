@@ -30,6 +30,8 @@ import { readOfficeBulletins } from '@/lib/mountain-weather/read-office-bulletin
 import { FzlForecastSection } from '@/components/mountain-weather/FzlForecastSection';
 import { readFzlForPlace } from '@/lib/mountain-weather/read-place-fzl';
 import { readMansfieldPack } from '@/lib/mountain-weather/read-mansfield-pack';
+import { ObservationsSection } from '@/components/mountain-weather/ObservationsSection';
+import { readPlaceObservations } from '@/lib/mountain-weather/read-place-observations';
 import { readMtnPointForPlace } from '@/lib/mountain-weather/read-mtn-point';
 import { readNwsGridBaseline } from '@/lib/mountain-weather/readers/nws-grid-baseline';
 
@@ -52,7 +54,8 @@ export default async function MountainPlacePage({
   const bulletinBinding = bulletinOfficeForPlace(place.id);
   const bulletinOffice = bulletinBinding?.office ?? null;
 
-  const [baseline, mtnPoint, rec, avg, allLocations, mansfieldPack, balloon, bulletins, fzl] = await Promise.all([
+  const [baseline, mtnPoint, rec, avg, allLocations, mansfieldPack, balloon, bulletins, fzl, observations] =
+    await Promise.all([
     readNwsGridBaseline(place),
     readMtnPointForPlace(place.id),
     readRecForPlace(place.id),
@@ -62,6 +65,7 @@ export default async function MountainPlacePage({
     readBalloonForPlace(place.id),
     bulletinOffice ? readOfficeBulletins(bulletinOffice) : Promise.resolve(null),
     readFzlForPlace(place),
+    readPlaceObservations(place.id),
   ]);
   const moreSources = moreSourcesForPlace(stateCode, sectionId, place);
 
@@ -101,6 +105,7 @@ export default async function MountainPlacePage({
         <AllLocationsSection results={allLocations} />
         <BalloonForecastSection result={balloon} />
         <MansfieldPackSection pack={mansfieldPack} />
+        <ObservationsSection data={observations} placeElevationFt={place.elevationFt} />
         <BasicForecastSection result={baseline} placeName={place.name} placeElevationFt={place.elevationFt} />
         <MoreSourcesSection groups={moreSources} />
       </div>
