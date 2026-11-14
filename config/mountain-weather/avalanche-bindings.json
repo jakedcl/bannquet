@@ -1,6 +1,37 @@
 {
-  "version": 1,
-  "ruleSummary": "MWAC for mount-washington, mount-adams, pinkham-notch. NYSAC for all places in Adirondack High Peaks and Northern Adirondacks sections. AVG subpages derived from explicit source-bindings avg pointMatch values (16 points).",
+  "version": 2,
+  "geometryFetchedAt": "2026-11-14T06:40:47.357Z",
+  "ruleSummary": "MWAC and NYSAC bindings from point-in-polygon on cached avalanche.org map-layer geometry (2026-11-14), plus explicit exceptions: pinkham-notch (MWAC trailhead outside polygon). AVG subpages from source-bindings (16 points).",
+  "exceptions": {
+    "pinkham-notch": {
+      "centers": [
+        "MWAC"
+      ],
+      "bindReason": "Trailhead for the MWAC forecast area (just outside the zone). Explicit exception — coordinates are outside the cached MWAC map-layer polygon."
+    }
+  },
+  "pipAudit": {
+    "MWAC": [
+      "mount-washington",
+      "mount-adams",
+      "crawford-notch"
+    ],
+    "NYSAC": [
+      "mount-marcy",
+      "whiteface-mountain",
+      "dix-mountain",
+      "algonquin-peak",
+      "mount-colden",
+      "mount-colvin",
+      "giant-mountain",
+      "santanoni-peak",
+      "cascade-mountain",
+      "mckenzie-mountain",
+      "mount-van-hoevenberg",
+      "keene-valley",
+      "ampersand-mountain"
+    ]
+  },
   "centers": {
     "MWAC": {
       "id": "MWAC",
@@ -16,125 +47,107 @@
     }
   },
   "places": {
-    "mount-washington": {
-      "centers": [
-        "MWAC"
-      ],
-      "bindReason": "Presidential Range avalanche forecast zone (MWAC via avalanche.org map-layer)."
-    },
-    "mount-adams": {
-      "centers": [
-        "MWAC"
-      ],
-      "bindReason": "Presidential Range avalanche forecast zone (MWAC via avalanche.org map-layer)."
-    },
-    "pinkham-notch": {
-      "centers": [
-        "MWAC"
-      ],
-      "bindReason": "Presidential Range avalanche forecast zone (MWAC via avalanche.org map-layer)."
-    },
     "mount-marcy": {
       "centers": [
         "NYSAC"
       ],
-      "bindReason": "Adirondack Park avalanche guidance zone (NY DEC NYSAC via avalanche.org map-layer)."
+      "bindReason": "Inside NYSAC map-layer polygon (point-in-polygon vs geometry cached 2026-11-14)."
     },
     "whiteface-mountain": {
       "centers": [
         "NYSAC"
       ],
-      "bindReason": "Adirondack Park avalanche guidance zone (NY DEC NYSAC via avalanche.org map-layer)."
+      "bindReason": "Inside NYSAC map-layer polygon (point-in-polygon vs geometry cached 2026-11-14)."
     },
     "dix-mountain": {
       "centers": [
         "NYSAC"
       ],
-      "bindReason": "Adirondack Park avalanche guidance zone (NY DEC NYSAC via avalanche.org map-layer)."
+      "bindReason": "Inside NYSAC map-layer polygon (point-in-polygon vs geometry cached 2026-11-14)."
     },
     "algonquin-peak": {
       "centers": [
         "NYSAC"
       ],
-      "bindReason": "Adirondack Park avalanche guidance zone (NY DEC NYSAC via avalanche.org map-layer)."
+      "bindReason": "Inside NYSAC map-layer polygon (point-in-polygon vs geometry cached 2026-11-14)."
     },
     "mount-colden": {
       "centers": [
         "NYSAC"
       ],
-      "bindReason": "Adirondack Park avalanche guidance zone (NY DEC NYSAC via avalanche.org map-layer)."
+      "bindReason": "Inside NYSAC map-layer polygon (point-in-polygon vs geometry cached 2026-11-14)."
     },
     "mount-colvin": {
       "centers": [
         "NYSAC"
       ],
-      "bindReason": "Adirondack Park avalanche guidance zone (NY DEC NYSAC via avalanche.org map-layer)."
+      "bindReason": "Inside NYSAC map-layer polygon (point-in-polygon vs geometry cached 2026-11-14)."
     },
     "giant-mountain": {
       "centers": [
         "NYSAC"
       ],
-      "bindReason": "Adirondack Park avalanche guidance zone (NY DEC NYSAC via avalanche.org map-layer)."
+      "bindReason": "Inside NYSAC map-layer polygon (point-in-polygon vs geometry cached 2026-11-14)."
     },
     "santanoni-peak": {
       "centers": [
         "NYSAC"
       ],
-      "bindReason": "Adirondack Park avalanche guidance zone (NY DEC NYSAC via avalanche.org map-layer)."
+      "bindReason": "Inside NYSAC map-layer polygon (point-in-polygon vs geometry cached 2026-11-14)."
     },
     "cascade-mountain": {
       "centers": [
         "NYSAC"
       ],
-      "bindReason": "Adirondack Park avalanche guidance zone (NY DEC NYSAC via avalanche.org map-layer)."
+      "bindReason": "Inside NYSAC map-layer polygon (point-in-polygon vs geometry cached 2026-11-14)."
     },
     "mckenzie-mountain": {
       "centers": [
         "NYSAC"
       ],
-      "bindReason": "Adirondack Park avalanche guidance zone (NY DEC NYSAC via avalanche.org map-layer)."
+      "bindReason": "Inside NYSAC map-layer polygon (point-in-polygon vs geometry cached 2026-11-14)."
     },
     "mount-van-hoevenberg": {
       "centers": [
         "NYSAC"
       ],
-      "bindReason": "Adirondack Park avalanche guidance zone (NY DEC NYSAC via avalanche.org map-layer)."
+      "bindReason": "Inside NYSAC map-layer polygon (point-in-polygon vs geometry cached 2026-11-14)."
     },
     "keene-valley": {
       "centers": [
         "NYSAC"
       ],
-      "bindReason": "Adirondack Park avalanche guidance zone (NY DEC NYSAC via avalanche.org map-layer)."
-    },
-    "lyon-mountain": {
-      "centers": [
-        "NYSAC"
-      ],
-      "bindReason": "Adirondack Park avalanche guidance zone (NY DEC NYSAC via avalanche.org map-layer)."
+      "bindReason": "Inside NYSAC map-layer polygon (point-in-polygon vs geometry cached 2026-11-14)."
     },
     "ampersand-mountain": {
       "centers": [
         "NYSAC"
       ],
-      "bindReason": "Adirondack Park avalanche guidance zone (NY DEC NYSAC via avalanche.org map-layer)."
+      "bindReason": "Inside NYSAC map-layer polygon (point-in-polygon vs geometry cached 2026-11-14)."
     },
-    "debar-mountain": {
+    "mount-washington": {
       "centers": [
-        "NYSAC"
+        "MWAC"
       ],
-      "bindReason": "Adirondack Park avalanche guidance zone (NY DEC NYSAC via avalanche.org map-layer)."
+      "bindReason": "Inside MWAC map-layer polygon (point-in-polygon vs geometry cached 2026-11-14)."
     },
-    "st-regis-mountain": {
+    "mount-adams": {
       "centers": [
-        "NYSAC"
+        "MWAC"
       ],
-      "bindReason": "Adirondack Park avalanche guidance zone (NY DEC NYSAC via avalanche.org map-layer)."
+      "bindReason": "Inside MWAC map-layer polygon (point-in-polygon vs geometry cached 2026-11-14)."
     },
-    "mount-arab": {
+    "crawford-notch": {
       "centers": [
-        "NYSAC"
+        "MWAC"
       ],
-      "bindReason": "Adirondack Park avalanche guidance zone (NY DEC NYSAC via avalanche.org map-layer)."
+      "bindReason": "Inside MWAC map-layer polygon (point-in-polygon vs geometry cached 2026-11-14)."
+    },
+    "pinkham-notch": {
+      "centers": [
+        "MWAC"
+      ],
+      "bindReason": "Trailhead for the MWAC forecast area (just outside the zone). Explicit exception — coordinates are outside the cached MWAC map-layer polygon."
     }
   }
 }

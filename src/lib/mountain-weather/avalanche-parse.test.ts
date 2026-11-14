@@ -60,9 +60,9 @@ test('MWAC in-season product fixture parses bands and problems', () => {
   assert.ok(bundle.weatherData);
 });
 
-test('avalanche bindings JSON lists twenty bound places', async () => {
+test('avalanche bindings JSON lists polygon-bound places plus pinkham exception', async () => {
   const bindings = (await import('../../../config/mountain-weather/avalanche-bindings.json')).default as {
     places: Record<string, unknown>;
   };
-  assert.equal(Object.keys(bindings.places).length, 20);
+  assert.equal(Object.keys(bindings.places).length, 17);
 });
