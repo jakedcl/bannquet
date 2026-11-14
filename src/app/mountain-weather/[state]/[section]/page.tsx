@@ -3,7 +3,6 @@ import Link from 'next/link';
 import PageWrapper from '@/components/ui/PageWrapper';
 import { LargeTitle } from '@/components/hub/SectionHeader';
 import { Card } from '@/components/hub/Card';
-import { ListGroup, ListRow } from '@/components/hub/ListRow';
 import { MoreSourcesSection } from '@/components/mountain-weather/MoreSourcesSection';
 import { WeatherGlanceList } from '@/components/weather/WeatherGlanceList';
 import {
@@ -55,22 +54,6 @@ export default async function MountainSectionPage({
         <ScopeBulletinsSection bundles={bulletins} />
         <Card title="Places" padded={false}>
           <WeatherGlanceList items={glances} />
-        </Card>
-        <Card padded={false}>
-          <ListGroup bare>
-            {section.places.map((place) => (
-              <ListRow
-                key={place.id}
-                href={mountainWeatherPath(stateCode, sectionId, place.id)}
-                title={place.name}
-                subtitle={[
-                  place.elevationFt ? `${place.elevationFt.toLocaleString('en-US')} ft` : null,
-                  place.isBase ? 'Base' : null,
-                  `NWS ${place.office}`,
-                ].filter(Boolean).join(' · ')}
-              />
-            ))}
-          </ListGroup>
         </Card>
         <MoreSourcesSection groups={moreSources} />
       </div>

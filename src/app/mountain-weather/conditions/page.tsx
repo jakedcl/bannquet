@@ -24,7 +24,7 @@ export default async function ConditionsPage() {
             <p className="text-sm font-bold">{error ?? 'The live conditions did not load.'}</p>
           </Card>
         ) : (
-          <ConditionsReport report={report} />
+          <ConditionsReport report={report} glances={report.glances ?? []} />
         )}
       </HubPage>
     </PageWrapper>

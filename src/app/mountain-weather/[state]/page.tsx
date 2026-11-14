@@ -18,7 +18,7 @@ import {
   bulletinOfficesForState,
   readBulletinsForOffices,
 } from '@/lib/mountain-weather/read-scope-bulletins';
-import { loadStateSectionGlances } from '@/lib/weather-hub';
+import { loadAllPlaceGlancesForState } from '@/lib/weather-hub';
 
 export const dynamic = 'force-dynamic';
 
@@ -41,7 +41,7 @@ export default async function MountainStatePage({ params }: { params: Promise<{ 
 
   const bulletinOffices = bulletinOfficesForState(stateCode);
   const [glances, moreSources, bulletins] = await Promise.all([
-    loadStateSectionGlances(stateCode),
+    loadAllPlaceGlancesForState(stateCode),
     Promise.resolve(moreSourcesForState(stateCode)),
     readBulletinsForOffices(bulletinOffices),
   ]);
@@ -54,10 +54,11 @@ export default async function MountainStatePage({ params }: { params: Promise<{ 
         </p>
         <LargeTitle title={entry.name} />
         <ScopeBulletinsSection bundles={bulletins} />
-        <Card title="Sections" padded={false}>
+        <Card title="Places" padded={false}>
+          <p className="border-b border-[#5c3a1e]/20 px-3 py-2 text-xs text-gray-700">NWS grid via shared baseline reader (same cache as place pages).</p>
           <WeatherGlanceList items={glances} />
         </Card>
-        <Card title="All sections" padded={false}>
+        <Card title="Sections" padded={false}>
           <ListGroup bare>
             {entry.sections.map((section) => (
               <ListRow

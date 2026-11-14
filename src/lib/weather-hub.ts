@@ -106,3 +106,19 @@ export async function loadPlaceGlances(
     return hubGlanceFromBaseline(result, { title: place.name, href }, now);
   });
 }
+
+export async function loadAllPlaceGlancesForState(
+  stateCode: MountainStateCode,
+  now = new Date(),
+): Promise<HubGlance[]> {
+  const state = MOUNTAIN_STATES.find((entry) => entry.code === stateCode);
+  if (!state) return [];
+  const jobs = state.sections.flatMap((section) =>
+    section.places.map((place) => ({ sectionId: section.id, place })),
+  );
+  return mapPool(jobs, POOL, async ({ sectionId, place }) => {
+    const result = await readNwsGridBaseline(place);
+    const href = mountainWeatherPath(stateCode, sectionId, place.id);
+    return hubGlanceFromBaseline(result, { title: place.name, href }, now);
+  });
+}

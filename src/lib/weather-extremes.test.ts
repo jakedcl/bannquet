@@ -30,17 +30,17 @@ const spots: ExtremeSpot[] = [
 test('live conditions pick the same extremes the banner scrolls', () => {
   const stats = extremeStatsFromSpots(spots);
   const byLabel = Object.fromEntries(stats.map((stat) => [stat.label, stat]));
-  assert.equal(byLabel['HIGHEST WIND'].value, '40mph, gusts 55');
+  assert.equal(byLabel['HIGHEST WIND'].value, '40 mph, gusts 55');
   assert.equal(byLabel['HIGHEST WIND'].location, 'Washington, White Mountains');
-  assert.equal(byLabel['HIGHEST TEMP'].value, '30°F');
+  assert.equal(byLabel['HIGHEST TEMP'].value, '18°F');
   assert.equal(byLabel['COLDEST FEELS-LIKE'].value, '-2°F');
   assert.equal(byLabel['COLDEST FEELS-LIKE'].location, 'Washington, White Mountains');
   assert.equal(byLabel['LOWEST TEMP'], undefined);
   assert.equal(byLabel['LOWEST WIND CHILL'], undefined);
-  assert.equal(byLabel['FORECAST SNOW CHANCE'].value, 'Marcy');
+  assert.equal(byLabel['FORECAST SNOW CHANCE'], undefined);
 });
 
-test('a dry set of spots leaves snow off the banner', () => {
-  const stats = extremeStatsFromSpots(spots.map((spot) => ({ ...spot, isSnowing: false })));
+test('measured extremes never include forecast snow', () => {
+  const stats = extremeStatsFromSpots(spots);
   assert.equal(stats.some((stat) => stat.label === 'FORECAST SNOW CHANCE'), false);
 });

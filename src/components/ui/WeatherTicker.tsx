@@ -7,6 +7,8 @@ type WeatherStat = {
   label: string;
   value: string;
   location: string;
+  stationId?: string;
+  ageMinutes?: number | null;
 };
 
 /** Live Northeast extremes for the mountain weather hub. Refreshes every 5 minutes. */
@@ -72,7 +74,11 @@ export default function WeatherTicker() {
                 <span className="block truncate text-xs text-white/70 sm:hidden">{stat.location}</span>
               </span>
               <span className="shrink-0 text-base font-bold tabular-nums text-[#ffd700] sm:mt-0.5 sm:block sm:text-lg">{stat.value}</span>
-              <span className="hidden truncate text-xs text-white/70 sm:block">@ {stat.location}</span>
+              <span className="hidden truncate text-xs text-white/70 sm:block">
+                @ {stat.location}
+                {'stationId' in stat && stat.stationId ? ` · ${stat.stationId}` : ''}
+                {'ageMinutes' in stat && stat.ageMinutes != null ? ` · ${stat.ageMinutes}m` : ''}
+              </span>
             </li>
           ))}
         </ul>

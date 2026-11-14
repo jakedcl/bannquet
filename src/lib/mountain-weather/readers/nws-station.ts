@@ -36,7 +36,7 @@ function loadFactory(stationId: string): () => Promise<SourceResult<NwsStationLa
       const text = await res.text();
       const issuedAt = res.headers.get('last-modified');
       const base = buildSourceResult({
-        fetched: { ok: true, text, issuedAt, sourceUrl },
+        fetched: { ok: true, text, issuedAt, fetchedAt: issuedAt ?? new Date().toISOString(), httpStatus: res.status, sourceUrl },
         parse: parseNwsStationLatest,
         issuedAt,
       });
