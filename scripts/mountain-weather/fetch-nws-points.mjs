@@ -10,8 +10,6 @@ const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), '../.
 const placesPath = path.join(ROOT, 'config/mountain-weather/places.json');
 const outPath = path.join(ROOT, 'config/mountain-weather/nws-points.json');
 
-/** Catalog place ids with known-bad coordinates — not resolved via API. */
-const SKIP_PLACE_IDS = new Set(['bald-mountain']);
 
 const SUPPORTED_PRODUCT_OFFICES = new Set(['BTV', 'ALY', 'GYX', 'CAR']);
 
@@ -67,14 +65,6 @@ async function main() {
   const skipped = {};
 
   for (const row of rows) {
-    if (SKIP_PLACE_IDS.has(row.id)) {
-      skipped[row.id] = {
-        reason: 'Known-bad catalog coordinates (final-pass); NWS points lookup skipped.',
-        lat: row.lat,
-        lon: row.lon,
-      };
-      continue;
-    }
     try {
       const meta = await fetchPoint(row.lat, row.lon);
       points[row.id] = {

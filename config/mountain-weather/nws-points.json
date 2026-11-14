@@ -1,13 +1,7 @@
 {
   "version": 1,
   "generatedNote": "cwa and gridId from api.weather.gov/points; productOffice is cwa when in BTV/ALY/GYX/CAR.",
-  "skipped": {
-    "bald-mountain": {
-      "reason": "Known-bad catalog coordinates (final-pass); NWS points lookup skipped.",
-      "lat": 41.1326,
-      "lon": -73.3618
-    }
-  },
+  "skipped": {},
   "points": {
     "mount-marcy": {
       "lat": 44.1128,
@@ -21,8 +15,8 @@
       "productOffice": "BTV"
     },
     "whiteface-mountain": {
-      "lat": 44.3658,
-      "lon": -73.9026,
+      "lat": 44.3659,
+      "lon": -73.9031,
       "cwa": "BTV",
       "gridId": "BTV",
       "forecastOffice": "BTV",
@@ -32,8 +26,8 @@
       "productOffice": "BTV"
     },
     "dix-mountain": {
-      "lat": 44.0825,
-      "lon": -73.7572,
+      "lat": 44.0822,
+      "lon": -73.7865,
       "cwa": "BTV",
       "gridId": "BTV",
       "forecastOffice": "BTV",
@@ -43,8 +37,8 @@
       "productOffice": "BTV"
     },
     "algonquin-peak": {
-      "lat": 44.1567,
-      "lon": -73.9857,
+      "lat": 44.1435,
+      "lon": -73.9867,
       "cwa": "BTV",
       "gridId": "BTV",
       "forecastOffice": "BTV",
@@ -54,8 +48,8 @@
       "productOffice": "BTV"
     },
     "mount-colden": {
-      "lat": 44.1342,
-      "lon": -73.9419,
+      "lat": 44.127,
+      "lon": -73.9599,
       "cwa": "BTV",
       "gridId": "BTV",
       "forecastOffice": "BTV",
@@ -65,19 +59,19 @@
       "productOffice": "BTV"
     },
     "mount-colvin": {
-      "lat": 44.0947,
-      "lon": -73.8947,
+      "lat": 44.094,
+      "lon": -73.8346,
       "cwa": "BTV",
       "gridId": "BTV",
       "forecastOffice": "BTV",
       "forecastZone": "https://api.weather.gov/zones/forecast/NYZ034",
       "county": "https://api.weather.gov/zones/county/NYC031",
-      "relativeLocation": "Lake Placid",
+      "relativeLocation": "Elizabethtown",
       "productOffice": "BTV"
     },
     "giant-mountain": {
-      "lat": 44.1596,
-      "lon": -73.7203,
+      "lat": 44.1611,
+      "lon": -73.7202,
       "cwa": "BTV",
       "gridId": "BTV",
       "forecastOffice": "BTV",
@@ -87,19 +81,19 @@
       "productOffice": "BTV"
     },
     "santanoni-peak": {
-      "lat": 44.0961,
-      "lon": -74.1319,
+      "lat": 44.0823,
+      "lon": -74.131,
       "cwa": "BTV",
       "gridId": "BTV",
       "forecastOffice": "BTV",
       "forecastZone": "https://api.weather.gov/zones/forecast/NYZ034",
       "county": "https://api.weather.gov/zones/county/NYC031",
-      "relativeLocation": "Lake Placid",
+      "relativeLocation": "Long Lake",
       "productOffice": "BTV"
     },
     "cascade-mountain": {
-      "lat": 44.1953,
-      "lon": -73.8747,
+      "lat": 44.2187,
+      "lon": -73.8601,
       "cwa": "BTV",
       "gridId": "BTV",
       "forecastOffice": "BTV",
@@ -109,19 +103,19 @@
       "productOffice": "BTV"
     },
     "mckenzie-mountain": {
-      "lat": 44.4328,
-      "lon": -74.0956,
+      "lat": 44.3363,
+      "lon": -74.0321,
       "cwa": "BTV",
       "gridId": "BTV",
       "forecastOffice": "BTV",
-      "forecastZone": "https://api.weather.gov/zones/forecast/NYZ030",
-      "county": "https://api.weather.gov/zones/county/NYC033",
-      "relativeLocation": "Saranac Lake",
+      "forecastZone": "https://api.weather.gov/zones/forecast/NYZ034",
+      "county": "https://api.weather.gov/zones/county/NYC031",
+      "relativeLocation": "Lake Placid",
       "productOffice": "BTV"
     },
     "mount-van-hoevenberg": {
-      "lat": 44.2408,
-      "lon": -73.8328,
+      "lat": 44.21,
+      "lon": -73.9297,
       "cwa": "BTV",
       "gridId": "BTV",
       "forecastOffice": "BTV",
@@ -131,8 +125,8 @@
       "productOffice": "BTV"
     },
     "keene-valley": {
-      "lat": 44.1962,
-      "lon": -73.7871,
+      "lat": 44.1898,
+      "lon": -73.786,
       "cwa": "BTV",
       "gridId": "BTV",
       "forecastOffice": "BTV",
@@ -142,19 +136,19 @@
       "productOffice": "BTV"
     },
     "lyon-mountain": {
-      "lat": 42.2311,
-      "lon": -73.5204,
-      "cwa": "ALY",
-      "gridId": "ALY",
-      "forecastOffice": "ALY",
-      "forecastZone": "https://api.weather.gov/zones/forecast/NYZ061",
-      "county": "https://api.weather.gov/zones/county/NYC021",
-      "relativeLocation": "Copake Lake",
-      "productOffice": "ALY"
+      "lat": 44.7037,
+      "lon": -73.8646,
+      "cwa": "BTV",
+      "gridId": "BTV",
+      "forecastOffice": "BTV",
+      "forecastZone": "https://api.weather.gov/zones/forecast/NYZ031",
+      "county": "https://api.weather.gov/zones/county/NYC019",
+      "relativeLocation": "Lyon Mountain",
+      "productOffice": "BTV"
     },
     "ampersand-mountain": {
-      "lat": 44.2346,
-      "lon": -74.2027,
+      "lat": 44.2345,
+      "lon": -74.2023,
       "cwa": "BTV",
       "gridId": "BTV",
       "forecastOffice": "BTV",
@@ -164,8 +158,8 @@
       "productOffice": "BTV"
     },
     "debar-mountain": {
-      "lat": 44.6034,
-      "lon": -74.2204,
+      "lat": 44.6033,
+      "lon": -74.2202,
       "cwa": "BTV",
       "gridId": "BTV",
       "forecastOffice": "BTV",
@@ -175,8 +169,8 @@
       "productOffice": "BTV"
     },
     "st-regis-mountain": {
-      "lat": 44.4078,
-      "lon": -74.2525,
+      "lat": 44.4086,
+      "lon": -74.3296,
       "cwa": "BTV",
       "gridId": "BTV",
       "forecastOffice": "BTV",
@@ -186,19 +180,19 @@
       "productOffice": "BTV"
     },
     "mount-arab": {
-      "lat": 44.3114,
-      "lon": -74.4417,
+      "lat": 44.2039,
+      "lon": -74.5843,
       "cwa": "BTV",
       "gridId": "BTV",
       "forecastOffice": "BTV",
-      "forecastZone": "https://api.weather.gov/zones/forecast/NYZ030",
-      "county": "https://api.weather.gov/zones/county/NYC033",
+      "forecastZone": "https://api.weather.gov/zones/forecast/NYZ029",
+      "county": "https://api.weather.gov/zones/county/NYC089",
       "relativeLocation": "Tupper Lake",
       "productOffice": "BTV"
     },
     "snowy-mountain": {
       "lat": 43.7002,
-      "lon": -74.3867,
+      "lon": -74.3868,
       "cwa": "ALY",
       "gridId": "ALY",
       "forecastOffice": "ALY",
@@ -208,30 +202,30 @@
       "productOffice": "ALY"
     },
     "blue-mountain": {
-      "lat": 41.2723,
-      "lon": -73.9026,
-      "cwa": "OKX",
-      "gridId": "OKX",
-      "forecastOffice": "OKX",
-      "forecastZone": "https://api.weather.gov/zones/forecast/NYZ070",
-      "county": "https://api.weather.gov/zones/county/NYC119",
-      "relativeLocation": "Peekskill",
-      "productOffice": null
+      "lat": 43.8724,
+      "lon": -74.401,
+      "cwa": "ALY",
+      "gridId": "ALY",
+      "forecastOffice": "ALY",
+      "forecastZone": "https://api.weather.gov/zones/forecast/NYZ033",
+      "county": "https://api.weather.gov/zones/county/NYC041",
+      "relativeLocation": "Long Lake",
+      "productOffice": "ALY"
     },
     "pillsbury-mountain": {
-      "lat": 43.5732,
-      "lon": -71.8724,
-      "cwa": "GYX",
-      "gridId": "GYX",
-      "forecastOffice": "GYX",
-      "forecastZone": "https://api.weather.gov/zones/forecast/NHZ008",
-      "county": "https://api.weather.gov/zones/county/NHC013",
-      "relativeLocation": "Bristol",
-      "productOffice": "GYX"
+      "lat": 43.5815,
+      "lon": -74.5109,
+      "cwa": "ALY",
+      "gridId": "ALY",
+      "forecastOffice": "ALY",
+      "forecastZone": "https://api.weather.gov/zones/forecast/NYZ033",
+      "county": "https://api.weather.gov/zones/county/NYC041",
+      "relativeLocation": "Speculator",
+      "productOffice": "ALY"
     },
     "gore-mountain": {
-      "lat": 43.673,
-      "lon": -74.0489,
+      "lat": 43.6733,
+      "lon": -74.0485,
       "cwa": "ALY",
       "gridId": "ALY",
       "forecastOffice": "ALY",
@@ -241,29 +235,29 @@
       "productOffice": "ALY"
     },
     "blue-ridge-mountain": {
-      "lat": 43.6781,
-      "lon": -72.9021,
+      "lat": 43.9246,
+      "lon": -73.8151,
       "cwa": "BTV",
       "gridId": "BTV",
       "forecastOffice": "BTV",
-      "forecastZone": "https://api.weather.gov/zones/forecast/VTZ019",
-      "county": "https://api.weather.gov/zones/county/VTC021",
-      "relativeLocation": "Chittenden",
+      "forecastZone": "https://api.weather.gov/zones/forecast/NYZ034",
+      "county": "https://api.weather.gov/zones/county/NYC031",
+      "relativeLocation": "Schroon Lake",
       "productOffice": "BTV"
     },
     "fishing-brook-range": {
-      "lat": 43.8936,
-      "lon": -74.3186,
-      "cwa": "ALY",
-      "gridId": "ALY",
-      "forecastOffice": "ALY",
-      "forecastZone": "https://api.weather.gov/zones/forecast/NYZ033",
-      "county": "https://api.weather.gov/zones/county/NYC041",
+      "lat": 43.9183,
+      "lon": -74.3201,
+      "cwa": "BTV",
+      "gridId": "BTV",
+      "forecastOffice": "BTV",
+      "forecastZone": "https://api.weather.gov/zones/forecast/NYZ034",
+      "county": "https://api.weather.gov/zones/county/NYC031",
       "relativeLocation": "Long Lake",
-      "productOffice": "ALY"
+      "productOffice": "BTV"
     },
     "vanderwhacker-mountain": {
-      "lat": 43.8984,
+      "lat": 43.8981,
       "lon": -74.096,
       "cwa": "BTV",
       "gridId": "BTV",
@@ -274,19 +268,19 @@
       "productOffice": "BTV"
     },
     "crane-mountain": {
-      "lat": 43.6216,
-      "lon": -71.9012,
-      "cwa": "GYX",
-      "gridId": "GYX",
-      "forecastOffice": "GYX",
-      "forecastZone": "https://api.weather.gov/zones/forecast/NHZ005",
-      "county": "https://api.weather.gov/zones/county/NHC009",
-      "relativeLocation": "Canaan",
-      "productOffice": "GYX"
+      "lat": 43.545,
+      "lon": -73.9623,
+      "cwa": "ALY",
+      "gridId": "ALY",
+      "forecastOffice": "ALY",
+      "forecastZone": "https://api.weather.gov/zones/forecast/NYZ042",
+      "county": "https://api.weather.gov/zones/county/NYC113",
+      "relativeLocation": "Warrensburg",
+      "productOffice": "ALY"
     },
     "hadley-mountain": {
-      "lat": 43.3812,
-      "lon": -73.969,
+      "lat": 43.3801,
+      "lon": -73.9702,
       "cwa": "ALY",
       "gridId": "ALY",
       "forecastOffice": "ALY",
@@ -296,19 +290,19 @@
       "productOffice": "ALY"
     },
     "black-mountain": {
-      "lat": 41.2847,
-      "lon": -74.0405,
-      "cwa": "OKX",
-      "gridId": "OKX",
-      "forecastOffice": "OKX",
-      "forecastZone": "https://api.weather.gov/zones/forecast/NYZ067",
-      "county": "https://api.weather.gov/zones/county/NYC071",
-      "relativeLocation": "Woodbury",
-      "productOffice": null
+      "lat": 43.5729,
+      "lon": -74.1386,
+      "cwa": "ALY",
+      "gridId": "ALY",
+      "forecastOffice": "ALY",
+      "forecastZone": "https://api.weather.gov/zones/forecast/NYZ042",
+      "county": "https://api.weather.gov/zones/county/NYC113",
+      "relativeLocation": "Speculator",
+      "productOffice": "ALY"
     },
     "pharaoh-mountain": {
       "lat": 43.8184,
-      "lon": -73.6582,
+      "lon": -73.6579,
       "cwa": "BTV",
       "gridId": "BTV",
       "forecastOffice": "BTV",
@@ -318,19 +312,19 @@
       "productOffice": "BTV"
     },
     "prospect-mountain": {
-      "lat": 41.4729,
-      "lon": -72.9707,
-      "cwa": "OKX",
-      "gridId": "OKX",
-      "forecastOffice": "OKX",
-      "forecastZone": "https://api.weather.gov/zones/forecast/CTZ006",
-      "county": "https://api.weather.gov/zones/county/CTC009",
-      "relativeLocation": "Naugatuck",
-      "productOffice": null
+      "lat": 43.4248,
+      "lon": -73.7457,
+      "cwa": "ALY",
+      "gridId": "ALY",
+      "forecastOffice": "ALY",
+      "forecastZone": "https://api.weather.gov/zones/forecast/NYZ083",
+      "county": "https://api.weather.gov/zones/county/NYC113",
+      "relativeLocation": "Lake George",
+      "productOffice": "ALY"
     },
     "slide-mountain": {
       "lat": 41.9992,
-      "lon": -74.3859,
+      "lon": -74.3858,
       "cwa": "ALY",
       "gridId": "ALY",
       "forecastOffice": "ALY",
@@ -340,8 +334,8 @@
       "productOffice": "ALY"
     },
     "hunter-mountain": {
-      "lat": 42.202,
-      "lon": -74.2132,
+      "lat": 42.1777,
+      "lon": -74.2303,
       "cwa": "ALY",
       "gridId": "ALY",
       "forecastOffice": "ALY",
@@ -352,7 +346,7 @@
     },
     "peekamoose-mountain": {
       "lat": 41.9531,
-      "lon": -74.3982,
+      "lon": -74.3981,
       "cwa": "ALY",
       "gridId": "ALY",
       "forecastOffice": "ALY",
@@ -362,8 +356,8 @@
       "productOffice": "ALY"
     },
     "balsam-lake-mountain": {
-      "lat": 42.0459,
-      "lon": -74.594,
+      "lat": 42.0455,
+      "lon": -74.5946,
       "cwa": "ALY",
       "gridId": "ALY",
       "forecastOffice": "ALY",
@@ -373,19 +367,19 @@
       "productOffice": "ALY"
     },
     "panther-mountain": {
-      "lat": 41.1868,
-      "lon": -74.0863,
-      "cwa": "OKX",
-      "gridId": "OKX",
-      "forecastOffice": "OKX",
-      "forecastZone": "https://api.weather.gov/zones/forecast/NYZ069",
-      "county": "https://api.weather.gov/zones/county/NYC087",
-      "relativeLocation": "Wesley Hills",
-      "productOffice": null
+      "lat": 42.0565,
+      "lon": -74.3946,
+      "cwa": "ALY",
+      "gridId": "ALY",
+      "forecastOffice": "ALY",
+      "forecastZone": "https://api.weather.gov/zones/forecast/NYZ063",
+      "county": "https://api.weather.gov/zones/county/NYC111",
+      "relativeLocation": "Phoenicia",
+      "productOffice": "ALY"
     },
     "windham-high-peak": {
       "lat": 42.3148,
-      "lon": -74.1433,
+      "lon": -74.1431,
       "cwa": "ALY",
       "gridId": "ALY",
       "forecastOffice": "ALY",
@@ -406,19 +400,19 @@
       "productOffice": "ALY"
     },
     "red-hill": {
-      "lat": 41.6773,
-      "lon": -72.6056,
-      "cwa": "BOX",
-      "gridId": "BOX",
-      "forecastOffice": "BOX",
-      "forecastZone": "https://api.weather.gov/zones/forecast/CTZ002",
-      "county": "https://api.weather.gov/zones/county/CTC003",
-      "relativeLocation": "Glastonbury Center",
-      "productOffice": null
+      "lat": 41.924,
+      "lon": -74.5174,
+      "cwa": "ALY",
+      "gridId": "ALY",
+      "forecastOffice": "ALY",
+      "forecastZone": "https://api.weather.gov/zones/forecast/NYZ063",
+      "county": "https://api.weather.gov/zones/county/NYC111",
+      "relativeLocation": "Grahamsville",
+      "productOffice": "ALY"
     },
     "mount-tremper": {
-      "lat": 42.0417,
-      "lon": -74.2833,
+      "lat": 42.0744,
+      "lon": -74.2778,
       "cwa": "ALY",
       "gridId": "ALY",
       "forecastOffice": "ALY",
@@ -428,8 +422,8 @@
       "productOffice": "ALY"
     },
     "tannersville": {
-      "lat": 42.1959,
-      "lon": -74.1307,
+      "lat": 42.1957,
+      "lon": -74.1338,
       "cwa": "ALY",
       "gridId": "ALY",
       "forecastOffice": "ALY",
@@ -461,8 +455,8 @@
       "productOffice": "ALY"
     },
     "jay-peak": {
-      "lat": 44.9239,
-      "lon": -72.5316,
+      "lat": 44.9241,
+      "lon": -72.5257,
       "cwa": "BTV",
       "gridId": "BTV",
       "forecastOffice": "BTV",
@@ -472,7 +466,7 @@
       "productOffice": "BTV"
     },
     "belvidere-mountain": {
-      "lat": 44.7732,
+      "lat": 44.773,
       "lon": -72.5509,
       "cwa": "BTV",
       "gridId": "BTV",
@@ -483,8 +477,8 @@
       "productOffice": "BTV"
     },
     "jay-village": {
-      "lat": 44.9376,
-      "lon": -72.4512,
+      "lat": 44.9476,
+      "lon": -72.4371,
       "cwa": "BTV",
       "gridId": "BTV",
       "forecastOffice": "BTV",
@@ -494,8 +488,8 @@
       "productOffice": "BTV"
     },
     "mount-mansfield": {
-      "lat": 44.5439,
-      "lon": -72.8151,
+      "lat": 44.5437,
+      "lon": -72.8143,
       "cwa": "BTV",
       "gridId": "BTV",
       "forecastOffice": "BTV",
@@ -505,8 +499,8 @@
       "productOffice": "BTV"
     },
     "smugglers-notch": {
-      "lat": 44.554,
-      "lon": -72.786,
+      "lat": 44.5553,
+      "lon": -72.7957,
       "cwa": "BTV",
       "gridId": "BTV",
       "forecastOffice": "BTV",
@@ -516,8 +510,8 @@
       "productOffice": "BTV"
     },
     "stowe-town": {
-      "lat": 44.4654,
-      "lon": -72.6874,
+      "lat": 44.4653,
+      "lon": -72.6846,
       "cwa": "BTV",
       "gridId": "BTV",
       "forecastOffice": "BTV",
@@ -527,19 +521,19 @@
       "productOffice": "BTV"
     },
     "camels-hump": {
-      "lat": 44.3194,
-      "lon": -72.8853,
+      "lat": 44.3195,
+      "lon": -72.8863,
       "cwa": "BTV",
       "gridId": "BTV",
       "forecastOffice": "BTV",
-      "forecastZone": "https://api.weather.gov/zones/forecast/VTZ008",
-      "county": "https://api.weather.gov/zones/county/VTC023",
+      "forecastZone": "https://api.weather.gov/zones/forecast/VTZ017",
+      "county": "https://api.weather.gov/zones/county/VTC007",
       "relativeLocation": "Bolton",
       "productOffice": "BTV"
     },
     "mount-ellen": {
       "lat": 44.1601,
-      "lon": -72.9289,
+      "lon": -72.9288,
       "cwa": "BTV",
       "gridId": "BTV",
       "forecastOffice": "BTV",
@@ -549,19 +543,19 @@
       "productOffice": "BTV"
     },
     "bread-loaf-mountain": {
-      "lat": 41.8262,
-      "lon": -73.3847,
-      "cwa": "ALY",
-      "gridId": "ALY",
-      "forecastOffice": "ALY",
-      "forecastZone": "https://api.weather.gov/zones/forecast/CTZ001",
-      "county": "https://api.weather.gov/zones/county/CTC005",
-      "relativeLocation": "Cornwall Bridge",
-      "productOffice": "ALY"
+      "lat": 44.0022,
+      "lon": -72.9416,
+      "cwa": "BTV",
+      "gridId": "BTV",
+      "forecastOffice": "BTV",
+      "forecastZone": "https://api.weather.gov/zones/forecast/VTZ018",
+      "county": "https://api.weather.gov/zones/county/VTC001",
+      "relativeLocation": "South Lincoln",
+      "productOffice": "BTV"
     },
     "mount-worcester": {
-      "lat": 44.4431,
-      "lon": -72.5915,
+      "lat": 44.4432,
+      "lon": -72.5917,
       "cwa": "BTV",
       "gridId": "BTV",
       "forecastOffice": "BTV",
@@ -571,7 +565,7 @@
       "productOffice": "BTV"
     },
     "waterbury": {
-      "lat": 44.337,
+      "lat": 44.3378,
       "lon": -72.7562,
       "cwa": "BTV",
       "gridId": "BTV",
@@ -582,19 +576,19 @@
       "productOffice": "BTV"
     },
     "signal-mountain": {
-      "lat": 43.4134,
-      "lon": -74.7038,
-      "cwa": "ALY",
-      "gridId": "ALY",
-      "forecastOffice": "ALY",
-      "forecastZone": "https://api.weather.gov/zones/forecast/NYZ033",
-      "county": "https://api.weather.gov/zones/county/NYC041",
-      "relativeLocation": "Speculator",
-      "productOffice": "ALY"
+      "lat": 44.2062,
+      "lon": -72.3253,
+      "cwa": "BTV",
+      "gridId": "BTV",
+      "forecastOffice": "BTV",
+      "forecastZone": "https://api.weather.gov/zones/forecast/VTZ007",
+      "county": "https://api.weather.gov/zones/county/VTC005",
+      "relativeLocation": "Groton",
+      "productOffice": "BTV"
     },
     "burke-mountain": {
-      "lat": 44.5705,
-      "lon": -71.8928,
+      "lat": 44.5706,
+      "lon": -71.8929,
       "cwa": "BTV",
       "gridId": "BTV",
       "forecastOffice": "BTV",
@@ -604,8 +598,8 @@
       "productOffice": "BTV"
     },
     "monadnock-mountain": {
-      "lat": 44.8973,
-      "lon": -71.5448,
+      "lat": 44.8974,
+      "lon": -71.5445,
       "cwa": "BTV",
       "gridId": "BTV",
       "forecastOffice": "BTV",
@@ -616,7 +610,7 @@
     },
     "killington-peak": {
       "lat": 43.6045,
-      "lon": -72.8205,
+      "lon": -72.8201,
       "cwa": "BTV",
       "gridId": "BTV",
       "forecastOffice": "BTV",
@@ -626,29 +620,29 @@
       "productOffice": "BTV"
     },
     "stratton-mountain": {
-      "lat": 42.6801,
-      "lon": -72.401,
-      "cwa": "BOX",
-      "gridId": "BOX",
-      "forecastOffice": "BOX",
-      "forecastZone": "https://api.weather.gov/zones/forecast/MAZ003",
-      "county": "https://api.weather.gov/zones/county/MAC011",
-      "relativeLocation": "Northfield",
-      "productOffice": null
+      "lat": 43.0863,
+      "lon": -72.9249,
+      "cwa": "ALY",
+      "gridId": "ALY",
+      "forecastOffice": "ALY",
+      "forecastZone": "https://api.weather.gov/zones/forecast/VTZ014",
+      "county": "https://api.weather.gov/zones/county/VTC025",
+      "relativeLocation": "Stratton Mountain",
+      "productOffice": "ALY"
     },
     "mount-equinox": {
-      "lat": 43.1228,
-      "lon": -73.1765,
+      "lat": 43.1659,
+      "lon": -73.1174,
       "cwa": "ALY",
       "gridId": "ALY",
       "forecastOffice": "ALY",
       "forecastZone": "https://api.weather.gov/zones/forecast/VTZ013",
       "county": "https://api.weather.gov/zones/county/VTC003",
-      "relativeLocation": "Arlington",
+      "relativeLocation": "Manchester",
       "productOffice": "ALY"
     },
     "dorset-mountain": {
-      "lat": 43.3093,
+      "lat": 43.3092,
       "lon": -73.0282,
       "cwa": "BTV",
       "gridId": "BTV",
@@ -659,18 +653,18 @@
       "productOffice": "BTV"
     },
     "haystack-mountain": {
-      "lat": 42.0048,
-      "lon": -73.2084,
+      "lat": 42.9138,
+      "lon": -72.9191,
       "cwa": "ALY",
       "gridId": "ALY",
       "forecastOffice": "ALY",
-      "forecastZone": "https://api.weather.gov/zones/forecast/CTZ001",
-      "county": "https://api.weather.gov/zones/county/CTC005",
-      "relativeLocation": "Norfolk",
+      "forecastZone": "https://api.weather.gov/zones/forecast/VTZ014",
+      "county": "https://api.weather.gov/zones/county/VTC025",
+      "relativeLocation": "Chimney Hill",
       "productOffice": "ALY"
     },
     "ludlow-mountain": {
-      "lat": 43.404,
+      "lat": 43.4041,
       "lon": -72.7515,
       "cwa": "BTV",
       "gridId": "BTV",
@@ -681,8 +675,8 @@
       "productOffice": "BTV"
     },
     "bromley-mountain": {
-      "lat": 43.2277,
-      "lon": -72.9396,
+      "lat": 43.2276,
+      "lon": -72.9394,
       "cwa": "ALY",
       "gridId": "ALY",
       "forecastOffice": "ALY",
@@ -692,8 +686,8 @@
       "productOffice": "ALY"
     },
     "mount-ascutney": {
-      "lat": 43.4331,
-      "lon": -72.4365,
+      "lat": 43.4437,
+      "lon": -72.4546,
       "cwa": "BTV",
       "gridId": "BTV",
       "forecastOffice": "BTV",
@@ -702,9 +696,20 @@
       "relativeLocation": "Ascutney",
       "productOffice": "BTV"
     },
+    "bald-mountain": {
+      "lat": 42.9221,
+      "lon": -73.1437,
+      "cwa": "ALY",
+      "gridId": "ALY",
+      "forecastOffice": "ALY",
+      "forecastZone": "https://api.weather.gov/zones/forecast/VTZ013",
+      "county": "https://api.weather.gov/zones/county/VTC003",
+      "relativeLocation": "South Shaftsbury",
+      "productOffice": "ALY"
+    },
     "manchester-vt": {
-      "lat": 43.1638,
-      "lon": -73.0729,
+      "lat": 43.1637,
+      "lon": -73.0723,
       "cwa": "ALY",
       "gridId": "ALY",
       "forecastOffice": "ALY",
@@ -725,8 +730,8 @@
       "productOffice": "GYX"
     },
     "mount-adams": {
-      "lat": 44.3197,
-      "lon": -71.2914,
+      "lat": 44.3207,
+      "lon": -71.2915,
       "cwa": "GYX",
       "gridId": "GYX",
       "forecastOffice": "GYX",
@@ -736,8 +741,8 @@
       "productOffice": "GYX"
     },
     "pinkham-notch": {
-      "lat": 44.2556,
-      "lon": -71.2512,
+      "lat": 44.2576,
+      "lon": -71.2537,
       "cwa": "GYX",
       "gridId": "GYX",
       "forecastOffice": "GYX",
@@ -747,8 +752,8 @@
       "productOffice": "GYX"
     },
     "crawford-notch": {
-      "lat": 44.165,
-      "lon": -71.395,
+      "lat": 44.167,
+      "lon": -71.3759,
       "cwa": "GYX",
       "gridId": "GYX",
       "forecastOffice": "GYX",
@@ -758,19 +763,19 @@
       "productOffice": "GYX"
     },
     "baldface-mountain": {
-      "lat": 43.4409,
-      "lon": -74.7888,
-      "cwa": "ALY",
-      "gridId": "ALY",
-      "forecastOffice": "ALY",
-      "forecastZone": "https://api.weather.gov/zones/forecast/NYZ033",
-      "county": "https://api.weather.gov/zones/county/NYC041",
-      "relativeLocation": "Cold Brook",
-      "productOffice": "ALY"
+      "lat": 44.243,
+      "lon": -71.0873,
+      "cwa": "GYX",
+      "gridId": "GYX",
+      "forecastOffice": "GYX",
+      "forecastZone": "https://api.weather.gov/zones/forecast/NHZ002",
+      "county": "https://api.weather.gov/zones/county/NHC007",
+      "relativeLocation": "Gorham",
+      "productOffice": "GYX"
     },
     "mount-lafayette": {
-      "lat": 44.1606,
-      "lon": -71.645,
+      "lat": 44.1608,
+      "lon": -71.6445,
       "cwa": "GYX",
       "gridId": "GYX",
       "forecastOffice": "GYX",
@@ -780,8 +785,8 @@
       "productOffice": "GYX"
     },
     "mount-moosilauke": {
-      "lat": 44.0234,
-      "lon": -71.8314,
+      "lat": 44.0245,
+      "lon": -71.8309,
       "cwa": "GYX",
       "gridId": "GYX",
       "forecastOffice": "GYX",
@@ -791,8 +796,8 @@
       "productOffice": "GYX"
     },
     "mount-osceola": {
-      "lat": 44.0016,
-      "lon": -71.536,
+      "lat": 44.0015,
+      "lon": -71.5359,
       "cwa": "GYX",
       "gridId": "GYX",
       "forecastOffice": "GYX",
@@ -802,8 +807,8 @@
       "productOffice": "GYX"
     },
     "cannon-mountain": {
-      "lat": 44.1567,
-      "lon": -71.6986,
+      "lat": 44.1566,
+      "lon": -71.6988,
       "cwa": "GYX",
       "gridId": "GYX",
       "forecastOffice": "GYX",
@@ -813,19 +818,19 @@
       "productOffice": "GYX"
     },
     "kancamagus-pass": {
-      "lat": 44.053,
-      "lon": -71.418,
+      "lat": 44.0251,
+      "lon": -71.4926,
       "cwa": "GYX",
       "gridId": "GYX",
       "forecastOffice": "GYX",
       "forecastZone": "https://api.weather.gov/zones/forecast/NHZ003",
       "county": "https://api.weather.gov/zones/county/NHC009",
-      "relativeLocation": "Bartlett",
+      "relativeLocation": "Lincoln",
       "productOffice": "GYX"
     },
     "franconia-notch": {
-      "lat": 44.1489,
-      "lon": -71.6826,
+      "lat": 44.1526,
+      "lon": -71.6795,
       "cwa": "GYX",
       "gridId": "GYX",
       "forecastOffice": "GYX",
@@ -835,7 +840,7 @@
       "productOffice": "GYX"
     },
     "rumney-crag": {
-      "lat": 43.8098,
+      "lat": 43.8054,
       "lon": -71.8126,
       "cwa": "GYX",
       "gridId": "GYX",
@@ -846,8 +851,8 @@
       "productOffice": "GYX"
     },
     "mount-monadnock": {
-      "lat": 42.8605,
-      "lon": -72.1087,
+      "lat": 42.8614,
+      "lon": -72.108,
       "cwa": "GYX",
       "gridId": "GYX",
       "forecastOffice": "GYX",
@@ -857,8 +862,8 @@
       "productOffice": "GYX"
     },
     "north-pack-monadnock": {
-      "lat": 42.897,
-      "lon": -71.871,
+      "lat": 42.886,
+      "lon": -71.8658,
       "cwa": "GYX",
       "gridId": "GYX",
       "forecastOffice": "GYX",
@@ -868,8 +873,8 @@
       "productOffice": "GYX"
     },
     "katahdin": {
-      "lat": 45.9044,
-      "lon": -68.9217,
+      "lat": 45.9043,
+      "lon": -68.9214,
       "cwa": "CAR",
       "gridId": "CAR",
       "forecastOffice": "CAR",
@@ -890,7 +895,7 @@
       "productOffice": "CAR"
     },
     "millinocket": {
-      "lat": 45.657,
+      "lat": 45.6573,
       "lon": -68.7098,
       "cwa": "CAR",
       "gridId": "CAR",
@@ -901,7 +906,7 @@
       "productOffice": "CAR"
     },
     "white-cap-mountain": {
-      "lat": 45.5548,
+      "lat": 45.5547,
       "lon": -69.2462,
       "cwa": "CAR",
       "gridId": "CAR",
@@ -913,7 +918,7 @@
     },
     "sugarloaf-mountain": {
       "lat": 45.0317,
-      "lon": -70.3117,
+      "lon": -70.3133,
       "cwa": "GYX",
       "gridId": "GYX",
       "forecastOffice": "GYX",
@@ -923,19 +928,18 @@
       "productOffice": "GYX"
     },
     "bigelow": {
-      "lat": 45.1634,
-      "lon": -70.3009,
+      "lat": 44.6014,
+      "lon": -70.9022,
       "cwa": "GYX",
       "gridId": "GYX",
       "forecastOffice": "GYX",
-      "forecastZone": "https://api.weather.gov/zones/forecast/MEZ009",
-      "county": "https://api.weather.gov/zones/county/MEC025",
-      "relativeLocation": "Kingfield",
+      "county": "https://api.weather.gov/zones/county/MEC017",
+      "relativeLocation": "Berlin",
       "productOffice": "GYX"
     },
     "rangeley": {
-      "lat": 44.9917,
-      "lon": -70.6645,
+      "lat": 44.9665,
+      "lon": -70.6428,
       "cwa": "GYX",
       "gridId": "GYX",
       "forecastOffice": "GYX",
@@ -945,8 +949,8 @@
       "productOffice": "GYX"
     },
     "deboullie-mountain": {
-      "lat": 46.9706,
-      "lon": -68.8759,
+      "lat": 46.9704,
+      "lon": -68.8763,
       "cwa": "CAR",
       "gridId": "CAR",
       "forecastOffice": "CAR",
@@ -956,8 +960,8 @@
       "productOffice": "CAR"
     },
     "mars-hill-mountain": {
-      "lat": 46.5214,
-      "lon": -67.8136,
+      "lat": 46.5211,
+      "lon": -67.8138,
       "cwa": "CAR",
       "gridId": "CAR",
       "forecastOffice": "CAR",
@@ -967,8 +971,8 @@
       "productOffice": "CAR"
     },
     "cadillac-mountain": {
-      "lat": 44.3516,
-      "lon": -68.2221,
+      "lat": 44.3513,
+      "lon": -68.2265,
       "cwa": "CAR",
       "gridId": "CAR",
       "forecastOffice": "CAR",

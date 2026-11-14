@@ -9,6 +9,7 @@ import path from 'node:path';
 const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), '../..');
 const PLAN = process.env.WEATHER_PLAN
   ?? '/home/ubuntu/.cursor/projects/agent-repos-bannquet/uploads/weather-build-plan_83bf.txt';
+const PLACE_COORDS_PATH = path.join(ROOT, 'config/mountain-weather/place-coordinates.json');
 
 const SECTION_SLUGS = {
   'Adirondack High Peaks': 'adirondack-high-peaks',
@@ -152,8 +153,23 @@ function loadPeakIndex() {
   return index;
 }
 
-function lookupCoords(name, legacy, peaks) {
+function loadResolvedCoords() {
+  if (!fs.existsSync(PLACE_COORDS_PATH)) return new Map();
+  const raw = JSON.parse(fs.readFileSync(PLACE_COORDS_PATH, 'utf8'));
+  const map = new Map();
+  for (const [id, row] of Object.entries(raw.places ?? {})) {
+    if (row.flagged || row.lat == null || row.lon == null) continue;
+    map.set(id, { lat: row.lat, lon: row.lon, elevationFt: null });
+  }
+  return map;
+}
+
+function lookupCoords(name, legacy, peaks, resolved) {
   const key = slugify(name);
+  if (resolved.has(key)) {
+    const hit = resolved.get(key);
+    return { ...hit, id: normalizePlaceId(key) };
+  }
   if (COORD_OVERRIDES[key]) return { ...COORD_OVERRIDES[key], id: normalizePlaceId(key) };
 
   const plain = cleanName(name).toLowerCase();
@@ -208,12 +224,13 @@ function main() {
   }
   const legacy = loadLegacySpots();
   const peaks = loadPeakIndex();
+  const resolved = loadResolvedCoords();
 
   const states = { ny: [], vt: [], nh: [], me: [] };
   const missing = [];
 
   for (const row of rows) {
-    const coords = lookupCoords(row.name, legacy, peaks);
+    const coords = lookupCoords(row.name, legacy, peaks, resolved);
     if (!coords) {
       missing.push(row.name);
       continue;

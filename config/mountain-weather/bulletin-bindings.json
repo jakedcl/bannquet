@@ -50,8 +50,8 @@
       "bindReason": "api.weather.gov/points cwa=BTV gridId=BTV."
     },
     "lyon-mountain": {
-      "office": "ALY",
-      "bindReason": "api.weather.gov/points cwa=ALY gridId=ALY."
+      "office": "BTV",
+      "bindReason": "api.weather.gov/points cwa=BTV gridId=BTV."
     },
     "ampersand-mountain": {
       "office": "BTV",
@@ -74,12 +74,12 @@
       "bindReason": "api.weather.gov/points cwa=ALY gridId=ALY."
     },
     "blue-mountain": {
-      "office": "OKX",
-      "bindReason": "api.weather.gov/points cwa=OKX gridId=OKX."
+      "office": "ALY",
+      "bindReason": "api.weather.gov/points cwa=ALY gridId=ALY."
     },
     "pillsbury-mountain": {
-      "office": "GYX",
-      "bindReason": "api.weather.gov/points cwa=GYX gridId=GYX."
+      "office": "ALY",
+      "bindReason": "api.weather.gov/points cwa=ALY gridId=ALY."
     },
     "gore-mountain": {
       "office": "ALY",
@@ -90,32 +90,32 @@
       "bindReason": "api.weather.gov/points cwa=BTV gridId=BTV."
     },
     "fishing-brook-range": {
-      "office": "ALY",
-      "bindReason": "api.weather.gov/points cwa=ALY gridId=ALY."
+      "office": "BTV",
+      "bindReason": "api.weather.gov/points cwa=BTV gridId=BTV."
     },
     "vanderwhacker-mountain": {
       "office": "BTV",
       "bindReason": "api.weather.gov/points cwa=BTV gridId=BTV."
     },
     "crane-mountain": {
-      "office": "GYX",
-      "bindReason": "api.weather.gov/points cwa=GYX gridId=GYX."
+      "office": "ALY",
+      "bindReason": "api.weather.gov/points cwa=ALY gridId=ALY."
     },
     "hadley-mountain": {
       "office": "ALY",
       "bindReason": "api.weather.gov/points cwa=ALY gridId=ALY."
     },
     "black-mountain": {
-      "office": "OKX",
-      "bindReason": "api.weather.gov/points cwa=OKX gridId=OKX."
+      "office": "ALY",
+      "bindReason": "api.weather.gov/points cwa=ALY gridId=ALY."
     },
     "pharaoh-mountain": {
       "office": "BTV",
       "bindReason": "api.weather.gov/points cwa=BTV gridId=BTV."
     },
     "prospect-mountain": {
-      "office": "OKX",
-      "bindReason": "api.weather.gov/points cwa=OKX gridId=OKX."
+      "office": "ALY",
+      "bindReason": "api.weather.gov/points cwa=ALY gridId=ALY."
     },
     "slide-mountain": {
       "office": "ALY",
@@ -134,8 +134,8 @@
       "bindReason": "api.weather.gov/points cwa=ALY gridId=ALY."
     },
     "panther-mountain": {
-      "office": "OKX",
-      "bindReason": "api.weather.gov/points cwa=OKX gridId=OKX."
+      "office": "ALY",
+      "bindReason": "api.weather.gov/points cwa=ALY gridId=ALY."
     },
     "windham-high-peak": {
       "office": "ALY",
@@ -146,8 +146,8 @@
       "bindReason": "api.weather.gov/points cwa=ALY gridId=ALY."
     },
     "red-hill": {
-      "office": "BOX",
-      "bindReason": "api.weather.gov/points cwa=BOX gridId=BOX."
+      "office": "ALY",
+      "bindReason": "api.weather.gov/points cwa=ALY gridId=ALY."
     },
     "mount-tremper": {
       "office": "ALY",
@@ -198,8 +198,8 @@
       "bindReason": "api.weather.gov/points cwa=BTV gridId=BTV."
     },
     "bread-loaf-mountain": {
-      "office": "ALY",
-      "bindReason": "api.weather.gov/points cwa=ALY gridId=ALY."
+      "office": "BTV",
+      "bindReason": "api.weather.gov/points cwa=BTV gridId=BTV."
     },
     "mount-worcester": {
       "office": "BTV",
@@ -210,8 +210,8 @@
       "bindReason": "api.weather.gov/points cwa=BTV gridId=BTV."
     },
     "signal-mountain": {
-      "office": "ALY",
-      "bindReason": "api.weather.gov/points cwa=ALY gridId=ALY."
+      "office": "BTV",
+      "bindReason": "api.weather.gov/points cwa=BTV gridId=BTV."
     },
     "burke-mountain": {
       "office": "BTV",
@@ -226,8 +226,8 @@
       "bindReason": "api.weather.gov/points cwa=BTV gridId=BTV."
     },
     "stratton-mountain": {
-      "office": "BOX",
-      "bindReason": "api.weather.gov/points cwa=BOX gridId=BOX."
+      "office": "ALY",
+      "bindReason": "api.weather.gov/points cwa=ALY gridId=ALY."
     },
     "mount-equinox": {
       "office": "ALY",
@@ -254,8 +254,8 @@
       "bindReason": "api.weather.gov/points cwa=BTV gridId=BTV."
     },
     "bald-mountain": {
-      "office": "BTV",
-      "bindReason": "Known-bad catalog coordinates (final-pass); NWS points lookup skipped."
+      "office": "ALY",
+      "bindReason": "api.weather.gov/points cwa=ALY gridId=ALY."
     },
     "manchester-vt": {
       "office": "ALY",
@@ -278,8 +278,8 @@
       "bindReason": "api.weather.gov/points cwa=GYX gridId=GYX."
     },
     "baldface-mountain": {
-      "office": "ALY",
-      "bindReason": "api.weather.gov/points cwa=ALY gridId=ALY."
+      "office": "GYX",
+      "bindReason": "api.weather.gov/points cwa=GYX gridId=GYX."
     },
     "mount-lafayette": {
       "office": "GYX",
@@ -365,13 +365,24 @@
   "states": {
     "ny": null,
     "vt": null,
-    "nh": null,
+    "nh": {
+      "office": "GYX",
+      "bindReason": "Every catalog New Hampshire place shares cwa GYX."
+    },
     "me": null
   },
   "sections": {
     "adirondack-high-peaks": {
       "office": "BTV",
       "bindReason": "Every place in Adirondack High Peaks shares cwa BTV."
+    },
+    "northern-adirondacks": {
+      "office": "BTV",
+      "bindReason": "Every place in Northern Adirondacks shares cwa BTV."
+    },
+    "catskill-mountains": {
+      "office": "ALY",
+      "bindReason": "Every place in Catskill Mountains shares cwa ALY."
     },
     "shawangunks": {
       "office": "ALY",
@@ -388,6 +399,18 @@
     "northern-greens": {
       "office": "BTV",
       "bindReason": "Every place in Northern Greens shares cwa BTV."
+    },
+    "central-greens": {
+      "office": "BTV",
+      "bindReason": "Every place in Central Greens shares cwa BTV."
+    },
+    "northeast-kingdom": {
+      "office": "BTV",
+      "bindReason": "Every place in Northeast Kingdom (new) shares cwa BTV."
+    },
+    "presidential-range": {
+      "office": "GYX",
+      "bindReason": "Every place in Presidential Range shares cwa GYX."
     },
     "franconia-pemi": {
       "office": "GYX",
@@ -419,13 +442,8 @@
     }
   },
   "unboundScopes": {
-    "northern-adirondacks": "Mixed cwa (ALY, BTV); no single-office bulletin block.",
-    "central-southern-adirondacks": "Mixed cwa (ALY, OKX, GYX, BTV); no single-office bulletin block.",
-    "catskill-mountains": "Mixed cwa (ALY, OKX, BOX); no single-office bulletin block.",
-    "central-greens": "Mixed cwa (BTV, ALY); no single-office bulletin block.",
-    "northeast-kingdom": "Mixed cwa (ALY, BTV); no single-office bulletin block.",
-    "southern-greens": "Mixed cwa (BTV, BOX, ALY); no single-office bulletin block.",
-    "presidential-range": "Mixed cwa (GYX, ALY); no single-office bulletin block.",
+    "central-southern-adirondacks": "Mixed cwa (ALY, BTV); no single-office bulletin block.",
+    "southern-greens": "Mixed cwa (BTV, ALY); no single-office bulletin block.",
     "ny": "Catalog New York spans multiple CWAs; no state-wide bulletin block."
   }
 }

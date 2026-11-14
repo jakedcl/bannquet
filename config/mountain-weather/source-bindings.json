@@ -150,6 +150,10 @@
         "office": "ALY",
         "sectionMatch": "Southern Adirondacks",
         "nearbyLabel": "KALY REC (Clinton Co. under Albany CWA)"
+      },
+      "balloon": {
+        "regionMatch": "the Northern Adirondacks of New York",
+        "bindReason": "Dannemora bulletin city (Clinton Co. NY, BTV WFO)."
       }
     },
     "ampersand-mountain": {
@@ -198,6 +202,12 @@
         "sectionMatch": "Southern Adirondacks"
       }
     },
+    "blue-mountain": {
+      "rec": {
+        "office": "ALY",
+        "sectionMatch": "Southern Adirondacks"
+      }
+    },
     "pillsbury-mountain": {
       "rec": {
         "office": "GYX",
@@ -219,8 +229,8 @@
     },
     "fishing-brook-range": {
       "rec": {
-        "office": "ALY",
-        "sectionMatch": "Southern Adirondacks"
+        "office": "BTV",
+        "sectionMatch": "Northern Adirondacks of New York"
       }
     },
     "vanderwhacker-mountain": {
@@ -231,12 +241,17 @@
     },
     "crane-mountain": {
       "rec": {
-        "office": "GYX",
-        "sectionMatch": "2500 Feet to 4000 Feet",
-        "nearbyLabel": "KGYX REC nearest western Maine / northern NH band"
+        "office": "ALY",
+        "sectionMatch": "Southern Adirondacks"
       }
     },
     "hadley-mountain": {
+      "rec": {
+        "office": "ALY",
+        "sectionMatch": "Southern Adirondacks"
+      }
+    },
+    "black-mountain": {
       "rec": {
         "office": "ALY",
         "sectionMatch": "Southern Adirondacks"
@@ -246,6 +261,12 @@
       "rec": {
         "office": "BTV",
         "sectionMatch": "Northern Adirondacks of New York"
+      }
+    },
+    "prospect-mountain": {
+      "rec": {
+        "office": "ALY",
+        "sectionMatch": "Southern Adirondacks"
       }
     },
     "slide-mountain": {
@@ -411,6 +432,16 @@
         "bindReason": "Waitsfield bulletin city (Washington Co. VT, BTV WFO)."
       }
     },
+    "bread-loaf-mountain": {
+      "rec": {
+        "office": "BTV",
+        "sectionMatch": "Northern Adirondacks of New York"
+      },
+      "balloon": {
+        "regionMatch": "the Champlain Valley of Vermont and New York",
+        "bindReason": "Middlebury/Ripton bulletin cities (Addison Co. VT, BTV WFO)."
+      }
+    },
     "mount-worcester": {
       "rec": {
         "office": "BTV",
@@ -435,6 +466,10 @@
       "rec": {
         "office": "BTV",
         "sectionMatch": "Northern Adirondacks of New York"
+      },
+      "balloon": {
+        "regionMatch": "Central and Northeast Vermont",
+        "bindReason": "Island Pond bulletin city (Essex Co. VT, BTV WFO)."
       }
     },
     "burke-mountain": {
@@ -471,9 +506,9 @@
     },
     "stratton-mountain": {
       "rec": {
-        "office": "BOX",
-        "sectionMatch": "Southern New England",
-        "nearbyLabel": "KBOX REC (Stratton area)"
+        "office": "ALY",
+        "sectionMatch": "Southern Adirondacks",
+        "nearbyLabel": "KALY recreation band nearest southern Green peak"
       }
     },
     "mount-equinox": {
@@ -525,8 +560,9 @@
     },
     "bald-mountain": {
       "rec": {
-        "office": "BTV",
-        "sectionMatch": "Southern Green Mountains of Vermont"
+        "office": "ALY",
+        "sectionMatch": "Southern Adirondacks",
+        "nearbyLabel": "KALY recreation band nearest southern Green peak"
       }
     },
     "manchester-vt": {
@@ -627,6 +663,10 @@
       }
     },
     "baldface-mountain": {
+      "rec": {
+        "office": "GYX",
+        "sectionMatch": "Summits Above 4000 Feet"
+      },
       "avg": {
         "office": "GYX",
         "pointMatch": "BALDFACE MOUNTAIN"

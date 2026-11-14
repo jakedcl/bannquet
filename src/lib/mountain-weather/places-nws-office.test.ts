@@ -25,7 +25,3 @@ test('places.json office matches committed nws-points.cwa (except skipped)', () 
   }
   assert.deepEqual(mismatches, []);
 });
-
-test('bald-mountain remains skipped in nws-points', () => {
-  assert.ok(nws.skipped?.['bald-mountain']);
-});
