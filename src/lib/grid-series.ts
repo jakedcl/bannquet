@@ -145,10 +145,13 @@ export function gridWeatherSeriesSamples(series: GridWeatherSeries | undefined, 
   return out;
 }
 
-export function gridElevationFt(elevation?: { value?: number | null; uom?: string } | null): number | null {
+export function gridElevationFt(
+  elevation?: { value?: number | null; uom?: string; unitCode?: string } | null,
+): number | null {
   const value = elevation?.value;
   if (value === null || value === undefined || !Number.isFinite(value)) return null;
-  if (elevation?.uom === 'wmoUnit:m') return Math.round(value * 3.28084);
-  if (elevation?.uom === 'wmoUnit:ft') return Math.round(value);
+  const unit = elevation?.unitCode ?? elevation?.uom;
+  if (unit === 'wmoUnit:m') return Math.round(value * 3.28084);
+  if (unit === 'wmoUnit:ft') return Math.round(value);
   return Math.round(value);
 }

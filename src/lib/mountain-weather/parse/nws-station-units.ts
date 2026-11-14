@@ -20,6 +20,11 @@ const MEASUREMENT_KEYS = new Set([
   'elevation',
 ]);
 
+export function isPlaceholderStationName(name: string | null | undefined): boolean {
+  const n = (name ?? '').trim();
+  return /^crew\s+\d+/i.test(n);
+}
+
 export function stationHasReadableMeasurements(fields: NwsStationField[]): boolean {
   return fields.some(
     (f) =>
@@ -33,6 +38,37 @@ export function stationHasReadableMeasurements(fields: NwsStationField[]): boole
 
 function toFahrenheit(c: number): number {
   return (c * 9) / 5 + 32;
+}
+
+function numericFieldValue(field: NwsStationField | undefined): number | null {
+  if (!field || field.qcFailed) return null;
+  if (field.value === null || field.value === undefined || field.value === '') return null;
+  const num = typeof field.value === 'number' ? field.value : Number(field.value);
+  return Number.isFinite(num) ? num : null;
+}
+
+/** Raw NWS quantity in °F for extremes / ticker (null when missing). */
+export function stationFieldTempF(fields: NwsStationField[], key: string): number | null {
+  const field = fields.find((row) => row.key === key);
+  const num = numericFieldValue(field);
+  if (num === null || !field) return null;
+  if (field.unit === '°C') return Math.round(toFahrenheit(num));
+  if (field.unit === '°F') return Math.round(num);
+  return Math.round(num);
+}
+
+/** Raw NWS quantity in mph (null when missing; 0 is a real calm wind). */
+export function stationFieldWindMph(fields: NwsStationField[], key: 'windSpeed' | 'windGust'): number | null {
+  const field = fields.find((row) => row.key === key);
+  const num = numericFieldValue(field);
+  if (num === null || !field) return null;
+  if (field.unit === 'km/h') return Math.round(num * 0.621371);
+  if (field.unit === 'm/s') return Math.round(num * 2.23694);
+  return Math.round(num);
+}
+
+export function stationFieldByKey(fields: NwsStationField[], key: string): NwsStationField | undefined {
+  return fields.find((row) => row.key === key);
 }
 
 function formatNumber(value: number, decimals = 1): string {

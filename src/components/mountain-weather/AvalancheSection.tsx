@@ -26,6 +26,13 @@ function formatEt(value: string | null): string {
   });
 }
 
+function showAvalancheBindNote(reason: string): boolean {
+  if (!reason.trim()) return false;
+  if (/point-in-polygon/i.test(reason)) return false;
+  if (/geometry cached/i.test(reason)) return false;
+  return true;
+}
+
 function statusHeadline(status: SourceResult<AvalancheProductBundle>['status'], data: AvalancheProductBundle | null): string {
   if (status === 'seasonal-off') return 'Not issued / off-season';
   if (status === 'error') return 'Unavailable';
@@ -122,7 +129,11 @@ function CenterBlock({ result }: { result: SourceResult<AvalancheProductBundle> 
           {(result.status === 'seasonal-off' || data.offSeason) && (
             <p className="border border-[#5c3a1e]/30 bg-white/60 p-2 text-xs font-bold">
               Not issued / off-season. This is not low danger.
-              {data.lastKnownIssued ? ` Last known issued ${formatEt(data.lastKnownIssued)} ET.` : ''}
+              {data.mapLayer.startDate && data.mapLayer.endDate
+                ? ` Issued ${formatEt(data.mapLayer.startDate)} ET, expires ${formatEt(data.mapLayer.endDate)} ET.`
+                : data.lastKnownIssued
+                  ? ` Last known issued ${formatEt(data.lastKnownIssued)} ET.`
+                  : ''}
               {data.travelAdvice ? ` ${data.travelAdvice}` : ''}
             </p>
           )}
@@ -184,7 +195,9 @@ export function AvalancheSection({ data, showAvg = true }: { data: PlaceAvalanch
   return (
     <>
       <h2 className="text-lg font-bold uppercase tracking-wide text-gray-900">Avalanche</h2>
-      <p className="text-sm text-gray-700">{data.binding.bindReason}</p>
+      {showAvalancheBindNote(data.binding.bindReason) ? (
+        <p className="text-sm text-gray-700">{data.binding.bindReason}</p>
+      ) : null}
       {data.centers.map((result, idx) => (
         <CenterBlock key={result.data?.centerId ?? idx} result={result} />
       ))}

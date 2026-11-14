@@ -9,7 +9,7 @@ Branch: `lurk/site-overhaul-01d6` · PR [#54](https://github.com/jakedcl/bannque
 | `25f069a` | Cosmetic: no “(new)” labels, state **Places by section** (one card), hide empty snow blocks, overflow tweaks, docs |
 | `26d3862` | **M16:** `/mountain-weather/conditions` + **Live ticker** from `readNwsStationLatest` (M10 bindings, station + age); state/section place lines from `readNwsGridBaseline`; retired `REGION_WEATHER_SECTIONS` |
 | `b96863f` | **M15 fix:** Compass clock-as-UTC timestamps; TMDD tenths-°C ESS fields; HTTP 500 called out |
-| `f23def5` | **M15:** Ground & access (DEC/WFAS links, USDM drought, Compass ESS, AirNow stub) |
+| `f23def5` | **M15:** Ground & access (DEC/WFAS links, USDM drought, Compass ESS, AirNow via `/aq/data/` when keyed) |
 | `543364d` | **M14 fix:** USNO `dst=true`, EDT/EST per day |
 | `9682c4b` | **M14:** Sun & moon (USNO RSTT) |
 | `2a54974` | Maps fixes: SPC PNGs, alert polygons |
@@ -29,11 +29,7 @@ Branch: `lurk/site-overhaul-01d6` · PR [#54](https://github.com/jakedcl/bannque
 
 ## Unbound places (no M10 station binding)
 
-1. `snowy-mountain` — Snowy Mountain, NY  
-2. `blue-mountain` — Blue Mountain, NY  
-3. `pillsbury-mountain` — Pillsbury Mountain, NY  
-
-(87 other catalog places have at least one visible binding.)
+None of the catalog peaks are fully unbound for REC; snowy, blue, and pillsbury use ALY Southern Adirondacks REC. Several still lack summit ASOS bindings (valley-only or no M10 row).
 
 ## Stations often silent or sparse
 
@@ -66,4 +62,4 @@ After the latest push, open the branch preview (exact host may vary):
 - VT Compass sample: `/mountain-weather/vermont/central-greens/mount-ellen`  
 - NH ticker extremes: home + `/mountain-weather/conditions`
 
-Full preview base (typical): `https://bannquet-git-lurk-site-overhaul-01d6-jakedcl.vercel.app` — confirm in the Vercel deployment for this branch.
+Full preview base: `https://bannquet-git-lurk-site-overhaul-01d6-dcldev.vercel.app`

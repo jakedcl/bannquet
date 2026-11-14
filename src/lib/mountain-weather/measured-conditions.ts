@@ -4,7 +4,11 @@ import { mountainWeatherPath } from '@/lib/mountain-weather/slugs';
 import { readNwsGridBaseline } from '@/lib/mountain-weather/readers/nws-grid-baseline';
 import { readNwsStationLatest } from '@/lib/mountain-weather/readers/nws-station';
 import { visibleStationBindings } from '@/lib/mountain-weather/station-bindings';
-import { stationMeasuredScalars } from '@/lib/mountain-weather/station-scalars';
+import {
+  stationHasPlaceholderName,
+  stationMeasuredScalars,
+  stationObservationStale,
+} from '@/lib/mountain-weather/station-scalars';
 import type { MountainStateCode } from '@/lib/mountain-weather/slugs';
 
 const POOL = 4;
@@ -99,14 +103,22 @@ export async function loadMountainConditionsReport(now = new Date()): Promise<Mo
       failures.push(`${job.place.name}: ${result?.error ?? 'no station data'}`);
       continue;
     }
+    if (stationHasPlaceholderName(result.data)) {
+      failures.push(`${job.place.name}: placeholder station`);
+      continue;
+    }
     const scalars = stationMeasuredScalars(result.data);
+    if (stationObservationStale(scalars.observedAt)) {
+      failures.push(`${job.place.name}: stale observation`);
+      continue;
+    }
     if (scalars.tempF === null) {
       failures.push(`${job.place.name}: missing temperature`);
       continue;
     }
     const temp = scalars.tempF;
     const wind = scalars.windMph ?? 0;
-    const gust = scalars.gustMph ?? wind;
+    const gust = scalars.gustMph ?? 0;
     const chill = scalars.windChillF ?? temp;
     spots.push({
       placeId: job.place.id,

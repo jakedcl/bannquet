@@ -49,7 +49,7 @@ export const MAP_OUTLOOK_LINKS: OutlookLink[] = [
   },
 ];
 
-export const NWS_ALERTS_MAP_URL = 'https://www.weather.gov/warnings/?warnings=active';
+export const NWS_ALERTS_MAP_URL = 'https://www.weather.gov/';
 
 function assetFromResult(result: Awaited<ReturnType<typeof readNwsRidgeNeMosaic>>) {
   return result.status === 'ok' && result.data ? result.data : null;

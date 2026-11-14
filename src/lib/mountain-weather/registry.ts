@@ -95,7 +95,7 @@ export const NWS_REC_CAR_DEF: SourceDef = {
   terms: 'reuse-ok',
   url: 'https://api.weather.gov/products/types/REC/locations/CAR',
   ttlSeconds: 1800,
-  expectedEveryHours: 6,
+  expectedEveryHours: 12,
 };
 
 export const NWS_AVG_BTV_DEF: SourceDef = {

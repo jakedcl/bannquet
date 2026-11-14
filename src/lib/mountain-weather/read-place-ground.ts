@@ -55,10 +55,22 @@ async function nearestCompassEss(
       sourceUrl: bundle.sourceUrl,
     };
   }
-  const fetchAt = new Date(bundle.data.fetchAt);
-  const ranked = bundle.data.stations
+  const data = bundle.data;
+  const fetchAt = new Date(data.fetchAt);
+  const ranked = data.stations
     .map((row) => ({ row, distanceMi: milesBetween(lat, lon, row.lat, row.lon) }))
     .filter((x) => x.distanceMi <= COMPASS_MAX_MI)
+    .filter((x) => {
+      const name = (x.row.name ?? '').trim();
+      if (/^crew\s+\d+/i.test(name)) return false;
+      const vis = x.row.fields.visibility.raw;
+      const staleDays = 3;
+      const ts = resolveCompassTimestamp(x.row.timestampRaw, fetchAt, data.liveConfirmed);
+      const ageDays =
+        ts.instant != null ? (fetchAt.getTime() - ts.instant.getTime()) / (24 * 60 * 60 * 1000) : Infinity;
+      if (vis === 0 && ageDays > staleDays) return false;
+      return true;
+    })
     .sort((a, b) => a.distanceMi - b.distanceMi);
   const best = ranked[0];
   if (!best) {

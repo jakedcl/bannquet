@@ -116,7 +116,8 @@ export function GroundAccessSection({ data }: { data: PlaceGroundData }) {
                 </p>
                 <p className="text-xs text-gray-700">
                   {row.siteName ? `${row.siteName} · ` : ''}
-                  {row.distanceMi} mi · {row.ageMinutes} min ago
+                  {row.distanceMi} mi ·{' '}
+                  {row.ageMinutes != null ? `${row.ageMinutes} min ago` : 'observation time unknown'}
                 </p>
               </div>
             ))}

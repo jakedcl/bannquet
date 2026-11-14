@@ -29,7 +29,7 @@ export type AirNowParameterObservation = {
   distanceMi: number;
   distant: boolean;
   observedAt: string;
-  ageMinutes: number;
+  ageMinutes: number | null;
 };
 
 export type AirNowPlaceObservation = {
@@ -46,7 +46,10 @@ const DISPLAY_PARAMETER: Record<string, string> = {
 };
 
 function normalizeParameter(raw: string): string {
-  return raw.trim().toUpperCase().replace(/\s+/g, '');
+  const u = raw.trim().toUpperCase().replace(/\s+/g, '');
+  if (u === 'PM2.5' || u === 'PM₂.₅' || u === 'FINE') return 'PM25';
+  if (u === 'O3') return 'OZONE';
+  return u;
 }
 
 const EPA_AQI_CATEGORY: Record<number, string> = {
@@ -176,9 +179,9 @@ function utcToInstant(utc: string): Date | null {
   return Number.isNaN(d.getTime()) ? null : d;
 }
 
-function ageMinutes(utc: string, now: Date): number {
+function ageMinutes(utc: string, now: Date): number | null {
   const t = utcToInstant(utc);
-  if (!t) return 0;
+  if (!t) return null;
   return Math.max(0, Math.round((now.getTime() - t.getTime()) / 60_000));
 }
 

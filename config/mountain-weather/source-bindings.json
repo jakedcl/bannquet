@@ -231,13 +231,15 @@
     },
     "lyon-mountain": {
       "rec": {
-        "office": "ALY",
-        "sectionMatch": "Southern Adirondacks",
+        "office": "BTV",
+        "sectionMatch": "Northern Adirondacks of New York",
         "sectionMatches": [
-          "Southern Adirondacks",
-          "Southern Adirondacks Recreational Forecast"
-        ],
-        "nearbyLabel": "KALY REC (Clinton Co. under Albany CWA)"
+          "Northern Adirondacks of New York",
+          "Northern Adirondacks of New York and the Northern Green Mountains of Vermont",
+          "Vermont and Northern New York",
+          "Higher Summits Forecast for Vermont and Northern New York",
+          "Higher Summits Forecast for the Northern Adirondacks of New York"
+        ]
       },
       "balloon": {
         "regionMatch": "the Northern Adirondacks of New York",
@@ -334,14 +336,12 @@
     },
     "pillsbury-mountain": {
       "rec": {
-        "office": "GYX",
-        "sectionMatch": "2500 Feet to 4000 Feet",
+        "office": "ALY",
+        "sectionMatch": "Southern Adirondacks",
         "sectionMatches": [
-          "2500 Feet to 4000 Feet",
-          "elevations between 2500 and 4000 feet",
-          "2500 feet to 4000 feet"
-        ],
-        "nearbyLabel": "KGYX mid-elevation REC (Pillsbury under Gray CWA)"
+          "Southern Adirondacks",
+          "Southern Adirondacks Recreational Forecast"
+        ]
       }
     },
     "gore-mountain": {
@@ -553,8 +553,7 @@
         "sectionMatches": [
           "Mid Hudson River",
           "Mid Hudson River Recreational Forecast"
-        ],
-        "nearbyLabel": "Mid Hudson Valley REC (nearby)"
+        ]
       }
     },
     "thacher-park": {
@@ -564,8 +563,7 @@
         "sectionMatches": [
           "Mid Hudson River",
           "Mid Hudson River Recreational Forecast"
-        ],
-        "nearbyLabel": "Mid Hudson Valley REC (nearby)"
+        ]
       }
     },
     "jay-peak": {
@@ -634,8 +632,7 @@
       },
       "avg": {
         "office": "BTV",
-        "pointMatch": "Smugglers Notch",
-        "nearbyLabel": "Smugglers Notch AVG (nearby; Essex County VT Monadnock naming is unrelated — NH Mount Monadnock has no BTV AVG point)"
+        "pointMatch": "Smugglers Notch"
       },
       "balloon": {
         "regionMatch": "Central and Northeast Vermont",
@@ -823,8 +820,7 @@
       },
       "balloon": {
         "regionMatch": "Central and Northeast Vermont",
-        "bindReason": "Bradford bulletin city (Essex Co. VT, BTV WFO).",
-        "nearbyLabel": "Essex County VT Monadnock only — NH Mount Monadnock is GYX, not this balloon product."
+        "bindReason": "Bradford bulletin city (Orange Co. VT, BTV WFO)."
       }
     },
     "killington-peak": {
@@ -844,23 +840,25 @@
     "stratton-mountain": {
       "rec": {
         "office": "ALY",
-        "sectionMatch": "Southern Adirondacks",
+        "sectionMatch": "Southern Green Mountains",
         "sectionMatches": [
-          "Southern Adirondacks",
-          "Southern Adirondacks Recreational Forecast"
-        ],
-        "nearbyLabel": "KALY recreation band nearest southern Green peak"
+          "Southern Green Mountains",
+          "Southern Green Mountains Recreational Forecast",
+          "Southern Green Mountains Recreational Forecast for elevations above 2000 feet",
+          "elevations above 2000 feet"
+        ]
       }
     },
     "mount-equinox": {
       "rec": {
         "office": "ALY",
-        "sectionMatch": "Southern Adirondacks",
+        "sectionMatch": "Southern Green Mountains",
         "sectionMatches": [
-          "Southern Adirondacks",
-          "Southern Adirondacks Recreational Forecast"
-        ],
-        "nearbyLabel": "KALY recreation band nearest southern Green peak"
+          "Southern Green Mountains",
+          "Southern Green Mountains Recreational Forecast",
+          "Southern Green Mountains Recreational Forecast for elevations above 2000 feet",
+          "elevations above 2000 feet"
+        ]
       }
     },
     "dorset-mountain": {
@@ -876,12 +874,13 @@
     "haystack-mountain": {
       "rec": {
         "office": "ALY",
-        "sectionMatch": "Southern Adirondacks",
+        "sectionMatch": "Southern Green Mountains",
         "sectionMatches": [
-          "Southern Adirondacks",
-          "Southern Adirondacks Recreational Forecast"
-        ],
-        "nearbyLabel": "KALY recreation band nearest southern Green peak"
+          "Southern Green Mountains",
+          "Southern Green Mountains Recreational Forecast",
+          "Southern Green Mountains Recreational Forecast for elevations above 2000 feet",
+          "elevations above 2000 feet"
+        ]
       }
     },
     "ludlow-mountain": {
@@ -901,12 +900,13 @@
     "bromley-mountain": {
       "rec": {
         "office": "ALY",
-        "sectionMatch": "Southern Adirondacks",
+        "sectionMatch": "Southern Green Mountains",
         "sectionMatches": [
-          "Southern Adirondacks",
-          "Southern Adirondacks Recreational Forecast"
-        ],
-        "nearbyLabel": "KALY recreation band nearest southern Green peak"
+          "Southern Green Mountains",
+          "Southern Green Mountains Recreational Forecast",
+          "Southern Green Mountains Recreational Forecast for elevations above 2000 feet",
+          "elevations above 2000 feet"
+        ]
       }
     },
     "mount-ascutney": {
@@ -926,23 +926,25 @@
     "bald-mountain": {
       "rec": {
         "office": "ALY",
-        "sectionMatch": "Southern Adirondacks",
+        "sectionMatch": "Southern Green Mountains",
         "sectionMatches": [
-          "Southern Adirondacks",
-          "Southern Adirondacks Recreational Forecast"
-        ],
-        "nearbyLabel": "KALY recreation band nearest southern Green peak"
+          "Southern Green Mountains",
+          "Southern Green Mountains Recreational Forecast",
+          "Southern Green Mountains Recreational Forecast for elevations above 2000 feet",
+          "elevations above 2000 feet"
+        ]
       }
     },
     "manchester-vt": {
       "rec": {
         "office": "ALY",
-        "sectionMatch": "Southern Adirondacks",
+        "sectionMatch": "Southern Green Mountains",
         "sectionMatches": [
-          "Southern Adirondacks",
-          "Southern Adirondacks Recreational Forecast"
-        ],
-        "nearbyLabel": "KALY recreation band nearest southern Green peak"
+          "Southern Green Mountains",
+          "Southern Green Mountains Recreational Forecast",
+          "Southern Green Mountains Recreational Forecast for elevations above 2000 feet",
+          "elevations above 2000 feet"
+        ]
       }
     },
     "mount-washington": {
@@ -1244,8 +1246,7 @@
         "sectionMatch": "TOP OF MOUNT KATAHDIN",
         "sectionMatches": [
           "TOP OF MOUNT KATAHDIN"
-        ],
-        "nearbyLabel": "Katahdin summit REC (nearby)"
+        ]
       }
     },
     "white-cap-mountain": {
@@ -1343,8 +1344,7 @@
         "sectionMatch": "TOP OF CADILLAC MOUNTAIN",
         "sectionMatches": [
           "TOP OF CADILLAC MOUNTAIN"
-        ],
-        "nearbyLabel": "Cadillac summit REC (nearby)"
+        ]
       }
     }
   }

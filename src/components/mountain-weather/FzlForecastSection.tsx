@@ -134,7 +134,7 @@ export function FzlForecastSection({ result }: { result: SourceResult<FzlPlaceSl
           </a>
           {' · '}
           <a
-            href={`https://forecast.weather.gov/product.php?issuedby=${office}&product=FZL`}
+            href={`https://forecast.weather.gov/product.php?site=${office}&product=FZL`}
             className="font-bold underline"
             target="_blank"
             rel="noopener noreferrer"

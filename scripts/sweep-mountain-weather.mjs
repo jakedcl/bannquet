@@ -231,12 +231,29 @@ async function main() {
   const pageSizes = results.map((r) => ({ route: r.route, bytes: r.text?.length ?? 0 }));
   const tinyPages = pageSizes.filter((p) => p.bytes > 0 && p.bytes < 50_000);
 
+  let linkCheck = { checked: 0, bad: [] };
+  if (process.env.SWEEP_CHECK_LINKS === '1') {
+    try {
+      const proc = await import('node:child_process');
+      const out = proc.execFileSync(
+        'npm',
+        ['test', '--', 'src/lib/mountain-weather/more-sources-links.test.ts'],
+        { cwd: ROOT, encoding: 'utf8', env: { ...process.env, NODE_OPTIONS: '' } },
+      );
+      linkCheck.checked = 1;
+      linkCheck.output = out.split('\n').slice(-3).join('\n');
+    } catch (err) {
+      linkCheck.bad.push(err instanceof Error ? err.message : String(err));
+    }
+  }
+
   console.log(
     JSON.stringify(
       {
         base: BASE,
         bypassHeader: BYPASS_SECRET ? BYPASS_HEADER : null,
         shareQuery: SHARE_TOKEN ? '_vercel_share' : null,
+        linkCheck,
         scanned: results.length,
         tinyPageCount: tinyPages.length,
         tinyPagesSample: tinyPages.slice(0, 12),

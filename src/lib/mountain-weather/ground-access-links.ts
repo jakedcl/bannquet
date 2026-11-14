@@ -12,7 +12,7 @@ const RULES: Rule[] = [
   {
     id: 'ny-dec-adk',
     label: 'Adirondack backcountry information (DEC)',
-    href: 'https://dec.ny.gov/things-to-do/hiking/adirondack-backcountry-information',
+    href: 'https://dec.ny.gov/things-to-do/hiking/adirondack-backcountry/backcountry-information-for-adirondack-park',
     org: 'NY DEC',
     mode: 'link',
     states: ['ny'],
@@ -38,7 +38,7 @@ const RULES: Rule[] = [
   {
     id: 'gmc',
     label: 'Green Mountain Club trail notices',
-    href: 'https://greenmountainclub.org/trail-closures/',
+    href: 'https://greenmountainclub.org/hike/plan-and-prepare/trail-updates/',
     org: 'Green Mountain Club',
     mode: 'link',
     states: ['vt'],

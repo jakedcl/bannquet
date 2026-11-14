@@ -1,5 +1,5 @@
 import sourceBindings from '../../../config/mountain-weather/source-bindings.json';
-import type { MountainPlace } from '@/lib/mountain-weather/places';
+import { findMountainPlaceCatalogEntry, type MountainPlace } from '@/lib/mountain-weather/places';
 import { countyFipsForPlace } from '@/lib/mountain-weather/place-county-fips';
 import type { MountainStateCode } from '@/lib/mountain-weather/slugs';
 
@@ -40,6 +40,20 @@ const STATE_FOR_OFFICE: Record<MountainPlace['office'], string> = {
   BOX: 'MA',
   OKX: 'NY',
 };
+
+/** Tabular State Forecast location codes (not always the WFO id). */
+const SFT_LOCATION_FOR_OFFICE: Record<MountainPlace['office'], string> = {
+  BTV: 'VT',
+  ALY: 'NY',
+  GYX: 'NH',
+  CAR: 'ME',
+  BOX: 'MA',
+  OKX: 'NY',
+};
+
+/** From avalanche.org NYSAC map-layer `link` field (DEC, verified 200). */
+const NYSAC_DEC_HREF =
+  'https://dec.ny.gov/things-to-do/hiking/adirondack-backcountry/backcountry-information-for-adirondack-park';
 
 const OFFICES_BY_STATE: Record<MountainStateCode, MountainPlace['office'][]> = {
   ny: ['BTV', 'ALY', 'OKX'],
@@ -112,6 +126,15 @@ function baseCatalog(ctx: CatalogContext): MoreSourceEntry[] {
         org: 'US Naval Observatory',
         label: 'Sun, moon, twilight',
         href: `https://aa.usno.navy.mil/api/rstt/oneday?date=${iso}&coords=${lat},${lon}&tz=-5`,
+        mode: 'link',
+        placeIds: [place.id],
+      },
+      {
+        id: 'usno-api-docs',
+        scope: 'place',
+        org: 'US Naval Observatory',
+        label: 'USNO astronomical data API',
+        href: 'https://aa.usno.navy.mil/data/api',
         mode: 'link',
         placeIds: [place.id],
       },
@@ -280,15 +303,13 @@ function baseCatalog(ctx: CatalogContext): MoreSourceEntry[] {
 
   for (const office of offices) {
     const low = office.toLowerCase();
-    const sftState = STATE_FOR_OFFICE[office];
+    const sftLoc = SFT_LOCATION_FOR_OFFICE[office];
     entries.push(
       { id: `office-home-${office}`, scope: 'state', org: `NWS ${office}`, label: 'Office homepage', href: OFFICE_HUB[office], mode: 'link', offices: [office], states: [stateCode] },
       { id: `afd-${office}`, scope: 'state', org: `NWS ${office}`, label: 'Area Forecast Discussion (AFD)', href: `https://api.weather.gov/products/types/AFD/locations/${office}/latest`, mode: 'link', offices: [office], states: [stateCode] },
       { id: `ghwo-${office}`, scope: 'state', org: `NWS ${office}`, label: 'Graphical Hazardous Weather Outlook', href: `https://www.weather.gov/erh/ghwo?wfo=${low}`, mode: 'link', offices: [office], states: [stateCode] },
       { id: `zfp-${office}`, scope: 'state', org: `NWS ${office}`, label: 'Zone Forecast (ZFP)', href: `https://api.weather.gov/products/types/ZFP/locations/${office}/latest`, mode: 'link', offices: [office], states: [stateCode] },
-      { id: `sft-${office}`, scope: 'state', org: `NWS ${office}`, label: 'Tabular State Forecast (SFT)', href: `https://api.weather.gov/products/types/SFT/locations/${sftState}/latest`, mode: 'link', offices: [office], states: [stateCode] },
-      { id: `hyd-${office}`, scope: 'state', org: `NWS ${office}`, label: 'Hydrologic summary (HYD)', href: `https://api.weather.gov/products/types/HYD/locations/${office}/latest`, mode: 'link', offices: [office], states: [stateCode] },
-      { id: `rec-${office}`, scope: 'state', org: `NWS ${office}`, label: 'Recreation', href: `https://www.weather.gov/${low}/recreation`, mode: 'link', offices: [office], states: [stateCode] },
+      { id: `sft-${office}`, scope: 'state', org: `NWS ${office}`, label: 'Tabular State Forecast (SFT)', href: `https://api.weather.gov/products/types/SFT/locations/${sftLoc}/latest`, mode: 'link', offices: [office], states: [stateCode] },
       {
         id: `winter-hub-${office}`,
         scope: 'state',
@@ -300,6 +321,30 @@ function baseCatalog(ctx: CatalogContext): MoreSourceEntry[] {
         states: [stateCode],
       },
     );
+    if (office !== 'ALY') {
+      entries.push({
+        id: `hyd-${office}`,
+        scope: 'state',
+        org: `NWS ${office}`,
+        label: 'Hydrologic summary (HYD)',
+        href: `https://api.weather.gov/products/types/HYD/locations/${office}/latest`,
+        mode: 'link',
+        offices: [office],
+        states: [stateCode],
+      });
+    }
+    if (office !== 'OKX' && office !== 'BOX') {
+      entries.push({
+        id: `rec-${office}`,
+        scope: 'state',
+        org: `NWS ${office}`,
+        label: 'Recreation',
+        href: `https://www.weather.gov/${low}/recreation`,
+        mode: 'link',
+        offices: [office],
+        states: [stateCode],
+      });
+    }
   }
 
   entries.push(
@@ -319,16 +364,33 @@ function baseCatalog(ctx: CatalogContext): MoreSourceEntry[] {
 
   if (stateCode === 'ny') {
     entries.push(
-      { id: 'ny-dec-adk', scope: 'section', org: 'NY DEC', label: 'Adirondack backcountry information', href: 'https://dec.ny.gov/things-to-do/hiking/adirondack-backcountry-information', mode: 'link', states: ['ny'], sections: ['adirondack-high-peaks', 'northern-adirondacks', 'central-southern-adirondacks'] },
+      {
+        id: 'ny-dec-adk',
+        scope: 'section',
+        org: 'NY DEC',
+        label: 'Adirondack backcountry information',
+        href: 'https://dec.ny.gov/things-to-do/hiking/adirondack-backcountry/backcountry-information-for-adirondack-park',
+        mode: 'link',
+        states: ['ny'],
+        sections: ['adirondack-high-peaks', 'northern-adirondacks', 'central-southern-adirondacks'],
+      },
       { id: 'ny-dec-cats', scope: 'section', org: 'NY DEC', label: 'Catskill backcountry information', href: 'https://dec.ny.gov/things-to-do/hiking/catskill-backcountry-information', mode: 'link', states: ['ny'], sections: ['catskill-mountains'] },
-      { id: 'nysac', scope: 'section', org: 'NY DEC', label: 'Adirondack avalanche (NYSAC)', href: 'https://www.dec.ny.gov/things-to-do/hiking/adirondack-avalanche', mode: 'link', states: ['ny'], sections: ['adirondack-high-peaks', 'northern-adirondacks'] },
+      { id: 'nysac', scope: 'section', org: 'NY DEC', label: 'Adirondack avalanche (NYSAC)', href: NYSAC_DEC_HREF, mode: 'link', states: ['ny'], sections: ['adirondack-high-peaks', 'northern-adirondacks'] },
       { id: 'ny-fire', scope: 'state', org: 'NY DEC', label: 'Fire danger map', href: 'https://dec.ny.gov/environmental-protection/wildfires/fire-danger-map', mode: 'link', states: ['ny'] },
       { id: 'nys-mesonet', scope: 'state', org: 'NYS Mesonet', label: 'Mesonet (personal use; link only)', href: 'https://www.nysmesonet.org/', mode: 'link', states: ['ny'] },
     );
   }
   if (stateCode === 'vt') {
     entries.push(
-      { id: 'gmc', scope: 'state', org: 'Green Mountain Club', label: 'Trail conditions and notices', href: 'https://greenmountainclub.org/', mode: 'link', states: ['vt'] },
+      {
+        id: 'gmc',
+        scope: 'state',
+        org: 'Green Mountain Club',
+        label: 'Trail conditions and notices',
+        href: 'https://greenmountainclub.org/hike/plan-and-prepare/trail-updates/',
+        mode: 'link',
+        states: ['vt'],
+      },
       { id: 'gmnf', scope: 'state', org: 'Green Mountain National Forest', label: 'Alerts', href: 'https://www.fs.usda.gov/r09/gmfl/alerts', mode: 'link', states: ['vt'] },
     );
   }
@@ -336,7 +398,7 @@ function baseCatalog(ctx: CatalogContext): MoreSourceEntry[] {
     entries.push(
       { id: 'wmnf', scope: 'state', org: 'White Mountain National Forest', label: 'Forest alerts', href: 'https://www.fs.usda.gov/whitemountain', mode: 'link', states: ['nh'] },
       { id: 'mwobs-hsf', scope: 'section', org: 'MWOBS', label: 'Higher Summits Forecast (link only)', href: 'https://mountwashington.org/weather/higher-summits-forecast/', mode: 'link', states: ['nh'], sections: ['presidential-range', 'franconia-pemi'] },
-      { id: 'mwac', scope: 'state', org: 'MWAC', label: 'Avalanche center map layer', href: 'https://api.avalanche.org/2/public/products/map-layer/MWAC', mode: 'link', states: ['nh'] },
+      { id: 'mwac', scope: 'state', org: 'MWAC', label: 'Avalanche center map layer', href: 'https://api.avalanche.org/v2/public/products/map-layer/MWAC', mode: 'link', states: ['nh'] },
     );
     if (sectionId === 'presidential-range') {
       entries.push(
@@ -488,4 +550,29 @@ export function moreSourcesForState(stateCode: MountainStateCode): MoreSourceGro
 
 export function moreSourcesHasAny(groups: MoreSourceGroups): boolean {
   return Object.values(groups).some((list) => list.length > 0);
+}
+
+/** All outbound hrefs from the catalog (for link health checks). */
+export function allOutboundMoreSourceLinks(): string[] {
+  const states: MountainStateCode[] = ['ny', 'vt', 'nh', 'me'];
+  const hrefs = new Set<string>();
+  for (const stateCode of states) {
+    for (const g of Object.values(moreSourcesForState(stateCode))) {
+      for (const link of g) hrefs.add(link.href);
+    }
+  }
+  const samplePlaces: Array<{ stateCode: MountainStateCode; sectionId: string; placeId: string }> = [
+    { stateCode: 'ny', sectionId: 'adirondack-high-peaks', placeId: 'mount-marcy' },
+    { stateCode: 'nh', sectionId: 'presidential-range', placeId: 'mount-washington' },
+    { stateCode: 'vt', sectionId: 'northern-greens', placeId: 'stowe-town' },
+    { stateCode: 'me', sectionId: 'baxter-state-park', placeId: 'katahdin' },
+  ];
+  for (const row of samplePlaces) {
+    const found = findMountainPlaceCatalogEntry(row.placeId);
+    if (!found) continue;
+    for (const g of Object.values(moreSourcesForPlace(found.state, found.sectionId, found))) {
+      for (const link of g) hrefs.add(link.href);
+    }
+  }
+  return [...hrefs].sort();
 }

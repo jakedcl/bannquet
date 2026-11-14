@@ -37,8 +37,12 @@ export type ExtremeReport = {
 export function extremeStatsFromSpots(results: ExtremeSpot[]): ExtremeStat[] {
   if (results.length === 0) return [];
 
-  const highestWind = results.reduce((max, curr) =>
-    curr.windSpeed > max.windSpeed ? curr : max, results[0]);
+  const windCandidates = results.filter((s) => s.windSpeed > 0 || s.windGust > 0);
+  const highestWind = (windCandidates.length ? windCandidates : results).reduce((max, curr) => {
+    const maxScore = Math.max(max.windGust > max.windSpeed ? max.windGust : max.windSpeed, max.windSpeed);
+    const curScore = Math.max(curr.windGust > curr.windSpeed ? curr.windGust : curr.windSpeed, curr.windSpeed);
+    return curScore > maxScore ? curr : max;
+  }, (windCandidates.length ? windCandidates : results)[0]);
   const highestTemp = results.reduce((max, curr) =>
     curr.temperature > max.temperature ? curr : max, results[0]);
   const coldest = results.reduce((min, curr) =>
@@ -47,9 +51,10 @@ export function extremeStatsFromSpots(results: ExtremeSpot[]): ExtremeStat[] {
   return [
     {
       label: 'HIGHEST WIND',
-      value: highestWind.windGust > highestWind.windSpeed
-        ? `${highestWind.windSpeed} mph, gusts ${highestWind.windGust}`
-        : `${highestWind.windSpeed} mph`,
+      value:
+        highestWind.windGust > 0 && highestWind.windGust > highestWind.windSpeed
+          ? `${highestWind.windSpeed} mph, gusts ${highestWind.windGust}`
+          : `${highestWind.windSpeed} mph`,
       location: `${highestWind.mountain}, ${highestWind.state}`,
       stationId: highestWind.stationId,
       ageMinutes: highestWind.ageMinutes,

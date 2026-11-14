@@ -78,9 +78,12 @@ export function inForecastWindow(period: GlancePeriod, now: Date): boolean {
 }
 
 export function summitHighLow(periods: GlancePeriod[]): { high: number | null; low: number | null } {
-  const temps = periods.slice(0, 2).map((period) => period.temperature).filter((value) => Number.isFinite(value));
-  if (temps.length === 0) return { high: null, low: null };
-  return { high: Math.max(...temps), low: Math.min(...temps) };
+  const day = periods.find((p) => p.isDaytime !== false && Number.isFinite(p.temperature));
+  const night = periods.find((p) => p.isDaytime === false && Number.isFinite(p.temperature));
+  return {
+    high: day?.temperature ?? null,
+    low: night?.temperature ?? null,
+  };
 }
 
 export function maxPrecip(periods: GlancePeriod[], now: Date): number | null {
