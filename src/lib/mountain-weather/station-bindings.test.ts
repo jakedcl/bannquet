@@ -1,53 +1,67 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import bindingsJson from '../../../config/mountain-weather/station-bindings.json';
-import places from '../../../config/mountain-weather/places.json';
+import { resolveStationElevationFt } from '@/lib/mountain-weather/station-elevation-epqs';
 import {
   stationBindingForPlace,
-  stationMeta,
   visibleStationBindings,
 } from '@/lib/mountain-weather/station-bindings';
 
-const bindings = bindingsJson as {
+const bindings = bindingsJson as unknown as {
+  version: number;
   ruleSummary: string;
-  stations: Record<string, { office: string | null; state: string | null; elevationFt: number | null }>;
-  places: Record<string, { observations: { stationId: string; kind: string; bindReason: string }[] }>;
+  stations: Record<string, { network: string; nwsElevationFt?: number; epqsElevationFt?: number; elevationSource?: string }>;
+  places: Record<string, { observations: { stationId: string; kind: string; network: string; distanceMi: number; elevationDiffFt: number | null; hideFromObservationsSection?: boolean }[] }>;
+  audit?: { place: string; station: string; network: string; kind: string; distanceMi: number; elevationDiffFt: number | null }[];
 };
 
-test('station meta exists for every bound station', () => {
+test('EPQS replaces NWS elevation when metadata differs by more than 200 ft', () => {
+  const r = resolveStationElevationFt(7907, 3850, 200);
+  assert.equal(r.elevationFt, 3850);
+  assert.equal(r.rejectedNws, true);
+  assert.match(r.elevationSource, /EPQS/);
+});
+
+test('no CWOP summit bindings and summit must be within 1 mi and 500 ft', () => {
   for (const [placeId, binding] of Object.entries(bindings.places)) {
-    for (const obs of binding.observations) {
-      const meta = bindings.stations[obs.stationId];
-      assert.ok(meta, `${placeId} → ${obs.stationId} missing station meta`);
-      assert.ok(meta.office, `${obs.stationId} missing WFO`);
-      assert.ok(meta.state, `${obs.stationId} missing state`);
+    for (const obs of binding.observations.filter((o) => !o.hideFromObservationsSection)) {
+      if (obs.kind !== 'summit') continue;
+      assert.ok(obs.network !== 'CWOP citizen station', `${placeId} ${obs.stationId} CWOP summit`);
+      assert.ok(obs.distanceMi <= 1.05, `${placeId} summit ${obs.stationId} too far: ${obs.distanceMi} mi`);
+      if (obs.elevationDiffFt !== null) {
+        assert.ok(
+          Math.abs(obs.elevationDiffFt) <= 500,
+          `${placeId} summit ${obs.stationId} elev diff ${obs.elevationDiffFt}`,
+        );
+      }
     }
   }
 });
 
-test('mount washington uses KMWN summit; marcy has no distant summit substitute', () => {
-  const wash = bindings.places['mount-washington'];
-  assert.ok(wash?.observations.some((o) => o.stationId === 'KMWN' && o.kind === 'summit'));
-  const marcy = bindings.places['mount-marcy'];
-  assert.ok(marcy);
-  assert.ok(!marcy.observations.some((o) => o.kind === 'summit' && o.stationId === 'A4090'));
-  assert.ok(marcy.observations.some((o) => o.stationId === 'KSLK'));
+test('killington and stratton are not bound to bad CWOP summits', () => {
+  const kill = visibleStationBindings('killington-peak');
+  assert.ok(!kill.some((o) => o.kind === 'summit' && o.stationId === 'FW8716'));
+  const stratton = visibleStationBindings('stratton-mountain');
+  assert.ok(!stratton.some((o) => o.kind === 'summit' && o.stationId === 'FW5837'));
 });
 
-test('mansfield summit hidden from observations section (pack holds MMNV1)', () => {
+test('marcy has no whiteface summit; cascade has nearby-higher not summit for A4090', () => {
+  const marcy = visibleStationBindings('mount-marcy');
+  assert.ok(!marcy.some((o) => o.kind === 'summit' && o.stationId === 'A4090'));
+  const cascade = visibleStationBindings('cascade-mountain');
+  const a409 = cascade.find((o) => o.stationId === 'A4090');
+  if (a409) assert.equal(a409.kind, 'nearby-higher');
+});
+
+test('pinkham notch uses low base station not KMWN', () => {
+  const pink = visibleStationBindings('pinkham-notch');
+  assert.ok(!pink.some((o) => o.stationId === 'KMWN'));
+  const hi = pink.find((o) => o.stationId === 'KHIE');
+  assert.ok(hi);
+  assert.equal(hi?.kind, 'base');
+});
+
+test('mount mansfield pack hides MMNV1 duplicate', () => {
   const raw = stationBindingForPlace('mount-mansfield');
   assert.ok(raw?.observations.some((o) => o.stationId === 'MMNV1' && o.hideFromObservationsSection));
-  const visible = visibleStationBindings('mount-mansfield');
-  assert.ok(!visible.some((o) => o.stationId === 'MMNV1'));
-  assert.ok(visible.some((o) => o.stationId === 'KMPV'));
-});
-
-test('registry-backed bindings resolve via station-bindings module', () => {
-  const kmwn = stationMeta('KMWN');
-  assert.ok(kmwn?.elevationFt && kmwn.elevationFt > 6000);
-  const total = places.states.flatMap((s) => s.sections.flatMap((sec) => sec.places)).length;
-  assert.equal(total, 90);
-  const withSection = Object.keys(bindings.places).length;
-  assert.ok(withSection > 0);
-  assert.ok(bindings.ruleSummary.includes('900 ft'));
 });

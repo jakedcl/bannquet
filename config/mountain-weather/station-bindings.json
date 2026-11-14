@@ -1,7 +1,7 @@
 {
-  "version": 1,
-  "generatedAt": "2026-11-14T06:11:00.376Z",
-  "ruleSummary": "Nearest ASOS/METAR-style NWS station with same state and WFO as the place; summit slot only within 20 km when station elevation is within 900 ft of catalog summit elevation (or higher). Optional valley slot is the nearest qualifying station at least 700 ft lower (up to 95 km). Manual summit pins for KMWN and MMNV1. MMNV1 is shown only in the Mansfield pack, not duplicated here. Places with no qualifying station within radius have no observation block.",
+  "version": 2,
+  "generatedAt": "2026-11-14T06:33:38.467Z",
+  "ruleSummary": "Summit only for stations within 1 mi and 500 ft of catalog elevation at that summit (pinned: KMWN, A4090, A3672, MMNV1 in Mansfield pack). Nearby higher peaks use kind nearby-higher. Valley/base stations must not sit far above the place; ASOS/AWOS and RAWS preferred over CWOP. Station elevation uses USGS EPQS when NWS metadata differs by >200 ft. Bindings require a weather field (not river-only) in the last 24 h.",
   "stations": {
     "KSLK": {
       "id": "KSLK",
@@ -9,8 +9,13 @@
       "lat": 44.39306,
       "lon": -74.20278,
       "elevationFt": 1663,
+      "nwsElevationFt": 1663,
+      "epqsElevationFt": 1657,
+      "elevationSource": "NWS metadata",
+      "network": "ASOS/AWOS airport",
       "state": "NY",
-      "office": "BTV"
+      "office": "BTV",
+      "hasWeatherLast24h": true
     },
     "A4090": {
       "id": "A4090",
@@ -18,170 +23,69 @@
       "lat": 44.3647,
       "lon": -73.9017,
       "elevationFt": 4662,
+      "nwsElevationFt": 4662,
+      "epqsElevationFt": 4709,
+      "elevationSource": "NWS metadata",
+      "network": "NWS mesonet",
       "state": "NY",
-      "office": "BTV"
+      "office": "BTV",
+      "hasWeatherLast24h": true
     },
-    "KLKP": {
-      "id": "KLKP",
-      "name": "Lake Placid Airport",
-      "lat": 44.26448,
-      "lon": -73.96187,
-      "elevationFt": 1747,
+    "KPBG": {
+      "id": "KPBG",
+      "name": "Plattsburgh International Airport ",
+      "lat": 44.65,
+      "lon": -73.46667,
+      "elevationFt": 236,
+      "nwsElevationFt": 236,
+      "epqsElevationFt": 184,
+      "elevationSource": "NWS metadata",
+      "network": "ASOS/AWOS airport",
       "state": "NY",
-      "office": "BTV"
+      "office": "BTV",
+      "hasWeatherLast24h": true
     },
-    "G0968": {
-      "id": "G0968",
-      "name": "GW0968 Lake Placid",
-      "lat": 44.28617,
-      "lon": -73.97733,
-      "elevationFt": 1890,
+    "KGFL": {
+      "id": "KGFL",
+      "name": "Glens Falls, Floyd Bennett Memorial Airport",
+      "lat": 43.34111,
+      "lon": -73.61056,
+      "elevationFt": 328,
+      "nwsElevationFt": 328,
+      "epqsElevationFt": 321,
+      "elevationSource": "NWS metadata",
+      "network": "ASOS/AWOS airport",
       "state": "NY",
-      "office": "BTV"
+      "office": "ALY",
+      "hasWeatherLast24h": true
     },
-    "E7899": {
-      "id": "E7899",
-      "name": "EW7899 Saranac",
-      "lat": 44.63983,
-      "lon": -73.7385,
-      "elevationFt": 815,
+    "PHCN6": {
+      "id": "PHCN6",
+      "name": "LAKE CHAMPLAIN AT PORT HENRY",
+      "lat": 44.0525,
+      "lon": -73.45333,
+      "elevationFt": 98,
+      "nwsElevationFt": 98,
+      "epqsElevationFt": 102,
+      "elevationSource": "NWS metadata",
+      "network": "NWS/other station",
       "state": "NY",
-      "office": "BTV"
+      "office": "BTV",
+      "hasWeatherLast24h": true
     },
-    "G5014": {
-      "id": "G5014",
-      "name": "GW5014 SARANAC LAKE",
-      "lat": 44.32317,
-      "lon": -74.145,
-      "elevationFt": 1611,
+    "MTRN6": {
+      "id": "MTRN6",
+      "name": "ESOPUS CREEK AT MOUNT TREMPER (COLDBROOK)",
+      "lat": 42.01444,
+      "lon": -74.27028,
+      "elevationFt": 652,
+      "nwsElevationFt": 652,
+      "epqsElevationFt": 627,
+      "elevationSource": "NWS metadata",
+      "network": "NWS/other station",
       "state": "NY",
-      "office": "BTV"
-    },
-    "E4918": {
-      "id": "E4918",
-      "name": "EW4918 Tupper Lake",
-      "lat": 44.23683,
-      "lon": -74.479,
-      "elevationFt": 1549,
-      "state": "NY",
-      "office": "BTV"
-    },
-    "A4091": {
-      "id": "A4091",
-      "name": "Piseco Lake",
-      "lat": 43.4556,
-      "lon": -74.515,
-      "elevationFt": 1719,
-      "state": "NY",
-      "office": "ALY"
-    },
-    "C9192": {
-      "id": "C9192",
-      "name": "CW9192 Inlet",
-      "lat": 43.75083,
-      "lon": -74.79417,
-      "elevationFt": 1719,
-      "state": "NY",
-      "office": "ALY"
-    },
-    "D2199": {
-      "id": "D2199",
-      "name": "DW2199 Bolton Landing",
-      "lat": 43.6,
-      "lon": -73.63,
-      "elevationFt": 319,
-      "state": "NY",
-      "office": "ALY"
-    },
-    "F4844": {
-      "id": "F4844",
-      "name": "FW4844 Loch Muller",
-      "lat": 43.85267,
-      "lon": -73.88083,
-      "elevationFt": 1721,
-      "state": "NY",
-      "office": "BTV"
-    },
-    "G7904": {
-      "id": "G7904",
-      "name": "GW7904 LAKE GEORGE",
-      "lat": 43.45767,
-      "lon": -73.6505,
-      "elevationFt": 1053,
-      "state": "NY",
-      "office": "ALY"
-    },
-    "F9326": {
-      "id": "F9326",
-      "name": "FW9326 Northville",
-      "lat": 43.18167,
-      "lon": -74.13533,
-      "elevationFt": 781,
-      "state": "NY",
-      "office": "ALY"
-    },
-    "G0385": {
-      "id": "G0385",
-      "name": "GW0385 Port Henry",
-      "lat": 44.04267,
-      "lon": -73.45567,
-      "elevationFt": 93,
-      "state": "NY",
-      "office": "BTV"
-    },
-    "FVYN6": {
-      "id": "FVYN6",
-      "name": "BISCUIT BROOK ABOVE PIGEON BROOK AT FROST VALLEY",
-      "lat": 41.99611,
-      "lon": -74.50028,
-      "elevationFt": 2142,
-      "state": "NY",
-      "office": "ALY"
-    },
-    "E1865": {
-      "id": "E1865",
-      "name": "EW1865 Hunter",
-      "lat": 42.2,
-      "lon": -74.2,
-      "elevationFt": 1600,
-      "state": "NY",
-      "office": "ALY"
-    },
-    "ALAN6": {
-      "id": "ALAN6",
-      "name": "ESOPUS CREEK AT ALLABEN",
-      "lat": 42.11694,
-      "lon": -74.38056,
-      "elevationFt": 1013,
-      "state": "NY",
-      "office": "ALY"
-    },
-    "G1612": {
-      "id": "G1612",
-      "name": "GW1612 EAST DURHAM",
-      "lat": 42.3725,
-      "lon": -74.09567,
-      "elevationFt": 640,
-      "state": "NY",
-      "office": "ALY"
-    },
-    "MRNN6": {
-      "id": "MRNN6",
-      "name": "ESOPUS CREEK AT MOUNT MARION",
-      "lat": 42.03778,
-      "lon": -73.9725,
-      "elevationFt": 137,
-      "state": "NY",
-      "office": "ALY"
-    },
-    "F1784": {
-      "id": "F1784",
-      "name": "FW1784 Kerhonkson",
-      "lat": 41.832,
-      "lon": -74.3015,
-      "elevationFt": 897,
-      "state": "NY",
-      "office": "ALY"
+      "office": "ALY",
+      "hasWeatherLast24h": true
     },
     "CHIN6": {
       "id": "CHIN6",
@@ -189,44 +93,111 @@
       "lat": 42.10194,
       "lon": -74.31083,
       "elevationFt": 984,
+      "nwsElevationFt": 984,
+      "epqsElevationFt": 952,
+      "elevationSource": "NWS metadata",
+      "network": "NWS/other station",
       "state": "NY",
-      "office": "ALY"
+      "office": "ALY",
+      "hasWeatherLast24h": true
     },
-    "G2393": {
-      "id": "G2393",
-      "name": "GW2393 Kerhonkson",
-      "lat": 41.72867,
-      "lon": -74.23683,
-      "elevationFt": 1704,
+    "BIGN6": {
+      "id": "BIGN6",
+      "name": "BIRCH CREEK AT BIG INDIAN",
+      "lat": 42.10889,
+      "lon": -74.45222,
+      "elevationFt": 1263,
+      "nwsElevationFt": 1263,
+      "epqsElevationFt": 1241,
+      "elevationSource": "NWS metadata",
+      "network": "NWS/other station",
       "state": "NY",
-      "office": "ALY"
+      "office": "ALY",
+      "hasWeatherLast24h": true
     },
-    "APBN6": {
-      "id": "APBN6",
-      "name": "ALBANY PINE BUSH",
-      "lat": 42.71969,
-      "lon": -73.86433,
-      "elevationFt": 346,
+    "NGC51": {
+      "id": "NGC51",
+      "name": "Greenville High School",
+      "lat": 42.4182,
+      "lon": -74.0263,
+      "elevationFt": 746,
+      "nwsElevationFt": 234,
+      "epqsElevationFt": 746,
+      "elevationSource": "USGS EPQS (NWS metadata rejected)",
+      "network": "NWS/other station",
       "state": "NY",
-      "office": "ALY"
+      "office": "ALY",
+      "hasWeatherLast24h": true
     },
-    "NTYV1": {
-      "id": "NTYV1",
-      "name": "MISSISQUOI RIVER NEAR NORTH TROY 2SSE",
-      "lat": 44.9728,
-      "lon": -72.3858,
-      "elevationFt": 560,
+    "K20N": {
+      "id": "K20N",
+      "name": "KINGULSTER",
+      "lat": 41.98525,
+      "lon": -73.96409,
+      "elevationFt": 149,
+      "nwsElevationFt": 149,
+      "epqsElevationFt": 139,
+      "elevationSource": "NWS metadata",
+      "network": "ASOS/AWOS airport",
+      "state": "NY",
+      "office": "ALY",
+      "hasWeatherLast24h": true
+    },
+    "LMTN6": {
+      "id": "LMTN6",
+      "name": "ESOPUS CREEK NEAR LOMONTVILLE 1SW",
+      "lat": 41.87917,
+      "lon": -74.14528,
+      "elevationFt": 216,
+      "nwsElevationFt": 216,
+      "epqsElevationFt": 203,
+      "elevationSource": "NWS metadata",
+      "network": "NWS/other station",
+      "state": "NY",
+      "office": "ALY",
+      "hasWeatherLast24h": true
+    },
+    "KALB": {
+      "id": "KALB",
+      "name": "Albany International Airport",
+      "lat": 42.74722,
+      "lon": -73.79912,
+      "elevationFt": 285,
+      "nwsElevationFt": 285,
+      "epqsElevationFt": 277,
+      "elevationSource": "NWS metadata",
+      "network": "ASOS/AWOS airport",
+      "state": "NY",
+      "office": "ALY",
+      "hasWeatherLast24h": true
+    },
+    "KEFK": {
+      "id": "KEFK",
+      "name": "Northeast Kingdom International Airport",
+      "lat": 44.88846,
+      "lon": -72.23593,
+      "elevationFt": 934,
+      "nwsElevationFt": 934,
+      "epqsElevationFt": 935,
+      "elevationSource": "NWS metadata",
+      "network": "ASOS/AWOS airport",
       "state": "VT",
-      "office": "BTV"
+      "office": "BTV",
+      "hasWeatherLast24h": true
     },
-    "LEDV1": {
-      "id": "LEDV1",
-      "name": "MT. NORRIS RESERVATION AT LAKE EDEN",
-      "lat": 44.72417,
-      "lon": -72.495,
-      "elevationFt": 1292,
+    "KMVL": {
+      "id": "KMVL",
+      "name": "Morrisville-Stowe State Airport",
+      "lat": 44.53589,
+      "lon": -72.61625,
+      "elevationFt": 709,
+      "nwsElevationFt": 709,
+      "epqsElevationFt": null,
+      "elevationSource": "NWS metadata",
+      "network": "ASOS/AWOS airport",
       "state": "VT",
-      "office": "BTV"
+      "office": "BTV",
+      "hasWeatherLast24h": true
     },
     "MMNV1": {
       "id": "MMNV1",
@@ -234,8 +205,13 @@
       "lat": 44.52472,
       "lon": -72.81528,
       "elevationFt": 3891,
+      "nwsElevationFt": 3891,
+      "epqsElevationFt": 3920,
+      "elevationSource": "NWS metadata",
+      "network": "NWS mesonet (NEPP)",
       "state": "VT",
-      "office": "BTV"
+      "office": "BTV",
+      "hasWeatherLast24h": true
     },
     "KMPV": {
       "id": "KMPV",
@@ -243,53 +219,27 @@
       "lat": 44.20472,
       "lon": -72.56611,
       "elevationFt": 1165,
+      "nwsElevationFt": 1165,
+      "epqsElevationFt": 1104,
+      "elevationSource": "NWS metadata",
+      "network": "ASOS/AWOS airport",
       "state": "VT",
-      "office": "BTV"
+      "office": "BTV",
+      "hasWeatherLast24h": true
     },
-    "E2573": {
-      "id": "E2573",
-      "name": "EW2573 Hanksville",
-      "lat": 44.26217,
-      "lon": -72.9845,
-      "elevationFt": 1656,
+    "EMRV1": {
+      "id": "EMRV1",
+      "name": "ELMORE",
+      "lat": 44.54312,
+      "lon": -72.52906,
+      "elevationFt": 1164,
+      "nwsElevationFt": 1164,
+      "epqsElevationFt": 1170,
+      "elevationSource": "NWS metadata",
+      "network": "RAWS fire-weather station",
       "state": "VT",
-      "office": "BTV"
-    },
-    "G5033": {
-      "id": "G5033",
-      "name": "GW5033 STARKSBORO",
-      "lat": 44.1695,
-      "lon": -73.02133,
-      "elevationFt": 1444,
-      "state": "VT",
-      "office": "BTV"
-    },
-    "K6B0": {
-      "id": "K6B0",
-      "name": "Middlebury State Airport",
-      "lat": 43.9848,
-      "lon": -73.0959,
-      "elevationFt": 489,
-      "state": "VT",
-      "office": "BTV"
-    },
-    "UVM06": {
-      "id": "UVM06",
-      "name": "Mt. Mansfield (East)",
-      "lat": 44.519,
-      "lon": -72.798,
-      "elevationFt": 2877,
-      "state": "VT",
-      "office": "BTV"
-    },
-    "F8108": {
-      "id": "F8108",
-      "name": "FW8108 Worcester",
-      "lat": 44.36668,
-      "lon": -72.54171,
-      "elevationFt": 1060,
-      "state": "VT",
-      "office": "BTV"
+      "office": "BTV",
+      "hasWeatherLast24h": true
     },
     "WRSV1": {
       "id": "WRSV1",
@@ -297,116 +247,55 @@
       "lat": 44.38167,
       "lon": -72.77028,
       "elevationFt": 570,
+      "nwsElevationFt": 570,
+      "epqsElevationFt": 633,
+      "elevationSource": "NWS metadata",
+      "network": "NWS/other station",
       "state": "VT",
-      "office": "BTV"
+      "office": "BTV",
+      "hasWeatherLast24h": true
     },
-    "E3614": {
-      "id": "E3614",
-      "name": "EW3614 West Topsham",
-      "lat": 44.16083,
-      "lon": -72.30833,
-      "elevationFt": 1639,
+    "K6B0": {
+      "id": "K6B0",
+      "name": "Middlebury State Airport",
+      "lat": 43.9848,
+      "lon": -73.0959,
+      "elevationFt": 489,
+      "nwsElevationFt": 489,
+      "epqsElevationFt": 488,
+      "elevationSource": "NWS metadata",
+      "network": "ASOS/AWOS airport",
       "state": "VT",
-      "office": "BTV"
+      "office": "BTV",
+      "hasWeatherLast24h": true
     },
-    "LSC02": {
-      "id": "LSC02",
-      "name": "EW7405 Granby",
-      "lat": 44.58317,
-      "lon": -71.77867,
-      "elevationFt": 1485,
+    "KCDA": {
+      "id": "KCDA",
+      "name": "Caledonia County Airport",
+      "lat": 44.5691142,
+      "lon": -72.0179789,
+      "elevationFt": 1188,
+      "nwsElevationFt": 1188,
+      "epqsElevationFt": 1167,
+      "elevationSource": "NWS metadata",
+      "network": "ASOS/AWOS airport",
       "state": "VT",
-      "office": "BTV"
+      "office": "BTV",
+      "hasWeatherLast24h": true
     },
-    "NLHV1": {
-      "id": "NLHV1",
-      "name": "NULHEGAN",
-      "lat": 44.76722,
-      "lon": -71.70139,
-      "elevationFt": 1245,
+    "KRUT": {
+      "id": "KRUT",
+      "name": "Rutland-Southern Vermont Regional Airport",
+      "lat": 43.53333,
+      "lon": -72.95,
+      "elevationFt": 787,
+      "nwsElevationFt": 787,
+      "epqsElevationFt": 783,
+      "elevationSource": "NWS metadata",
+      "network": "ASOS/AWOS airport",
       "state": "VT",
-      "office": "BTV"
-    },
-    "F8716": {
-      "id": "F8716",
-      "name": "FW8716 Killington",
-      "lat": 43.616,
-      "lon": -72.77467,
-      "elevationFt": 7907,
-      "state": "VT",
-      "office": "BTV"
-    },
-    "OTQV1": {
-      "id": "OTQV1",
-      "name": "OTTAUQUECHEE RIVER NEAR WEST BRIDGEWATER 2NNW",
-      "lat": 43.62222,
-      "lon": -72.75944,
-      "elevationFt": 1187,
-      "state": "VT",
-      "office": "BTV"
-    },
-    "F5837": {
-      "id": "F5837",
-      "name": "FW5837 West Dover",
-      "lat": 42.9555,
-      "lon": -72.82033,
-      "elevationFt": 7438,
-      "state": "VT",
-      "office": "ALY"
-    },
-    "E1683": {
-      "id": "E1683",
-      "name": "EW1683 Stratton Mountain          VT US",
-      "lat": 43.12733,
-      "lon": -72.86933,
-      "elevationFt": 2271,
-      "state": "VT",
-      "office": "ALY"
-    },
-    "F6618": {
-      "id": "F6618",
-      "name": "FW6618 Arlington",
-      "lat": 43.10617,
-      "lon": -73.139,
-      "elevationFt": 828,
-      "state": "VT",
-      "office": "ALY"
-    },
-    "LSC06": {
-      "id": "LSC06",
-      "name": "FW1245 Danby",
-      "lat": 43.33107,
-      "lon": -73.04978,
-      "elevationFt": 1400,
-      "state": "VT",
-      "office": "BTV"
-    },
-    "D3212": {
-      "id": "D3212",
-      "name": "DW3212 West Dover",
-      "lat": 42.9445,
-      "lon": -72.889,
-      "elevationFt": 2106,
-      "state": "VT",
-      "office": "ALY"
-    },
-    "D8397": {
-      "id": "D8397",
-      "name": "DW8397 Weston",
-      "lat": 43.27,
-      "lon": -72.78,
-      "elevationFt": 1477,
-      "state": "VT",
-      "office": "BTV"
-    },
-    "D8675": {
-      "id": "D8675",
-      "name": "DW8675 Weathersfield",
-      "lat": 43.397,
-      "lon": -72.479,
-      "elevationFt": 1182,
-      "state": "VT",
-      "office": "BTV"
+      "office": "BTV",
+      "hasWeatherLast24h": true
     },
     "WFRV1": {
       "id": "WFRV1",
@@ -414,8 +303,13 @@
       "lat": 42.89142,
       "lon": -73.0393,
       "elevationFt": 2317,
+      "nwsElevationFt": 2317,
+      "epqsElevationFt": 2355,
+      "elevationSource": "NWS metadata",
+      "network": "RAWS fire-weather station",
       "state": "VT",
-      "office": "ALY"
+      "office": "ALY",
+      "hasWeatherLast24h": true
     },
     "KDDH": {
       "id": "KDDH",
@@ -423,8 +317,41 @@
       "lat": 42.89355,
       "lon": -73.2486,
       "elevationFt": 827,
+      "nwsElevationFt": 827,
+      "epqsElevationFt": 790,
+      "elevationSource": "NWS metadata",
+      "network": "ASOS/AWOS airport",
       "state": "VT",
-      "office": "ALY"
+      "office": "ALY",
+      "hasWeatherLast24h": true
+    },
+    "KVSF": {
+      "id": "KVSF",
+      "name": "Springfield, Hartness State Springfield Airport",
+      "lat": 43.3425,
+      "lon": -72.52167,
+      "elevationFt": 574,
+      "nwsElevationFt": 574,
+      "epqsElevationFt": 577,
+      "elevationSource": "NWS metadata",
+      "network": "ASOS/AWOS airport",
+      "state": "VT",
+      "office": "BTV",
+      "hasWeatherLast24h": true
+    },
+    "LBKV1": {
+      "id": "LBKV1",
+      "name": "LYE BROOK",
+      "lat": 43.05,
+      "lon": -73.03333,
+      "elevationFt": 2435,
+      "nwsElevationFt": 2435,
+      "epqsElevationFt": 2356,
+      "elevationSource": "NWS metadata",
+      "network": "NWS/other station",
+      "state": "VT",
+      "office": "ALY",
+      "hasWeatherLast24h": true
     },
     "KMWN": {
       "id": "KMWN",
@@ -432,8 +359,13 @@
       "lat": 44.27086,
       "lon": -71.30337,
       "elevationFt": 6262,
+      "nwsElevationFt": 6262,
+      "epqsElevationFt": 6279,
+      "elevationSource": "NWS metadata",
+      "network": "ASOS/AWOS airport",
       "state": "NH",
-      "office": "GYX"
+      "office": "GYX",
+      "hasWeatherLast24h": true
     },
     "OSLN3": {
       "id": "OSLN3",
@@ -441,8 +373,27 @@
       "lat": 44.33806,
       "lon": -71.27444,
       "elevationFt": 4192,
+      "nwsElevationFt": 4192,
+      "epqsElevationFt": 4164,
+      "elevationSource": "NWS metadata",
+      "network": "NWS/other station",
       "state": "NH",
-      "office": "GYX"
+      "office": "GYX",
+      "hasWeatherLast24h": true
+    },
+    "KHIE": {
+      "id": "KHIE",
+      "name": "Whitefield - Mount Washington Regional Airport",
+      "lat": 44.36595,
+      "lon": -71.55218,
+      "elevationFt": 1047,
+      "nwsElevationFt": 1047,
+      "epqsElevationFt": 1048,
+      "elevationSource": "NWS metadata",
+      "network": "ASOS/AWOS airport",
+      "state": "NH",
+      "office": "GYX",
+      "hasWeatherLast24h": true
     },
     "BLTN3": {
       "id": "BLTN3",
@@ -450,53 +401,27 @@
       "lat": 44.08389,
       "lon": -71.28556,
       "elevationFt": 688,
+      "nwsElevationFt": 688,
+      "epqsElevationFt": 681,
+      "elevationSource": "NWS metadata",
+      "network": "USGS/NWS hydrologic gauge",
       "state": "NH",
-      "office": "GYX"
+      "office": "GYX",
+      "hasWeatherLast24h": true
     },
-    "E3811": {
-      "id": "E3811",
-      "name": "EW3811 Jackson",
-      "lat": 44.20533,
-      "lon": -71.19867,
-      "elevationFt": 1662,
+    "GHNN3": {
+      "id": "GHNN3",
+      "name": "NEPP SITE AT GORHAM",
+      "lat": 44.38361,
+      "lon": -71.18361,
+      "elevationFt": 1092,
+      "nwsElevationFt": 1092,
+      "epqsElevationFt": 1082,
+      "elevationSource": "NWS metadata",
+      "network": "NWS/other station",
       "state": "NH",
-      "office": "GYX"
-    },
-    "NHFN1": {
-      "id": "NHFN1",
-      "name": "LaFayette",
-      "lat": 44.14301,
-      "lon": -71.68218,
-      "elevationFt": 1775,
-      "state": "NH",
-      "office": "GYX"
-    },
-    "LICN3": {
-      "id": "LICN3",
-      "name": "NEPP SITE AT LINCOLN",
-      "lat": 44.0425,
-      "lon": -71.6725,
-      "elevationFt": 875,
-      "state": "NH",
-      "office": "GYX"
-    },
-    "G7912": {
-      "id": "G7912",
-      "name": "GW7912 CAMPTON",
-      "lat": 43.85817,
-      "lon": -71.59633,
-      "elevationFt": 6562,
-      "state": "NH",
-      "office": "GYX"
-    },
-    "WVVN3": {
-      "id": "WVVN3",
-      "name": "NEPP SITE AT WATERVILLE VALLEY",
-      "lat": 43.94583,
-      "lon": -71.51083,
-      "elevationFt": 1445,
-      "state": "NH",
-      "office": "GYX"
+      "office": "GYX",
+      "hasWeatherLast24h": true
     },
     "K1P1": {
       "id": "K1P1",
@@ -504,26 +429,41 @@
       "lat": 43.77714,
       "lon": -71.75598,
       "elevationFt": 502,
+      "nwsElevationFt": 502,
+      "epqsElevationFt": 505,
+      "elevationSource": "NWS metadata",
+      "network": "ASOS/AWOS airport",
       "state": "NH",
-      "office": "GYX"
+      "office": "GYX",
+      "hasWeatherLast24h": true
     },
-    "MACN3": {
-      "id": "MACN3",
-      "name": "NUBANUSIT BROOK AT MACDOWELL DAM NEAR PETERBOROUGH",
-      "lat": 42.89278,
-      "lon": -71.98722,
-      "elevationFt": 964,
+    "WVVN3": {
+      "id": "WVVN3",
+      "name": "NEPP SITE AT WATERVILLE VALLEY",
+      "lat": 43.94583,
+      "lon": -71.51083,
+      "elevationFt": 1445,
+      "nwsElevationFt": 1445,
+      "epqsElevationFt": 1445,
+      "elevationSource": "NWS metadata",
+      "network": "NWS/other station",
       "state": "NH",
-      "office": "GYX"
+      "office": "GYX",
+      "hasWeatherLast24h": true
     },
-    "LYNN3": {
-      "id": "LYNN3",
-      "name": "LYNDEBOROUGH 3SW",
-      "lat": 42.88528,
-      "lon": -71.81361,
-      "elevationFt": 835,
+    "KAFN": {
+      "id": "KAFN",
+      "name": "Jaffrey Airport-Silver Ranch",
+      "lat": 42.80667,
+      "lon": -72.00127,
+      "elevationFt": 1010,
+      "nwsElevationFt": 1010,
+      "epqsElevationFt": null,
+      "elevationSource": "NWS metadata",
+      "network": "ASOS/AWOS airport",
       "state": "NH",
-      "office": "GYX"
+      "office": "GYX",
+      "hasWeatherLast24h": true
     },
     "KMLT": {
       "id": "KMLT",
@@ -531,44 +471,27 @@
       "lat": 45.64778,
       "lon": -68.69194,
       "elevationFt": 407,
+      "nwsElevationFt": 407,
+      "epqsElevationFt": 399,
+      "elevationSource": "NWS metadata",
+      "network": "ASOS/AWOS airport",
       "state": "ME",
-      "office": "CAR"
+      "office": "CAR",
+      "hasWeatherLast24h": true
     },
-    "GRNM1": {
-      "id": "GRNM1",
-      "name": "EAST BRANCH PENOBSCOT RIVER AT GRINDSTONE",
-      "lat": 45.73028,
-      "lon": -68.58944,
-      "elevationFt": 324,
+    "KGNR": {
+      "id": "KGNR",
+      "name": "Greenville",
+      "lat": 45.46462,
+      "lon": -69.5538,
+      "elevationFt": 1394,
+      "nwsElevationFt": 1394,
+      "epqsElevationFt": 1392,
+      "elevationSource": "NWS metadata",
+      "network": "ASOS/AWOS airport",
       "state": "ME",
-      "office": "CAR"
-    },
-    "KKJM1": {
-      "id": "KKJM1",
-      "name": "KOKADJO",
-      "lat": 45.67278,
-      "lon": -69.44639,
-      "elevationFt": 1227,
-      "state": "ME",
-      "office": "CAR"
-    },
-    "G4192": {
-      "id": "G4192",
-      "name": "GW4192 RANGELEY",
-      "lat": 44.935,
-      "lon": -70.50933,
-      "elevationFt": 3999,
-      "state": "ME",
-      "office": "GYX"
-    },
-    "B219": {
-      "id": "B219",
-      "name": "CARRABASSETT",
-      "lat": 45.08533,
-      "lon": -70.21633,
-      "elevationFt": 885,
-      "state": "ME",
-      "office": "GYX"
+      "office": "CAR",
+      "hasWeatherLast24h": true
     },
     "K8B0": {
       "id": "K8B0",
@@ -576,35 +499,55 @@
       "lat": 44.99,
       "lon": -70.6623,
       "elevationFt": 1808,
+      "nwsElevationFt": 1808,
+      "epqsElevationFt": 1809,
+      "elevationSource": "NWS metadata",
+      "network": "ASOS/AWOS airport",
       "state": "ME",
-      "office": "GYX"
+      "office": "GYX",
+      "hasWeatherLast24h": true
     },
-    "FOXM1": {
-      "id": "FOXM1",
-      "name": "NEPP SITE AT FOX BROOK CAMP GROUND OFF ROCKY BROOK ROAD NEAR PORTAGE 19WNW",
-      "lat": 46.80611,
-      "lon": -68.83944,
-      "elevationFt": 902,
+    "OQOM1": {
+      "id": "OQOM1",
+      "name": "OQUOSSOC CLIMATE STATION",
+      "lat": 44.96944,
+      "lon": -70.77556,
+      "elevationFt": 1495,
+      "nwsElevationFt": 1495,
+      "epqsElevationFt": 1500,
+      "elevationSource": "NWS metadata",
+      "network": "NWS/other station",
       "state": "ME",
-      "office": "CAR"
+      "office": "GYX",
+      "hasWeatherLast24h": true
     },
-    "E6643": {
-      "id": "E6643",
-      "name": "EW6643 Monticello",
-      "lat": 46.35917,
-      "lon": -67.883,
-      "elevationFt": 2218,
+    "KFVE": {
+      "id": "KFVE",
+      "name": "Frenchville, Northern Aroostook Regional Airport",
+      "lat": 47.285,
+      "lon": -68.30722,
+      "elevationFt": 988,
+      "nwsElevationFt": 988,
+      "epqsElevationFt": null,
+      "elevationSource": "NWS metadata",
+      "network": "ASOS/AWOS airport",
       "state": "ME",
-      "office": "CAR"
+      "office": "CAR",
+      "hasWeatherLast24h": true
     },
-    "WFDM1": {
-      "id": "WFDM1",
-      "name": "NEPP SITE AT WESTFIELD",
-      "lat": 46.59694,
-      "lon": -67.93167,
-      "elevationFt": 495,
+    "KPQI": {
+      "id": "KPQI",
+      "name": "Presque Isle",
+      "lat": 46.68333,
+      "lon": -68.05,
+      "elevationFt": 535,
+      "nwsElevationFt": 535,
+      "epqsElevationFt": 466,
+      "elevationSource": "NWS metadata",
+      "network": "ASOS/AWOS airport",
       "state": "ME",
-      "office": "CAR"
+      "office": "CAR",
+      "hasWeatherLast24h": true
     },
     "A3672": {
       "id": "A3672",
@@ -612,26 +555,27 @@
       "lat": 44.35167,
       "lon": -68.22722,
       "elevationFt": 1493,
+      "nwsElevationFt": 1493,
+      "epqsElevationFt": 1509,
+      "elevationSource": "NWS metadata",
+      "network": "NWS mesonet",
       "state": "ME",
-      "office": "CAR"
+      "office": "CAR",
+      "hasWeatherLast24h": true
     },
-    "E7164": {
-      "id": "E7164",
-      "name": "EW7164 Bar Harbor",
-      "lat": 44.37367,
-      "lon": -68.20467,
-      "elevationFt": 212,
+    "KBHB": {
+      "id": "KBHB",
+      "name": "Bar Harbor, Hancock County-Bar Harbor Airport",
+      "lat": 44.45,
+      "lon": -68.36667,
+      "elevationFt": 82,
+      "nwsElevationFt": 82,
+      "epqsElevationFt": 90,
+      "elevationSource": "NWS metadata",
+      "network": "ASOS/AWOS airport",
       "state": "ME",
-      "office": "CAR"
-    },
-    "ATGM1": {
-      "id": "ATGM1",
-      "name": "Bar Harbor",
-      "lat": 44.3917,
-      "lon": -68.205,
-      "elevationFt": 20,
-      "state": "ME",
-      "office": "CAR"
+      "office": "CAR",
+      "hasWeatherLast24h": true
     }
   },
   "places": {
@@ -641,11 +585,15 @@
         {
           "stationId": "KSLK",
           "kind": "valley",
+          "network": "ASOS/AWOS airport",
           "stationName": "Saranac Lake, Adirondack Regional Airport",
           "stationElevationFt": 1663,
-          "distanceMi": 23.8,
+          "elevationSource": "NWS metadata",
+          "nwsElevationFt": 1663,
+          "epqsElevationFt": 1657,
+          "distanceMi": 23.785,
           "elevationDiffFt": 3681,
-          "bindReason": "Manual valley/nearby METAR pin for Mount Marcy.",
+          "bindReason": "ASOS/AWOS airport KSLK at 1663 ft (NWS metadata), 23.785 mi, WFO BTV/NY; station 3,681 ft below catalog. valley. Pinned valley/base METAR.",
           "hideFromObservationsSection": false
         }
       ]
@@ -656,21 +604,29 @@
         {
           "stationId": "A4090",
           "kind": "summit",
+          "network": "NWS mesonet",
           "stationName": "Whiteface Mtn",
           "stationElevationFt": 4662,
-          "distanceMi": 0.1,
+          "elevationSource": "NWS metadata",
+          "nwsElevationFt": 4662,
+          "epqsElevationFt": 4709,
+          "distanceMi": 0.108,
           "elevationDiffFt": 205,
-          "bindReason": "A4090 (4,662 ft station elev) is 0.1 mi from Whiteface Mountain; same WFO BTV and state NY; station is 205 ft lower than catalog. Summit slot: elevation within 900 ft of 4,867 ft catalog.",
+          "bindReason": "NWS mesonet A4090 at 4662 ft (NWS metadata), 0.108 mi, WFO BTV/NY; station 205 ft below catalog. summit. Pinned summit station for this peak.",
           "hideFromObservationsSection": false
         },
         {
           "stationId": "KSLK",
           "kind": "valley",
+          "network": "ASOS/AWOS airport",
           "stationName": "Saranac Lake, Adirondack Regional Airport",
           "stationElevationFt": 1663,
-          "distanceMi": 14.9,
+          "elevationSource": "NWS metadata",
+          "nwsElevationFt": 1663,
+          "epqsElevationFt": 1657,
+          "distanceMi": 14.917,
           "elevationDiffFt": 3204,
-          "bindReason": "Manual valley/nearby METAR pin for Whiteface Mountain.",
+          "bindReason": "ASOS/AWOS airport KSLK at 1663 ft (NWS metadata), 14.917 mi, WFO BTV/NY; station 3,204 ft below catalog. valley. Pinned valley/base METAR.",
           "hideFromObservationsSection": false
         }
       ]
@@ -679,13 +635,17 @@
       "asrcTimelapse": false,
       "observations": [
         {
-          "stationId": "KLKP",
+          "stationId": "KSLK",
           "kind": "valley",
-          "stationName": "Lake Placid Airport",
-          "stationElevationFt": 1747,
-          "distanceMi": 15.3,
-          "elevationDiffFt": 3110,
-          "bindReason": "KLKP (1,747 ft station elev) is 15.3 mi from Dix Mountain; same WFO BTV and state NY; station is 3,110 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "network": "ASOS/AWOS airport",
+          "stationName": "Saranac Lake, Adirondack Regional Airport",
+          "stationElevationFt": 1663,
+          "elevationSource": "NWS metadata",
+          "nwsElevationFt": 1663,
+          "epqsElevationFt": 1657,
+          "distanceMi": 29.765,
+          "elevationDiffFt": 3194,
+          "bindReason": "ASOS/AWOS airport KSLK at 1663 ft (NWS metadata), 29.765 mi, WFO BTV/NY; station 3,194 ft below catalog. valley. Auto: nearest qualifying station with weather in 24 h.",
           "hideFromObservationsSection": false
         }
       ]
@@ -694,13 +654,17 @@
       "asrcTimelapse": true,
       "observations": [
         {
-          "stationId": "KLKP",
+          "stationId": "KSLK",
           "kind": "valley",
-          "stationName": "Lake Placid Airport",
-          "stationElevationFt": 1747,
-          "distanceMi": 8.4,
-          "elevationDiffFt": 3367,
-          "bindReason": "KLKP (1,747 ft station elev) is 8.4 mi from Algonquin Peak; same WFO BTV and state NY; station is 3,367 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "network": "ASOS/AWOS airport",
+          "stationName": "Saranac Lake, Adirondack Regional Airport",
+          "stationElevationFt": 1663,
+          "elevationSource": "NWS metadata",
+          "nwsElevationFt": 1663,
+          "epqsElevationFt": 1657,
+          "distanceMi": 20.288,
+          "elevationDiffFt": 3451,
+          "bindReason": "ASOS/AWOS airport KSLK at 1663 ft (NWS metadata), 20.288 mi, WFO BTV/NY; station 3,451 ft below catalog. valley. Auto: nearest qualifying station with weather in 24 h.",
           "hideFromObservationsSection": false
         }
       ]
@@ -709,13 +673,17 @@
       "asrcTimelapse": true,
       "observations": [
         {
-          "stationId": "KLKP",
+          "stationId": "KSLK",
           "kind": "valley",
-          "stationName": "Lake Placid Airport",
-          "stationElevationFt": 1747,
-          "distanceMi": 9.5,
-          "elevationDiffFt": 2968,
-          "bindReason": "KLKP (1,747 ft station elev) is 9.5 mi from Mount Colden; same WFO BTV and state NY; station is 2,968 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "network": "ASOS/AWOS airport",
+          "stationName": "Saranac Lake, Adirondack Regional Airport",
+          "stationElevationFt": 1663,
+          "elevationSource": "NWS metadata",
+          "nwsElevationFt": 1663,
+          "epqsElevationFt": 1657,
+          "distanceMi": 21.963,
+          "elevationDiffFt": 3052,
+          "bindReason": "ASOS/AWOS airport KSLK at 1663 ft (NWS metadata), 21.963 mi, WFO BTV/NY; station 3,052 ft below catalog. valley. Auto: nearest qualifying station with weather in 24 h.",
           "hideFromObservationsSection": false
         }
       ]
@@ -724,13 +692,17 @@
       "asrcTimelapse": false,
       "observations": [
         {
-          "stationId": "KLKP",
+          "stationId": "KSLK",
           "kind": "valley",
-          "stationName": "Lake Placid Airport",
-          "stationElevationFt": 1747,
-          "distanceMi": 13.4,
-          "elevationDiffFt": 2333,
-          "bindReason": "KLKP (1,747 ft station elev) is 13.4 mi from Mount Colvin; same WFO BTV and state NY; station is 2,333 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "network": "ASOS/AWOS airport",
+          "stationName": "Saranac Lake, Adirondack Regional Airport",
+          "stationElevationFt": 1663,
+          "elevationSource": "NWS metadata",
+          "nwsElevationFt": 1663,
+          "epqsElevationFt": 1657,
+          "distanceMi": 27.551,
+          "elevationDiffFt": 2417,
+          "bindReason": "ASOS/AWOS airport KSLK at 1663 ft (NWS metadata), 27.551 mi, WFO BTV/NY; station 2,417 ft below catalog. valley. Auto: nearest qualifying station with weather in 24 h.",
           "hideFromObservationsSection": false
         }
       ]
@@ -739,13 +711,17 @@
       "asrcTimelapse": false,
       "observations": [
         {
-          "stationId": "KLKP",
+          "stationId": "KSLK",
           "kind": "valley",
-          "stationName": "Lake Placid Airport",
-          "stationElevationFt": 1747,
-          "distanceMi": 13.9,
-          "elevationDiffFt": 2880,
-          "bindReason": "KLKP (1,747 ft station elev) is 13.9 mi from Giant Mountain; same WFO BTV and state NY; station is 2,880 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "network": "ASOS/AWOS airport",
+          "stationName": "Saranac Lake, Adirondack Regional Airport",
+          "stationElevationFt": 1663,
+          "elevationSource": "NWS metadata",
+          "nwsElevationFt": 1663,
+          "epqsElevationFt": 1657,
+          "distanceMi": 28.753,
+          "elevationDiffFt": 2964,
+          "bindReason": "ASOS/AWOS airport KSLK at 1663 ft (NWS metadata), 28.753 mi, WFO BTV/NY; station 2,964 ft below catalog. valley. Auto: nearest qualifying station with weather in 24 h.",
           "hideFromObservationsSection": false
         }
       ]
@@ -754,13 +730,17 @@
       "asrcTimelapse": false,
       "observations": [
         {
-          "stationId": "KLKP",
+          "stationId": "KSLK",
           "kind": "valley",
-          "stationName": "Lake Placid Airport",
-          "stationElevationFt": 1747,
-          "distanceMi": 15.1,
-          "elevationDiffFt": 2860,
-          "bindReason": "KLKP (1,747 ft station elev) is 15.1 mi from Santanoni Peak; same WFO BTV and state NY; station is 2,860 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "network": "ASOS/AWOS airport",
+          "stationName": "Saranac Lake, Adirondack Regional Airport",
+          "stationElevationFt": 1663,
+          "elevationSource": "NWS metadata",
+          "nwsElevationFt": 1663,
+          "epqsElevationFt": 1657,
+          "distanceMi": 21.763,
+          "elevationDiffFt": 2944,
+          "bindReason": "ASOS/AWOS airport KSLK at 1663 ft (NWS metadata), 21.763 mi, WFO BTV/NY; station 2,944 ft below catalog. valley. Auto: nearest qualifying station with weather in 24 h.",
           "hideFromObservationsSection": false
         }
       ]
@@ -770,22 +750,30 @@
       "observations": [
         {
           "stationId": "A4090",
-          "kind": "summit",
+          "kind": "nearby-higher",
+          "network": "NWS mesonet",
           "stationName": "Whiteface Mtn",
           "stationElevationFt": 4662,
-          "distanceMi": 10.3,
+          "elevationSource": "NWS metadata",
+          "nwsElevationFt": 4662,
+          "epqsElevationFt": 4709,
+          "distanceMi": 10.295,
           "elevationDiffFt": -564,
-          "bindReason": "A4090 (4,662 ft station elev) is 10.3 mi from Cascade Mountain; same WFO BTV and state NY; station is 564 ft higher than catalog. Summit slot: elevation within 900 ft of 4,098 ft catalog.",
+          "bindReason": "NWS mesonet A4090 at 4662 ft (NWS metadata), 10.295 mi, WFO BTV/NY; station 564 ft above catalog. nearby-higher. Nearby higher station: Whiteface Mountain.",
           "hideFromObservationsSection": false
         },
         {
-          "stationId": "KLKP",
+          "stationId": "KSLK",
           "kind": "valley",
-          "stationName": "Lake Placid Airport",
-          "stationElevationFt": 1747,
-          "distanceMi": 5.9,
-          "elevationDiffFt": 2351,
-          "bindReason": "KLKP (1,747 ft station elev) is 5.9 mi from Cascade Mountain; same WFO BTV and state NY; station is 2,351 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "network": "ASOS/AWOS airport",
+          "stationName": "Saranac Lake, Adirondack Regional Airport",
+          "stationElevationFt": 1663,
+          "elevationSource": "NWS metadata",
+          "nwsElevationFt": 1663,
+          "epqsElevationFt": 1657,
+          "distanceMi": 20.79,
+          "elevationDiffFt": 2435,
+          "bindReason": "ASOS/AWOS airport KSLK at 1663 ft (NWS metadata), 20.79 mi, WFO BTV/NY; station 2,435 ft below catalog. valley. Auto: nearest qualifying station with weather in 24 h.",
           "hideFromObservationsSection": false
         }
       ]
@@ -795,22 +783,30 @@
       "observations": [
         {
           "stationId": "A4090",
-          "kind": "summit",
+          "kind": "nearby-higher",
+          "network": "NWS mesonet",
           "stationName": "Whiteface Mtn",
           "stationElevationFt": 4662,
-          "distanceMi": 6.7,
+          "elevationSource": "NWS metadata",
+          "nwsElevationFt": 4662,
+          "epqsElevationFt": 4709,
+          "distanceMi": 6.735,
           "elevationDiffFt": -840,
-          "bindReason": "A4090 (4,662 ft station elev) is 6.7 mi from McKenzie Mountain; same WFO BTV and state NY; station is 840 ft higher than catalog. Summit slot: elevation within 900 ft of 3,822 ft catalog.",
+          "bindReason": "NWS mesonet A4090 at 4662 ft (NWS metadata), 6.735 mi, WFO BTV/NY; station 840 ft above catalog. nearby-higher. Nearby higher station: Whiteface Mountain.",
           "hideFromObservationsSection": false
         },
         {
-          "stationId": "G0968",
+          "stationId": "KSLK",
           "kind": "valley",
-          "stationName": "GW0968 Lake Placid",
-          "stationElevationFt": 1890,
-          "distanceMi": 4.4,
-          "elevationDiffFt": 1932,
-          "bindReason": "G0968 (1,890 ft station elev) is 4.4 mi from McKenzie Mountain; same WFO BTV and state NY; station is 1,932 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "network": "ASOS/AWOS airport",
+          "stationName": "Saranac Lake, Adirondack Regional Airport",
+          "stationElevationFt": 1663,
+          "elevationSource": "NWS metadata",
+          "nwsElevationFt": 1663,
+          "epqsElevationFt": 1657,
+          "distanceMi": 9.298,
+          "elevationDiffFt": 2159,
+          "bindReason": "ASOS/AWOS airport KSLK at 1663 ft (NWS metadata), 9.298 mi, WFO BTV/NY; station 2,159 ft below catalog. valley. Auto: nearest qualifying station with weather in 24 h.",
           "hideFromObservationsSection": false
         }
       ]
@@ -820,22 +816,30 @@
       "observations": [
         {
           "stationId": "A4090",
-          "kind": "summit",
+          "kind": "nearby-higher",
+          "network": "NWS mesonet",
           "stationName": "Whiteface Mtn",
           "stationElevationFt": 4662,
-          "distanceMi": 10.8,
+          "elevationSource": "NWS metadata",
+          "nwsElevationFt": 4662,
+          "epqsElevationFt": 4709,
+          "distanceMi": 10.778,
           "elevationDiffFt": -1723,
-          "bindReason": "A4090 (4,662 ft station elev) is 10.8 mi from Mount Van Hoevenberg; same WFO BTV and state NY; station is 1,723 ft higher than catalog. Summit slot: elevation within 900 ft of 2,939 ft catalog.",
+          "bindReason": "NWS mesonet A4090 at 4662 ft (NWS metadata), 10.778 mi, WFO BTV/NY; station 1,723 ft above catalog. nearby-higher. Nearby higher station: Whiteface Mountain.",
           "hideFromObservationsSection": false
         },
         {
-          "stationId": "KLKP",
+          "stationId": "KSLK",
           "kind": "valley",
-          "stationName": "Lake Placid Airport",
-          "stationElevationFt": 1747,
-          "distanceMi": 4.1,
-          "elevationDiffFt": 1192,
-          "bindReason": "KLKP (1,747 ft station elev) is 4.1 mi from Mount Van Hoevenberg; same WFO BTV and state NY; station is 1,192 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "network": "ASOS/AWOS airport",
+          "stationName": "Saranac Lake, Adirondack Regional Airport",
+          "stationElevationFt": 1663,
+          "elevationSource": "NWS metadata",
+          "nwsElevationFt": 1663,
+          "epqsElevationFt": 1657,
+          "distanceMi": 18.502,
+          "elevationDiffFt": 1276,
+          "bindReason": "ASOS/AWOS airport KSLK at 1663 ft (NWS metadata), 18.502 mi, WFO BTV/NY; station 1,276 ft below catalog. valley. Auto: nearest qualifying station with weather in 24 h.",
           "hideFromObservationsSection": false
         }
       ]
@@ -844,13 +848,17 @@
       "asrcTimelapse": false,
       "observations": [
         {
-          "stationId": "KLKP",
+          "stationId": "KPBG",
           "kind": "base",
-          "stationName": "Lake Placid Airport",
-          "stationElevationFt": 1747,
-          "distanceMi": 10.1,
-          "elevationDiffFt": -717,
-          "bindReason": "KLKP (1,747 ft station elev) is 10.1 mi from Keene Valley; same WFO BTV and state NY; station is 717 ft higher than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "network": "ASOS/AWOS airport",
+          "stationName": "Plattsburgh International Airport ",
+          "stationElevationFt": 236,
+          "elevationSource": "NWS metadata",
+          "nwsElevationFt": 236,
+          "epqsElevationFt": 184,
+          "distanceMi": 35.487,
+          "elevationDiffFt": 794,
+          "bindReason": "ASOS/AWOS airport KPBG at 236 ft (NWS metadata), 35.487 mi, WFO BTV/NY; station 794 ft below catalog. base. Auto: nearest qualifying station with weather in 24 h.",
           "hideFromObservationsSection": false
         }
       ]
@@ -859,13 +867,17 @@
       "asrcTimelapse": false,
       "observations": [
         {
-          "stationId": "E7899",
+          "stationId": "KPBG",
           "kind": "valley",
-          "stationName": "EW7899 Saranac",
-          "stationElevationFt": 815,
-          "distanceMi": 7.6,
-          "elevationDiffFt": 3014,
-          "bindReason": "E7899 (815 ft station elev) is 7.6 mi from Lyon Mountain; same WFO BTV and state NY; station is 3,014 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "network": "ASOS/AWOS airport",
+          "stationName": "Plattsburgh International Airport ",
+          "stationElevationFt": 236,
+          "elevationSource": "NWS metadata",
+          "nwsElevationFt": 236,
+          "epqsElevationFt": 184,
+          "distanceMi": 19.9,
+          "elevationDiffFt": 3593,
+          "bindReason": "ASOS/AWOS airport KPBG at 236 ft (NWS metadata), 19.9 mi, WFO BTV/NY; station 3,593 ft below catalog. valley. Auto: nearest qualifying station with weather in 24 h.",
           "hideFromObservationsSection": false
         }
       ]
@@ -874,13 +886,17 @@
       "asrcTimelapse": false,
       "observations": [
         {
-          "stationId": "G5014",
+          "stationId": "KSLK",
           "kind": "valley",
-          "stationName": "GW5014 SARANAC LAKE",
-          "stationElevationFt": 1611,
-          "distanceMi": 6.8,
-          "elevationDiffFt": 1741,
-          "bindReason": "G5014 (1,611 ft station elev) is 6.8 mi from Ampersand Mountain; same WFO BTV and state NY; station is 1,741 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "network": "ASOS/AWOS airport",
+          "stationName": "Saranac Lake, Adirondack Regional Airport",
+          "stationElevationFt": 1663,
+          "elevationSource": "NWS metadata",
+          "nwsElevationFt": 1663,
+          "epqsElevationFt": 1657,
+          "distanceMi": 10.955,
+          "elevationDiffFt": 1689,
+          "bindReason": "ASOS/AWOS airport KSLK at 1663 ft (NWS metadata), 10.955 mi, WFO BTV/NY; station 1,689 ft below catalog. valley. Auto: nearest qualifying station with weather in 24 h.",
           "hideFromObservationsSection": false
         }
       ]
@@ -891,11 +907,15 @@
         {
           "stationId": "KSLK",
           "kind": "valley",
+          "network": "ASOS/AWOS airport",
           "stationName": "Saranac Lake, Adirondack Regional Airport",
           "stationElevationFt": 1663,
-          "distanceMi": 14.6,
+          "elevationSource": "NWS metadata",
+          "nwsElevationFt": 1663,
+          "epqsElevationFt": 1657,
+          "distanceMi": 14.552,
           "elevationDiffFt": 1654,
-          "bindReason": "KSLK (1,663 ft station elev) is 14.6 mi from Debar Mountain; same WFO BTV and state NY; station is 1,654 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "bindReason": "ASOS/AWOS airport KSLK at 1663 ft (NWS metadata), 14.552 mi, WFO BTV/NY; station 1,654 ft below catalog. valley. Auto: nearest qualifying station with weather in 24 h.",
           "hideFromObservationsSection": false
         }
       ]
@@ -906,11 +926,15 @@
         {
           "stationId": "KSLK",
           "kind": "valley",
+          "network": "ASOS/AWOS airport",
           "stationName": "Saranac Lake, Adirondack Regional Airport",
           "stationElevationFt": 1663,
-          "distanceMi": 6.4,
+          "elevationSource": "NWS metadata",
+          "nwsElevationFt": 1663,
+          "epqsElevationFt": 1657,
+          "distanceMi": 6.352,
           "elevationDiffFt": 1175,
-          "bindReason": "KSLK (1,663 ft station elev) is 6.4 mi from St. Regis Mountain; same WFO BTV and state NY; station is 1,175 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "bindReason": "ASOS/AWOS airport KSLK at 1663 ft (NWS metadata), 6.352 mi, WFO BTV/NY; station 1,175 ft below catalog. valley. Auto: nearest qualifying station with weather in 24 h.",
           "hideFromObservationsSection": false
         }
       ]
@@ -919,58 +943,17 @@
       "asrcTimelapse": false,
       "observations": [
         {
-          "stationId": "E4918",
+          "stationId": "KSLK",
           "kind": "valley",
-          "stationName": "EW4918 Tupper Lake",
-          "stationElevationFt": 1549,
-          "distanceMi": 5.7,
-          "elevationDiffFt": 984,
-          "bindReason": "E4918 (1,549 ft station elev) is 5.7 mi from Mount Arab; same WFO BTV and state NY; station is 984 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
-          "hideFromObservationsSection": false
-        }
-      ]
-    },
-    "snowy-mountain": {
-      "asrcTimelapse": false,
-      "observations": [
-        {
-          "stationId": "A4091",
-          "kind": "valley",
-          "stationName": "Piseco Lake",
-          "stationElevationFt": 1719,
-          "distanceMi": 18.1,
-          "elevationDiffFt": 2180,
-          "bindReason": "A4091 (1,719 ft station elev) is 18.1 mi from Snowy Mountain; same WFO ALY and state NY; station is 2,180 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
-          "hideFromObservationsSection": false
-        }
-      ]
-    },
-    "blue-mountain": {
-      "asrcTimelapse": false,
-      "observations": [
-        {
-          "stationId": "C9192",
-          "kind": "valley",
-          "stationName": "CW9192 Inlet",
-          "stationElevationFt": 1719,
-          "distanceMi": 21.3,
-          "elevationDiffFt": 2031,
-          "bindReason": "C9192 (1,719 ft station elev) is 21.3 mi from Blue Mountain; same WFO ALY and state NY; station is 2,031 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
-          "hideFromObservationsSection": false
-        }
-      ]
-    },
-    "pillsbury-mountain": {
-      "asrcTimelapse": false,
-      "observations": [
-        {
-          "stationId": "A4091",
-          "kind": "valley",
-          "stationName": "Piseco Lake",
-          "stationElevationFt": 1719,
-          "distanceMi": 8.7,
-          "elevationDiffFt": 1878,
-          "bindReason": "A4091 (1,719 ft station elev) is 8.7 mi from Pillsbury Mountain; same WFO ALY and state NY; station is 1,878 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "network": "ASOS/AWOS airport",
+          "stationName": "Saranac Lake, Adirondack Regional Airport",
+          "stationElevationFt": 1663,
+          "elevationSource": "NWS metadata",
+          "nwsElevationFt": 1663,
+          "epqsElevationFt": 1657,
+          "distanceMi": 22.951,
+          "elevationDiffFt": 870,
+          "bindReason": "ASOS/AWOS airport KSLK at 1663 ft (NWS metadata), 22.951 mi, WFO BTV/NY; station 870 ft below catalog. valley. Auto: nearest qualifying station with weather in 24 h.",
           "hideFromObservationsSection": false
         }
       ]
@@ -979,13 +962,17 @@
       "asrcTimelapse": false,
       "observations": [
         {
-          "stationId": "D2199",
+          "stationId": "KGFL",
           "kind": "valley",
-          "stationName": "DW2199 Bolton Landing",
-          "stationElevationFt": 319,
-          "distanceMi": 21.5,
-          "elevationDiffFt": 3244,
-          "bindReason": "D2199 (319 ft station elev) is 21.5 mi from Gore Mountain; same WFO ALY and state NY; station is 3,244 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "network": "ASOS/AWOS airport",
+          "stationName": "Glens Falls, Floyd Bennett Memorial Airport",
+          "stationElevationFt": 328,
+          "elevationSource": "NWS metadata",
+          "nwsElevationFt": 328,
+          "epqsElevationFt": 321,
+          "distanceMi": 31.756,
+          "elevationDiffFt": 3235,
+          "bindReason": "ASOS/AWOS airport KGFL at 328 ft (NWS metadata), 31.756 mi, WFO ALY/NY; station 3,235 ft below catalog. valley. Auto: nearest qualifying station with weather in 24 h.",
           "hideFromObservationsSection": false
         }
       ]
@@ -994,13 +981,17 @@
       "asrcTimelapse": false,
       "observations": [
         {
-          "stationId": "F4844",
+          "stationId": "KSLK",
           "kind": "valley",
-          "stationName": "FW4844 Loch Muller",
-          "stationElevationFt": 1721,
-          "distanceMi": 6,
-          "elevationDiffFt": 1744,
-          "bindReason": "F4844 (1,721 ft station elev) is 6.0 mi from Blue Ridge Mountain; same WFO BTV and state NY; station is 1,744 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "network": "ASOS/AWOS airport",
+          "stationName": "Saranac Lake, Adirondack Regional Airport",
+          "stationElevationFt": 1663,
+          "elevationSource": "NWS metadata",
+          "nwsElevationFt": 1663,
+          "epqsElevationFt": 1657,
+          "distanceMi": 37.642,
+          "elevationDiffFt": 1802,
+          "bindReason": "ASOS/AWOS airport KSLK at 1663 ft (NWS metadata), 37.642 mi, WFO BTV/NY; station 1,802 ft below catalog. valley. Auto: nearest qualifying station with weather in 24 h.",
           "hideFromObservationsSection": false
         }
       ]
@@ -1009,13 +1000,17 @@
       "asrcTimelapse": false,
       "observations": [
         {
-          "stationId": "F4844",
+          "stationId": "KSLK",
           "kind": "valley",
-          "stationName": "FW4844 Loch Muller",
-          "stationElevationFt": 1721,
-          "distanceMi": 22.3,
-          "elevationDiffFt": 1679,
-          "bindReason": "F4844 (1,721 ft station elev) is 22.3 mi from Fishing Brook Range; same WFO BTV and state NY; station is 1,679 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "network": "ASOS/AWOS airport",
+          "stationName": "Saranac Lake, Adirondack Regional Airport",
+          "stationElevationFt": 1663,
+          "elevationSource": "NWS metadata",
+          "nwsElevationFt": 1663,
+          "epqsElevationFt": 1657,
+          "distanceMi": 33.314,
+          "elevationDiffFt": 1737,
+          "bindReason": "ASOS/AWOS airport KSLK at 1663 ft (NWS metadata), 33.314 mi, WFO BTV/NY; station 1,737 ft below catalog. valley. Auto: nearest qualifying station with weather in 24 h.",
           "hideFromObservationsSection": false
         }
       ]
@@ -1024,13 +1019,17 @@
       "asrcTimelapse": false,
       "observations": [
         {
-          "stationId": "F4844",
+          "stationId": "KSLK",
           "kind": "valley",
-          "stationName": "FW4844 Loch Muller",
-          "stationElevationFt": 1721,
-          "distanceMi": 11.2,
-          "elevationDiffFt": 1668,
-          "bindReason": "F4844 (1,721 ft station elev) is 11.2 mi from Vanderwhacker Mountain; same WFO BTV and state NY; station is 1,668 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "network": "ASOS/AWOS airport",
+          "stationName": "Saranac Lake, Adirondack Regional Airport",
+          "stationElevationFt": 1663,
+          "elevationSource": "NWS metadata",
+          "nwsElevationFt": 1663,
+          "epqsElevationFt": 1657,
+          "distanceMi": 34.606,
+          "elevationDiffFt": 1726,
+          "bindReason": "ASOS/AWOS airport KSLK at 1663 ft (NWS metadata), 34.606 mi, WFO BTV/NY; station 1,726 ft below catalog. valley. Auto: nearest qualifying station with weather in 24 h.",
           "hideFromObservationsSection": false
         }
       ]
@@ -1039,13 +1038,17 @@
       "asrcTimelapse": false,
       "observations": [
         {
-          "stationId": "G7904",
+          "stationId": "KGFL",
           "kind": "valley",
-          "stationName": "GW7904 LAKE GEORGE",
-          "stationElevationFt": 1053,
-          "distanceMi": 16.8,
-          "elevationDiffFt": 2201,
-          "bindReason": "G7904 (1,053 ft station elev) is 16.8 mi from Crane Mountain; same WFO ALY and state NY; station is 2,201 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "network": "ASOS/AWOS airport",
+          "stationName": "Glens Falls, Floyd Bennett Memorial Airport",
+          "stationElevationFt": 328,
+          "elevationSource": "NWS metadata",
+          "nwsElevationFt": 328,
+          "epqsElevationFt": 321,
+          "distanceMi": 22.579,
+          "elevationDiffFt": 2926,
+          "bindReason": "ASOS/AWOS airport KGFL at 328 ft (NWS metadata), 22.579 mi, WFO ALY/NY; station 2,926 ft below catalog. valley. Auto: nearest qualifying station with weather in 24 h.",
           "hideFromObservationsSection": false
         }
       ]
@@ -1054,13 +1057,17 @@
       "asrcTimelapse": false,
       "observations": [
         {
-          "stationId": "F9326",
+          "stationId": "KGFL",
           "kind": "valley",
-          "stationName": "FW9326 Northville",
-          "stationElevationFt": 781,
-          "distanceMi": 16,
-          "elevationDiffFt": 1870,
-          "bindReason": "F9326 (781 ft station elev) is 16.0 mi from Hadley Mountain; same WFO ALY and state NY; station is 1,870 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "network": "ASOS/AWOS airport",
+          "stationName": "Glens Falls, Floyd Bennett Memorial Airport",
+          "stationElevationFt": 328,
+          "elevationSource": "NWS metadata",
+          "nwsElevationFt": 328,
+          "epqsElevationFt": 321,
+          "distanceMi": 18.266,
+          "elevationDiffFt": 2323,
+          "bindReason": "ASOS/AWOS airport KGFL at 328 ft (NWS metadata), 18.266 mi, WFO ALY/NY; station 2,323 ft below catalog. valley. Auto: nearest qualifying station with weather in 24 h.",
           "hideFromObservationsSection": false
         }
       ]
@@ -1069,13 +1076,17 @@
       "asrcTimelapse": false,
       "observations": [
         {
-          "stationId": "A4091",
+          "stationId": "KGFL",
           "kind": "valley",
-          "stationName": "Piseco Lake",
-          "stationElevationFt": 1719,
-          "distanceMi": 20.5,
-          "elevationDiffFt": 921,
-          "bindReason": "A4091 (1,719 ft station elev) is 20.5 mi from Black Mountain; same WFO ALY and state NY; station is 921 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "network": "ASOS/AWOS airport",
+          "stationName": "Glens Falls, Floyd Bennett Memorial Airport",
+          "stationElevationFt": 328,
+          "elevationSource": "NWS metadata",
+          "nwsElevationFt": 328,
+          "epqsElevationFt": 321,
+          "distanceMi": 30.949,
+          "elevationDiffFt": 2312,
+          "bindReason": "ASOS/AWOS airport KGFL at 328 ft (NWS metadata), 30.949 mi, WFO ALY/NY; station 2,312 ft below catalog. valley. Auto: nearest qualifying station with weather in 24 h.",
           "hideFromObservationsSection": false
         }
       ]
@@ -1084,23 +1095,17 @@
       "asrcTimelapse": false,
       "observations": [
         {
-          "stationId": "F4844",
-          "kind": "summit",
-          "stationName": "FW4844 Loch Muller",
-          "stationElevationFt": 1721,
-          "distanceMi": 11.4,
-          "elevationDiffFt": 812,
-          "bindReason": "F4844 (1,721 ft station elev) is 11.4 mi from Pharaoh Mountain; same WFO BTV and state NY; station is 812 ft lower than catalog. Summit slot: elevation within 900 ft of 2,533 ft catalog.",
-          "hideFromObservationsSection": false
-        },
-        {
-          "stationId": "G0385",
+          "stationId": "PHCN6",
           "kind": "valley",
-          "stationName": "GW0385 Port Henry",
-          "stationElevationFt": 93,
-          "distanceMi": 18.5,
-          "elevationDiffFt": 2440,
-          "bindReason": "G0385 (93 ft station elev) is 18.5 mi from Pharaoh Mountain; same WFO BTV and state NY; station is 2,440 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "network": "NWS/other station",
+          "stationName": "LAKE CHAMPLAIN AT PORT HENRY",
+          "stationElevationFt": 98,
+          "elevationSource": "NWS metadata",
+          "nwsElevationFt": 98,
+          "epqsElevationFt": 102,
+          "distanceMi": 19.111,
+          "elevationDiffFt": 2435,
+          "bindReason": "NWS/other station PHCN6 at 98 ft (NWS metadata), 19.111 mi, WFO BTV/NY; station 2,435 ft below catalog. valley. Auto: nearest qualifying station with weather in 24 h.",
           "hideFromObservationsSection": false
         }
       ]
@@ -1109,13 +1114,17 @@
       "asrcTimelapse": false,
       "observations": [
         {
-          "stationId": "G7904",
+          "stationId": "KGFL",
           "kind": "valley",
-          "stationName": "GW7904 LAKE GEORGE",
-          "stationElevationFt": 1053,
-          "distanceMi": 5.3,
-          "elevationDiffFt": 977,
-          "bindReason": "G7904 (1,053 ft station elev) is 5.3 mi from Prospect Mountain; same WFO ALY and state NY; station is 977 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "network": "ASOS/AWOS airport",
+          "stationName": "Glens Falls, Floyd Bennett Memorial Airport",
+          "stationElevationFt": 328,
+          "elevationSource": "NWS metadata",
+          "nwsElevationFt": 328,
+          "epqsElevationFt": 321,
+          "distanceMi": 8.916,
+          "elevationDiffFt": 1702,
+          "bindReason": "ASOS/AWOS airport KGFL at 328 ft (NWS metadata), 8.916 mi, WFO ALY/NY; station 1,702 ft below catalog. valley. Auto: nearest qualifying station with weather in 24 h.",
           "hideFromObservationsSection": false
         }
       ]
@@ -1124,13 +1133,17 @@
       "asrcTimelapse": false,
       "observations": [
         {
-          "stationId": "FVYN6",
+          "stationId": "MTRN6",
           "kind": "valley",
-          "stationName": "BISCUIT BROOK ABOVE PIGEON BROOK AT FROST VALLEY",
-          "stationElevationFt": 2142,
-          "distanceMi": 5.9,
-          "elevationDiffFt": 2038,
-          "bindReason": "FVYN6 (2,142 ft station elev) is 5.9 mi from Slide Mountain; same WFO ALY and state NY; station is 2,038 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "network": "NWS/other station",
+          "stationName": "ESOPUS CREEK AT MOUNT TREMPER (COLDBROOK)",
+          "stationElevationFt": 652,
+          "elevationSource": "NWS metadata",
+          "nwsElevationFt": 652,
+          "epqsElevationFt": 627,
+          "distanceMi": 6.024,
+          "elevationDiffFt": 3528,
+          "bindReason": "NWS/other station MTRN6 at 652 ft (NWS metadata), 6.024 mi, WFO ALY/NY; station 3,528 ft below catalog. valley. Auto: nearest qualifying station with weather in 24 h.",
           "hideFromObservationsSection": false
         }
       ]
@@ -1139,13 +1152,17 @@
       "asrcTimelapse": false,
       "observations": [
         {
-          "stationId": "E1865",
+          "stationId": "CHIN6",
           "kind": "valley",
-          "stationName": "EW1865 Hunter",
-          "stationElevationFt": 1600,
-          "distanceMi": 2.2,
-          "elevationDiffFt": 2440,
-          "bindReason": "E1865 (1,600 ft station elev) is 2.2 mi from Hunter Mountain; same WFO ALY and state NY; station is 2,440 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "network": "NWS/other station",
+          "stationName": "STONY CLOVE CREEK AT CHICHESTER",
+          "stationElevationFt": 984,
+          "elevationSource": "NWS metadata",
+          "nwsElevationFt": 984,
+          "epqsElevationFt": 952,
+          "distanceMi": 6.665,
+          "elevationDiffFt": 3056,
+          "bindReason": "NWS/other station CHIN6 at 984 ft (NWS metadata), 6.665 mi, WFO ALY/NY; station 3,056 ft below catalog. valley. Auto: nearest qualifying station with weather in 24 h.",
           "hideFromObservationsSection": false
         }
       ]
@@ -1154,13 +1171,17 @@
       "asrcTimelapse": false,
       "observations": [
         {
-          "stationId": "FVYN6",
+          "stationId": "MTRN6",
           "kind": "valley",
-          "stationName": "BISCUIT BROOK ABOVE PIGEON BROOK AT FROST VALLEY",
-          "stationElevationFt": 2142,
-          "distanceMi": 6,
-          "elevationDiffFt": 1701,
-          "bindReason": "FVYN6 (2,142 ft station elev) is 6.0 mi from Peekamoose Mountain; same WFO ALY and state NY; station is 1,701 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "network": "NWS/other station",
+          "stationName": "ESOPUS CREEK AT MOUNT TREMPER (COLDBROOK)",
+          "stationElevationFt": 652,
+          "elevationSource": "NWS metadata",
+          "nwsElevationFt": 652,
+          "epqsElevationFt": 627,
+          "distanceMi": 7.814,
+          "elevationDiffFt": 3191,
+          "bindReason": "NWS/other station MTRN6 at 652 ft (NWS metadata), 7.814 mi, WFO ALY/NY; station 3,191 ft below catalog. valley. Auto: nearest qualifying station with weather in 24 h.",
           "hideFromObservationsSection": false
         }
       ]
@@ -1169,13 +1190,17 @@
       "asrcTimelapse": false,
       "observations": [
         {
-          "stationId": "FVYN6",
+          "stationId": "BIGN6",
           "kind": "valley",
-          "stationName": "BISCUIT BROOK ABOVE PIGEON BROOK AT FROST VALLEY",
-          "stationElevationFt": 2142,
-          "distanceMi": 5.9,
-          "elevationDiffFt": 1588,
-          "bindReason": "FVYN6 (2,142 ft station elev) is 5.9 mi from Balsam Lake Mountain; same WFO ALY and state NY; station is 1,588 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "network": "NWS/other station",
+          "stationName": "BIRCH CREEK AT BIG INDIAN",
+          "stationElevationFt": 1263,
+          "elevationSource": "NWS metadata",
+          "nwsElevationFt": 1263,
+          "epqsElevationFt": 1241,
+          "distanceMi": 8.515,
+          "elevationDiffFt": 2467,
+          "bindReason": "NWS/other station BIGN6 at 1263 ft (NWS metadata), 8.515 mi, WFO ALY/NY; station 2,467 ft below catalog. valley. Auto: nearest qualifying station with weather in 24 h.",
           "hideFromObservationsSection": false
         }
       ]
@@ -1184,13 +1209,17 @@
       "asrcTimelapse": false,
       "observations": [
         {
-          "stationId": "ALAN6",
+          "stationId": "BIGN6",
           "kind": "valley",
-          "stationName": "ESOPUS CREEK AT ALLABEN",
-          "stationElevationFt": 1013,
-          "distanceMi": 4.2,
-          "elevationDiffFt": 2707,
-          "bindReason": "ALAN6 (1,013 ft station elev) is 4.2 mi from Panther Mountain; same WFO ALY and state NY; station is 2,707 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "network": "NWS/other station",
+          "stationName": "BIRCH CREEK AT BIG INDIAN",
+          "stationElevationFt": 1263,
+          "elevationSource": "NWS metadata",
+          "nwsElevationFt": 1263,
+          "epqsElevationFt": 1241,
+          "distanceMi": 4.673,
+          "elevationDiffFt": 2457,
+          "bindReason": "NWS/other station BIGN6 at 1263 ft (NWS metadata), 4.673 mi, WFO ALY/NY; station 2,457 ft below catalog. valley. Auto: nearest qualifying station with weather in 24 h.",
           "hideFromObservationsSection": false
         }
       ]
@@ -1199,13 +1228,17 @@
       "asrcTimelapse": false,
       "observations": [
         {
-          "stationId": "G1612",
+          "stationId": "NGC51",
           "kind": "valley",
-          "stationName": "GW1612 EAST DURHAM",
-          "stationElevationFt": 640,
-          "distanceMi": 4.7,
-          "elevationDiffFt": 2884,
-          "bindReason": "G1612 (640 ft station elev) is 4.7 mi from Windham High Peak; same WFO ALY and state NY; station is 2,884 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "network": "NWS/other station",
+          "stationName": "Greenville High School",
+          "stationElevationFt": 746,
+          "elevationSource": "USGS EPQS (NWS metadata rejected)",
+          "nwsElevationFt": 234,
+          "epqsElevationFt": 746,
+          "distanceMi": 9.306,
+          "elevationDiffFt": 2778,
+          "bindReason": "NWS/other station NGC51 at 746 ft (USGS EPQS (NWS metadata rejected); NWS had 234 ft), 9.306 mi, WFO ALY/NY; station 2,778 ft below catalog. valley. Auto: nearest qualifying station with weather in 24 h.",
           "hideFromObservationsSection": false
         }
       ]
@@ -1214,13 +1247,17 @@
       "asrcTimelapse": false,
       "observations": [
         {
-          "stationId": "MRNN6",
+          "stationId": "K20N",
           "kind": "valley",
-          "stationName": "ESOPUS CREEK AT MOUNT MARION",
-          "stationElevationFt": 137,
-          "distanceMi": 7,
-          "elevationDiffFt": 2999,
-          "bindReason": "MRNN6 (137 ft station elev) is 7.0 mi from Overlook Mountain; same WFO ALY and state NY; station is 2,999 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "network": "ASOS/AWOS airport",
+          "stationName": "KINGULSTER",
+          "stationElevationFt": 149,
+          "elevationSource": "NWS metadata",
+          "nwsElevationFt": 149,
+          "epqsElevationFt": 139,
+          "distanceMi": 9.565,
+          "elevationDiffFt": 2987,
+          "bindReason": "ASOS/AWOS airport K20N at 149 ft (NWS metadata), 9.565 mi, WFO ALY/NY; station 2,987 ft below catalog. valley. Auto: nearest qualifying station with weather in 24 h.",
           "hideFromObservationsSection": false
         }
       ]
@@ -1229,23 +1266,17 @@
       "asrcTimelapse": false,
       "observations": [
         {
-          "stationId": "FVYN6",
-          "kind": "summit",
-          "stationName": "BISCUIT BROOK ABOVE PIGEON BROOK AT FROST VALLEY",
-          "stationElevationFt": 2142,
-          "distanceMi": 5.1,
-          "elevationDiffFt": 844,
-          "bindReason": "FVYN6 (2,142 ft station elev) is 5.1 mi from Red Hill; same WFO ALY and state NY; station is 844 ft lower than catalog. Summit slot: elevation within 900 ft of 2,986 ft catalog.",
-          "hideFromObservationsSection": false
-        },
-        {
-          "stationId": "F1784",
+          "stationId": "BIGN6",
           "kind": "valley",
-          "stationName": "FW1784 Kerhonkson",
-          "stationElevationFt": 897,
-          "distanceMi": 12.8,
-          "elevationDiffFt": 2089,
-          "bindReason": "F1784 (897 ft station elev) is 12.8 mi from Red Hill; same WFO ALY and state NY; station is 2,089 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "network": "NWS/other station",
+          "stationName": "BIRCH CREEK AT BIG INDIAN",
+          "stationElevationFt": 1263,
+          "elevationSource": "NWS metadata",
+          "nwsElevationFt": 1263,
+          "epqsElevationFt": 1241,
+          "distanceMi": 13.206,
+          "elevationDiffFt": 1723,
+          "bindReason": "NWS/other station BIGN6 at 1263 ft (NWS metadata), 13.206 mi, WFO ALY/NY; station 1,723 ft below catalog. valley. Auto: nearest qualifying station with weather in 24 h.",
           "hideFromObservationsSection": false
         }
       ]
@@ -1254,13 +1285,17 @@
       "asrcTimelapse": false,
       "observations": [
         {
-          "stationId": "CHIN6",
+          "stationId": "K20N",
           "kind": "valley",
-          "stationName": "STONY CLOVE CREEK AT CHICHESTER",
-          "stationElevationFt": 984,
-          "distanceMi": 2.5,
-          "elevationDiffFt": 1756,
-          "bindReason": "CHIN6 (984 ft station elev) is 2.5 mi from Mount Tremper; same WFO ALY and state NY; station is 1,756 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "network": "ASOS/AWOS airport",
+          "stationName": "KINGULSTER",
+          "stationElevationFt": 149,
+          "elevationSource": "NWS metadata",
+          "nwsElevationFt": 149,
+          "epqsElevationFt": 139,
+          "distanceMi": 17.238,
+          "elevationDiffFt": 2591,
+          "bindReason": "ASOS/AWOS airport K20N at 149 ft (NWS metadata), 17.238 mi, WFO ALY/NY; station 2,591 ft below catalog. valley. Auto: nearest qualifying station with weather in 24 h.",
           "hideFromObservationsSection": false
         }
       ]
@@ -1269,13 +1304,17 @@
       "asrcTimelapse": false,
       "observations": [
         {
-          "stationId": "E1865",
+          "stationId": "CHIN6",
           "kind": "base",
-          "stationName": "EW1865 Hunter",
-          "stationElevationFt": 1600,
-          "distanceMi": 3.4,
-          "elevationDiffFt": 300,
-          "bindReason": "E1865 (1,600 ft station elev) is 3.4 mi from Tannersville; same WFO ALY and state NY; station is 300 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "network": "NWS/other station",
+          "stationName": "STONY CLOVE CREEK AT CHICHESTER",
+          "stationElevationFt": 984,
+          "elevationSource": "NWS metadata",
+          "nwsElevationFt": 984,
+          "epqsElevationFt": 952,
+          "distanceMi": 11.145,
+          "elevationDiffFt": 916,
+          "bindReason": "NWS/other station CHIN6 at 984 ft (NWS metadata), 11.145 mi, WFO ALY/NY; station 916 ft below catalog. base. Auto: nearest qualifying station with weather in 24 h.",
           "hideFromObservationsSection": false
         }
       ]
@@ -1284,13 +1323,17 @@
       "asrcTimelapse": false,
       "observations": [
         {
-          "stationId": "G2393",
+          "stationId": "LMTN6",
           "kind": "base",
-          "stationName": "GW2393 Kerhonkson",
-          "stationElevationFt": 1704,
-          "distanceMi": 0.5,
-          "elevationDiffFt": 536,
-          "bindReason": "G2393 (1,704 ft station elev) is 0.5 mi from Gunks Ridge; same WFO ALY and state NY; station is 536 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "network": "NWS/other station",
+          "stationName": "ESOPUS CREEK NEAR LOMONTVILLE 1SW",
+          "stationElevationFt": 216,
+          "elevationSource": "NWS metadata",
+          "nwsElevationFt": 216,
+          "epqsElevationFt": 203,
+          "distanceMi": 10.936,
+          "elevationDiffFt": 2024,
+          "bindReason": "NWS/other station LMTN6 at 216 ft (NWS metadata), 10.936 mi, WFO ALY/NY; station 2,024 ft below catalog. base. Auto: nearest qualifying station with weather in 24 h.",
           "hideFromObservationsSection": false
         }
       ]
@@ -1299,13 +1342,17 @@
       "asrcTimelapse": false,
       "observations": [
         {
-          "stationId": "APBN6",
+          "stationId": "KALB",
           "kind": "base",
-          "stationName": "ALBANY PINE BUSH",
-          "stationElevationFt": 346,
-          "distanceMi": 8.7,
-          "elevationDiffFt": 954,
-          "bindReason": "APBN6 (346 ft station elev) is 8.7 mi from Thacher State Park; same WFO ALY and state NY; station is 954 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "network": "ASOS/AWOS airport",
+          "stationName": "Albany International Airport",
+          "stationElevationFt": 285,
+          "elevationSource": "NWS metadata",
+          "nwsElevationFt": 285,
+          "epqsElevationFt": 277,
+          "distanceMi": 12.494,
+          "elevationDiffFt": 1015,
+          "bindReason": "ASOS/AWOS airport KALB at 285 ft (NWS metadata), 12.494 mi, WFO ALY/NY; station 1,015 ft below catalog. base. Auto: nearest qualifying station with weather in 24 h.",
           "hideFromObservationsSection": false
         }
       ]
@@ -1314,13 +1361,17 @@
       "asrcTimelapse": false,
       "observations": [
         {
-          "stationId": "NTYV1",
+          "stationId": "KEFK",
           "kind": "valley",
-          "stationName": "MISSISQUOI RIVER NEAR NORTH TROY 2SSE",
-          "stationElevationFt": 560,
-          "distanceMi": 7.6,
-          "elevationDiffFt": 3298,
-          "bindReason": "NTYV1 (560 ft station elev) is 7.6 mi from Jay Peak; same WFO BTV and state VT; station is 3,298 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "network": "ASOS/AWOS airport",
+          "stationName": "Northeast Kingdom International Airport",
+          "stationElevationFt": 934,
+          "elevationSource": "NWS metadata",
+          "nwsElevationFt": 934,
+          "epqsElevationFt": 935,
+          "distanceMi": 14.392,
+          "elevationDiffFt": 2924,
+          "bindReason": "ASOS/AWOS airport KEFK at 934 ft (NWS metadata), 14.392 mi, WFO BTV/VT; station 2,924 ft below catalog. valley. Auto: nearest qualifying station with weather in 24 h.",
           "hideFromObservationsSection": false
         }
       ]
@@ -1329,13 +1380,17 @@
       "asrcTimelapse": false,
       "observations": [
         {
-          "stationId": "LEDV1",
+          "stationId": "KMVL",
           "kind": "valley",
-          "stationName": "MT. NORRIS RESERVATION AT LAKE EDEN",
-          "stationElevationFt": 1292,
-          "distanceMi": 4.3,
-          "elevationDiffFt": 2048,
-          "bindReason": "LEDV1 (1,292 ft station elev) is 4.3 mi from Belvidere Mountain; same WFO BTV and state VT; station is 2,048 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "network": "ASOS/AWOS airport",
+          "stationName": "Morrisville-Stowe State Airport",
+          "stationElevationFt": 709,
+          "elevationSource": "NWS metadata",
+          "nwsElevationFt": 709,
+          "epqsElevationFt": null,
+          "distanceMi": 16.695,
+          "elevationDiffFt": 2631,
+          "bindReason": "ASOS/AWOS airport KMVL at 709 ft (NWS metadata), 16.695 mi, WFO BTV/VT; station 2,631 ft below catalog. valley. Auto: nearest qualifying station with weather in 24 h.",
           "hideFromObservationsSection": false
         }
       ]
@@ -1344,13 +1399,17 @@
       "asrcTimelapse": false,
       "observations": [
         {
-          "stationId": "NTYV1",
+          "stationId": "KEFK",
           "kind": "base",
-          "stationName": "MISSISQUOI RIVER NEAR NORTH TROY 2SSE",
-          "stationElevationFt": 560,
-          "distanceMi": 3.1,
-          "elevationDiffFt": 540,
-          "bindReason": "NTYV1 (560 ft station elev) is 3.1 mi from Jay Village; same WFO BTV and state VT; station is 540 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "network": "ASOS/AWOS airport",
+          "stationName": "Northeast Kingdom International Airport",
+          "stationElevationFt": 934,
+          "elevationSource": "NWS metadata",
+          "nwsElevationFt": 934,
+          "epqsElevationFt": 935,
+          "distanceMi": 10.657,
+          "elevationDiffFt": 166,
+          "bindReason": "ASOS/AWOS airport KEFK at 934 ft (NWS metadata), 10.657 mi, WFO BTV/VT; station 166 ft below catalog. base. Auto: nearest qualifying station with weather in 24 h.",
           "hideFromObservationsSection": false
         }
       ]
@@ -1361,21 +1420,29 @@
         {
           "stationId": "MMNV1",
           "kind": "summit",
+          "network": "NWS mesonet (NEPP)",
           "stationName": "NEPP SITE AT MOUNT MANSFIELD NEAR STOWE 8WNW",
           "stationElevationFt": 3891,
-          "distanceMi": 1.3,
+          "elevationSource": "NWS metadata",
+          "nwsElevationFt": 3891,
+          "epqsElevationFt": 3920,
+          "distanceMi": 1.312,
           "elevationDiffFt": 502,
-          "bindReason": "Manual summit pin: NWS station metadata at api.weather.gov/stations/MMNV1.",
+          "bindReason": "NWS mesonet (NEPP) MMNV1 at 3891 ft (NWS metadata), 1.312 mi, WFO BTV/VT; station 502 ft below catalog. summit. Pinned summit station for this peak.",
           "hideFromObservationsSection": true
         },
         {
           "stationId": "KMPV",
           "kind": "valley",
+          "network": "ASOS/AWOS airport",
           "stationName": "Barre / Montpelier, Knapp State Airport",
           "stationElevationFt": 1165,
-          "distanceMi": 26.4,
+          "elevationSource": "NWS metadata",
+          "nwsElevationFt": 1165,
+          "epqsElevationFt": 1104,
+          "distanceMi": 26.435,
           "elevationDiffFt": 3228,
-          "bindReason": "Manual valley/nearby METAR pin for Mount Mansfield.",
+          "bindReason": "ASOS/AWOS airport KMPV at 1165 ft (NWS metadata), 26.435 mi, WFO BTV/VT; station 3,228 ft below catalog. valley. Pinned valley/base METAR.",
           "hideFromObservationsSection": false
         }
       ]
@@ -1384,13 +1451,17 @@
       "asrcTimelapse": false,
       "observations": [
         {
-          "stationId": "MMNV1",
+          "stationId": "EMRV1",
           "kind": "base",
-          "stationName": "NEPP SITE AT MOUNT MANSFIELD NEAR STOWE 8WNW",
-          "stationElevationFt": 3891,
-          "distanceMi": 2.3,
-          "elevationDiffFt": -521,
-          "bindReason": "MMNV1 (3,891 ft station elev) is 2.3 mi from Smugglers Notch; same WFO BTV and state VT; station is 521 ft higher than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "network": "RAWS fire-weather station",
+          "stationName": "ELMORE",
+          "stationElevationFt": 1164,
+          "elevationSource": "NWS metadata",
+          "nwsElevationFt": 1164,
+          "epqsElevationFt": 1170,
+          "distanceMi": 13.156,
+          "elevationDiffFt": 2206,
+          "bindReason": "RAWS fire-weather station EMRV1 at 1164 ft (NWS metadata), 13.156 mi, WFO BTV/VT; station 2,206 ft below catalog. base. Auto: nearest qualifying station with weather in 24 h.",
           "hideFromObservationsSection": false
         }
       ]
@@ -1400,12 +1471,16 @@
       "observations": [
         {
           "stationId": "KMPV",
-          "kind": "valley",
+          "kind": "base",
+          "network": "ASOS/AWOS airport",
           "stationName": "Barre / Montpelier, Knapp State Airport",
           "stationElevationFt": 1165,
-          "distanceMi": 18.9,
+          "elevationSource": "NWS metadata",
+          "nwsElevationFt": 1165,
+          "epqsElevationFt": 1104,
+          "distanceMi": 18.933,
           "elevationDiffFt": -125,
-          "bindReason": "Manual valley/nearby METAR pin for Stowe.",
+          "bindReason": "ASOS/AWOS airport KMPV at 1165 ft (NWS metadata), 18.933 mi, WFO BTV/VT; station 125 ft above catalog. base. Pinned valley/base METAR.",
           "hideFromObservationsSection": false
         }
       ]
@@ -1414,13 +1489,17 @@
       "asrcTimelapse": false,
       "observations": [
         {
-          "stationId": "E2573",
+          "stationId": "WRSV1",
           "kind": "valley",
-          "stationName": "EW2573 Hanksville",
-          "stationElevationFt": 1656,
-          "distanceMi": 6.3,
-          "elevationDiffFt": 2427,
-          "bindReason": "E2573 (1,656 ft station elev) is 6.3 mi from Camel's Hump; same WFO BTV and state VT; station is 2,427 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "network": "NWS/other station",
+          "stationName": "WATERBURY RESERVOIR NEAR WATERBURY 3NNW",
+          "stationElevationFt": 570,
+          "elevationSource": "NWS metadata",
+          "nwsElevationFt": 570,
+          "epqsElevationFt": 633,
+          "distanceMi": 7.163,
+          "elevationDiffFt": 3513,
+          "bindReason": "NWS/other station WRSV1 at 570 ft (NWS metadata), 7.163 mi, WFO BTV/VT; station 3,513 ft below catalog. valley. Auto: nearest qualifying station with weather in 24 h.",
           "hideFromObservationsSection": false
         }
       ]
@@ -1429,13 +1508,17 @@
       "asrcTimelapse": false,
       "observations": [
         {
-          "stationId": "G5033",
+          "stationId": "K6B0",
           "kind": "valley",
-          "stationName": "GW5033 STARKSBORO",
-          "stationElevationFt": 1444,
-          "distanceMi": 4.6,
-          "elevationDiffFt": 2639,
-          "bindReason": "G5033 (1,444 ft station elev) is 4.6 mi from Mount Ellen; same WFO BTV and state VT; station is 2,639 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "network": "ASOS/AWOS airport",
+          "stationName": "Middlebury State Airport",
+          "stationElevationFt": 489,
+          "elevationSource": "NWS metadata",
+          "nwsElevationFt": 489,
+          "epqsElevationFt": 488,
+          "distanceMi": 14.68,
+          "elevationDiffFt": 3594,
+          "bindReason": "ASOS/AWOS airport K6B0 at 489 ft (NWS metadata), 14.68 mi, WFO BTV/VT; station 3,594 ft below catalog. valley. Auto: nearest qualifying station with weather in 24 h.",
           "hideFromObservationsSection": false
         }
       ]
@@ -1446,11 +1529,15 @@
         {
           "stationId": "K6B0",
           "kind": "valley",
+          "network": "ASOS/AWOS airport",
           "stationName": "Middlebury State Airport",
           "stationElevationFt": 489,
-          "distanceMi": 7.8,
+          "elevationSource": "NWS metadata",
+          "nwsElevationFt": 489,
+          "epqsElevationFt": 488,
+          "distanceMi": 7.763,
           "elevationDiffFt": 3346,
-          "bindReason": "K6B0 (489 ft station elev) is 7.8 mi from Bread Loaf Mountain; same WFO BTV and state VT; station is 3,346 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "bindReason": "ASOS/AWOS airport K6B0 at 489 ft (NWS metadata), 7.763 mi, WFO BTV/VT; station 3,346 ft below catalog. valley. Auto: nearest qualifying station with weather in 24 h.",
           "hideFromObservationsSection": false
         }
       ]
@@ -1459,23 +1546,31 @@
       "asrcTimelapse": false,
       "observations": [
         {
-          "stationId": "UVM06",
-          "kind": "summit",
-          "stationName": "Mt. Mansfield (East)",
-          "stationElevationFt": 2877,
-          "distanceMi": 11.4,
-          "elevationDiffFt": 416,
-          "bindReason": "UVM06 (2,877 ft station elev) is 11.4 mi from Mount Worcester; same WFO BTV and state VT; station is 416 ft lower than catalog. Summit slot: elevation within 900 ft of 3,293 ft catalog.",
+          "stationId": "MMNV1",
+          "kind": "nearby-higher",
+          "network": "NWS mesonet (NEPP)",
+          "stationName": "NEPP SITE AT MOUNT MANSFIELD NEAR STOWE 8WNW",
+          "stationElevationFt": 3891,
+          "elevationSource": "NWS metadata",
+          "nwsElevationFt": 3891,
+          "epqsElevationFt": 3920,
+          "distanceMi": 12.377,
+          "elevationDiffFt": -598,
+          "bindReason": "NWS mesonet (NEPP) MMNV1 at 3891 ft (NWS metadata), 12.377 mi, WFO BTV/VT; station 598 ft above catalog. nearby-higher. Nearby higher station: Mount Mansfield.",
           "hideFromObservationsSection": false
         },
         {
-          "stationId": "F8108",
+          "stationId": "KMVL",
           "kind": "valley",
-          "stationName": "FW8108 Worcester",
-          "stationElevationFt": 1060,
-          "distanceMi": 5.8,
-          "elevationDiffFt": 2233,
-          "bindReason": "F8108 (1,060 ft station elev) is 5.8 mi from Mount Worcester; same WFO BTV and state VT; station is 2,233 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "network": "ASOS/AWOS airport",
+          "stationName": "Morrisville-Stowe State Airport",
+          "stationElevationFt": 709,
+          "elevationSource": "NWS metadata",
+          "nwsElevationFt": 709,
+          "epqsElevationFt": null,
+          "distanceMi": 6.518,
+          "elevationDiffFt": 2584,
+          "bindReason": "ASOS/AWOS airport KMVL at 709 ft (NWS metadata), 6.518 mi, WFO BTV/VT; station 2,584 ft below catalog. valley. Auto: nearest qualifying station with weather in 24 h.",
           "hideFromObservationsSection": false
         }
       ]
@@ -1486,11 +1581,15 @@
         {
           "stationId": "WRSV1",
           "kind": "base",
+          "network": "NWS/other station",
           "stationName": "WATERBURY RESERVOIR NEAR WATERBURY 3NNW",
           "stationElevationFt": 570,
-          "distanceMi": 3.1,
+          "elevationSource": "NWS metadata",
+          "nwsElevationFt": 570,
+          "epqsElevationFt": 633,
+          "distanceMi": 3.11,
           "elevationDiffFt": 30,
-          "bindReason": "WRSV1 (570 ft station elev) is 3.1 mi from Bolton / Waterbury; same WFO BTV and state VT; station is 30 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "bindReason": "NWS/other station WRSV1 at 570 ft (NWS metadata), 3.11 mi, WFO BTV/VT; station 30 ft below catalog. base. Auto: nearest qualifying station with weather in 24 h.",
           "hideFromObservationsSection": false
         }
       ]
@@ -1499,13 +1598,17 @@
       "asrcTimelapse": false,
       "observations": [
         {
-          "stationId": "E3614",
+          "stationId": "KMPV",
           "kind": "valley",
-          "stationName": "EW3614 West Topsham",
-          "stationElevationFt": 1639,
-          "distanceMi": 3.2,
-          "elevationDiffFt": 1731,
-          "bindReason": "E3614 (1,639 ft station elev) is 3.2 mi from Signal Mountain; same WFO BTV and state VT; station is 1,731 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "network": "ASOS/AWOS airport",
+          "stationName": "Barre / Montpelier, Knapp State Airport",
+          "stationElevationFt": 1165,
+          "elevationSource": "NWS metadata",
+          "nwsElevationFt": 1165,
+          "epqsElevationFt": 1104,
+          "distanceMi": 11.928,
+          "elevationDiffFt": 2205,
+          "bindReason": "ASOS/AWOS airport KMPV at 1165 ft (NWS metadata), 11.928 mi, WFO BTV/VT; station 2,205 ft below catalog. valley. Auto: nearest qualifying station with weather in 24 h.",
           "hideFromObservationsSection": false
         }
       ]
@@ -1514,13 +1617,17 @@
       "asrcTimelapse": false,
       "observations": [
         {
-          "stationId": "LSC02",
+          "stationId": "KCDA",
           "kind": "valley",
-          "stationName": "EW7405 Granby",
-          "stationElevationFt": 1485,
-          "distanceMi": 5.7,
-          "elevationDiffFt": 1782,
-          "bindReason": "LSC02 (1,485 ft station elev) is 5.7 mi from Burke Mountain; same WFO BTV and state VT; station is 1,782 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "network": "ASOS/AWOS airport",
+          "stationName": "Caledonia County Airport",
+          "stationElevationFt": 1188,
+          "elevationSource": "NWS metadata",
+          "nwsElevationFt": 1188,
+          "epqsElevationFt": 1167,
+          "distanceMi": 6.157,
+          "elevationDiffFt": 2079,
+          "bindReason": "ASOS/AWOS airport KCDA at 1188 ft (NWS metadata), 6.157 mi, WFO BTV/VT; station 2,079 ft below catalog. valley. Auto: nearest qualifying station with weather in 24 h.",
           "hideFromObservationsSection": false
         }
       ]
@@ -1529,13 +1636,17 @@
       "asrcTimelapse": false,
       "observations": [
         {
-          "stationId": "NLHV1",
+          "stationId": "KCDA",
           "kind": "valley",
-          "stationName": "NULHEGAN",
-          "stationElevationFt": 1245,
-          "distanceMi": 11.8,
-          "elevationDiffFt": 1903,
-          "bindReason": "NLHV1 (1,245 ft station elev) is 11.8 mi from Monadnock Mountain; same WFO BTV and state VT; station is 1,903 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "network": "ASOS/AWOS airport",
+          "stationName": "Caledonia County Airport",
+          "stationElevationFt": 1188,
+          "elevationSource": "NWS metadata",
+          "nwsElevationFt": 1188,
+          "epqsElevationFt": 1167,
+          "distanceMi": 32.474,
+          "elevationDiffFt": 1960,
+          "bindReason": "ASOS/AWOS airport KCDA at 1188 ft (NWS metadata), 32.474 mi, WFO BTV/VT; station 1,960 ft below catalog. valley. Auto: nearest qualifying station with weather in 24 h.",
           "hideFromObservationsSection": false
         }
       ]
@@ -1544,23 +1655,17 @@
       "asrcTimelapse": false,
       "observations": [
         {
-          "stationId": "F8716",
-          "kind": "summit",
-          "stationName": "FW8716 Killington",
-          "stationElevationFt": 7907,
-          "distanceMi": 2.4,
-          "elevationDiffFt": -3672,
-          "bindReason": "F8716 (7,907 ft station elev) is 2.4 mi from Killington Peak; same WFO BTV and state VT; station is 3,672 ft higher than catalog. Summit slot: elevation within 900 ft of 4,235 ft catalog.",
-          "hideFromObservationsSection": false
-        },
-        {
-          "stationId": "OTQV1",
+          "stationId": "KRUT",
           "kind": "valley",
-          "stationName": "OTTAUQUECHEE RIVER NEAR WEST BRIDGEWATER 2NNW",
-          "stationElevationFt": 1187,
-          "distanceMi": 3.3,
-          "elevationDiffFt": 3048,
-          "bindReason": "OTQV1 (1,187 ft station elev) is 3.3 mi from Killington Peak; same WFO BTV and state VT; station is 3,048 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "network": "ASOS/AWOS airport",
+          "stationName": "Rutland-Southern Vermont Regional Airport",
+          "stationElevationFt": 787,
+          "elevationSource": "NWS metadata",
+          "nwsElevationFt": 787,
+          "epqsElevationFt": 783,
+          "distanceMi": 8.153,
+          "elevationDiffFt": 3448,
+          "bindReason": "ASOS/AWOS airport KRUT at 787 ft (NWS metadata), 8.153 mi, WFO BTV/VT; station 3,448 ft below catalog. valley. Auto: nearest qualifying station with weather in 24 h.",
           "hideFromObservationsSection": false
         }
       ]
@@ -1569,23 +1674,17 @@
       "asrcTimelapse": false,
       "observations": [
         {
-          "stationId": "F5837",
-          "kind": "summit",
-          "stationName": "FW5837 West Dover",
-          "stationElevationFt": 7438,
-          "distanceMi": 10.5,
-          "elevationDiffFt": -3498,
-          "bindReason": "F5837 (7,438 ft station elev) is 10.5 mi from Stratton Mountain; same WFO ALY and state VT; station is 3,498 ft higher than catalog. Summit slot: elevation within 900 ft of 3,940 ft catalog.",
-          "hideFromObservationsSection": false
-        },
-        {
-          "stationId": "E1683",
+          "stationId": "WFRV1",
           "kind": "valley",
-          "stationName": "EW1683 Stratton Mountain          VT US",
-          "stationElevationFt": 2271,
-          "distanceMi": 4,
-          "elevationDiffFt": 1669,
-          "bindReason": "E1683 (2,271 ft station elev) is 4.0 mi from Stratton Mountain; same WFO ALY and state VT; station is 1,669 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "network": "RAWS fire-weather station",
+          "stationName": "WOODFORD STATE PARK",
+          "stationElevationFt": 2317,
+          "elevationSource": "NWS metadata",
+          "nwsElevationFt": 2317,
+          "epqsElevationFt": 2355,
+          "distanceMi": 14.654,
+          "elevationDiffFt": 1623,
+          "bindReason": "RAWS fire-weather station WFRV1 at 2317 ft (NWS metadata), 14.654 mi, WFO ALY/VT; station 1,623 ft below catalog. valley. Auto: nearest qualifying station with weather in 24 h.",
           "hideFromObservationsSection": false
         }
       ]
@@ -1594,13 +1693,17 @@
       "asrcTimelapse": false,
       "observations": [
         {
-          "stationId": "F6618",
+          "stationId": "KDDH",
           "kind": "valley",
-          "stationName": "FW6618 Arlington",
-          "stationElevationFt": 828,
-          "distanceMi": 4.3,
-          "elevationDiffFt": 3012,
-          "bindReason": "F6618 (828 ft station elev) is 4.3 mi from Mount Equinox; same WFO ALY and state VT; station is 3,012 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "network": "ASOS/AWOS airport",
+          "stationName": "Bennington Morse State Airport",
+          "stationElevationFt": 827,
+          "elevationSource": "NWS metadata",
+          "nwsElevationFt": 827,
+          "epqsElevationFt": 790,
+          "distanceMi": 19.95,
+          "elevationDiffFt": 3013,
+          "bindReason": "ASOS/AWOS airport KDDH at 827 ft (NWS metadata), 19.95 mi, WFO ALY/VT; station 3,013 ft below catalog. valley. Auto: nearest qualifying station with weather in 24 h.",
           "hideFromObservationsSection": false
         }
       ]
@@ -1609,13 +1712,17 @@
       "asrcTimelapse": false,
       "observations": [
         {
-          "stationId": "LSC06",
+          "stationId": "KRUT",
           "kind": "valley",
-          "stationName": "FW1245 Danby",
-          "stationElevationFt": 1400,
-          "distanceMi": 1.9,
-          "elevationDiffFt": 2360,
-          "bindReason": "LSC06 (1,400 ft station elev) is 1.9 mi from Dorset Mountain; same WFO BTV and state VT; station is 2,360 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "network": "ASOS/AWOS airport",
+          "stationName": "Rutland-Southern Vermont Regional Airport",
+          "stationElevationFt": 787,
+          "elevationSource": "NWS metadata",
+          "nwsElevationFt": 787,
+          "epqsElevationFt": 783,
+          "distanceMi": 15.975,
+          "elevationDiffFt": 2973,
+          "bindReason": "ASOS/AWOS airport KRUT at 787 ft (NWS metadata), 15.975 mi, WFO BTV/VT; station 2,973 ft below catalog. valley. Auto: nearest qualifying station with weather in 24 h.",
           "hideFromObservationsSection": false
         }
       ]
@@ -1624,23 +1731,17 @@
       "asrcTimelapse": false,
       "observations": [
         {
-          "stationId": "F5837",
-          "kind": "summit",
-          "stationName": "FW5837 West Dover",
-          "stationElevationFt": 7438,
-          "distanceMi": 5.8,
-          "elevationDiffFt": -3993,
-          "bindReason": "F5837 (7,438 ft station elev) is 5.8 mi from Haystack Mountain; same WFO ALY and state VT; station is 3,993 ft higher than catalog. Summit slot: elevation within 900 ft of 3,445 ft catalog.",
-          "hideFromObservationsSection": false
-        },
-        {
-          "stationId": "D3212",
+          "stationId": "KDDH",
           "kind": "valley",
-          "stationName": "DW3212 West Dover",
-          "stationElevationFt": 2106,
-          "distanceMi": 2.6,
-          "elevationDiffFt": 1339,
-          "bindReason": "D3212 (2,106 ft station elev) is 2.6 mi from Haystack Mountain; same WFO ALY and state VT; station is 1,339 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "network": "ASOS/AWOS airport",
+          "stationName": "Bennington Morse State Airport",
+          "stationElevationFt": 827,
+          "elevationSource": "NWS metadata",
+          "nwsElevationFt": 827,
+          "epqsElevationFt": 790,
+          "distanceMi": 16.735,
+          "elevationDiffFt": 2618,
+          "bindReason": "ASOS/AWOS airport KDDH at 827 ft (NWS metadata), 16.735 mi, WFO ALY/VT; station 2,618 ft below catalog. valley. Auto: nearest qualifying station with weather in 24 h.",
           "hideFromObservationsSection": false
         }
       ]
@@ -1649,13 +1750,17 @@
       "asrcTimelapse": false,
       "observations": [
         {
-          "stationId": "D8397",
+          "stationId": "KVSF",
           "kind": "valley",
-          "stationName": "DW8397 Weston",
-          "stationElevationFt": 1477,
-          "distanceMi": 9.4,
-          "elevationDiffFt": 1843,
-          "bindReason": "D8397 (1,477 ft station elev) is 9.4 mi from Ludlow Mountain; same WFO BTV and state VT; station is 1,843 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "network": "ASOS/AWOS airport",
+          "stationName": "Springfield, Hartness State Springfield Airport",
+          "stationElevationFt": 574,
+          "elevationSource": "NWS metadata",
+          "nwsElevationFt": 574,
+          "epqsElevationFt": 577,
+          "distanceMi": 12.303,
+          "elevationDiffFt": 2746,
+          "bindReason": "ASOS/AWOS airport KVSF at 574 ft (NWS metadata), 12.303 mi, WFO BTV/VT; station 2,746 ft below catalog. valley. Auto: nearest qualifying station with weather in 24 h.",
           "hideFromObservationsSection": false
         }
       ]
@@ -1664,13 +1769,17 @@
       "asrcTimelapse": false,
       "observations": [
         {
-          "stationId": "E1683",
+          "stationId": "LBKV1",
           "kind": "valley",
-          "stationName": "EW1683 Stratton Mountain          VT US",
-          "stationElevationFt": 2271,
-          "distanceMi": 7.8,
-          "elevationDiffFt": 992,
-          "bindReason": "E1683 (2,271 ft station elev) is 7.8 mi from Bromley Mountain; same WFO ALY and state VT; station is 992 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "network": "NWS/other station",
+          "stationName": "LYE BROOK",
+          "stationElevationFt": 2435,
+          "elevationSource": "NWS metadata",
+          "nwsElevationFt": 2435,
+          "epqsElevationFt": 2356,
+          "distanceMi": 13.153,
+          "elevationDiffFt": 828,
+          "bindReason": "NWS/other station LBKV1 at 2435 ft (NWS metadata), 13.153 mi, WFO ALY/VT; station 828 ft below catalog. valley. Auto: nearest qualifying station with weather in 24 h.",
           "hideFromObservationsSection": false
         }
       ]
@@ -1679,13 +1788,17 @@
       "asrcTimelapse": false,
       "observations": [
         {
-          "stationId": "D8675",
+          "stationId": "KVSF",
           "kind": "valley",
-          "stationName": "DW8675 Weathersfield",
-          "stationElevationFt": 1182,
-          "distanceMi": 3.5,
-          "elevationDiffFt": 1958,
-          "bindReason": "D8675 (1,182 ft station elev) is 3.5 mi from Mount Ascutney; same WFO BTV and state VT; station is 1,958 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "network": "ASOS/AWOS airport",
+          "stationName": "Springfield, Hartness State Springfield Airport",
+          "stationElevationFt": 574,
+          "elevationSource": "NWS metadata",
+          "nwsElevationFt": 574,
+          "epqsElevationFt": 577,
+          "distanceMi": 7.761,
+          "elevationDiffFt": 2566,
+          "bindReason": "ASOS/AWOS airport KVSF at 574 ft (NWS metadata), 7.761 mi, WFO BTV/VT; station 2,566 ft below catalog. valley. Auto: nearest qualifying station with weather in 24 h.",
           "hideFromObservationsSection": false
         }
       ]
@@ -1694,23 +1807,17 @@
       "asrcTimelapse": false,
       "observations": [
         {
-          "stationId": "WFRV1",
-          "kind": "summit",
-          "stationName": "WOODFORD STATE PARK",
-          "stationElevationFt": 2317,
-          "distanceMi": 5.7,
-          "elevationDiffFt": 540,
-          "bindReason": "WFRV1 (2,317 ft station elev) is 5.7 mi from Bald Mountain; same WFO ALY and state VT; station is 540 ft lower than catalog. Summit slot: elevation within 900 ft of 2,857 ft catalog.",
-          "hideFromObservationsSection": false
-        },
-        {
           "stationId": "KDDH",
           "kind": "valley",
+          "network": "ASOS/AWOS airport",
           "stationName": "Bennington Morse State Airport",
           "stationElevationFt": 827,
-          "distanceMi": 5.7,
+          "elevationSource": "NWS metadata",
+          "nwsElevationFt": 827,
+          "epqsElevationFt": 790,
+          "distanceMi": 5.663,
           "elevationDiffFt": 2030,
-          "bindReason": "KDDH (827 ft station elev) is 5.7 mi from Bald Mountain; same WFO ALY and state VT; station is 2,030 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "bindReason": "ASOS/AWOS airport KDDH at 827 ft (NWS metadata), 5.663 mi, WFO ALY/VT; station 2,030 ft below catalog. valley. Auto: nearest qualifying station with weather in 24 h.",
           "hideFromObservationsSection": false
         }
       ]
@@ -1719,13 +1826,17 @@
       "asrcTimelapse": false,
       "observations": [
         {
-          "stationId": "F6618",
+          "stationId": "KDDH",
           "kind": "base",
-          "stationName": "FW6618 Arlington",
-          "stationElevationFt": 828,
-          "distanceMi": 5.2,
-          "elevationDiffFt": 72,
-          "bindReason": "F6618 (828 ft station elev) is 5.2 mi from Manchester; same WFO ALY and state VT; station is 72 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "network": "ASOS/AWOS airport",
+          "stationName": "Bennington Morse State Airport",
+          "stationElevationFt": 827,
+          "elevationSource": "NWS metadata",
+          "nwsElevationFt": 827,
+          "epqsElevationFt": 790,
+          "distanceMi": 20.681,
+          "elevationDiffFt": 73,
+          "bindReason": "ASOS/AWOS airport KDDH at 827 ft (NWS metadata), 20.681 mi, WFO ALY/VT; station 73 ft below catalog. base. Auto: nearest qualifying station with weather in 24 h.",
           "hideFromObservationsSection": false
         }
       ]
@@ -1736,21 +1847,29 @@
         {
           "stationId": "KMWN",
           "kind": "summit",
+          "network": "ASOS/AWOS airport",
           "stationName": "Mount Washington",
           "stationElevationFt": 6262,
-          "distanceMi": 0,
+          "elevationSource": "NWS metadata",
+          "nwsElevationFt": 6262,
+          "epqsElevationFt": 6279,
+          "distanceMi": 0.018,
           "elevationDiffFt": 26,
-          "bindReason": "Manual summit pin: NWS station metadata at api.weather.gov/stations/KMWN.",
+          "bindReason": "ASOS/AWOS airport KMWN at 6262 ft (NWS metadata), 0.018 mi, WFO GYX/NH; station 26 ft below catalog. summit. Pinned summit station for this peak.",
           "hideFromObservationsSection": false
         },
         {
           "stationId": "OSLN3",
           "kind": "valley",
+          "network": "NWS/other station",
           "stationName": "OSSIPEE LAKE",
           "stationElevationFt": 4192,
-          "distanceMi": 4.9,
+          "elevationSource": "NWS metadata",
+          "nwsElevationFt": 4192,
+          "epqsElevationFt": 4164,
+          "distanceMi": 4.875,
           "elevationDiffFt": 2096,
-          "bindReason": "OSLN3 (4,192 ft station elev) is 4.9 mi from Mount Washington; same WFO GYX and state NH; station is 2,096 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "bindReason": "NWS/other station OSLN3 at 4192 ft (NWS metadata), 4.875 mi, WFO GYX/NH; station 2,096 ft below catalog. valley. Auto: nearest qualifying station with weather in 24 h.",
           "hideFromObservationsSection": false
         }
       ]
@@ -1760,22 +1879,30 @@
       "observations": [
         {
           "stationId": "KMWN",
-          "kind": "summit",
+          "kind": "nearby-higher",
+          "network": "ASOS/AWOS airport",
           "stationName": "Mount Washington",
           "stationElevationFt": 6262,
-          "distanceMi": 3.5,
+          "elevationSource": "NWS metadata",
+          "nwsElevationFt": 6262,
+          "epqsElevationFt": 6279,
+          "distanceMi": 3.493,
           "elevationDiffFt": -463,
-          "bindReason": "KMWN (6,262 ft station elev) is 3.5 mi from Mount Adams; same WFO GYX and state NH; station is 463 ft higher than catalog. Summit slot: elevation within 900 ft of 5,799 ft catalog.",
+          "bindReason": "ASOS/AWOS airport KMWN at 6262 ft (NWS metadata), 3.493 mi, WFO GYX/NH; station 463 ft above catalog. nearby-higher. Nearby higher station: Mount Washington.",
           "hideFromObservationsSection": false
         },
         {
           "stationId": "OSLN3",
           "kind": "valley",
+          "network": "NWS/other station",
           "stationName": "OSSIPEE LAKE",
           "stationElevationFt": 4192,
-          "distanceMi": 1.5,
+          "elevationSource": "NWS metadata",
+          "nwsElevationFt": 4192,
+          "epqsElevationFt": 4164,
+          "distanceMi": 1.466,
           "elevationDiffFt": 1607,
-          "bindReason": "OSLN3 (4,192 ft station elev) is 1.5 mi from Mount Adams; same WFO GYX and state NH; station is 1,607 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "bindReason": "NWS/other station OSLN3 at 4192 ft (NWS metadata), 1.466 mi, WFO GYX/NH; station 1,607 ft below catalog. valley. Auto: nearest qualifying station with weather in 24 h.",
           "hideFromObservationsSection": false
         }
       ]
@@ -1784,13 +1911,17 @@
       "asrcTimelapse": false,
       "observations": [
         {
-          "stationId": "KMWN",
+          "stationId": "KHIE",
           "kind": "base",
-          "stationName": "Mount Washington",
-          "stationElevationFt": 6262,
-          "distanceMi": 2.6,
-          "elevationDiffFt": -4245,
-          "bindReason": "KMWN (6,262 ft station elev) is 2.6 mi from Pinkham Notch; same WFO GYX and state NH; station is 4,245 ft higher than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "network": "ASOS/AWOS airport",
+          "stationName": "Whitefield - Mount Washington Regional Airport",
+          "stationElevationFt": 1047,
+          "elevationSource": "NWS metadata",
+          "nwsElevationFt": 1047,
+          "epqsElevationFt": 1048,
+          "distanceMi": 16.547,
+          "elevationDiffFt": 970,
+          "bindReason": "ASOS/AWOS airport KHIE at 1047 ft (NWS metadata), 16.547 mi, WFO GYX/NH; station 970 ft below catalog. base. Pinned valley/base METAR.",
           "hideFromObservationsSection": false
         }
       ]
@@ -1801,11 +1932,15 @@
         {
           "stationId": "BLTN3",
           "kind": "base",
+          "network": "USGS/NWS hydrologic gauge",
           "stationName": "SACO RIVER AT BARTLETT",
           "stationElevationFt": 688,
-          "distanceMi": 7.3,
+          "elevationSource": "NWS metadata",
+          "nwsElevationFt": 688,
+          "epqsElevationFt": 681,
+          "distanceMi": 7.284,
           "elevationDiffFt": 1212,
-          "bindReason": "BLTN3 (688 ft station elev) is 7.3 mi from Crawford Notch; same WFO GYX and state NH; station is 1,212 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "bindReason": "USGS/NWS hydrologic gauge BLTN3 at 688 ft (NWS metadata), 7.284 mi, WFO GYX/NH; station 1,212 ft below catalog. base. Auto: nearest qualifying station with weather in 24 h.",
           "hideFromObservationsSection": false
         }
       ]
@@ -1814,13 +1949,31 @@
       "asrcTimelapse": false,
       "observations": [
         {
-          "stationId": "E3811",
+          "stationId": "KMWN",
+          "kind": "nearby-higher",
+          "network": "ASOS/AWOS airport",
+          "stationName": "Mount Washington",
+          "stationElevationFt": 6262,
+          "elevationSource": "NWS metadata",
+          "nwsElevationFt": 6262,
+          "epqsElevationFt": 6279,
+          "distanceMi": 10.864,
+          "elevationDiffFt": -2715,
+          "bindReason": "ASOS/AWOS airport KMWN at 6262 ft (NWS metadata), 10.864 mi, WFO GYX/NH; station 2,715 ft above catalog. nearby-higher. Nearby higher station: Mount Washington.",
+          "hideFromObservationsSection": false
+        },
+        {
+          "stationId": "GHNN3",
           "kind": "valley",
-          "stationName": "EW3811 Jackson",
-          "stationElevationFt": 1662,
-          "distanceMi": 6.1,
-          "elevationDiffFt": 1885,
-          "bindReason": "E3811 (1,662 ft station elev) is 6.1 mi from Baldface Mountain; same WFO GYX and state NH; station is 1,885 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "network": "NWS/other station",
+          "stationName": "NEPP SITE AT GORHAM",
+          "stationElevationFt": 1092,
+          "elevationSource": "NWS metadata",
+          "nwsElevationFt": 1092,
+          "epqsElevationFt": 1082,
+          "distanceMi": 10.819,
+          "elevationDiffFt": 2455,
+          "bindReason": "NWS/other station GHNN3 at 1092 ft (NWS metadata), 10.819 mi, WFO GYX/NH; station 2,455 ft below catalog. valley. Auto: nearest qualifying station with weather in 24 h.",
           "hideFromObservationsSection": false
         }
       ]
@@ -1829,13 +1982,17 @@
       "asrcTimelapse": false,
       "observations": [
         {
-          "stationId": "NHFN1",
+          "stationId": "KHIE",
           "kind": "valley",
-          "stationName": "LaFayette",
-          "stationElevationFt": 1775,
-          "distanceMi": 2.2,
-          "elevationDiffFt": 3474,
-          "bindReason": "NHFN1 (1,775 ft station elev) is 2.2 mi from Mount Lafayette; same WFO GYX and state NH; station is 3,474 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "network": "ASOS/AWOS airport",
+          "stationName": "Whitefield - Mount Washington Regional Airport",
+          "stationElevationFt": 1047,
+          "elevationSource": "NWS metadata",
+          "nwsElevationFt": 1047,
+          "epqsElevationFt": 1048,
+          "distanceMi": 14.892,
+          "elevationDiffFt": 4202,
+          "bindReason": "ASOS/AWOS airport KHIE at 1047 ft (NWS metadata), 14.892 mi, WFO GYX/NH; station 4,202 ft below catalog. valley. Auto: nearest qualifying station with weather in 24 h.",
           "hideFromObservationsSection": false
         }
       ]
@@ -1844,13 +2001,17 @@
       "asrcTimelapse": false,
       "observations": [
         {
-          "stationId": "LICN3",
+          "stationId": "K1P1",
           "kind": "valley",
-          "stationName": "NEPP SITE AT LINCOLN",
-          "stationElevationFt": 875,
-          "distanceMi": 8,
-          "elevationDiffFt": 3927,
-          "bindReason": "LICN3 (875 ft station elev) is 8.0 mi from Mount Moosilauke; same WFO GYX and state NH; station is 3,927 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "network": "ASOS/AWOS airport",
+          "stationName": "Plymouth Municipal Airport",
+          "stationElevationFt": 502,
+          "elevationSource": "NWS metadata",
+          "nwsElevationFt": 502,
+          "epqsElevationFt": 505,
+          "distanceMi": 17.493,
+          "elevationDiffFt": 4300,
+          "bindReason": "ASOS/AWOS airport K1P1 at 502 ft (NWS metadata), 17.493 mi, WFO GYX/NH; station 4,300 ft below catalog. valley. Auto: nearest qualifying station with weather in 24 h.",
           "hideFromObservationsSection": false
         }
       ]
@@ -1859,23 +2020,17 @@
       "asrcTimelapse": false,
       "observations": [
         {
-          "stationId": "G7912",
-          "kind": "summit",
-          "stationName": "GW7912 CAMPTON",
-          "stationElevationFt": 6562,
-          "distanceMi": 10.3,
-          "elevationDiffFt": -2222,
-          "bindReason": "G7912 (6,562 ft station elev) is 10.3 mi from Mount Osceola; same WFO GYX and state NH; station is 2,222 ft higher than catalog. Summit slot: elevation within 900 ft of 4,340 ft catalog.",
-          "hideFromObservationsSection": false
-        },
-        {
           "stationId": "WVVN3",
           "kind": "valley",
+          "network": "NWS/other station",
           "stationName": "NEPP SITE AT WATERVILLE VALLEY",
           "stationElevationFt": 1445,
-          "distanceMi": 4,
+          "elevationSource": "NWS metadata",
+          "nwsElevationFt": 1445,
+          "epqsElevationFt": 1445,
+          "distanceMi": 4.043,
           "elevationDiffFt": 2895,
-          "bindReason": "WVVN3 (1,445 ft station elev) is 4.0 mi from Mount Osceola; same WFO GYX and state NH; station is 2,895 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "bindReason": "NWS/other station WVVN3 at 1445 ft (NWS metadata), 4.043 mi, WFO GYX/NH; station 2,895 ft below catalog. valley. Auto: nearest qualifying station with weather in 24 h.",
           "hideFromObservationsSection": false
         }
       ]
@@ -1884,13 +2039,17 @@
       "asrcTimelapse": false,
       "observations": [
         {
-          "stationId": "NHFN1",
+          "stationId": "KHIE",
           "kind": "valley",
-          "stationName": "LaFayette",
-          "stationElevationFt": 1775,
-          "distanceMi": 1.2,
-          "elevationDiffFt": 2305,
-          "bindReason": "NHFN1 (1,775 ft station elev) is 1.2 mi from Cannon Mountain; same WFO GYX and state NH; station is 2,305 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "network": "ASOS/AWOS airport",
+          "stationName": "Whitefield - Mount Washington Regional Airport",
+          "stationElevationFt": 1047,
+          "elevationSource": "NWS metadata",
+          "nwsElevationFt": 1047,
+          "epqsElevationFt": 1048,
+          "distanceMi": 16.182,
+          "elevationDiffFt": 3033,
+          "bindReason": "ASOS/AWOS airport KHIE at 1047 ft (NWS metadata), 16.182 mi, WFO GYX/NH; station 3,033 ft below catalog. valley. Auto: nearest qualifying station with weather in 24 h.",
           "hideFromObservationsSection": false
         }
       ]
@@ -1901,11 +2060,15 @@
         {
           "stationId": "WVVN3",
           "kind": "base",
+          "network": "NWS/other station",
           "stationName": "NEPP SITE AT WATERVILLE VALLEY",
           "stationElevationFt": 1445,
-          "distanceMi": 5.6,
+          "elevationSource": "NWS metadata",
+          "nwsElevationFt": 1445,
+          "epqsElevationFt": 1445,
+          "distanceMi": 5.552,
           "elevationDiffFt": 1410,
-          "bindReason": "WVVN3 (1,445 ft station elev) is 5.6 mi from Kancamagus Pass; same WFO GYX and state NH; station is 1,410 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "bindReason": "NWS/other station WVVN3 at 1445 ft (NWS metadata), 5.552 mi, WFO GYX/NH; station 1,410 ft below catalog. base. Auto: nearest qualifying station with weather in 24 h.",
           "hideFromObservationsSection": false
         }
       ]
@@ -1914,13 +2077,17 @@
       "asrcTimelapse": false,
       "observations": [
         {
-          "stationId": "NHFN1",
+          "stationId": "KHIE",
           "kind": "base",
-          "stationName": "LaFayette",
-          "stationElevationFt": 1775,
-          "distanceMi": 0.7,
-          "elevationDiffFt": 165,
-          "bindReason": "NHFN1 (1,775 ft station elev) is 0.7 mi from Franconia Notch; same WFO GYX and state NH; station is 165 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "network": "ASOS/AWOS airport",
+          "stationName": "Whitefield - Mount Washington Regional Airport",
+          "stationElevationFt": 1047,
+          "elevationSource": "NWS metadata",
+          "nwsElevationFt": 1047,
+          "epqsElevationFt": 1048,
+          "distanceMi": 16.031,
+          "elevationDiffFt": 893,
+          "bindReason": "ASOS/AWOS airport KHIE at 1047 ft (NWS metadata), 16.031 mi, WFO GYX/NH; station 893 ft below catalog. base. Auto: nearest qualifying station with weather in 24 h.",
           "hideFromObservationsSection": false
         }
       ]
@@ -1931,11 +2098,15 @@
         {
           "stationId": "K1P1",
           "kind": "base",
+          "network": "ASOS/AWOS airport",
           "stationName": "Plymouth Municipal Airport",
           "stationElevationFt": 502,
-          "distanceMi": 3.4,
+          "elevationSource": "NWS metadata",
+          "nwsElevationFt": 502,
+          "epqsElevationFt": 505,
+          "distanceMi": 3.433,
           "elevationDiffFt": 898,
-          "bindReason": "K1P1 (502 ft station elev) is 3.4 mi from Rumney Crags; same WFO GYX and state NH; station is 898 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "bindReason": "ASOS/AWOS airport K1P1 at 502 ft (NWS metadata), 3.433 mi, WFO GYX/NH; station 898 ft below catalog. base. Auto: nearest qualifying station with weather in 24 h.",
           "hideFromObservationsSection": false
         }
       ]
@@ -1944,13 +2115,17 @@
       "asrcTimelapse": false,
       "observations": [
         {
-          "stationId": "MACN3",
+          "stationId": "KAFN",
           "kind": "valley",
-          "stationName": "NUBANUSIT BROOK AT MACDOWELL DAM NEAR PETERBOROUGH",
-          "stationElevationFt": 964,
-          "distanceMi": 6.5,
-          "elevationDiffFt": 2201,
-          "bindReason": "MACN3 (964 ft station elev) is 6.5 mi from Mount Monadnock; same WFO GYX and state NH; station is 2,201 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "network": "ASOS/AWOS airport",
+          "stationName": "Jaffrey Airport-Silver Ranch",
+          "stationElevationFt": 1010,
+          "elevationSource": "NWS metadata",
+          "nwsElevationFt": 1010,
+          "epqsElevationFt": null,
+          "distanceMi": 6.599,
+          "elevationDiffFt": 2155,
+          "bindReason": "ASOS/AWOS airport KAFN at 1010 ft (NWS metadata), 6.599 mi, WFO GYX/NH; station 2,155 ft below catalog. valley. Auto: nearest qualifying station with weather in 24 h.",
           "hideFromObservationsSection": false
         }
       ]
@@ -1959,13 +2134,17 @@
       "asrcTimelapse": false,
       "observations": [
         {
-          "stationId": "LYNN3",
+          "stationId": "KAFN",
           "kind": "valley",
-          "stationName": "LYNDEBOROUGH 3SW",
-          "stationElevationFt": 835,
-          "distanceMi": 2.6,
-          "elevationDiffFt": 1441,
-          "bindReason": "LYNN3 (835 ft station elev) is 2.6 mi from North Pack Monadnock; same WFO GYX and state NH; station is 1,441 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "network": "ASOS/AWOS airport",
+          "stationName": "Jaffrey Airport-Silver Ranch",
+          "stationElevationFt": 1010,
+          "elevationSource": "NWS metadata",
+          "nwsElevationFt": 1010,
+          "epqsElevationFt": null,
+          "distanceMi": 8.783,
+          "elevationDiffFt": 1266,
+          "bindReason": "ASOS/AWOS airport KAFN at 1010 ft (NWS metadata), 8.783 mi, WFO GYX/NH; station 1,266 ft below catalog. valley. Auto: nearest qualifying station with weather in 24 h.",
           "hideFromObservationsSection": false
         }
       ]
@@ -1976,11 +2155,15 @@
         {
           "stationId": "KMLT",
           "kind": "valley",
+          "network": "ASOS/AWOS airport",
           "stationName": "Millinocket, Millinocket Municipal Airport",
           "stationElevationFt": 407,
-          "distanceMi": 20.9,
+          "elevationSource": "NWS metadata",
+          "nwsElevationFt": 407,
+          "epqsElevationFt": 399,
+          "distanceMi": 20.89,
           "elevationDiffFt": 4861,
-          "bindReason": "Manual valley/nearby METAR pin for Katahdin.",
+          "bindReason": "ASOS/AWOS airport KMLT at 407 ft (NWS metadata), 20.89 mi, WFO CAR/ME; station 4,861 ft below catalog. valley. Pinned valley/base METAR.",
           "hideFromObservationsSection": false
         }
       ]
@@ -1989,13 +2172,17 @@
       "asrcTimelapse": false,
       "observations": [
         {
-          "stationId": "GRNM1",
+          "stationId": "KMLT",
           "kind": "base",
-          "stationName": "EAST BRANCH PENOBSCOT RIVER AT GRINDSTONE",
-          "stationElevationFt": 324,
-          "distanceMi": 11.7,
-          "elevationDiffFt": 876,
-          "bindReason": "GRNM1 (324 ft station elev) is 11.7 mi from Katahdin Woods and Waters; same WFO CAR and state ME; station is 876 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "network": "ASOS/AWOS airport",
+          "stationName": "Millinocket, Millinocket Municipal Airport",
+          "stationElevationFt": 407,
+          "elevationSource": "NWS metadata",
+          "nwsElevationFt": 407,
+          "epqsElevationFt": 399,
+          "distanceMi": 18.593,
+          "elevationDiffFt": 793,
+          "bindReason": "ASOS/AWOS airport KMLT at 407 ft (NWS metadata), 18.593 mi, WFO CAR/ME; station 793 ft below catalog. base. Auto: nearest qualifying station with weather in 24 h.",
           "hideFromObservationsSection": false
         }
       ]
@@ -2005,12 +2192,16 @@
       "observations": [
         {
           "stationId": "KMLT",
-          "kind": "valley",
+          "kind": "base",
+          "network": "ASOS/AWOS airport",
           "stationName": "Millinocket, Millinocket Municipal Airport",
           "stationElevationFt": 407,
-          "distanceMi": 1.1,
+          "elevationSource": "NWS metadata",
+          "nwsElevationFt": 407,
+          "epqsElevationFt": 399,
+          "distanceMi": 1.085,
           "elevationDiffFt": -7,
-          "bindReason": "Manual valley/nearby METAR pin for Millinocket.",
+          "bindReason": "ASOS/AWOS airport KMLT at 407 ft (NWS metadata), 1.085 mi, WFO CAR/ME; station 7 ft above catalog. base. Pinned valley/base METAR.",
           "hideFromObservationsSection": false
         }
       ]
@@ -2019,13 +2210,17 @@
       "asrcTimelapse": false,
       "observations": [
         {
-          "stationId": "KKJM1",
+          "stationId": "KGNR",
           "kind": "valley",
-          "stationName": "KOKADJO",
-          "stationElevationFt": 1227,
-          "distanceMi": 12.7,
-          "elevationDiffFt": 2427,
-          "bindReason": "KKJM1 (1,227 ft station elev) is 12.7 mi from White Cap Mountain; same WFO CAR and state ME; station is 2,427 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "network": "ASOS/AWOS airport",
+          "stationName": "Greenville",
+          "stationElevationFt": 1394,
+          "elevationSource": "NWS metadata",
+          "nwsElevationFt": 1394,
+          "epqsElevationFt": 1392,
+          "distanceMi": 16.142,
+          "elevationDiffFt": 2260,
+          "bindReason": "ASOS/AWOS airport KGNR at 1394 ft (NWS metadata), 16.142 mi, WFO CAR/ME; station 2,260 ft below catalog. valley. Auto: nearest qualifying station with weather in 24 h.",
           "hideFromObservationsSection": false
         }
       ]
@@ -2034,23 +2229,17 @@
       "asrcTimelapse": false,
       "observations": [
         {
-          "stationId": "G4192",
-          "kind": "summit",
-          "stationName": "GW4192 RANGELEY",
-          "stationElevationFt": 3999,
-          "distanceMi": 11.7,
-          "elevationDiffFt": 238,
-          "bindReason": "G4192 (3,999 ft station elev) is 11.7 mi from Sugarloaf Mountain; same WFO GYX and state ME; station is 238 ft lower than catalog. Summit slot: elevation within 900 ft of 4,237 ft catalog.",
-          "hideFromObservationsSection": false
-        },
-        {
-          "stationId": "B219",
+          "stationId": "K8B0",
           "kind": "valley",
-          "stationName": "CARRABASSETT",
-          "stationElevationFt": 885,
-          "distanceMi": 6,
-          "elevationDiffFt": 3352,
-          "bindReason": "B219 (885 ft station elev) is 6.0 mi from Sugarloaf Mountain; same WFO GYX and state ME; station is 3,352 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "network": "ASOS/AWOS airport",
+          "stationName": "Steven A Bean Municipal Airport",
+          "stationElevationFt": 1808,
+          "elevationSource": "NWS metadata",
+          "nwsElevationFt": 1808,
+          "epqsElevationFt": 1809,
+          "distanceMi": 17.289,
+          "elevationDiffFt": 2429,
+          "bindReason": "ASOS/AWOS airport K8B0 at 1808 ft (NWS metadata), 17.289 mi, WFO GYX/ME; station 2,429 ft below catalog. valley. Auto: nearest qualifying station with weather in 24 h.",
           "hideFromObservationsSection": false
         }
       ]
@@ -2059,13 +2248,17 @@
       "asrcTimelapse": false,
       "observations": [
         {
-          "stationId": "B219",
+          "stationId": "K8B0",
           "kind": "valley",
-          "stationName": "CARRABASSETT",
-          "stationElevationFt": 885,
-          "distanceMi": 5.5,
-          "elevationDiffFt": 3265,
-          "bindReason": "B219 (885 ft station elev) is 5.5 mi from Bigelow Mountain; same WFO GYX and state ME; station is 3,265 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "network": "ASOS/AWOS airport",
+          "stationName": "Steven A Bean Municipal Airport",
+          "stationElevationFt": 1808,
+          "elevationSource": "NWS metadata",
+          "nwsElevationFt": 1808,
+          "epqsElevationFt": 1809,
+          "distanceMi": 21.24,
+          "elevationDiffFt": 2342,
+          "bindReason": "ASOS/AWOS airport K8B0 at 1808 ft (NWS metadata), 21.24 mi, WFO GYX/ME; station 2,342 ft below catalog. valley. Auto: nearest qualifying station with weather in 24 h.",
           "hideFromObservationsSection": false
         }
       ]
@@ -2074,13 +2267,17 @@
       "asrcTimelapse": false,
       "observations": [
         {
-          "stationId": "K8B0",
+          "stationId": "OQOM1",
           "kind": "base",
-          "stationName": "Steven A Bean Municipal Airport",
-          "stationElevationFt": 1808,
-          "distanceMi": 1.9,
-          "elevationDiffFt": -290,
-          "bindReason": "K8B0 (1,808 ft station elev) is 1.9 mi from Rangeley; same WFO GYX and state ME; station is 290 ft higher than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "network": "NWS/other station",
+          "stationName": "OQUOSSOC CLIMATE STATION",
+          "stationElevationFt": 1495,
+          "elevationSource": "NWS metadata",
+          "nwsElevationFt": 1495,
+          "epqsElevationFt": 1500,
+          "distanceMi": 6.493,
+          "elevationDiffFt": 23,
+          "bindReason": "NWS/other station OQOM1 at 1495 ft (NWS metadata), 6.493 mi, WFO GYX/ME; station 23 ft below catalog. base. Auto: nearest qualifying station with weather in 24 h.",
           "hideFromObservationsSection": false
         }
       ]
@@ -2089,13 +2286,17 @@
       "asrcTimelapse": false,
       "observations": [
         {
-          "stationId": "FOXM1",
+          "stationId": "KFVE",
           "kind": "valley",
-          "stationName": "NEPP SITE AT FOX BROOK CAMP GROUND OFF ROCKY BROOK ROAD NEAR PORTAGE 19WNW",
-          "stationElevationFt": 902,
-          "distanceMi": 11.5,
-          "elevationDiffFt": 1079,
-          "bindReason": "FOXM1 (902 ft station elev) is 11.5 mi from Deboullie Mountain; same WFO CAR and state ME; station is 1,079 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "network": "ASOS/AWOS airport",
+          "stationName": "Frenchville, Northern Aroostook Regional Airport",
+          "stationElevationFt": 988,
+          "elevationSource": "NWS metadata",
+          "nwsElevationFt": 988,
+          "epqsElevationFt": null,
+          "distanceMi": 34.469,
+          "elevationDiffFt": 993,
+          "bindReason": "ASOS/AWOS airport KFVE at 988 ft (NWS metadata), 34.469 mi, WFO CAR/ME; station 993 ft below catalog. valley. Auto: nearest qualifying station with weather in 24 h.",
           "hideFromObservationsSection": false
         }
       ]
@@ -2104,23 +2305,17 @@
       "asrcTimelapse": false,
       "observations": [
         {
-          "stationId": "E6643",
-          "kind": "summit",
-          "stationName": "EW6643 Monticello",
-          "stationElevationFt": 2218,
-          "distanceMi": 11.7,
-          "elevationDiffFt": -469,
-          "bindReason": "E6643 (2,218 ft station elev) is 11.7 mi from Mars Hill Mountain; same WFO CAR and state ME; station is 469 ft higher than catalog. Summit slot: elevation within 900 ft of 1,749 ft catalog.",
-          "hideFromObservationsSection": false
-        },
-        {
-          "stationId": "WFDM1",
+          "stationId": "KPQI",
           "kind": "valley",
-          "stationName": "NEPP SITE AT WESTFIELD",
-          "stationElevationFt": 495,
-          "distanceMi": 7.7,
-          "elevationDiffFt": 1254,
-          "bindReason": "WFDM1 (495 ft station elev) is 7.7 mi from Mars Hill Mountain; same WFO CAR and state ME; station is 1,254 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "network": "ASOS/AWOS airport",
+          "stationName": "Presque Isle",
+          "stationElevationFt": 535,
+          "elevationSource": "NWS metadata",
+          "nwsElevationFt": 535,
+          "epqsElevationFt": 466,
+          "distanceMi": 15.855,
+          "elevationDiffFt": 1214,
+          "bindReason": "ASOS/AWOS airport KPQI at 535 ft (NWS metadata), 15.855 mi, WFO CAR/ME; station 1,214 ft below catalog. valley. Auto: nearest qualifying station with weather in 24 h.",
           "hideFromObservationsSection": false
         }
       ]
@@ -2131,21 +2326,29 @@
         {
           "stationId": "A3672",
           "kind": "summit",
+          "network": "NWS mesonet",
           "stationName": "Bar Harbor - Cadillac Mtn.",
           "stationElevationFt": 1493,
-          "distanceMi": 0,
+          "elevationSource": "NWS metadata",
+          "nwsElevationFt": 1493,
+          "epqsElevationFt": 1509,
+          "distanceMi": 0.044,
           "elevationDiffFt": 37,
-          "bindReason": "A3672 (1,493 ft station elev) is 0.0 mi from Cadillac Mountain; same WFO CAR and state ME; station is 37 ft lower than catalog. Summit slot: elevation within 900 ft of 1,530 ft catalog.",
+          "bindReason": "NWS mesonet A3672 at 1493 ft (NWS metadata), 0.044 mi, WFO CAR/ME; station 37 ft below catalog. summit. Pinned summit station for this peak.",
           "hideFromObservationsSection": false
         },
         {
-          "stationId": "E7164",
+          "stationId": "KBHB",
           "kind": "valley",
-          "stationName": "EW7164 Bar Harbor",
-          "stationElevationFt": 212,
-          "distanceMi": 1.9,
-          "elevationDiffFt": 1318,
-          "bindReason": "E7164 (212 ft station elev) is 1.9 mi from Cadillac Mountain; same WFO CAR and state ME; station is 1,318 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "network": "ASOS/AWOS airport",
+          "stationName": "Bar Harbor, Hancock County-Bar Harbor Airport",
+          "stationElevationFt": 82,
+          "elevationSource": "NWS metadata",
+          "nwsElevationFt": 82,
+          "epqsElevationFt": 90,
+          "distanceMi": 9.715,
+          "elevationDiffFt": 1448,
+          "bindReason": "ASOS/AWOS airport KBHB at 82 ft (NWS metadata), 9.715 mi, WFO CAR/ME; station 1,448 ft below catalog. valley. Auto: nearest qualifying station with weather in 24 h.",
           "hideFromObservationsSection": false
         }
       ]
@@ -2154,16 +2357,790 @@
       "asrcTimelapse": false,
       "observations": [
         {
-          "stationId": "ATGM1",
+          "stationId": "KBHB",
           "kind": "base",
-          "stationName": "Bar Harbor",
-          "stationElevationFt": 20,
-          "distanceMi": 0.3,
-          "elevationDiffFt": 130,
-          "bindReason": "ATGM1 (20 ft station elev) is 0.3 mi from Bar Harbor; same WFO CAR and state ME; station is 130 ft lower than catalog. Valley/nearby slot: at least 700 ft below summit catalog (or base-area nearest METAR).",
+          "network": "ASOS/AWOS airport",
+          "stationName": "Bar Harbor, Hancock County-Bar Harbor Airport",
+          "stationElevationFt": 82,
+          "elevationSource": "NWS metadata",
+          "nwsElevationFt": 82,
+          "epqsElevationFt": 90,
+          "distanceMi": 9.117,
+          "elevationDiffFt": 68,
+          "bindReason": "ASOS/AWOS airport KBHB at 82 ft (NWS metadata), 9.117 mi, WFO CAR/ME; station 68 ft below catalog. base. Auto: nearest qualifying station with weather in 24 h.",
           "hideFromObservationsSection": false
         }
       ]
     }
-  }
+  },
+  "audit": [
+    {
+      "place": "mount-marcy",
+      "station": "KSLK",
+      "network": "ASOS/AWOS airport",
+      "kind": "valley",
+      "distanceMi": 23.785,
+      "elevationDiffFt": 3681
+    },
+    {
+      "place": "whiteface-mountain",
+      "station": "A4090",
+      "network": "NWS mesonet",
+      "kind": "summit",
+      "distanceMi": 0.108,
+      "elevationDiffFt": 205
+    },
+    {
+      "place": "whiteface-mountain",
+      "station": "KSLK",
+      "network": "ASOS/AWOS airport",
+      "kind": "valley",
+      "distanceMi": 14.917,
+      "elevationDiffFt": 3204
+    },
+    {
+      "place": "dix-mountain",
+      "station": "KSLK",
+      "network": "ASOS/AWOS airport",
+      "kind": "valley",
+      "distanceMi": 29.765,
+      "elevationDiffFt": 3194
+    },
+    {
+      "place": "algonquin-peak",
+      "station": "KSLK",
+      "network": "ASOS/AWOS airport",
+      "kind": "valley",
+      "distanceMi": 20.288,
+      "elevationDiffFt": 3451
+    },
+    {
+      "place": "mount-colden",
+      "station": "KSLK",
+      "network": "ASOS/AWOS airport",
+      "kind": "valley",
+      "distanceMi": 21.963,
+      "elevationDiffFt": 3052
+    },
+    {
+      "place": "mount-colvin",
+      "station": "KSLK",
+      "network": "ASOS/AWOS airport",
+      "kind": "valley",
+      "distanceMi": 27.551,
+      "elevationDiffFt": 2417
+    },
+    {
+      "place": "giant-mountain",
+      "station": "KSLK",
+      "network": "ASOS/AWOS airport",
+      "kind": "valley",
+      "distanceMi": 28.753,
+      "elevationDiffFt": 2964
+    },
+    {
+      "place": "santanoni-peak",
+      "station": "KSLK",
+      "network": "ASOS/AWOS airport",
+      "kind": "valley",
+      "distanceMi": 21.763,
+      "elevationDiffFt": 2944
+    },
+    {
+      "place": "cascade-mountain",
+      "station": "A4090",
+      "network": "NWS mesonet",
+      "kind": "nearby-higher",
+      "distanceMi": 10.295,
+      "elevationDiffFt": -564
+    },
+    {
+      "place": "cascade-mountain",
+      "station": "KSLK",
+      "network": "ASOS/AWOS airport",
+      "kind": "valley",
+      "distanceMi": 20.79,
+      "elevationDiffFt": 2435
+    },
+    {
+      "place": "mckenzie-mountain",
+      "station": "A4090",
+      "network": "NWS mesonet",
+      "kind": "nearby-higher",
+      "distanceMi": 6.735,
+      "elevationDiffFt": -840
+    },
+    {
+      "place": "mckenzie-mountain",
+      "station": "KSLK",
+      "network": "ASOS/AWOS airport",
+      "kind": "valley",
+      "distanceMi": 9.298,
+      "elevationDiffFt": 2159
+    },
+    {
+      "place": "mount-van-hoevenberg",
+      "station": "A4090",
+      "network": "NWS mesonet",
+      "kind": "nearby-higher",
+      "distanceMi": 10.778,
+      "elevationDiffFt": -1723
+    },
+    {
+      "place": "mount-van-hoevenberg",
+      "station": "KSLK",
+      "network": "ASOS/AWOS airport",
+      "kind": "valley",
+      "distanceMi": 18.502,
+      "elevationDiffFt": 1276
+    },
+    {
+      "place": "keene-valley",
+      "station": "KPBG",
+      "network": "ASOS/AWOS airport",
+      "kind": "base",
+      "distanceMi": 35.487,
+      "elevationDiffFt": 794
+    },
+    {
+      "place": "lyon-mountain",
+      "station": "KPBG",
+      "network": "ASOS/AWOS airport",
+      "kind": "valley",
+      "distanceMi": 19.9,
+      "elevationDiffFt": 3593
+    },
+    {
+      "place": "ampersand-mountain",
+      "station": "KSLK",
+      "network": "ASOS/AWOS airport",
+      "kind": "valley",
+      "distanceMi": 10.955,
+      "elevationDiffFt": 1689
+    },
+    {
+      "place": "debar-mountain",
+      "station": "KSLK",
+      "network": "ASOS/AWOS airport",
+      "kind": "valley",
+      "distanceMi": 14.552,
+      "elevationDiffFt": 1654
+    },
+    {
+      "place": "st-regis-mountain",
+      "station": "KSLK",
+      "network": "ASOS/AWOS airport",
+      "kind": "valley",
+      "distanceMi": 6.352,
+      "elevationDiffFt": 1175
+    },
+    {
+      "place": "mount-arab",
+      "station": "KSLK",
+      "network": "ASOS/AWOS airport",
+      "kind": "valley",
+      "distanceMi": 22.951,
+      "elevationDiffFt": 870
+    },
+    {
+      "place": "gore-mountain",
+      "station": "KGFL",
+      "network": "ASOS/AWOS airport",
+      "kind": "valley",
+      "distanceMi": 31.756,
+      "elevationDiffFt": 3235
+    },
+    {
+      "place": "blue-ridge-mountain",
+      "station": "KSLK",
+      "network": "ASOS/AWOS airport",
+      "kind": "valley",
+      "distanceMi": 37.642,
+      "elevationDiffFt": 1802
+    },
+    {
+      "place": "fishing-brook-range",
+      "station": "KSLK",
+      "network": "ASOS/AWOS airport",
+      "kind": "valley",
+      "distanceMi": 33.314,
+      "elevationDiffFt": 1737
+    },
+    {
+      "place": "vanderwhacker-mountain",
+      "station": "KSLK",
+      "network": "ASOS/AWOS airport",
+      "kind": "valley",
+      "distanceMi": 34.606,
+      "elevationDiffFt": 1726
+    },
+    {
+      "place": "crane-mountain",
+      "station": "KGFL",
+      "network": "ASOS/AWOS airport",
+      "kind": "valley",
+      "distanceMi": 22.579,
+      "elevationDiffFt": 2926
+    },
+    {
+      "place": "hadley-mountain",
+      "station": "KGFL",
+      "network": "ASOS/AWOS airport",
+      "kind": "valley",
+      "distanceMi": 18.266,
+      "elevationDiffFt": 2323
+    },
+    {
+      "place": "black-mountain",
+      "station": "KGFL",
+      "network": "ASOS/AWOS airport",
+      "kind": "valley",
+      "distanceMi": 30.949,
+      "elevationDiffFt": 2312
+    },
+    {
+      "place": "pharaoh-mountain",
+      "station": "PHCN6",
+      "network": "NWS/other station",
+      "kind": "valley",
+      "distanceMi": 19.111,
+      "elevationDiffFt": 2435
+    },
+    {
+      "place": "prospect-mountain",
+      "station": "KGFL",
+      "network": "ASOS/AWOS airport",
+      "kind": "valley",
+      "distanceMi": 8.916,
+      "elevationDiffFt": 1702
+    },
+    {
+      "place": "slide-mountain",
+      "station": "MTRN6",
+      "network": "NWS/other station",
+      "kind": "valley",
+      "distanceMi": 6.024,
+      "elevationDiffFt": 3528
+    },
+    {
+      "place": "hunter-mountain",
+      "station": "CHIN6",
+      "network": "NWS/other station",
+      "kind": "valley",
+      "distanceMi": 6.665,
+      "elevationDiffFt": 3056
+    },
+    {
+      "place": "peekamoose-mountain",
+      "station": "MTRN6",
+      "network": "NWS/other station",
+      "kind": "valley",
+      "distanceMi": 7.814,
+      "elevationDiffFt": 3191
+    },
+    {
+      "place": "balsam-lake-mountain",
+      "station": "BIGN6",
+      "network": "NWS/other station",
+      "kind": "valley",
+      "distanceMi": 8.515,
+      "elevationDiffFt": 2467
+    },
+    {
+      "place": "panther-mountain",
+      "station": "BIGN6",
+      "network": "NWS/other station",
+      "kind": "valley",
+      "distanceMi": 4.673,
+      "elevationDiffFt": 2457
+    },
+    {
+      "place": "windham-high-peak",
+      "station": "NGC51",
+      "network": "NWS/other station",
+      "kind": "valley",
+      "distanceMi": 9.306,
+      "elevationDiffFt": 2778
+    },
+    {
+      "place": "overlook-mountain",
+      "station": "K20N",
+      "network": "ASOS/AWOS airport",
+      "kind": "valley",
+      "distanceMi": 9.565,
+      "elevationDiffFt": 2987
+    },
+    {
+      "place": "red-hill",
+      "station": "BIGN6",
+      "network": "NWS/other station",
+      "kind": "valley",
+      "distanceMi": 13.206,
+      "elevationDiffFt": 1723
+    },
+    {
+      "place": "mount-tremper",
+      "station": "K20N",
+      "network": "ASOS/AWOS airport",
+      "kind": "valley",
+      "distanceMi": 17.238,
+      "elevationDiffFt": 2591
+    },
+    {
+      "place": "tannersville",
+      "station": "CHIN6",
+      "network": "NWS/other station",
+      "kind": "base",
+      "distanceMi": 11.145,
+      "elevationDiffFt": 916
+    },
+    {
+      "place": "gunks-ridge",
+      "station": "LMTN6",
+      "network": "NWS/other station",
+      "kind": "base",
+      "distanceMi": 10.936,
+      "elevationDiffFt": 2024
+    },
+    {
+      "place": "thacher-park",
+      "station": "KALB",
+      "network": "ASOS/AWOS airport",
+      "kind": "base",
+      "distanceMi": 12.494,
+      "elevationDiffFt": 1015
+    },
+    {
+      "place": "jay-peak",
+      "station": "KEFK",
+      "network": "ASOS/AWOS airport",
+      "kind": "valley",
+      "distanceMi": 14.392,
+      "elevationDiffFt": 2924
+    },
+    {
+      "place": "belvidere-mountain",
+      "station": "KMVL",
+      "network": "ASOS/AWOS airport",
+      "kind": "valley",
+      "distanceMi": 16.695,
+      "elevationDiffFt": 2631
+    },
+    {
+      "place": "jay-village",
+      "station": "KEFK",
+      "network": "ASOS/AWOS airport",
+      "kind": "base",
+      "distanceMi": 10.657,
+      "elevationDiffFt": 166
+    },
+    {
+      "place": "mount-mansfield",
+      "station": "KMPV",
+      "network": "ASOS/AWOS airport",
+      "kind": "valley",
+      "distanceMi": 26.435,
+      "elevationDiffFt": 3228
+    },
+    {
+      "place": "smugglers-notch",
+      "station": "EMRV1",
+      "network": "RAWS fire-weather station",
+      "kind": "base",
+      "distanceMi": 13.156,
+      "elevationDiffFt": 2206
+    },
+    {
+      "place": "stowe-town",
+      "station": "KMPV",
+      "network": "ASOS/AWOS airport",
+      "kind": "base",
+      "distanceMi": 18.933,
+      "elevationDiffFt": -125
+    },
+    {
+      "place": "camels-hump",
+      "station": "WRSV1",
+      "network": "NWS/other station",
+      "kind": "valley",
+      "distanceMi": 7.163,
+      "elevationDiffFt": 3513
+    },
+    {
+      "place": "mount-ellen",
+      "station": "K6B0",
+      "network": "ASOS/AWOS airport",
+      "kind": "valley",
+      "distanceMi": 14.68,
+      "elevationDiffFt": 3594
+    },
+    {
+      "place": "bread-loaf-mountain",
+      "station": "K6B0",
+      "network": "ASOS/AWOS airport",
+      "kind": "valley",
+      "distanceMi": 7.763,
+      "elevationDiffFt": 3346
+    },
+    {
+      "place": "mount-worcester",
+      "station": "MMNV1",
+      "network": "NWS mesonet (NEPP)",
+      "kind": "nearby-higher",
+      "distanceMi": 12.377,
+      "elevationDiffFt": -598
+    },
+    {
+      "place": "mount-worcester",
+      "station": "KMVL",
+      "network": "ASOS/AWOS airport",
+      "kind": "valley",
+      "distanceMi": 6.518,
+      "elevationDiffFt": 2584
+    },
+    {
+      "place": "waterbury",
+      "station": "WRSV1",
+      "network": "NWS/other station",
+      "kind": "base",
+      "distanceMi": 3.11,
+      "elevationDiffFt": 30
+    },
+    {
+      "place": "signal-mountain",
+      "station": "KMPV",
+      "network": "ASOS/AWOS airport",
+      "kind": "valley",
+      "distanceMi": 11.928,
+      "elevationDiffFt": 2205
+    },
+    {
+      "place": "burke-mountain",
+      "station": "KCDA",
+      "network": "ASOS/AWOS airport",
+      "kind": "valley",
+      "distanceMi": 6.157,
+      "elevationDiffFt": 2079
+    },
+    {
+      "place": "monadnock-mountain",
+      "station": "KCDA",
+      "network": "ASOS/AWOS airport",
+      "kind": "valley",
+      "distanceMi": 32.474,
+      "elevationDiffFt": 1960
+    },
+    {
+      "place": "killington-peak",
+      "station": "KRUT",
+      "network": "ASOS/AWOS airport",
+      "kind": "valley",
+      "distanceMi": 8.153,
+      "elevationDiffFt": 3448
+    },
+    {
+      "place": "stratton-mountain",
+      "station": "WFRV1",
+      "network": "RAWS fire-weather station",
+      "kind": "valley",
+      "distanceMi": 14.654,
+      "elevationDiffFt": 1623
+    },
+    {
+      "place": "mount-equinox",
+      "station": "KDDH",
+      "network": "ASOS/AWOS airport",
+      "kind": "valley",
+      "distanceMi": 19.95,
+      "elevationDiffFt": 3013
+    },
+    {
+      "place": "dorset-mountain",
+      "station": "KRUT",
+      "network": "ASOS/AWOS airport",
+      "kind": "valley",
+      "distanceMi": 15.975,
+      "elevationDiffFt": 2973
+    },
+    {
+      "place": "haystack-mountain",
+      "station": "KDDH",
+      "network": "ASOS/AWOS airport",
+      "kind": "valley",
+      "distanceMi": 16.735,
+      "elevationDiffFt": 2618
+    },
+    {
+      "place": "ludlow-mountain",
+      "station": "KVSF",
+      "network": "ASOS/AWOS airport",
+      "kind": "valley",
+      "distanceMi": 12.303,
+      "elevationDiffFt": 2746
+    },
+    {
+      "place": "bromley-mountain",
+      "station": "LBKV1",
+      "network": "NWS/other station",
+      "kind": "valley",
+      "distanceMi": 13.153,
+      "elevationDiffFt": 828
+    },
+    {
+      "place": "mount-ascutney",
+      "station": "KVSF",
+      "network": "ASOS/AWOS airport",
+      "kind": "valley",
+      "distanceMi": 7.761,
+      "elevationDiffFt": 2566
+    },
+    {
+      "place": "bald-mountain",
+      "station": "KDDH",
+      "network": "ASOS/AWOS airport",
+      "kind": "valley",
+      "distanceMi": 5.663,
+      "elevationDiffFt": 2030
+    },
+    {
+      "place": "manchester-vt",
+      "station": "KDDH",
+      "network": "ASOS/AWOS airport",
+      "kind": "base",
+      "distanceMi": 20.681,
+      "elevationDiffFt": 73
+    },
+    {
+      "place": "mount-washington",
+      "station": "KMWN",
+      "network": "ASOS/AWOS airport",
+      "kind": "summit",
+      "distanceMi": 0.018,
+      "elevationDiffFt": 26
+    },
+    {
+      "place": "mount-washington",
+      "station": "OSLN3",
+      "network": "NWS/other station",
+      "kind": "valley",
+      "distanceMi": 4.875,
+      "elevationDiffFt": 2096
+    },
+    {
+      "place": "mount-adams",
+      "station": "KMWN",
+      "network": "ASOS/AWOS airport",
+      "kind": "nearby-higher",
+      "distanceMi": 3.493,
+      "elevationDiffFt": -463
+    },
+    {
+      "place": "mount-adams",
+      "station": "OSLN3",
+      "network": "NWS/other station",
+      "kind": "valley",
+      "distanceMi": 1.466,
+      "elevationDiffFt": 1607
+    },
+    {
+      "place": "pinkham-notch",
+      "station": "KHIE",
+      "network": "ASOS/AWOS airport",
+      "kind": "base",
+      "distanceMi": 16.547,
+      "elevationDiffFt": 970
+    },
+    {
+      "place": "crawford-notch",
+      "station": "BLTN3",
+      "network": "USGS/NWS hydrologic gauge",
+      "kind": "base",
+      "distanceMi": 7.284,
+      "elevationDiffFt": 1212
+    },
+    {
+      "place": "baldface-mountain",
+      "station": "KMWN",
+      "network": "ASOS/AWOS airport",
+      "kind": "nearby-higher",
+      "distanceMi": 10.864,
+      "elevationDiffFt": -2715
+    },
+    {
+      "place": "baldface-mountain",
+      "station": "GHNN3",
+      "network": "NWS/other station",
+      "kind": "valley",
+      "distanceMi": 10.819,
+      "elevationDiffFt": 2455
+    },
+    {
+      "place": "mount-lafayette",
+      "station": "KHIE",
+      "network": "ASOS/AWOS airport",
+      "kind": "valley",
+      "distanceMi": 14.892,
+      "elevationDiffFt": 4202
+    },
+    {
+      "place": "mount-moosilauke",
+      "station": "K1P1",
+      "network": "ASOS/AWOS airport",
+      "kind": "valley",
+      "distanceMi": 17.493,
+      "elevationDiffFt": 4300
+    },
+    {
+      "place": "mount-osceola",
+      "station": "WVVN3",
+      "network": "NWS/other station",
+      "kind": "valley",
+      "distanceMi": 4.043,
+      "elevationDiffFt": 2895
+    },
+    {
+      "place": "cannon-mountain",
+      "station": "KHIE",
+      "network": "ASOS/AWOS airport",
+      "kind": "valley",
+      "distanceMi": 16.182,
+      "elevationDiffFt": 3033
+    },
+    {
+      "place": "kancamagus-pass",
+      "station": "WVVN3",
+      "network": "NWS/other station",
+      "kind": "base",
+      "distanceMi": 5.552,
+      "elevationDiffFt": 1410
+    },
+    {
+      "place": "franconia-notch",
+      "station": "KHIE",
+      "network": "ASOS/AWOS airport",
+      "kind": "base",
+      "distanceMi": 16.031,
+      "elevationDiffFt": 893
+    },
+    {
+      "place": "rumney-crag",
+      "station": "K1P1",
+      "network": "ASOS/AWOS airport",
+      "kind": "base",
+      "distanceMi": 3.433,
+      "elevationDiffFt": 898
+    },
+    {
+      "place": "mount-monadnock",
+      "station": "KAFN",
+      "network": "ASOS/AWOS airport",
+      "kind": "valley",
+      "distanceMi": 6.599,
+      "elevationDiffFt": 2155
+    },
+    {
+      "place": "north-pack-monadnock",
+      "station": "KAFN",
+      "network": "ASOS/AWOS airport",
+      "kind": "valley",
+      "distanceMi": 8.783,
+      "elevationDiffFt": 1266
+    },
+    {
+      "place": "katahdin",
+      "station": "KMLT",
+      "network": "ASOS/AWOS airport",
+      "kind": "valley",
+      "distanceMi": 20.89,
+      "elevationDiffFt": 4861
+    },
+    {
+      "place": "katahdin-woods-and-waters",
+      "station": "KMLT",
+      "network": "ASOS/AWOS airport",
+      "kind": "base",
+      "distanceMi": 18.593,
+      "elevationDiffFt": 793
+    },
+    {
+      "place": "millinocket",
+      "station": "KMLT",
+      "network": "ASOS/AWOS airport",
+      "kind": "base",
+      "distanceMi": 1.085,
+      "elevationDiffFt": -7
+    },
+    {
+      "place": "white-cap-mountain",
+      "station": "KGNR",
+      "network": "ASOS/AWOS airport",
+      "kind": "valley",
+      "distanceMi": 16.142,
+      "elevationDiffFt": 2260
+    },
+    {
+      "place": "sugarloaf-mountain",
+      "station": "K8B0",
+      "network": "ASOS/AWOS airport",
+      "kind": "valley",
+      "distanceMi": 17.289,
+      "elevationDiffFt": 2429
+    },
+    {
+      "place": "bigelow",
+      "station": "K8B0",
+      "network": "ASOS/AWOS airport",
+      "kind": "valley",
+      "distanceMi": 21.24,
+      "elevationDiffFt": 2342
+    },
+    {
+      "place": "rangeley",
+      "station": "OQOM1",
+      "network": "NWS/other station",
+      "kind": "base",
+      "distanceMi": 6.493,
+      "elevationDiffFt": 23
+    },
+    {
+      "place": "deboullie-mountain",
+      "station": "KFVE",
+      "network": "ASOS/AWOS airport",
+      "kind": "valley",
+      "distanceMi": 34.469,
+      "elevationDiffFt": 993
+    },
+    {
+      "place": "mars-hill-mountain",
+      "station": "KPQI",
+      "network": "ASOS/AWOS airport",
+      "kind": "valley",
+      "distanceMi": 15.855,
+      "elevationDiffFt": 1214
+    },
+    {
+      "place": "cadillac-mountain",
+      "station": "A3672",
+      "network": "NWS mesonet",
+      "kind": "summit",
+      "distanceMi": 0.044,
+      "elevationDiffFt": 37
+    },
+    {
+      "place": "cadillac-mountain",
+      "station": "KBHB",
+      "network": "ASOS/AWOS airport",
+      "kind": "valley",
+      "distanceMi": 9.715,
+      "elevationDiffFt": 1448
+    },
+    {
+      "place": "bar-harbor",
+      "station": "KBHB",
+      "network": "ASOS/AWOS airport",
+      "kind": "base",
+      "distanceMi": 9.117,
+      "elevationDiffFt": 68
+    }
+  ]
 }

@@ -20,20 +20,32 @@ function formatEt(value: string | null): string {
   });
 }
 
-function kindTitle(kind: PlaceStationObservationBinding['kind'], stationId: string, stationName: string | null): string {
+function kindTitle(
+  kind: PlaceStationObservationBinding['kind'],
+  stationId: string,
+  stationName: string | null,
+  network: string,
+): string {
   const label = stationName ? `${stationName} (${stationId})` : stationId;
-  if (kind === 'summit') return `Summit station · ${label}`;
-  if (kind === 'valley') return `Valley / nearby METAR · ${label}`;
-  return `Nearby METAR · ${label}`;
+  const net = network ? ` · ${network}` : '';
+  if (kind === 'summit') return `Summit station · ${label}${net}`;
+  if (kind === 'nearby-higher') return `Nearby higher station · ${label}${net}`;
+  if (kind === 'valley') return `Valley / nearby · ${label}${net}`;
+  return `Nearby · ${label}${net}`;
 }
 
 function placementNote(binding: PlaceStationObservationBinding, placeElevationFt: number | null): string {
-  const parts = [`${binding.distanceMi} mi from this place`];
+  const parts = [`${binding.distanceMi} mi from this place`, binding.network];
   if (binding.stationElevationFt !== null) {
-    parts.push(`${binding.stationElevationFt.toLocaleString('en-US')} ft station elevation`);
+    const src = binding.elevationSource ? ` (${binding.elevationSource})` : '';
+    parts.push(`${binding.stationElevationFt.toLocaleString('en-US')} ft station elevation${src}`);
   }
   if (placeElevationFt !== null && binding.elevationDiffFt !== null) {
-    if (binding.kind === 'valley' || binding.elevationDiffFt >= 700) {
+    if (binding.kind === 'nearby-higher' && binding.elevationDiffFt !== null && binding.elevationDiffFt < 0) {
+      parts.push(
+        `${Math.abs(binding.elevationDiffFt).toLocaleString('en-US')} ft higher than catalog (${placeElevationFt.toLocaleString('en-US')} ft)`,
+      );
+    } else if (binding.kind === 'valley' || binding.elevationDiffFt >= 700) {
       parts.push(
         `${binding.elevationDiffFt.toLocaleString('en-US')} ft below catalog summit (${placeElevationFt.toLocaleString('en-US')} ft)`,
       );
@@ -71,7 +83,7 @@ function StationBlock({
 
   return (
     <CollapsibleSection
-      title={kindTitle(binding.kind, binding.stationId, binding.stationName)}
+      title={kindTitle(binding.kind, binding.stationId, binding.stationName, binding.network)}
       subtitle={`${def.org} · measured${stale}`}
       defaultOpen={binding.kind === 'summit'}
     >

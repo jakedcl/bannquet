@@ -1,12 +1,16 @@
 import bindingsJson from '../../../config/mountain-weather/station-bindings.json';
 
-export type StationObsKind = 'summit' | 'valley' | 'base';
+export type StationObsKind = 'summit' | 'valley' | 'base' | 'nearby-higher';
 
 export type PlaceStationObservationBinding = {
   stationId: string;
   kind: StationObsKind;
+  network: string;
   stationName: string | null;
   stationElevationFt: number | null;
+  elevationSource?: string;
+  nwsElevationFt?: number | null;
+  epqsElevationFt?: number | null;
   distanceMi: number;
   elevationDiffFt: number | null;
   bindReason: string;
