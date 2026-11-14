@@ -68,11 +68,18 @@ function MeasuredBlock({ data }: { data: PlaceSnowData }) {
           return (
             <li key={row.dedupeKey} className="border border-[#5c3a1e]/20 bg-white/50 p-2 text-sm">
               <p className="font-bold">
-                {b.kind === 'summit' ? 'Summit-class' : b.kind === 'valley' ? 'Valley / lower' : 'Base'} ·{' '}
-                {b.stationName} ({b.stationId})
+                {b.kind === 'summit'
+                  ? 'Summit'
+                  : b.kind === 'nearby-higher'
+                    ? 'Nearby higher'
+                    : b.kind === 'valley'
+                      ? 'Valley / lower'
+                      : 'Base'}{' '}
+                · {b.stationName} ({b.stationId})
               </p>
               <p className="text-xs text-gray-800">
-                {b.distanceMi} mi · {b.stationElevationFt?.toLocaleString('en-US') ?? '—'} ft station elev
+                {b.network} · {b.distanceMi} mi · {b.stationElevationFt?.toLocaleString('en-US') ?? '—'} ft station elev
+                {b.elevationSource ? ` (${b.elevationSource})` : ''}
                 {b.elevationDiffFt !== null
                   ? ` · ${b.elevationDiffFt >= 0 ? '+' : ''}${b.elevationDiffFt.toLocaleString('en-US')} ft vs catalog`
                   : ''}{' '}

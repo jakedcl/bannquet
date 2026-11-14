@@ -4,7 +4,7 @@ import type { MeasuredSnowBinding } from '@/lib/mountain-weather/snow-types';
 type File = {
   version: number;
   ruleSummary: string;
-  nohrscSnapshotAt: string;
+  catalogBuiltAt: string;
   places: Record<string, { measured: MeasuredSnowBinding[] }>;
 };
 

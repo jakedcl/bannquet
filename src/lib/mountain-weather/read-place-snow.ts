@@ -54,24 +54,36 @@ export async function readPlaceSnow(place: MountainPlace): Promise<PlaceSnowData
   ]);
 
   const stationMap = new Map((nohrscStations.data ?? []).map((s) => [s.stationId, s]));
+  const staleMs = 7 * 24 * 60 * 60 * 1000;
+  const now = Date.now();
   const measuredRaw: MeasuredSnowReport[] = [];
   for (const binding of bindings) {
     const row = stationMap.get(binding.stationId);
-    if (!row) continue;
-    const dedupeKey = `${binding.source}:${binding.stationId}:${row.reportTimeUtc ?? 'na'}`;
-    const value = row.amountIn;
-    const valueDisplay =
-      value === null ? 'No report' : value === 0 ? '0' : row.amountDisplay;
+    const reportTimeUtc = row?.reportTimeUtc ?? null;
+    let reportMs = reportTimeUtc ? Date.parse(reportTimeUtc.replace(' ', 'T') + ':00Z') : NaN;
+    if (Number.isNaN(reportMs) && reportTimeUtc) {
+      reportMs = Date.parse(reportTimeUtc.includes('UTC') ? reportTimeUtc : `${reportTimeUtc} UTC`);
+    }
+    const stale = !Number.isFinite(reportMs) || now - reportMs > staleMs;
+    const dedupeKey = `${binding.source}:${binding.stationId}:${reportTimeUtc ?? 'na'}`;
+    const value = stale ? null : row?.amountIn ?? null;
+    const valueDisplay = stale
+      ? 'No report in the last 7 days'
+      : value === null
+        ? 'No report'
+        : value === 0
+          ? '0'
+          : row?.amountDisplay ?? String(value);
     measuredRaw.push({
       binding,
-      reportTimeUtc: row.reportTimeUtc,
-      reportTimeEt: formatEt(row.reportTimeUtc),
+      reportTimeUtc: stale ? null : reportTimeUtc,
+      reportTimeEt: stale ? null : formatEt(reportTimeUtc),
       value,
       valueDisplay,
       units: 'in',
       windowLabel:
         binding.element === 'snowdepth'
-          ? 'Snow depth (NOHRSC station table snapshot — not 6 h snowfall)'
+          ? 'Snow depth (NOHRSC station table — not 6 h snowfall)'
           : 'Report window per NOHRSC station table',
       element: binding.element,
       dedupeKey,

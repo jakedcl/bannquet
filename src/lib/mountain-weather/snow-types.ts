@@ -42,16 +42,22 @@ export type IemLsrSnowEvent = {
   remark: string | null;
 };
 
+export type MeasuredSnowBindingKind = 'summit' | 'valley' | 'base' | 'nearby-higher';
+
 export type MeasuredSnowBinding = {
   stationId: string;
   source: 'NOHRSC' | 'IEM_COOP' | 'COCORAHS';
+  network: string;
   stationName: string;
   lat: number;
   lon: number;
   stationElevationFt: number | null;
+  elevationSource?: string;
+  nohrscElevationFt?: number | null;
+  epqsElevationFt?: number | null;
   distanceMi: number;
   elevationDiffFt: number | null;
-  kind: 'summit' | 'valley' | 'base';
+  kind: MeasuredSnowBindingKind;
   element: SnowPhysicalElement;
   bindReason: string;
 };
