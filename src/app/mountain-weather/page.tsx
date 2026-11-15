@@ -6,7 +6,8 @@ import WeatherTicker from '@/components/ui/WeatherTicker';
 import { WeatherHub } from '@/components/weather/WeatherHub';
 import { Card } from '@/components/hub/Card';
 import { ListGroup, ListRow } from '@/components/hub/ListRow';
-import { MOUNTAIN_STATES, placeCount } from '@/lib/mountain-weather/places';
+import { allMountainPlaces, MOUNTAIN_STATES, placeCount } from '@/lib/mountain-weather/places';
+import { MountainPlaceSearch } from '@/components/mountain-weather/MountainPlaceSearch';
 import { loadWeatherHub } from '@/lib/weather-hub';
 import { isRegionCode, type RegionCode } from '@/lib/regions';
 import { mountainWeatherPath } from '@/lib/mountain-weather/slugs';
@@ -25,6 +26,12 @@ export default async function MountainWeatherPage({
   }
 
   const hub = await loadWeatherHub();
+  const searchPlaces = allMountainPlaces().map((place) => ({
+    name: place.name,
+    href: mountainWeatherPath(place.state, place.sectionId, place.id),
+    sectionTitle: place.sectionTitle,
+    stateName: MOUNTAIN_STATES.find((s) => s.code === place.state)?.name ?? place.state,
+  }));
 
   return (
     <PageWrapper className="hub">
@@ -34,6 +41,7 @@ export default async function MountainWeatherPage({
           {placeCount()} peaks and bases across New York, Vermont, New Hampshire, and Maine.
         </p>
         <WeatherTicker />
+        <MountainPlaceSearch places={searchPlaces} />
         <WeatherHub states={hub} />
         <Card padded={false}>
           <ListGroup bare>

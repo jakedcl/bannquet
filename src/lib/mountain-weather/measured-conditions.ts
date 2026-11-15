@@ -48,6 +48,7 @@ export type MeasuredConditionSpot = {
 
 export type MountainConditionsReport = {
   success: boolean;
+  partial?: boolean;
   spots: MeasuredConditionSpot[];
   glances: HubGlance[];
   error?: string;
@@ -139,8 +140,10 @@ export async function loadMountainConditionsReport(now = new Date()): Promise<Mo
   }
 
   if (spots.length === 0) {
+    const forecastsOk = glances.some((g) => g.phrase !== 'Forecast unavailable');
     return {
       success: false,
+      partial: forecastsOk,
       spots: [],
       glances,
       error: failures[0] ?? 'No measured station results',

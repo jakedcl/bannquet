@@ -4,6 +4,7 @@ import type { PlaceGroundData } from '@/lib/mountain-weather/ground-access-types
 import { GROUND_ACCESS_NOTES } from '@/lib/mountain-weather/read-place-ground';
 import { USDM_COUNTY_DROUGHT_DEF } from '@/lib/mountain-weather/readers/usdm-county-drought';
 import { COMPASS_NE_ESS_DEF } from '@/lib/mountain-weather/readers/compass-ne-ess';
+import { formatObservationAge } from '@/lib/mountain-weather/format-display';
 
 export function GroundAccessSection({ data }: { data: PlaceGroundData }) {
   return (
@@ -117,7 +118,7 @@ export function GroundAccessSection({ data }: { data: PlaceGroundData }) {
                 <p className="text-xs text-gray-700">
                   {row.siteName ? `${row.siteName} · ` : ''}
                   {row.distanceMi} mi ·{' '}
-                  {row.ageMinutes != null ? `${row.ageMinutes} min ago` : 'observation time unknown'}
+                  {formatObservationAge(row.ageMinutes)}
                 </p>
               </div>
             ))}

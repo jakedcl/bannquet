@@ -4,6 +4,7 @@ import { WeatherGlanceList } from '@/components/weather/WeatherGlanceList';
 import { Card } from '@/components/hub/Card';
 import type { ExtremeReport } from '@/lib/weather-extremes';
 import type { HubGlance } from '@/lib/mountain-weather/hub-glance';
+import { formatObservationAge } from '@/lib/mountain-weather/format-display';
 
 export function ConditionsReport({
   report,
@@ -15,13 +16,23 @@ export function ConditionsReport({
   showForecastLink?: boolean;
 }) {
   const spots = [...report.spots].sort((a, b) => a.mountain.localeCompare(b.mountain));
+  const hasMeasured = report.spots.length > 0 && report.stats.length > 0;
 
   return (
     <div className="space-y-5">
+      {report.partial ? (
+        <p className="text-sm text-gray-800">
+          Some summit stations did not respond ({report.failed} of {report.attempted} places). Forecast lines below are
+          still from the National Weather Service grid.
+        </p>
+      ) : null}
       <Card title="Live measured extremes">
-        <p className="text-xs text-gray-700">From bound NWS/ASOS stations (M10 bindings) — not forecasts.</p>
-        {!report.success || report.stats.length === 0 ? (
-          <p className="text-sm font-bold">The live conditions did not load.</p>
+        <p className="text-xs text-gray-700">From ASOS and mesonet stations bound to each peak — not forecasts.</p>
+        {!hasMeasured ? (
+          <p className="text-sm font-bold">
+            {report.error ?? 'The live conditions did not load.'}
+            {(report.glances?.length ?? 0) > 0 ? ' See place forecast lines below.' : ''}
+          </p>
         ) : (
           <ul className="space-y-2 text-sm">
             {report.stats.map((stat) => (
@@ -32,7 +43,7 @@ export function ConditionsReport({
                   <span className="text-gray-600">
                     {' '}
                     · {stat.stationId}
-                    {stat.ageMinutes != null ? ` · ${stat.ageMinutes} min ago` : ''}
+                    {stat.ageMinutes != null ? ` · ${formatObservationAge(stat.ageMinutes)}` : ''}
                   </span>
                 ) : null}
               </li>
@@ -49,13 +60,17 @@ export function ConditionsReport({
         ) : null}
       </Card>
 
-      <Card title="Measured spots">
-        <SpotsTable spots={spots} />
-      </Card>
+      {spots.length > 0 ? (
+        <Card title="Measured spots">
+          <SpotsTable spots={spots} />
+        </Card>
+      ) : null}
 
       {glances.length ? (
         <Card title="Place forecast lines" padded={false}>
-          <p className="border-b border-[#5c3a1e]/20 px-3 py-2 text-xs text-gray-700">Same cached NWS baseline reader as place pages.</p>
+          <p className="border-b border-[#5c3a1e]/20 px-3 py-2 text-xs text-gray-700">
+            Same NWS grid forecast shown on each place page (updated on the same schedule).
+          </p>
           <WeatherGlanceList items={glances} />
         </Card>
       ) : null}

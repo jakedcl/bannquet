@@ -77,6 +77,25 @@ export function inForecastWindow(period: GlancePeriod, now: Date): boolean {
   return finish > now.getTime() && start < now.getTime() + WINDOW;
 }
 
+export type DailyHighLowRow = {
+  temperature: number;
+  secondaryTemp?: number;
+  startTime: string;
+  name?: string;
+};
+
+/** NWS daily rows store high on `temperature` and tonight's low on `secondaryTemp` (all marked daytime). */
+export function dailyHighLowFromSnippets(
+  rows: DailyHighLowRow[],
+): { high: number | null; low: number | null } {
+  const first = rows[0];
+  if (!first || !Number.isFinite(first.temperature)) return { high: null, low: null };
+  return {
+    high: first.temperature,
+    low: typeof first.secondaryTemp === 'number' ? first.secondaryTemp : null,
+  };
+}
+
 export function summitHighLow(periods: GlancePeriod[]): { high: number | null; low: number | null } {
   const day = periods.find((p) => p.isDaytime !== false && Number.isFinite(p.temperature));
   const night = periods.find((p) => p.isDaytime === false && Number.isFinite(p.temperature));
@@ -99,9 +118,21 @@ export function maxSustainedMph(periods: GlancePeriod[], now: Date): number | nu
 }
 
 export function windLabel(gust: number | null, sustained: number | null): string | null {
-  const values = [gust, sustained].filter((value): value is number => value != null && Number.isFinite(value) && value > 0);
-  if (values.length === 0) return null;
-  return `${Math.round(Math.max(...values))} mph`;
+  return formatWindSummary(sustained, gust).line;
+}
+
+export function formatWindSummary(
+  sustained: number | null,
+  gust: number | null,
+): { line: string | null; sustained: number | null; gust: number | null } {
+  const s = sustained != null && sustained > 0 ? Math.round(sustained) : null;
+  const g = gust != null && gust > 0 ? Math.round(gust) : null;
+  if (s == null && g == null) return { line: null, sustained: s, gust: g };
+  if (g != null && s != null && g > s) {
+    return { line: `${s} mph sustained · gusts to ${g} mph`, sustained: s, gust: g };
+  }
+  if (s != null) return { line: `${s} mph sustained`, sustained: s, gust: g };
+  return { line: `${g} mph gusts`, sustained: s, gust: g };
 }
 
 function spellWhen(period: GlancePeriod): string {

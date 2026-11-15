@@ -1,3 +1,4 @@
+import { isNortheastLsrState } from '@/lib/mountain-weather/parse/iem-lsr-states';
 import type { IemLsrSnowEvent } from '@/lib/mountain-weather/snow-types';
 
 type GeoJson = {
@@ -18,13 +19,15 @@ export function parseIemLsrSnowGeoJson(text: string): IemLsrSnowEvent[] {
     const coords = f.geometry?.coordinates;
     if (!coords || coords.length < 2) continue;
     const [lon, lat] = coords;
+    const state = typeof p.state === 'string' ? p.state : null;
+    if (!isNortheastLsrState(state)) continue;
     const mag = typeof p.magnitude === 'number' ? p.magnitude : Number(p.magnitude);
     out.push({
       id: String(f.id ?? `${p.valid}-${p.city}`),
       valid: String(p.valid ?? ''),
       city: typeof p.city === 'string' ? p.city : null,
       county: typeof p.county === 'string' ? p.county : null,
-      state: typeof p.state === 'string' ? p.state : null,
+      state,
       lat,
       lon,
       magnitude: Number.isFinite(mag) ? mag : null,
