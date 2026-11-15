@@ -142,9 +142,7 @@ export default function GroupMap({
   const controlsRef = useRef<HTMLDivElement | null>(null);
   const [terrain, setTerrain] = useState(false);
   const popupRef = useRef<Popup | null>(null);
-  const [mapFailed, setMapFailed] = useState(() =>
-    typeof document !== 'undefined' ? !canUseWebGl2() : false,
-  );
+  const [mapFailed, setMapFailed] = useState(false);
 
   useEffect(() => {
     pointsRef.current = points;
@@ -157,6 +155,10 @@ export default function GroupMap({
   useEffect(() => {
     const container = containerRef.current;
     if (!container || mapRef.current || mapFailed) return;
+    if (!canUseWebGl2()) {
+      queueMicrotask(() => setMapFailed(true));
+      return;
+    }
 
     let map: MlMap;
     try {

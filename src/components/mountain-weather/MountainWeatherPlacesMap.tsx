@@ -24,11 +24,13 @@ type Props = {
 export function MountainWeatherPlacesMap({ pins, alertMap, focus, className }: Props) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<MlMap | null>(null);
-  const [mapFailed, setMapFailed] = useState(() =>
-    typeof document !== 'undefined' ? !canUseWebGl2() : false,
-  );
+  const [mapFailed, setMapFailed] = useState(false);
 
   useEffect(() => {
+    if (!canUseWebGl2()) {
+      queueMicrotask(() => setMapFailed(true));
+      return;
+    }
     if (!containerRef.current || mapRef.current || mapFailed) return;
     let map: MlMap;
     try {

@@ -10,6 +10,7 @@ import { GOES19_NE_GEOCOLOR_DEF, GOES19_NE_GLM_DEF } from '@/lib/mountain-weathe
 import { radarSiteLabel, nwsRidgeLoopUrl } from '@/lib/mountain-weather/radar-sites';
 import { NWS_ALERTS_ACTIVE_NE_DEF as ALERTS_DEF } from '@/lib/mountain-weather/readers/nws-alerts-active-ne';
 import { SPC_CONVECTIVE_OUTLOOK_DEF } from '@/lib/mountain-weather/readers/spc-convective-outlook';
+import { formatEt } from '@/lib/mountain-weather/format-display';
 
 function formatValid(summary: { effective: string | null; expires: string | null; onset: string | null; ends: string | null }) {
   const from = summary.effective ?? summary.onset;
@@ -28,7 +29,7 @@ export function MapsSection({ data, place }: MapsSectionProps) {
   );
 
   const alertBundle = data.alerts.status === 'ok' && data.alerts.data ? data.alerts.data : null;
-  const issued = data.alerts.issuedAt ? new Date(data.alerts.issuedAt).toLocaleString() : null;
+  const issued = data.alerts.issuedAt ? formatEt(data.alerts.issuedAt) : null;
 
   return (
     <CollapsibleSection title="Maps &amp; imagery" subtitle="Radar, satellite, lightning, alerts — government sources only">

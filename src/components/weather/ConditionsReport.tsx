@@ -4,6 +4,7 @@ import { WeatherGlanceList } from '@/components/weather/WeatherGlanceList';
 import { Card } from '@/components/hub/Card';
 import type { ExtremeReport } from '@/lib/weather-extremes';
 import type { HubGlance } from '@/lib/mountain-weather/hub-glance';
+import { formatObservationAge } from '@/lib/mountain-weather/format-display';
 
 export function ConditionsReport({
   report,
@@ -42,7 +43,7 @@ export function ConditionsReport({
                   <span className="text-gray-600">
                     {' '}
                     · {stat.stationId}
-                    {stat.ageMinutes != null ? ` · ${stat.ageMinutes} min ago` : ''}
+                    {stat.ageMinutes != null ? ` · ${formatObservationAge(stat.ageMinutes)}` : ''}
                   </span>
                 ) : null}
               </li>
