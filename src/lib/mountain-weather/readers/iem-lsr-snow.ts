@@ -34,7 +34,7 @@ export function readIemLsrSnow(office: MountainWfo): Promise<SourceResult<IemLsr
       const fetched = await fetchSourceBody(def.url);
       return buildSourceResult({ fetched, parse: parseIemLsrSnowGeoJson });
     };
-    reader = cachedSourceRead({ cacheKey: [def.id, sts.slice(0, 10)], def, read: load });
+    reader = cachedSourceRead({ cacheKey: [def.id, sts.slice(0, 10), 'ne-state-filter-v1'], def, read: load });
     readerCache.set(office, reader);
   }
   return reader();

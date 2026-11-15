@@ -1,6 +1,8 @@
 'use client';
 
-import { forwardRef, useEffect, useRef } from 'react';
+import { forwardRef, useEffect, useRef, useState } from 'react';
+import { MapUnavailableFallback } from '@/components/mountain-weather/MapUnavailableFallback';
+import { canUseWebGl2 } from '@/lib/map-webgl';
 import { LngLatBounds, Map as MlMap, NavigationControl, Popup, setWorkerUrl } from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { MAP_CENTER, NEUTRAL_PIN_COLOR, OPENFREEMAP_STYLE_URL } from '@/lib/map';
@@ -22,18 +24,31 @@ type Props = {
 export function MountainWeatherPlacesMap({ pins, alertMap, focus, className }: Props) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<MlMap | null>(null);
+  const [mapFailed, setMapFailed] = useState(() =>
+    typeof document !== 'undefined' ? !canUseWebGl2() : false,
+  );
 
   useEffect(() => {
-    if (!containerRef.current || mapRef.current) return;
-    const map = new MlMap({
+    if (!containerRef.current || mapRef.current || mapFailed) return;
+    let map: MlMap;
+    try {
+      map = new MlMap({
       container: containerRef.current,
       style: OPENFREEMAP_STYLE_URL,
       center: [MAP_CENTER.lng, MAP_CENTER.lat],
       zoom: 6,
       attributionControl: false,
-    });
+      });
+    } catch {
+      queueMicrotask(() => setMapFailed(true));
+      return;
+    }
     map.addControl(new NavigationControl({ showCompass: false }), 'top-right');
     mapRef.current = map;
+    map.on('error', (event) => {
+      const msg = event.error?.message ?? String(event.error ?? '');
+      if (/webgl|gpu|context/i.test(msg)) setMapFailed(true);
+    });
 
     map.on('load', () => {
       if (alertMap?.mapGeoJson.features.length) {
@@ -149,7 +164,11 @@ export function MountainWeatherPlacesMap({ pins, alertMap, focus, className }: P
       map.remove();
       mapRef.current = null;
     };
-  }, [pins, alertMap, focus]);
+  }, [pins, alertMap, focus, mapFailed]);
+
+  if (mapFailed) {
+    return <MapUnavailableFallback pins={pins} className={className} />;
+  }
 
   return (
     <div className={className}>

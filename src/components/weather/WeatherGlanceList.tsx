@@ -26,11 +26,17 @@ export function WeatherGlanceRow({ glance }: { glance: HubGlance & { id?: string
         <span className="min-w-0 flex-1">
           <span className="t-headline block truncate text-ui-label">{glance.title}</span>
           <span className="t-footnote block break-words text-ui-label-2 sm:truncate">{glance.phrase}</span>
+          {glance.representativeNote ? (
+            <span className="t-caption block text-ui-label-2">{glance.representativeNote}</span>
+          ) : null}
           {glance.alert ? <Pill tone="warn" className="mt-1">{glance.alert}</Pill> : null}
         </span>
         <span className="shrink-0 text-right">
           <span className="t-headline block tabular-nums text-ui-label">{degrees(glance.high, glance.low)}</span>
           {extras ? <span className="t-caption block text-ui-label-2">{extras}</span> : null}
+          {glance.windowLabel ? (
+            <span className="t-caption block text-ui-label-2">{glance.windowLabel}</span>
+          ) : null}
         </span>
       </Link>
     </li>

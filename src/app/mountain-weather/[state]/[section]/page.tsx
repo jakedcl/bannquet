@@ -51,10 +51,10 @@ export default async function MountainSectionPage({
           <Link href={mountainWeatherPath(stateCode)} className="font-bold underline">{stateEntry.name}</Link>
         </p>
         <LargeTitle title={section.title} />
-        <ScopeBulletinsSection bundles={bulletins} />
         <Card title="Places" padded={false}>
           <WeatherGlanceList items={glances} />
         </Card>
+        <ScopeBulletinsSection bundles={bulletins} />
         <MoreSourcesSection groups={moreSources} />
       </div>
     </PageWrapper>

@@ -31,6 +31,7 @@ import { styleForBasemap } from '@/lib/map-style';
 import { LayersIcon } from '@/components/hub/Icons';
 import { leafFromProps, leafMeta, type MapLeaf } from '@/lib/map-leaf';
 import type { MapFeatureCollection } from '@/lib/posts';
+import { canUseWebGl2 } from '@/lib/map-webgl';
 
 type Leaf = MapLeaf;
 
@@ -141,6 +142,9 @@ export default function GroupMap({
   const controlsRef = useRef<HTMLDivElement | null>(null);
   const [terrain, setTerrain] = useState(false);
   const popupRef = useRef<Popup | null>(null);
+  const [mapFailed, setMapFailed] = useState(() =>
+    typeof document !== 'undefined' ? !canUseWebGl2() : false,
+  );
 
   useEffect(() => {
     pointsRef.current = points;
@@ -152,9 +156,11 @@ export default function GroupMap({
 
   useEffect(() => {
     const container = containerRef.current;
-    if (!container || mapRef.current) return;
+    if (!container || mapRef.current || mapFailed) return;
 
-    const map = new MlMap({
+    let map: MlMap;
+    try {
+      map = new MlMap({
       container,
       style: OPENFREEMAP_STYLE_URL,
       center: [focus?.lng ?? MAP_CENTER.lng, focus?.lat ?? MAP_CENTER.lat],
@@ -171,9 +177,17 @@ export default function GroupMap({
       doubleClickZoom: !preview,
       touchZoomRotate: !preview,
       touchPitch: !preview,
-    });
+      });
+    } catch {
+      queueMicrotask(() => setMapFailed(true));
+      return;
+    }
     if (!preview) map.addControl(new NavigationControl({ visualizePitch: true }), 'top-right');
     mapRef.current = map;
+    map.on('error', (event) => {
+      const msg = event.error?.message ?? String(event.error ?? '');
+      if (/webgl|gpu|context/i.test(msg)) setMapFailed(true);
+    });
     requestAnimationFrame(() => map.resize());
 
     map.on('click', (event) => {
@@ -428,7 +442,7 @@ export default function GroupMap({
       map.off('click', 'pin-markers', onPin);
       map.off('click', 'routes', onRoute);
     };
-  }, [terrain, basemap, picking, preview]);
+  }, [terrain, basemap, picking, preview, mapFailed]);
 
   useEffect(() => {
     const map = mapRef.current;
@@ -468,6 +482,18 @@ export default function GroupMap({
   const attribution = terrain
     ? `${BASEMAP_ATTRIBUTION[basemap]}. ${TERRAIN_ATTRIBUTION}`
     : BASEMAP_ATTRIBUTION[basemap];
+
+  if (mapFailed) {
+    return (
+      <div className={`flex h-full min-h-48 w-full flex-col items-center justify-center border border-[#5c3a1e]/40 bg-beige/90 p-4 text-center ${className}`}>
+        <p className="text-sm font-bold text-gray-900">Map unavailable</p>
+        <p className="mt-2 max-w-md text-sm text-gray-800">
+          This browser cannot use WebGL2, so the interactive map did not start. Lists, weather, and other pages still
+          work. Try another browser or enable hardware acceleration.
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className={`relative h-full w-full ${className}`}>

@@ -61,12 +61,18 @@ async function loadSectionGlance(
       low: null,
       precip: null,
       wind: null,
+      windowLabel: 'Next 48 hours',
       phrase: 'Forecast unavailable',
       alert: null,
+      representativeNote: null,
     };
   }
   const result = await readNwsGridBaseline(representative);
-  const glance = hubGlanceFromBaseline(result, { title: section.title, href }, now);
+  const glance = hubGlanceFromBaseline(result, {
+    title: section.title,
+    href,
+    representativeNote: `NWS grid near ${representative.name}`,
+  }, now);
   return { id: section.id, ...glance };
 }
 

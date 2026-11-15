@@ -7,6 +7,8 @@ import {
   maxGustMph,
   parseMph,
   summitHighLow,
+  dailyHighLowFromSnippets,
+  formatWindSummary,
   type GlancePeriod,
 } from './weather-glance';
 
@@ -141,6 +143,22 @@ test('summit high and low use the next day pair', () => {
     period({ temperature: 42 }),
     period({ name: 'Saturday Night', temperature: 28, isDaytime: false }),
   ]), { high: 42, low: 28 });
+});
+
+test('daily NWS rows use secondaryTemp for overnight low', () => {
+  assert.deepEqual(
+    dailyHighLowFromSnippets([
+      { temperature: 25, secondaryTemp: 18, startTime: '2026-11-15T12:00:00Z' },
+      { temperature: 30, secondaryTemp: 22, startTime: '2026-11-16T12:00:00Z' },
+    ]),
+    { high: 25, low: 18 },
+  );
+});
+
+test('formatWindSummary keeps sustained and gust separate', () => {
+  assert.equal(formatWindSummary(12, 25).line, '12 mph sustained · gusts to 25 mph');
+  assert.equal(formatWindSummary(12, null).line, '12 mph sustained');
+  assert.equal(formatWindSummary(null, 20).line, '20 mph gusts');
 });
 
 test('summit high/low use today high and tonight low, not two daytime periods', () => {

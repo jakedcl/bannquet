@@ -26,8 +26,11 @@ export type ExtremeSpot = {
 
 export type ExtremeReport = {
   success: boolean;
+  /** True when measured spots failed but place forecast lines still loaded. */
+  partial?: boolean;
   stats: ExtremeStat[];
   spots: ExtremeSpot[];
+  glances?: import('@/lib/mountain-weather/hub-glance').HubGlance[];
   error?: string;
   attempted: number;
   succeeded: number;
@@ -97,6 +100,7 @@ export async function loadWeatherExtremes(): Promise<ExtremeReport & { glances?:
 
   return {
     success: report.success,
+    partial: report.partial,
     stats: extremeStatsFromSpots(spots),
     spots,
     glances: report.glances,
