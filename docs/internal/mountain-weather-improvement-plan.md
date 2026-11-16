@@ -1,6 +1,6 @@
 # Mountain weather improvement plan
 
-Status: proposed, 2026-11-16. Scope: public routes under `/mountain-weather/**` only. This is a planning PR; it changes no runtime behavior.
+Status: implementation in PR #57, 2026-11-16. Scope: public routes under `/mountain-weather/**` only. Review the code and preview before merge.
 
 ## Goal
 
@@ -89,7 +89,7 @@ Likely files: `SnowSection.tsx`, `snow/avalanche/page.tsx`, `AvalancheSection.ts
 
 ## Delivery order and verification
 
-Build these as **small implementation PRs**, not one large rewrite: (1) peak forecast hierarchy, (2) Conditions provenance, (3) WPC assets, (4) local snow reports and hub geography, (5) copy/AVG cleanup. If WPC graphics are currently broken, its fix may ship before the layout change. Keep each PR reviewable and include before/after screenshots for visual changes.
+The implementation on this branch addresses (1) peak forecast hierarchy, (2) Conditions provenance, (3) WPC cycle parsing and graphic fallback, (4) local snow reports and hub geography, and (5) copy/AVG cleanup. Review each area separately in this PR. WPC asset delivery remains dependent on the upstream server and browser; its fallback links to the official product when an image cannot load.
 
 For each PR, run the repo's relevant focused tests plus `npm run lint`, `npm run typecheck`, `npm test`, and `npm run build` as required by its CI. Test the preview at phone and desktop widths across Marcy, Washington, one place with no mountain-specific product, Conditions, Snow, Avalanche, and Maps. Exercise fresh, stale, missing, and off-season data; inspect links and source timestamps. After Jake merges, check the production page before calling an issue fixed. Do not merge this plan or any implementation PR without Jake's go-ahead.
 

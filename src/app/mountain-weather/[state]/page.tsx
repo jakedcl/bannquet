@@ -55,7 +55,7 @@ export default async function MountainStatePage({ params }: { params: Promise<{ 
         <ScopeBulletinsSection bundles={bulletins} />
         <Card title="Places by section" padded={false}>
           <p className="border-b border-[#5c3a1e]/20 px-3 py-2 text-xs text-gray-700">
-            One NWS baseline line per catalog place (same cache as place pages).
+            NWS forecasts for each place. Open a place for hourly detail and nearby measured conditions.
           </p>
           <div className="divide-y divide-[#5c3a1e]/15">
             {sections.map((group) => (

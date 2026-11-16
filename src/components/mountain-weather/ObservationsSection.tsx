@@ -99,7 +99,6 @@ function StationBlock({
           Distant station: {binding.distanceMi} mi away, may not reflect conditions here.
         </p>
       ) : null}
-      <p className="text-xs text-gray-600">{binding.bindReason}</p>
       {result.status === 'not-in-issuance' ? (
         <NotInIssuanceNote
           label="Weather observation"

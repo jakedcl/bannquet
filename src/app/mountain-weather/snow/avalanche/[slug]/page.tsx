@@ -47,7 +47,7 @@ export default async function AvalancheAvgPointPage({ params }: { params: Promis
             <Link href={placeHref} className="font-bold underline">
               {catalog?.name ?? point.examplePlaceId}
             </Link>{' '}
-            · {binding.bindReason}
+            · Check this place&apos;s forecast and conditions alongside the guidance.
           </p>
         ) : null}
         {placeAvalanche && binding ? (

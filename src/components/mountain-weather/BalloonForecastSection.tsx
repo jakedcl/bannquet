@@ -88,7 +88,7 @@ export function BalloonForecastSection({ result }: { result: SourceResult<Balloo
           </p>
         ))}
         <p className="text-xs text-gray-800">
-          <span className="font-bold">Region binding:</span> {regionMatch}
+          <span className="font-bold">Nearby region:</span> {regionMatch}
         </p>
         {region.cityLines.map((line) => (
           <p key={line} className="text-xs text-gray-800 whitespace-pre-wrap">

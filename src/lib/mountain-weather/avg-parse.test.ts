@@ -54,6 +54,7 @@ test('GYX winter fixture includes Washington and Franconia points', () => {
   const snowLevel = wash.grids[0]?.rows.find((r) => r.key.includes('snow_level'));
   assert.ok(snowLevel, 'GYX Washington block should include snow level row when present');
   assert.ok(wash.grids.length >= 1);
+  assert.equal(wash.grids[0].rows.some((row) => /^\d{1,2}[AP]$/.test(row.label)), false);
 });
 
 test('IEM AFOS archive fixture parses Smugglers block', () => {

@@ -32,7 +32,7 @@ export function MapsSection({ data, place }: MapsSectionProps) {
   const issued = data.alerts.issuedAt ? formatEt(data.alerts.issuedAt) : null;
 
   return (
-    <CollapsibleSection title="Maps &amp; imagery" subtitle="Radar, satellite, lightning, alerts — government sources only">
+    <CollapsibleSection title="Maps & imagery" subtitle="Radar, satellite, lightning, alerts — government sources only">
       {place && data.radarSiteId ? (
         <p className="text-sm text-gray-700">
           Nearest WSR-88D loop for NWS {place.office}: {radarSiteLabel(data.radarSiteId)} ·{' '}
@@ -92,7 +92,7 @@ export function MapsSection({ data, place }: MapsSectionProps) {
       <section className="retro-box border-[#5c3a1e] bg-beige/60 p-4">
         <h3 className="text-sm font-bold uppercase tracking-wide">SPC &amp; CPC outlooks</h3>
         <p className="text-xs text-gray-700">
-          SPC categorical PNGs resolved from each outlook page archive token ·{' '}
+          Official thunderstorm outlook maps ·{' '}
           <a href={SPC_CONVECTIVE_OUTLOOK_DEF.url} className="font-bold underline" target="_blank" rel="noopener noreferrer">
             SPC source
           </a>

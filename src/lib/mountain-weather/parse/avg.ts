@@ -44,6 +44,9 @@ function rowLabelKey(label: string): string {
 function parseDataLine(line: string): AvgTableRow | null {
   const trimmed = line.trim();
   if (!trimmed || trimmed.startsWith('Date ') || trimmed.startsWith('DATE ')) return null;
+  // The source prints a second clock row (7P, 10P...) beneath TIME (LT).
+  // It supplies column labels, not forecast measurements.
+  if (/^\d{1,2}[AP](?:\s+\d{1,2}[AP]){3,}$/i.test(trimmed)) return null;
   const match = trimmed.match(/^([\dA-Za-z][\dA-Za-z0-9 /()%:\-]+?)\s{2,}(.+)$/);
   const labelOnly = trimmed.match(/^([\dA-Za-z][\dA-Za-z0-9 /()%:\-]+?)\s*$/);
   const label = (match?.[1] ?? labelOnly?.[1])?.trim();
