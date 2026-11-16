@@ -5,6 +5,7 @@ import test from 'node:test';
 import { parseNohrscStationSnowText } from '@/lib/mountain-weather/parse/nohrsc-stations';
 import { parsePnsSnowReports } from '@/lib/mountain-weather/parse/pns';
 import { snowMeasuredBindingsForPlace } from '@/lib/mountain-weather/snow-measured-bindings';
+import { firstWpcCycle } from '@/lib/mountain-weather/readers/wpc-pwpf-snow';
 
 const FIX = path.resolve(process.cwd(), 'src/lib/mountain-weather/fixtures');
 
@@ -30,4 +31,10 @@ test('mount marcy has nearest measured snow bindings', () => {
   const b = snowMeasuredBindingsForPlace('mount-marcy');
   assert.ok(b.length >= 1);
   assert.ok(b.every((row) => row.distanceMi <= 40));
+});
+
+test('WPC cycle list selects the requested forecast duration from a space-separated file', () => {
+  assert.equal(firstWpcCycle('2026111612f024 2026111612f030\n2026111612f036', 24), '2026111612f024');
+  assert.equal(firstWpcCycle('2026111612f048 2026111612f054', 48), '2026111612f048');
+  assert.equal(firstWpcCycle('bad source text', 24), null);
 });

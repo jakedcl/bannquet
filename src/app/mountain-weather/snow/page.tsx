@@ -20,8 +20,8 @@ export default async function MountainSnowHubPage() {
         nerfcImages: hub.nerfc.data ?? [],
         nohrscImages: hub.nohrscImgs.data ?? [],
         measured: [],
-        pns: marcySnow.pns,
-        lsrSnow: marcySnow.lsrSnow,
+        pns: null,
+        lsrSnow: [],
         mansfieldStake: hub.mansfieldStake?.data?.row
           ? {
               snowNew: hub.mansfieldStake.data.row.snowNew,
@@ -41,6 +41,7 @@ export default async function MountainSnowHubPage() {
           </Link>
         </nav>
         <LargeTitle title="Snow" eyebrow="Hub" />
+        <p className="text-sm text-gray-700">Regional maps and guidance are below. For nearby measured snow and storm reports, open a place page such as <Link href="/mountain-weather/new-york/adirondack-high-peaks/mount-marcy" className="font-bold underline">Mount Marcy</Link>.</p>
         <ul className="list-disc space-y-2 pl-5 text-sm">
           <li>
             <Link href="/mountain-weather/snow/avalanche" className="font-bold underline">

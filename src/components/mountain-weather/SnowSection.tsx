@@ -7,7 +7,8 @@ import { WPC_PWPF_SNOW_DEF } from '@/lib/mountain-weather/readers/wpc-pwpf-snow'
 import { nwsPnsSourceDef } from '@/lib/mountain-weather/readers/nws-pns-latest';
 import { iemLsrSnowSourceDef } from '@/lib/mountain-weather/readers/iem-lsr-snow';
 import { NWS_BTV_MANSFIELD_HYD_DEF } from '@/lib/mountain-weather/registry';
-import { snowMeasuredRuleSummary } from '@/lib/mountain-weather/snow-measured-bindings';
+import { LOCAL_SNOW_RADIUS_MI } from '@/lib/mountain-weather/local-snow-reports';
+import { SnowRemoteImage } from '@/components/mountain-weather/SnowRemoteImage';
 
 function SnowImageGrid({
   title,
@@ -27,9 +28,8 @@ function SnowImageGrid({
         {images.map((img) => (
           <figure key={img.id} className="space-y-1">
             <figcaption className="text-xs font-bold">{img.label}</figcaption>
-            {img.validTimeLabel ? <p className="text-[10px] text-gray-700">Valid/cycle: {img.validTimeLabel}</p> : null}
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={img.url} alt={img.label} className="max-w-full border border-[#5c3a1e]/30 bg-white" />
+            {img.validTimeLabel ? <p className="text-xs text-gray-700">Valid {img.validTimeLabel}</p> : null}
+            <SnowRemoteImage key={img.url} src={img.url} alt={img.label} sourceUrl={sourceUrl} />
             <p className="text-[10px] text-gray-700">
               {img.org} ·{' '}
               <a href={img.url} className="font-bold underline" target="_blank" rel="noopener noreferrer">
@@ -55,7 +55,7 @@ function MeasuredBlock({ data }: { data: PlaceSnowData }) {
   }
   return (
     <CollapsibleSection title="Nearest measured snow" subtitle="NOHRSC / CoCoRaHS station table" defaultOpen>
-      <p className="text-xs text-gray-700">{snowMeasuredRuleSummary()}</p>
+      <p className="text-xs text-gray-700">These are station snow depths, not summit conditions unless marked Summit. Check the station elevation, distance, and report time.</p>
       <ul className="space-y-3">
         {data.measured.map((row) => {
           const b = row.binding;
@@ -85,7 +85,6 @@ function MeasuredBlock({ data }: { data: PlaceSnowData }) {
                   Distant station: {b.distanceMi} mi away, may not reflect conditions here.
                 </p>
               ) : null}
-              <p className="text-xs text-gray-600">{b.bindReason}</p>
               <p className="mt-1 text-base font-bold">
                 {row.value === null ? (
                   <span className="text-gray-800">No report / missing</span>
@@ -111,7 +110,7 @@ function MeasuredBlock({ data }: { data: PlaceSnowData }) {
   );
 }
 
-export function SnowSection({ data }: { data: PlaceSnowData }) {
+export function SnowSection({ data, placeName }: { data: PlaceSnowData; placeName?: string }) {
   const pnsDef = nwsPnsSourceDef(data.office);
   const lsrDef = iemLsrSnowSourceDef(data.office);
 
@@ -120,6 +119,7 @@ export function SnowSection({ data }: { data: PlaceSnowData }) {
       <h2 className="text-lg font-bold uppercase tracking-wide text-gray-900">Snow</h2>
       <p className="text-sm text-gray-700">
         WPC probabilities, winter severity, modeled snow, storm reports, and nearest station depth.{' '}
+        <a href="https://www.wpc.ncep.noaa.gov/pwpf/wwd_percentiles_new.php" className="font-bold underline" target="_blank" rel="noopener noreferrer">WPC snow forecast</a>{' · '}
         <a href={data.winterPageUrl} className="font-bold underline" target="_blank" rel="noopener noreferrer">
           NWS winter page ({data.office})
         </a>
@@ -129,6 +129,7 @@ export function SnowSection({ data }: { data: PlaceSnowData }) {
         </a>
       </p>
       <SnowImageGrid title="WPC probabilistic snowfall" org={WPC_PWPF_SNOW_DEF.org} sourceUrl={WPC_PWPF_SNOW_DEF.url} images={data.wpcImages} />
+      {!data.wpcImages.length ? <p className="text-sm text-gray-700">Current WPC graphics are unavailable here. Use the official WPC snow forecast linked above.</p> : null}
       <SnowImageGrid title="NOHRSC modeled layers" org={NOHRSC_NE_INDEX_DEF.org} sourceUrl={NOHRSC_NE_INDEX_DEF.url} images={data.nohrscImages} />
       <SnowImageGrid title="NERFC / NOHRSC composites" org={NERFC_SNOW_OPS_DEF.org} sourceUrl={NERFC_SNOW_OPS_DEF.url} images={data.nerfcImages} />
       {data.mansfieldStake ? (
@@ -146,7 +147,7 @@ export function SnowSection({ data }: { data: PlaceSnowData }) {
       ) : null}
       <MeasuredBlock data={data} />
       {data.pns ? (
-      <CollapsibleSection title={`Storm reports · PNS (${data.office})`} subtitle={pnsDef.org}>
+      <CollapsibleSection title={`Office-wide storm bulletin · PNS (${data.office})`} subtitle={`${pnsDef.org} · may include distant locations`}>
           <>
             {data.pns.parseReliable ? (
               <ul className="space-y-1 text-xs">
@@ -172,16 +173,18 @@ export function SnowSection({ data }: { data: PlaceSnowData }) {
           </>
       </CollapsibleSection>
       ) : null}
-      {data.lsrSnow.length ? (
-      <CollapsibleSection title={`LSR snowfall (14d, ${data.office})`} subtitle={lsrDef.org}>
+      {placeName ? (
+      <CollapsibleSection title={`Snowfall reports near ${placeName} (within ${LOCAL_SNOW_RADIUS_MI} mi, past 14 days)`} subtitle={`${lsrDef.org} · ${data.office} feed`}>
+          {data.lsrSnow.length ? (
           <ul className="space-y-1 text-xs">
             {data.lsrSnow.slice(0, 25).map((e) => (
               <li key={e.id}>
-                {e.valid} · {e.city ?? '—'}, {e.county ?? ''} {e.state ?? ''} · {e.magnitude ?? '—'} {e.unit ?? ''}{' '}
+                {e.distanceMi?.toFixed(1) ?? '—'} mi away · {e.valid} · {e.city ?? '—'}, {e.county ?? ''} {e.state ?? ''} · {e.magnitude ?? '—'} {e.unit ?? ''}{' '}
                 {e.remark ? `· ${e.remark}` : ''}
               </li>
             ))}
           </ul>
+          ) : <p className="text-sm">No nearby snowfall reports in the past 14 days. This does not mean there is no snow.</p>}
         <p className="text-xs text-gray-700">
           <a href={lsrDef.url} className="font-bold underline" target="_blank" rel="noopener noreferrer">
             IEM LSR GeoJSON source
