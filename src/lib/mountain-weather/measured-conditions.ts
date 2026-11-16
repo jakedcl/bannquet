@@ -4,6 +4,7 @@ import { mountainWeatherPath } from '@/lib/mountain-weather/slugs';
 import { readNwsGridBaseline } from '@/lib/mountain-weather/readers/nws-grid-baseline';
 import { readNwsStationLatest } from '@/lib/mountain-weather/readers/nws-station';
 import { visibleStationBindings } from '@/lib/mountain-weather/station-bindings';
+import type { StationObsKind } from '@/lib/mountain-weather/station-bindings';
 import {
   stationHasPlaceholderName,
   stationMeasuredScalars,
@@ -36,6 +37,10 @@ export type MeasuredConditionSpot = {
   href: string;
   stationId: string;
   stationName: string | null;
+  stationKind: StationObsKind;
+  stationDistanceMi: number;
+  stationElevationFt: number | null;
+  elevationDiffFt: number | null;
   observedAt: string | null;
   ageMinutes: number | null;
   temperature: number;
@@ -128,6 +133,10 @@ export async function loadMountainConditionsReport(now = new Date()): Promise<Mo
       href: mountainWeatherPath(job.stateCode, job.sectionId, job.place.id),
       stationId: binding.stationId,
       stationName: binding.stationName,
+      stationKind: binding.kind,
+      stationDistanceMi: binding.distanceMi,
+      stationElevationFt: binding.stationElevationFt,
+      elevationDiffFt: binding.elevationDiffFt,
       observedAt: scalars.observedAt,
       ageMinutes: scalars.ageMinutes,
       temperature: temp,
