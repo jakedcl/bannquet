@@ -3,6 +3,7 @@ import Link from 'next/link';
 import PageWrapper from '@/components/ui/PageWrapper';
 import { LargeTitle } from '@/components/hub/SectionHeader';
 import { BasicForecastSection } from '@/components/mountain-weather/BasicForecastSection';
+import { ForecastAtAGlance } from '@/components/mountain-weather/ForecastAtAGlance';
 import { AllLocationsSection } from '@/components/mountain-weather/AllLocationsSection';
 import { MountainForecastSection } from '@/components/mountain-weather/MountainForecastSection';
 import { AvgForecastSection } from '@/components/mountain-weather/AvgForecastSection';
@@ -33,6 +34,7 @@ import { readMansfieldPack } from '@/lib/mountain-weather/read-mansfield-pack';
 import { ObservationsSection } from '@/components/mountain-weather/ObservationsSection';
 import { readPlaceObservations } from '@/lib/mountain-weather/read-place-observations';
 import { AvalancheSection } from '@/components/mountain-weather/AvalancheSection';
+import { AvalancheStatus } from '@/components/mountain-weather/AvalancheStatus';
 import { readPlaceAvalanche } from '@/lib/mountain-weather/read-place-avalanche';
 import { readPlaceSnow } from '@/lib/mountain-weather/read-place-snow';
 import { SnowSection } from '@/components/mountain-weather/SnowSection';
@@ -118,21 +120,23 @@ export default async function MountainPlacePage({
           })()}
           NWS {place.office} · {place.lat.toFixed(4)}, {place.lon.toFixed(4)}
         </p>
-        <BulletinsSection bundle={bulletins} />
-        <AvalancheSection data={avalanche} />
-        <SnowSection data={snow} />
-        <MapsSection data={maps} place={place} />
-        <SkySection data={sky} />
-        <GroundAccessSection data={ground} />
-        <FzlForecastSection result={fzl} />
+        <ForecastAtAGlance result={baseline} placeName={place.name} placeElevationFt={place.elevationFt} />
+        <AvalancheStatus data={avalanche} />
         <MountainForecastSection result={mtnPoint} placeName={place.name} />
+        <BasicForecastSection result={baseline} placeName={place.name} placeElevationFt={place.elevationFt} />
+        <ObservationsSection data={observations} placeElevationFt={place.elevationFt} />
+        {avalanche ? <div id="avalanche-guidance"><AvalancheSection data={avalanche} /></div> : null}
+        <FzlForecastSection result={fzl} />
         <RecForecastSection results={rec} />
         {showStandaloneAvg ? <AvgForecastSection results={avg} /> : null}
         <AllLocationsSection results={allLocations} />
         <BalloonForecastSection result={balloon} />
         <MansfieldPackSection pack={mansfieldPack} />
-        <ObservationsSection data={observations} placeElevationFt={place.elevationFt} />
-        <BasicForecastSection result={baseline} placeName={place.name} placeElevationFt={place.elevationFt} />
+        <BulletinsSection bundle={bulletins} />
+        <SnowSection data={snow} placeName={place.name} />
+        <MapsSection data={maps} place={place} />
+        <SkySection data={sky} />
+        <GroundAccessSection data={ground} />
         <MoreSourcesSection groups={moreSources} />
       </div>
     </PageWrapper>
