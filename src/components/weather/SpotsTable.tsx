@@ -15,9 +15,19 @@ export function SpotsTable({ spots }: { spots: ExtremeSpot[] }) {
     },
     {
       id: 'station',
-      header: 'Station',
+      header: 'Measured at',
       sortValue: (row) => row.stationId ?? '',
-      cell: (row) => row.stationId ?? '—',
+      cell: (row) => row.stationId ? (
+        <span>
+          <strong>{row.stationName ?? row.stationId} ({row.stationId})</strong>
+          <span className="block text-xs text-gray-700">
+            {row.stationKind === 'summit' ? 'Summit station' : row.stationKind === 'valley' ? 'Nearby valley station' : row.stationKind === 'nearby-higher' ? 'Nearby higher station' : 'Nearby station'}
+            {row.stationDistanceMi != null ? ` · ${row.stationDistanceMi.toFixed(1)} mi away` : ''}
+            {row.stationElevationFt != null ? ` · ${row.stationElevationFt.toLocaleString('en-US')} ft station` : ' · elevation unknown'}
+            {row.elevationDiffFt != null ? ` · ${Math.abs(row.elevationDiffFt).toLocaleString('en-US')} ft ${row.elevationDiffFt >= 0 ? 'below' : 'above'} place` : ''}
+          </span>
+        </span>
+      ) : '—',
     },
     {
       id: 'age',

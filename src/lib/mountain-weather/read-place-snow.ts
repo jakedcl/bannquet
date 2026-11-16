@@ -16,6 +16,7 @@ import {
   wssiUrlForOffice,
 } from '@/lib/mountain-weather/readers/wpc-pwpf-snow';
 import { snowMeasuredBindingsForPlace } from '@/lib/mountain-weather/snow-measured-bindings';
+import { localSnowReports } from '@/lib/mountain-weather/local-snow-reports';
 
 function formatEt(iso: string | null): string | null {
   if (!iso) return null;
@@ -107,7 +108,7 @@ export async function readPlaceSnow(place: MountainPlace): Promise<PlaceSnowData
     winterPageUrl: nwsWinterPageUrl(place.office),
     wssiUrl: wssiUrlForOffice(place.office),
     pns: pns.status === 'ok' ? pns.data : null,
-    lsrSnow: lsr.status === 'ok' ? lsr.data ?? [] : [],
+    lsrSnow: lsr.status === 'ok' ? localSnowReports(lsr.data ?? [], place) : [],
     measured: dedupeReports(measuredRaw),
     mansfieldStake,
   };

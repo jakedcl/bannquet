@@ -61,3 +61,11 @@ test('missing wind gust stays null for JSON extremes', () => {
   const stats = extremeStatsFromSpots([spot]);
   assert.equal(stats[0]?.value, '10 mph');
 });
+
+test('shared valley station is attributed as one measurement', () => {
+  const marcy: ExtremeSpot = { ...spots[0], stationId: 'KSLK', stationName: 'Adirondack Regional Airport', stationKind: 'valley' };
+  const ampersand: ExtremeSpot = { ...marcy, mountain: 'Ampersand' };
+  const stats = extremeStatsFromSpots([marcy, ampersand]);
+  assert.equal(stats.length, 3);
+  assert.match(stats[0].location, /Adirondack Regional Airport \(KSLK, valley station\)/);
+});

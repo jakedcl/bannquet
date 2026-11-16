@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { parseIemLsrSnowGeoJson } from '@/lib/mountain-weather/parse/iem-lsr';
+import { localSnowReports } from '@/lib/mountain-weather/local-snow-reports';
 
 const fixture = {
   type: 'FeatureCollection',
@@ -52,4 +53,19 @@ test('parseIemLsrSnowGeoJson drops out-of-region LSR states', () => {
   assert.equal(rows.length, 2);
   assert.ok(rows.every((r) => r.state === 'NY' || r.state === 'VT'));
   assert.equal(rows.some((r) => r.state === 'CO'), false);
+});
+
+test('place reports exclude distant events and duplicate IDs while retaining nearby events', () => {
+  const near = { id: 'one', valid: '2026-11-15T12:00:00Z', city: 'Keene', county: 'Essex', state: 'NY', lat: 44.2, lon: -73.9, magnitude: 6, unit: 'in', remark: null };
+  const rows = localSnowReports([
+    { ...near, id: 'other-feed-id' },
+    { ...near, lat: 42.6, lon: -75.1, city: 'Otsego' },
+    near,
+    { ...near, id: 'bad-coordinates', lat: 999 },
+    { ...near, id: 'old', valid: '2026-10-01T12:00:00Z' },
+  ], { lat: 44.1, lon: -73.9 }, Date.parse('2026-11-16T12:00:00Z'));
+  assert.equal(rows.length, 1);
+  assert.equal(rows[0].city, 'Keene');
+  assert.ok((rows[0].distanceMi ?? Infinity) < 35);
+  assert.deepEqual(localSnowReports([], { lat: 44.1, lon: -73.9 }), []);
 });

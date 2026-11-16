@@ -40,6 +40,7 @@ export type IemLsrSnowEvent = {
   magnitude: number | null;
   unit: string | null;
   remark: string | null;
+  distanceMi?: number;
 };
 
 export type MeasuredSnowBindingKind = 'summit' | 'valley' | 'base' | 'nearby-higher';

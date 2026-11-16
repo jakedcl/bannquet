@@ -46,7 +46,7 @@ export function GroundAccessSection({ data }: { data: PlaceGroundData }) {
             />
           </dl>
         ) : (
-          <p className="text-sm text-gray-700">No county FIPS binding for this place.</p>
+          <p className="text-sm text-gray-700">County-level drought information is unavailable for this place.</p>
         )}
         <p className="mt-1 text-xs text-gray-600">
           <a href={USDM_COUNTY_DROUGHT_DEF.url} className="underline" target="_blank" rel="noopener noreferrer">
