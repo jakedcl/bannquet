@@ -110,7 +110,7 @@ function MeasuredBlock({ data }: { data: PlaceSnowData }) {
   );
 }
 
-export function SnowSection({ data, placeName }: { data: PlaceSnowData; placeName?: string }) {
+export function SnowSection({ data, placeName, isHub = false }: { data: PlaceSnowData; placeName?: string; isHub?: boolean }) {
   const pnsDef = nwsPnsSourceDef(data.office);
   const lsrDef = iemLsrSnowSourceDef(data.office);
 
@@ -118,8 +118,10 @@ export function SnowSection({ data, placeName }: { data: PlaceSnowData; placeNam
     <>
       <h2 className="text-lg font-bold uppercase tracking-wide text-gray-900">Snow</h2>
       <p className="text-sm text-gray-700">
-        WPC probabilities, winter severity, modeled snow, storm reports, and nearest station depth.{' '}
-        <a href="https://www.wpc.ncep.noaa.gov/pwpf/wwd_percentiles_new.php" className="font-bold underline" target="_blank" rel="noopener noreferrer">WPC snow forecast</a>{' · '}
+        {isHub ? 'Regional WPC probabilities and modeled snow. ' : 'WPC probabilities, winter severity, modeled snow, storm reports, and nearest station depth. '}
+        <a href="https://www.wpc.ncep.noaa.gov/pwpf/wwd_percentiles_new.php" className="font-bold underline" target="_blank" rel="noopener noreferrer">WPC snow forecast</a>
+        {!isHub ? <>
+        {' · '}
         <a href={data.winterPageUrl} className="font-bold underline" target="_blank" rel="noopener noreferrer">
           NWS winter page ({data.office})
         </a>
@@ -127,6 +129,7 @@ export function SnowSection({ data, placeName }: { data: PlaceSnowData; placeNam
         <a href={data.wssiUrl} className="font-bold underline" target="_blank" rel="noopener noreferrer">
           WSSI ({data.office})
         </a>
+        </> : null}
       </p>
       <SnowImageGrid title="WPC probabilistic snowfall" org={WPC_PWPF_SNOW_DEF.org} sourceUrl={WPC_PWPF_SNOW_DEF.url} images={data.wpcImages} />
       {!data.wpcImages.length ? <p className="text-sm text-gray-700">Current WPC graphics are unavailable here. Use the official WPC snow forecast linked above.</p> : null}

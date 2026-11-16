@@ -3,34 +3,31 @@ import PageWrapper from '@/components/ui/PageWrapper';
 import { LargeTitle } from '@/components/hub/SectionHeader';
 import { SnowSection } from '@/components/mountain-weather/SnowSection';
 import { readSnowHub } from '@/lib/mountain-weather/read-place-snow';
-import { getMountainPlace } from '@/lib/mountain-weather/places';
-import { readPlaceSnow } from '@/lib/mountain-weather/read-place-snow';
+import { nwsWinterPageUrl, wssiUrlForOffice } from '@/lib/mountain-weather/readers/wpc-pwpf-snow';
+import type { PlaceSnowData } from '@/lib/mountain-weather/snow-types';
 
 export const dynamic = 'force-dynamic';
 
 export default async function MountainSnowHubPage() {
   const hub = await readSnowHub();
-  const marcy = getMountainPlace('ny', 'adirondack-high-peaks', 'mount-marcy');
-  const marcySnow = marcy ? await readPlaceSnow(marcy) : null;
-
-  const hubAsPlace: Parameters<typeof SnowSection>[0]['data'] | null = marcySnow
-    ? {
-        ...marcySnow,
-        wpcImages: hub.wpc.data ?? [],
-        nerfcImages: hub.nerfc.data ?? [],
-        nohrscImages: hub.nohrscImgs.data ?? [],
-        measured: [],
-        pns: null,
-        lsrSnow: [],
-        mansfieldStake: hub.mansfieldStake?.data?.row
-          ? {
-              snowNew: hub.mansfieldStake.data.row.snowNew,
-              snowTotal: hub.mansfieldStake.data.row.snowTotal,
-              asOf: hub.mansfieldStake.issuedAt,
-            }
-          : null,
-      }
-    : null;
+  const hubSnow: PlaceSnowData = {
+    office: 'BTV',
+    wpcImages: hub.wpc.data ?? [],
+    nerfcImages: hub.nerfc.data ?? [],
+    nohrscImages: hub.nohrscImgs.data ?? [],
+    winterPageUrl: nwsWinterPageUrl('BTV'),
+    wssiUrl: wssiUrlForOffice('BTV'),
+    measured: [],
+    pns: null,
+    lsrSnow: [],
+    mansfieldStake: hub.mansfieldStake?.data?.row
+      ? {
+          snowNew: hub.mansfieldStake.data.row.snowNew,
+          snowTotal: hub.mansfieldStake.data.row.snowTotal,
+          asOf: hub.mansfieldStake.issuedAt,
+        }
+      : null,
+  };
 
   return (
     <PageWrapper>
@@ -67,7 +64,7 @@ export default async function MountainSnowHubPage() {
             ))}
           </ul>
         </section>
-        {hubAsPlace ? <SnowSection data={hubAsPlace} /> : <p className="text-sm">Snow hub data did not load.</p>}
+        <SnowSection data={hubSnow} isHub />
       </div>
     </PageWrapper>
   );
