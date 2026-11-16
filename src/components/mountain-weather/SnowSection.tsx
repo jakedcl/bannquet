@@ -3,7 +3,7 @@ import type { PlaceSnowData } from '@/lib/mountain-weather/snow-types';
 import { NOHRSC_NE_INDEX_DEF } from '@/lib/mountain-weather/readers/nohrsc-northeast-images';
 import { NOHRSC_STATION_SNOWDEPTH_DEF } from '@/lib/mountain-weather/readers/nohrsc-station-snowdepth';
 import { NERFC_SNOW_OPS_DEF } from '@/lib/mountain-weather/readers/nerfc-snow-ops';
-import { WPC_PWPF_SNOW_DEF } from '@/lib/mountain-weather/readers/wpc-pwpf-snow';
+import { WPC_PWPF_SNOW_DEF, WPC_SNOW_PAGE_URL } from '@/lib/mountain-weather/readers/wpc-pwpf-snow';
 import { nwsPnsSourceDef } from '@/lib/mountain-weather/readers/nws-pns-latest';
 import { iemLsrSnowSourceDef } from '@/lib/mountain-weather/readers/iem-lsr-snow';
 import { NWS_BTV_MANSFIELD_HYD_DEF } from '@/lib/mountain-weather/registry';
@@ -119,7 +119,7 @@ export function SnowSection({ data, placeName, isHub = false }: { data: PlaceSno
       <h2 className="text-lg font-bold uppercase tracking-wide text-gray-900">Snow</h2>
       <p className="text-sm text-gray-700">
         {isHub ? 'Regional WPC probabilities and modeled snow. ' : 'WPC probabilities, winter severity, modeled snow, storm reports, and nearest station depth. '}
-        <a href="https://www.wpc.ncep.noaa.gov/pwpf/wwd_percentiles_new.php" className="font-bold underline" target="_blank" rel="noopener noreferrer">WPC snow forecast</a>
+        <a href={WPC_SNOW_PAGE_URL} className="font-bold underline" target="_blank" rel="noopener noreferrer">WPC snow forecast</a>
         {!isHub ? <>
         {' · '}
         <a href={data.winterPageUrl} className="font-bold underline" target="_blank" rel="noopener noreferrer">
@@ -131,7 +131,7 @@ export function SnowSection({ data, placeName, isHub = false }: { data: PlaceSno
         </a>
         </> : null}
       </p>
-      <SnowImageGrid title="WPC probabilistic snowfall" org={WPC_PWPF_SNOW_DEF.org} sourceUrl={WPC_PWPF_SNOW_DEF.url} images={data.wpcImages} />
+      <SnowImageGrid title="WPC probabilistic snowfall" org={WPC_PWPF_SNOW_DEF.org} sourceUrl={WPC_SNOW_PAGE_URL} images={data.wpcImages} />
       {!data.wpcImages.length ? <p className="text-sm text-gray-700">Current WPC graphics are unavailable here. Use the official WPC snow forecast linked above.</p> : null}
       <SnowImageGrid title="NOHRSC modeled layers" org={NOHRSC_NE_INDEX_DEF.org} sourceUrl={NOHRSC_NE_INDEX_DEF.url} images={data.nohrscImages} />
       <SnowImageGrid title="NERFC / NOHRSC composites" org={NERFC_SNOW_OPS_DEF.org} sourceUrl={NERFC_SNOW_OPS_DEF.url} images={data.nerfcImages} />

@@ -14,6 +14,7 @@ export const WPC_PWPF_SNOW_DEF: SourceDef = {
 };
 
 const WPC_48H_CYCLES_URL = 'https://www.wpc.ncep.noaa.gov/pwpf/displayfiles_prb_snow_48hr.txt';
+export const WPC_SNOW_PAGE_URL = 'https://www.wpc.ncep.noaa.gov/pwpf/wwd_percentiles_new.php';
 
 const THRESHOLDS = [
   { id: 'ge01', label: '≥ 1 in' },
