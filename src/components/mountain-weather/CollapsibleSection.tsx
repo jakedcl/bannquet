@@ -16,7 +16,7 @@ export function CollapsibleSection({
   const [open, setOpen] = useState(defaultOpen);
   const panelId = useId();
   return (
-    <section className="retro-box min-w-0 max-w-full border-[#5c3a1e] bg-beige/80">
+    <section className="retro-box border-[#5c3a1e] bg-beige/80">
       <button
         type="button"
         className="flex w-full items-start justify-between gap-3 px-4 py-3 text-left"
@@ -30,7 +30,7 @@ export function CollapsibleSection({
         </span>
         <span className="text-lg font-bold leading-none" aria-hidden="true">{open ? '−' : '+'}</span>
       </button>
-      <div id={panelId} className={`min-w-0 max-w-full border-t border-[#5c3a1e]/40 px-4 py-3 ${open ? 'block' : 'hidden'}`}>
+      <div id={panelId} className={`border-t border-[#5c3a1e]/40 px-4 py-3 ${open ? 'block' : 'hidden'}`}>
         {children}
       </div>
     </section>

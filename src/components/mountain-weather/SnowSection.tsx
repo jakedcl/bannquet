@@ -169,7 +169,7 @@ export function SnowSection({ data, placeName, isHub = false }: { data: PlaceSno
               {data.pns.fullText.trim()}
             </pre>
             <p className="text-xs text-gray-700">
-              Issued {formatEt(data.pns.issuanceTime)} ET ·{' '}
+              Issued {formatEt(data.pns.issuanceTime)} ·{' '}
               <a href={pnsDef.url} className="font-bold underline" target="_blank" rel="noopener noreferrer">
                 Latest PNS
               </a>

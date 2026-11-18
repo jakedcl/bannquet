@@ -78,7 +78,7 @@ export function MountainForecastSection({
         {data.standard?.narratives?.length ? (
           <NarrativeList narratives={data.standard.narratives} placeName={placeName} />
         ) : null}
-        <div className="w-full max-w-full min-w-0 overflow-x-auto overscroll-x-contain">
+        <div className="overflow-x-auto">
           <table className="min-w-full border border-[#5c3a1e]/30 text-xs">
             <thead className="bg-white/70">
               <tr className="text-left uppercase tracking-wide">
@@ -111,7 +111,7 @@ export function MountainForecastSection({
           </table>
         </div>
         {meta.showSnowBlocks && snowIce.length > 0 ? (
-          <div className="w-full max-w-full min-w-0 overflow-x-auto overscroll-x-contain">
+          <div className="overflow-x-auto">
             <p className="text-xs font-bold uppercase text-gray-700">6-hour snow and ice totals</p>
             <table className="mt-1 min-w-full border border-[#5c3a1e]/30 text-xs">
               <thead className="bg-white/70">
@@ -136,7 +136,7 @@ export function MountainForecastSection({
         <p className="text-xs text-gray-700">
           Source: {source?.org} ·{' '}
           <a href={result.sourceUrl} className="font-bold underline" target="_blank" rel="noopener noreferrer">
-            NWS mountain XML ({data.office === 'BTV' ? NWS_MTN_BTV_STANDARD_DEF.url : NWS_MTN_ALY_STANDARD_DEF.url})
+            NWS mountain XML ({data.office})
           </a>
           {result.issuedAt
             ? ` · file Last-Modified ${new Date(result.issuedAt).toLocaleString('en-US', { timeZone: 'America/New_York' })} ET`
