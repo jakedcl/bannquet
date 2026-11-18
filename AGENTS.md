@@ -2,6 +2,8 @@
 
 Mountain weather, trip posts, peaks challenges, trips, and a map for a Northeast hiking crew (Adirondacks, Catskills, Gunks, Greens, Whites, Maine). Live at www.bannquet.com.
 
+Parked product work (fishing redesign, map, Dependabot #55, etc.): see [docs/internal/parked.md](docs/internal/parked.md).
+
 ## Stack
 - Next.js 16.3 (App Router), React 19.2, TypeScript, Tailwind CSS 4, Framer Motion, MapLibre GL 6.
 - Neon Postgres + Drizzle ORM 0.45 (PostGIS). Self-hosted Better Auth (`better-auth` + `neon_auth` schema). Vercel Blob for photos.

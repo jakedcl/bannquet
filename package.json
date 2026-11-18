@@ -1,7 +1,7 @@
 {
   "name": "bannquet",
   "version": "0.1.0",
-  "description": "Northeast mountain weather, maps, and hiking crew trips and peaks",
+  "description": "Northeast mountain and recreation weather, maps, peaks, photos, and posts for a hiking crew",
   "private": true,
   "scripts": {
     "dev": "next dev",

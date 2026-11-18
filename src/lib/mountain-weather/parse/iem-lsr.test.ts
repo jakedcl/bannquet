@@ -63,10 +63,10 @@ const fixture = {
 
 test('parseIemLsrSnowGeoJson drops out-of-region LSR states', () => {
   const rows = parseIemLsrSnowGeoJson(JSON.stringify(fixture));
-  assert.equal(rows.length, 2);
-  assert.ok(rows.every((r) => ['NY', 'VT'].includes(r.state ?? '')));
+  assert.equal(rows.length, 3);
+  assert.ok(rows.every((r) => ['NY', 'VT', 'PA'].includes(r.state ?? '')));
   assert.equal(rows.some((r) => r.state === 'CO'), false);
-  assert.equal(rows.some((r) => r.state === 'PA'), false);
+  assert.equal(rows.some((r) => r.state === 'PA'), true);
 });
 
 test('place reports exclude distant events and duplicate IDs while retaining nearby events', () => {
