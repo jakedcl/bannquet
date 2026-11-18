@@ -15,6 +15,7 @@ function rowKey(label: string): string {
 function parseCell(raw: string): BalloonCell {
   const v = raw.trim();
   if (!v) return null;
+  if (/^(null|n\/a|na|none|—|-+)$/i.test(v)) return null;
   const n = Number(v);
   if (Number.isFinite(n)) return n;
   return v;

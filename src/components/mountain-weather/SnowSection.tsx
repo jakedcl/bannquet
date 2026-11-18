@@ -8,6 +8,7 @@ import { nwsPnsSourceDef } from '@/lib/mountain-weather/readers/nws-pns-latest';
 import { iemLsrSnowSourceDef } from '@/lib/mountain-weather/readers/iem-lsr-snow';
 import { NWS_BTV_MANSFIELD_HYD_DEF } from '@/lib/mountain-weather/registry';
 import { LOCAL_SNOW_RADIUS_MI } from '@/lib/mountain-weather/local-snow-reports';
+import { formatEt } from '@/lib/mountain-weather/format-display';
 import { SnowRemoteImage } from '@/components/mountain-weather/SnowRemoteImage';
 
 function SnowImageGrid({
@@ -182,7 +183,7 @@ export function SnowSection({ data, placeName, isHub = false }: { data: PlaceSno
           <ul className="space-y-1 text-xs">
             {data.lsrSnow.slice(0, 25).map((e) => (
               <li key={e.id}>
-                {e.distanceMi?.toFixed(1) ?? '—'} mi away · {e.valid} · {e.city ?? '—'}, {e.county ?? ''} {e.state ?? ''} · {e.magnitude ?? '—'} {e.unit ?? ''}{' '}
+                {e.distanceMi?.toFixed(1) ?? '—'} mi away · {formatEt(e.valid)} · {e.city ?? '—'}, {e.county ?? ''} {e.state ?? ''} · {e.magnitude ?? '—'} {e.unit ?? ''}{' '}
                 {e.remark ? `· ${e.remark}` : ''}
               </li>
             ))}
