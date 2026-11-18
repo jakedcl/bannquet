@@ -33,6 +33,19 @@ const fixture = {
       geometry: { coordinates: [-104.9, 39.7] },
     },
     {
+      id: 'pa-1',
+      properties: {
+        typetext: 'Snow',
+        valid: '2025-11-10T10:00:00Z',
+        city: 'Seven Springs',
+        county: 'Somerset',
+        state: 'PA',
+        magnitude: 3,
+        unit: 'in',
+      },
+      geometry: { coordinates: [-79.3, 40.02] },
+    },
+    {
       id: 'vt-1',
       properties: {
         typetext: 'Light Snow',
@@ -50,9 +63,10 @@ const fixture = {
 
 test('parseIemLsrSnowGeoJson drops out-of-region LSR states', () => {
   const rows = parseIemLsrSnowGeoJson(JSON.stringify(fixture));
-  assert.equal(rows.length, 2);
-  assert.ok(rows.every((r) => r.state === 'NY' || r.state === 'VT'));
+  assert.equal(rows.length, 3);
+  assert.ok(rows.every((r) => ['NY', 'VT', 'PA'].includes(r.state ?? '')));
   assert.equal(rows.some((r) => r.state === 'CO'), false);
+  assert.equal(rows.some((r) => r.state === 'PA'), true);
 });
 
 test('place reports exclude distant events and duplicate IDs while retaining nearby events', () => {

@@ -8,6 +8,7 @@ import { nwsPnsSourceDef } from '@/lib/mountain-weather/readers/nws-pns-latest';
 import { iemLsrSnowSourceDef } from '@/lib/mountain-weather/readers/iem-lsr-snow';
 import { NWS_BTV_MANSFIELD_HYD_DEF } from '@/lib/mountain-weather/registry';
 import { LOCAL_SNOW_RADIUS_MI } from '@/lib/mountain-weather/local-snow-reports';
+import { formatEt } from '@/lib/mountain-weather/format-display';
 import { SnowRemoteImage } from '@/components/mountain-weather/SnowRemoteImage';
 
 function SnowImageGrid({
@@ -141,7 +142,7 @@ export function SnowSection({ data, placeName, isHub = false }: { data: PlaceSno
             New snow: {data.mansfieldStake.snowNew ?? '—'} · Total on stake: {data.mansfieldStake.snowTotal ?? '—'}
           </p>
           <p className="text-xs text-gray-700">
-            {NWS_BTV_MANSFIELD_HYD_DEF.org} · Issued {data.mansfieldStake.asOf ?? '—'} ·{' '}
+            {NWS_BTV_MANSFIELD_HYD_DEF.org} · Issued {formatEt(data.mansfieldStake.asOf)} ·{' '}
             <a href={NWS_BTV_MANSFIELD_HYD_DEF.url} className="font-bold underline" target="_blank" rel="noopener noreferrer">
               Source
             </a>
@@ -168,7 +169,7 @@ export function SnowSection({ data, placeName, isHub = false }: { data: PlaceSno
               {data.pns.fullText.trim()}
             </pre>
             <p className="text-xs text-gray-700">
-              Issued {data.pns.issuanceTime ?? '—'} ·{' '}
+              Issued {formatEt(data.pns.issuanceTime)} ·{' '}
               <a href={pnsDef.url} className="font-bold underline" target="_blank" rel="noopener noreferrer">
                 Latest PNS
               </a>
@@ -182,7 +183,7 @@ export function SnowSection({ data, placeName, isHub = false }: { data: PlaceSno
           <ul className="space-y-1 text-xs">
             {data.lsrSnow.slice(0, 25).map((e) => (
               <li key={e.id}>
-                {e.distanceMi?.toFixed(1) ?? '—'} mi away · {e.valid} · {e.city ?? '—'}, {e.county ?? ''} {e.state ?? ''} · {e.magnitude ?? '—'} {e.unit ?? ''}{' '}
+                {e.distanceMi?.toFixed(1) ?? '—'} mi away · {formatEt(e.valid)} · {e.city ?? '—'}, {e.county ?? ''} {e.state ?? ''} · {e.magnitude ?? '—'} {e.unit ?? ''}{' '}
                 {e.remark ? `· ${e.remark}` : ''}
               </li>
             ))}

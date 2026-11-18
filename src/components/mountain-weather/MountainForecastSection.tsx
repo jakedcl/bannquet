@@ -136,7 +136,7 @@ export function MountainForecastSection({
         <p className="text-xs text-gray-700">
           Source: {source?.org} ·{' '}
           <a href={result.sourceUrl} className="font-bold underline" target="_blank" rel="noopener noreferrer">
-            NWS mountain XML ({data.office === 'BTV' ? NWS_MTN_BTV_STANDARD_DEF.url : NWS_MTN_ALY_STANDARD_DEF.url})
+            NWS mountain XML ({data.office})
           </a>
           {result.issuedAt
             ? ` · file Last-Modified ${new Date(result.issuedAt).toLocaleString('en-US', { timeZone: 'America/New_York' })} ET`

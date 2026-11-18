@@ -1,6 +1,8 @@
 import { CollapsibleSection } from '@/components/mountain-weather/CollapsibleSection';
 import { NotInIssuanceNote } from '@/components/mountain-weather/NotInIssuanceNote';
 import { SourceErrorNote } from '@/components/mountain-weather/SourceErrorNote';
+import { SourceLink } from '@/components/mountain-weather/SourceLink';
+import { allLocationsSourceLinkLabel } from '@/lib/mountain-weather/all-locations-labels';
 import type { AllLocationsPlaceSlice } from '@/lib/mountain-weather/all-locations-types';
 import { defaultResumeHint } from '@/lib/mountain-weather/parse/seasonal-off';
 import {
@@ -80,9 +82,9 @@ function AllLocationsBlock({ result }: { result: SourceResult<AllLocationsPlaceS
           {marker.lat !== null && marker.lon !== null
             ? `NWS point ${marker.lat}, ${marker.lon} · `
             : null}
-          <a href={result.sourceUrl} className="font-bold underline" target="_blank" rel="noopener noreferrer">
-            {def?.url}
-          </a>
+          <SourceLink href={result.sourceUrl ?? def?.url ?? 'https://www.weather.gov/'}>
+            {allLocationsSourceLinkLabel(result.data.office)}
+          </SourceLink>
           {result.issuedAt ? ` · Last-Modified ${formatEt(result.issuedAt)} ET` : null}
         </p>
       </div>
