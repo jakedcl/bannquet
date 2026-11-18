@@ -64,9 +64,9 @@ export async function proxy(request: NextRequest) {
 }
 
 // Page GETs only. Server action POSTs (next-action header) must never pass
-// through: a redirect here broke forms (see docs/environments.md and the
-// dev framework's server-action-redirects lesson). Actions check sign-in
-// themselves. Next reads this at build time, so it stays plain literals.
+// through: a redirect here broke forms (see docs/environments.md). Actions
+// check sign-in themselves. Next reads this at build time, so it stays
+// plain literals.
 export const config = {
   matcher: [
     {
