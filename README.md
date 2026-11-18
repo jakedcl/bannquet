@@ -1,21 +1,24 @@
 # Bannquet
 
-[Bannquet](https://www.bannquet.com) is a Northeast hiking crew site: mountain weather for summits and trails, a trail map, fishing conditions, peak challenges, trip planning, photos, and community posts.
+[Bannquet](https://www.bannquet.com) is a Northeast hiking crew site: mountain weather for summits and trails, a shared trail map, fishing conditions, peak challenges, photos, posts, and chat.
 
 ![Bannquet homepage](docs/screenshot.png)
 
 ## Features
 
-- **Mountain weather** (`/mountain-weather`) — hourly and daily NWS forecasts, wind, precip, and alerts for hundreds of places across New York, Vermont, New Hampshire, and Maine. Sections cover bulletins, observations, snow, avalanche outlooks, maps, and a Northeast conditions board. Data is attributed on-page and comes from free public sources: [NWS](https://www.weather.gov/), [Iowa Environmental Mesonet](https://mesonet.agron.iastate.edu/) local storm reports, state avalanche centers, USGS, AirNow, drought monitor, and other agency feeds wired in `src/lib/mountain-weather/`.
-- **Conditions ticker** — homepage banner and `/mountain-weather/conditions` show live extremes from bound NWS stations (`config/weather-regions.json`).
-- **Map** (`/map`) — MapLibre with OpenFreeMap, USGS topo/satellite, and AWS Terrarium terrain (no paid tile APIs).
-- **Peak Finder** (`/peak-finder`) — browser-based summit skyline tool (static peak data, terrain in the client).
-- **Peaks** (`/peaks`) — Catskill 35, Adirondack 46, NH 48, VT and ME 4000-footers, and combined New England lists (`config/challenges/`).
-- **Trips & photos** — shared trip plans, routes, pins, and gallery (`/trips`, `/photos`, `/posts`; legacy `/posts` URLs redirect).
+- **Home / map** (`/` and `/map`) — MapLibre map of crew **pins** and **GPX routes** (OpenFreeMap labels, USGS topo/satellite, AWS Terrarium terrain; no paid tile APIs). `/routes` and `/pins` redirect here.
+- **Mountain weather** (`/mountain-weather`) — **90 catalog peaks and trailheads** in NY, VT, NH, and ME, each tied to an NWS forecast office (Burlington/BTV, Albany/ALY, Gray/GYX, or Caribou/CAR). Place pages pull hourly and daily NWS grid forecasts, station observations, area discussions, hazardous weather outlooks, summit (REC) and avalanche (AVG) text, snow graphics and measured depth tables, alert polygons, and regional radar/GOES layers. Attribution stays on-page.
+  - **Ingested on place pages:** NWS API products, Iowa Environmental Mesonet local storm reports (nearby snow), NOAA/USGS drought monitor by county, NE Compass road weather (ESS XML), and—when `AIRNOW_API_KEY` is set—AirNow `/aq/data/` for regional PM2.5 and ozone.
+  - **Links only (not parsed in-app):** NY DEC and other land-manager pages, WFAS/DEC fire-danger maps, state 511 pages, Baxter’s Google Doc conditions, and the long “more sources” link lists (CoCoRaHS, office product pages, etc.).
+- **Conditions board** (`/mountain-weather/conditions`; `/conditions` redirects) — measured extremes from bound NWS stations plus short forecast lines per catalog place. The homepage ticker links here (`config/weather-regions.json` for station bindings).
+- **Peak Finder** (`/peak-finder`) — browser-based summit skyline tool (static peak data; terrain in the client).
+- **Peaks** (`/peaks`) — challenge lists (Adirondack 46, Catskill 35, NH 48, VT/ME 4000-footers, and related combos in `config/challenges/`).
+- **Posts & uploads** — `/posts` is the trip-report style feed. Approved members use `/upload` to add a **post** (optional links to pins, routes, or photos), upload a **route** (GPX), drop a **pin** on the map, or add a **photo** (Vercel Blob). Legacy `/trips` URLs redirect to `/posts`.
+- **Photos** (`/photos`) — gallery of uploaded images.
 - **Fishing** (`/fishing`) — saltwater tides and marine conditions, USGS freshwater flows, stocking calendars, and guides.
-- **Community** — members, gear list, and group chat for approved accounts.
+- **Community** (`/community`, `/chat`, `/members`) — hub previews, one group chat, and the members directory (no separate gear list).
 
-Weather and fishing boards work without API keys. Member content needs Postgres and Vercel Blob for uploads.
+Weather and fishing boards work without API keys. Member content needs Neon Postgres and Vercel Blob for uploads.
 
 API notes for the original region weather endpoints: `API_DOCUMENTATION.md`.
 
@@ -36,7 +39,7 @@ cp .env.example .env.local   # fill DATABASE_URL etc. for full features
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000).
+Open [http://localhost:3000](http://localhost:3000) (the map).
 
 `DATABASE_URL` should be the pooled Neon URL (`-pooler` host). Use `DATABASE_URL_UNPOOLED` for Drizzle migrations. Preview and local dev target the Neon `preview` branch; production uses `main`. See `docs/environments.md` before changing schema or auth.
 
