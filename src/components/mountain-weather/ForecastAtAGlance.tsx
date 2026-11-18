@@ -28,7 +28,7 @@ export function ForecastAtAGlance({
   const gridElevation = forecast?.gridExtras?.elevationFt;
 
   return (
-    <section className="retro-box border-[#5c3a1e] bg-beige/80 p-4" aria-label={`${placeName} forecast summary`}>
+    <section className="retro-box min-w-0 max-w-full border-[#5c3a1e] bg-beige/80 p-4" aria-label={`${placeName} forecast summary`}>
       <h2 className="text-lg font-bold uppercase tracking-wide">Forecast at a glance</h2>
       <p className="mt-1 text-xs text-gray-700">
         NWS forecast for this map point, not a measured summit reading
@@ -63,7 +63,7 @@ export function ForecastAtAGlance({
         <p className="mt-3 text-sm font-bold">Forecast unavailable. Check the NWS source before heading out.</p>
       )}
       {hourly.length > 0 && daily.length > 0 ? (
-        <p className="mt-2 text-xs text-gray-700">
+        <p className="mt-2 break-words text-xs text-gray-700">
           Next days: {daily.map((period) => `${period.name} ${period.temperature}°${period.secondaryTemp != null ? `/${period.secondaryTemp}°` : ''}`).join(' · ')}
         </p>
       ) : null}

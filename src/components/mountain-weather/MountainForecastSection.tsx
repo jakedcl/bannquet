@@ -78,7 +78,7 @@ export function MountainForecastSection({
         {data.standard?.narratives?.length ? (
           <NarrativeList narratives={data.standard.narratives} placeName={placeName} />
         ) : null}
-        <div className="overflow-x-auto">
+        <div className="w-full max-w-full min-w-0 overflow-x-auto overscroll-x-contain">
           <table className="min-w-full border border-[#5c3a1e]/30 text-xs">
             <thead className="bg-white/70">
               <tr className="text-left uppercase tracking-wide">
@@ -111,7 +111,7 @@ export function MountainForecastSection({
           </table>
         </div>
         {meta.showSnowBlocks && snowIce.length > 0 ? (
-          <div className="overflow-x-auto">
+          <div className="w-full max-w-full min-w-0 overflow-x-auto overscroll-x-contain">
             <p className="text-xs font-bold uppercase text-gray-700">6-hour snow and ice totals</p>
             <table className="mt-1 min-w-full border border-[#5c3a1e]/30 text-xs">
               <thead className="bg-white/70">

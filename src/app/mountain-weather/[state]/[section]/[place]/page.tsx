@@ -94,7 +94,7 @@ export default async function MountainPlacePage({
 
   return (
     <PageWrapper>
-      <div className="mx-auto max-w-5xl space-y-5 px-4 pb-12 pt-6 md:pt-8">
+      <div className="mx-auto min-w-0 max-w-5xl space-y-5 px-4 pb-12 pt-6 md:pt-8">
         <nav className="text-sm" aria-label="Breadcrumb">
           <Link href="/mountain-weather" className="font-bold underline">Mountain Weather</Link>
           {' · '}

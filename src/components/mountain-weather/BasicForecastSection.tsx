@@ -163,7 +163,7 @@ function SeriesRow({
   return (
     <div>
       <p className="font-bold">{title}</p>
-      <ul className="mt-1 flex gap-1 overflow-x-auto">
+      <ul className="mt-1 flex w-full min-w-0 gap-1 overflow-x-auto overscroll-x-contain">
         {samples.map((s) => (
           <li key={`${title}-${s.label}`} className="shrink-0 rounded border border-[#5c3a1e]/25 px-2 py-1">
             <span className="block font-bold">{s.label}</span>
