@@ -24,6 +24,9 @@
   /* Lines */
   --color-hairline: #d6d0c2;
   --color-bevel: #cccccc;
+  /* Top-left edge of a sunken field; drawn as solid colors because
+     inset borders lose their light edges on rounded corners. */
+  --color-bevel-dark: #9a9a9a;
   --color-rule: #1a1a1a;
 
   /* Text. ink-3 is the warm gray from the boards; #777 fails AA on cream. */
@@ -226,7 +229,8 @@
   border: var(--border-control) outset var(--color-bevel);
 }
 @utility bevel-inset {
-  border: var(--border-control) inset var(--color-bevel);
+  border: var(--border-control) solid;
+  border-color: var(--color-bevel-dark) var(--color-bevel) var(--color-bevel) var(--color-bevel-dark);
 }
 
 /* Bold uppercase label text used by buttons, title bars, tags, eyebrows. */

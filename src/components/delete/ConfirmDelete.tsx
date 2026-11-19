@@ -48,8 +48,8 @@ export function TrashButton({
         disabled={pending}
         onClick={onClick}
         className={resolvedTone ? '' : text
-          ? 'retro-button ui-press min-h-11 w-full rounded-none text-sm font-bold uppercase tracking-wide text-red-700'
-          : 'retro-button ui-press inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-none !p-0 text-red-700'}
+          ? 'retro-button ui-press min-h-11 w-full text-sm font-bold uppercase tracking-wide text-red-700'
+          : 'retro-button ui-press inline-flex h-11 w-11 shrink-0 items-center justify-center !p-0 text-red-700'}
       >
         {text ?? <TrashIcon />}
       </SubmitButton>

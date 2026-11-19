@@ -202,7 +202,7 @@ export function ChatRoom({
             aria-label="Attach a pin, route, or photo"
             disabled={!canSend}
             onClick={openPicker}
-            className="composer-control retro-button-blue min-h-11 w-11 shrink-0 rounded-none p-0 text-lg leading-none"
+            className="composer-control retro-button-blue min-h-11 w-11 shrink-0 p-0 text-lg leading-none"
           >
             @
           </button>

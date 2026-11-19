@@ -141,7 +141,8 @@ dialog[open]::backdrop {
   position: relative;
   height: 0.75rem;
   overflow: hidden;
-  background: #e4dccb;
+  border-radius: var(--radius-tag);
+  background-image: var(--texture-skeleton);
 }
 
 .skeleton-bar::after {

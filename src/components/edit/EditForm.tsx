@@ -108,8 +108,8 @@ export function EditDetails({
           title={editAdmin?.title}
           aria-label={editAdmin?.ariaLabel}
           className={adminPower
-            ? 'retro-button retro-button-admin ui-press flex min-h-11 cursor-pointer list-none items-center justify-center rounded-none [&::-webkit-details-marker]:hidden'
-            : 'retro-button ui-press flex min-h-11 cursor-pointer list-none items-center justify-center rounded-none text-sm font-bold uppercase tracking-wide text-gray-800 [&::-webkit-details-marker]:hidden'}
+            ? 'retro-button retro-button-admin ui-press flex min-h-11 cursor-pointer list-none items-center justify-center [&::-webkit-details-marker]:hidden'
+            : 'retro-button ui-press flex min-h-11 cursor-pointer list-none items-center justify-center text-sm font-bold uppercase tracking-wide text-gray-800 [&::-webkit-details-marker]:hidden'}
         >
           {adminPower ? <span className="retro-button-admin-label">Edit</span> : 'Edit'}
         </summary>

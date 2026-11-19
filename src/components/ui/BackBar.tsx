@@ -45,7 +45,7 @@ export function BackBar({ leaf = null }: { leaf?: string | null }) {
     <nav aria-label="Page" className="back-bar">
       <button
         type="button"
-        className="retro-button back-bar-button"
+        className="btn btn-sm back-bar-button"
         onClick={() => {
           if (canGoBackInApp()) {
             router.back();

@@ -92,7 +92,7 @@ export function MapHome({
         type="button"
         onClick={() => onSelect(null)}
         aria-label="Close"
-        className="retro-button ui-press flex h-11 w-11 shrink-0 items-center justify-center rounded-none !p-0 text-gray-800"
+        className="retro-button ui-press flex h-11 w-11 shrink-0 items-center justify-center !p-0 text-gray-800"
       >
         <CloseIcon className="h-4 w-4" />
       </button>

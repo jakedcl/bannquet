@@ -514,7 +514,7 @@ export default function GroupMap({
             aria-expanded={layersOpen}
             aria-haspopup="menu"
             onClick={() => setLayersOpen((open) => !open)}
-            className={`retro-button ui-press flex h-11 w-11 items-center justify-center rounded-none !p-0 text-gray-800 ${layersOpen ? 'retro-button-yellow' : ''}`}
+            className={`retro-button ui-press flex h-11 w-11 items-center justify-center !p-0 text-gray-800 ${layersOpen ? 'retro-button-yellow' : ''}`}
           >
             <LayersIcon className="h-5 w-5" />
           </button>
@@ -530,7 +530,7 @@ export default function GroupMap({
                     setBasemap(id);
                     setLayersOpen(false);
                   }}
-                  className={`retro-button flex min-h-11 items-center rounded-none !px-3 !py-0 text-left text-sm font-bold uppercase ${basemap === id ? 'retro-button-yellow' : 'text-gray-800'}`}
+                  className={`retro-button flex min-h-11 items-center !px-3 !py-0 text-left text-sm font-bold uppercase ${basemap === id ? 'retro-button-yellow' : 'text-gray-800'}`}
                 >
                   {BASEMAP_LABELS[id]}
                 </button>
@@ -545,7 +545,7 @@ export default function GroupMap({
             setLayersOpen(false);
             setTerrain((value) => !value);
           }}
-          className={`retro-button ui-press flex h-11 w-11 items-center justify-center rounded-none !p-0 text-sm font-bold ${terrain ? 'retro-button-orange' : 'text-gray-800'}`}
+          className={`retro-button ui-press flex h-11 w-11 items-center justify-center !p-0 text-sm font-bold ${terrain ? 'retro-button-orange' : 'text-gray-800'}`}
         >
           3D
         </button>

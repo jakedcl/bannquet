@@ -71,7 +71,7 @@ export function Sheet({
         }}
         className="flex min-h-11 shrink-0 cursor-grab touch-none items-center justify-center md:hidden"
       >
-        <span className="h-1.5 w-10 bg-[#a39e93] shadow-[inset_1px_1px_2px_rgba(0,0,0,0.35)]" />
+        <span className="h-1.5 w-10 rounded-full bg-ink-3/40" />
       </div>
       <div className="shrink-0 px-3 pb-2 md:pt-3">{header}</div>
       <div className={`min-h-0 flex-1 overflow-y-auto overscroll-contain px-2 pb-2 ${expanded ? '' : 'max-md:invisible'}`}>
