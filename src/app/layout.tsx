@@ -64,7 +64,7 @@ export default async function RootLayout({
               <RouteMotion />
             </Suspense>
             <LoadEntrance />
-            <main className="route-stage flex-1 bg-gray-50 pb-[var(--tab-h)]">
+            <main className="route-stage flex-1 bg-page pb-[var(--tab-h)]">
               {children}
             </main>
             <TabBar account={account} />

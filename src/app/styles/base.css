@@ -45,32 +45,10 @@
   max-width: 1200px;
 }
 
-:root {
-  --background: #f0f0f0;
-  --foreground: #1a1a1a;
-  --brand-green: #2d5016;
-  --brand-green-light: #4a7c2a;
-  --brand-green-dark: #1a3009;
-  --background-beige: #e8e6e1;
-  --text-primary: #1a1a1a;
-  --accent-yellow: #ffd700;
-  --accent-orange: #ff8c00;
-  --border-gray: #999999;
-  --shadow-color: rgba(0, 0, 0, 0.3);
-}
-
 body {
-  color: var(--foreground);
-  background: var(--background);
+  color: var(--color-ink);
+  background: var(--color-page);
   font-family: var(--font-sans);
-  background-image:
-    repeating-linear-gradient(
-      0deg,
-      transparent,
-      transparent 2px,
-      rgba(0, 0, 0, 0.02) 2px,
-      rgba(0, 0, 0, 0.02) 4px
-    );
 }
 
 h1, h2, h3, h4, h5, h6 {
