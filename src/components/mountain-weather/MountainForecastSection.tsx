@@ -74,13 +74,13 @@ export function MountainForecastSection({
       defaultOpen
     >
       <div className="space-y-4 text-sm">
-        {meta.issuedLine ? <p className="text-xs font-bold text-gray-800">{meta.issuedLine}</p> : null}
+        {meta.issuedLine ? <p className="text-xs font-bold text-ink">{meta.issuedLine}</p> : null}
         {data.standard?.narratives?.length ? (
           <NarrativeList narratives={data.standard.narratives} placeName={placeName} />
         ) : null}
         <div className="overflow-x-auto">
-          <table className="min-w-full border border-[#5c3a1e]/30 text-xs">
-            <thead className="bg-white/70">
+          <table className="min-w-full whitespace-nowrap text-caption [&_td]:whitespace-nowrap">
+            <thead className="bg-surface-gray text-tag uppercase tracking-label">
               <tr className="text-left uppercase tracking-wide">
                 <th className="px-2 py-1">Period</th>
                 <th className="px-2 py-1">Temp</th>
@@ -94,7 +94,7 @@ export function MountainForecastSection({
             </thead>
             <tbody>
               {hourly.map((row) => (
-                <tr key={`${row.label}-${row.tempF}-${row.windMph}`} className="border-t border-[#5c3a1e]/15">
+                <tr key={`${row.label}-${row.tempF}-${row.windMph}`} className="border-t border-hairline">
                   <td className="whitespace-nowrap px-2 py-1 font-bold">{row.label}</td>
                   <td className="px-2 py-1 tabular-nums">{fmtNum(row.tempF, '°')}</td>
                   <td className="px-2 py-1">{fmtWind(row)}</td>
@@ -112,9 +112,9 @@ export function MountainForecastSection({
         </div>
         {meta.showSnowBlocks && snowIce.length > 0 ? (
           <div className="overflow-x-auto">
-            <p className="text-xs font-bold uppercase text-gray-700">6-hour snow and ice totals</p>
-            <table className="mt-1 min-w-full border border-[#5c3a1e]/30 text-xs">
-              <thead className="bg-white/70">
+            <p className="text-xs font-bold uppercase text-ink-2">6-hour snow and ice totals</p>
+            <table className="mt-1 min-w-full border border-hairline text-xs">
+              <thead className="bg-surface-gray text-tag uppercase tracking-label">
                 <tr className="text-left uppercase tracking-wide">
                   <th className="px-2 py-1">Block start</th>
                   <th className="px-2 py-1">Snow</th>
@@ -123,7 +123,7 @@ export function MountainForecastSection({
               </thead>
               <tbody>
                 {snowIce.map((block) => (
-                  <tr key={block.label} className="border-t border-[#5c3a1e]/15">
+                  <tr key={block.label} className="border-t border-hairline">
                     <td className="whitespace-nowrap px-2 py-1 font-bold">{block.label}</td>
                     <td className="px-2 py-1 tabular-nums">{fmtMtnAmount(block.snowIn)}</td>
                     {meta.showIce ? <td className="px-2 py-1 tabular-nums">{fmtMtnAmount(block.iceIn)}</td> : null}
@@ -133,7 +133,7 @@ export function MountainForecastSection({
             </table>
           </div>
         ) : null}
-        <p className="text-xs text-gray-700">
+        <p className="text-xs text-ink-2">
           Source: {source?.org} ·{' '}
           <a href={result.sourceUrl} className="font-bold underline" target="_blank" rel="noopener noreferrer">
             NWS mountain XML ({data.office})
@@ -156,12 +156,12 @@ function NarrativeList({
 }) {
   return (
     <div>
-      <p className="text-xs font-bold uppercase text-gray-700">Narrative · {placeName}</p>
+      <p className="text-xs font-bold uppercase text-ink-2">Narrative · {placeName}</p>
       <ul className="mt-1 space-y-2">
         {narratives.map((block) => (
           <li key={block.name}>
             <p className="font-bold">{block.name}</p>
-            <p className="text-gray-800">{block.text}</p>
+            <p className="text-ink">{block.text}</p>
           </li>
         ))}
       </ul>

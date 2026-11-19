@@ -1,7 +1,8 @@
 import { notFound } from 'next/navigation';
-import Link from 'next/link';
 import PageWrapper from '@/components/ui/PageWrapper';
-import { LargeTitle } from '@/components/hub/SectionHeader';
+import { PageHero } from '@/components/hub/PageHero';
+import { Card } from '@/components/hub/Card';
+import { ListGroup, ListRow } from '@/components/hub/ListRow';
 import { AvalancheSection } from '@/components/mountain-weather/AvalancheSection';
 import { AvgForecastSection } from '@/components/mountain-weather/AvgForecastSection';
 import { avalancheAvgPointBySlug, avalancheBindingForPlace } from '@/lib/mountain-weather/avalanche-bindings';
@@ -24,31 +25,16 @@ export default async function AvalancheAvgPointPage({ params }: { params: Promis
 
   return (
     <PageWrapper>
-      <div className="mx-auto max-w-5xl space-y-5 px-4 pb-12 pt-6">
-        <nav className="text-sm">
-          <Link href="/mountain-weather" className="font-bold underline">
-            Mountain Weather
-          </Link>
-          {' · '}
-          <Link href="/mountain-weather/snow" className="font-bold underline">
-            Snow
-          </Link>
-          {' · '}
-          <Link href="/mountain-weather/snow/avalanche" className="font-bold underline">
-            Avalanche
-          </Link>
-        </nav>
-        <LargeTitle title={point.title} eyebrow={`NWS AVG · ${point.office}`} />
-        {point.elevationNote ? <p className="text-sm text-gray-700">{point.elevationNote}</p> : null}
-        {point.nearbyLabel ? <p className="text-sm text-gray-700">{point.nearbyLabel}</p> : null}
+      <PageHero eyebrow={`Avalanche weather guidance · NWS ${point.office}`} title={point.title} />
+      <div className="mx-auto max-w-3xl space-y-4 px-4 pb-12 pt-4">
+        {point.elevationNote ? <p className="text-meta text-ink-2">{point.elevationNote}</p> : null}
+        {point.nearbyLabel ? <p className="text-meta text-ink-2">{point.nearbyLabel}</p> : null}
         {binding && placeHref ? (
-          <p className="text-sm text-gray-700">
-            Related place:{' '}
-            <Link href={placeHref} className="font-bold underline">
-              {catalog?.name ?? point.examplePlaceId}
-            </Link>{' '}
-            · Check this place&apos;s forecast and conditions alongside the guidance.
-          </p>
+          <Card padded={false}>
+            <ListGroup bare>
+              <ListRow href={placeHref} title={catalog?.name ?? point.examplePlaceId} subtitle="Related place: its forecast and measured conditions" />
+            </ListGroup>
+          </Card>
         ) : null}
         {placeAvalanche && binding ? (
           <AvalancheSection

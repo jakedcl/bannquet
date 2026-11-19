@@ -29,9 +29,9 @@ function SnowImageGrid({
         {images.map((img) => (
           <figure key={img.id} className="space-y-1">
             <figcaption className="text-xs font-bold">{img.label}</figcaption>
-            {img.validTimeLabel ? <p className="text-xs text-gray-700">Valid {img.validTimeLabel}</p> : null}
+            {img.validTimeLabel ? <p className="text-xs text-ink-2">Valid {img.validTimeLabel}</p> : null}
             <SnowRemoteImage key={img.url} src={img.url} alt={img.label} sourceUrl={sourceUrl} />
-            <p className="text-[10px] text-gray-700">
+            <p className="text-[10px] text-ink-2">
               {img.org} ·{' '}
               <a href={img.url} className="font-bold underline" target="_blank" rel="noopener noreferrer">
                 Image URL
@@ -40,7 +40,7 @@ function SnowImageGrid({
           </figure>
         ))}
       </div>
-      <p className="text-xs text-gray-700">
+      <p className="text-xs text-ink-2">
         {org} ·{' '}
         <a href={sourceUrl} className="font-bold underline" target="_blank" rel="noopener noreferrer">
           Source page
@@ -56,13 +56,13 @@ function MeasuredBlock({ data }: { data: PlaceSnowData }) {
   }
   return (
     <CollapsibleSection title="Nearest measured snow" subtitle="NOHRSC / CoCoRaHS station table" defaultOpen>
-      <p className="text-xs text-gray-700">These are station snow depths, not summit conditions unless marked Summit. Check the station elevation, distance, and report time.</p>
+      <p className="text-xs text-ink-2">These are station snow depths, not summit conditions unless marked Summit. Check the station elevation, distance, and report time.</p>
       <ul className="space-y-3">
         {data.measured.map((row) => {
           const b = row.binding;
           const distant = b.distanceMi > 25;
           return (
-            <li key={row.dedupeKey} className="border border-[#5c3a1e]/20 bg-white/50 p-2 text-sm">
+            <li key={row.dedupeKey} className="border border-hairline bg-white/50 p-2 text-sm">
               <p className="font-bold">
                 {b.kind === 'summit'
                   ? 'Summit'
@@ -73,7 +73,7 @@ function MeasuredBlock({ data }: { data: PlaceSnowData }) {
                       : 'Base'}{' '}
                 · {b.stationName} ({b.stationId})
               </p>
-              <p className="text-xs text-gray-800">
+              <p className="text-xs text-ink">
                 {b.network} · {b.distanceMi} mi · {b.stationElevationFt?.toLocaleString('en-US') ?? '—'} ft station elev
                 {b.elevationSource ? ` (${b.elevationSource})` : ''}
                 {b.elevationDiffFt !== null
@@ -88,7 +88,7 @@ function MeasuredBlock({ data }: { data: PlaceSnowData }) {
               ) : null}
               <p className="mt-1 text-base font-bold">
                 {row.value === null ? (
-                  <span className="text-gray-800">No report / missing</span>
+                  <span className="text-ink">No report / missing</span>
                 ) : row.value === 0 ? (
                   <span>0 in depth reported (not the same as “no snow season”)</span>
                 ) : (
@@ -97,7 +97,7 @@ function MeasuredBlock({ data }: { data: PlaceSnowData }) {
                   </span>
                 )}
               </p>
-              <p className="text-xs text-gray-700">
+              <p className="text-xs text-ink-2">
                 Report time: {row.reportTimeEt ?? row.reportTimeUtc ?? '—'} · {NOHRSC_STATION_SNOWDEPTH_DEF.org} ·{' '}
                 <a href={NOHRSC_STATION_SNOWDEPTH_DEF.url} className="font-bold underline" target="_blank" rel="noopener noreferrer">
                   Source
@@ -117,8 +117,8 @@ export function SnowSection({ data, placeName, isHub = false }: { data: PlaceSno
 
   return (
     <>
-      <h2 className="text-lg font-bold uppercase tracking-wide text-gray-900">Snow</h2>
-      <p className="text-sm text-gray-700">
+      <h2 className="text-lg font-bold uppercase tracking-wide text-ink">Snow</h2>
+      <p className="text-sm text-ink-2">
         {isHub ? 'Regional WPC probabilities and modeled snow. ' : 'WPC probabilities, winter severity, modeled snow, storm reports, and nearest station depth. '}
         <a href={WPC_SNOW_PAGE_URL} className="font-bold underline" target="_blank" rel="noopener noreferrer">WPC snow forecast</a>
         {!isHub ? <>
@@ -133,7 +133,7 @@ export function SnowSection({ data, placeName, isHub = false }: { data: PlaceSno
         </> : null}
       </p>
       <SnowImageGrid title="WPC probabilistic snowfall" org={WPC_PWPF_SNOW_DEF.org} sourceUrl={WPC_SNOW_PAGE_URL} images={data.wpcImages} />
-      {!data.wpcImages.length ? <p className="text-sm text-gray-700">Current WPC graphics are unavailable here. Use the official WPC snow forecast linked above.</p> : null}
+      {!data.wpcImages.length ? <p className="text-sm text-ink-2">Current WPC graphics are unavailable here. Use the official WPC snow forecast linked above.</p> : null}
       <SnowImageGrid title="NOHRSC modeled layers" org={NOHRSC_NE_INDEX_DEF.org} sourceUrl={NOHRSC_NE_INDEX_DEF.url} images={data.nohrscImages} />
       <SnowImageGrid title="NERFC / NOHRSC composites" org={NERFC_SNOW_OPS_DEF.org} sourceUrl={NERFC_SNOW_OPS_DEF.url} images={data.nerfcImages} />
       {data.mansfieldStake ? (
@@ -141,7 +141,7 @@ export function SnowSection({ data, placeName, isHub = false }: { data: PlaceSno
           <p className="text-sm">
             New snow: {data.mansfieldStake.snowNew ?? '—'} · Total on stake: {data.mansfieldStake.snowTotal ?? '—'}
           </p>
-          <p className="text-xs text-gray-700">
+          <p className="text-xs text-ink-2">
             {NWS_BTV_MANSFIELD_HYD_DEF.org} · Issued {formatEt(data.mansfieldStake.asOf)} ·{' '}
             <a href={NWS_BTV_MANSFIELD_HYD_DEF.url} className="font-bold underline" target="_blank" rel="noopener noreferrer">
               Source
@@ -163,12 +163,12 @@ export function SnowSection({ data, placeName, isHub = false }: { data: PlaceSno
                 ))}
               </ul>
             ) : (
-              <p className="text-sm text-gray-700">Structured snow lines not reliable; full bulletin below.</p>
+              <p className="text-sm text-ink-2">Structured snow lines not reliable; full bulletin below.</p>
             )}
-            <pre className="mt-2 max-h-64 overflow-auto whitespace-pre-wrap border border-[#5c3a1e]/20 bg-white/60 p-2 text-[10px]">
+            <pre className="mt-2 max-h-64 overflow-auto whitespace-pre-wrap border border-hairline bg-surface p-2 text-[10px]">
               {data.pns.fullText.trim()}
             </pre>
-            <p className="text-xs text-gray-700">
+            <p className="text-xs text-ink-2">
               Issued {formatEt(data.pns.issuanceTime)} ·{' '}
               <a href={pnsDef.url} className="font-bold underline" target="_blank" rel="noopener noreferrer">
                 Latest PNS
@@ -189,7 +189,7 @@ export function SnowSection({ data, placeName, isHub = false }: { data: PlaceSno
             ))}
           </ul>
           ) : <p className="text-sm">No nearby snowfall reports in the past 14 days. This does not mean there is no snow.</p>}
-        <p className="text-xs text-gray-700">
+        <p className="text-xs text-ink-2">
           <a href={lsrDef.url} className="font-bold underline" target="_blank" rel="noopener noreferrer">
             IEM LSR GeoJSON source
           </a>

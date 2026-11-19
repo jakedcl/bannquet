@@ -1,5 +1,7 @@
 import type { BaselineForecast } from '@/lib/mountain-weather/baseline-forecast';
 import type { SourceResult } from '@/lib/mountain-weather/source-types';
+import { Notice } from '@/components/hub/Notice';
+import { SourceLine, WindArrow } from '@/components/mountain-weather/kit';
 
 function periodTime(value: string): string {
   const date = new Date(value);
@@ -28,21 +30,31 @@ export function ForecastAtAGlance({
   const gridElevation = forecast?.gridExtras?.elevationFt;
 
   return (
-    <section className="retro-box border-[#5c3a1e] bg-beige/80 p-4" aria-label={`${placeName} forecast summary`}>
-      <h2 className="text-lg font-bold uppercase tracking-wide">Forecast at a glance</h2>
-      <p className="mt-1 text-xs text-gray-700">
-        NWS forecast for this map point, not a measured summit reading
-        {gridElevation != null ? ` · grid elevation ${gridElevation.toLocaleString('en-US')} ft` : ''}
-        {placeElevationFt != null ? ` · ${placeName} catalog elevation ${placeElevationFt.toLocaleString('en-US')} ft` : ''}
-        {result.status === 'stale' ? ' · forecast may be out of date' : ''}
-      </p>
+    <section className="panel" aria-label={`${placeName} forecast summary`}>
+      <h2 className="panel-bar">Forecast at a glance</h2>
+      <div className="border-b border-hairline bg-surface-cream px-3.5 py-1.5 sm:px-4">
+        <SourceLine
+          source={
+            <>
+              NWS forecast for this map point, not a measured summit reading
+              {gridElevation != null ? ` · grid ${gridElevation.toLocaleString('en-US')} ft` : ''}
+              {placeElevationFt != null ? ` · ${placeName} ${placeElevationFt.toLocaleString('en-US')} ft` : ''}
+              {result.status === 'stale' ? ' · may be out of date' : ''}
+            </>
+          }
+        />
+      </div>
       {hourly.length ? (
-        <ul className="mt-3 grid gap-2 sm:grid-cols-3">
+        <ul className="ui-list">
           {hourly.map((period) => (
-            <li key={period.startTime} className="border border-[#5c3a1e]/25 bg-white/60 p-2 text-sm">
-              <p className="font-bold">{periodTime(period.startTime)} ET · {period.temperature}°F</p>
-              <p>{period.shortForecast || period.gridWeather || 'Forecast details unavailable'}</p>
-              <p className="text-xs text-gray-700">
+            <li key={period.startTime} className="px-3.5 py-2.5 sm:px-4">
+              <p className="flex items-baseline justify-between gap-3">
+                <span className="text-meta font-bold">{periodTime(period.startTime)} ET</span>
+                <span className="text-stat font-bold tabular-nums">{period.temperature}°F</span>
+              </p>
+              <p className="text-meta">{period.shortForecast || period.gridWeather || 'Forecast details unavailable'}</p>
+              <p className="flex items-center gap-1 text-caption text-ink-2">
+                <WindArrow from={period.windDirection} />
                 Wind {[period.windDirection, period.windSpeed].filter(Boolean).join(' ') || '—'}
                 {period.windGust ? ` · gust ${period.windGust}` : ''}
                 {' · '}Precip {period.precipChance != null ? `${period.precipChance}%` : '—'}
@@ -51,26 +63,33 @@ export function ForecastAtAGlance({
           ))}
         </ul>
       ) : daily.length ? (
-        <ul className="mt-3 grid gap-2 sm:grid-cols-3">
+        <ul className="ui-list">
           {daily.map((period) => (
-            <li key={period.startTime} className="border border-[#5c3a1e]/25 bg-white/60 p-2 text-sm">
-              <p className="font-bold">{period.name} · {period.temperature}°{period.secondaryTemp != null ? ` / ${period.secondaryTemp}°` : ''}</p>
-              <p>{period.shortForecast || 'Forecast details unavailable'}</p>
+            <li key={period.startTime} className="px-3.5 py-2.5 sm:px-4">
+              <p className="flex items-baseline justify-between gap-3">
+                <span className="text-meta font-bold">{period.name}</span>
+                <span className="text-stat font-bold tabular-nums">{period.temperature}°{period.secondaryTemp != null ? ` / ${period.secondaryTemp}°` : ''}</span>
+              </p>
+              <p className="text-meta">{period.shortForecast || 'Forecast details unavailable'}</p>
             </li>
           ))}
         </ul>
       ) : (
-        <p className="mt-3 text-sm font-bold">Forecast unavailable. Check the NWS source before heading out.</p>
+        <div className="p-3.5">
+          <Notice title="Forecast unavailable" tone="error">Check the NWS source before heading out.</Notice>
+        </div>
       )}
-      {hourly.length > 0 && daily.length > 0 ? (
-        <p className="mt-2 text-xs text-gray-700">
-          Next days: {daily.map((period) => `${period.name} ${period.temperature}°${period.secondaryTemp != null ? `/${period.secondaryTemp}°` : ''}`).join(' · ')}
+      <div className="space-y-1 border-t border-hairline px-3.5 py-2.5 text-caption text-ink-2 sm:px-4">
+        {hourly.length > 0 && daily.length > 0 ? (
+          <p>
+            Next days: {daily.map((period) => `${period.name} ${period.temperature}°${period.secondaryTemp != null ? `/${period.secondaryTemp}°` : ''}`).join(' · ')}
+          </p>
+        ) : null}
+        <p>
+          {hourly[0] ? `First period ${periodTime(hourly[0].startTime)} ET · ` : ''}
+          <a href={result.sourceUrl || forecast?.mapUrl || 'https://forecast.weather.gov/'} target="_blank" rel="noopener noreferrer" className="font-bold underline">NWS forecast source</a>
         </p>
-      ) : null}
-      <p className="mt-2 text-xs text-gray-700">
-        {hourly[0] ? `First period ${periodTime(hourly[0].startTime)} ET · ` : ''}
-        <a href={result.sourceUrl || forecast?.mapUrl || 'https://forecast.weather.gov/'} target="_blank" rel="noopener noreferrer" className="font-bold underline">NWS forecast source</a>
-      </p>
+      </div>
     </section>
   );
 }

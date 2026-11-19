@@ -12,16 +12,19 @@ export function PageHero({
   subtitle,
   trailing,
   innerClassName = 'max-w-3xl',
+  photo = false,
 }: {
   title: ReactNode;
   eyebrow?: ReactNode;
   subtitle?: ReactNode;
   trailing?: ReactNode;
   innerClassName?: string;
+  /** Green-tinted mountain photo with a rounded bottom (Home, Mountain weather). */
+  photo?: boolean;
 }) {
   return (
-    <header className="page-hero">
-      <div className={`mx-auto flex w-full min-w-0 items-center gap-3 px-4 py-3.5 ${innerClassName}`}>
+    <header className={`page-hero ${photo ? 'page-hero-photo' : ''}`}>
+      <div className={`mx-auto flex w-full min-w-0 items-center gap-3 px-4 ${photo ? 'pb-7 pt-6' : 'py-3.5'} ${innerClassName}`}>
         <div className="min-w-0 flex-1">
           {eyebrow ? <p className="eyebrow mb-0.5 text-yellow">{eyebrow}</p> : null}
           <h1 className="page-hero-title">{title}</h1>

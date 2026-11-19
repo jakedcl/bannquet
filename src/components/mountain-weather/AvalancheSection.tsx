@@ -43,10 +43,10 @@ function statusHeadline(status: SourceResult<AvalancheProductBundle>['status'], 
 }
 
 function DangerBandTable({ bands }: { bands: AvalancheDangerBand[] }) {
-  if (bands.length === 0) return <p className="text-xs text-gray-700">Danger by elevation band: none reported.</p>;
+  if (bands.length === 0) return <p className="text-xs text-ink-2">Danger by elevation band: none reported.</p>;
   return (
-    <table className="w-full border border-[#5c3a1e]/30 text-xs">
-      <thead className="bg-white/70">
+    <table className="w-full border border-hairline text-xs">
+      <thead className="bg-surface">
         <tr>
           <th className="px-2 py-1 text-left">Band</th>
           <th className="px-2 py-1 text-left">Elevation (ft)</th>
@@ -56,7 +56,7 @@ function DangerBandTable({ bands }: { bands: AvalancheDangerBand[] }) {
       </thead>
       <tbody>
         {bands.map((b, i) => (
-          <tr key={i} className="border-t border-[#5c3a1e]/15">
+          <tr key={i} className="border-t border-hairline">
             <td className="px-2 py-1">{b.name ?? '—'}</td>
             <td className="px-2 py-1">
               {b.lowerFt ?? '—'} – {b.upperFt ?? '—'}
@@ -71,20 +71,20 @@ function DangerBandTable({ bands }: { bands: AvalancheDangerBand[] }) {
 }
 
 function ProblemList({ problems }: { problems: AvalancheProblem[] }) {
-  if (problems.length === 0) return <p className="text-xs text-gray-700">Avalanche problems: none reported.</p>;
+  if (problems.length === 0) return <p className="text-xs text-ink-2">Avalanche problems: none reported.</p>;
   return (
     <ul className="space-y-2 text-sm">
       {problems.map((p, i) => (
-        <li key={i} className="border border-[#5c3a1e]/20 bg-white/50 p-2">
+        <li key={i} className="border border-hairline bg-white/50 p-2">
           <p className="font-bold">{p.name ?? p.problemType ?? 'Problem'}</p>
-          <p className="text-xs text-gray-800">
+          <p className="text-xs text-ink">
             Likelihood: {p.likelihood ?? '—'} · Size: {p.size ?? '—'}
           </p>
-          <p className="text-xs text-gray-800">
+          <p className="text-xs text-ink">
             Aspects: {p.aspects.length ? p.aspects.join(', ') : '—'} · Elevations: {p.elevations.length ? p.elevations.join(', ') : '—'}
           </p>
           {p.roseData ? (
-            <p className="font-mono text-[10px] text-gray-700">Rose data: {JSON.stringify(p.roseData)}</p>
+            <p className="font-mono text-[10px] text-ink-2">Rose data: {JSON.stringify(p.roseData)}</p>
           ) : null}
           {p.comment ? <p className="text-xs">{p.comment}</p> : null}
         </li>
@@ -97,7 +97,7 @@ function RecordFields({ record, label }: { record: Record<string, unknown> | nul
   if (!record || Object.keys(record).length === 0) return null;
   return (
     <div className="space-y-1">
-      <p className="text-xs font-bold uppercase text-gray-800">{label}</p>
+      <p className="text-xs font-bold uppercase text-ink">{label}</p>
       <ul className="space-y-1 text-xs">
         {Object.entries(record).map(([k, v]) => (
           <li key={k}>
@@ -127,7 +127,7 @@ function CenterBlock({ result }: { result: SourceResult<AvalancheProductBundle> 
       ) : data ? (
         <div className="space-y-3 text-sm">
           {(result.status === 'seasonal-off' || data.offSeason) && (
-            <p className="border border-[#5c3a1e]/30 bg-white/60 p-2 text-xs font-bold">
+            <p className="border border-hairline bg-surface p-2 text-xs font-bold">
               Not issued / off-season. This is not low danger.
               {data.mapLayer.startDate && data.mapLayer.endDate
                 ? ` Issued ${formatEt(data.mapLayer.startDate)} ET, expires ${formatEt(data.mapLayer.endDate)} ET.`
@@ -138,7 +138,7 @@ function CenterBlock({ result }: { result: SourceResult<AvalancheProductBundle> 
             </p>
           )}
           {result.status === 'stale' ? (
-            <p className="text-xs font-bold text-gray-800">Forecast expired — showing last issued product only.</p>
+            <p className="text-xs font-bold text-ink">Forecast expired — showing last issued product only.</p>
           ) : null}
           {data.bottomLine ? (
             <p>
@@ -165,7 +165,7 @@ function CenterBlock({ result }: { result: SourceResult<AvalancheProductBundle> 
                   ))}
                 </ul>
               ) : null}
-              <p className="text-xs text-gray-700">
+              <p className="text-xs text-ink-2">
                 Issued {formatEt(data.publishedTime)} ET · Expires {formatEt(data.expiresTime)} ET
               </p>
             </>
@@ -179,7 +179,7 @@ function CenterBlock({ result }: { result: SourceResult<AvalancheProductBundle> 
           ) : null}
         </div>
       ) : null}
-      <p className="text-xs text-gray-700">
+      <p className="text-xs text-ink-2">
         {layerDef.org} · map-layer + product ·{' '}
         <a href={result.sourceUrl} className="font-bold underline" target="_blank" rel="noopener noreferrer">
           Source
@@ -194,9 +194,9 @@ export function AvalancheSection({ data, showAvg = true }: { data: PlaceAvalanch
 
   return (
     <>
-      <h2 className="text-lg font-bold uppercase tracking-wide text-gray-900">Avalanche</h2>
+      <h2 className="text-lg font-bold uppercase tracking-wide text-ink">Avalanche</h2>
       {showAvalancheBindNote(data.binding.bindReason) ? (
-        <p className="text-sm text-gray-700">{data.binding.bindReason}</p>
+        <p className="text-sm text-ink-2">{data.binding.bindReason}</p>
       ) : null}
       {data.centers.map((result, idx) => (
         <CenterBlock key={result.data?.centerId ?? idx} result={result} />

@@ -18,7 +18,10 @@ const strict = process.argv.includes('--strict');
 const list = process.argv.includes('--list') || strict;
 
 /** Files allowed to use literal colors (canvas drawing, map styles). */
-const ALLOW = [];
+const ALLOW = [
+  // MapLibre paint properties need literal colors.
+  'src/components/mountain-weather/MountainWeatherPlacesMap.tsx',
+];
 
 const RULES = [
   { id: 'hex', why: 'raw hex color; use a token', re: /#[0-9a-fA-F]{6}\b|#[0-9a-fA-F]{3}\b(?![0-9a-zA-Z-])/g },

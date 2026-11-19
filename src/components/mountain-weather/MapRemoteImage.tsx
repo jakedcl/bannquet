@@ -29,7 +29,7 @@ export function MapRemoteImage({
     <img
       src={src}
       alt={alt}
-      className="max-w-full border border-[#5c3a1e]/30 bg-white"
+      className="max-w-full border border-hairline bg-white"
       onError={() => setFailed(true)}
     />
   );

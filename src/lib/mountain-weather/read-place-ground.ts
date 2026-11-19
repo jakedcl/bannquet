@@ -13,14 +13,15 @@ import { readAirNowCurrent } from '@/lib/mountain-weather/readers/airnow-aqi';
 const COMPASS_MAX_MI = 75;
 const DISTANT_MI = 25;
 
+/** Shown in the place page's "About these sources" panel. Plain words. */
 export const GROUND_ACCESS_NOTES = {
-  fire: 'NY places link to the DEC fire-danger map; other states link to WFAS national maps. We do not infer point fire-danger ratings without an official station feed.',
-  baxter: 'Baxter conditions are a Google Doc on the park site — link only, not parsed.',
-  dec: 'NY DEC trail pages block scripted access (403); links only.',
+  fire: 'Fire danger: New York places link to the DEC fire-danger map and other states to the national WFAS maps. Bannquet does not estimate fire danger for a single point.',
+  baxter: 'Baxter State Park posts trail conditions as a Google Doc, so it is a link only.',
+  dec: 'New York DEC trail pages cannot be read automatically, so they are links only.',
   compassCameras:
-    'Compass cctvSnapshotData has no latitude/longitude in the public C2C feed, so nearest cameras are not bound by distance; use state 511 links.',
+    'Road cameras are not matched to places by distance because the camera feed has no locations. Use the state 511 links instead.',
   airnow:
-    'AirNow uses one cached /aq/data/ request for the Northeast bbox (last 2 hours); each place shows the nearest PM2.5 and ozone monitors. Without AIRNOW_API_KEY we show only a link to airnow.gov.',
+    'Air quality comes from the nearest AirNow monitors over the last two hours. Without an AirNow key the page links to airnow.gov instead.',
 } as const;
 
 function emptyCompass(): SourceResult<CompassEssRow | null> {

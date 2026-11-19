@@ -156,7 +156,7 @@ function baseCatalog(ctx: CatalogContext): MoreSourceEntry[] {
         id: 'aly-fzl',
         scope: 'place',
         org: 'NWS Albany',
-        label: 'Freezing level (FZL / RADAT) — also on this page',
+        label: 'Freezing level (FZL / RADAT)',
         href: 'https://api.weather.gov/products/types/FZL/locations/ALY',
         mode: 'link',
         offices: ['ALY'],
@@ -168,7 +168,7 @@ function baseCatalog(ctx: CatalogContext): MoreSourceEntry[] {
         id: 'gyx-fzl',
         scope: 'place',
         org: 'NWS Gray',
-        label: 'Freezing level (FZL / RADAT) — also on this page',
+        label: 'Freezing level (FZL / RADAT)',
         href: 'https://api.weather.gov/products/types/FZL/locations/GYX',
         mode: 'link',
         offices: ['GYX'],
@@ -481,8 +481,6 @@ const UI_WHEN_INGESTED = new Set([
   'gyx-alllocations',
   'rec-summits',
   'btv-balloon-xml',
-  'aly-fzl',
-  'gyx-fzl',
 ]);
 
 function applyIngestedModes(entries: MoreSourceEntry[], ctx: CatalogContext): MoreSourceEntry[] {
@@ -498,8 +496,6 @@ function applyIngestedModes(entries: MoreSourceEntry[], ctx: CatalogContext): Mo
     if (entry.id === 'airnow' && !airnowKey) mode = 'link';
     if (entry.id === 'drought' && !fips) mode = 'link';
     if (entry.id === 'btv-balloon-xml' && !binding?.balloon) mode = 'link';
-    if (entry.id === 'aly-fzl' && office !== 'ALY') mode = 'link';
-    if (entry.id === 'gyx-fzl' && office !== 'GYX') mode = 'link';
     if (entry.id.startsWith('rec-') && office && entry.id === `rec-${office}` && ctx.place) mode = 'ui';
     if (entry.id === 'whiteface-cam' && ctx.place?.id !== 'whiteface-mountain') mode = 'link';
     if (entry.id === 'kmwn-series' && ctx.place?.id !== 'mount-washington') mode = 'link';

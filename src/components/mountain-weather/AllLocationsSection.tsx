@@ -70,15 +70,15 @@ function AllLocationsBlock({ result }: { result: SourceResult<AllLocationsPlaceS
     >
       <div className="space-y-2 text-sm">
         {seasonal ? (
-          <p className="border border-[#5c3a1e]/30 bg-white/60 p-2 text-xs font-bold">
+          <p className="border border-hairline bg-surface p-2 text-xs font-bold">
             {defaultResumeHint(marker.type)}
             {result.issuedAt ? ` Last file update ${formatEt(result.issuedAt)} ET.` : ''}
             {marker.seasonalMessage ? ` ${marker.seasonalMessage}` : null}
           </p>
         ) : (
-          <p className="whitespace-pre-wrap text-gray-900">{marker.narrative || '—'}</p>
+          <p className="whitespace-pre-wrap text-ink">{marker.narrative || '—'}</p>
         )}
-        <p className="text-xs text-gray-700">
+        <p className="text-xs text-ink-2">
           {marker.lat !== null && marker.lon !== null
             ? `NWS point ${marker.lat}, ${marker.lon} · `
             : null}

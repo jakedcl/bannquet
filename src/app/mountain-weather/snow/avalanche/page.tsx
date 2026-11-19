@@ -1,6 +1,7 @@
-import Link from 'next/link';
 import PageWrapper from '@/components/ui/PageWrapper';
-import { LargeTitle } from '@/components/hub/SectionHeader';
+import { PageHero } from '@/components/hub/PageHero';
+import { Card } from '@/components/hub/Card';
+import { ListGroup, ListRow } from '@/components/hub/ListRow';
 import { AvalancheSection } from '@/components/mountain-weather/AvalancheSection';
 import { avalancheAvgPoints } from '@/lib/mountain-weather/avalanche-bindings';
 import { readAvalancheHub } from '@/lib/mountain-weather/read-place-avalanche';
@@ -22,45 +23,26 @@ export default async function AvalancheHubPage() {
 
   return (
     <PageWrapper>
-      <div className="mx-auto max-w-5xl space-y-5 px-4 pb-12 pt-6">
-        <nav className="text-sm">
-          <Link href="/mountain-weather" className="font-bold underline">
-            Mountain Weather
-          </Link>
-          {' · '}
-          <Link href="/mountain-weather/snow" className="font-bold underline">
-            Snow
-          </Link>
-        </nav>
-        <LargeTitle title="Avalanche" eyebrow="Snow hub" />
-        <p className="text-sm text-gray-700">Official forecasts from the Mount Washington and Adirondack avalanche centers. Check the issued and expiration times; no forecast during the off-season does not mean low danger. NWS avalanche weather guidance below describes weather, not avalanche danger.</p>
+      <PageHero eyebrow="Mountain weather · Snow" title="Avalanche" subtitle="Official forecasts from the Mount Washington and Adirondack avalanche centers." />
+      <div className="mx-auto max-w-3xl space-y-4 px-4 pb-12 pt-4">
+        <p className="text-meta text-ink-2">Check the issued and expiration times. No forecast during the off-season does not mean low danger. The NWS avalanche weather guidance below describes weather, not avalanche danger.</p>
         <AvalancheSection data={overview} showAvg={false} />
-        <section className="space-y-2">
-          <h2 className="text-lg font-bold uppercase tracking-wide text-gray-900">Avalanche weather guidance</h2>
-          <p className="text-sm text-gray-700">NWS weather guidance for {points.length} mountain areas. This is separate from the avalanche center&apos;s danger forecast.</p>
-          <ul className="columns-1 gap-x-8 text-sm sm:columns-2">
-            {points.map((p) => (
-              <li key={p.slug} className="mb-1 break-inside-avoid">
-                <Link href={`/mountain-weather/snow/avalanche/${p.slug}`} className="font-bold underline">
-                  {p.title}
-                </Link>
-                <span className="text-gray-700"> · {p.office}</span>
-              </li>
-            ))}
-          </ul>
-        </section>
-        <section className="space-y-2 text-sm">
-          <h2 className="text-lg font-bold uppercase tracking-wide text-gray-900">Example place sections</h2>
-          <p className="text-gray-700">
-            <Link href="/mountain-weather/new-hampshire/presidential-range/mount-washington" className="font-bold underline">
-              Mount Washington
-            </Link>
-            {' · '}
-            <Link href="/mountain-weather/new-york/adirondack-high-peaks/mount-marcy" className="font-bold underline">
-              Mount Marcy
-            </Link>
+        <Card title="Avalanche weather guidance" padded={false}>
+          <p className="border-b border-hairline bg-surface-cream px-3.5 py-2 text-caption text-ink-2">
+            NWS weather guidance for {points.length} mountain areas. This is separate from the avalanche center&apos;s danger forecast.
           </p>
-        </section>
+          <ListGroup bare>
+            {points.map((p) => (
+              <ListRow key={p.slug} href={`/mountain-weather/snow/avalanche/${p.slug}`} title={p.title} subtitle={`NWS ${p.office}`} />
+            ))}
+          </ListGroup>
+        </Card>
+        <Card title="On a place page" padded={false}>
+          <ListGroup bare>
+            <ListRow href="/mountain-weather/new-hampshire/presidential-range/mount-washington?tab=snow" title="Mount Washington" subtitle="Snow tab" />
+            <ListRow href="/mountain-weather/new-york/adirondack-high-peaks/mount-marcy?tab=snow" title="Mount Marcy" subtitle="Snow tab" />
+          </ListGroup>
+        </Card>
       </div>
     </PageWrapper>
   );

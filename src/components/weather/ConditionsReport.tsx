@@ -21,13 +21,13 @@ export function ConditionsReport({
   return (
     <div className="space-y-5">
       {report.partial ? (
-        <p className="text-sm text-gray-800">
+        <p className="text-sm text-ink">
           Some summit stations did not respond ({report.failed} of {report.attempted} places). Forecast lines below are
           still from the National Weather Service grid.
         </p>
       ) : null}
       <Card title="Live measured extremes">
-        <p className="text-xs text-gray-700">From ASOS and mesonet stations bound to each peak — not forecasts.</p>
+        <p className="text-xs text-ink-2">From ASOS and mesonet stations bound to each peak — not forecasts.</p>
         {!hasMeasured ? (
           <p className="text-sm font-bold">
             {report.error ?? 'The live conditions did not load.'}
@@ -38,9 +38,9 @@ export function ConditionsReport({
             {report.stats.map((stat) => (
               <li key={stat.label}>
                 <span className="font-bold">{stat.label}:</span> {stat.value}
-                <span className="text-gray-600"> @ {stat.location}</span>
+                <span className="text-ink-2"> @ {stat.location}</span>
                 {stat.stationId ? (
-                  <span className="text-gray-600">
+                  <span className="text-ink-2">
                     {' '}
                     · {stat.stationId}
                     {stat.ageMinutes != null ? ` · ${formatObservationAge(stat.ageMinutes)}` : ''}
@@ -68,7 +68,7 @@ export function ConditionsReport({
 
       {glances.length ? (
         <Card title="Place forecast lines" padded={false}>
-          <p className="border-b border-[#5c3a1e]/20 px-3 py-2 text-xs text-gray-700">
+          <p className="border-b border-hairline px-3 py-2 text-xs text-ink-2">
             Same NWS grid forecast shown on each place page (updated on the same schedule).
           </p>
           <WeatherGlanceList items={glances} />

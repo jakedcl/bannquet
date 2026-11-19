@@ -2,8 +2,17 @@
 
 Inventory for UI revamp stage 4a. Taken from the code and the live pages
 (Mount Washington, Mount Mansfield, Mount Marcy, Katahdin, and every hub
-page) on 2026-11-19. Rule: nothing is dropped. Every item below has a
-place in the new layout. Items marked **Ask** need Jake's call.
+page) on 2026-11-19. Rule: nothing is dropped without Jake's say. Every
+item below has a place in the new layout.
+
+Jake's calls (2026-11-19):
+- Developer notes: rewritten in plain words in a collapsed "About these
+  sources" panel at the end of More.
+- Hub States list: dropped; its section and place counts moved onto the
+  state cards.
+- Freezing level (FZL / RADAT): not shown. The panel is removed and the
+  place page no longer fetches it; More sources keeps a plain link to the
+  NWS product.
 
 ## Place page (`/mountain-weather/[state]/[section]/[place]`)
 
@@ -36,7 +45,7 @@ sources. A tab with no data for that place is hidden.
 | Recreation forecast (REC), one or two elevation bands | NWS BTV, GYX | Panel per band, labeled with the band |
 | allLocations narrative (summit and mid-elevation) | NWS GYX | Panel per location |
 | Ridge / balloon wind forecast | NWS BTV | Panel |
-| Freezing level (FZL / RADAT) | NWS (balloon, measured) | Panel here, labeled measured, since it is used for planning |
+| Freezing level (FZL / RADAT) | NWS (balloon, measured) | Removed (Jake). Link only under More sources |
 | Bulletins: AFD (all subsections), HWO, aviation, marine, watches | NWS office | Collapsed "Forecaster discussion and outlook" at the end of the tab |
 
 ### Measured tab
@@ -80,7 +89,7 @@ sources. A tab with no data for that place is hidden.
 | County drought | US Drought Monitor | Panel with the categories |
 | More sources: NWS office products, guidance, land/access/research, each labeled In UI or Link only | various | Grouped link rows with the "Link only" tag (boards) |
 | Coordinates, NWS office | config | Facts panel |
-| Developer notes shown to everyone (USNO API details, "DEC pages block scripted access (403)", AirNow key, Compass camera feed) | n/a | **Ask:** rewrite in plain words in a collapsed "About these sources" panel at the end of More |
+| Developer notes shown to everyone (USNO API details, "DEC pages block scripted access (403)", AirNow key, Compass camera feed) | n/a | Rewritten in plain words in a collapsed "About these sources" panel at the end of More |
 
 ## Hub (`/mountain-weather`)
 
@@ -91,7 +100,7 @@ sources. A tab with no data for that place is hidden.
 | Find a mountain (search all places) | Search panel |
 | State cards with each section's glance row (icon, hi/lo, phrase, precip, wind, alerts) | Same, restyled as boards' state panels |
 | Links: Conditions, Snow, Maps | Shortcut rows |
-| States list | **Ask:** it repeats the state cards; keep as is or drop |
+| States list | Dropped (Jake); section and place counts are on the state cards |
 | Mount Marcy and Mount Washington links | Shortcut chips |
 
 ## State (`/mountain-weather/[state]`) and section (`.../[section]`)

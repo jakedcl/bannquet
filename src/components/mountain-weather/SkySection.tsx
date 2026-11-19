@@ -28,9 +28,8 @@ export function SkySection({ data }: { data: PlaceSkyData }) {
       {data.bundle.status === 'error' ? (
         <SourceErrorNote label="USNO sky data" href={data.bundle.sourceUrl ?? USNO_RSTT_ONEDAY_DEF.url} />
       ) : null}
-      <p className="text-xs text-gray-700">{data.horizonNote}</p>
-      <p className="text-xs text-gray-700">{data.apiNote}</p>
-      <p className="text-xs text-gray-700">
+      <p className="text-xs text-ink-2">{data.horizonNote}</p>
+      <p className="text-xs text-ink-2">
         Coordinates: {data.coords.lat.toFixed(4)}, {data.coords.lon.toFixed(4)} ·{' '}
         <a href={USNO_RSTT_ONEDAY_DEF.url} className="font-bold underline" target="_blank" rel="noopener noreferrer">
           API docs
@@ -38,7 +37,7 @@ export function SkySection({ data }: { data: PlaceSkyData }) {
       </p>
       <div className="space-y-4">
         {data.days.map((day) => (
-          <article key={day.dateEt} className="retro-box border-[#5c3a1e] bg-white/60 p-3">
+          <article key={day.dateEt} className="tile p-3">
             <h3 className="text-sm font-bold">
               {day.dateEt} · {day.dayOfWeek ?? '—'} ({day.tzLabel})
             </h3>

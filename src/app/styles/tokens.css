@@ -58,6 +58,14 @@
   --color-warn: #f7941e;
   --color-warn-soft: #fff0d6;
   --color-ok: #4a7c2a;
+
+  /* Avalanche danger, official North American scale (1 Low to 5 Extreme).
+     A center's own color from its data wins over these. */
+  --color-avy-1: #50b848;
+  --color-avy-2: #fff200;
+  --color-avy-3: #f7941e;
+  --color-avy-4: #ed1c24;
+  --color-avy-5: #231f20;
   --color-stale: #999999;
 
   /* ---- Radius (always paired with the squircle utility) --------- */

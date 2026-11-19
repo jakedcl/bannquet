@@ -19,12 +19,12 @@ export function MapImageGrid({
         {images.map((img) => (
           <figure key={img.id} className="space-y-1">
             <figcaption className="text-xs font-bold">{img.label}</figcaption>
-            <p className="text-[10px] text-gray-700">
+            <p className="text-[10px] text-ink-2">
               {img.org} · valid/frame: {img.validTimeLabel ?? 'not published'}
             </p>
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={img.url} alt={img.label} className="max-w-full border border-[#5c3a1e]/30 bg-white" />
-            <p className="text-[10px] text-gray-700">
+            <img src={img.url} alt={img.label} className="max-w-full border border-hairline bg-white" />
+            <p className="text-[10px] text-ink-2">
               <a href={img.url} className="font-bold underline" target="_blank" rel="noopener noreferrer">
                 {img.org} image URL
               </a>
@@ -32,7 +32,7 @@ export function MapImageGrid({
           </figure>
         ))}
       </div>
-      <p className="text-xs text-gray-700">
+      <p className="text-xs text-ink-2">
         {refreshNote} ·{' '}
         <a href={sourceUrl} className="font-bold underline" target="_blank" rel="noopener noreferrer">
           Source

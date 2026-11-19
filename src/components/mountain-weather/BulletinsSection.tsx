@@ -37,7 +37,7 @@ function ProductBlock({
     return (
       <CollapsibleSection title={title} subtitle={`${def.org} (unavailable)${stale}`}>
         <SourceErrorNote label={title} href={result.sourceUrl ?? def.url} />
-        <p className="text-xs text-gray-700">
+        <p className="text-xs text-ink-2">
           <a href={def.url} className="font-bold underline" target="_blank" rel="noopener noreferrer">
             Latest via API
           </a>
@@ -55,14 +55,14 @@ function ProductBlock({
     >
       <div className="space-y-3 text-sm">
         {data.preamble ? (
-          <pre className="whitespace-pre-wrap font-mono text-[11px] text-gray-900">{data.preamble}</pre>
+          <pre className="whitespace-pre-wrap font-mono text-[11px] text-ink">{data.preamble}</pre>
         ) : null}
         {data.sections.map((section) => (
           <CollapsibleSection key={section.key} title={section.title} defaultOpen={false}>
-            <pre className="mt-1 whitespace-pre-wrap text-sm text-gray-900">{section.body || '—'}</pre>
+            <pre className="mt-1 whitespace-pre-wrap text-sm text-ink">{section.body || '—'}</pre>
           </CollapsibleSection>
         ))}
-        <p className="text-xs text-gray-700">
+        <p className="text-xs text-ink-2">
           Issued {formatEt(result.issuedAt)} ET · {data.sections.length} sections ·{' '}
           <a href={result.sourceUrl} className="font-bold underline" target="_blank" rel="noopener noreferrer">
             Product JSON
@@ -109,7 +109,7 @@ export function BulletinsSection({
             <p className="text-sm">
               Text HWO is not shown in-page for {bundle.office}; use the graphical outlook.
             </p>
-            <p className="text-xs text-gray-700">
+            <p className="text-xs text-ink-2">
               <a
                 href={ghwoUrl(bundle.office as MountainWfo)}
                 className="font-bold underline"

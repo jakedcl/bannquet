@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { Pill } from '@/components/hub/Button';
+import { Tag } from '@/components/hub/Button';
 import type { HubGlance } from '@/lib/mountain-weather/hub-glance';
 
 function degrees(high: number | null, low: number | null): string {
@@ -17,26 +17,27 @@ export function WeatherGlanceRow({ glance }: { glance: HubGlance & { id?: string
   ].filter(Boolean).join(' · ');
   return (
     <li>
-      <Link href={glance.href} className="ui-row-press flex min-w-0 items-center gap-3 px-3 py-2 no-underline">
+      <Link href={glance.href} className="ui-row-press flex min-h-16 min-w-0 items-center gap-3 px-3.5 py-2.5 no-underline">
         {glance.icon ? (
-          <Image src={glance.icon} alt="" width={36} height={36} unoptimized className="h-8 w-8 shrink-0 border border-ui-separator object-cover" />
+          <Image src={glance.icon} alt="" width={36} height={36} unoptimized className="h-9 w-9 shrink-0 rounded-tag object-cover squircle" />
         ) : (
-          <span className="h-8 w-8 shrink-0 bg-ui-fill" aria-hidden="true" />
+          <span className="h-9 w-9 shrink-0 rounded-tag bg-surface-gray" aria-hidden="true" />
         )}
         <span className="min-w-0 flex-1">
-          <span className="t-headline block truncate text-ui-label">{glance.title}</span>
-          <span className="t-footnote block break-words text-ui-label-2 sm:truncate">{glance.phrase}</span>
+          <span className="block font-heading text-meta font-bold uppercase text-ink [overflow-wrap:anywhere]">{glance.title}</span>
+          <span className="block text-caption text-ink-2 [overflow-wrap:anywhere]">{glance.phrase}</span>
           {glance.representativeNote ? (
-            <span className="t-caption block text-ui-label-2">{glance.representativeNote}</span>
+            <span className="block text-caption text-ink-3">{glance.representativeNote}</span>
           ) : null}
-          {glance.alert ? <Pill tone="warn" className="mt-1">{glance.alert}</Pill> : null}
+          {extras || glance.windowLabel ? (
+            <span className="block text-caption text-ink-3 [overflow-wrap:anywhere]">
+              {[extras, glance.windowLabel].filter(Boolean).join(' · ')}
+            </span>
+          ) : null}
+          {glance.alert ? <Tag kind="warn" className="mt-1">{glance.alert}</Tag> : null}
         </span>
-        <span className="shrink-0 text-right">
-          <span className="t-headline block tabular-nums text-ui-label">{degrees(glance.high, glance.low)}</span>
-          {extras ? <span className="t-caption block text-ui-label-2">{extras}</span> : null}
-          {glance.windowLabel ? (
-            <span className="t-caption block text-ui-label-2">{glance.windowLabel}</span>
-          ) : null}
+        <span className="shrink-0 self-start pt-0.5 text-right">
+          <span className="block text-heading font-bold tabular-nums text-ink">{degrees(glance.high, glance.low)}</span>
         </span>
       </Link>
     </li>
@@ -44,7 +45,7 @@ export function WeatherGlanceRow({ glance }: { glance: HubGlance & { id?: string
 }
 
 export function WeatherGlanceList({ items }: { items: Array<HubGlance & { id?: string }> }) {
-  if (items.length === 0) return <p className="t-subhead p-3 text-ui-label-2">Nothing to show.</p>;
+  if (items.length === 0) return <p className="p-3.5 text-meta text-ink-2">No places to show.</p>;
   return (
     <ul className="ui-list">
       {items.map((item, index) => (

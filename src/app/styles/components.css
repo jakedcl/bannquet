@@ -227,7 +227,7 @@
 
   .switcher {
     display: flex;
-    gap: 0.25rem;
+    gap: 0.125rem;
     padding: 0.1875rem;
     border: var(--border-control) solid;
     border-color: var(--color-bevel-dark) var(--color-bevel) var(--color-bevel) var(--color-bevel-dark);
@@ -240,24 +240,37 @@
 
   .switcher-item {
     display: flex;
-    flex: 1 1 0;
+    flex: 1 1 auto;
     align-items: center;
     justify-content: center;
     min-height: 2.25rem;
-    padding: 0 0.625rem;
+    padding: 0 0.3125rem;
     border: var(--border-control) solid transparent;
     border-radius: var(--radius-control);
     corner-shape: squircle;
     color: var(--color-ink);
     font-size: var(--text-tag);
     font-weight: 700;
-    letter-spacing: var(--tracking-label);
+    letter-spacing: 0.02em;
     text-align: center;
     text-decoration: none;
     text-transform: uppercase;
     white-space: nowrap;
     cursor: pointer;
     -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Very narrow phones: all five place tabs still fit. */
+  @media (max-width: 360px) {
+    .switcher {
+      gap: 0;
+      padding: 0.125rem;
+    }
+
+    .switcher-item {
+      padding: 0 0.1875rem;
+      letter-spacing: 0;
+    }
   }
 
   .switcher-item[aria-current="page"],
@@ -414,6 +427,32 @@
     color: var(--color-on-dark);
   }
 
+  /* Photo hero (Home, Mountain weather): green-tinted mountain photo,
+     rounded bottom, faint scan lines. */
+  .page-hero-photo {
+    position: relative;
+    overflow: hidden;
+    border-bottom: 0;
+    border-radius: 0 0 var(--radius-hero) var(--radius-hero);
+    corner-shape: squircle;
+    background-image: var(--gradient-hero-tint), url("/background.jpeg");
+    background-position: center 40%;
+    background-size: cover;
+  }
+
+  .page-hero-photo::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image: var(--texture-scanlines);
+  }
+
+  .page-hero-photo > * {
+    position: relative;
+    z-index: 1;
+  }
+
   .page-hero-title {
     font-family: var(--font-heading);
     font-size: var(--text-title);
@@ -453,6 +492,53 @@
     background-image: var(--gradient-green);
     color: var(--color-on-dark);
     font-weight: 700;
+  }
+
+  /* ---- Opening sections: height animates from 0fr to 1fr ---------- */
+  .collapse-body {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows var(--duration-toast) var(--ease-soft);
+  }
+
+  .collapse-body[data-open="true"] {
+    grid-template-rows: 1fr;
+  }
+
+  /* Closed content is hidden from tabbing and screen readers once shut. */
+  .collapse-body > div {
+    visibility: hidden;
+    transition: visibility 0s linear var(--duration-toast);
+  }
+
+  .collapse-body[data-open="true"] > div {
+    visibility: visible;
+    transition-delay: 0s;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .collapse-body,
+    .collapse-body > div {
+      transition: none;
+    }
+  }
+
+  /* ---- Charts: lines draw in once ---------------------------------- */
+  .chart-draw {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    animation: chart-draw 700ms var(--ease-soft) forwards;
+  }
+
+  @keyframes chart-draw {
+    to { stroke-dashoffset: 0; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .chart-draw {
+      animation: none;
+      stroke-dashoffset: 0;
+    }
   }
 
   /* ---- Skeleton loading line ---------------------------------------- */
