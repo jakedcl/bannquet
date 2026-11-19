@@ -38,3 +38,6 @@ next-env.d.ts
 
 # build output
 /dist
+
+# UI revamp screenshots
+/.ui-shots/

@@ -1,0 +1,110 @@
+/* Design tokens: Tailwind theme, layout sizes and the --ui-* palette (exposed as ui-* colors). */
+
+@theme {
+  --color-background: #f0f0f0;
+  --color-foreground: #1a1a1a;
+  --color-beige: #e8e6e1;
+  --color-border-gray: #999999;
+  --color-brand-green: #2d5016;
+  --color-brand-green-light: #4a7c2a;
+  --color-brand-green-dark: #1a3009;
+  --color-accent-yellow: #ffd700;
+  --color-accent-orange: #ff8c00;
+
+  /* Readable floor: small text 13px, body 16px on phones. */
+  --text-xs: 0.8125rem;
+  --text-xs--line-height: 1.35;
+  --text-sm: 1rem;
+  --text-sm--line-height: 1.45;
+
+  --font-sans: Verdana, "Trebuchet MS", Arial, Helvetica, sans-serif;
+  --font-heading: "Trebuchet MS", Verdana, Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+  --shadow-retro: 4px 4px 8px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  --shadow-retro-inset: inset 2px 2px 4px rgba(0, 0, 0, 0.2);
+  --shadow-retro-button: 2px 2px 4px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  --shadow-retro-button-active: inset 2px 2px 4px rgba(0, 0, 0, 0.3);
+
+  --animate-fade-in: fadeIn 0.5s ease-in-out;
+  --animate-slide-up: slideUp 0.5s ease-in-out;
+  --animate-slide-down: slideDown 0.5s ease-in-out;
+
+  @keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+  }
+  @keyframes slideUp {
+    0% { transform: translateY(20px); opacity: 0; }
+    100% { transform: translateY(0); opacity: 1; }
+  }
+  @keyframes slideDown {
+    0% { transform: translateY(-20px); opacity: 0; }
+    100% { transform: translateY(0); opacity: 1; }
+  }
+  @keyframes peakFinderBar {
+    0% { transform: translateX(-120%); }
+    100% { transform: translateX(320%); }
+  }
+  --animate-peak-finder-bar: peakFinderBar 1.1s ease-in-out infinite;
+}
+
+/* ------------------------------------------------------------------
+   Hub kit: the original retro Bannquet look, made consistent so the
+   shared components in src/components/hub can be used on every page.
+   Light only, same palette, fonts, bevels and green banner as before.
+   ------------------------------------------------------------------ */
+:root {
+  --bar-h: 64px;
+  --tab-h: calc(68px + env(safe-area-inset-bottom, 0px));
+
+  --ui-bg: #f0f0f0;
+  --ui-surface: #ffffff;
+  --ui-surface-2: #f6f4ef;
+  --ui-label: #1a1a1a;
+  --ui-label-2: #4b4b4b;
+  --ui-label-3: #636363;
+  --ui-separator: #d9d5cc;
+  --ui-fill: #e8e6e1;
+  --ui-fill-2: #dcd8cf;
+  --ui-accent: #2d5016;
+  --ui-accent-strong: #1a3009;
+  --ui-accent-soft: #e4ecdb;
+  --ui-on-accent: #ffffff;
+  --ui-danger: #b3261e;
+  --ui-warn-bg: #fff4c2;
+  --ui-warn: #5c3a1e;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --bar-h: 72px;
+  }
+}
+
+/* The full banner links only fit from lg up; below that the phone layout
+   (three-line menu and bottom tab bar) is used. Keep in step with TopBar/TabBar. */
+@media (min-width: 1024px) {
+  :root {
+    --tab-h: 0px;
+  }
+}
+
+@theme inline {
+  --color-ui-bg: var(--ui-bg);
+  --color-ui-surface: var(--ui-surface);
+  --color-ui-surface-2: var(--ui-surface-2);
+  --color-ui-label: var(--ui-label);
+  --color-ui-label-2: var(--ui-label-2);
+  --color-ui-label-3: var(--ui-label-3);
+  --color-ui-separator: var(--ui-separator);
+  --color-ui-fill: var(--ui-fill);
+  --color-ui-fill-2: var(--ui-fill-2);
+  --color-ui-accent: var(--ui-accent);
+  --color-ui-accent-strong: var(--ui-accent-strong);
+  --color-ui-accent-soft: var(--ui-accent-soft);
+  --color-ui-on-accent: var(--ui-on-accent);
+  --color-ui-danger: var(--ui-danger);
+  --color-ui-warn: var(--ui-warn);
+  --color-ui-warn-bg: var(--ui-warn-bg);
+}
