@@ -4,7 +4,9 @@ Design canvas: https://claude.ai/artifact/CK3oghrtb1jC72JqmMZ8F4 (Jake can expor
 
 ## How to read this
 
-A `screenshots/` folder next to this file has a PNG of every Design board, named after the board (for example `Pg-Community.png`). The three "Design" tabs show the look to build. The nine "Context only (old look)" tabs show content and ideas in the old style and are not a styling reference.
+A `screenshots/` folder next to this file has a PNG of every Design board, named after the board (for example `Pg-Community.png`).
+
+A `boards/` folder has the source HTML for the same 69 Design boards (for example `boards/Pg-Community.dc.html`). Use them as a reference for exact values: colors, corner radii, padding, font sizes, shadows and how each component is put together. They are not code to copy into the app. Each file is a design-canvas mockup with sample text in brackets and a small `support.js` loader that is not included, so the files will not render on their own. The screenshots show how a page looks, and the board files show the CSS behind it. The old-look Options boards are not included on purpose. The three "Design" tabs show the look to build. The nine "Context only (old look)" tabs show content and ideas in the old style and are not a styling reference.
 
 The boards are mockups for styling. They show roughly how each page should look. They are not a spec for new systems.
 
