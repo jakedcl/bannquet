@@ -17,6 +17,8 @@ The boards are mockups for styling. They show roughly how each page should look.
 
 ## Rules that apply everywhere
 
+- **AGENTS.md still applies.** Follow it for commits (no `Co-authored-by` trailers), database and auth work (read `docs/environments.md`, never run `db:migrate` on production), the redirects in `next.config.ts`, route privacy (`routeCutSql`/`shownLineSql`), and the image rules (no Vercel Image Optimization). This redesign should not touch the database, auth or API logic.
+
 - **No competition.** No leaderboards, rankings, or counts that compare people. Peaks and challenges show your own progress. Lists of who has been somewhere are plain names. Specific places in the repo to change (UI only):
   - The "most popular peaks by number of friends" ranking: `src/app/community/page.tsx` and `popularPeaksByFriends` in `src/lib/summits.ts`. Remove it from the page.
   - The Friends column in `src/components/peaks/PeaksTable.tsx` (the `visitors` field). Remove the column and the default sort by it.
