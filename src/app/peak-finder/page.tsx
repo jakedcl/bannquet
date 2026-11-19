@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 
 export default function PeakFinderPage() {
   return (
-    <div className="fixed inset-x-0 top-[var(--bar-h)] bottom-[var(--tab-h)] z-0 overflow-hidden">
+    <div className="fixed inset-x-0 top-[var(--bar-h)] bottom-0 z-0 overflow-hidden">
       <PeakFinder />
     </div>
   );

@@ -1,18 +1,18 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { communitySection, HOME_ACTIONS, linkOn, matchSection, pageTrail, settingsHref, visibleLinks, settingsLinks } from './sections';
+import { communitySection, HOME_ACTIONS, linkOn, matchSection, MENU_SECTIONS, menuAccountLinks, pageTrail, settingsHref, visibleLinks, settingsLinks } from './sections';
 
 const nobody = null;
 
-test('a peak crumb is Community / Peaks / name and backs up to the list', () => {
+test('a peak crumb is Peaks / name and backs up to the list', () => {
   const trail = pageTrail('/peaks/adk46_algonquin_peak', '', nobody, 'Algonquin Peak');
   assert.equal(trail.parentHref, '/peaks');
-  assert.deepEqual(trail.crumbs?.map((crumb) => crumb.label), ['Community', 'Peaks', 'Algonquin Peak']);
+  assert.deepEqual(trail.crumbs?.map((crumb) => crumb.label), ['Peaks', 'Algonquin Peak']);
 });
 
-test('a member crumb is Community / Members / handle', () => {
+test('a member crumb is Community / Members / handle and backs up to Community', () => {
   const trail = pageTrail('/user/jkiddf', '', nobody);
-  assert.equal(trail.parentHref, '/members');
+  assert.equal(trail.parentHref, '/community');
   assert.deepEqual(trail.crumbs?.map((crumb) => crumb.label), ['Community', 'Members', 'jkiddf']);
 });
 
@@ -27,7 +27,8 @@ test('every section page has a breadcrumb, including the parent', () => {
   assert.equal(pageTrail('/community', '', nobody).parentHref, '/');
   assert.deepEqual(pageTrail('/posts', '', nobody).crumbs?.map((crumb) => crumb.label), ['Community', 'Posts']);
   assert.equal(pageTrail('/posts', '', nobody).parentHref, '/community');
-  assert.deepEqual(pageTrail('/peaks', '', nobody).crumbs?.map((crumb) => crumb.label), ['Community', 'Peaks']);
+  assert.deepEqual(pageTrail('/peaks', '', nobody).crumbs?.map((crumb) => crumb.label), ['Peaks']);
+  assert.equal(pageTrail('/peaks', '', nobody).parentHref, '/');
   assert.deepEqual(pageTrail('/chat', '', nobody).crumbs?.map((crumb) => crumb.label), ['Community', 'Chat']);
   assert.deepEqual(pageTrail('/members', '', nobody).crumbs?.map((crumb) => crumb.label), ['Community', 'Members']);
   assert.deepEqual(pageTrail('/map', '', nobody).crumbs?.map((crumb) => crumb.label), ['Map']);
@@ -77,7 +78,8 @@ test('an upload form sits under Upload', () => {
 
 test('a post, pin, route, and photo name the record', () => {
   assert.equal(pageTrail('/posts/abc', '', nobody, 'Greasefest').crumbs?.at(-1)?.label, 'Greasefest');
-  assert.equal(pageTrail('/pins/abc', '', nobody, 'Lookout').parentHref, '/map');
+  assert.equal(pageTrail('/pins/abc', '', nobody, 'Lookout').parentHref, '/community');
+  assert.equal(pageTrail('/routes/abc', '', nobody, 'Ridge').parentHref, '/community');
   assert.equal(pageTrail('/routes/abc', '', nobody, 'Ridge').crumbs?.at(-1)?.label, 'Ridge');
   assert.equal(pageTrail('/photos/abc', '', nobody).crumbs?.at(-1)?.label, 'Photo');
   assert.deepEqual(pageTrail('/photos/abc', '', nobody).crumbs?.map((crumb) => crumb.label), ['Community', 'Photos', 'Photo']);
@@ -151,4 +153,29 @@ test('fishing is its own section, outside community', () => {
   assert.equal(spot.parentHref, '/fishing/freshwater');
   assert.deepEqual(spot.crumbs?.map((crumb) => crumb.label), ['Fishing', 'Freshwater', 'Esopus Creek']);
   assert.deepEqual(pageTrail('/fishing/01362500', '', nobody).crumbs?.map((crumb) => crumb.label), ['Fishing', 'Freshwater', 'Gauge']);
+});
+
+test('weather sub-pages back up one level', () => {
+  assert.equal(pageTrail('/mountain-weather/snow', '', nobody).parentHref, '/mountain-weather');
+  assert.equal(pageTrail('/mountain-weather/maps', '', nobody).parentHref, '/mountain-weather');
+  assert.equal(pageTrail('/mountain-weather/snow/avalanche', '', nobody).parentHref, '/mountain-weather/snow');
+  const point = pageTrail('/mountain-weather/snow/avalanche/mwac', '', nobody, 'Mount Washington');
+  assert.equal(point.parentHref, '/mountain-weather/snow/avalanche');
+  assert.deepEqual(point.crumbs?.map((crumb) => crumb.label), ['Mountain Weather', 'Snow', 'Avalanche', 'Mount Washington']);
+});
+
+test('the menu reaches every section and its sub-pages', () => {
+  const hrefs = MENU_SECTIONS.flatMap((section) => [section.href, ...section.links.map((link) => link.href)]);
+  for (const href of [
+    '/', '/mountain-weather', '/mountain-weather/conditions', '/mountain-weather/snow', '/mountain-weather/snow/avalanche',
+    '/mountain-weather/maps', '/peak-finder', '/map', '/peaks', '/fishing', '/fishing/freshwater', '/fishing/saltwater',
+    '/fishing/stocking', '/fishing/guides', '/community', '/photos', '/posts', '/chat', '/members',
+  ]) {
+    assert.ok(hrefs.includes(href), href);
+  }
+  assert.deepEqual(menuAccountLinks(null), []);
+  const admin = menuAccountLinks({ handle: 'jake', role: 'admin' }).map((link) => link.href);
+  assert.deepEqual(admin, ['/user/jake', '/upload', '/account', '/admin']);
+  const pending = menuAccountLinks({ handle: 'new', role: 'pending' }).map((link) => link.href);
+  assert.ok(!pending.includes('/upload'));
 });

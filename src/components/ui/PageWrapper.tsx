@@ -3,7 +3,6 @@
 import { ReactNode, Suspense } from 'react';
 import { usePathname } from 'next/navigation';
 import { BackBar } from '@/components/ui/BackBar';
-import { SectionChrome } from '@/components/ui/SectionChrome';
 
 interface PageWrapperProps {
   children: ReactNode;
@@ -15,9 +14,8 @@ interface PageWrapperProps {
 export default function PageWrapper({ children, className = '', leaf = null }: PageWrapperProps) {
   const pathname = usePathname();
   return (
-    <div className={`page-frame mt-[var(--bar-h)] min-h-[calc(100dvh-var(--bar-h)-var(--tab-h))] ${className}`}>
+    <div className={`page-frame mt-[var(--bar-h)] min-h-[calc(100dvh-var(--bar-h))] ${className}`}>
       <Suspense fallback={null}>
-        <SectionChrome />
         {pathname === '/' ? null : <BackBar leaf={leaf} />}
       </Suspense>
       {children}

@@ -187,22 +187,8 @@
   --duration-toast: 220ms;
   --duration-sheet: 260ms;
 
-  --bar-h: 64px;
-  --tab-h: calc(68px + env(safe-area-inset-bottom, 0px));
-}
-
-@media (min-width: 768px) {
-  :root {
-    --bar-h: 72px;
-  }
-}
-
-/* The full banner links only fit from lg up; below that the phone layout
-   (three-line menu and bottom tab bar) is used. Keep in step with TopBar/TabBar. */
-@media (min-width: 1024px) {
-  :root {
-    --tab-h: 0px;
-  }
+  /* Height of the fixed green top bar. */
+  --bar-h: 60px;
 }
 
 /* ---- Token utilities ---------------------------------------------- */

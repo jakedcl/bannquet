@@ -120,35 +120,6 @@
   background: linear-gradient(to bottom, #ff1493 0%, #cc1180 100%);
 }
 
-/* One height for every top-nav item, including dropdown triggers. */
-.nav-button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  box-sizing: border-box;
-  height: 2.75rem;
-  line-height: 1;
-  white-space: nowrap;
-  padding-top: 0;
-  padding-bottom: 0;
-}
-
-.nav-button.nav-button-lg {
-  height: 4.25rem;
-  padding-left: 1.75rem;
-  padding-right: 1.75rem;
-  font-size: 1.25rem;
-}
-
-@media (min-width: 640px) {
-  .nav-button.nav-button-lg {
-    height: 4.75rem;
-    padding-left: 2.25rem;
-    padding-right: 2.25rem;
-    font-size: 1.5rem;
-  }
-}
-
 .maplibregl-popup.bnqt-popup .maplibregl-popup-content {
   background: var(--color-surface-gray);
   border: var(--border-bevel) outset var(--color-bevel);
@@ -327,36 +298,8 @@ td.cell-primary :is(img, .avatar-frame, svg) {
   .crumb-narrow { display: none; }
 }
 
-/* Brown section bar: pinned under the green banner; buttons wrap, never clip. */
-.section-nav { top: var(--bar-h); }
-.has-pending .section-nav { top: calc(var(--bar-h) + 3.5rem); }
-
 /* Anchors and Next's scroll-into-view land below the fixed bars. */
 html { scroll-padding-top: var(--bar-h); }
-html:has(.section-nav) { scroll-padding-top: calc(var(--bar-h) + var(--sub-h, 3.75rem)); }
-
-.section-nav-link {
-  display: inline-flex;
-  flex-shrink: 0;
-  align-items: center;
-  justify-content: center;
-  box-sizing: border-box;
-  height: 2.75rem;
-  padding: 0 0.75rem;
-  font-size: 0.8125rem;
-  line-height: 1;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  white-space: nowrap;
-}
-
-@media (min-width: 640px) {
-  .section-nav-link {
-    padding: 0 1rem;
-    font-size: 0.875rem;
-  }
-}
 
 .retro-banner {
   background: linear-gradient(to bottom, var(--brand-green-light) 0%, var(--brand-green) 50%, var(--brand-green-dark) 100%);
@@ -377,11 +320,11 @@ html:has(.section-nav) { scroll-padding-top: calc(var(--bar-h) + var(--sub-h, 3.
 
 .has-pending .page-frame {
   margin-top: calc(var(--bar-h) + 3.5rem);
-  min-height: calc(100dvh - var(--bar-h) - 3.5rem - var(--tab-h));
+  min-height: calc(100dvh - var(--bar-h) - 3.5rem);
 }
 
 .has-pending .map-bleed {
   top: calc(var(--bar-h) + 3.5rem);
-  height: calc(100dvh - var(--bar-h) - 3.5rem - var(--tab-h));
+  height: calc(100dvh - var(--bar-h) - 3.5rem);
 }
 

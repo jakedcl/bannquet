@@ -1,5 +1,4 @@
 import { Suspense } from 'react';
-import { TabBar } from '@/components/hub/TabBar';
 import { TopBar } from '@/components/hub/TopBar';
 import { HomeScreenTip } from '@/components/ui/HomeScreenTip';
 import { LoadEntrance } from '@/components/ui/LoadEntrance';
@@ -64,10 +63,9 @@ export default async function RootLayout({
               <RouteMotion />
             </Suspense>
             <LoadEntrance />
-            <main className="route-stage flex-1 bg-page pb-[var(--tab-h)]">
+            <main className="route-stage flex-1 bg-page">
               {children}
             </main>
-            <TabBar account={account} />
           </div>
         </Providers>
       </body>

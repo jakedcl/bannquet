@@ -108,6 +108,68 @@ export const FISHING_MENU_LINKS: NavLink[] = [
   ...FISHING_LINKS,
 ];
 
+/** A main row in the menu, with its sub-pages shown as small links under it. */
+export type MenuSection = NavLink & { note?: string; links: NavLink[] };
+
+/**
+ * The menu. Every page is reachable from here: a main row, or a link under
+ * its section (see the route map board in the design handoff).
+ */
+export const MENU_SECTIONS: MenuSection[] = [
+  { href: '/', label: 'Home', links: [] },
+  {
+    href: '/mountain-weather',
+    label: 'Mountain weather',
+    note: 'Forecasts, conditions, snow, maps',
+    links: [
+      { href: '/mountain-weather/conditions', label: 'Conditions' },
+      { href: '/mountain-weather/snow', label: 'Snow' },
+      { href: '/mountain-weather/snow/avalanche', label: 'Avalanche' },
+      { href: '/mountain-weather/maps', label: 'Maps' },
+      ...REGION_OPTIONS.map((option) => ({
+        href: mountainWeatherPath(option.code as MountainStateCode),
+        label: option.label,
+      })),
+    ],
+  },
+  { href: PEAK_FINDER_LINK.href, label: PEAK_FINDER_LINK.label, links: [] },
+  { href: '/map', label: 'Map', links: [] },
+  { href: '/peaks', label: 'Peaks', links: [] },
+  {
+    href: '/fishing',
+    label: 'Fishing',
+    note: 'Streams, tides, stocking',
+    links: [
+      { href: '/fishing/freshwater', label: 'Freshwater' },
+      { href: '/fishing/saltwater', label: 'Saltwater' },
+      { href: '/fishing/stocking', label: 'Stocking' },
+      { href: '/fishing/guides', label: 'Guides' },
+    ],
+  },
+  {
+    href: '/community',
+    label: 'Community',
+    note: 'Photos, posts, chat, pins and routes',
+    links: [
+      { href: '/photos', label: 'Photos' },
+      { href: '/posts', label: 'Posts' },
+      { href: '/chat', label: 'Chat' },
+      { href: '/members', label: 'Members' },
+    ],
+  },
+];
+
+/** The signed-in part of the menu. */
+export function menuAccountLinks(account: NavAccount): Array<NavLink & { note?: string }> {
+  if (!account) return [];
+  const links: Array<NavLink & { note?: string }> = [];
+  if (account.handle) links.push({ href: `/user/${account.handle}`, label: 'Profile', note: 'Your peaks, posts and routes' });
+  if (account.role !== 'pending') links.push({ href: '/upload', label: 'Upload', note: 'Post, route, pin or photo' });
+  links.push({ href: '/account', label: 'Account', note: 'Edit your profile' });
+  if (account.role === 'admin') links.push({ href: '/admin', label: 'Admin', note: 'Invites and new members' });
+  return links;
+}
+
 export type HomeAction = {
   id: string;
   href: string;
@@ -216,11 +278,15 @@ function communityTrail(href: string, label: string, leaf?: Crumb | null): Crumb
 }
 
 export function pageTrail(pathname: string, search: string, account: NavAccount, leaf?: string | null): PageTrail {
+  if (pathname === '/peaks') {
+    return { parentHref: '/', crumbs: [{ href: '/peaks', label: 'Peaks' }] };
+  }
+
   const peak = pathname.match(/^\/peaks\/([^/]+)$/);
   if (peak) {
     return {
       parentHref: '/peaks',
-      crumbs: communityTrail('/peaks', 'Peaks', named(pathname, 'Peak', leaf)),
+      crumbs: [{ href: '/peaks', label: 'Peaks' }, named(pathname, 'Peak', leaf)],
     };
   }
 
@@ -234,7 +300,7 @@ export function pageTrail(pathname: string, search: string, account: NavAccount,
       { href: profileHref, label: handle },
     ];
     const section = member[2] ? PROFILE_LISTS[member[2]] : null;
-    if (!section) return { parentHref: '/members', crumbs };
+    if (!section) return { parentHref: '/community', crumbs };
     crumbs.push({ href: pathname, label: section });
     return { parentHref: profileHref, crumbs };
   }
@@ -244,6 +310,28 @@ export function pageTrail(pathname: string, search: string, account: NavAccount,
       parentHref: '/posts',
       crumbs: communityTrail('/posts', 'Posts', named(pathname, 'Post', leaf)),
     };
+  }
+
+  if (pathname === '/mountain-weather/maps' || pathname === '/mountain-weather/snow') {
+    const label = pathname.endsWith('/maps') ? 'Maps' : 'Snow';
+    return {
+      parentHref: '/mountain-weather',
+      crumbs: [
+        { href: '/mountain-weather', label: 'Mountain Weather' },
+        { href: pathname, label },
+      ],
+    };
+  }
+
+  if (pathOn(pathname, '/mountain-weather/snow/avalanche')) {
+    const crumbs: Crumb[] = [
+      { href: '/mountain-weather', label: 'Mountain Weather' },
+      { href: '/mountain-weather/snow', label: 'Snow' },
+      { href: '/mountain-weather/snow/avalanche', label: 'Avalanche' },
+    ];
+    if (pathname === '/mountain-weather/snow/avalanche') return { parentHref: '/mountain-weather/snow', crumbs };
+    crumbs.push(named(pathname, 'Forecast point', leaf));
+    return { parentHref: '/mountain-weather/snow/avalanche', crumbs };
   }
 
   if (pathname === '/mountain-weather/conditions') {
@@ -258,9 +346,9 @@ export function pageTrail(pathname: string, search: string, account: NavAccount,
 
   if (/^\/pins\/[^/]+$/.test(pathname)) {
     return {
-      parentHref: '/map',
+      parentHref: '/community',
       crumbs: [
-        { href: '/map', label: 'Map' },
+        { href: '/community', label: 'Community' },
         named(pathname, 'Pin', leaf),
       ],
     };
@@ -268,9 +356,9 @@ export function pageTrail(pathname: string, search: string, account: NavAccount,
 
   if (/^\/routes\/[^/]+$/.test(pathname)) {
     return {
-      parentHref: '/map',
+      parentHref: '/community',
       crumbs: [
-        { href: '/map', label: 'Map' },
+        { href: '/community', label: 'Community' },
         named(pathname, 'Route', leaf),
       ],
     };

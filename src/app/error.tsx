@@ -12,7 +12,7 @@ export default function ErrorPage({ error, reset }: { error: Error & { digest?: 
   }, [error]);
 
   return (
-    <div className="page-frame mt-[var(--bar-h)] min-h-[calc(100dvh-var(--bar-h)-var(--tab-h))]">
+    <div className="page-frame mt-[var(--bar-h)] min-h-[calc(100dvh-var(--bar-h))]">
       <HubPage title="Something broke" width="3xl">
         <Card>
           <p className="t-body">This page did not load. Try again in a minute.</p>

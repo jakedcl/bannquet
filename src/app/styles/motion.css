@@ -15,7 +15,6 @@
   .retro-button-pink,
   .retro-button-purple,
   .retro-button-primary,
-  .nav-button,
   button
 ) {
   transition: transform var(--motion) var(--motion-ease), opacity var(--motion) var(--motion-ease);
@@ -30,7 +29,6 @@
   .retro-button-pink,
   .retro-button-purple,
   .retro-button-primary,
-  .nav-button,
   button
 ):active:not(:disabled) {
   transform: translate(1px, 1px);
@@ -237,8 +235,7 @@ dialog[open]::backdrop {
     .retro-button-pink,
     .retro-button-purple,
     .retro-button-primary,
-    .nav-button,
-    button
+      button
   ) {
     transition: none;
   }
@@ -252,8 +249,7 @@ dialog[open]::backdrop {
     .retro-button-pink,
     .retro-button-purple,
     .retro-button-primary,
-    .nav-button,
-    button
+      button
   ):active:not(:disabled) {
     transform: none;
   }

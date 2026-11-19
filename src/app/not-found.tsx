@@ -5,7 +5,7 @@ import { HubPage } from '@/components/hub/Page';
 
 export default function NotFound() {
   return (
-    <div className="page-frame mt-[var(--bar-h)] min-h-[calc(100dvh-var(--bar-h)-var(--tab-h))]">
+    <div className="page-frame mt-[var(--bar-h)] min-h-[calc(100dvh-var(--bar-h))]">
       <HubPage title="Not found" width="3xl">
         <Card>
           <p className="t-body">That page is not here.</p>

@@ -26,7 +26,7 @@ export default async function MapPage({
   const coordinates = focusFeature?.geometry.type === 'Point' ? focusFeature.geometry.coordinates : null;
 
   return (
-    <div className="map-bleed hub fixed inset-x-0 top-[var(--bar-h)] bottom-[var(--tab-h)] z-0 overflow-hidden">
+    <div className="map-bleed hub fixed inset-x-0 top-[var(--bar-h)] bottom-0 z-0 overflow-hidden">
       <MapHome
         points={data.points}
         lines={data.lines}
