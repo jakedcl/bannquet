@@ -1,5 +1,4 @@
 import { Suspense } from 'react';
-import { TabBar } from '@/components/hub/TabBar';
 import { TopBar } from '@/components/hub/TopBar';
 import { HomeScreenTip } from '@/components/ui/HomeScreenTip';
 import { LoadEntrance } from '@/components/ui/LoadEntrance';
@@ -56,7 +55,7 @@ export default async function RootLayout({
             <TopBar account={account} />
             <HomeScreenTip show={Boolean(viewer && !viewer.homeScreenTipSeenAt)} />
             {pending ? (
-              <p className="pending-banner retro-box bg-beige px-4 py-2 text-center text-sm font-bold text-gray-900">
+              <p className="pending-banner panel rounded-none border-x-0 bg-surface-gray px-4 py-2 text-center text-sm font-bold text-ink">
                 {APPROVAL_WAIT}
               </p>
             ) : null}
@@ -64,10 +63,9 @@ export default async function RootLayout({
               <RouteMotion />
             </Suspense>
             <LoadEntrance />
-            <main className="route-stage flex-1 bg-gray-50 pb-[var(--tab-h)]">
+            <main className="route-stage flex-1 bg-page">
               {children}
             </main>
-            <TabBar account={account} />
           </div>
         </Providers>
       </body>

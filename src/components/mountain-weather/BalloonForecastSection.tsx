@@ -48,7 +48,7 @@ export function BalloonForecastSection({ result }: { result: SourceResult<Balloo
           href={result.sourceUrl ?? def.url}
           latestIssuanceEt={formatEt(result.issuedAt)}
         />
-        <p className="text-xs text-gray-700">
+        <p className="text-xs text-ink-2">
           {def.org} ·{' '}
           <a href={def.url} className="font-bold underline" target="_blank" rel="noopener noreferrer">
             Source
@@ -62,7 +62,7 @@ export function BalloonForecastSection({ result }: { result: SourceResult<Balloo
     return (
       <CollapsibleSection title="Ridge / balloon wind forecast" subtitle={`${def.org} (unavailable)${stale}`}>
         <SourceErrorNote label="Balloon wind forecast" href={result.sourceUrl ?? def.url} />
-        <p className="text-xs text-gray-700">
+        <p className="text-xs text-ink-2">
           {def.org} · {def.kind} ·{' '}
           <a href={result.sourceUrl} className="font-bold underline" target="_blank" rel="noopener noreferrer">
             Source
@@ -83,22 +83,22 @@ export function BalloonForecastSection({ result }: { result: SourceResult<Balloo
     >
       <div className="space-y-3 text-sm">
         {region.productLines.map((line) => (
-          <p key={line} className="text-xs font-bold uppercase text-gray-800">
+          <p key={line} className="text-xs font-bold uppercase text-ink">
             {line}
           </p>
         ))}
-        <p className="text-xs text-gray-800">
+        <p className="text-xs text-ink">
           <span className="font-bold">Nearby region:</span> {regionMatch}
         </p>
         {region.cityLines.map((line) => (
-          <p key={line} className="text-xs text-gray-800 whitespace-pre-wrap">
+          <p key={line} className="text-xs text-ink whitespace-pre-wrap">
             {line}
           </p>
         ))}
         {region.issuanceLine ? <p className="text-xs font-bold">{region.issuanceLine}</p> : null}
 
         {seasonal ? (
-          <p className="border border-[#5c3a1e]/30 bg-white/60 p-2 text-xs font-bold">
+          <p className="border border-hairline bg-surface p-2 text-xs font-bold">
             {region.seasonalMessage ?? defaultResumeHint('ridge wind')}
             {result.issuedAt ? ` Last update ${formatEt(result.issuedAt)} ET.` : ''}
           </p>
@@ -106,8 +106,8 @@ export function BalloonForecastSection({ result }: { result: SourceResult<Balloo
 
         {!seasonal && region.rows.length > 0 ? (
           <div className="overflow-x-auto">
-            <table className="min-w-full border border-[#5c3a1e]/30 text-[11px]">
-              <thead className="bg-white/70">
+            <table className="min-w-full border border-hairline text-[11px]">
+              <thead className="bg-surface">
                 <tr className="text-left">
                   <th className="sticky left-0 bg-white/90 px-2 py-1">Field</th>
                   {(region.estHours.length > 0 ? region.estHours : region.rows[0]?.values.map((_, i) => String(i + 1)) ?? []).map(
@@ -115,7 +115,7 @@ export function BalloonForecastSection({ result }: { result: SourceResult<Balloo
                       <th key={`${h}-${idx}`} className="px-1 py-1 whitespace-nowrap">
                         {h}
                         {region.utcHours[idx] ? (
-                          <span className="block font-normal text-gray-600">UTC {region.utcHours[idx]}</span>
+                          <span className="block font-normal text-ink-2">UTC {region.utcHours[idx]}</span>
                         ) : null}
                       </th>
                     ),
@@ -124,8 +124,8 @@ export function BalloonForecastSection({ result }: { result: SourceResult<Balloo
               </thead>
               <tbody>
                 {region.rows.map((row) => (
-                  <tr key={row.key} className="border-t border-[#5c3a1e]/15">
-                    <td className="sticky left-0 bg-[#f4e8d4]/95 px-2 py-0.5 font-bold whitespace-nowrap">{row.label}</td>
+                  <tr key={row.key} className="border-t border-hairline">
+                    <td className="sticky left-0 bg-surface-cream px-2 py-0.5 font-bold whitespace-nowrap">{row.label}</td>
                     {row.values.map((cell, idx) => (
                       <td key={`${row.key}-${idx}`} className="px-1 py-0.5 text-center">
                         {formatCell(cell, row)}
@@ -149,17 +149,17 @@ export function BalloonForecastSection({ result }: { result: SourceResult<Balloo
         {region.tafLines.length > 0 ? (
           <div>
             <p className="text-xs font-bold uppercase">TAF excerpt</p>
-            <pre className="mt-1 whitespace-pre-wrap font-mono text-[11px] text-gray-900">{region.tafLines.join('\n')}</pre>
+            <pre className="mt-1 whitespace-pre-wrap font-mono text-[11px] text-ink">{region.tafLines.join('\n')}</pre>
           </div>
         ) : null}
 
         {region.footerLines.map((line) => (
-          <p key={line} className="text-[11px] text-gray-800">
+          <p key={line} className="text-[11px] text-ink">
             {line}
           </p>
         ))}
 
-        <p className="text-xs text-gray-700">
+        <p className="text-xs text-ink-2">
           Wind speeds shown in knots with mph derived (×1.15078). {def.org} · {def.kind} · Issued{' '}
           {formatEt(result.issuedAt)} ET ·{' '}
           <a href={result.sourceUrl} className="font-bold underline" target="_blank" rel="noopener noreferrer">

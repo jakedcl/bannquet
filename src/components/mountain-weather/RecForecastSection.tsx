@@ -86,29 +86,29 @@ function RecBlock({ result }: { result: SourceResult<RecPlaceSlice> }) {
       defaultOpen
     >
       {data.notInLatestIssuance ? (
-        <p className="mb-2 text-xs text-gray-700">
+        <p className="mb-2 text-xs text-ink-2">
           Not in latest bulletin ({formatEt(data.latestIssuanceTime)} ET). Showing{' '}
           {formatEt(result.issuedAt)} ET instead. Matched header: {data.matchedSectionTitle}
         </p>
       ) : (
-        <p className="mb-2 text-xs text-gray-700">Matched header: {data.matchedSectionTitle}</p>
+        <p className="mb-2 text-xs text-ink-2">Matched header: {data.matchedSectionTitle}</p>
       )}
       <div className="space-y-3 text-sm">
-        {section.zoneHeader ? <p className="text-xs font-bold uppercase text-gray-700">{section.zoneHeader}</p> : null}
+        {section.zoneHeader ? <p className="text-xs font-bold uppercase text-ink-2">{section.zoneHeader}</p> : null}
         {section.periods.length > 0 ? (
           <ul className="space-y-2">
             {section.periods.map((period) => (
               <li key={period.name}>
                 <p className="font-bold">{period.name}</p>
-                <p className="text-gray-900 whitespace-pre-wrap">{period.text}</p>
+                <p className="text-ink whitespace-pre-wrap">{period.text}</p>
               </li>
             ))}
           </ul>
         ) : null}
         {section.bands.length > 0 ? (
           <div className="overflow-x-auto">
-            <table className="min-w-full border border-[#5c3a1e]/30 text-xs">
-              <thead className="bg-white/70">
+            <table className="min-w-full border border-hairline text-xs">
+              <thead className="bg-surface">
                 <tr className="text-left uppercase tracking-wide">
                   <th className="px-2 py-1">Period</th>
                   <th className="px-2 py-1">Fields</th>
@@ -116,7 +116,7 @@ function RecBlock({ result }: { result: SourceResult<RecPlaceSlice> }) {
               </thead>
               <tbody>
                 {section.bands.map((band) => (
-                  <tr key={band.label} className="border-t border-[#5c3a1e]/15">
+                  <tr key={band.label} className="border-t border-hairline">
                     <td className="whitespace-nowrap px-2 py-1 font-bold">{band.label}</td>
                     <td className="px-2 py-1">
                       <ul>
@@ -133,7 +133,7 @@ function RecBlock({ result }: { result: SourceResult<RecPlaceSlice> }) {
             </table>
           </div>
         ) : null}
-        <p className="text-xs text-gray-700">
+        <p className="text-xs text-ink-2">
           Issued {formatEt(result.issuedAt)} ET ·{' '}
           <a href={result.sourceUrl} className="font-bold underline" target="_blank" rel="noopener noreferrer">
             NWS REC ({data.office})

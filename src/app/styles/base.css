@@ -1,0 +1,62 @@
+/* Base: layout utilities, header logo, chat composer, and body and heading defaults. */
+
+@utility h-header {
+  height: 72px;
+}
+
+.header-logo {
+  display: block;
+  height: 40px;
+  width: auto;
+  max-height: none;
+  max-width: none;
+  flex-shrink: 0;
+  object-fit: contain;
+}
+
+/* Chat composer: @, the field, and Send share one 2.5rem row. */
+.composer-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.composer-control {
+  box-sizing: border-box;
+  height: 2.75rem;
+  min-height: 2.75rem;
+}
+
+.composer-field {
+  box-sizing: border-box;
+  min-height: 2.75rem;
+  max-height: 6rem;
+  padding-top: 0.375rem;
+  padding-bottom: 0.375rem;
+  line-height: 1.35;
+  resize: vertical;
+}
+
+@utility max-w-container {
+  max-width: 1440px;
+}
+
+@utility max-w-content {
+  max-width: 1200px;
+}
+
+body {
+  color: var(--color-ink);
+  background: var(--color-page);
+  font-family: var(--font-sans);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  font-weight: bold;
+}
+
+button, .btn {
+  font-family: var(--font-sans);
+}
+

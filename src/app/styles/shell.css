@@ -1,0 +1,190 @@
+/* Shell and page chrome: avatar frame, shared table first column, back bar and breadcrumbs, pending banner, map popups. */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.maplibregl-popup.bnqt-popup .maplibregl-popup-content {
+  background: var(--color-surface-gray);
+  border: var(--border-bevel) outset var(--color-bevel);
+  border-radius: var(--radius-panel);
+  corner-shape: squircle;
+  padding: 10px 12px;
+  color: #1a1a1a;
+  max-height: min(50vh, 320px);
+  overflow: auto;
+  box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.25);
+  font-family: Verdana, "Trebuchet MS", Arial, Helvetica, sans-serif;
+}
+
+.maplibregl-popup.bnqt-popup .maplibregl-popup-close-button {
+  font-size: 24px;
+  width: 44px;
+  height: 44px;
+  color: #1a3009;
+  padding: 0;
+}
+
+@media (max-width: 640px) {
+  .maplibregl-popup.bnqt-popup .maplibregl-popup-content {
+    font-size: 15px;
+    max-width: calc(100vw - 1.5rem);
+  }
+}
+
+
+
+
+
+
+.avatar-frame {
+  padding: 0;
+  overflow: hidden;
+  border: var(--border-control) outset var(--color-brand-dark);
+  border-radius: 9999px;
+  box-shadow: var(--shadow-avatar);
+  background: var(--color-surface-gray);
+}
+
+/* First column of every shared table: one line, ellipsis, avatars stay put. */
+.cell-primary {
+  width: 1%;
+  min-width: 7.5rem;
+  max-width: 9.5rem;
+  overflow: hidden;
+}
+
+@media (min-width: 768px) {
+  .cell-primary {
+    max-width: 18rem;
+  }
+}
+
+td.cell-primary {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+td.cell-primary > a {
+  display: block;
+  max-width: 100%;
+  min-width: 0;
+}
+
+td.cell-primary > a:not(:has(.flex)):not(:has(img)):not(:has(.avatar-frame)):not(:has(svg)) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+td.cell-primary .flex:not(.avatar-frame) {
+  min-width: 0;
+  max-width: 100%;
+  width: 100%;
+}
+
+td.cell-primary .flex:not(.avatar-frame) > :last-child {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+td.cell-primary :is(img, .avatar-frame, svg) {
+  flex-shrink: 0;
+  flex-grow: 0;
+  width: 2rem;
+  height: 2rem;
+  min-width: 2rem;
+  max-width: 2rem;
+  min-height: 2rem;
+}
+
+/* Own bar under the brown section nav. Cream, with dark type.
+   The trail uses flex-basis:auto so it cannot collapse to 0 the way flex:1 (basis 0%) does. */
+.back-bar {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 0.75rem;
+  box-sizing: border-box;
+  background: var(--color-surface-cream);
+  color: var(--color-ink);
+  border-bottom: var(--border-control) solid var(--color-hairline);
+  min-height: 2.75rem;
+  padding: 0.25rem 0.875rem;
+  padding-left: max(0.75rem, calc((100% - 72rem) / 2 + 0.75rem));
+  padding-right: max(0.75rem, calc((100% - 72rem) / 2 + 0.75rem));
+}
+
+.back-bar-button {
+  flex-shrink: 0;
+  min-width: 2.75rem;
+}
+
+.back-bar a {
+  color: var(--color-ink);
+}
+
+.crumb-trail {
+  flex: 1 1 auto;
+  min-width: 8rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: left;
+  color: var(--color-ink-2);
+  font-size: var(--text-caption);
+}
+
+.crumb-trail a {
+  display: inline-block;
+  padding: 0.75rem 0.125rem;
+  text-underline-offset: 3px;
+}
+
+.crumb-wide { display: none; }
+.crumb-narrow { display: inline; }
+
+@media (min-width: 40rem) {
+  .crumb-wide { display: inline; }
+  .crumb-narrow { display: none; }
+}
+
+/* Anchors and Next's scroll-into-view land below the fixed bars. */
+html { scroll-padding-top: var(--bar-h); }
+
+
+/* The header is fixed, so a banner in normal flow sits underneath it. */
+.pending-banner {
+  position: fixed;
+  top: calc(var(--bar-h) + 0.5rem);
+  left: 1rem;
+  right: 1rem;
+  z-index: 40;
+  margin: 0;
+}
+
+.has-pending .page-frame {
+  margin-top: calc(var(--bar-h) + 3.5rem);
+  min-height: calc(100dvh - var(--bar-h) - 3.5rem);
+}
+
+.has-pending .map-bleed {
+  top: calc(var(--bar-h) + 3.5rem);
+  height: calc(100dvh - var(--bar-h) - 3.5rem);
+}
+

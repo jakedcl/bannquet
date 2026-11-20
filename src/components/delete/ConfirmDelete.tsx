@@ -1,7 +1,7 @@
 'use client';
 
 import { useActionState } from 'react';
-import type { ButtonTone } from '@/components/hub/Button';
+import type { ButtonKind } from '@/components/hub/Button';
 import { adminPowerLabel } from '@/lib/admin-ui';
 import { SubmitButton } from '@/components/ui/SubmitButton';
 
@@ -18,7 +18,7 @@ export function TrashButton({
   onClick,
   look = 'retro',
   text,
-  tone,
+  kind,
   adminPower,
 }: {
   pending?: boolean;
@@ -30,16 +30,16 @@ export function TrashButton({
   look?: 'retro' | 'hub';
   /** Hub only: a labeled button instead of the trash icon. */
   text?: string;
-  tone?: ButtonTone;
+  kind?: ButtonKind;
   adminPower?: boolean;
 }) {
-  const resolvedTone = tone ?? (adminPower ? 'admin' : undefined);
+  const resolvedTone = kind ?? (adminPower ? 'admin' : undefined);
   const adminLabels = adminPower ? adminPowerLabel(label) : null;
   if (look === 'hub') {
     return (
       <SubmitButton
         unstyled={!resolvedTone}
-        tone={resolvedTone ?? 'default'}
+        kind={resolvedTone ?? 'gray'}
         pendingLabel="Deleting…"
         ariaLabel={adminLabels?.ariaLabel ?? (text ? undefined : label)}
         title={adminLabels?.title ?? label}
@@ -48,8 +48,8 @@ export function TrashButton({
         disabled={pending}
         onClick={onClick}
         className={resolvedTone ? '' : text
-          ? 'retro-button ui-press min-h-11 w-full rounded-none text-sm font-bold uppercase tracking-wide text-red-700'
-          : 'retro-button ui-press inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-none !p-0 text-red-700'}
+          ? 'btn ui-press min-h-11 w-full text-sm font-bold uppercase tracking-wide text-red-700'
+          : 'btn ui-press inline-flex h-11 w-11 shrink-0 items-center justify-center !p-0 text-red-700'}
       >
         {text ?? <TrashIcon />}
       </SubmitButton>
@@ -58,7 +58,7 @@ export function TrashButton({
   return (
     <SubmitButton
       icon={!resolvedTone}
-      tone={resolvedTone ?? 'yellow'}
+      kind={resolvedTone ?? 'yellow'}
       pendingLabel="Deleting…"
       ariaLabel={adminLabels?.ariaLabel ?? label}
       title={adminLabels?.title ?? label}
@@ -81,7 +81,7 @@ export function ConfirmDelete({
   look = 'retro',
   text,
   adminPower,
-  tone,
+  kind,
 }: {
   action: Action;
   confirm: string;
@@ -91,7 +91,7 @@ export function ConfirmDelete({
   look?: 'retro' | 'hub';
   text?: string;
   adminPower?: boolean;
-  tone?: ButtonTone;
+  kind?: ButtonKind;
 }) {
   const [state, formAction, pending] = useActionState(action, null);
   return (
@@ -114,7 +114,7 @@ export function ConfirmDelete({
         look={look}
         text={text}
         adminPower={adminPower}
-        tone={tone}
+        kind={kind}
       />
     </form>
   );

@@ -60,9 +60,9 @@ export function DataTable<T>({
 
   return (
     <div>
-    <div className="overflow-x-auto bg-white max-md:border max-md:border-solid max-md:border-[#ccc] md:retro-box-inset">
-      <table className="w-full border-collapse text-left text-sm max-md:[&_a]:font-normal max-md:[&_a]:text-[#6b4423] max-md:[&_a]:no-underline md:min-w-[36rem]">
-        <thead className="bg-beige font-mono text-xs uppercase leading-none md:text-xs md:leading-normal">
+    <div className="well overflow-x-auto">
+      <table className="w-full border-collapse text-left text-sm max-md:[&_a]:font-normal max-md:[&_a]:text-brown max-md:[&_a]:no-underline md:min-w-[36rem]">
+        <thead className="bg-surface-gray text-tag uppercase tracking-label">
           <tr>
             {columns.map((column) => {
               const active = sort?.id === column.id;
@@ -70,9 +70,9 @@ export function DataTable<T>({
                 <th
                   key={column.id}
                   aria-sort={active ? (sort.dir === 'asc' ? 'ascending' : 'descending') : 'none'}
-                  className={`border border-border-gray px-0 py-0 font-bold max-md:border-[#e6e6e6] ${
+                  className={`border-b-2 border-rule px-0 py-0 font-bold ${
                     column.sticky || column === columns[0]
-                      ? 'cell-primary sticky left-0 z-20 bg-beige max-md:shadow-[1px_0_0_#e6e6e6]'
+                      ? 'cell-primary sticky left-0 z-20 bg-surface-gray max-md:shadow-[1px_0_0_var(--color-hairline)]'
                       : ''
                   }`}
                 >
@@ -163,10 +163,10 @@ function Row<T>({
         {columns.map((column) => (
           <td
             key={column.id}
-            className={`border border-border-gray px-3 py-2.5 align-middle max-md:border-[#e6e6e6] max-md:px-2 max-md:leading-5 ${column.align === 'right' ? 'text-right' : ''} ${
+            className={`border-b border-hairline px-3 py-2.5 align-middle max-md:px-2 max-md:leading-5 ${column.align === 'right' ? 'text-right' : ''} ${
               column.sticky || column === columns[0]
-                ? 'cell-primary sticky left-0 z-10 bg-white group-hover:bg-beige max-md:shadow-[1px_0_0_#e6e6e6]'
-                : 'group-hover:bg-beige/70 max-md:whitespace-nowrap'
+                ? 'cell-primary sticky left-0 z-10 bg-white group-hover:bg-surface-gray max-md:shadow-[1px_0_0_var(--color-hairline)]'
+                : 'group-hover:bg-surface-gray/70 max-md:whitespace-nowrap'
             }`}
           >
             {column.cell(row)}
@@ -175,7 +175,7 @@ function Row<T>({
       </tr>
       {extra ? (
         <tr>
-          <td colSpan={columns.length} className="border border-border-gray bg-beige/40 px-3 py-3 max-md:border-[#e6e6e6] max-md:px-2 max-md:py-2">
+          <td colSpan={columns.length} className="border-b border-hairline bg-surface-cream px-3 py-3 max-md:px-2 max-md:py-2">
             {extra}
           </td>
         </tr>

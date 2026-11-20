@@ -1,6 +1,7 @@
 'use client';
 
 import { useRef } from 'react';
+import { buttonClass } from '@/components/hub/Button';
 
 export function SearchBar({
   value,
@@ -20,7 +21,7 @@ export function SearchBar({
   return (
     <form
       role="search"
-      className="flex items-stretch"
+      className="flex items-stretch gap-2"
       onSubmit={(event) => {
         event.preventDefault();
         onSearch?.(inputRef.current?.value ?? value);
@@ -35,12 +36,12 @@ export function SearchBar({
         value={value}
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
-        className="min-w-0 flex-1 retro-box-inset bg-white px-3 py-2 text-sm"
+        className="min-w-0 flex-1"
       />
       <button
         type="submit"
         aria-label="Search"
-        className="retro-button-yellow inline-flex min-h-11 min-w-11 items-center justify-center rounded-none px-3"
+        className={buttonClass('yellow', 'icon')}
       >
         <SearchIcon />
       </button>

@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { LargeTitle } from './SectionHeader';
+import { PageHero } from './PageHero';
 
 const WIDTH = {
   lg: 'max-w-lg',
@@ -10,7 +10,7 @@ const WIDTH = {
   '6xl': 'max-w-6xl',
 } as const;
 
-/** One page body: the column, the page title, then sections and windows. */
+/** One page body: the green title band, then the column of sections and panels. */
 export function HubPage({
   title,
   subtitle,
@@ -29,9 +29,11 @@ export function HubPage({
   children?: ReactNode;
 }) {
   return (
-    <div className={`mx-auto w-full ${WIDTH[width]} space-y-5 px-4 pb-12 pt-6 md:pt-8 ${className}`}>
-      <LargeTitle title={title} subtitle={subtitle} eyebrow={eyebrow} trailing={trailing} />
-      {children}
-    </div>
+    <>
+      <PageHero title={title} subtitle={subtitle} eyebrow={eyebrow} trailing={trailing} innerClassName={WIDTH[width]} />
+      <div className={`mx-auto w-full ${WIDTH[width]} space-y-4 px-4 pb-12 pt-4 md:pt-6 ${className}`}>
+        {children}
+      </div>
+    </>
   );
 }

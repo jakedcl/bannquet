@@ -38,13 +38,13 @@ function AvgGridTable({ grid, gridIndex }: { grid: AvgDateGrid; gridIndex: numbe
   return (
     <div className="space-y-1">
       {grid.dateHeading ? (
-        <p className="text-xs font-bold uppercase tracking-wide text-gray-800">{grid.dateHeading}</p>
+        <p className="text-xs font-bold uppercase tracking-wide text-ink">{grid.dateHeading}</p>
       ) : (
-        <p className="text-xs font-bold text-gray-800">Period {gridIndex + 1}</p>
+        <p className="text-xs font-bold text-ink">Period {gridIndex + 1}</p>
       )}
       <div className="overflow-x-auto">
-        <table className="min-w-full border border-[#5c3a1e]/30 text-[11px]">
-          <thead className="bg-white/70">
+        <table className="min-w-full border border-hairline text-[11px]">
+          <thead className="bg-surface">
             <tr>
               <th className="sticky left-0 bg-white/90 px-2 py-1 text-left">Field</th>
               {columnLabels.map((label, idx) => (
@@ -56,7 +56,7 @@ function AvgGridTable({ grid, gridIndex }: { grid: AvgDateGrid; gridIndex: numbe
           </thead>
           <tbody>
             {grid.rows.map((row) => (
-              <tr key={`${gridIndex}-${row.key}-${row.label}`} className="border-t border-[#5c3a1e]/15">
+              <tr key={`${gridIndex}-${row.key}-${row.label}`} className="border-t border-hairline">
                 <td className="sticky left-0 bg-white/95 px-2 py-1 font-bold whitespace-nowrap">{row.label}</td>
                 {row.values.map((cell, idx) => (
                   <td key={idx} className="px-1 py-1 text-center">
@@ -101,7 +101,7 @@ function AvgBlock({ result }: { result: SourceResult<AvgPlaceSlice> }) {
     >
       <div className="space-y-3 text-sm">
         {seasonal ? (
-          <p className="border border-[#5c3a1e]/30 bg-white/60 p-2 text-xs font-bold">
+          <p className="border border-hairline bg-surface p-2 text-xs font-bold">
             {defaultResumeHint('AVG')}
             {result.issuedAt ? ` Last issued ${formatEt(result.issuedAt)} ET.` : ''}
             {data.seasonalMessage ? ` ${data.seasonalMessage}` : null}
@@ -109,7 +109,7 @@ function AvgBlock({ result }: { result: SourceResult<AvgPlaceSlice> }) {
         ) : (
           data.point.grids.map((grid, idx) => <AvgGridTable key={idx} grid={grid} gridIndex={idx} />)
         )}
-        <p className="text-xs text-gray-700">
+        <p className="text-xs text-ink-2">
           Issued {formatEt(result.issuedAt)} ET ·{' '}
           <a href={result.sourceUrl} className="font-bold underline" target="_blank" rel="noopener noreferrer">
             NWS AVG ({data.office})

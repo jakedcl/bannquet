@@ -11,7 +11,7 @@ import type { MapFeatureCollection } from '@/lib/posts';
 
 const GroupMap = dynamic(() => import('@/components/map/GroupMap'), {
   ssr: false,
-  loading: () => <div className="h-full w-full animate-pulse bg-ui-fill" />,
+  loading: () => <div className="h-full w-full animate-pulse bg-surface-gray" />,
 });
 
 /** The same color swatch the old map popup used. */
@@ -86,13 +86,13 @@ export function MapHome({
     <div className="flex items-start gap-3">
       <div className="min-w-0 flex-1">
         <h2 className="t-title2 truncate">{single ? single.title : clusterHeading(selected.map((leaf) => leaf.kind))}</h2>
-        {single ? <p className="t-footnote mt-0.5 truncate text-ui-label-2">{leafMeta(single)}</p> : null}
+        {single ? <p className="t-footnote mt-0.5 truncate text-ink-2">{leafMeta(single)}</p> : null}
       </div>
       <button
         type="button"
         onClick={() => onSelect(null)}
         aria-label="Close"
-        className="retro-button ui-press flex h-11 w-11 shrink-0 items-center justify-center rounded-none !p-0 text-gray-800"
+        className="btn ui-press flex h-11 w-11 shrink-0 items-center justify-center !p-0 text-ink"
       >
         <CloseIcon className="h-4 w-4" />
       </button>
@@ -100,7 +100,7 @@ export function MapHome({
   ) : (
     <div className="min-w-0">
       <h1 className="t-title2">Map</h1>
-      <p className="t-footnote mt-0.5 text-ui-label-2">{summary}</p>
+      <p className="t-footnote mt-0.5 text-ink-2">{summary}</p>
     </div>
   );
 
@@ -122,7 +122,7 @@ export function MapHome({
             <LeafRows leaves={recent} />
           </div>
         ) : (
-          <p className="t-subhead px-1 py-2 text-ui-label-2">Nothing on the map yet.</p>
+          <p className="t-subhead px-1 py-2 text-ink-2">Nothing on the map yet.</p>
         )}
       </Sheet>
     </div>

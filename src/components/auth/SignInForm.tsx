@@ -24,12 +24,12 @@ export function SignInForm({ next = '' }: { next?: string }) {
           autoCorrect="off"
           spellCheck={false}
           required
-          className="w-full retro-box-inset bg-white px-3 py-2 text-base"
+          className="w-full"
         />
       </label>
       <PasswordField name="password" label="Password" autoComplete="current-password" />
       {state?.error ? <p className="text-sm font-bold text-red-700">{state.error}</p> : null}
-      <SubmitButton tone="green" pendingLabel="Signing in…">Sign in</SubmitButton>
+      <SubmitButton kind="green" pendingLabel="Signing in…">Sign in</SubmitButton>
       <p className="text-sm">
         <Link href="/forgot-password" className="inline-flex min-h-11 items-center underline">
           Forgot your password?

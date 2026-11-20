@@ -41,7 +41,7 @@ export const AttachPicker = forwardRef<AttachPickerHandle, {
     <dialog
       ref={dialogRef}
       aria-label="Attach a pin, route, or photo"
-      className="m-auto w-[min(32rem,calc(100%-2rem))] max-h-[min(36rem,calc(100%-2rem))] border-4 border-[#5c3a1e] bg-beige p-4 shadow-[0_16px_40px_rgba(0,0,0,0.22)] backdrop:bg-black/40"
+      className="m-auto w-[min(32rem,calc(100%-2rem))] max-h-[min(36rem,calc(100%-2rem))] border-4 border-brown bg-surface-gray p-4 shadow-[0_16px_40px_rgba(0,0,0,0.22)] backdrop:bg-black/40"
       onClick={(event) => {
         if (event.target === dialogRef.current) dialogRef.current.close();
       }}
@@ -92,7 +92,7 @@ export const AttachPicker = forwardRef<AttachPickerHandle, {
                       <Thumb item={item} />
                       <span className="min-w-0">
                         <span className="block truncate font-bold underline">{item.label}</span>
-                        {tab === 'everyone' ? <span className="block truncate text-xs text-gray-600">{item.ownerName}</span> : null}
+                        {tab === 'everyone' ? <span className="block truncate text-xs text-ink-2">{item.ownerName}</span> : null}
                       </span>
                     </button>
                   </li>
@@ -120,6 +120,6 @@ function Thumb({ item }: { item: ChatCatalogItem }) {
       />
     );
   }
-  const color = item.kind === 'pin' ? 'bg-[#c0392b]' : item.kind === 'route' ? 'bg-[#1f4e9c]' : 'bg-[#e67e22]';
+  const color = item.kind === 'pin' ? 'bg-kind-pin' : item.kind === 'route' ? 'bg-kind-route' : 'bg-kind-photo';
   return <span className={`inline-block h-8 w-8 shrink-0 ${color}`} aria-hidden="true" />;
 }

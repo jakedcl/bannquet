@@ -32,7 +32,7 @@ export function ResetPasswordForm({ token }: { token: string }) {
       />
       <PasswordField name="confirm" label="New password again" autoComplete="new-password" />
       {state?.error ? <p className="text-sm font-bold text-red-700">{state.error}</p> : null}
-      <SubmitButton tone="green" pendingLabel="Saving…">Save password</SubmitButton>
+      <SubmitButton kind="green" pendingLabel="Saving…">Save password</SubmitButton>
     </form>
   );
 }

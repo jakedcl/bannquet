@@ -2,8 +2,9 @@ import Link from 'next/link';
 import type { ElementType, ReactNode } from 'react';
 
 /**
- * The retro window: white box, one outset bevel, optional green title bar.
- * `titleHref` makes the title bar a link (e.g. a state card on the weather hub).
+ * A panel: rounded white box with the outset bevel and an optional green
+ * title bar. `action` sits on the right of the bar (e.g. "See all ›").
+ * `titleHref` makes the title a link. `tone="cream"` for notes and empty states.
  */
 export function Card({
   as: Tag = 'section',
@@ -14,6 +15,7 @@ export function Card({
   bodyClassName = '',
   padded = true,
   tight = false,
+  tone = 'white',
   children,
   ...rest
 }: {
@@ -26,15 +28,16 @@ export function Card({
   padded?: boolean;
   /** Smaller padding, for tables and dense lists. */
   tight?: boolean;
+  tone?: 'white' | 'cream';
   children: ReactNode;
   id?: string;
   'aria-label'?: string;
   'aria-labelledby'?: string;
 }) {
   return (
-    <Tag className={`ui-card min-w-0 ${className}`} {...rest}>
+    <Tag className={`panel ${tone === 'cream' ? 'panel-cream' : ''} ${className}`} {...rest}>
       {title ? (
-        <header className="ui-card-bar">
+        <header className="panel-bar">
           <span className="min-w-0 flex-1 truncate">
             {titleHref ? <Link href={titleHref} className="-my-2 flex min-h-11 items-center truncate">{title}</Link> : title}
           </span>

@@ -1,5 +1,7 @@
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
+import { Card } from '@/components/hub/Card';
+import { ListGroup, ListRow } from '@/components/hub/ListRow';
 import { DashboardGrid } from '@/components/ui/DashboardGrid';
 import { DashboardWindow } from '@/components/ui/DashboardWindow';
 import PageWrapper from '@/components/ui/PageWrapper';
@@ -114,6 +116,13 @@ export default async function FishingPage({
             </ul>
           </DashboardWindow>
         </DashboardGrid>
+        <Card title="Fishing pages" padded={false}>
+          <ListGroup bare>
+            <ListRow href="/fishing/freshwater" title="Freshwater" subtitle="Streams and rivers, flows and the map" />
+            <ListRow href="/fishing/saltwater" title="Saltwater" subtitle="Tides, water temperature, wind and shore spots" />
+            <ListRow href="/fishing/stocking" title="Stocking" subtitle="Recently stocked waters, on the freshwater page" />
+          </ListGroup>
+        </Card>
       </HubPage>
     </PageWrapper>
   );

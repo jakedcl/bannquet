@@ -121,13 +121,13 @@ export function TideChart({
             const left = x(Math.max(band.start, rangeStart));
             const right = x(Math.min(band.end, rangeEnd));
             if (right - left < 1) return null;
-            return <rect key={`${band.start}-${band.end}`} x={left} y={padTop} width={right - left} height={y(yMin) - padTop} fill="#d5e2f2" />;
+            return <rect key={`${band.start}-${band.end}`} x={left} y={padTop} width={right - left} height={y(yMin) - padTop} fill="var(--color-chart-night)" />;
           })}
-          <text x={padLeft - 6} y={padTop - 6} textAnchor="end" fontSize="11" fill="#444444">ft</text>
+          <text x={padLeft - 6} y={padTop - 6} textAnchor="end" fontSize="11" fill="var(--color-ink-2)">ft</text>
           {ticks.map((tick) => (
             <g key={tick}>
-              <line x1={padLeft} x2={width - padRight} y1={y(tick)} y2={y(tick)} stroke="#e4dccd" />
-              <text x={padLeft - 6} y={y(tick) + 3} textAnchor="end" fontSize="11" fill="#444444">{tick}</text>
+              <line x1={padLeft} x2={width - padRight} y1={y(tick)} y2={y(tick)} stroke="var(--color-chart-day)" />
+              <text x={padLeft - 6} y={y(tick) + 3} textAnchor="end" fontSize="11" fill="var(--color-ink-2)">{tick}</text>
             </g>
           ))}
           {dates.map((date) => {
@@ -137,20 +137,20 @@ export function TideChart({
             return (
               <g key={date} id={`tide-${date}`}>
                 <rect x={anchor} y={padTop} width="1" height="1" fill="transparent" />
-                {inside ? <line x1={anchor} x2={anchor} y1={padTop} y2={y(yMin)} stroke="#9a8b74" /> : null}
+                {inside ? <line x1={anchor} x2={anchor} y1={padTop} y2={y(yMin)} stroke="var(--color-chart-grid)" /> : null}
                 {inside || date === dates[0] ? (
-                  <text x={anchor + 4} y={padTop + 12} fontSize="11" fill="#444444">{dayLabel(midnight)}</text>
+                  <text x={anchor + 4} y={padTop + 12} fontSize="11" fill="var(--color-ink-2)">{dayLabel(midnight)}</text>
                 ) : null}
               </g>
             );
           })}
           {axisTimes.map((time) => (
-            <text key={time} x={x(time)} y={height - 10} textAnchor="middle" fontSize="11" fill="#444444">
+            <text key={time} x={x(time)} y={height - 10} textAnchor="middle" fontSize="11" fill="var(--color-ink-2)">
               {clockLabel(time)}
             </text>
           ))}
-          <path d={fill} fill="#1f4e9c" opacity="0.28" />
-          <path d={line} fill="none" stroke="#1f4e9c" strokeWidth="2.5" />
+          <path d={fill} fill="var(--color-kind-route)" opacity="0.28" />
+          <path d={line} fill="none" stroke="var(--color-kind-route)" strokeWidth="2.5" />
           {extremes.map((extreme) => {
             if (extreme.time < rangeStart || extreme.time > rangeEnd) return null;
             const cx = x(extreme.time);
@@ -159,23 +159,23 @@ export function TideChart({
             const labelY = above ? cy - 18 : cy + 14;
             return (
               <g key={`${extreme.time}-${extreme.kind}`}>
-                <circle cx={cx} cy={cy} r="4" fill={extreme.kind === 'H' ? '#c0392b' : '#1f4e9c'} stroke="#ffffff" strokeWidth="1.5" />
-                <text x={cx} y={labelY} textAnchor="middle" fontSize="10" fontWeight="700" fill="#222222">{clockLabel(extreme.time)}</text>
-                <text x={cx} y={labelY + 11} textAnchor="middle" fontSize="10" fill="#222222">{extreme.feet.toFixed(1)}</text>
+                <circle cx={cx} cy={cy} r="4" fill={extreme.kind === 'H' ? 'var(--color-kind-pin)' : 'var(--color-kind-route)'} stroke="var(--color-on-dark)" strokeWidth="1.5" />
+                <text x={cx} y={labelY} textAnchor="middle" fontSize="10" fontWeight="700" fill="var(--color-ink)">{clockLabel(extreme.time)}</text>
+                <text x={cx} y={labelY + 11} textAnchor="middle" fontSize="10" fill="var(--color-ink)">{extreme.feet.toFixed(1)}</text>
               </g>
             );
           })}
           {nowFeet != null ? (
             <g>
-              <line x1={x(now)} x2={x(now)} y1={padTop} y2={y(yMin)} stroke="#222222" strokeDasharray="3 3" />
-              <circle cx={x(now)} cy={y(nowFeet)} r="4" fill="#222222" />
+              <line x1={x(now)} x2={x(now)} y1={padTop} y2={y(yMin)} stroke="var(--color-ink)" strokeDasharray="3 3" />
+              <circle cx={x(now)} cy={y(nowFeet)} r="4" fill="var(--color-ink)" />
               <text
                 x={x(now) + (x(now) > width - 78 ? -8 : 8)}
                 y={Math.min(Math.max(y(nowFeet) - 8, padTop + 22), y(yMin) - 4)}
                 textAnchor={x(now) > width - 78 ? 'end' : 'start'}
                 fontSize="11"
                 fontWeight="700"
-                fill="#222222"
+                fill="var(--color-ink)"
               >
                 {`Now ${nowFeet.toFixed(1)} ft`}
               </text>
@@ -183,7 +183,7 @@ export function TideChart({
           ) : null}
         </svg>
       </TideScroller>
-      <p className="px-2 py-1 text-xs text-gray-700">
+      <p className="px-2 py-1 text-xs text-ink-2">
         {estimated ? 'Estimated from the highs and lows. ' : ''}
         Feet above MLLW.
       </p>

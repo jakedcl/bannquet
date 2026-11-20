@@ -26,7 +26,7 @@ export function ProfileForm({ member }: { member: Member }) {
           required
           maxLength={80}
           defaultValue={member.displayName ?? ''}
-          className="w-full retro-box-inset bg-white px-3 py-2 text-base"
+          className="w-full"
         />
       </label>
       {member.handle ? (
@@ -45,9 +45,9 @@ export function ProfileForm({ member }: { member: Member }) {
             autoCapitalize="none"
             autoCorrect="off"
             spellCheck={false}
-            className="w-full retro-box-inset bg-white px-3 py-2 text-base"
+            className="w-full"
           />
-          <span className="block text-xs text-gray-600">
+          <span className="block text-xs text-ink-2">
             Lowercase letters, numbers, and underscores. This becomes your page address.
           </span>
         </label>
@@ -57,7 +57,7 @@ export function ProfileForm({ member }: { member: Member }) {
         <select
           name="homeRegion"
           defaultValue={homeStateCode(member.homeRegion) ?? ''}
-          className="w-full retro-box-inset bg-white px-3 py-2 text-base"
+          className="w-full"
         >
           <option value="">Not set</option>
           {US_STATES.map((state) => (
@@ -74,7 +74,7 @@ export function ProfileForm({ member }: { member: Member }) {
           maxLength={500}
           rows={4}
           defaultValue={member.bio ?? ''}
-          className="w-full retro-box-inset bg-white px-3 py-2 text-base"
+          className="w-full"
         />
       </label>
       <PhotoField
@@ -86,7 +86,7 @@ export function ProfileForm({ member }: { member: Member }) {
       {state?.error || photoError ? (
         <p className="text-sm font-bold text-red-700">{photoError || state?.error}</p>
       ) : null}
-      <SubmitButton tone="green" pendingLabel="Saving…" disabled={photoBusy}>
+      <SubmitButton kind="green" pendingLabel="Saving…" disabled={photoBusy}>
         {photoBusy ? 'Preparing photo…' : 'Save profile'}
       </SubmitButton>
     </form>
@@ -147,7 +147,7 @@ function PhotoField({
             // eslint-disable-next-line @next/next/no-img-element
             <img src={preview} alt="Profile photo preview" className="h-full w-full object-cover" />
           ) : (
-            <span className="text-xs text-gray-700">None</span>
+            <span className="text-xs text-ink-2">None</span>
           )}
         </div>
         <div>
@@ -157,7 +157,7 @@ function PhotoField({
             onChange={(files) => { void onFile(files[0]); }}
           />
           <input type="hidden" name="avatarUrl" value={avatarUrl} />
-          <span className="mt-1 block text-xs text-gray-600">
+          <span className="mt-1 block text-xs text-ink-2">
             {busy ? 'Preparing photo…' : 'Optional. JPG or PNG.'}
           </span>
         </div>

@@ -1,0 +1,630 @@
+/*
+ * Shared component looks (UI revamp). One definition per look, built only
+ * from tokens. React components in src/components/hub and src/components/ui
+ * apply these classes; pages should use those components, not the classes.
+ *
+ * Everything is in @layer components so Tailwind utilities on an element can
+ * still adjust spacing or size.
+ */
+
+@layer base {
+  /* Text fields, selects and text areas. 16px text on phones so iOS does not zoom. */
+  input:not([type="checkbox"], [type="radio"], [type="file"], [type="hidden"], [type="range"], [type="submit"], [type="button"], [type="color"]),
+  select,
+  textarea {
+    min-height: 2.5rem;
+    border: var(--border-control) solid;
+    border-color: var(--color-bevel-dark) var(--color-bevel) var(--color-bevel) var(--color-bevel-dark);
+    border-radius: var(--radius-panel);
+    corner-shape: squircle;
+    background-color: var(--color-surface);
+    color: var(--color-ink);
+    padding: 0.5rem 0.75rem;
+    font-size: var(--text-body);
+    transition: box-shadow var(--duration-fast) ease, border-color var(--duration-fast) ease;
+  }
+
+  textarea {
+    border-radius: var(--radius-control);
+  }
+
+  /* Search fields: drop the native look so the field style applies. */
+  input[type="search"] {
+    appearance: none;
+  }
+
+  input::placeholder,
+  textarea::placeholder {
+    color: var(--color-ink-3);
+  }
+
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible {
+    outline: none;
+    border: var(--border-control) solid var(--color-brand-light);
+    box-shadow: var(--shadow-focus);
+  }
+
+  input[aria-invalid="true"],
+  select[aria-invalid="true"],
+  textarea[aria-invalid="true"] {
+    border: var(--border-control) solid var(--color-danger-bright);
+    box-shadow: var(--shadow-focus-danger);
+  }
+
+  input:disabled,
+  select:disabled,
+  textarea:disabled {
+    background-color: var(--color-surface-gray);
+    color: var(--color-ink-3);
+  }
+
+  input[type="checkbox"],
+  input[type="radio"] {
+    width: 1.375rem;
+    height: 1.375rem;
+    accent-color: var(--color-brand);
+  }
+
+  @media (min-width: 768px) {
+    :where(input:not([type="checkbox"], [type="radio"], [type="file"], [type="hidden"], [type="range"]), select, textarea) {
+      font-size: var(--text-meta);
+    }
+  }
+}
+
+@layer components {
+  /* ---- Buttons ------------------------------------------------------
+     40px tall (sm 32, lg 44), 13px bold caps. Long labels wrap and center.
+     Kinds: gray (default), yellow (primary), green, brown, danger. */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.375rem;
+    min-height: 2.5rem;
+    padding: 0.25rem 1.375rem;
+    border: var(--border-control) outset var(--color-bevel);
+    border-radius: var(--radius-panel);
+    corner-shape: squircle;
+    background-color: #e0e0e0;
+    background-image: var(--gradient-button);
+    box-shadow: var(--shadow-button);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-size: var(--text-button);
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: var(--tracking-label);
+    text-align: center;
+    text-decoration: none;
+    text-transform: uppercase;
+    overflow-wrap: anywhere;
+    cursor: pointer;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    transition: transform var(--duration-fast) ease-out, filter var(--duration-fast) ease-out, box-shadow var(--duration-fast) ease-out;
+  }
+
+  .btn:hover {
+    filter: brightness(0.97);
+  }
+
+  .btn:active:not(:disabled, [aria-disabled="true"]) {
+    transform: translate(1px, 1px);
+    box-shadow: var(--shadow-button-pressed);
+  }
+
+  .btn:disabled,
+  .btn[aria-disabled="true"] {
+    cursor: default;
+    opacity: 0.6;
+    filter: none;
+  }
+
+  .btn-yellow {
+    border: var(--border-bevel) outset var(--color-yellow-edge);
+    background-color: var(--color-yellow-deep);
+    background-image: var(--gradient-yellow);
+    box-shadow: var(--shadow-panel-dark);
+    color: var(--color-brand-dark);
+  }
+
+  .btn-green {
+    border: var(--border-bevel) outset var(--color-brand-dark);
+    background-color: var(--color-brand);
+    background-image: var(--gradient-green);
+    box-shadow: var(--shadow-panel-dark);
+    color: var(--color-on-dark);
+  }
+
+  /* Trail-sign brown with yellow lettering ("blue" is the old name). */
+  .btn-brown {
+    border: var(--border-bevel) outset var(--color-brown-dark);
+    background-color: var(--color-brown);
+    background-image: var(--gradient-brown);
+    box-shadow: var(--shadow-panel-dark);
+    color: var(--color-yellow);
+  }
+
+  /* Admin actions: black and yellow hazard stripes. */
+  .btn-admin {
+    padding: 0;
+    border: var(--border-bevel) solid var(--color-ink);
+    background-color: var(--color-yellow);
+    background-image: repeating-linear-gradient(-45deg, var(--color-ink), var(--color-ink) 10px, var(--color-yellow) 10px, var(--color-yellow) 20px);
+    box-shadow: var(--shadow-panel);
+    color: var(--color-ink);
+  }
+
+  .btn-admin-label {
+    display: inline-flex;
+    min-height: 2.25rem;
+    align-items: center;
+    justify-content: center;
+    margin: 3px;
+    padding: 0 0.75rem;
+    border: var(--border-control) solid var(--color-ink);
+    border-radius: var(--radius-control);
+    background: var(--color-yellow);
+  }
+
+  .btn-danger {
+    color: var(--color-danger);
+  }
+
+  .btn-plain {
+    min-height: 0;
+    padding: 0;
+    border: 0;
+    background: none;
+    box-shadow: none;
+    color: var(--color-brand);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .btn-sm {
+    min-height: 2rem;
+    padding: 0.125rem 0.875rem;
+    font-size: var(--text-tag);
+  }
+
+  .btn-lg {
+    min-height: 2.75rem;
+    padding: 0.25rem 1.625rem;
+    font-size: var(--text-meta);
+  }
+
+  .btn-full {
+    width: 100%;
+  }
+
+  /* Square icon button (+, edit, close). */
+  .btn-icon {
+    width: 2.5rem;
+    min-width: 2.5rem;
+    padding: 0;
+    border-radius: var(--radius-control);
+  }
+
+  /* ---- Chips and the segmented switcher ----------------------------- */
+  .chip {
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    min-height: 2.25rem;
+    padding: 0 0.75rem;
+    border: var(--border-control) outset var(--color-bevel);
+    border-radius: var(--radius-panel);
+    corner-shape: squircle;
+    background-color: #e0e0e0;
+    background-image: var(--gradient-button);
+    color: var(--color-ink);
+    font-size: var(--text-tag);
+    font-weight: 700;
+    letter-spacing: var(--tracking-label);
+    text-decoration: none;
+    text-transform: uppercase;
+    white-space: nowrap;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: transform var(--duration-fast) ease-out;
+  }
+
+  .chip:active {
+    transform: translate(1px, 1px);
+  }
+
+  .chip-on,
+  .chip[aria-pressed="true"],
+  .chip[aria-current="page"] {
+    border: var(--border-bevel) outset var(--color-yellow-edge);
+    background-color: var(--color-yellow-deep);
+    background-image: var(--gradient-yellow);
+    color: var(--color-brand-dark);
+  }
+
+  .switcher {
+    display: flex;
+    gap: 0.125rem;
+    padding: 0.1875rem;
+    border: var(--border-control) solid;
+    border-color: var(--color-bevel-dark) var(--color-bevel) var(--color-bevel) var(--color-bevel-dark);
+    border-radius: var(--radius-panel);
+    corner-shape: squircle;
+    background: var(--color-hairline);
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .switcher-item {
+    display: flex;
+    flex: 1 1 auto;
+    align-items: center;
+    justify-content: center;
+    min-height: 2.25rem;
+    padding: 0 0.3125rem;
+    border: var(--border-control) solid transparent;
+    border-radius: var(--radius-control);
+    corner-shape: squircle;
+    color: var(--color-ink);
+    font-size: var(--text-tag);
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    text-align: center;
+    text-decoration: none;
+    text-transform: uppercase;
+    white-space: nowrap;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Very narrow phones: all five place tabs still fit. */
+  @media (max-width: 360px) {
+    .switcher {
+      gap: 0;
+      padding: 0.125rem;
+    }
+
+    .switcher-item {
+      padding: 0 0.1875rem;
+      letter-spacing: 0;
+    }
+  }
+
+  .switcher-item[aria-current="page"],
+  .switcher-item[aria-selected="true"],
+  .switcher-item[aria-pressed="true"] {
+    border: var(--border-control) outset var(--color-yellow-edge);
+    background-color: var(--color-yellow-deep);
+    background-image: var(--gradient-yellow);
+    color: var(--color-brand-dark);
+  }
+
+  /* ---- Switch (Peak Finder toggles) ---------------------------------- */
+  .switch {
+    padding: 4px;
+    border: var(--border-control) outset var(--color-bevel);
+    border-radius: var(--radius-control);
+    corner-shape: squircle;
+    background-color: #e0e0e0;
+    background-image: var(--gradient-button);
+    box-shadow: var(--shadow-button);
+    color: var(--color-ink);
+    cursor: pointer;
+  }
+
+  .switch:disabled,
+  .switch-locked:disabled {
+    cursor: default;
+    opacity: 1;
+  }
+
+  .switch-track {
+    display: block;
+    position: relative;
+    width: 2.75rem;
+    height: 1.35rem;
+    border: var(--border-control) solid;
+    border-color: var(--color-bevel-dark) var(--color-bevel) var(--color-bevel) var(--color-bevel-dark);
+    border-radius: 9999px;
+    background: var(--color-surface-sunken);
+  }
+
+  .switch-on .switch-track {
+    background: var(--color-brand-soft);
+  }
+
+  .switch-thumb {
+    position: absolute;
+    top: 1px;
+    left: 1px;
+    width: 1rem;
+    height: calc(100% - 2px);
+    border: var(--border-control) outset var(--color-surface);
+    border-radius: 9999px;
+    background-image: var(--gradient-button);
+    box-shadow: var(--shadow-avatar);
+    transition: transform var(--duration-base) var(--ease-soft);
+  }
+
+  .switch-on .switch-thumb {
+    transform: translateX(1.35rem);
+  }
+
+  .switch-compact .switch-track {
+    width: 2.15rem;
+    height: 1.05rem;
+  }
+
+  .switch-compact .switch-thumb {
+    width: 0.8rem;
+  }
+
+  .switch-compact.switch-on .switch-thumb {
+    transform: translateX(1.05rem);
+  }
+
+  /* ---- Tags --------------------------------------------------------- */
+  .tag {
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    max-width: 100%;
+    padding: 0.125rem 0.5rem;
+    font-size: var(--text-tag);
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: var(--tracking-caps);
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .tag-outline {
+    border: var(--border-control) solid var(--color-brand);
+    border-radius: var(--radius-control);
+    corner-shape: squircle;
+    color: var(--color-brand);
+  }
+
+  .tag-gray {
+    border: 1px solid var(--color-stale);
+    border-radius: var(--radius-control);
+    corner-shape: squircle;
+    background: var(--color-surface-gray);
+    color: var(--color-ink);
+  }
+
+  .tag-green {
+    border-radius: var(--radius-control);
+    corner-shape: squircle;
+    background: var(--color-brand);
+    color: var(--color-on-dark);
+  }
+
+  .tag-warn {
+    border: var(--border-control) solid var(--color-warn);
+    border-radius: var(--radius-control);
+    corner-shape: squircle;
+    background: var(--color-warn-soft);
+    color: var(--color-brown);
+  }
+
+  /* Trail-sign arrow: brown with yellow text, pointed right end. */
+  .tag-arrow {
+    padding: 0.25rem 1.125rem 0.25rem 0.625rem;
+    background-color: var(--color-brown);
+    background-image: var(--gradient-brown);
+    color: var(--color-yellow);
+    clip-path: polygon(0 0, calc(100% - 9px) 0, 100% 50%, calc(100% - 9px) 100%, 0 100%);
+  }
+
+  /* ---- Panels ------------------------------------------------------- */
+  .panel {
+    min-width: 0;
+    overflow: hidden;
+    border: var(--border-bevel) outset var(--color-bevel);
+    border-radius: var(--radius-panel);
+    corner-shape: squircle;
+    background: var(--color-surface);
+    box-shadow: var(--shadow-panel);
+  }
+
+  .panel-cream {
+    background: var(--color-surface-cream);
+  }
+
+  /* Green panel (live conditions, alerts on green). */
+  .panel-green {
+    border-color: var(--color-brand-dark);
+    background-color: var(--color-brand);
+    background-image: var(--gradient-banner);
+    box-shadow: var(--shadow-panel-dark);
+    color: var(--color-on-dark);
+  }
+
+  /* Green title bar with faint wood lines. Title text is always white. */
+  .panel-bar {
+    display: flex;
+    min-width: 0;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 2.25rem;
+    padding: 0.4375rem 0.75rem;
+    border-bottom: var(--border-control) solid var(--color-brand-dark);
+    background-color: var(--color-brand);
+    background-image: var(--gradient-title-bar);
+    color: var(--color-on-dark);
+    font-family: var(--font-heading);
+    font-size: var(--text-button);
+    font-weight: 700;
+    letter-spacing: var(--tracking-caps);
+    text-transform: uppercase;
+  }
+
+  .panel-bar a {
+    color: var(--color-on-dark);
+    text-decoration: none;
+  }
+
+  /* Inset well inside a panel (lists, numbers). */
+  .well {
+    border: var(--border-control) solid;
+    border-color: var(--color-bevel-dark) var(--color-bevel) var(--color-bevel) var(--color-bevel-dark);
+    border-radius: var(--radius-control);
+    corner-shape: squircle;
+    background: var(--color-surface);
+  }
+
+  /* Small cream box: reading tiles, chips of facts. */
+  .tile {
+    border: var(--border-control) solid var(--color-hairline);
+    border-radius: var(--radius-control);
+    corner-shape: squircle;
+    background: var(--color-surface-cream);
+  }
+
+  /* Beige panel floating over the map (sheet, menus). */
+  .ui-panel {
+    border: var(--border-bevel) outset var(--color-bevel);
+    border-radius: var(--radius-sheet);
+    corner-shape: squircle;
+    background: var(--color-surface-gray);
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.3);
+  }
+
+  .ui-list > * + * {
+    border-top: 1px solid var(--color-hairline);
+  }
+
+  /* ---- Page hero: green band under the back bar --------------------- */
+  .page-hero {
+    border-bottom: 4px solid var(--color-brand-dark);
+    background-color: var(--color-brand);
+    background-image: var(--gradient-banner);
+    color: var(--color-on-dark);
+  }
+
+  /* Photo hero (Home, Mountain weather): green-tinted mountain photo,
+     rounded bottom, faint scan lines. */
+  .page-hero-photo {
+    position: relative;
+    overflow: hidden;
+    border-bottom: 0;
+    border-radius: 0 0 var(--radius-hero) var(--radius-hero);
+    corner-shape: squircle;
+    background-image: var(--gradient-hero-tint), url("/background.jpeg");
+    background-position: center 40%;
+    background-size: cover;
+  }
+
+  .page-hero-photo::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image: var(--texture-scanlines);
+  }
+
+  .page-hero-photo > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  .page-hero-title {
+    font-family: var(--font-heading);
+    font-size: var(--text-title);
+    font-weight: 700;
+    line-height: 1.15;
+    text-transform: uppercase;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    overflow-wrap: anywhere;
+  }
+
+  .eyebrow {
+    font-size: var(--text-tag);
+    font-weight: 700;
+    letter-spacing: var(--tracking-eyebrow);
+    text-transform: uppercase;
+  }
+
+  /* Section heading on the page: caps with a black rule. */
+  .section-title {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding-bottom: 0.375rem;
+    border-bottom: var(--border-control) solid var(--color-rule);
+  }
+
+  /* ---- Avatar ------------------------------------------------------- */
+  .avatar {
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border: var(--border-control) outset var(--color-brand-dark);
+    border-radius: 9999px;
+    background-color: var(--color-brand);
+    background-image: var(--gradient-green);
+    color: var(--color-on-dark);
+    font-weight: 700;
+  }
+
+  /* ---- Opening sections: height animates from 0fr to 1fr ---------- */
+  .collapse-body {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows var(--duration-toast) var(--ease-soft);
+  }
+
+  .collapse-body[data-open="true"] {
+    grid-template-rows: 1fr;
+  }
+
+  /* Closed content is hidden from tabbing and screen readers once shut. */
+  .collapse-body > div {
+    visibility: hidden;
+    transition: visibility 0s linear var(--duration-toast);
+  }
+
+  .collapse-body[data-open="true"] > div {
+    visibility: visible;
+    transition-delay: 0s;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .collapse-body,
+    .collapse-body > div {
+      transition: none;
+    }
+  }
+
+  /* ---- Charts: lines draw in once ---------------------------------- */
+  .chart-draw {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    animation: chart-draw 700ms var(--ease-soft) forwards;
+  }
+
+  @keyframes chart-draw {
+    to { stroke-dashoffset: 0; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .chart-draw {
+      animation: none;
+      stroke-dashoffset: 0;
+    }
+  }
+
+  /* ---- Skeleton loading line ---------------------------------------- */
+  .skeleton {
+    border-radius: var(--radius-tag);
+    background-image: var(--texture-skeleton);
+  }
+}

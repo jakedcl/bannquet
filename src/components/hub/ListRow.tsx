@@ -15,7 +15,7 @@ export function ListGroup({
   'aria-label'?: string;
 }) {
   return (
-    <ul aria-label={label} className={`ui-list min-w-0 ${bare ? '' : 'ui-inset'} ${className}`}>
+    <ul aria-label={label} className={`ui-list min-w-0 ${bare ? '' : 'well'} ${className}`}>
       {children}
     </ul>
   );
@@ -48,14 +48,14 @@ export function ListRow({
     <>
       {leading ? <span className="flex shrink-0 items-center">{leading}</span> : null}
       <span className="min-w-0 flex-1">
-        <span className="t-headline block truncate text-ui-label">{title}</span>
-        {subtitle ? <span className="t-footnote mt-0.5 block truncate text-ui-label-2">{subtitle}</span> : null}
+        <span className="t-headline block truncate text-ink">{title}</span>
+        {subtitle ? <span className="mt-0.5 block truncate text-caption text-ink-2">{subtitle}</span> : null}
       </span>
-      {trailing ? <span className="t-subhead shrink-0 text-right text-ui-label-2">{trailing}</span> : null}
-      {showChevron ? <ChevronIcon className="h-3 w-2 shrink-0 text-brand-green" /> : null}
+      {trailing ? <span className="shrink-0 text-right text-meta text-ink-2">{trailing}</span> : null}
+      {showChevron ? <ChevronIcon className="h-3 w-2 shrink-0 text-brown-light" /> : null}
     </>
   );
-  const rowClass = 'flex min-h-11 min-w-0 flex-1 items-center gap-3 px-3 py-2 no-underline';
+  const rowClass = 'flex min-h-14 min-w-0 flex-1 items-center gap-2.5 px-3 py-2 no-underline';
   return (
     <li className={`flex min-w-0 items-center ${className}`}>
       {href ? (

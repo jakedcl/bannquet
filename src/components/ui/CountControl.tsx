@@ -29,7 +29,7 @@ export function CountControl({
     return (
       <form action={add.action} onClick={stop} onKeyDown={stop}>
         <Fields fields={add.fields} />
-        <SubmitButton tone="yellow" pendingLabel="Saving…" className="px-3">
+        <SubmitButton kind="yellow" pendingLabel="Saving…" className="px-3">
           {zeroLabel}
         </SubmitButton>
       </form>
@@ -41,14 +41,14 @@ export function CountControl({
       {children ? <p className="text-sm font-bold">{children}</p> : null}
       <form action={remove.action}>
         <Fields fields={remove.fields} />
-        <SubmitButton icon tone="yellow" pendingLabel="Saving…" ariaLabel={removeLabel}>
+        <SubmitButton icon kind="yellow" pendingLabel="Saving…" ariaLabel={removeLabel}>
           −
         </SubmitButton>
       </form>
       {children ? null : <p className="min-w-4 text-center text-sm font-bold">{count}</p>}
       <form action={add.action}>
         <Fields fields={add.fields} />
-        <SubmitButton icon tone="yellow" pendingLabel="Saving…" ariaLabel={addLabel}>
+        <SubmitButton icon kind="yellow" pendingLabel="Saving…" ariaLabel={addLabel}>
           +
         </SubmitButton>
       </form>

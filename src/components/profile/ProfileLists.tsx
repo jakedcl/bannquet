@@ -241,7 +241,7 @@ export function PhotoGrid({
               alt={photo.caption || ''}
               width={240}
               height={240}
-              className="h-28 w-full object-cover retro-box"
+              className="h-28 w-full object-cover panel"
             />
           </Link>
           {manage ? (

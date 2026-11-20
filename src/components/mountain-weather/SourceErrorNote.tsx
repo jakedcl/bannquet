@@ -9,7 +9,7 @@ export function SourceErrorNote({
   serverError?: string | null;
 }) {
   return (
-    <p className="text-sm text-gray-700" data-mwx-source-error={serverError ?? undefined}>
+    <p className="text-sm text-ink-2" data-mwx-source-error={serverError ?? undefined}>
       {label} did not load (source error).{' '}
       <a href={href} className="font-bold underline" target="_blank" rel="noopener noreferrer">
         Open official source

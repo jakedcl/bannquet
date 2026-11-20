@@ -18,7 +18,7 @@ export function PeakCheck({ peakSlug, count }: { peakSlug: string; count: number
       <ButtonStack onClick={stop} onKeyDown={stop}>
         <form action={addAction}>
           <input type="hidden" name="peakSlug" value={peakSlug} />
-          <SubmitButton tone="yellow" pendingLabel="Saving…" disabled={addPending} className="px-3">
+          <SubmitButton kind="yellow" pendingLabel="Saving…" disabled={addPending} className="px-3">
             Add to my peaks
           </SubmitButton>
         </form>
@@ -32,13 +32,13 @@ export function PeakCheck({ peakSlug, count }: { peakSlug: string; count: number
         <span className="text-sm font-bold">✓ Been here{count > 1 ? ` ×${count}` : ''}</span>
         <form action={addAction}>
           <input type="hidden" name="peakSlug" value={peakSlug} />
-          <SubmitButton icon tone="yellow" pendingLabel="Saving…" disabled={addPending} ariaLabel="Been up again" title="Been up again" className="text-xs">
+          <SubmitButton icon kind="yellow" pendingLabel="Saving…" disabled={addPending} ariaLabel="Been up again" title="Been up again" className="text-xs">
             +1
           </SubmitButton>
         </form>
         <form action={removeAction}>
           <input type="hidden" name="peakSlug" value={peakSlug} />
-          <SubmitButton icon tone="yellow" pendingLabel="Saving…" disabled={removePending} ariaLabel="Take one visit off" title="Take one visit off">
+          <SubmitButton icon kind="yellow" pendingLabel="Saving…" disabled={removePending} ariaLabel="Take one visit off" title="Take one visit off">
             ×
           </SubmitButton>
         </form>

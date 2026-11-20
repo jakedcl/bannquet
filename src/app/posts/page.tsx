@@ -45,7 +45,7 @@ export default async function PostsPage() {
 
   return (
     <PageWrapper>
-      <HubPage title="Posts" width="3xl" trailing={canAdd ? <Button href="/upload?kind=post" tone="yellow">+ New post</Button> : null}>
+      <HubPage title="Posts" width="3xl" trailing={canAdd ? <Button href="/upload?kind=post" kind="yellow">+ New post</Button> : null}>
         {waiting ? <p className="t-body font-bold">{APPROVAL_WAIT}</p> : null}
         {!viewer ? <p className="t-body"><Link href="/sign-in" className="underline">Sign in</Link> to read member posts.</p> : null}
         {error ? <p className="t-body font-bold">{error}</p> : posts.length === 0 ? <p className="t-body">No posts yet.</p> : (

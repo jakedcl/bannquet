@@ -3,7 +3,7 @@ import { notFound, redirect } from 'next/navigation';
 import PageWrapper from '@/components/ui/PageWrapper';
 import { PeakRows, PhotoGrid, PinRows, PostRows, RouteRows, SeeAll } from '@/components/profile/ProfileLists';
 import { ChallengeBadge } from '@/components/stats/ChallengeBadge';
-import { Pill } from '@/components/hub/Button';
+import { Tag } from '@/components/hub/Button';
 import { Button } from '@/components/hub/Button';
 import { SubmitButton } from '@/components/ui/SubmitButton';
 import { Card } from '@/components/hub/Card';
@@ -83,7 +83,7 @@ export default async function UserPage({ params }: { params: Promise<{ username:
                 className="avatar-frame h-[88px] w-[88px] object-cover"
               />
             ) : (
-              <div className="avatar-frame flex h-[88px] w-[88px] items-center justify-center bg-beige text-2xl font-bold">
+              <div className="avatar-frame flex h-[88px] w-[88px] items-center justify-center bg-surface-gray text-2xl font-bold">
                 {name.slice(0, 1).toUpperCase()}
               </div>
             )}
@@ -91,13 +91,13 @@ export default async function UserPage({ params }: { params: Promise<{ username:
               {activities.length > 0 ? (
                 <div className="flex flex-wrap gap-1">
                   {activities.map((activity) => (
-                    <Pill key={activity}>{ACTIVITY_META[activity].label}</Pill>
+                    <Tag kind="gray" key={activity}>{ACTIVITY_META[activity].label}</Tag>
                   ))}
                 </div>
               ) : null}
               {region ? <p className="text-sm">Home: {region}</p> : null}
               {viewer?.id === member.id ? (
-                <Button href="/account#edit-profile" tone="yellow">Edit profile</Button>
+                <Button href="/account#edit-profile" kind="yellow">Edit profile</Button>
               ) : null}
             </div>
           </div>

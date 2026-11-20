@@ -19,7 +19,7 @@ export function MembersTable({ rows }: { rows: DirectoryMember[] }) {
         const face = row.avatarUrl ? (
           <AvatarImage src={row.avatarUrl} width={32} height={32} className="avatar-frame h-8 w-8 object-cover" />
         ) : (
-          <span className="avatar-frame flex h-8 w-8 items-center justify-center bg-beige text-xs font-bold">{initial}</span>
+          <span className="avatar-frame flex h-8 w-8 items-center justify-center bg-surface-gray text-xs font-bold">{initial}</span>
         );
         const label = (
           <span className="flex items-center gap-2">

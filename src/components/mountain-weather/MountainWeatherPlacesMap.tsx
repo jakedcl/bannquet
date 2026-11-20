@@ -11,7 +11,7 @@ import type { NwsAlertsBundle, PlaceMapPin } from '@/lib/mountain-weather/map-ty
 setWorkerUrl('/maplibre-gl-worker.mjs');
 
 const MapShell = forwardRef<HTMLDivElement>(function MapShell(_, ref) {
-  return <div ref={ref} className="h-[min(60vh,28rem)] w-full border border-[#5c3a1e]/40" />;
+  return <div ref={ref} className="h-[min(60vh,28rem)] w-full border border-hairline" />;
 });
 
 type Props = {
@@ -174,13 +174,13 @@ export function MountainWeatherPlacesMap({ pins, alertMap, focus, className }: P
 
   return (
     <div className={className}>
-      <p className="mb-2 text-xs text-gray-700">
+      <p className="mb-2 text-xs text-ink-2">
         Basemap: OpenFreeMap (OSM). Active NWS alerts are filled polygons (alert geometry or forecast-zone polygons from api.weather.gov/zones). Pin data matches place-page baselines.
       </p>
       {alertMap?.legend.length ? (
         <ul className="mb-2 flex flex-wrap gap-2 text-[10px]">
           {alertMap.legend.map((row) => (
-            <li key={row.event} className="flex items-center gap-1 border border-[#5c3a1e]/30 bg-white px-1.5 py-0.5">
+            <li key={row.event} className="flex items-center gap-1 border border-hairline bg-white px-1.5 py-0.5">
               <span className="inline-block h-2.5 w-2.5 border border-black/20" style={{ background: row.color }} />
               {row.event}
             </li>

@@ -102,7 +102,7 @@ export function PinForm({
           required
           maxLength={120}
           defaultValue={initial?.title ?? ''}
-          className="w-full retro-box-inset bg-white px-3 py-2 text-base"
+          className="w-full"
         />
       </label>
       <label className="block space-y-1">
@@ -111,7 +111,7 @@ export function PinForm({
           name="kind"
           required
           defaultValue={initial?.kind ?? 'other'}
-          className="w-full retro-box-inset bg-white px-3 py-2 text-base"
+          className="w-full"
         >
           {PIN_KINDS.map((kind) => (
             <option key={kind} value={kind}>{PIN_KIND_LABELS[kind]}</option>
@@ -125,7 +125,7 @@ export function PinForm({
           rows={4}
           maxLength={2000}
           defaultValue={initial?.note ?? ''}
-          className="w-full retro-box-inset bg-white px-3 py-2 text-base"
+          className="w-full"
         />
       </label>
       <div className="space-y-2">
@@ -159,15 +159,15 @@ export function PinForm({
           ) : null}
         </div>
         {point ? (
-          <p className="text-sm text-gray-700">Pin at {point.lat.toFixed(5)}, {point.lng.toFixed(5)}</p>
+          <p className="text-sm text-ink-2">Pin at {point.lat.toFixed(5)}, {point.lng.toFixed(5)}</p>
         ) : (
-          <p className="text-sm text-gray-700">No spot chosen yet.</p>
+          <p className="text-sm text-ink-2">No spot chosen yet.</p>
         )}
         {locateError ? <p className="text-sm font-bold text-red-700">{locateError}</p> : null}
         {/* Bound to state: React puts an uncontrolled hidden input back to its default on every render. */}
         <input type="hidden" name="lat" value={point ? String(point.lat) : ''} />
         <input type="hidden" name="lng" value={point ? String(point.lng) : ''} />
-        <div className="h-64 overflow-hidden retro-box">
+        <div className="h-64 overflow-hidden panel">
           <GroupMap
             points={draft}
             lines={EMPTY}
@@ -193,7 +193,7 @@ export function PinForm({
       <PhotoFields photos={photos} onChange={onPhotos} onBusy={setPhotoBusy} />
       {state?.error ? <p className="text-sm font-bold text-red-700">{state.error}</p> : null}
       <SubmitButton
-        tone={adminPower ? 'admin' : 'green'}
+        kind={adminPower ? 'admin' : 'green'}
         pendingLabel="Saving…"
         disabled={photoBusy}
         title={saveAdmin?.title}

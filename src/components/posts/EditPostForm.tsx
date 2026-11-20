@@ -60,7 +60,7 @@ export function EditPostForm({
           maxLength={120}
           value={title}
           onChange={(event) => setTitle(event.target.value)}
-          className="w-full retro-box-inset bg-white px-3 py-2"
+          className="w-full bg-white px-3 py-2"
         />
       </label>
       <label className="block space-y-1">
@@ -72,7 +72,7 @@ export function EditPostForm({
           required
           value={body}
           onChange={(event) => setBody(event.target.value)}
-          className="w-full retro-box-inset bg-white px-3 py-2"
+          className="w-full bg-white px-3 py-2"
         />
       </label>
       <PostAttachmentsEditor
@@ -84,7 +84,7 @@ export function EditPostForm({
       {state?.error ? <p className="text-sm font-bold text-red-700">{state.error}</p> : null}
       {state?.saved ? <p className="text-sm">Saved.</p> : null}
       <SubmitButton
-        tone="yellow"
+        kind="yellow"
         pendingLabel="Saving…"
         title={saveAdmin?.title}
         ariaLabel={saveAdmin?.ariaLabel}

@@ -1,7 +1,8 @@
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import PageWrapper from '@/components/ui/PageWrapper';
-import { LargeTitle } from '@/components/hub/SectionHeader';
+import { PageHero } from '@/components/hub/PageHero';
+import { chipClass } from '@/components/hub/Button';
 import WeatherTicker from '@/components/ui/WeatherTicker';
 import { WeatherHub } from '@/components/weather/WeatherHub';
 import { Card } from '@/components/hub/Card';
@@ -33,44 +34,35 @@ export default async function MountainWeatherPage({
     stateName: MOUNTAIN_STATES.find((s) => s.code === place.state)?.name ?? place.state,
   }));
 
+  const counts = Object.fromEntries(
+    MOUNTAIN_STATES.map((entry) => [
+      entry.code,
+      { sections: entry.sections.length, places: entry.sections.reduce((n, section) => n + section.places.length, 0) },
+    ]),
+  );
+
   return (
     <PageWrapper className="hub">
-      <div className="mx-auto max-w-5xl space-y-5 px-4 pb-12 pt-6 md:pt-8">
-        <LargeTitle title="Mountain Weather" />
-        <p className="text-sm text-gray-700">
-          {placeCount()} peaks and bases across New York, Vermont, New Hampshire, and Maine.
-        </p>
+      <PageHero
+        photo
+        title="Mountain weather"
+        subtitle={`${placeCount()} peaks and bases across New York, Vermont, New Hampshire and Maine.`}
+      />
+      <div className="mx-auto max-w-3xl space-y-4 px-4 pb-12 pt-4">
         <WeatherTicker />
         <MountainPlaceSearch places={searchPlaces} />
-        <WeatherHub states={hub} />
+        <div className="flex flex-wrap gap-2">
+          <Link href={mountainWeatherPath('ny', 'adirondack-high-peaks', 'mount-marcy')} className={chipClass(false)}>Mount Marcy</Link>
+          <Link href={mountainWeatherPath('nh', 'presidential-range', 'mount-washington')} className={chipClass(false)}>Mount Washington</Link>
+        </div>
         <Card padded={false}>
           <ListGroup bare>
             <ListRow href="/mountain-weather/conditions" title="Conditions" subtitle="Measured extremes and place forecast lines" />
-            <ListRow href="/mountain-weather/snow" title="Snow" subtitle="Avalanche hub (MWAC, NYSAC, NWS AVG)" />
-            <ListRow href="/mountain-weather/maps" title="Maps" subtitle="Radar, GOES, GLM, alerts — live pins" />
+            <ListRow href="/mountain-weather/snow" title="Snow" subtitle="Snow, avalanche centers and avalanche weather guidance" />
+            <ListRow href="/mountain-weather/maps" title="Maps" subtitle="Radar, satellite, lightning, alerts and outlooks" />
           </ListGroup>
         </Card>
-        <Card title="States" padded={false}>
-          <ListGroup bare>
-            {MOUNTAIN_STATES.map((entry) => (
-              <ListRow
-                key={entry.code}
-                href={mountainWeatherPath(entry.code)}
-                title={entry.name}
-                subtitle={`${entry.sections.length} sections · ${entry.sections.reduce((n, s) => n + s.places.length, 0)} places`}
-              />
-            ))}
-          </ListGroup>
-        </Card>
-        <p className="text-sm">
-          <Link href={mountainWeatherPath('ny', 'adirondack-high-peaks', 'mount-marcy')} className="font-bold underline">
-            Mount Marcy
-          </Link>
-          {' · '}
-          <Link href={mountainWeatherPath('nh', 'presidential-range', 'mount-washington')} className="font-bold underline">
-            Mount Washington
-          </Link>
-        </p>
+        <WeatherHub states={hub} counts={counts} />
       </div>
     </PageWrapper>
   );

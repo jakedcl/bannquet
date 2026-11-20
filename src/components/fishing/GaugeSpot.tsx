@@ -16,7 +16,7 @@ function shown(state: FieldState, value: string | null): string {
 
 function Metric({ label, value, note }: { label: string; value: string; note?: string | null }) {
   return (
-    <div className="retro-box-inset min-w-0 bg-white px-2 py-2" title={note ?? undefined}>
+    <div className="well min-w-0 bg-white px-2 py-2" title={note ?? undefined}>
       <p className="break-words text-xs font-bold uppercase leading-tight">{label}</p>
       <p className="break-words text-sm font-bold">{value}</p>
     </div>
@@ -39,7 +39,7 @@ export function GaugeSpot({
 
   return (
     <Card>
-      {place ? <p className="mb-4 break-words text-sm text-gray-700">{place}</p> : null}
+      {place ? <p className="mb-4 break-words text-sm text-ink-2">{place}</p> : null}
       {gauge.verdict ? <p className="mb-3 text-sm font-bold">{gauge.verdict}</p> : null}
       <div className="mb-4 grid min-w-0 grid-cols-2 gap-2 sm:grid-cols-3">
         <Metric label="Flow" value={shown(gauge.flowState, gauge.flow)} note={gauge.flowNote} />
@@ -80,7 +80,7 @@ export async function GaugeForecast({ gauge }: { gauge: GaugeView }) {
   const nws = `https://forecast.weather.gov/MapClick.php?lat=${gauge.lat}&lon=${gauge.lon}`;
 
   return (
-    <section className="min-w-0 max-w-full space-y-2 border border-border-gray bg-beige/40 px-3 py-2">
+    <section className="min-w-0 max-w-full space-y-2 border border-hairline bg-surface-cream px-3 py-2">
       <h2 className="text-sm font-bold uppercase">Forecast</h2>
       <p className="break-words text-sm">
         {typeof weather.temperature === 'number' ? `Air ${weather.temperature}°F` : 'Air temperature missing'}
@@ -96,7 +96,7 @@ export async function GaugeForecast({ gauge }: { gauge: GaugeView }) {
               <span className="block font-bold">{periodLabel(period.name)}</span>
               <span className="block">{typeof period.temperature === 'number' ? `${period.temperature}°` : '—'}</span>
               <span className="block truncate">{period.windSpeed || '—'}</span>
-              <span className="block truncate text-gray-700">{period.shortForecast || '—'}</span>
+              <span className="block truncate text-ink-2">{period.shortForecast || '—'}</span>
             </li>
           ))}
         </ul>

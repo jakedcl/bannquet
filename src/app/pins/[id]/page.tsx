@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation';
 import PageWrapper from '@/components/ui/PageWrapper';
 import { MapCanvas } from '@/components/map/MapCanvas';
 import { DeletePinButton, PinForm } from '@/components/pins/PinForm';
-import { Pill } from '@/components/hub/Button';
+import { Tag } from '@/components/hub/Button';
 import { Button } from '@/components/hub/Button';
 import { Card } from '@/components/hub/Card';
 import { getViewer } from '@/app/sign-in/actions';
@@ -90,8 +90,8 @@ export default async function PinPage({
         }
       >
         <div className="flex flex-wrap items-center gap-2">
-          {activity ? <Pill>{activity}</Pill> : null}
-          <Pill>{category}</Pill>
+          {activity ? <Tag kind="gray">{activity}</Tag> : null}
+          <Tag kind="gray">{category}</Tag>
         </div>
         <Card>
           {pin.note ? <p className="mb-4 whitespace-pre-wrap t-body">{pin.note}</p> : null}
@@ -105,17 +105,17 @@ export default async function PinPage({
                     alt={photo.alt || ''}
                     width={240}
                     height={240}
-                    className="h-28 w-full object-cover retro-box"
+                    className="h-28 w-full object-cover panel"
                   />
                 </Link>
               ))}
             </div>
           ) : null}
           <div>
-            <Button href={`/map?pin=${pin.id}`} tone="blue">Open on the map</Button>
+            <Button href={`/map?pin=${pin.id}`} kind="brown">Open on the map</Button>
           </div>
         </Card>
-        <div className="retro-box h-80 min-h-[420px] overflow-hidden bg-white">
+        <div className="panel h-80 min-h-[420px] overflow-hidden bg-white">
           <MapCanvas
             points={data.points}
             lines={data.lines}

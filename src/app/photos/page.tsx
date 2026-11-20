@@ -45,7 +45,7 @@ export default async function PhotosPage({
 
   return (
     <PageWrapper>
-      <HubPage title="Photos" width="5xl" trailing={canAdd ? <Button href="/upload?kind=photo" tone="yellow">+ Add photos</Button> : null}>
+      <HubPage title="Photos" width="5xl" trailing={canAdd ? <Button href="/upload?kind=photo" kind="yellow">+ Add photos</Button> : null}>
         <Card>
           {error ? <p className="text-sm font-bold">{error}</p> : (
             <div className="space-y-4">

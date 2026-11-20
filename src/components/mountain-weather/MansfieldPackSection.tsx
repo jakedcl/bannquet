@@ -24,7 +24,7 @@ function formatEt(value: string | null): string {
 
 function Footer({ def, issuedAt, sourceUrl }: { def: SourceDef; issuedAt: string | null; sourceUrl: string }) {
   return (
-    <p className="text-xs text-gray-700">
+    <p className="text-xs text-ink-2">
       {def.org} · {def.kind} · Issued {formatEt(issuedAt)} ET ·{' '}
       <a href={sourceUrl} className="font-bold underline" target="_blank" rel="noopener noreferrer">
         Source
@@ -91,8 +91,18 @@ function PackBlock<T>({
   );
 }
 
-export function MansfieldPackSection({ pack }: { pack: MansfieldPackData | null }) {
+/**
+ * Mount Mansfield's own readers, split by place-page tab: `measured` (MMNV1
+ * station, RR2 summit), `forecast` (elevation profile), `snow` (snow stake,
+ * snow depth climatology). Without `part`, everything.
+ */
+export function MansfieldPackSection({ pack, part }: { pack: MansfieldPackData | null; part?: 'measured' | 'forecast' | 'snow' }) {
   if (!pack) return null;
+  const show = {
+    measured: !part || part === 'measured',
+    forecast: !part || part === 'forecast',
+    snow: !part || part === 'snow',
+  };
 
   const defs = Object.fromEntries(mansfieldPackSourceDefs().map((s) => [s.key, s.def])) as Record<
     keyof MansfieldPackData,
@@ -101,12 +111,13 @@ export function MansfieldPackSection({ pack }: { pack: MansfieldPackData | null 
 
   return (
     <>
+      {show.measured ? (
       <PackBlock title="Summit station (MMNV1)" def={defs.station} result={pack.station}>
         {pack.station.data ? (
           <>
-            <p className="text-xs font-bold uppercase text-gray-800">{pack.station.data.stationName ?? 'MMNV1'}</p>
+            <p className="text-xs font-bold uppercase text-ink">{pack.station.data.stationName ?? 'MMNV1'}</p>
             {pack.station.data.fields.length === 0 ? (
-              <p className="text-xs text-gray-700">No scalar fields in the latest observation (check RR2 SHEF below).</p>
+              <p className="text-xs text-ink-2">No scalar fields in the latest observation (check RR2 SHEF below).</p>
             ) : (
               <ul className="grid gap-1 sm:grid-cols-2">
                 {pack.station.data.fields.map((f) => (
@@ -114,26 +125,28 @@ export function MansfieldPackSection({ pack }: { pack: MansfieldPackData | null 
                     <span className="font-bold">{f.label}:</span>{' '}
                     {f.value === null ? '—' : `${f.value}${f.unit ? ` ${f.unit}` : ''}`}
                     {f.qcFailed ? (
-                      <span className="text-gray-700"> (failed NWS quality check)</span>
+                      <span className="text-ink-2"> (failed NWS quality check)</span>
                     ) : f.qualityControl ? (
-                      <span className="text-gray-600"> (QC {f.qualityControl})</span>
+                      <span className="text-ink-2"> (QC {f.qualityControl})</span>
                     ) : null}
                   </li>
                 ))}
               </ul>
             )}
             {pack.station.data.timestamp ? (
-              <p className="text-xs text-gray-700">Observation {formatEt(pack.station.data.timestamp)} ET</p>
+              <p className="text-xs text-ink-2">Observation {formatEt(pack.station.data.timestamp)} ET</p>
             ) : null}
           </>
         ) : null}
       </PackBlock>
+      ) : null}
 
+      {show.measured ? (
       <PackBlock title="RR2 summit (SHEF)" def={defs.rr2Summit} result={pack.rr2Summit}>
         {pack.rr2Summit.data ? (
           <>
             {pack.rr2Summit.data.reportHeader ? (
-              <p className="font-mono text-xs text-gray-800">{pack.rr2Summit.data.reportHeader}</p>
+              <p className="font-mono text-xs text-ink">{pack.rr2Summit.data.reportHeader}</p>
             ) : null}
             <ul className="space-y-1 text-sm">
               {pack.rr2Summit.data.shefFields.map((f) => (
@@ -143,21 +156,23 @@ export function MansfieldPackSection({ pack }: { pack: MansfieldPackData | null 
               ))}
             </ul>
             {pack.rr2Summit.data.summitTempF !== null ? (
-              <p className="text-xs text-gray-700">
+              <p className="text-xs text-ink-2">
                 <span className="font-bold">TAIRGZZ (°F):</span> {pack.rr2Summit.data.summitTempF}
               </p>
             ) : null}
-            <p className="font-mono text-xs text-gray-800">{pack.rr2Summit.data.rawLine}</p>
+            <p className="font-mono text-xs text-ink">{pack.rr2Summit.data.rawLine}</p>
           </>
         ) : null}
       </PackBlock>
+      ) : null}
 
+      {show.forecast ? (
       <PackBlock title="Elevation profile" def={defs.profile} result={pack.profile}>
         {pack.profile.data ? (
           <>
             <div className="overflow-x-auto">
-              <table className="min-w-full border border-[#5c3a1e]/30 text-xs">
-                <thead className="bg-white/70">
+              <table className="min-w-full border border-hairline text-xs">
+                <thead className="bg-surface">
                   <tr className="text-left">
                     <th className="px-2 py-1">Site</th>
                     <th className="px-2 py-1">Elev (ft)</th>
@@ -169,7 +184,7 @@ export function MansfieldPackSection({ pack }: { pack: MansfieldPackData | null 
                 </thead>
                 <tbody>
                   {pack.profile.data.stations.map((row) => (
-                    <tr key={row.id} className="border-t border-[#5c3a1e]/15">
+                    <tr key={row.id} className="border-t border-hairline">
                       <td className="px-2 py-1 font-bold">{row.id}</td>
                       <td className="px-2 py-1">{row.elevationFt ?? '—'}</td>
                       <td className="px-2 py-1">{row.temperature ?? '—'}</td>
@@ -198,10 +213,12 @@ export function MansfieldPackSection({ pack }: { pack: MansfieldPackData | null 
           </>
         ) : null}
       </PackBlock>
+      ) : null}
 
+      {show.snow ? (
       <PackBlock title="Mansfield snow stake (HYD)" def={defs.hyd} result={pack.hyd}>
         {pack.hyd.status === 'seasonal-off' ? (
-          <p className="border border-[#5c3a1e]/30 bg-white/60 p-2 text-xs font-bold">
+          <p className="border border-hairline bg-surface p-2 text-xs font-bold">
             {defaultResumeHint('stake')}
             {pack.hyd.issuedAt ? ` Last update ${formatEt(pack.hyd.issuedAt)} ET.` : ''}
             {pack.hyd.data?.seasonalMessage ? ` ${pack.hyd.data.seasonalMessage}` : null}
@@ -210,12 +227,12 @@ export function MansfieldPackSection({ pack }: { pack: MansfieldPackData | null 
         {pack.hyd.data && pack.hyd.status !== 'seasonal-off' ? (
           <>
             {pack.hyd.data.headerLines.map((line) => (
-              <p key={line} className="text-xs text-gray-800">
+              <p key={line} className="text-xs text-ink">
                 {line}
               </p>
             ))}
             <div className="overflow-x-auto">
-              <table className="min-w-full border border-[#5c3a1e]/30 text-xs">
+              <table className="min-w-full border border-hairline text-xs">
                 <tbody>
                   {(
                     [
@@ -229,7 +246,7 @@ export function MansfieldPackSection({ pack }: { pack: MansfieldPackData | null 
                       ['SWE', pack.hyd.data.row.swe],
                     ] as const
                   ).map(([label, value]) => (
-                    <tr key={label} className="border-t border-[#5c3a1e]/15">
+                    <tr key={label} className="border-t border-hairline">
                       <td className="px-2 py-1 font-bold">{label}</td>
                       <td className="px-2 py-1">{value ?? '—'}</td>
                     </tr>
@@ -240,11 +257,13 @@ export function MansfieldPackSection({ pack }: { pack: MansfieldPackData | null 
           </>
         ) : null}
       </PackBlock>
+      ) : null}
 
+      {show.snow ? (
       <PackBlock title="Snow depth climatology (in)" def={defs.climatology} result={pack.climatology}>
         {pack.climatology.data ? (
           <div className="max-h-96 overflow-auto">
-            <table className="min-w-full border border-[#5c3a1e]/30 text-[11px]">
+            <table className="min-w-full border border-hairline text-[11px]">
               <thead className="sticky top-0 bg-white/90">
                 <tr>
                   <th className="px-2 py-1 text-left">Date</th>
@@ -255,7 +274,7 @@ export function MansfieldPackSection({ pack }: { pack: MansfieldPackData | null 
               </thead>
               <tbody>
                 {mergeClimatology(pack.climatology).map((row) => (
-                  <tr key={`${row.monthIndex}-${row.day}`} className="border-t border-[#5c3a1e]/10">
+                  <tr key={`${row.monthIndex}-${row.day}`} className="border-t border-hairline">
                     <td className="px-2 py-0.5">
                       {MONTHS[row.monthIndex] ?? row.monthIndex} {row.day}
                     </td>
@@ -269,6 +288,7 @@ export function MansfieldPackSection({ pack }: { pack: MansfieldPackData | null 
           </div>
         ) : null}
       </PackBlock>
+      ) : null}
     </>
   );
 }

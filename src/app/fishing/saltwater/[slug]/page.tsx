@@ -27,7 +27,7 @@ export default async function ShoreSpotPage({ params }: { params: Promise<{ slug
               {station.label}
             </Link>
           </p>
-          <div className="retro-box-inset mt-4 bg-white">
+          <div className="well mt-4 bg-white">
             <ShoreMapFrame lat={spot.lat} lon={spot.lon} name={spot.name} />
           </div>
         </Card>
@@ -43,7 +43,7 @@ export default async function ShoreSpotPage({ params }: { params: Promise<{ slug
             headers={{ name: 'Fish', detail: 'General', extra: 'Sensitive' }}
             empty="No advisory for this water."
           />
-          <p className="mt-3 text-sm text-gray-700">
+          <p className="mt-3 text-sm text-ink-2">
             Sensitive: people who can become pregnant, under 50, and children under 15. Do not eat crab or lobster tomalley.
             {' '}
             <a href={ADVISORIES_SOURCE} target="_blank" rel="noopener noreferrer" className="underline">

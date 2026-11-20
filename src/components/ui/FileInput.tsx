@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, type ChangeEvent } from 'react';
-import { navButtonClass } from '@/components/ui/NavButton';
+import { buttonClass } from '@/components/hub/Button';
 
 export function FileInput({
   accept,
@@ -29,7 +29,7 @@ export function FileInput({
 
   return (
     <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-      <label className={navButtonClass(false, disabled ? 'pointer-events-none cursor-pointer opacity-60' : 'cursor-pointer')}>
+      <label className={buttonClass('brown', 'md', disabled ? 'pointer-events-none opacity-60' : '')}>
         {label}
         <input
           type="file"

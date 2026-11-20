@@ -84,7 +84,7 @@ export default async function PhotoPage({
             height={800}
             unoptimized
             sizes="(max-width: 768px) 100vw, 48rem"
-            className="h-auto w-full bg-white object-contain retro-box"
+            className="h-auto w-full bg-white object-contain panel"
           />
           <PhotoTags photo={photo} />
           {manage ? (
@@ -100,7 +100,7 @@ export default async function PhotoPage({
           ) : null}
         </Card>
         {map && photo.lat != null && photo.lng != null ? (
-          <div className="h-80 min-h-[420px] overflow-hidden bg-white retro-box">
+          <div className="h-80 min-h-[420px] overflow-hidden bg-white panel">
             <MapCanvas points={map.points} lines={map.lines} focus={{ lng: photo.lng, lat: photo.lat, zoom: 12 }} />
           </div>
         ) : null}

@@ -41,25 +41,38 @@ export function BackBar({ leaf = null }: { leaf?: string | null }) {
   const trail = pageTrail(pathname, search.toString(), account, leaf || peak);
   const crumbs = trail.crumbs;
 
+  const arrow = (
+    <svg viewBox="0 0 20 20" className="h-4 w-4" aria-hidden="true">
+      <path d="M12.5 4 L6.5 10 L12.5 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="square" />
+    </svg>
+  );
+
+  // Back goes up one level (the route map in the design handoff). Upload is
+  // the exception: it returns to wherever the upload was started from.
   return (
     <nav aria-label="Page" className="back-bar">
-      <button
-        type="button"
-        className="retro-button back-bar-button"
-        onClick={() => {
-          if (canGoBackInApp()) {
-            router.back();
-            return;
-          }
-          noteFallback(trail.parentHref);
-          router.push(trail.parentHref);
-        }}
-      >
-        <svg viewBox="0 0 20 20" className="h-4 w-4" aria-hidden="true">
-          <path d="M12.5 4 L6.5 10 L12.5 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="square" />
-        </svg>
-        Back
-      </button>
+      {pathname === '/upload' ? (
+        <button
+          type="button"
+          className="btn btn-sm back-bar-button"
+          onClick={() => {
+            if (canGoBackInApp()) {
+              router.back();
+              return;
+            }
+            noteFallback(trail.parentHref);
+            router.push(trail.parentHref);
+          }}
+        >
+          {arrow}
+          Back
+        </button>
+      ) : (
+        <Link href={trail.parentHref} className="btn btn-sm back-bar-button">
+          {arrow}
+          Back
+        </Link>
+      )}
       {crumbs && crumbs.length > 0 ? (
         <p className="crumb-trail">
           <span className="crumb-wide">

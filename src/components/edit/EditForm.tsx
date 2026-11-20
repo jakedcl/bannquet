@@ -56,8 +56,8 @@ export function EditForm({
           value: values[field.name] ?? '',
           maxLength: field.maxLength,
           className: inline
-            ? 'retro-box-inset bg-white px-3 py-2 text-sm'
-            : 'w-full retro-box-inset bg-white px-3 py-2 text-base',
+            ? ' bg-white px-3 py-2 text-sm'
+            : 'w-full bg-white px-3 py-2 text-base',
           'aria-label': inline ? field.label : undefined,
           onChange: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
             const next = event.target.value;
@@ -78,7 +78,7 @@ export function EditForm({
       {state?.error ? <p className="text-sm font-bold text-red-700">{state.error}</p> : null}
       {state?.saved && !inline ? <p className="text-sm">Saved.</p> : null}
       <SubmitButton
-        tone={adminPower ? 'admin' : 'default'}
+        kind={adminPower ? 'admin' : 'gray'}
         pendingLabel="Saving…"
         title={saveAdmin?.title}
         ariaLabel={saveAdmin?.ariaLabel}
@@ -108,10 +108,10 @@ export function EditDetails({
           title={editAdmin?.title}
           aria-label={editAdmin?.ariaLabel}
           className={adminPower
-            ? 'retro-button retro-button-admin ui-press flex min-h-11 cursor-pointer list-none items-center justify-center rounded-none [&::-webkit-details-marker]:hidden'
-            : 'retro-button ui-press flex min-h-11 cursor-pointer list-none items-center justify-center rounded-none text-sm font-bold uppercase tracking-wide text-gray-800 [&::-webkit-details-marker]:hidden'}
+            ? 'btn btn-admin ui-press flex min-h-11 cursor-pointer list-none items-center justify-center [&::-webkit-details-marker]:hidden'
+            : 'btn ui-press flex min-h-11 cursor-pointer list-none items-center justify-center text-sm font-bold uppercase tracking-wide text-ink [&::-webkit-details-marker]:hidden'}
         >
-          {adminPower ? <span className="retro-button-admin-label">Edit</span> : 'Edit'}
+          {adminPower ? <span className="btn-admin-label">Edit</span> : 'Edit'}
         </summary>
         <div className="mt-3">{children}</div>
       </details>
@@ -122,9 +122,9 @@ export function EditDetails({
       <summary
         title={editAdmin?.title}
         aria-label={editAdmin?.ariaLabel}
-        className={`flex min-h-11 cursor-pointer items-center text-sm font-bold underline${adminPower ? ' retro-button-admin inline-flex !p-0' : ''}`}
+        className={`flex min-h-11 cursor-pointer items-center text-sm font-bold underline${adminPower ? ' btn-admin inline-flex !p-0' : ''}`}
       >
-        {adminPower ? <span className="retro-button-admin-label">Edit</span> : 'Edit'}
+        {adminPower ? <span className="btn-admin-label">Edit</span> : 'Edit'}
       </summary>
       {children}
     </details>

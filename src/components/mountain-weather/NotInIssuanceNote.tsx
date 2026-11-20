@@ -10,7 +10,7 @@ export function NotInIssuanceNote({
   priorIssuanceEt?: string | null;
 }) {
   return (
-    <p className="text-sm text-gray-700">
+    <p className="text-sm text-ink-2">
       {label} is not in {priorIssuanceEt ? 'the latest' : 'this'} issuance
       {latestIssuanceEt ? ` (${latestIssuanceEt} ET)` : ''}.
       {priorIssuanceEt ? (

@@ -83,10 +83,10 @@ function BoxSelectionOverlay({ box }: { box: { width: number; height: number } }
   const halfH = box.height / 2;
   return (
     <>
-      <div className="absolute inset-x-0 top-0 bg-[#1a1a1a]/28" style={{ height: `calc(50% - ${halfH}px)` }} />
-      <div className="absolute inset-x-0 bottom-0 bg-[#1a1a1a]/28" style={{ height: `calc(50% - ${halfH}px)` }} />
+      <div className="absolute inset-x-0 top-0 bg-ink/28" style={{ height: `calc(50% - ${halfH}px)` }} />
+      <div className="absolute inset-x-0 bottom-0 bg-ink/28" style={{ height: `calc(50% - ${halfH}px)` }} />
       <div
-        className="absolute left-0 bg-[#1a1a1a]/28"
+        className="absolute left-0 bg-ink/28"
         style={{
           top: `calc(50% - ${halfH}px)`,
           width: `calc(50% - ${halfW}px)`,
@@ -94,7 +94,7 @@ function BoxSelectionOverlay({ box }: { box: { width: number; height: number } }
         }}
       />
       <div
-        className="absolute right-0 bg-[#1a1a1a]/28"
+        className="absolute right-0 bg-ink/28"
         style={{
           top: `calc(50% - ${halfH}px)`,
           width: `calc(50% - ${halfW}px)`,
@@ -102,7 +102,7 @@ function BoxSelectionOverlay({ box }: { box: { width: number; height: number } }
         }}
       />
       <div
-        className="absolute left-1/2 top-1/2 box-border -translate-x-1/2 -translate-y-1/2 border-[3px] border-[#ffc94d] bg-[#2d5016]/12"
+        className="absolute left-1/2 top-1/2 box-border -translate-x-1/2 -translate-y-1/2 border-[3px] border-yellow bg-brand/12"
         style={{ width: box.width, height: box.height }}
       />
     </>
@@ -333,7 +333,7 @@ export function OfflineAreaPicker({
   const radiusKm = radiusM / 1000;
 
   return (
-    <div className="relative flex h-full min-h-0 w-full flex-col bg-[#e7e1d4] text-[#1a1a1a]">
+    <div className="relative flex h-full min-h-0 w-full flex-col bg-surface-gray text-ink">
       <div className="offline-area-picker-map relative min-h-0 w-full flex-1 basis-0 overflow-hidden">
         <div ref={containerRef} className="h-full w-full" />
         {dimPortal ? createPortal(<BoxSelectionOverlay box={box} />, dimPortal) : null}
@@ -342,30 +342,30 @@ export function OfflineAreaPicker({
           Pan the map — box = {radiusKm} km offline area
         </p>
       </div>
-      <div className="shrink-0 space-y-1.5 border-t-2 border-[#5c3a1e] bg-[#e7e1d4]/95 px-2 py-1.5 pb-[max(0.375rem,env(safe-area-inset-bottom))]">
-        <p className="text-center text-[10px] text-[#3d3d3d]">
-          Download ~<span className="font-bold text-[#1a1a1a]">{estimate ?? '…'}</span>
+      <div className="shrink-0 space-y-1.5 border-t-2 border-brown bg-surface-gray/95 px-2 py-1.5 pb-[max(0.375rem,env(safe-area-inset-bottom))]">
+        <p className="text-center text-[10px] text-ink-2">
+          Download ~<span className="font-bold text-ink">{estimate ?? '…'}</span>
         </p>
         <div className="flex items-center gap-1.5">
           <button
             type="button"
-            className="retro-button min-h-9 shrink-0 px-2 text-[10px]"
+            className="btn min-h-9 shrink-0 px-2 text-[10px]"
             title="Use my current location"
             onClick={() => void centerOnUser()}
           >
             Here
           </button>
-          <div className="flex min-h-9 flex-1 overflow-hidden rounded border-2 border-[#5c3a1e]">
+          <div className="flex min-h-9 flex-1 overflow-hidden rounded border-2 border-brown">
             <button
               type="button"
-              className={`min-h-9 flex-1 px-1 text-[10px] ${basemap === 'satellite' ? 'bg-[#ffc94d] font-bold' : 'bg-[#e7e1d4]'}`}
+              className={`min-h-9 flex-1 px-1 text-[10px] ${basemap === 'satellite' ? 'bg-yellow font-bold' : 'bg-surface-gray'}`}
               onClick={() => setBasemap('satellite')}
             >
               Sat
             </button>
             <button
               type="button"
-              className={`min-h-9 flex-1 border-l-2 border-[#5c3a1e] px-1 text-[10px] ${basemap === 'map' ? 'bg-[#ffc94d] font-bold' : 'bg-[#e7e1d4]'}`}
+              className={`min-h-9 flex-1 border-l-2 border-brown px-1 text-[10px] ${basemap === 'map' ? 'bg-yellow font-bold' : 'bg-surface-gray'}`}
               onClick={() => setBasemap('map')}
             >
               Topo
@@ -373,7 +373,7 @@ export function OfflineAreaPicker({
           </div>
           <button
             type="button"
-            className="retro-button retro-button-yellow min-h-9 shrink-0 px-2 text-[10px] font-bold"
+            className="btn btn-yellow min-h-9 shrink-0 px-2 text-[10px] font-bold"
             disabled={downloading}
             onClick={onDownload}
           >
@@ -392,7 +392,7 @@ export function OfflineAreaPicker({
           onChange={(e) => onRadiusM(Number(e.target.value) * 1000)}
         />
         {downloading ? (
-          <p className="text-center text-[10px] font-bold text-[#2d5016]">Downloading…</p>
+          <p className="text-center text-[10px] font-bold text-brand">Downloading…</p>
         ) : null}
         {error ? <p className="text-center text-[10px] font-bold text-red-900">{error}</p> : null}
       </div>

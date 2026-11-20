@@ -186,7 +186,7 @@ export function FreshwaterBoard({
               </label>
             ) : null}
           </div>
-          <div className="retro-box-inset bg-white">
+          <div className="well bg-white">
             <FishingMap
               places={plotted}
               parking={showParking ? parkingShown : []}

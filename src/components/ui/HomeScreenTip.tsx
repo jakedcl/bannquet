@@ -26,8 +26,8 @@ export function HomeScreenTip({ show }: { show: boolean }) {
 
   return (
     <div className="motion-sheet fixed inset-0 z-[60] flex items-end justify-center bg-black/50 p-4 sm:items-center">
-      <div role="dialog" aria-labelledby="home-tip-title" className="motion-panel w-full max-w-md bg-beige retro-box">
-        <header className="bg-[#5c3a1e] px-4 py-2 text-sm font-bold uppercase tracking-wide text-[#ffd700]">
+      <div role="dialog" aria-labelledby="home-tip-title" className="motion-panel panel w-full max-w-md bg-surface-gray">
+        <header className="panel-bar">
           Add BANNQUET to your Home Screen
         </header>
         <div className="space-y-4 p-4">
@@ -36,7 +36,7 @@ export function HomeScreenTip({ show }: { show: boolean }) {
             <Step n={2} title="Tap Add to Home Screen. It may be under View More." art={<MenuArt />} />
             <Step n={3} title="Keep Open as Web App on, then tap Add." art={<ToggleArt />} />
           </ol>
-          {error ? <p className="text-sm font-bold text-red-700">{error}</p> : null}
+          {error ? <p className="text-sm font-bold text-danger">{error}</p> : null}
           <form
             action={async () => {
               setError(null);
@@ -48,7 +48,7 @@ export function HomeScreenTip({ show }: { show: boolean }) {
               setDismissed(true);
             }}
           >
-            <SubmitButton tone="yellow" pendingLabel="Saving…" className="w-full">Got it</SubmitButton>
+            <SubmitButton kind="yellow" pendingLabel="Saving…" className="w-full">Got it</SubmitButton>
           </form>
         </div>
       </div>
@@ -70,7 +70,7 @@ function Step({ n, title, art }: { n: number; title: string; art: React.ReactNod
 
 function Frame({ children }: { children: React.ReactNode }) {
   return (
-    <svg viewBox="0 0 96 72" className="h-16 w-24 border-2 border-[#3d2412] bg-[#8b5a2b]" aria-hidden="true">
+    <svg viewBox="0 0 96 72" className="h-16 w-24 rounded-tag border-2 border-brown-dark bg-brown-light" aria-hidden="true">
       {children}
     </svg>
   );
@@ -79,11 +79,11 @@ function Frame({ children }: { children: React.ReactNode }) {
 function ShareArt() {
   return (
     <Frame>
-      <rect x="8" y="46" width="80" height="18" fill="#5c3a1e" />
-      <circle cx="28" cy="55" r="2" fill="#ffd700" />
-      <circle cx="36" cy="55" r="2" fill="#ffd700" />
-      <circle cx="44" cy="55" r="2" fill="#ffd700" />
-      <path d="M68 60 V50 M68 50 l-4 4 M68 50 l4 4" stroke="#ffd700" strokeWidth="2" fill="none" />
+      <rect x="8" y="46" width="80" height="18" fill="var(--color-brown)" />
+      <circle cx="28" cy="55" r="2" fill="var(--color-yellow)" />
+      <circle cx="36" cy="55" r="2" fill="var(--color-yellow)" />
+      <circle cx="44" cy="55" r="2" fill="var(--color-yellow)" />
+      <path d="M68 60 V50 M68 50 l-4 4 M68 50 l4 4" stroke="var(--color-yellow)" strokeWidth="2" fill="none" />
     </Frame>
   );
 }
@@ -91,9 +91,9 @@ function ShareArt() {
 function MenuArt() {
   return (
     <Frame>
-      <rect x="14" y="10" width="68" height="52" fill="#e8e6e1" />
-      <rect x="20" y="28" width="56" height="14" fill="#ffd700" stroke="#3d2412" />
-      <text x="24" y="38" fontSize="7" fontFamily="Helvetica, Arial, sans-serif" fill="#1a3009">+ Home</text>
+      <rect x="14" y="10" width="68" height="52" fill="var(--color-surface-gray)" />
+      <rect x="20" y="28" width="56" height="14" fill="var(--color-yellow)" stroke="var(--color-brown-dark)" />
+      <text x="24" y="38" fontSize="7" fontFamily="Helvetica, Arial, sans-serif" fill="var(--color-brand-dark)">+ Home</text>
     </Frame>
   );
 }
@@ -101,12 +101,12 @@ function MenuArt() {
 function ToggleArt() {
   return (
     <Frame>
-      <rect x="10" y="16" width="76" height="40" fill="#e8e6e1" />
-      <text x="16" y="30" fontSize="6" fontFamily="Helvetica, Arial, sans-serif" fill="#1a3009">Web App</text>
-      <rect x="58" y="20" width="22" height="12" rx="6" fill="#5c3a1e" />
-      <circle cx="74" cy="26" r="4" fill="#ffd700" />
-      <rect x="52" y="40" width="28" height="10" fill="#ffd700" stroke="#3d2412" />
-      <text x="57" y="48" fontSize="7" fontFamily="Helvetica, Arial, sans-serif" fill="#1a3009">Add</text>
+      <rect x="10" y="16" width="76" height="40" fill="var(--color-surface-gray)" />
+      <text x="16" y="30" fontSize="6" fontFamily="Helvetica, Arial, sans-serif" fill="var(--color-brand-dark)">Web App</text>
+      <rect x="58" y="20" width="22" height="12" rx="6" fill="var(--color-brown)" />
+      <circle cx="74" cy="26" r="4" fill="var(--color-yellow)" />
+      <rect x="52" y="40" width="28" height="10" fill="var(--color-yellow)" stroke="var(--color-brown-dark)" />
+      <text x="57" y="48" fontSize="7" fontFamily="Helvetica, Arial, sans-serif" fill="var(--color-brand-dark)">Add</text>
     </Frame>
   );
 }

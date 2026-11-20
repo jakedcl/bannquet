@@ -7,10 +7,10 @@ import { usnoEtDatesThrough } from '@/lib/mountain-weather/usno-dates';
 const SKY_DAYS = 8;
 
 export const USNO_HORIZON_NOTE =
-  'Times are for a sea-level horizon at these coordinates. USNO does not adjust for local terrain or summit elevation; sunrise and sunset can differ on peaks and in valleys.';
+  'Times are for a flat horizon at sea level. On a summit or in a valley the sun can rise and set earlier or later.';
 
 export const USNO_API_TWILIGHT_NOTE =
-  'The USNO rstt/oneday API (v4) documents civil twilight begin/end only — no nautical or astronomical twilight on this endpoint or other published rstt URLs we verified. All sundata and moondata fields returned by the API are listed below. Requests use tz=-5&dst=true so USNO applies U.S. daylight saving rules per date (times marked DT or ST).';
+  'Sun and moon times come from the US Naval Observatory. It gives civil twilight only, not nautical or astronomical, and its times follow daylight saving (marked DT or ST).';
 
 async function loadDays(lat: number, lon: number, start = new Date()): Promise<PlaceSkyData> {
   const dates = usnoEtDatesThrough(start, SKY_DAYS);

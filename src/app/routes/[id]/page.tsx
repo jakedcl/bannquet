@@ -113,7 +113,7 @@ export default async function RoutePage({
           ) : null}
         </Card>
         {map && route.lat != null && route.lng != null ? (
-          <div className="h-80 min-h-[420px] overflow-hidden bg-white retro-box">
+          <div className="h-80 min-h-[420px] overflow-hidden bg-white panel">
             <MapCanvas points={map.points} lines={map.lines} focus={{ lng: route.lng, lat: route.lat, zoom: 12 }} />
           </div>
         ) : null}

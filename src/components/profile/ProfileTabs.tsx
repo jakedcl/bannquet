@@ -18,14 +18,14 @@ export function ProfileTabs({ tabs }: { tabs: ProfileTab[] }) {
 
   return (
     <div className="space-y-4">
-      <nav aria-label="Profile sections" className="flex flex-wrap gap-2 border-b border-[#d9d2c5] pb-2">
+      <nav aria-label="Profile sections" className="flex flex-wrap gap-2 border-b border-hairline pb-2">
         {visible.map((tab) => (
           <button
             key={tab.id}
             type="button"
             onClick={() => setActive(tab.id)}
             aria-current={current?.id === tab.id ? 'true' : undefined}
-            className={`min-h-11 px-3 text-sm font-bold uppercase ${current?.id === tab.id ? 'bg-brand-green text-white' : 'underline'}`}
+            className={`min-h-11 px-3 text-sm font-bold uppercase ${current?.id === tab.id ? 'bg-brand text-white' : 'underline'}`}
           >
             {tab.label}
           </button>

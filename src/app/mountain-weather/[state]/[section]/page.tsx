@@ -1,7 +1,6 @@
 import { notFound } from 'next/navigation';
-import Link from 'next/link';
 import PageWrapper from '@/components/ui/PageWrapper';
-import { LargeTitle } from '@/components/hub/SectionHeader';
+import { PageHero } from '@/components/hub/PageHero';
 import { Card } from '@/components/hub/Card';
 import { MoreSourcesSection } from '@/components/mountain-weather/MoreSourcesSection';
 import { WeatherGlanceList } from '@/components/weather/WeatherGlanceList';
@@ -12,7 +11,6 @@ import {
   resolveMountainStateSlug,
 } from '@/lib/mountain-weather/places';
 import { moreSourcesForSection } from '@/lib/mountain-weather/more-sources';
-import { mountainWeatherPath } from '@/lib/mountain-weather/slugs';
 import { ScopeBulletinsSection } from '@/components/mountain-weather/ScopeBulletinsSection';
 import {
   bulletinOfficesForSection,
@@ -44,13 +42,8 @@ export default async function MountainSectionPage({
 
   return (
     <PageWrapper>
-      <div className="mx-auto max-w-5xl space-y-5 px-4 pb-12 pt-6 md:pt-8">
-        <p className="text-sm">
-          <Link href="/mountain-weather" className="font-bold underline">Mountain Weather</Link>
-          {' · '}
-          <Link href={mountainWeatherPath(stateCode)} className="font-bold underline">{stateEntry.name}</Link>
-        </p>
-        <LargeTitle title={section.title} />
+      <PageHero eyebrow={`Mountain weather · ${stateEntry.name}`} title={section.title} subtitle={`${glances.length} places`} />
+      <div className="mx-auto max-w-3xl space-y-4 px-4 pb-12 pt-4">
         <Card title="Places" padded={false}>
           <WeatherGlanceList items={glances} />
         </Card>

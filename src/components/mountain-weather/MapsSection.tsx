@@ -34,7 +34,7 @@ export function MapsSection({ data, place }: MapsSectionProps) {
   return (
     <CollapsibleSection title="Maps & imagery" subtitle="Radar, satellite, lightning, alerts — government sources only">
       {place && data.radarSiteId ? (
-        <p className="text-sm text-gray-700">
+        <p className="text-sm text-ink-2">
           Nearest WSR-88D loop for NWS {place.office}: {radarSiteLabel(data.radarSiteId)} ·{' '}
           <a href={nwsRidgeLoopUrl(data.radarSiteId)} className="font-bold underline" target="_blank" rel="noopener noreferrer">
             RIDGE loop
@@ -56,9 +56,9 @@ export function MapsSection({ data, place }: MapsSectionProps) {
         refreshNote="NOAA STAR GOES-19 Northeast sector · refresh ~5 min"
       />
 
-      <section className="retro-box border-[#5c3a1e] bg-beige/60 p-4">
+      <section className="panel panel-cream p-4">
         <h3 className="text-sm font-bold uppercase tracking-wide">NWS active alerts</h3>
-        <p className="text-xs text-gray-700">
+        <p className="text-xs text-ink-2">
           {ALERTS_DEF.org} · {alertBundle?.alerts.length ?? 0} for NY/VT/NH/ME · {alertBundle?.mapGeoJson.features.length ?? 0} polygons on map
         </p>
         {data.alerts.status === 'error' ? (
@@ -67,18 +67,18 @@ export function MapsSection({ data, place }: MapsSectionProps) {
         {alertBundle && alertBundle.alerts.length === 0 ? (
           <p className="text-sm">No active alerts in NY, VT, NH, or ME right now.</p>
         ) : null}
-        {issued ? <p className="text-xs text-gray-700">Feed fetched: {issued}</p> : null}
+        {issued ? <p className="text-xs text-ink-2">Feed fetched: {issued}</p> : null}
         <ul className="list-disc space-y-1 pl-5 text-sm">
           {(alertBundle?.alerts ?? []).slice(0, place ? 6 : 20).map((row) => (
             <li key={row.id}>
               <span className="font-bold">{row.event}</span>
               {row.severity ? ` (${row.severity})` : ''}
               {row.headline ? ` — ${row.headline}` : ''}
-              {formatValid(row) ? <span className="block text-xs text-gray-700">Valid {formatValid(row)}</span> : null}
+              {formatValid(row) ? <span className="block text-xs text-ink-2">Valid {formatValid(row)}</span> : null}
             </li>
           ))}
         </ul>
-        <p className="text-xs text-gray-700">
+        <p className="text-xs text-ink-2">
           <a href={NWS_ALERTS_MAP_URL} className="font-bold underline" target="_blank" rel="noopener noreferrer">
             NWS national warnings map
           </a>
@@ -89,9 +89,9 @@ export function MapsSection({ data, place }: MapsSectionProps) {
         </p>
       </section>
 
-      <section className="retro-box border-[#5c3a1e] bg-beige/60 p-4">
+      <section className="panel panel-cream p-4">
         <h3 className="text-sm font-bold uppercase tracking-wide">SPC &amp; CPC outlooks</h3>
-        <p className="text-xs text-gray-700">
+        <p className="text-xs text-ink-2">
           Official thunderstorm outlook maps ·{' '}
           <a href={SPC_CONVECTIVE_OUTLOOK_DEF.url} className="font-bold underline" target="_blank" rel="noopener noreferrer">
             SPC source
@@ -103,7 +103,7 @@ export function MapsSection({ data, place }: MapsSectionProps) {
               <a href={link.href} className="font-bold underline" target="_blank" rel="noopener noreferrer">
                 {link.label}
               </a>
-              <span className="text-xs text-gray-700"> · {link.org}</span>
+              <span className="text-xs text-ink-2"> · {link.org}</span>
             </li>
           ))}
         </ul>
@@ -111,9 +111,9 @@ export function MapsSection({ data, place }: MapsSectionProps) {
           {data.spcImages.map((img) => (
             <figure key={img.id} className="space-y-1">
               <figcaption className="text-xs font-bold">{img.label}</figcaption>
-              <p className="text-[10px] text-gray-700">Valid/cycle: {img.validTimeLabel ?? '—'}</p>
+              <p className="text-[10px] text-ink-2">Valid/cycle: {img.validTimeLabel ?? '—'}</p>
               <MapRemoteImage src={img.url} alt={img.label} expectedOk={img.httpOk} />
-              <p className="text-[10px] text-gray-700">
+              <p className="text-[10px] text-ink-2">
                 <a href={img.pageUrl} className="font-bold underline" target="_blank" rel="noopener noreferrer">
                   SPC page
                 </a>

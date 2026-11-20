@@ -32,7 +32,7 @@ export function SummitPrompts({
   return (
     <ul className="space-y-2">
       {left.map((peak) => (
-        <li key={peak.slug} className="retro-box-inset flex flex-wrap items-center justify-between gap-2 bg-white px-3 py-2">
+        <li key={peak.slug} className="well flex flex-wrap items-center justify-between gap-2 bg-white px-3 py-2">
           <p className="min-w-0 text-sm">Your route went over {peak.name}. Add it to your peaks?</p>
           <div className="flex shrink-0 flex-wrap items-center gap-2">
             <form
@@ -47,7 +47,7 @@ export function SummitPrompts({
               }}
             >
               <input type="hidden" name="peakSlug" value={peak.slug} />
-              <SubmitButton tone="yellow" pendingLabel="Adding…" className="px-3">
+              <SubmitButton kind="yellow" pendingLabel="Adding…" className="px-3">
                 Add
               </SubmitButton>
             </form>

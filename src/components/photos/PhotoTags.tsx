@@ -20,7 +20,7 @@ export function PhotoTags({ photo }: { photo: PhotoDetail }) {
   ].filter((tag): tag is Tag => Boolean(tag));
 
   return (
-    <p className="mt-3 flex flex-wrap gap-x-4 text-sm text-gray-700">
+    <p className="mt-3 flex flex-wrap gap-x-4 text-sm text-ink-2">
       {tags.map((tag) => (tag.href ? (
         <Link key={tag.key} href={tag.href} className="inline-flex min-h-11 items-center underline">{tag.label}</Link>
       ) : (
