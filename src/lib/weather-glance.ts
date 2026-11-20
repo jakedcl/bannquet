@@ -135,10 +135,10 @@ export function formatWindSummary(
   const g = gust != null && gust > 0 ? Math.round(gust) : null;
   if (s == null && g == null) return { line: null, sustained: s, gust: g };
   if (g != null && s != null && g > s) {
-    return { line: `${s} mph sustained · gusts to ${g} mph`, sustained: s, gust: g };
+    return { line: `Wind up to ${s} mph, gusts to ${g}`, sustained: s, gust: g };
   }
-  if (s != null) return { line: `${s} mph sustained`, sustained: s, gust: g };
-  return { line: `${g} mph gusts`, sustained: s, gust: g };
+  if (s != null) return { line: `Wind up to ${s} mph`, sustained: s, gust: g };
+  return { line: `Gusts to ${g} mph`, sustained: s, gust: g };
 }
 
 function spellWhen(period: GlancePeriod): string {

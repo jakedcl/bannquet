@@ -1,7 +1,8 @@
 import { CollapsibleSection } from '@/components/mountain-weather/CollapsibleSection';
 import { NotInIssuanceNote } from '@/components/mountain-weather/NotInIssuanceNote';
 import { SourceErrorNote } from '@/components/mountain-weather/SourceErrorNote';
-import { SourceReceipt } from '@/components/mountain-weather/kit';
+import { SourceReceipt, shortOrg } from '@/components/mountain-weather/kit';
+import { tidyLabel } from '@/lib/mountain-weather/format-display';
 import type { RecPlaceSlice } from '@/lib/mountain-weather/rec-types';
 import type { SourceResult } from '@/lib/mountain-weather/source-types';
 import type { RecOffice } from '@/lib/mountain-weather/rec-types';
@@ -46,13 +47,19 @@ function formatEt(value: string | null): string {
   });
 }
 
+/** "Recreation forecast for summits above 4000 feet in ..." -> "Summits above 4000 feet in ...". */
+function recArea(title: string | null | undefined): string {
+  const t = tidyLabel(title) ?? '';
+  const rest = t.replace(/^recreation(al)? forecast for\s+/i, '');
+  return rest.charAt(0).toUpperCase() + rest.slice(1);
+}
+
 function RecBlock({ result }: { result: SourceResult<RecPlaceSlice> }) {
   const def = result.data ? recSourceDef(result.data.office) : null;
-  const stale = result.status === 'stale' ? ' · stale' : '';
 
   if (result.status === 'not-in-issuance') {
     return (
-      <CollapsibleSection title="Recreation forecast (REC)" subtitle={`${def?.org ?? 'NWS'} · not in this issuance${stale}`}>
+      <CollapsibleSection title="Forecaster's mountain forecast" subtitle={`Recreation Forecast (REC) · ${shortOrg(def?.org ?? 'NWS')} · not in this issue`}>
         <NotInIssuanceNote
           label="Recreation forecast (REC)"
           href={result.sourceUrl ?? def?.url ?? 'https://api.weather.gov/'}
@@ -65,8 +72,8 @@ function RecBlock({ result }: { result: SourceResult<RecPlaceSlice> }) {
   if (result.status === 'error' || !result.data) {
     return (
       <CollapsibleSection
-        title="Recreation forecast (REC)"
-        subtitle={def ? `${def.org} (unavailable)${stale}` : 'REC unavailable'}
+        title="Forecaster's mountain forecast"
+        subtitle="Recreation Forecast (REC) (could not load)"
       >
         <SourceErrorNote
           label="Recreation forecast (REC)"
@@ -82,8 +89,8 @@ function RecBlock({ result }: { result: SourceResult<RecPlaceSlice> }) {
 
   return (
     <CollapsibleSection
-      title="Recreation forecast (REC)"
-      subtitle={`${def?.org} · ${title}${data.nearbyLabel ? ` · ${data.nearbyLabel}` : ''}${data.notInLatestIssuance ? ' · prior issuance' : ''}${stale}`}
+      title="Forecaster's mountain forecast"
+      subtitle={`Recreation Forecast (REC) · ${shortOrg(def?.org ?? '')} · ${recArea(title)}${data.nearbyLabel && !/feet|ft/i.test(title ?? '') ? ` · ${data.nearbyLabel}` : ''}${data.notInLatestIssuance ? ' · earlier issue' : ''}`}
       defaultOpen
     >
       {data.notInLatestIssuance ? (

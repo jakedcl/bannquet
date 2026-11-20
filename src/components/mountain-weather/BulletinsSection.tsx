@@ -1,5 +1,6 @@
 import { CollapsibleSection } from '@/components/mountain-weather/CollapsibleSection';
-import { SourceReceipt } from '@/components/mountain-weather/kit';
+import { SourceReceipt, shortOrg } from '@/components/mountain-weather/kit';
+import { discussionHeading, reflowProductText } from '@/lib/mountain-weather/format-display';
 import { SourceErrorNote } from '@/components/mountain-weather/SourceErrorNote';
 import type { OfficeBulletinBundle } from '@/lib/mountain-weather/read-office-bulletins';
 import type { NwsTextProduct } from '@/lib/mountain-weather/bulletin-types';
@@ -10,26 +11,23 @@ import type { SourceDef, SourceResult } from '@/lib/mountain-weather/source-type
 
 function ProductBlock({
   title,
+  product,
   def,
   result,
   defaultOpen,
 }: {
   title: string;
+  /** Official product name, shown under the plain title. */
+  product: string;
   def: SourceDef;
   result: SourceResult<NwsTextProduct>;
   defaultOpen?: boolean;
 }) {
-  const stale = result.status === 'stale' ? ' · stale' : '';
-
   if (result.status === 'error' || !result.data) {
     return (
-      <CollapsibleSection title={title} subtitle={`${def.org} (unavailable)${stale}`}>
+      <CollapsibleSection title={title} subtitle={`${product} (could not load)`}>
         <SourceErrorNote label={title} href={result.sourceUrl ?? def.url} />
-        <p className="text-xs text-ink-2">
-          <a href={def.url} className="font-bold underline" target="_blank" rel="noopener noreferrer">
-            Latest via API
-          </a>
-        </p>
+        <SourceReceipt org={def.org} product={product} status="error" href={def.url} />
       </CollapsibleSection>
     );
   }
@@ -38,21 +36,26 @@ function ProductBlock({
   return (
     <CollapsibleSection
       title={title}
-      subtitle={`${def.org} · ${def.kind}${stale}`}
+      subtitle={`${product} · ${shortOrg(def.org)}`}
       defaultOpen={defaultOpen ?? false}
     >
       <div className="space-y-3 text-sm">
-        {data.preamble ? (
-          <pre className="whitespace-pre-wrap font-mono text-[11px] text-ink">{data.preamble}</pre>
-        ) : null}
         {data.sections.map((section) => (
-          <CollapsibleSection key={section.key} title={section.title} defaultOpen={false}>
-            <pre className="mt-1 whitespace-pre-wrap text-sm text-ink">{section.body || '—'}</pre>
+          <CollapsibleSection key={section.key} title={discussionHeading(section.title)} defaultOpen={false}>
+            <div className="space-y-2 text-meta text-ink">
+              {section.body.trim() ? (
+                reflowProductText(section.body).map((para, i) => (
+                  <p key={i} className="whitespace-pre-line">{para}</p>
+                ))
+              ) : (
+                <p className="text-ink-2">Nothing in this section today.</p>
+              )}
+            </div>
           </CollapsibleSection>
         ))}
         <SourceReceipt
           org={def.org}
-          product={title}
+          product={product}
           at={result.issuedAt}
           status={result.status}
           expectedEveryHours={def.expectedEveryHours}
@@ -78,26 +81,22 @@ export function BulletinsSection({
 
   return (
     <CollapsibleSection
-      title={labeledByOffice ? `${officeTag} · Bulletins` : 'Bulletins'}
-      subtitle={
-        labeledByOffice
-          ? `AFD${hwoTag}`
-          : `${officeTag} · AFD${bundle.office === 'BTV' ? ' + HWO' : ''}`
-      }
+      title={labeledByOffice ? `What the forecasters are thinking · ${officeTag}` : 'What the forecasters are thinking'}
+      subtitle={`Area Forecast Discussion (AFD)${hwoTag ? ' and Hazardous Weather Outlook' : ''} · ${officeTag}`}
       defaultOpen={false}
     >
       <div className="space-y-3">
-        <ProductBlock title="Area Forecast Discussion (AFD)" def={afdDef} result={bundle.afd} defaultOpen />
+        <ProductBlock title="Forecast discussion" product="Area Forecast Discussion (AFD)" def={afdDef} result={bundle.afd} defaultOpen />
         {bundle.office === 'BTV' && bundle.hwo !== null ? (
-          <ProductBlock title="Hazardous Weather Outlook (HWO)" def={NWS_HWO_BTV_DEF} result={bundle.hwo} />
+          <ProductBlock title="Hazards in the coming week" product="Hazardous Weather Outlook (HWO)" def={NWS_HWO_BTV_DEF} result={bundle.hwo} />
         ) : (
           <CollapsibleSection
-            title="Hazardous Weather Outlook"
-            subtitle={`${afdDef.org} · link only`}
+            title="Hazards in the coming week"
+            subtitle={`Graphical Hazardous Weather Outlook · ${shortOrg(afdDef.org)} · link only`}
             defaultOpen={false}
           >
             <p className="text-sm">
-              Text HWO is not shown in-page for {bundle.office}; use the graphical outlook.
+              This office publishes its hazard outlook as maps; open them on the NWS site.
             </p>
             <p className="text-xs text-ink-2">
               <a

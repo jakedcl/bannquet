@@ -175,7 +175,7 @@ export function MountainWeatherPlacesMap({ pins, alertMap, focus, className }: P
   return (
     <div className={className}>
       <p className="mb-2 text-xs text-ink-2">
-        Basemap: OpenFreeMap (OSM). Active NWS alerts are filled polygons (alert geometry or forecast-zone polygons from api.weather.gov/zones). Pin data matches place-page baselines.
+        Shaded areas are active NWS alerts. Pins show each place&rsquo;s forecast. Map: OpenFreeMap (OpenStreetMap).
       </p>
       {alertMap?.legend.length ? (
         <ul className="mb-2 flex flex-wrap gap-2 text-[10px]">

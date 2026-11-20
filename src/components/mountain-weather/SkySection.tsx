@@ -5,6 +5,15 @@ import { SourceErrorNote } from '@/components/mountain-weather/SourceErrorNote';
 import type { PlaceSkyData, UsnoTimedEvent } from '@/lib/mountain-weather/sky-types';
 import { USNO_RSTT_ONEDAY_DEF } from '@/lib/mountain-weather/readers/usno-rstt-oneday';
 
+/** USNO event names in words; the USNO term stays in brackets where it differs. */
+const PHEN_WORDS: Record<string, string> = {
+  'Begin Civil Twilight': 'First light (civil twilight begins)',
+  'End Civil Twilight': 'Last light (civil twilight ends)',
+  Rise: 'Rise',
+  Set: 'Set',
+  'Upper Transit': 'Highest in the sky (transit)',
+};
+
 function EventList({ title, rows }: { title: string; rows: UsnoTimedEvent[] }) {
   if (!rows.length) return null;
   return (
@@ -13,7 +22,7 @@ function EventList({ title, rows }: { title: string; rows: UsnoTimedEvent[] }) {
       <ul className="text-sm">
         {rows.map((row) => (
           <li key={`${row.phen}-${row.time}`}>
-            {row.phen}: {formatClock12(row.display) ?? row.time ?? '—'} {row.marker ? `(${row.marker})` : ''}
+            {PHEN_WORDS[row.phen] ?? row.phen}: {formatClock12(row.display) ?? row.time ?? '—'}
           </li>
         ))}
       </ul>
@@ -26,7 +35,7 @@ export function SkySection({ data }: { data: PlaceSkyData }) {
     return null;
   }
   return (
-    <CollapsibleSection title="Sun &amp; moon" subtitle={`USNO RSTT · ${USNO_RSTT_ONEDAY_DEF.org} · times in ET`} defaultOpen={false}>
+    <CollapsibleSection title="Sun &amp; moon" subtitle={`Sun and moon data (RSTT) · ${USNO_RSTT_ONEDAY_DEF.org} · Eastern time`} defaultOpen={false}>
       {data.bundle.status === 'error' ? (
         <SourceErrorNote label="USNO sky data" href={data.bundle.sourceUrl ?? USNO_RSTT_ONEDAY_DEF.url} />
       ) : null}
@@ -58,16 +67,16 @@ export function SkySection({ data }: { data: PlaceSkyData }) {
                 <dd>{day.sunEvents.find((e) => e.phen === 'Upper Transit')?.time ?? '—'}</dd>
               </div>
               <div>
-                <dt className="text-xs font-bold">Closest primary phase</dt>
+                <dt className="text-xs font-bold">Nearest main moon phase</dt>
                 <dd>{day.closestPhase ? `${day.closestPhase.phase} · ${day.closestPhase.when}` : '—'}</dd>
               </div>
               <div>
-                <dt className="text-xs font-bold">DST flag (USNO)</dt>
+                <dt className="text-xs font-bold">Daylight saving time</dt>
                 <dd>{day.isDst === null ? '—' : day.isDst ? 'Yes' : 'No'}</dd>
               </div>
               {day.label ? (
                 <div className="sm:col-span-2">
-                  <dt className="text-xs font-bold">USNO label</dt>
+                  <dt className="text-xs font-bold">Note from USNO</dt>
                   <dd>{day.label}</dd>
                 </div>
               ) : null}

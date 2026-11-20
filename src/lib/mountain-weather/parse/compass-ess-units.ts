@@ -13,7 +13,7 @@ function tmddTempTenthsC(raw: unknown): DecodedQuantity {
   const f = (c * 9) / 5 + 32;
   return {
     raw: n,
-    display: `${f.toFixed(1)}°F (${c.toFixed(1)}°C raw ${n})`,
+    display: `${f.toFixed(1)}°F (${c.toFixed(1)}°C)`,
     note: 'TMDD tenths °C (ngTMDD / NTCIP 1204 metric)',
   };
 }

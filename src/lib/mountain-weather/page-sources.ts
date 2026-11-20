@@ -1,4 +1,7 @@
 import type { MountainPlace } from '@/lib/mountain-weather/places';
+import { tidyLabel } from '@/lib/mountain-weather/format-display';
+
+export { tidyLabel };
 import type { MountainStateCode } from '@/lib/mountain-weather/slugs';
 import type { SourceResult } from '@/lib/mountain-weather/source-types';
 import { moreSourcesForPlace, type MoreSourceLink } from '@/lib/mountain-weather/more-sources';
@@ -134,14 +137,6 @@ function productCodes(text: string | null): string[] {
   const t = text ?? '';
   const lead = t.match(/^([A-Z]{3,4})\b/);
   return [...t.matchAll(/\(([A-Z0-9]{2,5})\)/g)].map((m) => m[1]).concat(lead ? [lead[1]] : []);
-}
-
-/** "PRESIDENTIAL RANGE FORECAST AREA" -> "Presidential Range Forecast Area"; mixed case is left alone. */
-export function tidyLabel(text: string | null | undefined): string | null {
-  if (!text) return null;
-  const t = text.trim();
-  if (/[a-z]/.test(t)) return t;
-  return t.toLowerCase().replace(/\b([a-z])/g, (c) => c.toUpperCase()).replace(/\bFt\b/g, 'ft');
 }
 
 /** "Mid-elevation band (2,500–4,000 ft; GYX labels this Mount Adams)" -> "2,500–4,000 ft". */

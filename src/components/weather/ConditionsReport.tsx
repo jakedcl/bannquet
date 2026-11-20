@@ -26,8 +26,8 @@ export function ConditionsReport({
           still from the National Weather Service grid.
         </p>
       ) : null}
-      <Card title="Live measured extremes">
-        <p className="text-xs text-ink-2">From ASOS and mesonet stations bound to each peak — not forecasts.</p>
+      <Card title="Live extremes right now">
+        <p className="text-xs text-ink-2">Measured by weather stations near each peak (airports and mesonets), not forecasts. Summit and valley stations are labeled.</p>
         {!hasMeasured ? (
           <p className="text-sm font-bold">
             {report.error ?? 'The live conditions did not load.'}
@@ -61,15 +61,15 @@ export function ConditionsReport({
       </Card>
 
       {spots.length > 0 ? (
-        <Card title="Measured spots">
+        <Card title="Station readings near each peak">
           <SpotsTable spots={spots} />
         </Card>
       ) : null}
 
       {glances.length ? (
-        <Card title="Place forecast lines" padded={false}>
+        <Card title="Forecast for each place" padded={false}>
           <p className="border-b border-hairline px-3 py-2 text-xs text-ink-2">
-            Same NWS grid forecast shown on each place page (updated on the same schedule).
+            The same NWS forecast each place page shows.
           </p>
           <WeatherGlanceList items={glances} />
         </Card>

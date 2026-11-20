@@ -1,6 +1,7 @@
 import { CollapsibleSection } from '@/components/mountain-weather/CollapsibleSection';
 import { SourceErrorNote } from '@/components/mountain-weather/SourceErrorNote';
-import { SourceReceipt } from '@/components/mountain-weather/kit';
+import { SourceReceipt, shortOrg } from '@/components/mountain-weather/kit';
+import { tidyLabel } from '@/lib/mountain-weather/format-display';
 import { buildMtnDisplay, fmtMtnAmount, fmtMtnLightning } from '@/lib/mountain-weather/mtn-display';
 import type { MtnPointBundle } from '@/lib/mountain-weather/mtn-point-types';
 import { windDirFromDegrees } from '@/lib/mountain-weather/parse/mtn-sky';
@@ -49,13 +50,12 @@ export function MountainForecastSection({
   if (!result) return null;
 
   const source = result.data ? sourceLabel(result.data.office) : null;
-  const stale = result.status === 'stale' ? ' · stale' : '';
 
   if (result.status === 'error' || !result.data) {
     return (
       <CollapsibleSection
-        title="Mountain forecast"
-        subtitle={source ? `${source.org} (unavailable)${stale}` : 'Mountain point forecast unavailable'}
+        title="Mountain forecast, hour by hour"
+        subtitle="Mountain Point Forecast (could not load)"
       >
         <SourceErrorNote label="Mountain forecast" href={result.sourceUrl ?? NWS_MTN_BTV_STANDARD_DEF.url} />
       </CollapsibleSection>
@@ -66,12 +66,12 @@ export function MountainForecastSection({
   const display = buildMtnDisplay(data);
   const { meta, hourly, snowIce } = display;
   const elev =
-    meta.nwsElevationFt !== null ? `${meta.nwsElevationFt.toLocaleString('en-US')} ft (NWS)` : null;
+    meta.nwsElevationFt !== null ? `${meta.nwsElevationFt.toLocaleString('en-US')} ft` : null;
 
   return (
     <CollapsibleSection
-      title="Mountain forecast"
-      subtitle={`${source?.org} · ${data.loc}${data.enhanced ? ' · enhanced hourly table' : ' · standard table'}${elev ? ` · ${elev}` : ''}${stale}`}
+      title="Mountain forecast, hour by hour"
+      subtitle={`Mountain Point Forecast (${data.enhanced ? 'enhanced' : 'standard'}) · ${shortOrg(source?.org ?? '')} · ${tidyLabel(data.loc)}${elev ? ` · ${elev}` : ''}`}
       defaultOpen
     >
       <div className="space-y-4 text-sm">
@@ -87,8 +87,8 @@ export function MountainForecastSection({
                 <th className="px-2 py-1">Temp</th>
                 <th className="px-2 py-1">Wind</th>
                 {meta.showGust ? <th className="px-2 py-1">Gust</th> : null}
-                <th className="px-2 py-1">Chill</th>
-                <th className="px-2 py-1">PoP</th>
+                <th className="px-2 py-1">Wind chill</th>
+                <th className="px-2 py-1">Precip</th>
                 <th className="px-2 py-1">Sky</th>
                 {meta.showLightning ? <th className="px-2 py-1">Lightning</th> : null}
               </tr>
@@ -157,7 +157,7 @@ function NarrativeList({
 }) {
   return (
     <div>
-      <p className="text-xs font-bold uppercase text-ink-2">Narrative · {placeName}</p>
+      <p className="text-xs font-bold uppercase text-ink-2">Forecaster&rsquo;s words · {placeName}</p>
       <ul className="mt-1 space-y-2">
         {narratives.map((block) => (
           <li key={block.name}>

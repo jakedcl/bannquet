@@ -9,7 +9,13 @@ and Gunks Ridge. Source data was checked against the raw NWS API where something
 quality is a plain link; when no avalanche forecast is issued, the avalanche bar is hidden
 (the Snow tab panel still says so).
 
-**Status:** Step 2 (source line and Sources for this page) is done. `SourceReceipt` in
+**Status:** Step 3 (clear titles) is done. Every panel title says what the panel is, and the
+official product name is the subtitle. Helpers in `format-display.ts`: `gridElevationNote`
+(hero line), `tidyLabel` (ALL-CAPS labels), `reflowProductText` and `discussionHeading` (AFD
+text reflows on phones). Hub cards read "Wind up to 54 mph · next 48 hours" with a high / low
+label.
+
+Step 2 (source line and Sources for this page) is done. `SourceReceipt` in
 `src/components/mountain-weather/kit.tsx` ends every panel; images use `ImageCaption`.
 `src/lib/mountain-weather/page-sources.ts` builds the More tab's "Sources for this page". It
 streams in with Suspense because it reads every tab's (cached) sources. More sources groups

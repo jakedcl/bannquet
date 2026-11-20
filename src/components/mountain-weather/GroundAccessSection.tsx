@@ -10,8 +10,8 @@ import { formatObservationAge } from '@/lib/mountain-weather/format-display';
 /** Road weather stations and air quality near the place (Measured tab). */
 export function RoadAndAirSection({ data }: { data: PlaceGroundData }) {
   return (
-    <CollapsibleSection title="Roads and air" subtitle="NE Compass road weather · AirNow air quality">
-      <SubBlock title="Nearest NE Compass road weather (ESS)">
+    <CollapsibleSection title="Roads and air quality" subtitle="Road weather stations (New England Compass) · AirNow">
+      <SubBlock title="Nearest road weather station">
         {data.compassEss.status === 'error' ? (
           <SourceErrorNote
             label="Compass ESS"
@@ -21,7 +21,7 @@ export function RoadAndAirSection({ data }: { data: PlaceGroundData }) {
           <div>
             <p className="font-bold">{data.compassEss.data.name}</p>
             <p className="text-xs text-ink">
-              {data.compassEss.data.distanceMi} mi · {data.compassEss.data.lat.toFixed(4)}, {data.compassEss.data.lon.toFixed(4)}
+              {data.compassEss.data.distanceMi} mi away, beside a road · {data.compassEss.data.lat.toFixed(4)}, {data.compassEss.data.lon.toFixed(4)}
             </p>
             {data.compassEss.data.distant ? (
               <p className="text-xs font-bold text-amber-950">
@@ -112,7 +112,7 @@ export function LandAccessSection({ data }: { data: PlaceGroundData }) {
         </SubBlock>
       ) : null}
 
-      <SubBlock title="County drought (U.S. Drought Monitor)">
+      <SubBlock title="County drought">
         {data.drought.status === 'error' ? (
           <SourceErrorNote label="County drought" href={data.drought.sourceUrl ?? USDM_COUNTY_DROUGHT_DEF.url} />
         ) : data.drought.data ? (
@@ -122,7 +122,7 @@ export function LandAccessSection({ data }: { data: PlaceGroundData }) {
             <Field label="Map date" value={data.drought.data.mapDate} />
             <Field label="Worst category present" value={data.drought.data.dominant} />
             <Field
-              label="Area %"
+              label="Share of county (D0 abnormally dry to D4 exceptional drought)"
               value={`None ${data.drought.data.nonePct}% · D0 ${data.drought.data.d0Pct}% · D1 ${data.drought.data.d1Pct}% · D2 ${data.drought.data.d2Pct}% · D3 ${data.drought.data.d3Pct}% · D4 ${data.drought.data.d4Pct}%`}
               className="sm:col-span-2"
             />

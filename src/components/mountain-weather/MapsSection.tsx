@@ -31,12 +31,12 @@ export function MapsSection({ data, place }: MapsSectionProps) {
   const alertBundle = data.alerts.status === 'ok' && data.alerts.data ? data.alerts.data : null;
 
   return (
-    <CollapsibleSection title="Maps & imagery" subtitle="Radar, satellite, lightning, alerts — government sources only">
+    <CollapsibleSection title="Maps" subtitle="Radar, satellite, lightning, alerts and outlooks, from government sources">
       {place && data.radarSiteId ? (
         <p className="text-sm text-ink-2">
-          Nearest WSR-88D loop for NWS {place.office}: {radarSiteLabel(data.radarSiteId)} ·{' '}
+          Nearest radar: {radarSiteLabel(data.radarSiteId)} (WSR-88D) ·{' '}
           <a href={nwsRidgeLoopUrl(data.radarSiteId)} className="font-bold underline" target="_blank" rel="noopener noreferrer">
-            RIDGE loop
+            Full-size loop ›
           </a>
         </p>
       ) : null}
@@ -56,9 +56,9 @@ export function MapsSection({ data, place }: MapsSectionProps) {
       />
 
       <section className="panel panel-cream p-4">
-        <h3 className="text-sm font-bold uppercase tracking-wide">NWS active alerts</h3>
+        <h3 className="text-sm font-bold uppercase tracking-wide">Weather alerts</h3>
         <p className="text-xs text-ink-2">
-          {ALERTS_DEF.org} · {alertBundle?.alerts.length ?? 0} for NY/VT/NH/ME · {alertBundle?.mapGeoJson.features.length ?? 0} polygons on map
+          Active alerts (NWS) · {alertBundle?.alerts.length ?? 0} in NY, VT, NH and ME · {alertBundle?.mapGeoJson.features.length ?? 0} shaded on the map below
         </p>
         {data.alerts.status === 'error' ? (
           <SourceErrorNote label="NWS active alerts" href={data.alerts.sourceUrl ?? ALERTS_DEF.url} />
@@ -92,7 +92,7 @@ export function MapsSection({ data, place }: MapsSectionProps) {
       </section>
 
       <section className="panel panel-cream p-4">
-        <h3 className="text-sm font-bold uppercase tracking-wide">SPC &amp; CPC outlooks</h3>
+        <h3 className="text-sm font-bold uppercase tracking-wide">Thunderstorm and long-range outlooks</h3>
         <p className="text-xs text-ink-2">Official thunderstorm outlook maps and longer-range outlooks.</p>
         <ul className="list-disc space-y-2 pl-5 text-sm">
           {data.outlooks.map((link) => (

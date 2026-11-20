@@ -40,13 +40,13 @@ async function loadStill(def: SourceDef, label: string): Promise<SourceResult<Ma
 const readGeocolor = cachedSourceRead({
   cacheKey: [GOES19_NE_GEOCOLOR_DEF.id],
   def: GOES19_NE_GEOCOLOR_DEF,
-  read: () => loadStill(GOES19_NE_GEOCOLOR_DEF, 'GOES-19 Northeast GeoColor (ABI)'),
+  read: () => loadStill(GOES19_NE_GEOCOLOR_DEF, 'Satellite: clouds in true color (GOES-19 GeoColor)'),
 });
 
 const readGlm = cachedSourceRead({
   cacheKey: [GOES19_NE_GLM_DEF.id],
   def: GOES19_NE_GLM_DEF,
-  read: () => loadStill(GOES19_NE_GLM_DEF, 'GOES-19 GLM lightning extent (Northeast)'),
+  read: () => loadStill(GOES19_NE_GLM_DEF, 'Lightning seen from space (GOES-19 GLM)'),
 });
 
 export async function readGoes19NeGeocolor(): Promise<SourceResult<MapImageAsset>> {

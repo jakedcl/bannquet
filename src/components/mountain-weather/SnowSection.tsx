@@ -10,22 +10,26 @@ import { NWS_BTV_MANSFIELD_HYD_DEF } from '@/lib/mountain-weather/registry';
 import { LOCAL_SNOW_RADIUS_MI } from '@/lib/mountain-weather/local-snow-reports';
 import { formatEt } from '@/lib/mountain-weather/format-display';
 import { SnowRemoteImage } from '@/components/mountain-weather/SnowRemoteImage';
-import { ImageCaption, SourceReceipt } from '@/components/mountain-weather/kit';
+import { ImageCaption, SourceReceipt, shortOrg } from '@/components/mountain-weather/kit';
+import { tidyLabel } from '@/lib/mountain-weather/format-display';
 
 function SnowImageGrid({
   title,
+  product,
   org,
   sourceUrl,
   images,
 }: {
   title: string;
+  /** Official product name, shown under the plain title. */
+  product: string;
   org: string;
   sourceUrl: string;
   images: PlaceSnowData['wpcImages'];
 }) {
   if (!images.length) return null;
   return (
-    <CollapsibleSection title={title} subtitle={`${org} · images`}>
+    <CollapsibleSection title={title} subtitle={`${product} · ${shortOrg(org)}`}>
       <div className="grid gap-3 sm:grid-cols-2">
         {images.map((img) => (
           <figure key={img.id} className="space-y-1">
@@ -35,7 +39,7 @@ function SnowImageGrid({
           </figure>
         ))}
       </div>
-      <SourceReceipt org={org} product={title} href={sourceUrl} linkLabel="Source page" />
+      <SourceReceipt org={org} product={product} href={sourceUrl} linkLabel="Source page" />
     </CollapsibleSection>
   );
 }
@@ -48,7 +52,7 @@ function MeasuredBlock({ data }: { data: PlaceSnowData }) {
   const reported = data.measured.filter((row) => row.value !== null);
   const silent = data.measured.length - reported.length;
   return (
-    <CollapsibleSection title="Nearest measured snow" subtitle="NOHRSC / CoCoRaHS station table" defaultOpen>
+    <CollapsibleSection title="Snow on the ground nearby" subtitle="Station snow depths · NOHRSC, CoCoRaHS" defaultOpen>
       {reported.length === 0 ? (
         <p className="text-sm">
           {data.measured.length === 1
@@ -68,22 +72,16 @@ function MeasuredBlock({ data }: { data: PlaceSnowData }) {
           return (
             <li key={row.dedupeKey} className="border border-hairline bg-white/50 p-2 text-sm">
               <p className="font-bold">
-                {b.kind === 'summit'
-                  ? 'Summit'
-                  : b.kind === 'nearby-higher'
-                    ? 'Nearby higher'
-                    : b.kind === 'valley'
-                      ? 'Valley / lower'
-                      : 'Base'}{' '}
-                · {b.stationName} ({b.stationId})
+                {b.kind === 'summit' ? 'Summit' : b.kind === 'nearby-higher' ? 'Higher' : b.kind === 'valley' ? 'Valley' : 'Base'}:{' '}
+                {tidyLabel(b.stationName)} <span className="font-normal text-ink-2">({b.stationId})</span>
               </p>
               <p className="text-xs text-ink">
-                {b.network} · {b.distanceMi} mi · {b.stationElevationFt?.toLocaleString('en-US') ?? '—'} ft station elev
-                {b.elevationSource ? ` (${b.elevationSource})` : ''}
-                {b.elevationDiffFt !== null
-                  ? ` · ${b.elevationDiffFt >= 0 ? '+' : ''}${b.elevationDiffFt.toLocaleString('en-US')} ft vs catalog`
-                  : ''}{' '}
-                · {b.source} · {row.windowLabel}
+                {b.distanceMi} mi away · {b.stationElevationFt?.toLocaleString('en-US') ?? '—'} ft
+                {b.elevationDiffFt !== null && Math.abs(b.elevationDiffFt) >= 100
+                  ? ` · ${Math.abs(b.elevationDiffFt).toLocaleString('en-US')} ft ${b.elevationDiffFt < 0 ? 'lower' : 'higher'} than this place`
+                  : ''}
+                {' · '}
+                {b.network} · {row.windowLabel}
               </p>
               {distant ? (
                 <p className="text-xs font-bold text-amber-950">
@@ -126,25 +124,25 @@ export function SnowSection({ data, placeName, isHub = false }: { data: PlaceSno
     <>
       <h2 className="text-lg font-bold uppercase tracking-wide text-ink">Snow</h2>
       <p className="text-sm text-ink-2">
-        {isHub ? 'Regional WPC probabilities and modeled snow. ' : 'WPC probabilities, winter severity, modeled snow, storm reports, and nearest station depth. '}
-        <a href={WPC_SNOW_PAGE_URL} className="font-bold underline" target="_blank" rel="noopener noreferrer">WPC snow forecast</a>
+        {isHub ? 'Chance of snow and snow cover across the Northeast. ' : 'Chance of snow, snow on the ground, recent snowfall and snow cover maps. '}
+        <a href={WPC_SNOW_PAGE_URL} className="font-bold underline" target="_blank" rel="noopener noreferrer">WPC snow forecast ›</a>
         {!isHub ? <>
         {' · '}
         <a href={data.winterPageUrl} className="font-bold underline" target="_blank" rel="noopener noreferrer">
-          NWS winter page ({data.office})
+          NWS winter page ›
         </a>
         {' · '}
         <a href={data.wssiUrl} className="font-bold underline" target="_blank" rel="noopener noreferrer">
-          WSSI ({data.office})
+          Winter Storm Severity Index (WSSI) ›
         </a>
         </> : null}
       </p>
-      <SnowImageGrid title="WPC probabilistic snowfall" org={WPC_PWPF_SNOW_DEF.org} sourceUrl={WPC_SNOW_PAGE_URL} images={data.wpcImages} />
+      <SnowImageGrid title="Chance of snow" product="Probabilistic Snowfall (PWPF)" org={WPC_PWPF_SNOW_DEF.org} sourceUrl={WPC_SNOW_PAGE_URL} images={data.wpcImages} />
       {!data.wpcImages.length ? <p className="text-sm text-ink-2">Current WPC graphics are unavailable here. Use the official WPC snow forecast linked above.</p> : null}
-      <SnowImageGrid title="NOHRSC modeled layers" org={NOHRSC_NE_INDEX_DEF.org} sourceUrl={NOHRSC_NE_INDEX_DEF.url} images={data.nohrscImages} />
-      <SnowImageGrid title="NERFC / NOHRSC composites" org={NERFC_SNOW_OPS_DEF.org} sourceUrl={NERFC_SNOW_OPS_DEF.url} images={data.nerfcImages} />
+      <SnowImageGrid title="Snow cover maps (model)" product="NOHRSC snow model: depth, SWE (water in the snowpack), melt" org={NOHRSC_NE_INDEX_DEF.org} sourceUrl={NOHRSC_NE_INDEX_DEF.url} images={data.nohrscImages} />
+      <SnowImageGrid title="Snow cover maps (river forecast center)" product="NERFC snow composites" org={NERFC_SNOW_OPS_DEF.org} sourceUrl={NERFC_SNOW_OPS_DEF.url} images={data.nerfcImages} />
       {data.mansfieldStake ? (
-        <CollapsibleSection title="Mount Mansfield snow stake" subtitle={`${NWS_BTV_MANSFIELD_HYD_DEF.org} · BTV HYD`} defaultOpen>
+        <CollapsibleSection title="Mount Mansfield snow stake" subtitle={`Hydrologic Summary (HYD) · ${shortOrg(NWS_BTV_MANSFIELD_HYD_DEF.org)}`} defaultOpen>
           <p className="text-sm">
             New snow: {data.mansfieldStake.snowNew ?? '—'} · Total on stake: {data.mansfieldStake.snowTotal ?? '—'}
           </p>
@@ -159,7 +157,7 @@ export function SnowSection({ data, placeName, isHub = false }: { data: PlaceSno
       ) : null}
       <MeasuredBlock data={data} />
       {data.pns ? (
-      <CollapsibleSection title={`Office-wide storm bulletin · PNS (${data.office})`} subtitle={`${pnsDef.org} · may include distant locations`}>
+      <CollapsibleSection title="Office storm bulletin" subtitle={`Public Information Statement (PNS) · ${shortOrg(pnsDef.org)} · may include distant places`}>
           <>
             {data.pns.parseReliable ? (
               <ul className="space-y-1 text-xs">
@@ -189,7 +187,7 @@ export function SnowSection({ data, placeName, isHub = false }: { data: PlaceSno
       </CollapsibleSection>
       ) : null}
       {placeName ? (
-      <CollapsibleSection title={`Snowfall reports near ${placeName} (within ${LOCAL_SNOW_RADIUS_MI} mi, past 14 days)`} subtitle={`${lsrDef.org} · ${data.office} feed`}>
+      <CollapsibleSection title="Recent snowfall reports" subtitle={`Local Storm Reports (LSR) · ${lsrDef.org} · within ${LOCAL_SNOW_RADIUS_MI} mi of ${placeName}, past 14 days`}>
           {data.lsrSnow.length ? (
           <ul className="space-y-1 text-xs">
             {data.lsrSnow.slice(0, 25).map((e) => (

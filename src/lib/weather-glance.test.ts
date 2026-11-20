@@ -156,9 +156,9 @@ test('daily NWS rows use secondaryTemp for overnight low', () => {
 });
 
 test('formatWindSummary keeps sustained and gust separate', () => {
-  assert.equal(formatWindSummary(12, 25).line, '12 mph sustained · gusts to 25 mph');
-  assert.equal(formatWindSummary(12, null).line, '12 mph sustained');
-  assert.equal(formatWindSummary(null, 20).line, '20 mph gusts');
+  assert.equal(formatWindSummary(12, 25).line, 'Wind up to 12 mph, gusts to 25');
+  assert.equal(formatWindSummary(12, null).line, 'Wind up to 12 mph');
+  assert.equal(formatWindSummary(null, 20).line, 'Gusts to 20 mph');
 });
 
 test('summit high/low use today high and tonight low, not two daytime periods', () => {

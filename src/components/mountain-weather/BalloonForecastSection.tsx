@@ -1,7 +1,8 @@
 import { CollapsibleSection } from '@/components/mountain-weather/CollapsibleSection';
 import { NotInIssuanceNote } from '@/components/mountain-weather/NotInIssuanceNote';
 import { SourceErrorNote } from '@/components/mountain-weather/SourceErrorNote';
-import { SourceReceipt } from '@/components/mountain-weather/kit';
+import { SourceReceipt, shortOrg } from '@/components/mountain-weather/kit';
+import { tidyLabel } from '@/lib/mountain-weather/format-display';
 import type { BalloonCell, BalloonPlaceSlice, BalloonRow } from '@/lib/mountain-weather/balloon-types';
 import { defaultResumeHint } from '@/lib/mountain-weather/parse/seasonal-off';
 import { NWS_BTV_BALLOON_DEF } from '@/lib/mountain-weather/registry';
@@ -39,11 +40,10 @@ function formatCell(cell: BalloonCell, row: BalloonRow): string {
 export function BalloonForecastSection({ result }: { result: SourceResult<BalloonPlaceSlice> | null }) {
   if (!result) return null;
   const def = NWS_BTV_BALLOON_DEF;
-  const stale = result.status === 'stale' ? ' · stale' : '';
 
   if (result.status === 'not-in-issuance') {
     return (
-      <CollapsibleSection title="Ridge / balloon wind forecast" subtitle={`${def.org} · not in this issuance${stale}`}>
+      <CollapsibleSection title="Winds aloft" subtitle={`Hot Air Balloon Forecast · ${shortOrg(def.org)} · not in this issue`}>
         <NotInIssuanceNote
           label="Ridge / balloon wind forecast"
           href={result.sourceUrl ?? def.url}
@@ -56,7 +56,7 @@ export function BalloonForecastSection({ result }: { result: SourceResult<Balloo
 
   if (result.status === 'error' || !result.data) {
     return (
-      <CollapsibleSection title="Ridge / balloon wind forecast" subtitle={`${def.org} (unavailable)${stale}`}>
+      <CollapsibleSection title="Winds aloft" subtitle="Hot Air Balloon Forecast (could not load)">
         <SourceErrorNote label="Balloon wind forecast" href={result.sourceUrl ?? def.url} />
         <SourceReceipt org={def.org} product="Hot Air Balloon Forecast" status="error" href={result.sourceUrl ?? def.url} />
       </CollapsibleSection>
@@ -68,18 +68,14 @@ export function BalloonForecastSection({ result }: { result: SourceResult<Balloo
 
   return (
     <CollapsibleSection
-      title="Ridge / balloon wind forecast"
-      subtitle={`${def.org} · ${matchedRegionTitle ?? region.regionTitle}${nearbyLabel ? ` · ${nearbyLabel}` : ''}${seasonal ? ' · off season' : ''}${stale}`}
-      defaultOpen={!seasonal}
+      title="Winds aloft"
+      subtitle={`Ridge and Hot Air Balloon Forecast · ${shortOrg(def.org)} · ${tidyLabel(matchedRegionTitle ?? region.regionTitle)}${nearbyLabel ? ` · ${nearbyLabel}` : ''}${seasonal ? ' · off season' : ''}`}
+      defaultOpen={false}
     >
       <div className="space-y-3 text-sm">
-        {region.productLines.map((line) => (
-          <p key={line} className="text-xs font-bold uppercase text-ink">
-            {line}
-          </p>
-        ))}
         <p className="text-xs text-ink">
-          <span className="font-bold">Nearby region:</span> {regionMatch}
+          Wind speed and direction above the ground, from the forecast for balloon pilots.{' '}
+          <span className="font-bold">Region:</span> {tidyLabel(regionMatch)}
         </p>
         {region.cityLines.map((line) => (
           <p key={line} className="text-xs text-ink whitespace-pre-wrap">
@@ -116,7 +112,7 @@ export function BalloonForecastSection({ result }: { result: SourceResult<Balloo
               <tbody>
                 {region.rows.map((row) => (
                   <tr key={row.key} className="border-t border-hairline">
-                    <td className="sticky left-0 bg-surface-cream px-2 py-0.5 font-bold whitespace-nowrap">{row.label}</td>
+                    <td className="sticky left-0 bg-surface-cream px-2 py-0.5 font-bold whitespace-nowrap">{tidyLabel(row.label)}</td>
                     {row.values.map((cell, idx) => (
                       <td key={`${row.key}-${idx}`} className="px-1 py-0.5 text-center">
                         {formatCell(cell, row)}

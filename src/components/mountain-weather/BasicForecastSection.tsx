@@ -38,14 +38,14 @@ function GridReceipt({ result, product }: { result: Baseline; product: string })
 
 function gridLine(result: Baseline, placeElevationFt: number | null): string {
   const gridElev = result.data?.gridExtras?.elevationFt;
-  return `${NWS_GRID_BASELINE_DEF.org} grid at ${gridElev != null ? `${gridElev.toLocaleString('en-US')} ft` : 'unknown elevation'}${placeElevationFt != null ? ` · place ${placeElevationFt.toLocaleString('en-US')} ft` : ''}${result.status === 'stale' ? ' · stale' : ''}`;
+  return `NWS gridpoint forecast${gridElev != null ? ` at ${Math.round(gridElev).toLocaleString('en-US')} ft` : ''}${placeElevationFt != null ? ` · place ${placeElevationFt.toLocaleString('en-US')} ft` : ''}`;
 }
 
 /** Shown in place of the panels when the grid did not load. */
 export function BaselineError({ result }: { result: Baseline }) {
   if (result.status !== 'error' && result.data) return null;
   return (
-    <CollapsibleSection title="NWS forecast" subtitle={`${NWS_GRID_BASELINE_DEF.org} (unavailable)`}>
+    <CollapsibleSection title="Forecast" subtitle="NWS gridpoint forecast (could not load)">
       <SourceErrorNote label="NWS forecast" href={result.sourceUrl ?? NWS_GRID_BASELINE_DEF.url} />
     </CollapsibleSection>
   );
@@ -56,7 +56,7 @@ export function ForecastNowPanel({ result, placeElevationFt }: { result: Baselin
   const data = result.data;
   if (!data) return null;
   return (
-    <CollapsibleSection title="Right now (forecast)" subtitle={gridLine(result, placeElevationFt)}>
+    <CollapsibleSection title="This hour (forecast)" subtitle={gridLine(result, placeElevationFt)}>
       <ReadingGrid>
         <ReadingTile
           label="Temp"
@@ -66,7 +66,7 @@ export function ForecastNowPanel({ result, placeElevationFt }: { result: Baselin
         <ReadingTile
           label="Feels like"
           value={data.feelsLike !== null ? `${Math.round(data.feelsLike)}°F` : '—'}
-          sub={`Wind chill ${fmtScalar(data.windChill, '°')} · heat index ${fmtScalar(data.heatIndex, '°')} · apparent ${fmtScalar(data.apparentTemperature, '°')}`}
+          sub={feelsLikeWhy(data)}
         />
         <ReadingTile
           label="Wind"
@@ -83,8 +83,8 @@ export function ForecastNowPanel({ result, placeElevationFt }: { result: Baselin
         <ReadingTile label="Dewpoint" value={fmtScalar(data.dewpoint, '°F')} />
         <ReadingTile label="Sky cover" value={fmtScalar(data.skyCover, '%')} />
         <ReadingTile label="Precip chance" value={fmtScalar(data.precipitation, '%')} sub="This hour" />
-        <ReadingTile label="Precip amount" value={qpfLabel(data.quantitativePrecipitation)} sub="Grid now" />
-        <ReadingTile label="Thunder" value={fmtScalar(data.probabilityOfThunderstorm, '%')} sub="Chance" />
+        <ReadingTile label="Precip amount" value={qpfLabel(data.quantitativePrecipitation)} sub="This hour" />
+        <ReadingTile label="Thunder chance" value={fmtScalar(data.probabilityOfThunderstorm, '%')} sub={data.probabilityOfThunderstorm == null ? 'Not in the forecast' : undefined} />
       </ReadingGrid>
       <GridReceipt result={result} product="Gridpoint forecast, this hour" />
     </CollapsibleSection>
@@ -100,7 +100,7 @@ export function Next48Panel({ result }: { result: Baseline }) {
       <h2 className="panel-bar">Next 48 hours</h2>
       <div className="space-y-3 px-3.5 py-3 sm:px-4">
         <HourlyStrip periods={periods} />
-        <CollapsibleSection title={`All ${periods.length} hours`} subtitle="Every hour from NWS, with grid weather" defaultOpen={false}>
+        <CollapsibleSection title={`All ${periods.length} hours`} subtitle="Hour by hour, as NWS issues it" defaultOpen={false}>
           <HourlyTable periods={periods} />
         </CollapsibleSection>
         <GridReceipt result={result} product="Hourly forecast, shown in 3-hour steps" />
@@ -115,7 +115,7 @@ export function SevenDayPanel({ result }: { result: Baseline }) {
   const periods = result.data?.forecastPeriods ?? [];
   if (daily.length === 0 && periods.length === 0) return null;
   return (
-    <CollapsibleSection title="7-day forecast" subtitle="NWS forecast periods">
+    <CollapsibleSection title="7-day forecast" subtitle="NWS forecast periods, with the forecaster's wording">
       <div className="space-y-3">
         {daily.length ? <DailyList periods={daily} /> : null}
         {periods.length ? <PeriodNarratives periods={periods} /> : null}
@@ -123,6 +123,15 @@ export function SevenDayPanel({ result }: { result: Baseline }) {
       <GridReceipt result={result} product="7-day forecast" />
     </CollapsibleSection>
   );
+}
+
+/** Why it feels that way: wind chill in the cold, heat index in the heat; the full breakdown stays below. */
+function feelsLikeWhy(data: BaselineForecast): string {
+  const parts: string[] = [];
+  if (data.windChill != null && Number.isFinite(data.windChill)) parts.push(`Wind chill ${Math.round(data.windChill)}°`);
+  if (data.heatIndex != null && Number.isFinite(data.heatIndex)) parts.push(`Heat index ${Math.round(data.heatIndex)}°`);
+  if (data.apparentTemperature != null && Number.isFinite(data.apparentTemperature)) parts.push(`apparent ${Math.round(data.apparentTemperature)}°`);
+  return parts.join(' · ') || 'Same as the air temperature';
 }
 
 function fmtScalar(value: number | null | undefined, suffix = ''): string {
@@ -140,16 +149,16 @@ export function GridDetailsPanel({ result }: { result: Baseline }) {
   const g = result.data?.gridExtras;
   if (!g) return null;
   return (
-    <CollapsibleSection title="Grid details" subtitle="NWS gridpoint series: dewpoint, sky, precip, snow level, snowfall, ice, ceiling" defaultOpen={false}>
+    <CollapsibleSection title="Forecast numbers by hour" subtitle="NWS gridpoint data: dewpoint, cloud cover, precip, snow level, snowfall, ice, cloud ceiling" defaultOpen={false}>
       <div className="space-y-3 text-caption">
         <SeriesRow title="Dewpoint (°F)" samples={g.dewpoint} />
-        <SeriesRow title="Sky cover (%)" samples={g.skyCover} />
-        <SeriesRow title="QPF (in)" samples={g.quantitativePrecipitation} format={(v) => (v !== null ? v.toFixed(2) : '—')} />
+        <SeriesRow title="Cloud cover (%)" samples={g.skyCover} />
+        <SeriesRow title="Precip amount, liquid (in) · QPF" samples={g.quantitativePrecipitation} format={(v) => (v !== null ? v.toFixed(2) : '—')} />
         <SeriesRow title="Thunder probability (%)" samples={g.probabilityOfThunderstorm} />
-        <SeriesRow title="Snow level (ft)" samples={g.snowLevel} />
+        <SeriesRow title="Snow level: rain turns to snow above (ft)" samples={g.snowLevel} />
         <SeriesRow title="Snowfall (in)" samples={g.snowfallAmount} />
         <SeriesRow title="Ice (in)" samples={g.iceAccumulation} />
-        <SeriesRow title="Ceiling (ft)" samples={g.ceilingHeight} />
+        <SeriesRow title="Cloud base, ceiling (ft)" samples={g.ceilingHeight} />
       </div>
       <GridReceipt result={result} product="Gridpoint data" />
     </CollapsibleSection>
@@ -199,8 +208,8 @@ function HourlyTable({ periods }: { periods: NonNullable<BaselineForecast['hourl
               <th className="px-2 py-1">Temp</th>
               <th className="px-2 py-1">Wind</th>
               <th className="px-2 py-1">Gust</th>
-              <th className="px-2 py-1">PoP</th>
-              <th className="px-2 py-1">Grid weather</th>
+              <th className="px-2 py-1">Precip</th>
+              <th className="px-2 py-1">Weather</th>
               <th className="px-2 py-1">Forecast</th>
             </tr>
           </thead>

@@ -1,4 +1,5 @@
 import { CollapsibleSection } from '@/components/mountain-weather/CollapsibleSection';
+import { tidyLabel } from '@/lib/mountain-weather/format-display';
 import { NotInIssuanceNote } from '@/components/mountain-weather/NotInIssuanceNote';
 import { SourceErrorNote } from '@/components/mountain-weather/SourceErrorNote';
 import { Notice } from '@/components/hub/Notice';
@@ -30,42 +31,27 @@ function formatEt(value: string | null): string {
   });
 }
 
-function kindTitle(
-  kind: PlaceStationObservationBinding['kind'],
-  stationId: string,
-  stationName: string | null,
-  network: string,
-): string {
-  const label = stationName ? `${stationName} (${stationId})` : stationId;
-  const net = network ? ` · ${network}` : '';
-  if (kind === 'summit') return `Summit station · ${label}${net}`;
-  if (kind === 'nearby-higher') return `Nearby higher station · ${label}${net}`;
-  if (kind === 'valley') return `Valley / nearby · ${label}${net}`;
-  return `Nearby · ${label}${net}`;
+function kindTitle(kind: PlaceStationObservationBinding['kind'], stationId: string, stationName: string | null): string {
+  const name = tidyLabel(stationName) ?? stationId;
+  if (kind === 'summit') return `Summit right now: ${name}`;
+  if (kind === 'nearby-higher') return `Higher station: ${name}`;
+  if (kind === 'valley') return `Valley station: ${name}`;
+  return `Nearby station: ${name}`;
 }
 
+/** "ASOS/AWOS airport" -> "airport weather station"; other network names pass through. */
+function networkWords(network: string): string {
+  if (/ASOS|AWOS/i.test(network)) return 'airport weather station (ASOS/AWOS)';
+  return network;
+}
+
+/** "13.2 mi away · 1,047 ft · 5,241 ft lower than this place". */
 function placementNote(binding: PlaceStationObservationBinding, placeElevationFt: number | null): string {
-  const parts = [`${binding.distanceMi} mi from this place`, binding.network];
-  if (binding.stationElevationFt !== null) {
-    const src = binding.elevationSource ? ` (${binding.elevationSource})` : '';
-    parts.push(`${binding.stationElevationFt.toLocaleString('en-US')} ft station elevation${src}`);
-  }
-  if (placeElevationFt !== null && binding.elevationDiffFt !== null) {
-    if (binding.kind === 'nearby-higher' && binding.elevationDiffFt !== null && binding.elevationDiffFt < 0) {
-      parts.push(
-        `${Math.abs(binding.elevationDiffFt).toLocaleString('en-US')} ft higher than catalog (${placeElevationFt.toLocaleString('en-US')} ft)`,
-      );
-    } else if (binding.kind === 'valley' || binding.elevationDiffFt >= 700) {
-      parts.push(
-        `${binding.elevationDiffFt.toLocaleString('en-US')} ft below catalog summit (${placeElevationFt.toLocaleString('en-US')} ft)`,
-      );
-    } else if (binding.elevationDiffFt <= 0) {
-      parts.push(
-        `station is ${Math.abs(binding.elevationDiffFt).toLocaleString('en-US')} ft above catalog elevation`,
-      );
-    } else {
-      parts.push(`${binding.elevationDiffFt.toLocaleString('en-US')} ft below catalog elevation`);
-    }
+  const parts = [binding.distanceMi < 0.5 ? 'At this place' : `${binding.distanceMi} mi away`];
+  if (binding.stationElevationFt !== null) parts.push(`${binding.stationElevationFt.toLocaleString('en-US')} ft`);
+  const diff = binding.elevationDiffFt;
+  if (placeElevationFt !== null && diff !== null && Math.abs(diff) >= 100) {
+    parts.push(`${Math.abs(diff).toLocaleString('en-US')} ft ${diff > 0 ? 'lower' : 'higher'} than this place`);
   }
   return parts.join(' · ');
 }
@@ -106,12 +92,11 @@ function StationBlock({
   placeElevationFt: number | null;
 }) {
   const { binding, def, result } = block;
-  const stale = result.status === 'stale' ? ' · stale' : '';
 
   return (
     <CollapsibleSection
-      title={kindTitle(binding.kind, binding.stationId, binding.stationName, binding.network)}
-      subtitle={`${def.org} · measured${stale}`}
+      title={kindTitle(binding.kind, binding.stationId, binding.stationName)}
+      subtitle={`Station observations · ${binding.stationId}${binding.network ? ` · ${networkWords(binding.network)}` : ''}`}
       defaultOpen={binding.kind === 'summit'}
     >
       <p className="mb-2 flex flex-wrap items-center gap-2">
@@ -188,7 +173,7 @@ function AsrcBlock({
   result: SourceResult<AscrWhitefaceTimelapse>;
 }) {
   return (
-    <CollapsibleSection title="Whiteface summit timelapse (ASRC)" subtitle={`${def.org} · measured`} defaultOpen>
+    <CollapsibleSection title="Whiteface summit camera" subtitle={`Timelapse · ${def.org}`} defaultOpen>
       {result.status === 'error' || !result.data ? (
         <SourceErrorNote label="Whiteface timelapse" href={result.sourceUrl ?? ASRC_WHITEFACE_TIMELAPSE_DEF.url} />
       ) : (
@@ -235,7 +220,7 @@ export function ObservationsSection({
   return (
   <>
     <p className="text-meta text-ink-2">
-      Measured readings from government and university stations. Each station says whether it is on the summit or in the valley.
+      Live readings from weather stations. Each one says whether it is on the summit or in the valley, and how far away.
     </p>
     {data.stations.map((block) => (
       <StationBlock key={block.binding.stationId + block.binding.kind} block={block} placeElevationFt={placeElevationFt} />
