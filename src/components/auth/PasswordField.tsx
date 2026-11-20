@@ -23,11 +23,11 @@ export function PasswordField({ name, label, autoComplete, hint }: PasswordField
           required
           minLength={8}
           maxLength={128}
-          className="min-w-0 flex-1 retro-box-inset bg-white px-3 py-2 text-base"
+          className="min-w-0 flex-1"
         />
         <button
           type="button"
-          className="retro-button inline-flex min-h-11 shrink-0 items-center px-3 !py-0 text-sm font-bold"
+          className="btn inline-flex min-h-11 shrink-0 items-center px-3 !py-0 text-sm font-bold"
           aria-pressed={visible}
           aria-label={visible ? `Hide ${label.toLowerCase()}` : `Show ${label.toLowerCase()}`}
           onClick={() => setVisible((current) => !current)}
@@ -35,7 +35,7 @@ export function PasswordField({ name, label, autoComplete, hint }: PasswordField
           {visible ? 'Hide' : 'Show'}
         </button>
       </span>
-      {hint ? <span className="block text-xs text-gray-600">{hint}</span> : null}
+      {hint ? <span className="block text-xs text-ink-2">{hint}</span> : null}
     </label>
   );
 }

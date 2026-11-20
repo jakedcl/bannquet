@@ -1,5 +1,7 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import { Avatar } from '@/components/hub/Avatar';
+import { Notice } from '@/components/hub/Notice';
 import PageWrapper from '@/components/ui/PageWrapper';
 import { Card } from '@/components/hub/Card';
 import { PeakCheck } from '@/components/peaks/PeakCheck';
@@ -62,29 +64,41 @@ export default async function PeakPage({ params }: { params: Promise<{ slug: str
         width="3xl"
         subtitle={[`${peak.elevationFt.toLocaleString('en-US')} ft`, area, list].filter(Boolean).join(' · ')}
       >
-        {peak.note ? <p className="t-body">{peak.note}</p> : null}
-        {error ? <p className="t-body font-bold">{error}</p> : null}
+        {peak.note ? <Notice>{peak.note}</Notice> : null}
+        {error ? <Notice tone="error">{error}</Notice> : null}
+
+        {canMark ? (
+          <div className="flex flex-wrap gap-2">
+            <PeakCheck peakSlug={peak.slug} count={mine} />
+          </div>
+        ) : mine ? (
+          <p className="text-meta font-bold">✓ In your peaks{mine > 1 ? ` ×${mine}` : ''}</p>
+        ) : null}
 
         <Card title="Who has been here">
           {visitors.length === 0 ? (
-            <p className="text-sm text-gray-700">Nobody yet.</p>
+            <p className="text-meta text-ink-2">Nobody yet.</p>
           ) : (
-            <ul className="space-y-2 text-sm">
-              {visitors.map((person) => (
-                <li key={person.userId}>
-                  {person.handle ? <Link href={`/user/${person.handle}`} className="underline">{person.name}</Link> : person.name}
-                  {person.count > 1 ? <span className="ml-2 font-bold">×{person.count}</span> : null}
-                </li>
-              ))}
+            <ul className="flex flex-wrap gap-2">
+              {visitors.map((person) => {
+                const body = (
+                  <>
+                    <Avatar name={person.name} size={28} />
+                    <span className="min-w-0 truncate text-meta">{person.name}</span>
+                  </>
+                );
+                return (
+                  <li key={person.userId} className="min-w-0">
+                    {person.handle ? (
+                      <Link href={`/user/${person.handle}`} className="tile flex min-h-11 max-w-full items-center gap-2 px-2.5 no-underline">{body}</Link>
+                    ) : (
+                      <span className="tile flex min-h-11 max-w-full items-center gap-2 px-2.5">{body}</span>
+                    )}
+                  </li>
+                );
+              })}
             </ul>
           )}
-          {canMark ? (
-            <div className="mt-4">
-              <PeakCheck peakSlug={peak.slug} count={mine} />
-            </div>
-          ) : mine ? (
-            <p className="mt-4 text-sm font-bold">✓ In your peaks{mine > 1 ? ` ×${mine}` : ''}</p>
-          ) : null}
         </Card>
       </HubPage>
     </PageWrapper>

@@ -84,7 +84,7 @@ export function RouteUpload({
             setTitleTouched(true);
             setTitle(event.target.value);
           }}
-          className="w-full retro-box-inset bg-white px-3 py-2"
+          className="w-full bg-white px-3 py-2"
         />
       </label>
       <label className="block space-y-1">
@@ -95,12 +95,12 @@ export function RouteUpload({
           maxLength={4000}
           value={notes}
           onChange={(event) => setNotes(event.target.value)}
-          className="w-full retro-box-inset bg-white px-3 py-2"
+          className="w-full bg-white px-3 py-2"
         />
       </label>
       <label className="block space-y-1">
         <span className="text-sm">What were you doing?</span>
-        <select name="activity" className="w-full retro-box-inset bg-white px-3 py-2" defaultValue="hike">
+        <select name="activity" className="w-full" defaultValue="hike">
           {ACTIVITIES.map((activity) => (
             <option key={activity} value={activity}>{ACTIVITY_META[activity].label}</option>
           ))}
@@ -136,7 +136,7 @@ export function RouteUpload({
       <input type="hidden" name="trackJson" value={trackJson} />
       <HideEndsToggle checked={hideEnds} onChange={setHideEnds} />
       {note ? (
-        <p className={`text-sm ${trackJson ? 'text-gray-700' : 'font-bold text-red-700'}`}>{note}</p>
+        <p className={`text-sm ${trackJson ? 'text-ink-2' : 'font-bold text-red-700'}`}>{note}</p>
       ) : null}
       {state?.error ? <p className="text-sm font-bold text-red-700">{state.error}</p> : null}
       {state?.saved || (inline && suggestions.length > 0) ? (

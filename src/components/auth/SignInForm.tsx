@@ -24,7 +24,7 @@ export function SignInForm({ next = '' }: { next?: string }) {
           autoCorrect="off"
           spellCheck={false}
           required
-          className="w-full retro-box-inset bg-white px-3 py-2 text-base"
+          className="w-full"
         />
       </label>
       <PasswordField name="password" label="Password" autoComplete="current-password" />

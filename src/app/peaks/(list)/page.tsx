@@ -1,3 +1,4 @@
+import { Notice } from '@/components/hub/Notice';
 import PageWrapper from '@/components/ui/PageWrapper';
 import { PeaksTable, type PeakTableRow } from '@/components/peaks/PeaksTable';
 import { Card } from '@/components/hub/Card';
@@ -23,13 +24,11 @@ export default async function PeaksPage() {
   const viewer = await getViewer();
   const ready = isDatabaseConfigured();
   let error: string | null = ready ? null : 'Postgres is not connected, so peak counts stay at zero.';
-  const counts = new Map<string, number>();
   const mine = new Map<string, number>();
 
   if (ready) {
     try {
       for (const row of await listPeakRows()) {
-        counts.set(row.peakSlug, (counts.get(row.peakSlug) ?? 0) + 1);
         if (viewer && row.userId === viewer.id) mine.set(row.peakSlug, row.count);
       }
     } catch (err) {
@@ -42,15 +41,14 @@ export default async function PeaksPage() {
     name: peak.name,
     elevationFt: peak.elevationFt,
     state: STATES[peak.listId] ?? '—',
-    visitors: counts.get(peak.slug) ?? 0,
     mine: mine.get(peak.slug) ?? 0,
   }));
 
   return (
     <PageWrapper>
       <HubPage title="Peaks" width="5xl">
+        {error ? <Notice tone="error">{error}</Notice> : null}
         <Card>
-          {error ? <p className="mb-4 text-sm font-bold">{error}</p> : null}
           <PeaksTable rows={rows} canMark={Boolean(!error && viewerCanContribute(viewer))} />
         </Card>
       </HubPage>

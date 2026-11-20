@@ -56,8 +56,8 @@ export function EditForm({
           value: values[field.name] ?? '',
           maxLength: field.maxLength,
           className: inline
-            ? 'retro-box-inset bg-white px-3 py-2 text-sm'
-            : 'w-full retro-box-inset bg-white px-3 py-2 text-base',
+            ? ' bg-white px-3 py-2 text-sm'
+            : 'w-full bg-white px-3 py-2 text-base',
           'aria-label': inline ? field.label : undefined,
           onChange: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
             const next = event.target.value;
@@ -108,8 +108,8 @@ export function EditDetails({
           title={editAdmin?.title}
           aria-label={editAdmin?.ariaLabel}
           className={adminPower
-            ? 'retro-button retro-button-admin ui-press flex min-h-11 cursor-pointer list-none items-center justify-center [&::-webkit-details-marker]:hidden'
-            : 'retro-button ui-press flex min-h-11 cursor-pointer list-none items-center justify-center text-sm font-bold uppercase tracking-wide text-gray-800 [&::-webkit-details-marker]:hidden'}
+            ? 'btn retro-button-admin ui-press flex min-h-11 cursor-pointer list-none items-center justify-center [&::-webkit-details-marker]:hidden'
+            : 'btn ui-press flex min-h-11 cursor-pointer list-none items-center justify-center text-sm font-bold uppercase tracking-wide text-ink [&::-webkit-details-marker]:hidden'}
         >
           {adminPower ? <span className="retro-button-admin-label">Edit</span> : 'Edit'}
         </summary>

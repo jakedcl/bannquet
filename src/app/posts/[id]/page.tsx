@@ -33,7 +33,7 @@ function KindGlyph({ kind }: { kind: PostAttachment['kind'] }) {
       ? 'M12 20s-5.5-5-5.5-9a5.5 5.5 0 1111 0c0 4-5.5 9-5.5 9z'
       : 'M4 7h3l1.5-2h7L17 7h3v11H4zM12 15.5a3 3 0 100-6 3 3 0 000 6z';
   return (
-    <span aria-hidden="true" className="flex h-10 w-10 items-center justify-center border border-[#5c3a1e] bg-white text-gray-700">
+    <span aria-hidden="true" className="flex h-10 w-10 items-center justify-center border border-brown bg-white text-ink-2">
       <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
         <path d={path} />
       </svg>
@@ -103,7 +103,7 @@ export default async function PostPage({ params }: { params: Promise<{ id: strin
     <PageWrapper>
       <div className="mx-auto max-w-3xl space-y-5 px-4 pb-12 pt-6 md:pt-8">
         <LargeTitle title={post.title} />
-        <p className="text-sm text-gray-700">
+        <p className="text-sm text-ink-2">
           {authorHref ? <Link href={authorHref} className="font-bold underline">{post.authorName}</Link> : post.authorName}
           {' · '}
           {formatWhen(post.createdAt)}
@@ -140,7 +140,7 @@ export default async function PostPage({ params }: { params: Promise<{ id: strin
                             alt={item.label}
                             width={40}
                             height={40}
-                            className="h-10 w-10 border border-[#5c3a1e] object-cover"
+                            className="h-10 w-10 border border-brown object-cover"
                           />
                         ) : <KindGlyph kind={item.kind} />}
                         title={item.label}

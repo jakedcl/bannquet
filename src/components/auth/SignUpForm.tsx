@@ -34,7 +34,7 @@ export function SignUpForm({ stamp, next = '' }: { stamp: string; next?: string 
           required
           maxLength={80}
           autoComplete="name"
-          className="w-full retro-box-inset bg-white px-3 py-2 text-base"
+          className="w-full"
         />
       </label>
       <label className="block space-y-1">
@@ -48,9 +48,9 @@ export function SignUpForm({ stamp, next = '' }: { stamp: string; next?: string 
           autoCapitalize="none"
           autoCorrect="off"
           spellCheck={false}
-          className="w-full retro-box-inset bg-white px-3 py-2 text-base"
+          className="w-full"
         />
-        <span className="block text-xs text-gray-600">
+        <span className="block text-xs text-ink-2">
           Lowercase letters, numbers, and underscores. This becomes your page address.
         </span>
       </label>
@@ -61,7 +61,7 @@ export function SignUpForm({ stamp, next = '' }: { stamp: string; next?: string 
           name="email"
           autoComplete="email"
           required
-          className="w-full retro-box-inset bg-white px-3 py-2 text-base"
+          className="w-full"
         />
       </label>
       <PasswordField

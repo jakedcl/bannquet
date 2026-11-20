@@ -29,7 +29,7 @@ export function ResetMemberPassword({ userId }: { userId: string }) {
       {state?.url ? (
         <label className="block space-y-1">
           <span className="text-sm font-bold">Reset link</span>
-          <input readOnly value={state.url} className="w-full retro-box-inset bg-white px-3 py-2 text-sm" />
+          <input readOnly value={state.url} className="w-full" />
         </label>
       ) : null}
     </form>

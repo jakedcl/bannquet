@@ -39,7 +39,7 @@ export function RouteTitleForm({
           name="title"
           maxLength={120}
           defaultValue={title}
-          className="w-full retro-box-inset bg-white px-3 py-2 text-base"
+          className="w-full"
         />
       </label>
       <label className="block space-y-1">
@@ -49,7 +49,7 @@ export function RouteTitleForm({
           rows={5}
           maxLength={4000}
           defaultValue={notes}
-          className="w-full retro-box-inset bg-white px-3 py-2 text-base"
+          className="w-full"
         />
       </label>
       <HideEndsToggle checked={hidden} onChange={setHidden} />

@@ -81,7 +81,7 @@ export function PostAttachmentsEditor({
       <div className="space-y-2">
         <p className="text-sm font-bold">Pins, routes, photos</p>
         {attached.length === 0 ? (
-          <p className="text-sm text-gray-700">Nothing attached yet.</p>
+          <p className="text-sm text-ink-2">Nothing attached yet.</p>
         ) : (
           <ul className="space-y-1">
             {attached.map((item) => (
@@ -103,7 +103,7 @@ export function PostAttachmentsEditor({
                   }
                   return null;
                 })() ?? (
-                  <span className={`inline-block h-8 w-8 shrink-0 ${item.kind === 'pin' ? 'bg-[#c0392b]' : item.kind === 'route' ? 'bg-[#1f4e9c]' : 'bg-[#e67e22]'}`} aria-hidden="true" />
+                  <span className={`inline-block h-8 w-8 shrink-0 ${item.kind === 'pin' ? 'bg-kind-pin' : item.kind === 'route' ? 'bg-kind-route' : 'bg-kind-photo'}`} aria-hidden="true" />
                 )}
                 <span className="min-w-0 flex-1 truncate font-bold">{item.label}</span>
                 <button
@@ -148,7 +148,7 @@ export function PostAttachmentsEditor({
       <dialog
         ref={createRef}
         aria-label={createKind ? CREATE_LABEL[createKind] : 'New'}
-        className="m-auto w-[min(40rem,calc(100%-2rem))] max-h-[min(40rem,calc(100%-2rem))] overflow-y-auto border-4 border-[#5c3a1e] bg-beige p-4 shadow-[0_16px_40px_rgba(0,0,0,0.22)] backdrop:bg-black/40"
+        className="m-auto w-[min(40rem,calc(100%-2rem))] max-h-[min(40rem,calc(100%-2rem))] overflow-y-auto border-4 border-brown bg-beige p-4 shadow-[0_16px_40px_rgba(0,0,0,0.22)] backdrop:bg-black/40"
         onClose={() => setCreateKind(null)}
         onClick={(event) => {
           if (event.target === createRef.current) createRef.current.close();

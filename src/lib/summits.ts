@@ -158,27 +158,19 @@ export async function listMemberPeakRows(userId: string): Promise<PeakRow[]> {
   return selectPeakRows(sql`s.user_id = ${userId}`);
 }
 
-export type PopularPeak = { peakSlug: string; friends: number };
-
-/** Peaks the most members have climbed, for the community dashboard. */
-export async function popularPeaksByFriends(limit: number): Promise<PopularPeak[]> {
+/** Peaks someone in the crew has been to, newest visit first. No counts and no ranking. */
+export async function recentCrewPeaks(limit: number): Promise<string[]> {
   const capped = Math.max(1, Math.min(limit, 20));
   const result = await getDb().execute(sql`
-    select s.peak_slug, count(distinct s.user_id)::int as friends
+    select s.peak_slug, max(s.created_at) as latest
     from summits s
     join users u on u.id = s.user_id
     where u.role <> 'pending'
     group by s.peak_slug
-    having count(distinct s.user_id) > 0
-    order by friends desc, s.peak_slug asc
+    order by latest desc, s.peak_slug asc
     limit ${capped}
   `);
-  return asRows(result).flatMap((row) => {
-    const peakSlug = row.peak_slug == null ? '' : String(row.peak_slug);
-    const friends = Number(row.friends);
-    if (!peakSlug || !Number.isFinite(friends) || friends < 1) return [];
-    return [{ peakSlug, friends }];
-  });
+  return asRows(result).flatMap((row) => (row.peak_slug == null ? [] : [String(row.peak_slug)]));
 }
 
 /** Who has been to one peak, cached for an hour or until someone's peaks or profile change. */

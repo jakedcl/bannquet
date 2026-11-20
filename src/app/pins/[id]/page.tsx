@@ -105,7 +105,7 @@ export default async function PinPage({
                     alt={photo.alt || ''}
                     width={240}
                     height={240}
-                    className="h-28 w-full object-cover retro-box"
+                    className="h-28 w-full object-cover panel"
                   />
                 </Link>
               ))}
@@ -115,7 +115,7 @@ export default async function PinPage({
             <Button href={`/map?pin=${pin.id}`} tone="blue">Open on the map</Button>
           </div>
         </Card>
-        <div className="retro-box h-80 min-h-[420px] overflow-hidden bg-white">
+        <div className="panel h-80 min-h-[420px] overflow-hidden bg-white">
           <MapCanvas
             points={data.points}
             lines={data.lines}

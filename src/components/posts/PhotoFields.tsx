@@ -83,7 +83,7 @@ export function PhotoFields({
         {photos.map((photo, index) => {
           const located = photo.lat != null && photo.lng != null;
           return (
-            <div key={photo.url} className="flex gap-3 bg-white p-2 retro-box-inset">
+            <div key={photo.url} className="flex gap-3 bg-white p-2 well">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={photo.previewUrl} alt="Selected photo" className="h-16 w-16 object-cover" />
               <div className="min-w-0 flex-1 space-y-1">
@@ -107,7 +107,7 @@ export function PhotoFields({
         })}
       </div>
       {showLocation && pinning != null ? (
-        <div className="h-64 overflow-hidden retro-box">
+        <div className="h-64 overflow-hidden panel">
           <GroupMap
             points={EMPTY}
             lines={EMPTY}

@@ -59,6 +59,11 @@
   --color-warn-soft: #fff0d6;
   --color-ok: #4a7c2a;
 
+  /* Attachment and map-item colors: pin, route, photo (match the activity colors on the map). */
+  --color-kind-pin: #c0392b;
+  --color-kind-route: #1f4e9c;
+  --color-kind-photo: #e67e22;
+
   /* Avalanche danger, official North American scale (1 Low to 5 Extreme).
      A center's own color from its data wins over these. */
   --color-avy-1: #50b848;

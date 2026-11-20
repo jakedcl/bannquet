@@ -10,7 +10,7 @@ export function ForgotPasswordForm() {
 
   return (
     <form action={action} className="space-y-4">
-      <p className="text-sm text-gray-700">
+      <p className="text-sm text-ink-2">
         Type the email you used for Bannquet. If it can sign in, we will email a reset link.
       </p>
       <label className="block space-y-1">
@@ -20,7 +20,7 @@ export function ForgotPasswordForm() {
           name="email"
           autoComplete="email"
           required
-          className="w-full retro-box-inset bg-white px-3 py-2 text-base"
+          className="w-full"
         />
       </label>
       {state?.error ? <p className="text-sm font-bold text-red-700">{state.error}</p> : null}

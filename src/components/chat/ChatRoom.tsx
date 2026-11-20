@@ -150,9 +150,9 @@ export function ChatRoom({
 
   return (
     <div className="space-y-3">
-      <div ref={scroller} className="max-h-[28rem] space-y-3 overflow-y-auto bg-beige p-3 retro-box-inset">
+      <div ref={scroller} className="max-h-[28rem] space-y-3 overflow-y-auto bg-beige p-3 well">
         {messages.length === 0 ? (
-          <p className="text-sm text-gray-700">No messages yet. Say what you are up to.</p>
+          <p className="text-sm text-ink-2">No messages yet. Say what you are up to.</p>
         ) : messages.map((message) => (
           <ChatLine
             key={message.id}
@@ -214,7 +214,7 @@ export function ChatRoom({
               maxLength={500}
               disabled={!canSend || pending}
               placeholder="A note for the group"
-              className="composer-field w-full bg-white px-3 text-sm retro-box-inset"
+              className="composer-field w-full bg-white px-3 text-sm"
             />
           </label>
           <SubmitButton tone="yellow" pendingLabel="Sending…" disabled={!canSend} className="composer-control shrink-0 px-3">
@@ -226,7 +226,7 @@ export function ChatRoom({
       <dialog
         ref={dialogRef}
         aria-label="Attach a pin, route, or photo"
-        className="m-auto w-[min(32rem,calc(100%-2rem))] max-h-[min(36rem,calc(100%-2rem))] border-4 border-[#5c3a1e] bg-beige p-4 shadow-[0_16px_40px_rgba(0,0,0,0.22)] backdrop:bg-black/40"
+        className="m-auto w-[min(32rem,calc(100%-2rem))] max-h-[min(36rem,calc(100%-2rem))] border-4 border-brown bg-beige p-4 shadow-[0_16px_40px_rgba(0,0,0,0.22)] backdrop:bg-black/40"
         onClick={(event) => {
           if (event.target === dialogRef.current) dialogRef.current.close();
         }}
@@ -277,7 +277,7 @@ export function ChatRoom({
                         <Thumb item={item} />
                         <span className="min-w-0">
                           <span className="block truncate font-bold underline">{item.label}</span>
-                          {tab === 'everyone' ? <span className="block truncate text-xs text-gray-600">{item.ownerName}</span> : null}
+                          {tab === 'everyone' ? <span className="block truncate text-xs text-ink-2">{item.ownerName}</span> : null}
                         </span>
                       </button>
                     </li>
@@ -306,7 +306,7 @@ function Thumb({ item }: { item: ChatCatalogItem }) {
       />
     );
   }
-  const color = item.kind === 'pin' ? 'bg-[#c0392b]' : item.kind === 'route' ? 'bg-[#1f4e9c]' : 'bg-[#e67e22]';
+  const color = item.kind === 'pin' ? 'bg-kind-pin' : item.kind === 'route' ? 'bg-kind-route' : 'bg-kind-photo';
   return <span className={`inline-block h-8 w-8 shrink-0 ${color}`} aria-hidden="true" />;
 }
 
@@ -372,7 +372,7 @@ function ChatLine({
         ) : (
           <span className="font-bold">{message.name}</span>
         )}
-        <span className="ml-2 text-xs text-gray-700">{formatChatTime(message.createdAt)}</span>
+        <span className="ml-2 text-xs text-ink-2">{formatChatTime(message.createdAt)}</span>
       </p>
       {message.body ? <p className="mt-1 whitespace-pre-wrap">{message.body}</p> : null}
       {message.ref ? <Chip refItem={message.ref} /> : null}
@@ -384,13 +384,13 @@ function ChatLine({
             aria-label="Message actions"
             aria-expanded={open}
             onClick={() => setOpen((value) => !value)}
-            className="flex h-11 w-11 items-center justify-center text-xl font-bold leading-none text-[#5c3a1e] opacity-0 group-hover:opacity-100 focus:opacity-100 [@media(hover:none)]:opacity-100"
+            className="flex h-11 w-11 items-center justify-center text-xl font-bold leading-none text-brown opacity-0 group-hover:opacity-100 focus:opacity-100 [@media(hover:none)]:opacity-100"
           >
             ⋯
           </button>
           {open ? (
             <form
-              className="absolute right-0 top-11 z-20 bg-[#5c3a1e] p-1"
+              className="absolute right-0 top-11 z-20 bg-brown p-1"
               action={async (formData) => {
                 const result = await deleteChatAction(null, formData);
                 if (result?.error) {
@@ -436,11 +436,11 @@ function Chip({
   };
 }) {
   if (refItem.missing) {
-    return <span className="mt-1 inline-block text-xs text-gray-700">That {refItem.kind} is gone.</span>;
+    return <span className="mt-1 inline-block text-xs text-ink-2">That {refItem.kind} is gone.</span>;
   }
   const photo = draftPhotoSources(refItem);
   return (
-    <Link href={refItem.href} className="mt-1 inline-flex min-h-11 items-center gap-2 border border-gray-400 bg-white px-3 py-1 text-sm font-bold">
+    <Link href={refItem.href} className="mt-1 inline-flex min-h-11 items-center gap-2 border border-bevel bg-white px-3 py-1 text-sm font-bold">
       {photo ? (
         <SmallPhotoImage
           url={photo.url}

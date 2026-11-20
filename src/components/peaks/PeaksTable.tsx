@@ -12,8 +12,6 @@ export type PeakTableRow = {
   name: string;
   elevationFt: number;
   state: string;
-  /** How many members have this peak on their peaks. */
-  visitors: number;
   /** How many times the viewer has been up (0 = not yet). */
   mine: number;
 };
@@ -74,13 +72,6 @@ export function PeaksTable({
       ),
     },
     {
-      id: 'visitors',
-      header: 'Friends',
-      align: 'right',
-      sortValue: (row) => row.visitors,
-      cell: (row) => String(row.visitors),
-    },
-    {
       id: 'you',
       header: 'You',
       sortValue: (row) => row.mine,
@@ -116,7 +107,7 @@ export function PeaksTable({
         columns={columns}
         rowKey={(row) => row.slug}
         empty={rows.length === 0 ? 'No peaks yet.' : 'No peaks match.'}
-        defaultSort={{ id: 'visitors', dir: 'desc' }}
+        defaultSort={{ id: 'name', dir: 'asc' }}
       />
     </div>
   );

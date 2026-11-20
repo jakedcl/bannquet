@@ -11,7 +11,9 @@
 
 @layer base {
   /* Text fields, selects and text areas. 16px text on phones so iOS does not zoom. */
-  :where(input:not([type="checkbox"], [type="radio"], [type="file"], [type="hidden"], [type="range"], [type="submit"], [type="button"], [type="color"]), select, textarea) {
+  input:not([type="checkbox"], [type="radio"], [type="file"], [type="hidden"], [type="range"], [type="submit"], [type="button"], [type="color"]),
+  select,
+  textarea {
     min-height: 2.5rem;
     border: var(--border-control) solid;
     border-color: var(--color-bevel-dark) var(--color-bevel) var(--color-bevel) var(--color-bevel-dark);
@@ -24,36 +26,44 @@
     transition: box-shadow var(--duration-fast) ease, border-color var(--duration-fast) ease;
   }
 
-  :where(textarea) {
+  textarea {
     border-radius: var(--radius-control);
   }
 
   /* Search fields: drop the native look so the field style applies. */
-  :where(input[type="search"]) {
+  input[type="search"] {
     appearance: none;
   }
 
-  :where(input, select, textarea)::placeholder {
+  input::placeholder,
+  textarea::placeholder {
     color: var(--color-ink-3);
   }
 
-  :where(input, select, textarea):focus-visible {
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible {
     outline: none;
     border: var(--border-control) solid var(--color-brand-light);
     box-shadow: var(--shadow-focus);
   }
 
-  :where(input, select, textarea)[aria-invalid="true"] {
+  input[aria-invalid="true"],
+  select[aria-invalid="true"],
+  textarea[aria-invalid="true"] {
     border: var(--border-control) solid var(--color-danger-bright);
     box-shadow: var(--shadow-focus-danger);
   }
 
-  :where(input, select, textarea):disabled {
+  input:disabled,
+  select:disabled,
+  textarea:disabled {
     background-color: var(--color-surface-gray);
     color: var(--color-ink-3);
   }
 
-  :where(input[type="checkbox"], input[type="radio"]) {
+  input[type="checkbox"],
+  input[type="radio"] {
     width: 1.375rem;
     height: 1.375rem;
     accent-color: var(--color-brand);
