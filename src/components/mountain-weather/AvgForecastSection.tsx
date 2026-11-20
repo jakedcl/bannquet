@@ -1,4 +1,5 @@
 import { CollapsibleSection } from '@/components/mountain-weather/CollapsibleSection';
+import { SourceReceipt } from '@/components/mountain-weather/kit';
 import { SourceErrorNote } from '@/components/mountain-weather/SourceErrorNote';
 import type { AvgCell, AvgDateGrid, AvgPlaceSlice } from '@/lib/mountain-weather/avg-types';
 import { defaultResumeHint } from '@/lib/mountain-weather/parse/seasonal-off';
@@ -109,12 +110,14 @@ function AvgBlock({ result }: { result: SourceResult<AvgPlaceSlice> }) {
         ) : (
           data.point.grids.map((grid, idx) => <AvgGridTable key={idx} grid={grid} gridIndex={idx} />)
         )}
-        <p className="text-xs text-ink-2">
-          Issued {formatEt(result.issuedAt)} ET ·{' '}
-          <a href={result.sourceUrl} className="font-bold underline" target="_blank" rel="noopener noreferrer">
-            NWS AVG ({data.office})
-          </a>
-        </p>
+        <SourceReceipt
+          org={def?.org ?? `National Weather Service ${data.office}`}
+          product="Avalanche Weather Guidance (AVG)"
+          at={result.issuedAt}
+          status={result.status}
+          expectedEveryHours={def?.expectedEveryHours}
+          href={result.sourceUrl}
+        />
       </div>
     </CollapsibleSection>
   );

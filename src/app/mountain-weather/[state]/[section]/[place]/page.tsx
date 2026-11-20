@@ -19,7 +19,8 @@ import { RecForecastSection } from '@/components/mountain-weather/RecForecastSec
 import { BalloonForecastSection } from '@/components/mountain-weather/BalloonForecastSection';
 import { MansfieldPackSection } from '@/components/mountain-weather/MansfieldPackSection';
 import { WeatherHazardsHeader } from '@/components/mountain-weather/WeatherHazardsHeader';
-import { MoreSourcesSection } from '@/components/mountain-weather/MoreSourcesSection';
+import { PageSourcesSection } from '@/components/mountain-weather/PageSourcesSection';
+import { Suspense } from 'react';
 import { BulletinsSection } from '@/components/mountain-weather/BulletinsSection';
 import { ObservationsSection } from '@/components/mountain-weather/ObservationsSection';
 import { AvalancheSection } from '@/components/mountain-weather/AvalancheSection';
@@ -35,7 +36,7 @@ import {
   isMountainStateSlug,
   resolveMountainStateSlug,
 } from '@/lib/mountain-weather/places';
-import { moreSourcesForPlace } from '@/lib/mountain-weather/more-sources';
+import { readPageSources, type PageSourceTab } from '@/lib/mountain-weather/page-sources';
 import { mountainWeatherPath } from '@/lib/mountain-weather/slugs';
 import { readAvgForPlace } from '@/lib/mountain-weather/read-place-avg';
 import { readAllLocationsForPlace, readRecForPlace } from '@/lib/mountain-weather/read-place-rec';
@@ -119,11 +120,6 @@ export default async function MountainPlacePage({
       tab === 'maps' ? readPlaceMaps(place, { state: stateCode, sectionId }) : skip,
     ]);
 
-  const moreSourcesRaw = tab === 'more' ? moreSourcesForPlace(stateCode, sectionId, place) : null;
-  const groundHrefs = new Set(ground?.landLinks.map((l) => l.href) ?? []);
-  const moreSources = moreSourcesRaw
-    ? { ...moreSourcesRaw, land: moreSourcesRaw.land.filter((l) => !groundHrefs.has(l.href)) }
-    : null;
   const today = sky.days[0];
   const sunrise = formatClock12(today?.sunEvents.find((event) => event.phen === 'Rise')?.display);
   const sunset = formatClock12(today?.sunEvents.find((event) => event.phen === 'Set')?.display);
@@ -190,11 +186,31 @@ export default async function MountainPlacePage({
             <div id="sun-moon"><SkySection data={sky} /></div>
             <PlaceFactsSection place={place} stateName={stateEntry.name} sectionTitle={section.title} />
             {ground ? <LandAccessSection data={ground} /> : null}
-            {moreSources ? <MoreSourcesSection groups={moreSources} /> : null}
+            <Suspense fallback={<p className="panel px-3.5 py-3 text-meta text-ink-2">Checking every source for this page…</p>}>
+              <PlaceSources place={place} stateCode={stateCode} sectionId={sectionId} path={path} />
+            </Suspense>
             <AboutSourcesSection notes={[...(ground ? groundSourceNotes(ground) : []), USNO_API_TWILIGHT_NOTE]} />
           </>
         ) : null}
       </div>
     </PageWrapper>
   );
+}
+
+/** Streams in after the rest of the More tab: it reads every source the other tabs use. */
+async function PlaceSources({
+  place,
+  stateCode,
+  sectionId,
+  path,
+}: {
+  place: NonNullable<ReturnType<typeof getMountainPlace>>;
+  stateCode: NonNullable<ReturnType<typeof resolveMountainStateSlug>>;
+  sectionId: string;
+  path: string;
+}) {
+  const sources = await readPageSources(place, stateCode, sectionId);
+  const landHrefs = new Set((await readPlaceGround(place, stateCode, sectionId)).landLinks.map((l) => l.href));
+  const tabHref = (tab: PageSourceTab) => (tab === 'forecast' ? path : `${path}?tab=${tab}`);
+  return <PageSourcesSection sources={{ ...sources, links: sources.links.filter((l) => !landHrefs.has(l.href)) }} tabHref={tabHref} />;
 }

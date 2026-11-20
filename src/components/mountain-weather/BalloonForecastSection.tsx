@@ -1,6 +1,7 @@
 import { CollapsibleSection } from '@/components/mountain-weather/CollapsibleSection';
 import { NotInIssuanceNote } from '@/components/mountain-weather/NotInIssuanceNote';
 import { SourceErrorNote } from '@/components/mountain-weather/SourceErrorNote';
+import { SourceReceipt } from '@/components/mountain-weather/kit';
 import type { BalloonCell, BalloonPlaceSlice, BalloonRow } from '@/lib/mountain-weather/balloon-types';
 import { defaultResumeHint } from '@/lib/mountain-weather/parse/seasonal-off';
 import { NWS_BTV_BALLOON_DEF } from '@/lib/mountain-weather/registry';
@@ -48,12 +49,7 @@ export function BalloonForecastSection({ result }: { result: SourceResult<Balloo
           href={result.sourceUrl ?? def.url}
           latestIssuanceEt={formatEt(result.issuedAt)}
         />
-        <p className="text-xs text-ink-2">
-          {def.org} ·{' '}
-          <a href={def.url} className="font-bold underline" target="_blank" rel="noopener noreferrer">
-            Source
-          </a>
-        </p>
+        <SourceReceipt org={def.org} product="Hot Air Balloon Forecast" at={result.issuedAt} status={result.status} href={result.sourceUrl ?? def.url} />
       </CollapsibleSection>
     );
   }
@@ -62,12 +58,7 @@ export function BalloonForecastSection({ result }: { result: SourceResult<Balloo
     return (
       <CollapsibleSection title="Ridge / balloon wind forecast" subtitle={`${def.org} (unavailable)${stale}`}>
         <SourceErrorNote label="Balloon wind forecast" href={result.sourceUrl ?? def.url} />
-        <p className="text-xs text-ink-2">
-          {def.org} · {def.kind} ·{' '}
-          <a href={result.sourceUrl} className="font-bold underline" target="_blank" rel="noopener noreferrer">
-            Source
-          </a>
-        </p>
+        <SourceReceipt org={def.org} product="Hot Air Balloon Forecast" status="error" href={result.sourceUrl ?? def.url} />
       </CollapsibleSection>
     );
   }
@@ -159,13 +150,15 @@ export function BalloonForecastSection({ result }: { result: SourceResult<Balloo
           </p>
         ))}
 
-        <p className="text-xs text-ink-2">
-          Wind speeds shown in knots with mph derived (×1.15078). {def.org} · {def.kind} · Issued{' '}
-          {formatEt(result.issuedAt)} ET ·{' '}
-          <a href={result.sourceUrl} className="font-bold underline" target="_blank" rel="noopener noreferrer">
-            Source
-          </a>
-        </p>
+        <p className="text-xs text-ink-2">Wind speeds are issued in knots; mph is worked out (× 1.15).</p>
+        <SourceReceipt
+          org={def.org}
+          product="Hot Air Balloon Forecast"
+          at={result.issuedAt}
+          status={result.status}
+          expectedEveryHours={def.expectedEveryHours}
+          href={result.sourceUrl}
+        />
       </div>
     </CollapsibleSection>
   );

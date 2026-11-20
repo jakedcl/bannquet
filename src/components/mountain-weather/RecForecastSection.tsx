@@ -1,6 +1,7 @@
 import { CollapsibleSection } from '@/components/mountain-weather/CollapsibleSection';
 import { NotInIssuanceNote } from '@/components/mountain-weather/NotInIssuanceNote';
 import { SourceErrorNote } from '@/components/mountain-weather/SourceErrorNote';
+import { SourceReceipt } from '@/components/mountain-weather/kit';
 import type { RecPlaceSlice } from '@/lib/mountain-weather/rec-types';
 import type { SourceResult } from '@/lib/mountain-weather/source-types';
 import type { RecOffice } from '@/lib/mountain-weather/rec-types';
@@ -97,7 +98,8 @@ function RecBlock({ result }: { result: SourceResult<RecPlaceSlice> }) {
             {section.periods.map((period) => (
               <li key={period.name}>
                 <p className="font-bold">{period.name}</p>
-                <p className="text-ink whitespace-pre-wrap">{period.text}</p>
+                {/* Bulletins wrap at 66 columns; join those lines so the text reflows on a phone. */}
+                <p className="text-ink">{period.text.replace(/\s*\n\s*/g, ' ')}</p>
               </li>
             ))}
           </ul>
@@ -130,12 +132,14 @@ function RecBlock({ result }: { result: SourceResult<RecPlaceSlice> }) {
             </table>
           </div>
         ) : null}
-        <p className="text-xs text-ink-2">
-          Issued {formatEt(result.issuedAt)} ET ·{' '}
-          <a href={result.sourceUrl} className="font-bold underline" target="_blank" rel="noopener noreferrer">
-            NWS REC ({data.office})
-          </a>
-        </p>
+        <SourceReceipt
+          org={def?.org ?? `National Weather Service ${data.office}`}
+          product="Recreation Forecast (REC)"
+          at={result.issuedAt}
+          status={result.status}
+          expectedEveryHours={def?.expectedEveryHours}
+          href={result.sourceUrl}
+        />
       </div>
     </CollapsibleSection>
   );

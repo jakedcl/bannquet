@@ -1,4 +1,5 @@
 import { formatClock12 } from '@/lib/mountain-weather/format-display';
+import { SourceReceipt } from '@/components/mountain-weather/kit';
 import { CollapsibleSection } from '@/components/mountain-weather/CollapsibleSection';
 import { SourceErrorNote } from '@/components/mountain-weather/SourceErrorNote';
 import type { PlaceSkyData, UsnoTimedEvent } from '@/lib/mountain-weather/sky-types';
@@ -31,10 +32,7 @@ export function SkySection({ data }: { data: PlaceSkyData }) {
       ) : null}
       <p className="text-xs text-ink-2">{data.horizonNote}</p>
       <p className="text-xs text-ink-2">
-        Coordinates: {data.coords.lat.toFixed(4)}, {data.coords.lon.toFixed(4)} ·{' '}
-        <a href={USNO_RSTT_ONEDAY_DEF.url} className="font-bold underline" target="_blank" rel="noopener noreferrer">
-          API docs
-        </a>
+        Coordinates: {data.coords.lat.toFixed(4)}, {data.coords.lon.toFixed(4)}
       </p>
       <div className="space-y-4">
         {data.days.map((day) => (
@@ -81,6 +79,14 @@ export function SkySection({ data }: { data: PlaceSkyData }) {
           </article>
         ))}
       </div>
+      <SourceReceipt
+        org={USNO_RSTT_ONEDAY_DEF.org}
+        product="Sun and moon data (RSTT)"
+        at={data.bundle.issuedAt}
+        verb="read"
+        status={data.bundle.status}
+        href={data.bundle.sourceUrl ?? USNO_RSTT_ONEDAY_DEF.url}
+      />
     </CollapsibleSection>
   );
 }

@@ -1,6 +1,6 @@
 import { CollapsibleSection } from '@/components/mountain-weather/CollapsibleSection';
 import { SourceErrorNote } from '@/components/mountain-weather/SourceErrorNote';
-import { HourlyStrip, ReadingGrid, ReadingTile, SourceLine, WindArrow } from '@/components/mountain-weather/kit';
+import { HourlyStrip, ReadingGrid, ReadingTile, SourceReceipt, WindArrow } from '@/components/mountain-weather/kit';
 import type { BaselineForecast } from '@/lib/mountain-weather/baseline-forecast';
 import type { SourceResult } from '@/lib/mountain-weather/source-types';
 import type { ForecastSnippet, GridValueSample } from '@/types/weather';
@@ -13,6 +13,28 @@ import { NWS_GRID_BASELINE_DEF } from '@/lib/mountain-weather/registry';
  */
 
 type Baseline = SourceResult<BaselineForecast>;
+
+/** Receipt for a panel built from the NWS gridpoint forecast. */
+function GridReceipt({ result, product }: { result: Baseline; product: string }) {
+  return (
+    <SourceReceipt
+      org={NWS_GRID_BASELINE_DEF.org}
+      product={product}
+      at={result.issuedAt}
+      verb="updated"
+      status={result.status}
+      expectedEveryHours={NWS_GRID_BASELINE_DEF.expectedEveryHours}
+      href={result.sourceUrl}
+      extra={
+        result.data?.mapUrl ? (
+          <a href={result.data.mapUrl} className="font-bold underline" target="_blank" rel="noopener noreferrer">
+            NWS forecast page ›
+          </a>
+        ) : null
+      }
+    />
+  );
+}
 
 function gridLine(result: Baseline, placeElevationFt: number | null): string {
   const gridElev = result.data?.gridExtras?.elevationFt;
@@ -64,6 +86,7 @@ export function ForecastNowPanel({ result, placeElevationFt }: { result: Baselin
         <ReadingTile label="Precip amount" value={qpfLabel(data.quantitativePrecipitation)} sub="Grid now" />
         <ReadingTile label="Thunder" value={fmtScalar(data.probabilityOfThunderstorm, '%')} sub="Chance" />
       </ReadingGrid>
+      <GridReceipt result={result} product="Gridpoint forecast, this hour" />
     </CollapsibleSection>
   );
 }
@@ -75,19 +98,12 @@ export function Next48Panel({ result }: { result: Baseline }) {
   return (
     <section className="panel">
       <h2 className="panel-bar">Next 48 hours</h2>
-      <div className="border-b border-hairline bg-surface-cream px-3.5 py-1.5 sm:px-4">
-        <SourceLine source="NWS hourly forecast · 3-hour steps" at={result.issuedAt} />
-      </div>
       <div className="space-y-3 px-3.5 py-3 sm:px-4">
         <HourlyStrip periods={periods} />
         <CollapsibleSection title={`All ${periods.length} hours`} subtitle="Every hour from NWS, with grid weather" defaultOpen={false}>
           <HourlyTable periods={periods} />
         </CollapsibleSection>
-        {result.data?.mapUrl ? (
-          <p className="text-caption text-ink-2">
-            <a href={result.data.mapUrl} className="font-bold underline" target="_blank" rel="noopener noreferrer">NWS forecast page</a>
-          </p>
-        ) : null}
+        <GridReceipt result={result} product="Hourly forecast, shown in 3-hour steps" />
       </div>
     </section>
   );
@@ -104,6 +120,7 @@ export function SevenDayPanel({ result }: { result: Baseline }) {
         {daily.length ? <DailyList periods={daily} /> : null}
         {periods.length ? <PeriodNarratives periods={periods} /> : null}
       </div>
+      <GridReceipt result={result} product="7-day forecast" />
     </CollapsibleSection>
   );
 }
@@ -134,6 +151,7 @@ export function GridDetailsPanel({ result }: { result: Baseline }) {
         <SeriesRow title="Ice (in)" samples={g.iceAccumulation} />
         <SeriesRow title="Ceiling (ft)" samples={g.ceilingHeight} />
       </div>
+      <GridReceipt result={result} product="Gridpoint data" />
     </CollapsibleSection>
   );
 }

@@ -1,5 +1,6 @@
 import { CollapsibleSection } from '@/components/mountain-weather/CollapsibleSection';
 import { SourceErrorNote } from '@/components/mountain-weather/SourceErrorNote';
+import { SourceReceipt } from '@/components/mountain-weather/kit';
 import { buildMtnDisplay, fmtMtnAmount, fmtMtnLightning } from '@/lib/mountain-weather/mtn-display';
 import type { MtnPointBundle } from '@/lib/mountain-weather/mtn-point-types';
 import { windDirFromDegrees } from '@/lib/mountain-weather/parse/mtn-sky';
@@ -133,15 +134,15 @@ export function MountainForecastSection({
             </table>
           </div>
         ) : null}
-        <p className="text-xs text-ink-2">
-          Source: {source?.org} ·{' '}
-          <a href={result.sourceUrl} className="font-bold underline" target="_blank" rel="noopener noreferrer">
-            NWS mountain XML ({data.office})
-          </a>
-          {result.issuedAt
-            ? ` · file Last-Modified ${new Date(result.issuedAt).toLocaleString('en-US', { timeZone: 'America/New_York' })} ET`
-            : null}
-        </p>
+        <SourceReceipt
+          org={data.office === 'BTV' ? NWS_MTN_BTV_ENHANCED_DEF.org : NWS_MTN_ALY_ENHANCED_DEF.org}
+          product={`Mountain Point Forecast (${data.enhanced ? 'enhanced' : 'standard'})`}
+          at={result.issuedAt}
+          verb="updated"
+          status={result.status}
+          expectedEveryHours={NWS_MTN_BTV_ENHANCED_DEF.expectedEveryHours}
+          href={result.sourceUrl}
+        />
       </div>
     </CollapsibleSection>
   );

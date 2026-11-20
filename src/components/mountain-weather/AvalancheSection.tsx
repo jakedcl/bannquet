@@ -1,4 +1,5 @@
 import { CollapsibleSection } from '@/components/mountain-weather/CollapsibleSection';
+import { SourceReceipt } from '@/components/mountain-weather/kit';
 import { SourceErrorNote } from '@/components/mountain-weather/SourceErrorNote';
 import { AvgForecastSection } from '@/components/mountain-weather/AvgForecastSection';
 import type { AvalancheDangerBand, AvalancheProblem, AvalancheProductBundle } from '@/lib/mountain-weather/avalanche-types';
@@ -179,12 +180,13 @@ function CenterBlock({ result }: { result: SourceResult<AvalancheProductBundle> 
           ) : null}
         </div>
       ) : null}
-      <p className="text-xs text-ink-2">
-        {layerDef.org} · map-layer + product ·{' '}
-        <a href={result.sourceUrl} className="font-bold underline" target="_blank" rel="noopener noreferrer">
-          Source
-        </a>
-      </p>
+      <SourceReceipt
+        org={layerDef.org}
+        product="Avalanche forecast (map layer and product)"
+        at={result.issuedAt}
+        status={result.status}
+        href={result.sourceUrl}
+      />
     </CollapsibleSection>
   );
 }

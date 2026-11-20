@@ -10,6 +10,7 @@ import { NWS_BTV_MANSFIELD_HYD_DEF } from '@/lib/mountain-weather/registry';
 import { LOCAL_SNOW_RADIUS_MI } from '@/lib/mountain-weather/local-snow-reports';
 import { formatEt } from '@/lib/mountain-weather/format-display';
 import { SnowRemoteImage } from '@/components/mountain-weather/SnowRemoteImage';
+import { ImageCaption, SourceReceipt } from '@/components/mountain-weather/kit';
 
 function SnowImageGrid({
   title,
@@ -29,23 +30,12 @@ function SnowImageGrid({
         {images.map((img) => (
           <figure key={img.id} className="space-y-1">
             <figcaption className="text-xs font-bold">{img.label}</figcaption>
-            {img.validTimeLabel ? <p className="text-xs text-ink-2">Valid {img.validTimeLabel}</p> : null}
             <SnowRemoteImage key={img.url} src={img.url} alt={img.label} sourceUrl={sourceUrl} />
-            <p className="text-[10px] text-ink-2">
-              {img.org} ·{' '}
-              <a href={img.url} className="font-bold underline" target="_blank" rel="noopener noreferrer">
-                Image URL
-              </a>
-            </p>
+            <ImageCaption label={img.validTimeLabel} href={img.url} prefix="Model run" />
           </figure>
         ))}
       </div>
-      <p className="text-xs text-ink-2">
-        {org} ·{' '}
-        <a href={sourceUrl} className="font-bold underline" target="_blank" rel="noopener noreferrer">
-          Source page
-        </a>
-      </p>
+      <SourceReceipt org={org} product={title} href={sourceUrl} linkLabel="Source page" />
     </CollapsibleSection>
   );
 }
@@ -111,12 +101,7 @@ function MeasuredBlock({ data }: { data: PlaceSnowData }) {
                   </span>
                 )}
               </p>
-              <p className="text-xs text-ink-2">
-                Report time: {row.reportTimeEt ?? row.reportTimeUtc ?? '—'} · {NOHRSC_STATION_SNOWDEPTH_DEF.org} ·{' '}
-                <a href={NOHRSC_STATION_SNOWDEPTH_DEF.url} className="font-bold underline" target="_blank" rel="noopener noreferrer">
-                  Source
-                </a>
-              </p>
+              <p className="text-xs text-ink-2">Reported {row.reportTimeEt ?? row.reportTimeUtc ?? '—'}</p>
             </li>
           );
         })}
@@ -124,6 +109,11 @@ function MeasuredBlock({ data }: { data: PlaceSnowData }) {
       {reported.length > 0 && silent > 0 ? (
         <p className="text-xs text-ink-2">{silent} other nearby station{silent === 1 ? '' : 's'} sent no report.</p>
       ) : null}
+      <SourceReceipt
+        org={NOHRSC_STATION_SNOWDEPTH_DEF.org}
+        product="Station snow depth table (NOHRSC, CoCoRaHS)"
+        href={NOHRSC_STATION_SNOWDEPTH_DEF.url}
+      />
     </CollapsibleSection>
   );
 }
@@ -158,12 +148,13 @@ export function SnowSection({ data, placeName, isHub = false }: { data: PlaceSno
           <p className="text-sm">
             New snow: {data.mansfieldStake.snowNew ?? '—'} · Total on stake: {data.mansfieldStake.snowTotal ?? '—'}
           </p>
-          <p className="text-xs text-ink-2">
-            {NWS_BTV_MANSFIELD_HYD_DEF.org} · Issued {formatEt(data.mansfieldStake.asOf)} ·{' '}
-            <a href={NWS_BTV_MANSFIELD_HYD_DEF.url} className="font-bold underline" target="_blank" rel="noopener noreferrer">
-              Source
-            </a>
-          </p>
+          <SourceReceipt
+            org={NWS_BTV_MANSFIELD_HYD_DEF.org}
+            product="Hydrologic Summary (HYD)"
+            at={data.mansfieldStake.asOf}
+            expectedEveryHours={NWS_BTV_MANSFIELD_HYD_DEF.expectedEveryHours}
+            href={NWS_BTV_MANSFIELD_HYD_DEF.url}
+          />
         </CollapsibleSection>
       ) : null}
       <MeasuredBlock data={data} />
@@ -188,12 +179,12 @@ export function SnowSection({ data, placeName, isHub = false }: { data: PlaceSno
                 {data.pns.fullText.trim()}
               </pre>
             </details>
-            <p className="text-xs text-ink-2">
-              Issued {formatEt(data.pns.issuanceTime)} ·{' '}
-              <a href={pnsDef.url} className="font-bold underline" target="_blank" rel="noopener noreferrer">
-                Latest PNS
-              </a>
-            </p>
+            <SourceReceipt
+              org={pnsDef.org}
+              product="Public Information Statement (PNS)"
+              at={data.pns.issuanceTime}
+              href={pnsDef.url}
+            />
           </>
       </CollapsibleSection>
       ) : null}
@@ -209,11 +200,7 @@ export function SnowSection({ data, placeName, isHub = false }: { data: PlaceSno
             ))}
           </ul>
           ) : <p className="text-sm">No nearby snowfall reports in the past 14 days. This does not mean there is no snow.</p>}
-        <p className="text-xs text-ink-2">
-          <a href={lsrDef.url} className="font-bold underline" target="_blank" rel="noopener noreferrer">
-            IEM LSR GeoJSON source
-          </a>
-        </p>
+        <SourceReceipt org={lsrDef.org} product="Local Storm Reports (LSR)" href={lsrDef.url} />
       </CollapsibleSection>
       ) : null}
     </>

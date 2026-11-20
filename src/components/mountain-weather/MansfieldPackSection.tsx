@@ -3,6 +3,7 @@ import { SourceErrorNote } from '@/components/mountain-weather/SourceErrorNote';
 import type { MansfieldPackData } from '@/lib/mountain-weather/read-mansfield-pack';
 import { mansfieldPackSourceDefs } from '@/lib/mountain-weather/read-mansfield-pack';
 import { Notice } from '@/components/hub/Notice';
+import { SourceReceipt } from '@/components/mountain-weather/kit';
 import { formatStationFieldDisplay, stationHasReadableMeasurements } from '@/lib/mountain-weather/parse/nws-station-units';
 import { SHEF_CODE_LABELS } from '@/lib/mountain-weather/parse/rr2-mansfield';
 import { defaultResumeHint } from '@/lib/mountain-weather/parse/seasonal-off';
@@ -25,14 +26,29 @@ function formatEt(value: string | null): string {
   });
 }
 
-function Footer({ def, issuedAt, sourceUrl }: { def: SourceDef; issuedAt: string | null; sourceUrl: string }) {
+function Footer({
+  def,
+  product,
+  issuedAt,
+  status,
+  sourceUrl,
+}: {
+  def: SourceDef;
+  product?: string;
+  issuedAt: string | null;
+  status: string;
+  sourceUrl: string;
+}) {
   return (
-    <p className="text-xs text-ink-2">
-      {def.org} · {def.kind} · Issued {formatEt(issuedAt)} ET ·{' '}
-      <a href={sourceUrl} className="font-bold underline" target="_blank" rel="noopener noreferrer">
-        Source
-      </a>
-    </p>
+    <SourceReceipt
+      org={def.org}
+      product={product}
+      at={issuedAt}
+      verb={def.kind === 'measured' ? 'observed' : 'issued'}
+      status={status}
+      expectedEveryHours={def.expectedEveryHours}
+      href={sourceUrl}
+    />
   );
 }
 
@@ -80,7 +96,7 @@ function PackBlock<T>({
     return (
       <CollapsibleSection title={title} subtitle={`${subtitleName ? `${subtitleName} · ` : ''}${def.org} (unavailable)${stale}`}>
         <SourceErrorNote label={title} href={result.sourceUrl ?? def.url} />
-        <Footer def={def} issuedAt={result.issuedAt} sourceUrl={result.sourceUrl} />
+        <Footer def={def} product={subtitleName} issuedAt={result.issuedAt} status={result.status} sourceUrl={result.sourceUrl} />
       </CollapsibleSection>
     );
   }
@@ -92,7 +108,7 @@ function PackBlock<T>({
       defaultOpen={!seasonal}
     >
       <div className="space-y-2 text-sm">{children}</div>
-      <Footer def={def} issuedAt={result.issuedAt} sourceUrl={result.sourceUrl} />
+      <Footer def={def} product={subtitleName} issuedAt={result.issuedAt} status={result.status} sourceUrl={result.sourceUrl} />
     </CollapsibleSection>
   );
 }
@@ -178,7 +194,7 @@ export function MansfieldPackSection({ pack, part }: { pack: MansfieldPackData |
       ) : null}
 
       {show.forecast ? (
-      <PackBlock title="Elevation profile" def={defs.profile} result={pack.profile}>
+      <PackBlock title="Elevation profile" subtitleName="Worked out from the Mountain Point Forecast" def={defs.profile} result={pack.profile}>
         {pack.profile.data ? (
           <>
             <div className="overflow-x-auto">
@@ -227,7 +243,7 @@ export function MansfieldPackSection({ pack, part }: { pack: MansfieldPackData |
       ) : null}
 
       {show.snow ? (
-      <PackBlock title="Mansfield snow stake (HYD)" def={defs.hyd} result={pack.hyd}>
+      <PackBlock title="Mansfield snow stake" subtitleName="Hydrologic Summary (HYD)" def={defs.hyd} result={pack.hyd}>
         {pack.hyd.status === 'seasonal-off' ? (
           <p className="border border-hairline bg-surface p-2 text-xs font-bold">
             {defaultResumeHint('stake')}
@@ -271,7 +287,7 @@ export function MansfieldPackSection({ pack, part }: { pack: MansfieldPackData |
       ) : null}
 
       {show.snow ? (
-      <PackBlock title="Snow depth climatology (in)" def={defs.climatology} result={pack.climatology}>
+      <PackBlock title="Snow depth climatology (in)" subtitleName="Mount Mansfield snow depth record" def={defs.climatology} result={pack.climatology}>
         {pack.climatology.data ? (
           <div className="max-h-96 overflow-auto">
             <table className="min-w-full border border-hairline text-[11px]">

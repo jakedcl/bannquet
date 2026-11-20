@@ -9,7 +9,14 @@ and Gunks Ridge. Source data was checked against the raw NWS API where something
 quality is a plain link; when no avalanche forecast is issued, the avalanche bar is hidden
 (the Snow tab panel still says so).
 
-**Status:** Step 1 (correctness) is done. Fixes 1–7, 9 and 10 are in. Fix 8 was not a bug. Two
+**Status:** Step 2 (source line and Sources for this page) is done. `SourceReceipt` in
+`src/components/mountain-weather/kit.tsx` ends every panel; images use `ImageCaption`.
+`src/lib/mountain-weather/page-sources.ts` builds the More tab's "Sources for this page". It
+streams in with Suspense because it reads every tab's (cached) sources. More sources groups
+are now exclusive and keyed by address; the duplicates came from overlapping group filters,
+and `/REC/i` matched "forecast".
+
+Step 1 (correctness) is done. Fixes 1–7, 9 and 10 are in. Fix 8 was not a bug. Two
 extra changes went in with it: the off-season avalanche bar is hidden, and AirNow is now a link.
 The hub panel labels wind and cold as **valley** whenever no summit station has reported in the
 last hour; KMWN often reports only every few hours.

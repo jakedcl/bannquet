@@ -4,9 +4,9 @@ import { moreSourcesHasAny, type MoreSourceGroups } from '@/lib/mountain-weather
 
 const GROUP_LABEL = {
   office: 'NWS office products',
-  mountain: 'Mountain and national guidance',
+  mountain: 'Snow, radar, satellite and avalanche',
   land: 'Land, access, and research',
-  national: 'Maps and outlooks',
+  national: 'Outlooks and other data',
 } as const;
 
 export function MoreSourcesSection({ groups }: { groups: MoreSourceGroups }) {

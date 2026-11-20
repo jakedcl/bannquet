@@ -3,7 +3,7 @@ import { NotInIssuanceNote } from '@/components/mountain-weather/NotInIssuanceNo
 import { SourceErrorNote } from '@/components/mountain-weather/SourceErrorNote';
 import { Notice } from '@/components/hub/Notice';
 import { tagClass } from '@/components/hub/Button';
-import { ReadingGrid, ReadingTile, SourceLine, WindArrow } from '@/components/mountain-weather/kit';
+import { ReadingGrid, ReadingTile, SourceReceipt, WindArrow } from '@/components/mountain-weather/kit';
 import type { PlaceObservationsData, StationObservationBlock } from '@/lib/mountain-weather/read-place-observations';
 import type { PlaceStationObservationBinding } from '@/lib/mountain-weather/station-bindings';
 import type { SourceDef } from '@/lib/mountain-weather/source-types';
@@ -70,14 +70,31 @@ function placementNote(binding: PlaceStationObservationBinding, placeElevationFt
   return parts.join(' · ');
 }
 
-function SourceFooter({ def, issuedAt, sourceUrl }: { def: SourceDef; issuedAt: string | null; sourceUrl: string }) {
+function SourceFooter({
+  def,
+  product,
+  at,
+  status,
+  sourceUrl,
+  verb = 'observed',
+}: {
+  def: SourceDef;
+  product: string;
+  at: string | null;
+  status: string;
+  sourceUrl: string;
+  verb?: string;
+}) {
   return (
-    <p className="text-xs text-ink-2">
-      {def.org} · {def.kind} · measured · Issued {formatEt(issuedAt)} ET ·{' '}
-      <a href={sourceUrl} className="font-bold underline" target="_blank" rel="noopener noreferrer">
-        Source
-      </a>
-    </p>
+    <SourceReceipt
+      org={def.org}
+      product={product}
+      at={at}
+      verb={verb}
+      status={status}
+      expectedEveryHours={def.expectedEveryHours}
+      href={sourceUrl}
+    />
   );
 }
 
@@ -103,7 +120,6 @@ function StationBlock({
         </span>
         <span className="text-caption text-ink-2">{placementNote(binding, placeElevationFt)}</span>
       </p>
-      {result.data?.timestamp ? <div className="mb-2"><SourceLine source="Last report" at={result.data.timestamp} verb="observed" /></div> : null}
       {(binding.kind === 'valley' || binding.kind === 'base') && binding.distanceMi > 25 ? (
         <Notice tone="warn">Distant station: {binding.distanceMi} mi away, may not reflect conditions here.</Notice>
       ) : null}
@@ -151,14 +167,15 @@ function StationBlock({
               ))}
             </ul>
           </CollapsibleSection>
-          {result.data.timestamp ? (
-            <p className="text-xs text-ink-2">Observation time {formatEt(result.data.timestamp)} ET</p>
-          ) : (
-            <p className="text-xs text-ink-2">Observation time: null</p>
-          )}
         </>
       )}
-      <SourceFooter def={def} issuedAt={result.issuedAt} sourceUrl={result.sourceUrl} />
+      <SourceFooter
+        def={def}
+        product={`Station observations · ${binding.stationId}`}
+        at={result.data?.timestamp ?? result.issuedAt}
+        status={result.status}
+        sourceUrl={result.sourceUrl}
+      />
     </CollapsibleSection>
   );
 }
@@ -191,12 +208,16 @@ function AsrcBlock({
               ASRC Whiteface dashboard
             </a>
           </p>
-          {result.data.dataFeedStatus === 'unavailable' ? (
-            <p className="text-xs text-ink-2">{result.data.dataFeedNote}</p>
-          ) : null}
         </>
       )}
-      <SourceFooter def={def} issuedAt={result.issuedAt} sourceUrl={result.sourceUrl} />
+      <SourceFooter
+        def={def}
+        product="Whiteface summit timelapse"
+        at={result.issuedAt}
+        status={result.status}
+        sourceUrl={result.sourceUrl}
+        verb="updated"
+      />
     </CollapsibleSection>
   );
 }

@@ -61,6 +61,152 @@ export function SourceLine({ source, at, verb = 'updated' }: { source: ReactNode
   );
 }
 
+/* ---- Source receipt (one line at the end of every panel) -------------- */
+
+export type ReceiptState = 'ok' | 'late' | 'error' | 'off' | 'link';
+
+export const RECEIPT_DOT: Record<ReceiptState, string> = {
+  ok: 'bg-ok',
+  late: 'bg-yellow-deep',
+  error: 'bg-danger',
+  off: 'bg-stale',
+  link: 'bg-stale',
+};
+
+export const RECEIPT_WORD: Record<ReceiptState, string> = {
+  ok: 'Up to date',
+  late: 'Older than usual',
+  error: 'Could not load',
+  off: 'Off season',
+  link: 'Link only',
+};
+
+/** "NWS Burlington", not "National Weather Service Burlington". */
+export function shortOrg(org: string): string {
+  return org.replace(/^National Weather Service\b/, 'NWS').trim();
+}
+
+/**
+ * Green when the source is on schedule, yellow when it is more than twice its usual
+ * interval old (or the reader marked it stale), red when it failed, gray off-season.
+ */
+export function receiptState(input: {
+  status?: string | null;
+  at?: string | null;
+  expectedEveryHours?: number;
+  now?: number;
+}): ReceiptState {
+  const { status, at, expectedEveryHours, now = Date.now() } = input;
+  if (status === 'error') return 'error';
+  if (status === 'seasonal-off') return 'off';
+  if (status === 'link-only') return 'link';
+  if (status === 'stale' || status === 'not-in-issuance') return 'late';
+  if (at && expectedEveryHours) {
+    const t = new Date(at).getTime();
+    if (Number.isFinite(t) && now - t > expectedEveryHours * 2 * 3600000) return 'late';
+  }
+  return 'ok';
+}
+
+function receiptTime(at: string): string | null {
+  const d = new Date(at);
+  if (Number.isNaN(d.getTime())) return null;
+  const sameDay =
+    d.toLocaleDateString('en-US', { timeZone: 'America/New_York' }) ===
+    new Date().toLocaleDateString('en-US', { timeZone: 'America/New_York' });
+  return d.toLocaleString('en-US', {
+    timeZone: 'America/New_York',
+    ...(sameDay ? {} : { month: 'short', day: 'numeric' }),
+    hour: 'numeric',
+    minute: '2-digit',
+  });
+}
+
+/**
+ * The one source line every weather panel ends with:
+ * "● NWS Gray · Recreation Forecast (REC) · issued 7:40 PM (1 hr ago) · Original ›".
+ * The dot says whether the source is working; its meaning is spelled out for screen readers
+ * and on hover.
+ */
+export function SourceReceipt({
+  org,
+  product,
+  at,
+  verb = 'issued',
+  status,
+  expectedEveryHours,
+  href,
+  linkLabel = 'Original',
+  extra,
+}: {
+  org: string;
+  product?: string | null;
+  at?: string | null;
+  verb?: string;
+  status?: string | null;
+  expectedEveryHours?: number;
+  href?: string | null;
+  linkLabel?: string;
+  extra?: ReactNode;
+}) {
+  const state = receiptState({ status, at, expectedEveryHours });
+  const time = at ? receiptTime(at) : null;
+  const { ago } = freshnessOf(at);
+  return (
+    <p className="mt-2 flex flex-wrap items-center gap-x-1.5 gap-y-0.5 border-t border-hairline pt-2 text-caption text-ink-2">
+      <span className={`h-2 w-2 shrink-0 rounded-full ${RECEIPT_DOT[state]}`} title={RECEIPT_WORD[state]} aria-hidden="true" />
+      <span className="sr-only">{RECEIPT_WORD[state]}.</span>
+      <span className="font-bold text-ink [overflow-wrap:anywhere]">{shortOrg(org)}</span>
+      {product ? <span className="[overflow-wrap:anywhere]">· {product}</span> : null}
+      {state === 'error' ? (
+        <span>· could not load</span>
+      ) : time ? (
+        <span>
+          · {verb} {time}
+          {ago ? ` (${ago})` : ''}
+        </span>
+      ) : null}
+      {extra ? <span>· {extra}</span> : null}
+      {href ? (
+        <span>
+          ·{' '}
+          <a href={href} className="font-bold underline" target="_blank" rel="noopener noreferrer">
+            {linkLabel} ›
+          </a>
+        </span>
+      ) : null}
+    </p>
+  );
+}
+
+/** Parse the time labels image sources publish ("Fri, 20 Nov 2026 01:55:03 GMT", "2026-11-19 05 UTC"). */
+export function imageTimeIso(label: string | null | undefined): string | null {
+  if (!label) return null;
+  const hourOnly = label.match(/^(\d{4}-\d{2}-\d{2}) (\d{2}) UTC$/);
+  const t = Date.parse(hourOnly ? `${hourOnly[1]}T${hourOnly[2]}:00:00Z` : label);
+  return Number.isFinite(t) ? new Date(t).toISOString() : null;
+}
+
+/** Under each image: "Image from 8:55 PM (5 min ago) · Original ›", or the source's own label. */
+export function ImageCaption({ label, href, prefix = 'Image from' }: { label: string | null | undefined; href?: string | null; prefix?: string }) {
+  const iso = imageTimeIso(label);
+  const time = iso ? receiptTime(iso) : null;
+  const { ago } = freshnessOf(iso);
+  return (
+    <p className="text-caption text-ink-2">
+      {time ? `${prefix} ${time}${ago ? ` (${ago})` : ''}` : label ? `Valid ${label}` : 'Time not published'}
+      {href ? (
+        <>
+          {' · '}
+          <a href={href} className="font-bold underline" target="_blank" rel="noopener noreferrer">
+            Original ›
+          </a>
+        </>
+      ) : null}
+    </p>
+  );
+}
+
 /* ---- Wind -------------------------------------------------------------- */
 
 const COMPASS: Record<string, number> = {

@@ -1,5 +1,6 @@
 import { CollapsibleSection } from '@/components/mountain-weather/CollapsibleSection';
 import type { MapImageAsset } from '@/lib/mountain-weather/map-types';
+import { ImageCaption, SourceReceipt } from '@/components/mountain-weather/kit';
 
 export function MapImageGrid({
   title,
@@ -19,25 +20,13 @@ export function MapImageGrid({
         {images.map((img) => (
           <figure key={img.id} className="space-y-1">
             <figcaption className="text-xs font-bold">{img.label}</figcaption>
-            <p className="text-[10px] text-ink-2">
-              {img.org} · valid/frame: {img.validTimeLabel ?? 'not published'}
-            </p>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={img.url} alt={img.label} className="max-w-full border border-hairline bg-white" />
-            <p className="text-[10px] text-ink-2">
-              <a href={img.url} className="font-bold underline" target="_blank" rel="noopener noreferrer">
-                {img.org} image URL
-              </a>
-            </p>
+            <ImageCaption label={img.validTimeLabel} href={img.url} />
           </figure>
         ))}
       </div>
-      <p className="text-xs text-ink-2">
-        {refreshNote} ·{' '}
-        <a href={sourceUrl} className="font-bold underline" target="_blank" rel="noopener noreferrer">
-          Source
-        </a>
-      </p>
+      <SourceReceipt org={images[0].org} product={refreshNote} href={sourceUrl} linkLabel="Source page" />
     </CollapsibleSection>
   );
 }

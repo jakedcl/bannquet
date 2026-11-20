@@ -1,5 +1,6 @@
 import { CollapsibleSection } from '@/components/mountain-weather/CollapsibleSection';
 import { SourceErrorNote } from '@/components/mountain-weather/SourceErrorNote';
+import { SourceReceipt } from '@/components/mountain-weather/kit';
 import type { PlaceGroundData } from '@/lib/mountain-weather/ground-access-types';
 import { GROUND_ACCESS_NOTES } from '@/lib/mountain-weather/read-place-ground';
 import { USDM_COUNTY_DROUGHT_DEF } from '@/lib/mountain-weather/readers/usdm-county-drought';
@@ -50,7 +51,14 @@ export function RoadAndAirSection({ data }: { data: PlaceGroundData }) {
         ) : (
           <p className="text-sm text-ink-2">No road weather station within range has reported in the last 6 hours.</p>
         )}
-        <p className="mt-1 text-xs text-ink-2">{COMPASS_NE_ESS_DEF.org}</p>
+        <SourceReceipt
+          org={COMPASS_NE_ESS_DEF.org}
+          product="Road weather stations (ESS)"
+          at={data.compassEss.data?.observedAt ?? null}
+          verb="observed"
+          status={data.compassEss.status}
+          href={data.compassEss.sourceUrl ?? COMPASS_NE_ESS_DEF.url}
+        />
       </SubBlock>
 
       <SubBlock title="Air quality">
@@ -122,11 +130,15 @@ export function LandAccessSection({ data }: { data: PlaceGroundData }) {
         ) : (
           <p className="text-sm text-ink-2">County-level drought information is unavailable for this place.</p>
         )}
-        <p className="mt-1 text-xs text-ink-2">
-          <a href={USDM_COUNTY_DROUGHT_DEF.url} className="underline" target="_blank" rel="noopener noreferrer">
-            {USDM_COUNTY_DROUGHT_DEF.org}
-          </a>
-        </p>
+        <SourceReceipt
+          org={USDM_COUNTY_DROUGHT_DEF.org}
+          product="U.S. Drought Monitor, county statistics"
+          at={data.drought.issuedAt}
+          verb="updated"
+          status={data.drought.status}
+          expectedEveryHours={USDM_COUNTY_DROUGHT_DEF.expectedEveryHours}
+          href={data.drought.sourceUrl ?? USDM_COUNTY_DROUGHT_DEF.url}
+        />
       </SubBlock>
 
     </CollapsibleSection>

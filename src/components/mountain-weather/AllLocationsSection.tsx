@@ -1,8 +1,7 @@
 import { CollapsibleSection } from '@/components/mountain-weather/CollapsibleSection';
 import { NotInIssuanceNote } from '@/components/mountain-weather/NotInIssuanceNote';
 import { SourceErrorNote } from '@/components/mountain-weather/SourceErrorNote';
-import { SourceLink } from '@/components/mountain-weather/SourceLink';
-import { allLocationsSourceLinkLabel } from '@/lib/mountain-weather/all-locations-labels';
+import { SourceReceipt } from '@/components/mountain-weather/kit';
 import type { AllLocationsPlaceSlice } from '@/lib/mountain-weather/all-locations-types';
 import { defaultResumeHint } from '@/lib/mountain-weather/parse/seasonal-off';
 import {
@@ -78,15 +77,15 @@ function AllLocationsBlock({ result }: { result: SourceResult<AllLocationsPlaceS
         ) : (
           <p className="whitespace-pre-wrap text-ink">{marker.narrative || '—'}</p>
         )}
-        <p className="text-xs text-ink-2">
-          {marker.lat !== null && marker.lon !== null
-            ? `NWS point ${marker.lat}, ${marker.lon} · `
-            : null}
-          <SourceLink href={result.sourceUrl ?? def?.url ?? 'https://www.weather.gov/'}>
-            {allLocationsSourceLinkLabel(result.data.office)}
-          </SourceLink>
-          {result.issuedAt ? ` · Last-Modified ${formatEt(result.issuedAt)} ET` : null}
-        </p>
+        <SourceReceipt
+          org={def?.org ?? 'National Weather Service'}
+          product={`allLocations map file${marker.lat !== null && marker.lon !== null ? ` · point ${marker.lat}, ${marker.lon}` : ''}`}
+          at={result.issuedAt}
+          verb="updated"
+          status={result.status}
+          expectedEveryHours={def?.expectedEveryHours}
+          href={result.sourceUrl ?? def?.url ?? 'https://www.weather.gov/'}
+        />
       </div>
     </CollapsibleSection>
   );
