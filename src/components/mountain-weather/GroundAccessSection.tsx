@@ -45,18 +45,12 @@ export function RoadAndAirSection({ data }: { data: PlaceGroundData }) {
                 }
                 className="sm:col-span-2"
               />
-              <Field
-                label="Timestamp rule"
-                value={data.compassEss.data.timestampInterpretation}
-                className="sm:col-span-2"
-              />
             </dl>
-            <p className="text-xs text-ink-2">{data.compassEss.data.timestampNote}</p>
           </div>
         ) : (
-          <p className="text-sm text-ink-2">No Compass ESS within range for this state or distance.</p>
+          <p className="text-sm text-ink-2">No road weather station within range has reported in the last 6 hours.</p>
         )}
-        <p className="mt-1 text-xs text-ink-2">{COMPASS_NE_ESS_DEF.org} · $0 public XML</p>
+        <p className="mt-1 text-xs text-ink-2">{COMPASS_NE_ESS_DEF.org}</p>
       </SubBlock>
 
       <SubBlock title="Air quality">
@@ -80,12 +74,10 @@ export function RoadAndAirSection({ data }: { data: PlaceGroundData }) {
           </div>
         ) : (
           <p className="text-sm">
+            {data.airNowKeyConfigured ? 'No air quality monitor in range right now. ' : null}
             <a href={data.airNowLink} className="font-bold underline" target="_blank" rel="noopener noreferrer">
-              AirNow.gov
-            </a>{' '}
-            {data.airNowKeyConfigured
-              ? '(no monitors in regional feed for this point)'
-              : '(no live AQI without API key)'}
+              Check air quality on AirNow.gov ›
+            </a>
           </p>
         )}
       </SubBlock>

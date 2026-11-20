@@ -5,11 +5,22 @@ import type { PlaceAvalancheData } from '@/lib/mountain-weather/read-place-avala
 
 /**
  * Avalanche center status for a place, one row per center, linking to the
- * full guidance on the Snow tab. Shown under the alerts on every tab.
+ * full guidance on the Snow tab. Shown under the alerts on every tab while a forecast is issued.
  */
-export function AvalancheStatus({ data, snowHref }: { data: PlaceAvalancheData | null; snowHref: string }) {
+export function AvalancheStatus({
+  data,
+  snowHref,
+  onlyIssued = false,
+}: {
+  data: PlaceAvalancheData | null;
+  snowHref: string;
+  /** Hide centers with no issued forecast (off-season); the Snow tab panel still says so. */
+  onlyIssued?: boolean;
+}) {
   if (!data) return null;
-  const centers = data.centers.filter((center) => center.data);
+  const centers = data.centers.filter(
+    (center) => center.data && (!onlyIssued || (center.status === 'ok' && !center.data.offSeason)),
+  );
   if (!centers.length) return null;
   return (
     <section aria-label="Avalanche center status" className="space-y-2">

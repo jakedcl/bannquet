@@ -236,47 +236,48 @@ function mapForecastSlice(
 }
 
 function abbreviateName(_name: string, startTime: string) {
-  return new Date(startTime).toLocaleDateString(undefined, { weekday: 'short' });
+  // Every place is in the Northeast; the server runs in UTC, so name the day in Eastern time.
+  return new Date(startTime).toLocaleDateString('en-US', { weekday: 'short', timeZone: 'America/New_York' });
 }
 
-function buildDailyHighLow(periods: ForecastPeriod[], limit: number): ForecastSnippet[] {
+/**
+ * One row per day: the daytime high with the low of the night that follows it. When the
+ * forecast starts at night, the first row is "Tonight" with only the low (isDaytime false),
+ * so Friday's high is never paired with Thursday night's low.
+ */
+export function buildDailyHighLow(periods: ForecastPeriod[], limit: number): ForecastSnippet[] {
   const results: ForecastSnippet[] = [];
   for (let i = 0; i < periods.length && results.length < limit; i++) {
     const period = periods[i];
     if (!period.name) continue;
-    const companion = findCompanionPeriod(periods, i);
-    const high = period.isDaytime ? period.temperature : companion?.temperature ?? period.temperature;
-    const low = period.isDaytime ? companion?.temperature ?? period.temperature : period.temperature;
-    const label = abbreviateName('', period.startTime);
+    if (!period.isDaytime) {
+      if (results.length === 0) {
+        results.push({
+          name: 'Tonight',
+          startTime: period.startTime,
+          temperature: period.temperature,
+          windSpeed: period.windSpeed,
+          shortForecast: period.shortForecast,
+          isDaytime: false,
+          icon: period.icon,
+        });
+      }
+      continue;
+    }
+    const next = periods[i + 1];
+    const night = next && !next.isDaytime ? next : undefined;
     results.push({
-      name: label,
+      name: abbreviateName('', period.startTime),
       startTime: period.startTime,
-      temperature: high,
+      temperature: period.temperature,
       windSpeed: period.windSpeed,
       shortForecast: period.shortForecast,
       isDaytime: true,
       icon: period.icon,
-      secondaryTemp: low,
-      secondaryForecast: companion?.shortForecast,
+      secondaryTemp: night?.temperature,
+      secondaryForecast: night?.shortForecast,
     });
-    if (companion) {
-      i = periods.indexOf(companion);
-    }
+    if (night) i += 1;
   }
   return results.slice(0, limit);
 }
-
-function findCompanionPeriod(periods: ForecastPeriod[], index: number) {
-  const current = periods[index];
-  for (let i = index + 1; i < periods.length; i++) {
-    const candidate = periods[i];
-    if (!candidate.name) continue;
-    if (current.isDaytime && candidate.name.toLowerCase().includes('night')) {
-      return candidate;
-    }
-    if (!current.isDaytime && !candidate.name.toLowerCase().includes('night')) {
-      return candidate;
-    }
-  }
-  return undefined;
-} 

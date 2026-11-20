@@ -56,23 +56,30 @@ export function extremeStatsFromSpots(results: ExtremeSpot[]): ExtremeStat[] {
     ? `${s.stationName ?? s.stationId} (${s.stationId}, ${s.stationKind ?? 'nearby'} station), ${s.stationDistanceMi != null ? `${s.stationDistanceMi.toFixed(1)} mi from ` : 'listed for '}${s.mountain}`
     : `${s.mountain}, ${s.state}`;
 
+  // Wind and cold are summit questions: use summit stations when any reported, so a valley
+  // airport's 7 mph never headlines a night with 60 mph on the ridges.
+  const summits = unique.filter((s) => s.stationKind === 'summit' || s.stationKind === 'nearby-higher');
+  const exposed = summits.length > 0 ? summits : unique;
+  // No fresh summit report: say the wind and cold are from valley stations, not the peaks.
+  const summitWord = summits.length > 0 ? 'SUMMIT ' : unique.some((s) => s.stationKind) ? 'VALLEY ' : '';
+
   const gustMph = (s: ExtremeSpot) => (s.windGust != null && s.windGust > 0 ? s.windGust : null);
-  const windCandidates = unique.filter((s) => s.windSpeed > 0 || gustMph(s) != null);
-  const highestWind = (windCandidates.length ? windCandidates : unique).reduce((max, curr) => {
+  const windCandidates = exposed.filter((s) => s.windSpeed > 0 || gustMph(s) != null);
+  const highestWind = (windCandidates.length ? windCandidates : exposed).reduce((max, curr) => {
     const maxGust = gustMph(max);
     const curGust = gustMph(curr);
     const maxScore = Math.max(maxGust != null && maxGust > max.windSpeed ? maxGust : max.windSpeed, max.windSpeed);
     const curScore = Math.max(curGust != null && curGust > curr.windSpeed ? curGust : curr.windSpeed, curr.windSpeed);
     return curScore > maxScore ? curr : max;
-  }, (windCandidates.length ? windCandidates : unique)[0]);
+  }, (windCandidates.length ? windCandidates : exposed)[0]);
   const highestTemp = unique.reduce((max, curr) =>
     curr.temperature > max.temperature ? curr : max, unique[0]);
-  const coldest = unique.reduce((min, curr) =>
-    curr.windChill < min.windChill ? curr : min, unique[0]);
+  const coldest = exposed.reduce((min, curr) =>
+    curr.windChill < min.windChill ? curr : min, exposed[0]);
 
   return [
     {
-      label: 'HIGHEST WIND',
+      label: `HIGHEST ${summitWord}WIND`,
       value:
         gustMph(highestWind) != null && gustMph(highestWind)! > highestWind.windSpeed
           ? `${highestWind.windSpeed} mph, gusts ${gustMph(highestWind)}`
@@ -89,7 +96,7 @@ export function extremeStatsFromSpots(results: ExtremeSpot[]): ExtremeStat[] {
       ageMinutes: highestTemp.ageMinutes,
     },
     {
-      label: 'COLDEST FEELS-LIKE',
+      label: `COLDEST ${summitWord}FEELS-LIKE`,
       value: `${coldest.windChill}°F`,
       location: attribution(coldest),
       stationId: coldest.stationId,

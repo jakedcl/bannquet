@@ -140,6 +140,7 @@ function StationBlock({
                     ) : (
                       formatStationFieldDisplay(f)
                     )}
+                    {f.observedAt ? <span className="text-ink-2"> · {earlierNote(f)}</span> : null}
                     {f.qcFailed ? (
                       <span className="text-ink-2"> · failed NWS quality check</span>
                     ) : f.qualityControl ? (
@@ -234,6 +235,14 @@ const TILE_KEYS: Array<{ key: string; label: string }> = [
   { key: 'windChill', label: 'Wind chill' },
 ];
 
+/** "at 7:05 PM" when a reading came from an earlier report than the newest one. */
+function earlierNote(field: NwsStationField): string | undefined {
+  if (!field.observedAt) return undefined;
+  const d = new Date(field.observedAt);
+  if (Number.isNaN(d.getTime())) return undefined;
+  return `At ${d.toLocaleTimeString('en-US', { timeZone: 'America/New_York', hour: 'numeric', minute: '2-digit' })}`;
+}
+
 function hasValue(field: NwsStationField | undefined): field is NwsStationField {
   return Boolean(field) && field!.value !== null && field!.value !== undefined && field!.value !== '' && !field!.qcFailed;
 }
@@ -262,11 +271,15 @@ function KeyReadings({ fields }: { fields: NwsStationField[] }) {
                     {formatStationFieldDisplay(field)}
                   </span>
                 }
-                sub={deg !== null && Number.isFinite(deg) ? `From ${Math.round(deg)}°` : undefined}
+                sub={
+                  [deg !== null && Number.isFinite(deg) ? `From ${Math.round(deg)}°` : null, earlierNote(field)]
+                    .filter(Boolean)
+                    .join(' · ') || undefined
+                }
               />
             );
           }
-          return <ReadingTile key={key} label={label} value={formatStationFieldDisplay(field)} />;
+          return <ReadingTile key={key} label={label} value={formatStationFieldDisplay(field)} sub={earlierNote(field)} />;
         })}
       </ReadingGrid>
     </div>

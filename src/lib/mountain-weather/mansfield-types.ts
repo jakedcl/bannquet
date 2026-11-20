@@ -57,6 +57,8 @@ export type MansfieldRr2Summit = {
   reportHeader: string | null;
   shefFields: Rr2ShefField[];
   summitTempF: number | null;
+  /** UTC time of the reading, from the `.A` date and the `DHhhmm` code. */
+  observedAt: string | null;
 };
 
 export type NwsStationField = {
@@ -66,6 +68,8 @@ export type NwsStationField = {
   unit: string | null;
   qualityControl: string | null;
   qcFailed: boolean;
+  /** Set when the value came from an earlier report than the station's newest one. */
+  observedAt?: string | null;
 };
 
 export type NwsStationLatest = {

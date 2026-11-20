@@ -47,6 +47,7 @@ test('RR2 BTV sample extracts MMNV1 summit temperature', () => {
   assert.equal(parsed.summitTempF, 20.5);
   assert.ok(parsed.shefFields.some((f) => f.code === 'DH2118'));
   assert.ok(parsed.shefFields.some((f) => f.code === 'TAIRGZZ' && f.value === '20.5'));
+  assert.equal(parsed.observedAt, '2026-11-13T21:18:00Z');
 });
 
 test('MMNV1 latest JSON parses without throwing', () => {

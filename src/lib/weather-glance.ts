@@ -82,14 +82,20 @@ export type DailyHighLowRow = {
   secondaryTemp?: number;
   startTime: string;
   name?: string;
+  isDaytime?: boolean;
 };
 
-/** NWS daily rows store high on `temperature` and tonight's low on `secondaryTemp` (all marked daytime). */
+/** NWS daily rows store the day's high on `temperature` and that night's low on `secondaryTemp`; a leading night row is low only. */
 export function dailyHighLowFromSnippets(
   rows: DailyHighLowRow[],
 ): { high: number | null; low: number | null } {
   const first = rows[0];
   if (!first || !Number.isFinite(first.temperature)) return { high: null, low: null };
+  // A leading "Tonight" row carries only the low; the high is the next day's.
+  if (first.isDaytime === false) {
+    const day = rows[1];
+    return { high: day && Number.isFinite(day.temperature) ? day.temperature : null, low: first.temperature };
+  }
   return {
     high: first.temperature,
     low: typeof first.secondaryTemp === 'number' ? first.secondaryTemp : null,

@@ -88,13 +88,10 @@ function RecBlock({ result }: { result: SourceResult<RecPlaceSlice> }) {
       {data.notInLatestIssuance ? (
         <p className="mb-2 text-xs text-ink-2">
           Not in latest bulletin ({formatEt(data.latestIssuanceTime)} ET). Showing{' '}
-          {formatEt(result.issuedAt)} ET instead. Matched header: {data.matchedSectionTitle}
+          {formatEt(result.issuedAt)} ET instead.
         </p>
-      ) : (
-        <p className="mb-2 text-xs text-ink-2">Matched header: {data.matchedSectionTitle}</p>
-      )}
+      ) : null}
       <div className="space-y-3 text-sm">
-        {section.zoneHeader ? <p className="text-xs font-bold uppercase text-ink-2">{section.zoneHeader}</p> : null}
         {section.periods.length > 0 ? (
           <ul className="space-y-2">
             {section.periods.map((period) => (

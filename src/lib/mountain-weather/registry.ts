@@ -207,7 +207,7 @@ export const NWS_STATION_MMNV1_DEF: SourceDef = {
   org: 'National Weather Service',
   kind: 'measured',
   terms: 'reuse-ok',
-  url: 'https://api.weather.gov/stations/MMNV1/observations/latest',
+  url: 'https://api.weather.gov/stations/MMNV1/observations?limit=6',
   ttlSeconds: 600,
   expectedEveryHours: 1,
 };

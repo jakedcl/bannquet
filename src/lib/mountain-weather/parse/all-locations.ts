@@ -20,7 +20,8 @@ function parseLatLon(marker: Record<string, unknown>): { lat: number | null; lon
 function cleanNarrative(text: string): string {
   const lines = text.split('\n');
   const body = lines.slice(1).join('\n').trim();
-  return body.replace(/\s+/g, ' ').trim();
+  // `$$` and `&&` end NWS product blocks; they are formatting, not forecast text.
+  return body.replace(/(^|\s)(\$\$|&&)(?=\s|$)/g, ' ').replace(/\s+/g, ' ').trim();
 }
 
 export function parseAllLocationsXml(xml: string): Record<string, AllLocationsMarker> {

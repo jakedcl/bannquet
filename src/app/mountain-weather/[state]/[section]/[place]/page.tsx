@@ -52,6 +52,7 @@ import { readPlaceMaps } from '@/lib/mountain-weather/read-place-maps';
 import { readPlaceSky } from '@/lib/mountain-weather/read-place-sky';
 import { readPlaceGround } from '@/lib/mountain-weather/read-place-ground';
 import { USNO_API_TWILIGHT_NOTE } from '@/lib/mountain-weather/read-place-sky';
+import { formatClock12 } from '@/lib/mountain-weather/format-display';
 
 export const dynamic = 'force-dynamic';
 
@@ -124,8 +125,8 @@ export default async function MountainPlacePage({
     ? { ...moreSourcesRaw, land: moreSourcesRaw.land.filter((l) => !groundHrefs.has(l.href)) }
     : null;
   const today = sky.days[0];
-  const sunrise = today?.sunEvents.find((event) => event.phen === 'Rise')?.display ?? null;
-  const sunset = today?.sunEvents.find((event) => event.phen === 'Set')?.display ?? null;
+  const sunrise = formatClock12(today?.sunEvents.find((event) => event.phen === 'Rise')?.display);
+  const sunset = formatClock12(today?.sunEvents.find((event) => event.phen === 'Set')?.display);
 
   return (
     <PageWrapper leaf={place.name}>
@@ -137,7 +138,7 @@ export default async function MountainPlacePage({
       <div className="mx-auto max-w-3xl space-y-4 px-4 pb-12 pt-4">
         <Switcher label="Weather for this place" value={tab} items={TABS.map((t) => ({ id: t.id, label: t.label, href: tabHref(t.id) }))} />
         {baseline.data?.hazards?.length ? <WeatherHazardsHeader hazards={baseline.data.hazards} /> : null}
-        <AvalancheStatus data={avalanche} snowHref={tabHref('snow')} />
+        <AvalancheStatus data={avalanche} snowHref={tabHref('snow')} onlyIssued />
         {sunrise || sunset ? (
           <p className="panel flex items-center gap-4 px-3.5 py-2.5 text-meta">
             <span>Sunrise <b>{sunrise ?? '—'}</b></span>
@@ -167,8 +168,8 @@ export default async function MountainPlacePage({
 
         {tab === 'measured' ? (
           <>
-            <ObservationsSection data={observations} placeElevationFt={place.elevationFt} />
             <MansfieldPackSection pack={mansfieldPack} part="measured" />
+            <ObservationsSection data={observations} placeElevationFt={place.elevationFt} />
             {ground ? <RoadAndAirSection data={ground} /> : null}
           </>
         ) : null}

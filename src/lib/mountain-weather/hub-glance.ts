@@ -42,7 +42,7 @@ function periodsFromDaily(data: BaselineForecast): GlancePeriod[] {
         startTime: period.startTime,
         endTime: end.toISOString(),
         temperature: period.temperature,
-        isDaytime: true,
+        isDaytime: period.isDaytime !== false,
         precip: period.precipChance ?? null,
         windMph: parseMph(period.windSpeed),
         shortForecast: period.shortForecast ?? '',

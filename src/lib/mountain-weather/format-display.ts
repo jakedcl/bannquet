@@ -23,3 +23,12 @@ export function formatObservationAge(ageMinutes: number | null | undefined): str
   const hours = Math.round(ageMinutes / 60);
   return hours === 1 ? '1 hour ago' : `${hours} hours ago`;
 }
+/** "06:46" or "16:15" (USNO 24-hour clock) -> "6:46 AM" / "4:15 PM"; anything else unchanged. */
+export function formatClock12(clock: string | null | undefined): string | null {
+  if (!clock) return null;
+  const m = clock.trim().match(/^(\d{1,2}):(\d{2})$/);
+  if (!m) return clock;
+  const h = Number(m[1]);
+  if (h > 23) return clock;
+  return `${h % 12 === 0 ? 12 : h % 12}:${m[2]} ${h < 12 ? 'AM' : 'PM'}`;
+}

@@ -54,11 +54,25 @@ function MeasuredBlock({ data }: { data: PlaceSnowData }) {
   if (!data.measured.length) {
     return null;
   }
+  // Only stations that actually reported; four "No report" rows told nobody anything.
+  const reported = data.measured.filter((row) => row.value !== null);
+  const silent = data.measured.length - reported.length;
   return (
     <CollapsibleSection title="Nearest measured snow" subtitle="NOHRSC / CoCoRaHS station table" defaultOpen>
-      <p className="text-xs text-ink-2">These are station snow depths, not summit conditions unless marked Summit. Check the station elevation, distance, and report time.</p>
+      {reported.length === 0 ? (
+        <p className="text-sm">
+          {data.measured.length === 1
+            ? 'The nearest snow station has not reported a depth today.'
+            : `None of the ${data.measured.length} nearest snow stations has reported a depth today.`}{' '}
+          <a href={NOHRSC_STATION_SNOWDEPTH_DEF.url} className="font-bold underline" target="_blank" rel="noopener noreferrer">
+            NOHRSC station table ›
+          </a>
+        </p>
+      ) : (
+        <p className="text-xs text-ink-2">These are station snow depths, not summit conditions unless marked Summit. Check the station elevation, distance, and report time.</p>
+      )}
       <ul className="space-y-3">
-        {data.measured.map((row) => {
+        {reported.map((row) => {
           const b = row.binding;
           const distant = b.distanceMi > 25;
           return (
@@ -107,6 +121,9 @@ function MeasuredBlock({ data }: { data: PlaceSnowData }) {
           );
         })}
       </ul>
+      {reported.length > 0 && silent > 0 ? (
+        <p className="text-xs text-ink-2">{silent} other nearby station{silent === 1 ? '' : 's'} sent no report.</p>
+      ) : null}
     </CollapsibleSection>
   );
 }
@@ -163,11 +180,14 @@ export function SnowSection({ data, placeName, isHub = false }: { data: PlaceSno
                 ))}
               </ul>
             ) : (
-              <p className="text-sm text-ink-2">Structured snow lines not reliable; full bulletin below.</p>
+              <p className="text-sm">The latest bulletin from this office has no snow reports in it.</p>
             )}
-            <pre className="mt-2 max-h-64 overflow-auto whitespace-pre-wrap border border-hairline bg-surface p-2 text-[10px]">
-              {data.pns.fullText.trim()}
-            </pre>
+            <details className="mt-2">
+              <summary className="cursor-pointer text-xs font-bold">Original bulletin text</summary>
+              <pre className="mt-1 max-h-64 overflow-auto whitespace-pre-wrap border border-hairline bg-surface p-2 text-[10px]">
+                {data.pns.fullText.trim()}
+              </pre>
+            </details>
             <p className="text-xs text-ink-2">
               Issued {formatEt(data.pns.issuanceTime)} ·{' '}
               <a href={pnsDef.url} className="font-bold underline" target="_blank" rel="noopener noreferrer">
@@ -184,7 +204,7 @@ export function SnowSection({ data, placeName, isHub = false }: { data: PlaceSno
             {data.lsrSnow.slice(0, 25).map((e) => (
               <li key={e.id}>
                 {e.distanceMi?.toFixed(1) ?? '—'} mi away · {formatEt(e.valid)} · {e.city ?? '—'}, {e.county ?? ''} {e.state ?? ''} · {e.magnitude ?? '—'} {e.unit ?? ''}{' '}
-                {e.remark ? `· ${e.remark}` : ''}
+                {e.remark && !/^[\s&$]*$/.test(e.remark) ? `· ${e.remark}` : ''}
               </li>
             ))}
           </ul>

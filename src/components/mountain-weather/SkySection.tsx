@@ -1,3 +1,4 @@
+import { formatClock12 } from '@/lib/mountain-weather/format-display';
 import { CollapsibleSection } from '@/components/mountain-weather/CollapsibleSection';
 import { SourceErrorNote } from '@/components/mountain-weather/SourceErrorNote';
 import type { PlaceSkyData, UsnoTimedEvent } from '@/lib/mountain-weather/sky-types';
@@ -11,7 +12,7 @@ function EventList({ title, rows }: { title: string; rows: UsnoTimedEvent[] }) {
       <ul className="text-sm">
         {rows.map((row) => (
           <li key={`${row.phen}-${row.time}`}>
-            {row.phen}: {row.display ?? row.time ?? 'null (USNO)'} {row.marker ? `(${row.marker})` : ''}
+            {row.phen}: {formatClock12(row.display) ?? row.time ?? '—'} {row.marker ? `(${row.marker})` : ''}
           </li>
         ))}
       </ul>

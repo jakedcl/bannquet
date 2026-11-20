@@ -5,6 +5,15 @@ browser (390 px). Pages checked: the hub, New York, Adirondack High Peaks, Condi
 Avalanche and Maps, plus every tab for Mount Washington, Mount Mansfield, Mount Marcy, Katahdin
 and Gunks Ridge. Source data was checked against the raw NWS API where something looked off.
 
+**Decisions (Jake, 2026-11-20):** the Sources page is public; there's no AirNow key, so air
+quality is a plain link; when no avalanche forecast is issued, the avalanche bar is hidden
+(the Snow tab panel still says so).
+
+**Status:** Step 1 (correctness) is done. Fixes 1–7, 9 and 10 are in. Fix 8 was not a bug. Two
+extra changes went in with it: the off-season avalanche bar is hidden, and AirNow is now a link.
+The hub panel labels wind and cold as **valley** whenever no summit station has reported in the
+last hour; KMWN often reports only every few hours.
+
 **The goal:** a novice gets the answer in five seconds. An expert can still check every number.
 Jake can always see where each number comes from and whether that source is working. All of
 this goes in one view for everyone. No admin-only layer.
@@ -22,7 +31,7 @@ this goes in one view for everyone. No admin-only layer.
 | 5 | Mansfield's nearest road station shows all dashes. Its last report is **Mar 24, 2026**. | There's no age limit on road stations. | Hide stations older than 6 h. If nothing is left, say "No road station reporting nearby". |
 | 6 | Mansfield "All readings" shows `Wind gust: 67.248 km/h`. | No unit conversion on that path. | Convert to mph and round, the same as the tiles. |
 | 7 | "Nearest measured snow": all four rows say "No report / missing" (Washington, Marcy, Mansfield, Katahdin). | Rows are shown even when nothing was reported. | Show only stations that reported. If none did, show one line: "No snow depth reports nearby in the last 24 h". |
-| 8 | WPC snow: **six** cards that each say "Graphic unavailable". | The image fetch fails (see the older improvement plan, P3). | Fix the fetch, or show one notice with the link. Never six. |
+| 8 | WPC snow: **six** cards that each say "Graphic unavailable". | **Not a bug for real visitors.** WPC returns 403 only to headless test browsers; desktop and phone browsers get the images (checked 2026-11-20). | No change. Screenshot runs will keep showing the notice. |
 | 9 | Leftover raw text: `$$`, `&&`, `000 / FXUS61 KGYX`, `MEZ007>009-NHZ002>004-200900-`, `Matched header: …`, `3 Inch · &&`, and a broken "PERIOD / FIELDS" table on the REC. | Parsers pass NWS formatting through. | Strip these in the parsers and add tests with the existing fixtures. Raw text stays one tap away under "Original" (see section 3). |
 | 10 | Sunrise shows as `06:46`, but times everywhere else look like `8:00 PM`. | Two different time formatters. | Use one 12-hour format everywhere. |
 

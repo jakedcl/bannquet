@@ -235,7 +235,9 @@ function DailyList({ periods }: { periods: NonNullable<BaselineForecast['dailyFo
         {periods.map((p) => (
           <li key={p.startTime} className="tile flex min-w-20 shrink-0 flex-col items-center px-2.5 py-1.5 text-caption">
             <span className="font-bold">{p.name}</span>
-            <span className="tabular-nums">{p.temperature}°{p.secondaryTemp !== undefined ? ` / ${p.secondaryTemp}°` : ''}</span>
+            <span className="tabular-nums">
+              {p.isDaytime === false ? `${p.temperature}° low` : `${p.temperature}°${p.secondaryTemp !== undefined ? ` / ${p.secondaryTemp}°` : ''}`}
+            </span>
           </li>
         ))}
       </ul>
