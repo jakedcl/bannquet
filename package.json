@@ -16,7 +16,7 @@
     "shots": "node scripts/ui-screenshots.mjs"
   },
   "dependencies": {
-    "@better-auth/drizzle-adapter": "^1.7.6",
+    "@better-auth/drizzle-adapter": "^1.7.7",
     "@vercel/blob": "^2.8.2",
     "@vercel/functions": "^3.10.5",
     "better-auth": "^1.7.6",
