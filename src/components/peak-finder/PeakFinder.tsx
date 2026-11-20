@@ -944,7 +944,7 @@ export function PeakFinder() {
   }
 
   if (!booted) {
-    return <p className="p-4 text-sm font-bold text-[#1a1a1a]">Loading Peak Finder</p>;
+    return <p className="p-4 text-sm font-bold text-ink">Loading Peak Finder</p>;
   }
 
   if (screen === 'offline') {
@@ -979,10 +979,10 @@ export function PeakFinder() {
   if (screen === 'start') {
     const startUi = startScreenUi(offlineMode, offlineAreas.length);
     return (
-      <div className="relative flex h-full flex-col items-center justify-center gap-4 overflow-y-auto bg-[#e7e1d4] px-6 py-4 text-center text-[#1a1a1a]">
-        <h1 className="text-xl font-bold text-[#2d5016]">Peak Finder</h1>
+      <div className="relative flex h-full flex-col items-center justify-center gap-4 overflow-y-auto bg-surface-gray px-6 py-4 text-center text-ink">
+        <h1 className="text-xl font-bold text-brand">Peak Finder</h1>
         {startUi.showOfflineBadge ? (
-          <span className="rounded border-2 border-[#5c3a1e] bg-[#ffc94d] px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide">
+          <span className="rounded border-2 border-brown bg-yellow px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide">
             Offline
           </span>
         ) : null}
@@ -990,24 +990,24 @@ export function PeakFinder() {
         <div className="flex w-full max-w-sm flex-col gap-2">
           <button
             type="button"
-            className="retro-button min-h-11 px-4 text-sm"
+            className="btn min-h-11 px-4 text-sm"
             disabled={startFindingLocation}
             onClick={() => void beginExplore()}
           >
             Explore my current location
           </button>
           {startFindingLocation ? (
-            <p className="text-xs font-bold text-[#2d5016]" role="status">
+            <p className="text-xs font-bold text-brand" role="status">
               Finding your location…
             </p>
           ) : null}
           {startUi.showPickMap ? (
-            <button type="button" className="retro-button min-h-11 px-4 text-sm" onClick={beginPick}>
+            <button type="button" className="btn min-h-11 px-4 text-sm" onClick={beginPick}>
               Pick a spot on the map
             </button>
           ) : null}
           {startUi.showSaveOffline ? (
-            <button type="button" className="retro-button retro-button-yellow min-h-11 px-4 text-sm font-bold" onClick={beginOffline}>
+            <button type="button" className="btn btn-yellow min-h-11 px-4 text-sm font-bold" onClick={beginOffline}>
               Download offline map
             </button>
           ) : null}
@@ -1017,20 +1017,20 @@ export function PeakFinder() {
             <p className="text-sm font-bold leading-snug text-red-900">
               You&apos;re outside your saved offline areas.
             </p>
-            <p className="text-xs leading-snug text-[#3d3d3d]">Open a saved area below, or move into one you downloaded and try Explore again.</p>
+            <p className="text-xs leading-snug text-ink-2">Open a saved area below, or move into one you downloaded and try Explore again.</p>
           </div>
         ) : null}
         {startUi.showSavedAreasList || startOutsideSaved ? (
           <ul className="flex w-full max-w-sm flex-col gap-2">
             {offlineAreas.map((area) => (
-              <li key={area.id} className="retro-box flex flex-col gap-2 p-3 text-left text-sm">
+              <li key={area.id} className="panel flex flex-col gap-2 p-3 text-left text-sm">
                 <span className="font-bold">{area.name}</span>
-                <span className="text-xs text-[#3d3d3d]">
+                <span className="text-xs text-ink-2">
                   {Math.round(area.radiusM / 1000)} km · {new Date(area.savedAt).toLocaleDateString()}
                 </span>
                 <button
                   type="button"
-                  className="retro-button retro-button-yellow min-h-9 self-start px-3 text-xs"
+                  className="btn btn-yellow min-h-9 self-start px-3 text-xs"
                   onClick={() => openOfflineAreaSkyline(area)}
                 >
                   Open skyline
@@ -1043,11 +1043,11 @@ export function PeakFinder() {
         {offlineSavedToast ? (
           <button
             type="button"
-            className="retro-box absolute inset-x-4 top-4 z-50 border-[#2d5016] bg-[#ffc94d] px-4 py-3 text-left text-sm leading-snug text-[#1a1a1a] shadow-lg"
+            className="panel absolute inset-x-4 top-4 z-50 border-brand bg-yellow px-4 py-3 text-left text-sm leading-snug text-ink shadow-lg"
             onClick={dismissOfflineSavedToast}
           >
             <p className="font-bold">{OFFLINE_SAVED_TOAST_TEXT}</p>
-            <p className="mt-1 text-xs font-normal text-[#3d3d3d]">Tap to dismiss</p>
+            <p className="mt-1 text-xs font-normal text-ink-2">Tap to dismiss</p>
           </button>
         ) : null}
       </div>
@@ -1055,9 +1055,9 @@ export function PeakFinder() {
   }
 
   return (
-    <div className="relative flex h-full min-h-0 bg-[#e7e1d4] text-[#1a1a1a]">
+    <div className="relative flex h-full min-h-0 bg-surface-gray text-ink">
       {showMap ? (
-        <div className={mapFillsWidth ? 'relative h-full w-full' : 'relative h-full w-[min(42%,28rem)] shrink-0 border-r-2 border-[#5c3a1e]'}>
+        <div className={mapFillsWidth ? 'relative h-full w-full' : 'relative h-full w-[min(42%,28rem)] shrink-0 border-r-2 border-brown'}>
           <SpotPicker
             lat={pin.lat}
             lng={pin.lng}
@@ -1066,7 +1066,7 @@ export function PeakFinder() {
           />
           {screen === 'pick-map' ? (
             <div className="absolute inset-x-3 bottom-3 z-10 flex flex-col gap-2">
-              <button type="button" className="retro-button retro-button-yellow min-h-11 w-full px-3 text-sm" onClick={confirmPick}>
+              <button type="button" className="btn btn-yellow min-h-11 w-full px-3 text-sm" onClick={confirmPick}>
                 Confirm
               </button>
             </div>
@@ -1126,7 +1126,7 @@ export function PeakFinder() {
           {showMoved ? (
             <button
               type="button"
-              className="retro-button absolute bottom-36 left-1/2 z-20 min-h-11 -translate-x-1/2 px-3 text-xs"
+              className="btn absolute bottom-36 left-1/2 z-20 min-h-11 -translate-x-1/2 px-3 text-xs"
               onClick={() => {
                 const next = acceptMove(lock);
                 setLock(next.state);
@@ -1199,7 +1199,7 @@ function Status({
   const unsureOnly = unsure && text === GYRO_UNSURE_STATUS;
   return (
     <div
-      className={`absolute left-1/2 top-12 z-20 w-[min(28rem,calc(100%-1rem))] -translate-x-1/2 bg-[#1a1a1a]/80 px-3 py-2 text-center font-bold leading-snug text-white ${
+      className={`absolute left-1/2 top-12 z-20 w-[min(28rem,calc(100%-1rem))] -translate-x-1/2 bg-ink/80 px-3 py-2 text-center font-bold leading-snug text-white ${
         unsureOnly ? 'text-xs' : 'text-sm'
       }`}
       role="status"
@@ -1207,22 +1207,22 @@ function Status({
       <p>{text}</p>
       {loading ? (
         <div
-          className="relative mx-auto mt-2 h-2.5 w-full max-w-xs overflow-hidden border-2 border-[#ffc94d] bg-[#3d3d3d]"
+          className="relative mx-auto mt-2 h-2.5 w-full max-w-xs overflow-hidden border-2 border-yellow bg-ink-2"
           aria-hidden="true"
         >
           <div
-            className="absolute inset-y-0 left-0 bg-[#ffc94d] transition-[width] duration-150 ease-out"
+            className="absolute inset-y-0 left-0 bg-yellow transition-[width] duration-150 ease-out"
             style={{ width: `${fillPct}%` }}
           />
           {drawPulse ? (
             <div className="absolute inset-0 overflow-hidden">
-              <div className="h-full w-2/5 bg-[#ffc94d] opacity-90 motion-safe:animate-peak-finder-bar" />
+              <div className="h-full w-2/5 bg-yellow opacity-90 motion-safe:animate-peak-finder-bar" />
             </div>
           ) : null}
         </div>
       ) : null}
       {error ? (
-        <button type="button" className="retro-button mt-2 min-h-11 px-3 text-xs" onClick={onRetry}>Try again</button>
+        <button type="button" className="btn mt-2 min-h-11 px-3 text-xs" onClick={onRetry}>Try again</button>
       ) : null}
     </div>
   );
@@ -1260,7 +1260,7 @@ function Controls({
   const showGyro = sensors && (screen === 'explore' || screen === 'pick-view');
   const lineUpAboveBar = liningUp && onLineUpDone && onLineUpReset;
   return (
-    <div className="peak-finder-controls pointer-events-none absolute inset-x-0 bottom-0 z-40 px-2 pb-1.5 text-[#1a1a1a]">
+    <div className="peak-finder-controls pointer-events-none absolute inset-x-0 bottom-0 z-40 px-2 pb-1.5 text-ink">
       <div
         className="pointer-events-auto relative mx-auto w-full max-w-3xl"
         style={{ touchAction: 'manipulation' }}
@@ -1271,7 +1271,7 @@ function Controls({
             <button
               type="button"
               data-pf-control
-              className="peak-finder-control retro-button min-h-8 shrink-0 px-2 py-0 text-[10px] font-bold text-[#1a1a1a]"
+              className="peak-finder-control btn min-h-8 shrink-0 px-2 py-0 text-[10px] font-bold text-ink"
               onClick={onLineUpReset}
             >
               Reset
@@ -1279,7 +1279,7 @@ function Controls({
             <button
               type="button"
               data-pf-control
-              className="peak-finder-control retro-button min-h-8 shrink-0 px-2 py-0 text-[10px] font-bold text-[#1a1a1a]"
+              className="peak-finder-control btn min-h-8 shrink-0 px-2 py-0 text-[10px] font-bold text-ink"
               onClick={onLineUpDone}
             >
               Done
@@ -1288,7 +1288,7 @@ function Controls({
         ) : null}
         {onSummit ? (
           <p
-            className={`pointer-events-none absolute inset-x-0 truncate px-0.5 text-[10px] font-bold leading-tight text-[#1a1a1a] drop-shadow-[0_0_2px_rgba(231,225,212,0.9)] ${
+            className={`pointer-events-none absolute inset-x-0 truncate px-0.5 text-[10px] font-bold leading-tight text-ink drop-shadow-[0_0_2px_rgba(231,225,212,0.9)] ${
               lineUpAboveBar ? 'bottom-[calc(100%+2.25rem)]' : 'bottom-full mb-0.5'
             }`}
           >
@@ -1297,7 +1297,7 @@ function Controls({
         ) : null}
         {infoOpen ? (
           <div
-            className="absolute inset-x-0 bottom-full z-50 mb-1 max-h-32 overflow-y-auto rounded border border-[#5c3a1e]/40 bg-[#e7e1d4]/97 px-2 py-1.5 text-[10px] leading-snug text-[#1a1a1a] shadow-[0_2px_10px_rgba(0,0,0,0.25)]"
+            className="absolute inset-x-0 bottom-full z-50 mb-1 max-h-32 overflow-y-auto rounded border border-brown/40 bg-surface-gray/97 px-2 py-1.5 text-[10px] leading-snug text-ink shadow-[0_2px_10px_rgba(0,0,0,0.25)]"
             role="dialog"
             aria-label="Peak finder notes"
           >
@@ -1305,7 +1305,7 @@ function Controls({
             <p>{BARE_EARTH_NOTE}</p>
           </div>
         ) : null}
-        <div className="flex items-stretch gap-1.5 rounded border border-[#5c3a1e]/45 bg-[#e7e1d4]/90 px-1.5 py-1 shadow-[0_2px_8px_rgba(0,0,0,0.22)] backdrop-blur-[2px]">
+        <div className="flex items-stretch gap-1.5 rounded border border-brown/45 bg-surface-gray/90 px-1.5 py-1 shadow-[0_2px_8px_rgba(0,0,0,0.22)] backdrop-blur-[2px]">
           <div className="flex min-w-0 flex-1 flex-nowrap items-center gap-1.5 overflow-x-auto">
             {showCameraToggle ? (
               <RetroSwitch
@@ -1331,7 +1331,7 @@ function Controls({
               <button
                 type="button"
                 data-pf-control
-                className="peak-finder-control retro-button min-h-8 shrink-0 px-2 py-0 text-[10px] font-bold text-[#1a1a1a]"
+                className="peak-finder-control btn min-h-8 shrink-0 px-2 py-0 text-[10px] font-bold text-ink"
                 onClick={onStartLineUp}
               >
                 Line up
@@ -1341,7 +1341,7 @@ function Controls({
               <button
                 type="button"
                 data-pf-control
-                className="peak-finder-control retro-button min-h-8 shrink-0 px-2 py-0 text-[10px] font-bold text-[#1a1a1a]"
+                className="peak-finder-control btn min-h-8 shrink-0 px-2 py-0 text-[10px] font-bold text-ink"
                 onClick={onChangeSpot}
               >
                 Change spot
@@ -1351,7 +1351,7 @@ function Controls({
           <button
             type="button"
             data-pf-control
-            className="peak-finder-control retro-button flex min-h-8 w-8 shrink-0 items-center justify-center px-0 text-[#1a1a1a]"
+            className="peak-finder-control btn flex min-h-8 w-8 shrink-0 items-center justify-center px-0 text-ink"
             aria-expanded={infoOpen}
             aria-label={infoOpen ? 'Hide map credits and info' : 'Map credits and info'}
             onClick={() => setInfoOpen((open) => !open)}
@@ -1362,11 +1362,11 @@ function Controls({
               viewBox="0 0 16 16"
               aria-hidden="true"
               className="block h-4 w-4 shrink-0"
-              style={{ color: '#1a1a1a' }}
+              style={{ color: 'var(--color-ink)' }}
             >
-              <circle cx="3.25" cy="8" r="1.5" fill="#1a1a1a" />
-              <circle cx="8" cy="8" r="1.5" fill="#1a1a1a" />
-              <circle cx="12.75" cy="8" r="1.5" fill="#1a1a1a" />
+              <circle cx="3.25" cy="8" r="1.5" fill="var(--color-ink)" />
+              <circle cx="8" cy="8" r="1.5" fill="var(--color-ink)" />
+              <circle cx="12.75" cy="8" r="1.5" fill="var(--color-ink)" />
             </svg>
           </button>
         </div>

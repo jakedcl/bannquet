@@ -158,6 +158,28 @@
     color: var(--color-yellow);
   }
 
+  /* Admin actions: black and yellow hazard stripes. */
+  .btn-admin {
+    padding: 0;
+    border: var(--border-bevel) solid var(--color-ink);
+    background-color: var(--color-yellow);
+    background-image: repeating-linear-gradient(-45deg, var(--color-ink), var(--color-ink) 10px, var(--color-yellow) 10px, var(--color-yellow) 20px);
+    box-shadow: var(--shadow-panel);
+    color: var(--color-ink);
+  }
+
+  .btn-admin-label {
+    display: inline-flex;
+    min-height: 2.25rem;
+    align-items: center;
+    justify-content: center;
+    margin: 3px;
+    padding: 0 0.75rem;
+    border: var(--border-control) solid var(--color-ink);
+    border-radius: var(--radius-control);
+    background: var(--color-yellow);
+  }
+
   .btn-danger {
     color: var(--color-danger);
   }
@@ -290,6 +312,70 @@
     background-color: var(--color-yellow-deep);
     background-image: var(--gradient-yellow);
     color: var(--color-brand-dark);
+  }
+
+  /* ---- Switch (Peak Finder toggles) ---------------------------------- */
+  .switch {
+    padding: 4px;
+    border: var(--border-control) outset var(--color-bevel);
+    border-radius: var(--radius-control);
+    corner-shape: squircle;
+    background-color: #e0e0e0;
+    background-image: var(--gradient-button);
+    box-shadow: var(--shadow-button);
+    color: var(--color-ink);
+    cursor: pointer;
+  }
+
+  .switch:disabled,
+  .switch-locked:disabled {
+    cursor: default;
+    opacity: 1;
+  }
+
+  .switch-track {
+    display: block;
+    position: relative;
+    width: 2.75rem;
+    height: 1.35rem;
+    border: var(--border-control) solid;
+    border-color: var(--color-bevel-dark) var(--color-bevel) var(--color-bevel) var(--color-bevel-dark);
+    border-radius: 9999px;
+    background: var(--color-surface-sunken);
+  }
+
+  .switch-on .switch-track {
+    background: var(--color-brand-soft);
+  }
+
+  .switch-thumb {
+    position: absolute;
+    top: 1px;
+    left: 1px;
+    width: 1rem;
+    height: calc(100% - 2px);
+    border: var(--border-control) outset var(--color-surface);
+    border-radius: 9999px;
+    background-image: var(--gradient-button);
+    box-shadow: var(--shadow-avatar);
+    transition: transform var(--duration-base) var(--ease-soft);
+  }
+
+  .switch-on .switch-thumb {
+    transform: translateX(1.35rem);
+  }
+
+  .switch-compact .switch-track {
+    width: 2.15rem;
+    height: 1.05rem;
+  }
+
+  .switch-compact .switch-thumb {
+    width: 0.8rem;
+  }
+
+  .switch-compact.switch-on .switch-thumb {
+    transform: translateX(1.05rem);
   }
 
   /* ---- Tags --------------------------------------------------------- */

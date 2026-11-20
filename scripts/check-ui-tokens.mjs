@@ -21,6 +21,12 @@ const list = process.argv.includes('--list') || strict;
 const ALLOW = [
   // MapLibre paint properties need literal colors.
   'src/components/mountain-weather/MountainWeatherPlacesMap.tsx',
+  // The theme-color meta tag needs a literal color.
+  'src/app/layout.tsx',
+  // Canvas drawing and map marker colors.
+  'src/components/peak-finder/SkylineStage.tsx',
+  'src/components/peak-finder/SpotPicker.tsx',
+  'src/components/map/GroupMap.tsx',
   'src/components/fishing/FishingMap.tsx',
   'src/components/fishing/ShoreMap.tsx',
 ];

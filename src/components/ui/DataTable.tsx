@@ -72,7 +72,7 @@ export function DataTable<T>({
                   aria-sort={active ? (sort.dir === 'asc' ? 'ascending' : 'descending') : 'none'}
                   className={`border-b-2 border-rule px-0 py-0 font-bold ${
                     column.sticky || column === columns[0]
-                      ? 'cell-primary sticky left-0 z-20 bg-beige max-md:shadow-[1px_0_0_#e6e6e6]'
+                      ? 'cell-primary sticky left-0 z-20 bg-surface-gray max-md:shadow-[1px_0_0_var(--color-hairline)]'
                       : ''
                   }`}
                 >
@@ -165,8 +165,8 @@ function Row<T>({
             key={column.id}
             className={`border-b border-hairline px-3 py-2.5 align-middle max-md:px-2 max-md:leading-5 ${column.align === 'right' ? 'text-right' : ''} ${
               column.sticky || column === columns[0]
-                ? 'cell-primary sticky left-0 z-10 bg-white group-hover:bg-beige max-md:shadow-[1px_0_0_#e6e6e6]'
-                : 'group-hover:bg-beige/70 max-md:whitespace-nowrap'
+                ? 'cell-primary sticky left-0 z-10 bg-white group-hover:bg-surface-gray max-md:shadow-[1px_0_0_var(--color-hairline)]'
+                : 'group-hover:bg-surface-gray/70 max-md:whitespace-nowrap'
             }`}
           >
             {column.cell(row)}

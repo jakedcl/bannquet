@@ -123,22 +123,19 @@ export function Pill({
   return <Tag kind={kind} className={className}>{children}</Tag>;
 }
 
-export const BUTTON_TONES = ['default', 'primary', 'yellow', 'orange', 'pink', 'blue', 'green', 'purple', 'admin'] as const;
+export const BUTTON_TONES = ['default', 'primary', 'yellow', 'blue', 'green', 'admin'] as const;
 
 /** @deprecated Old color names. New code uses `ButtonKind`. */
 export type ButtonTone = (typeof BUTTON_TONES)[number];
 
-/** Old tones onto the new kinds. orange, pink and purple are region colors from config and keep their own fills. */
+/** Old tones onto the new kinds. */
 export const BUTTON_TONE_CLASS: Record<ButtonTone, string> = {
   default: 'btn',
   primary: 'btn btn-green',
   yellow: 'btn btn-yellow',
-  orange: 'btn retro-button-orange',
-  pink: 'btn retro-button-pink',
   blue: 'btn btn-brown',
   green: 'btn btn-green',
-  purple: 'btn retro-button-purple',
-  admin: 'btn retro-button-admin',
+  admin: 'btn btn-admin',
 };
 
 function toneClass(tone: ButtonTone, size: ButtonSize, extra: string): string {

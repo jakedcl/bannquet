@@ -108,10 +108,10 @@ export function EditDetails({
           title={editAdmin?.title}
           aria-label={editAdmin?.ariaLabel}
           className={adminPower
-            ? 'btn retro-button-admin ui-press flex min-h-11 cursor-pointer list-none items-center justify-center [&::-webkit-details-marker]:hidden'
+            ? 'btn btn-admin ui-press flex min-h-11 cursor-pointer list-none items-center justify-center [&::-webkit-details-marker]:hidden'
             : 'btn ui-press flex min-h-11 cursor-pointer list-none items-center justify-center text-sm font-bold uppercase tracking-wide text-ink [&::-webkit-details-marker]:hidden'}
         >
-          {adminPower ? <span className="retro-button-admin-label">Edit</span> : 'Edit'}
+          {adminPower ? <span className="btn-admin-label">Edit</span> : 'Edit'}
         </summary>
         <div className="mt-3">{children}</div>
       </details>
@@ -122,9 +122,9 @@ export function EditDetails({
       <summary
         title={editAdmin?.title}
         aria-label={editAdmin?.ariaLabel}
-        className={`flex min-h-11 cursor-pointer items-center text-sm font-bold underline${adminPower ? ' retro-button-admin inline-flex !p-0' : ''}`}
+        className={`flex min-h-11 cursor-pointer items-center text-sm font-bold underline${adminPower ? ' btn-admin inline-flex !p-0' : ''}`}
       >
-        {adminPower ? <span className="retro-button-admin-label">Edit</span> : 'Edit'}
+        {adminPower ? <span className="btn-admin-label">Edit</span> : 'Edit'}
       </summary>
       {children}
     </details>

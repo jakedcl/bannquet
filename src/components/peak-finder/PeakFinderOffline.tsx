@@ -127,44 +127,44 @@ export function PeakFinderOffline({ onBack, onSaved, onOpenSkyline, onSaveComple
   }
 
   return (
-    <div className="relative flex h-full min-h-0 flex-col bg-[#e7e1d4] text-[#1a1a1a]">
+    <div className="relative flex h-full min-h-0 flex-col bg-surface-gray text-ink">
       <PeakFinderBackButton onClick={onBack} />
       <div className="flex flex-1 flex-col gap-4 overflow-y-auto px-6 pb-6 pt-12">
       <div className="text-center">
-        <h2 className="text-lg font-bold text-[#2d5016]">Offline mode</h2>
+        <h2 className="text-lg font-bold text-brand">Offline mode</h2>
         <p className="mt-2 text-sm leading-snug">
           Save terrain and peak names for an area, then use Peak Finder with no signal.
         </p>
         <p className="mt-2 text-sm leading-snug">{OFFLINE_USE_HINT}</p>
-        <p className="mt-2 text-xs text-[#3d3d3d]">Tip: on iPhone, Add to Home Screen keeps saved data longer.</p>
+        <p className="mt-2 text-xs text-ink-2">Tip: on iPhone, Add to Home Screen keeps saved data longer.</p>
       </div>
       {canSaveNewArea ? (
-        <button type="button" className="retro-button retro-button-yellow min-h-11 w-full text-sm" onClick={startNewSave}>
+        <button type="button" className="btn btn-yellow min-h-11 w-full text-sm" onClick={startNewSave}>
           Save area for offline
         </button>
       ) : (
-        <p className="text-center text-xs text-[#3d3d3d]">Connect to download a new offline area.</p>
+        <p className="text-center text-xs text-ink-2">Connect to download a new offline area.</p>
       )}
       {areas.length > 0 ? (
         <ul className="flex flex-col gap-2">
           {areas.map((area) => (
-            <li key={area.id} className="retro-box flex flex-col gap-2 p-3 text-left text-sm">
+            <li key={area.id} className="panel flex flex-col gap-2 p-3 text-left text-sm">
               <span className="font-bold">{area.name}</span>
-              <span className="text-xs text-[#3d3d3d]">
+              <span className="text-xs text-ink-2">
                 {area.lat.toFixed(3)}°, {area.lng.toFixed(3)}° · {Math.round(area.radiusM / 1000)} km ·{' '}
                 {new Date(area.savedAt).toLocaleDateString()}
               </span>
               <div className="flex flex-wrap gap-2">
                 <button
                   type="button"
-                  className="retro-button retro-button-yellow min-h-9 px-3 text-xs"
+                  className="btn btn-yellow min-h-9 px-3 text-xs"
                   onClick={() => onOpenSkyline({ lat: area.lat, lng: area.lng })}
                 >
                   Open skyline
                 </button>
                 <button
                   type="button"
-                  className="retro-button min-h-9 px-3 text-xs"
+                  className="btn min-h-9 px-3 text-xs"
                   onClick={() => void removeArea(area.id)}
                 >
                   Delete
@@ -174,7 +174,7 @@ export function PeakFinderOffline({ onBack, onSaved, onOpenSkyline, onSaveComple
           ))}
         </ul>
       ) : (
-        <p className="text-center text-sm text-[#3d3d3d]">No saved areas yet.</p>
+        <p className="text-center text-sm text-ink-2">No saved areas yet.</p>
       )}
       {error ? <p className="text-sm font-bold text-red-900">{error}</p> : null}
       </div>

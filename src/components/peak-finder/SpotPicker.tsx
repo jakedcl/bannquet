@@ -60,7 +60,7 @@ function BasemapToggle({
     <div className="flex shrink-0 gap-1">
       <button
         type="button"
-        className={`retro-button min-h-11 px-3 text-xs ${basemap === 'satellite' ? 'retro-button-yellow' : ''}`}
+        className={`btn min-h-11 px-3 text-xs ${basemap === 'satellite' ? 'btn-yellow' : ''}`}
         aria-pressed={basemap === 'satellite'}
         onClick={() => onBasemap('satellite')}
       >
@@ -68,7 +68,7 @@ function BasemapToggle({
       </button>
       <button
         type="button"
-        className={`retro-button min-h-11 px-3 text-xs ${basemap === 'map' ? 'retro-button-yellow' : ''}`}
+        className={`btn min-h-11 px-3 text-xs ${basemap === 'map' ? 'btn-yellow' : ''}`}
         aria-pressed={basemap === 'map'}
         onClick={() => onBasemap('map')}
       >

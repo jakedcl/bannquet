@@ -70,7 +70,7 @@ export function PeakFinderGyroDebug({
       <div className="peak-finder-gyro-debug-actions">
         <button
           type="button"
-          className="peak-finder-control retro-button px-2 py-1 text-[10px] text-[#1a1a1a]"
+          className="peak-finder-control btn px-2 py-1 text-[10px] text-ink"
           data-pf-control
           onClick={() => {
             if (recorder.isRecording()) recorder.stopRecording();
@@ -81,7 +81,7 @@ export function PeakFinderGyroDebug({
         </button>
         <button
           type="button"
-          className="peak-finder-control retro-button px-2 py-1 text-[10px] text-[#1a1a1a]"
+          className="peak-finder-control btn px-2 py-1 text-[10px] text-ink"
           data-pf-control
           onClick={() => void copyText(recorder.exportJson(), 'Copied JSON to clipboard.')}
         >
@@ -89,7 +89,7 @@ export function PeakFinderGyroDebug({
         </button>
         <button
           type="button"
-          className="peak-finder-control retro-button px-2 py-1 text-[10px] text-[#1a1a1a]"
+          className="peak-finder-control btn px-2 py-1 text-[10px] text-ink"
           data-pf-control
           onClick={() => void copyText(recorder.exportCsv(), 'Copied CSV to clipboard.')}
         >
@@ -101,7 +101,7 @@ export function PeakFinderGyroDebug({
           <button
             key={label}
             type="button"
-            className={`peak-finder-control retro-button px-1.5 py-0.5 text-[9px] text-[#1a1a1a] ${activeStep === label && recording ? 'retro-button-yellow' : ''}`}
+            className={`peak-finder-control btn px-1.5 py-0.5 text-[9px] text-ink ${activeStep === label && recording ? 'btn-yellow' : ''}`}
             data-pf-control
             onClick={() => recorder.setStep(activeStep === label ? null : label)}
             disabled={!recording}
@@ -110,7 +110,7 @@ export function PeakFinderGyroDebug({
           </button>
         ))}
       </div>
-      {copyNote ? <p className="text-[10px] text-[#ffc94d]">{copyNote}</p> : null}
+      {copyNote ? <p className="text-[10px] text-yellow">{copyNote}</p> : null}
       {logText ? (
         <textarea className="peak-finder-gyro-debug-log" readOnly rows={4} value={logText} />
       ) : null}

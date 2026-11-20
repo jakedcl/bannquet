@@ -48,7 +48,7 @@ export function SubmitButton({
       {icon ? <span className="sr-only">{pendingLabel}</span> : pendingLabel}
     </>
   ) : tone === 'admin' ? (
-    <span className="retro-button-admin-label">{children}</span>
+    <span className="btn-admin-label">{children}</span>
   ) : (
     children
   );
