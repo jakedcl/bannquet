@@ -1,0 +1,141 @@
+# Mountain weather: quality pass and plan (2026-11-20)
+
+How this was tested: production build run locally, every weather page loaded on a phone-width
+browser (390 px). Pages checked: the hub, New York, Adirondack High Peaks, Conditions, Snow,
+Avalanche and Maps, plus every tab for Mount Washington, Mount Mansfield, Mount Marcy, Katahdin
+and Gunks Ridge. Source data was checked against the raw NWS API where something looked off.
+
+**The goal:** a novice gets the answer in five seconds. An expert can still check every number.
+Jake can always see where each number comes from and whether that source is working. All of
+this goes in one view for everyone. No admin-only layer.
+
+---
+
+## 1. Wrong or missing data (fix first)
+
+| # | What you see | Why | Fix |
+|---|---|---|---|
+| 1 | **Mount Washington summit (KMWN) shows "No reading" for temperature, wind and gusts.** | We read `/observations/latest`. NWS strips any value that failed its quality check from that endpoint. The same report in `/observations?limit=` has temp 1 °C and wind 66 km/h. | Read the last ~6 reports. Take the newest value for each field and show its age ("wind 41 mph · 1 hr ago"). This probably also fixes MMNV1 (Mansfield), where every field except gust says "failed NWS quality check". |
+| 2 | Mansfield's real summit temperature is shown as `DH0148: —` / `TAIRGZZ: 40.7`. | The RR2 panel prints raw SHEF codes. | Decode it to "Summit air temp 40.7°F · 8:48 PM". Use it in the Measured summit card. |
+| 3 | Hub "Live across the Northeast": **highest wind 7 mph** at a valley airport. That same evening, Washington is forecast at 50–60 mph. | Summit stations have no readings (see #1), so only valley airports are left. | After #1, split the panel into **Summits** and **Valleys**. Never give a valley number a headline without saying it is a valley. |
+| 4 | "Next days: Fri 36°/29° · **Fri** 38°/23°" | Tonight's low is paired with Friday's high, so Friday is listed twice. | Pair each day's high with the low that follows it. Label the days correctly. |
+| 5 | Mansfield's nearest road station shows all dashes. Its last report is **Mar 24, 2026**. | There's no age limit on road stations. | Hide stations older than 6 h. If nothing is left, say "No road station reporting nearby". |
+| 6 | Mansfield "All readings" shows `Wind gust: 67.248 km/h`. | No unit conversion on that path. | Convert to mph and round, the same as the tiles. |
+| 7 | "Nearest measured snow": all four rows say "No report / missing" (Washington, Marcy, Mansfield, Katahdin). | Rows are shown even when nothing was reported. | Show only stations that reported. If none did, show one line: "No snow depth reports nearby in the last 24 h". |
+| 8 | WPC snow: **six** cards that each say "Graphic unavailable". | The image fetch fails (see the older improvement plan, P3). | Fix the fetch, or show one notice with the link. Never six. |
+| 9 | Leftover raw text: `$$`, `&&`, `000 / FXUS61 KGYX`, `MEZ007>009-NHZ002>004-200900-`, `Matched header: …`, `3 Inch · &&`, and a broken "PERIOD / FIELDS" table on the REC. | Parsers pass NWS formatting through. | Strip these in the parsers and add tests with the existing fixtures. Raw text stays one tap away under "Original" (see section 3). |
+| 10 | Sunrise shows as `06:46`, but times everywhere else look like `8:00 PM`. | Two different time formatters. | Use one 12-hour format everywhere. |
+
+## 2. Too much of the same thing
+
+The Washington Forecast tab is **6,300 px** on a phone and Mansfield's is **8,700 px**. Much of
+that is repeated content:
+
+- **"Now" appears four times:** in the hero, in "Forecast at a glance" (the next 3 hours), in
+  "Right now (forecast)" (10 tiles), and as the first column of the 48-hour strip.
+  → Keep the hero. Move the useful tiles (feels like, humidity, visibility, cloud cover) into a
+  "More about this hour" expander in the hero. Remove "Forecast at a glance". Its next-days line
+  is already in the 7-day, and its elevation note moves into the hero.
+- **The GYX REC and "allLocations narrative" print the same text twice**, at both elevations.
+  → Show one "Forecaster's mountain forecast" panel with an elevation switcher
+  (Summits above 4,000 ft / 2,500–4,000 ft).
+- **Marcy has four written forecasts** (Mountain forecast, Narrative, REC, Balloon).
+  → Use the same single panel with a switcher. Move the balloon forecast to "Winds aloft" under
+  Grid details.
+- **The avalanche strip sits on every tab, even in the off-season**: "– No current forecast".
+  → When no forecast is issued, show it only on the Snow tab. When a forecast is issued, show it
+  on every tab.
+- **More sources lists 40+ rows with duplicates:** MapClick, REC, AFD, ZFP, SFT, PFM and
+  Recreation are each listed twice. "Sun & moon" is filed under Maps. AFD is tagged "Link only"
+  even though it is shown in Bulletins. → Replace the list (see section 4).
+- **Conditions page (9,400 px)** has one row per peak, but most rows are the same valley
+  airport. WRSV1 appears for both Waterbury and Camel's Hump.
+  → Group the rows by station, with "Used for: Camel's Hump, Bolton".
+
+## 3. Plain words, with expert detail kept
+
+The rule is plain label first, detail behind a tap. Nothing is removed for experts. The jargon
+moves into a "What's this?" line or the original text.
+
+| Now | Becomes |
+|---|---|
+| "NWS forecast for this map point · not a measured reading" | "Forecast, not a live reading. Live readings are on Measured." |
+| "grid 5,650 ft · place 6,288 ft" | "Forecast is for 5,650 ft. The summit is 640 ft higher, so expect about 2° colder." (worked out at about 3.5°F per 1,000 ft) |
+| "Wind chill 17° · heat index — · apparent 17°" | "Feels like 17° (wind chill)" |
+| "Thunder —", "Precip amount 0.00 in · Grid now" | Hidden when there's nothing to report |
+| Recreation forecast (REC), ALLLOCATIONS NARRATIVE, Mountain forecast | **Forecaster's mountain forecast** |
+| Bulletins · AFD | **What the forecasters are thinking** (Forecast discussion) |
+| Avalanche weather guidance (AVG), codes BK/OV/SC/FW | **Avalanche weather, hour by hour**. Codes decoded (BK means mostly cloudy), with a one-line legend for snow ratio and density |
+| Ridge / balloon wind forecast | **Winds aloft** |
+| RR2 summit (SHEF), MMNV1, NEPP site | **Mansfield summit sensor** |
+| Nearest NE Compass road weather (ESS), `raw 97`, `TIMESTAMP RULE clock-as-utc`, `$0 public XML` | **Nearest road weather station**: road surface, air temp and wind. The developer text goes to the Sources page |
+| NOHRSC modeled layers, NERFC composites, SWE | **Snow cover maps (model)**, with SWE explained as "water in the snowpack" |
+| WPC probabilistic snowfall | **Chance of snow**: 1, 4 and 8 inches, over 24 and 48 h |
+| WSR-88D / RIDGE loop, GOES-19 GeoColor, GLM | **Radar**, **Satellite**, **Lightning** |
+| "valid/frame: Fri, 20 Nov 2026 01:55:03 GMT" | "Image from 8:55 PM" |
+| SPC Day 1 categorical outlook (0100Z) | **Thunderstorm outlook: today** |
+| Whiteface: "Numeric WFMS feeds … unavailable when checked for M10" | Removed (it's a dev note) |
+| Hub card: "54 mph sustained · Next 48 hours · 41°/32°" | "Wind up to 54 mph in the next 48 h · High 41° · Low 32°" |
+
+## 4. "Where is this from, and is it working?": one pattern everywhere
+
+This is how the page stays trustworthy without becoming technical.
+
+**a. One source line on every panel.** Today there are several versions, e.g.
+`measured · measured · Issued … · Source`, `Image URL`, `Product JSON`, `Last-Modified`.
+Every panel will end with the same line instead:
+
+> ● NWS Gray · issued 7:40 PM (1 hr ago) · **Original ›**
+
+The dot is green when fresh, yellow when older than expected (using `expectedEveryHours`, which
+the registry already has), red when the fetch failed, and gray when the source is off-season.
+"Original" opens the raw product. For text products it's an in-page toggle that shows the exact
+NWS text.
+
+**b. "Sources for this page"** replaces More sources on every place page. There's one row per
+source, with no duplicates, grouped by what it feeds (Forecast, Measured, Snow, Maps). Each row
+has a status dot, its age and a link. Links we don't display become a short "Other useful links"
+group at the end.
+
+**c. A public `/mountain-weather/sources` page.** It is built from `SOURCE_REGISTRY` and lists
+every feed the site uses: who runs it, how often it updates, its status right now, its last error
+and which places use it. It's linked from every place page's More tab. This is Jake's "what's
+connected" view. It is public, so there's no separate admin layer to keep in your head. The dev
+notes (Compass timestamp rule, AirNow key, ASRC feeds) live here in plain words.
+
+## 5. Target layout per tab
+
+- **Forecast:** hero (now, feels like, wind, elevation note, "More about this hour") → alerts
+  (only when there are any) → next 48 hours → 7-day → Forecaster's mountain forecast (elevation
+  switcher) → What the forecasters are thinking (collapsed) → Grid details and winds aloft
+  (collapsed).
+- **Measured:** a **Summit right now** card first, using the best summit source (KMWN, MMNV1 or
+  RR2, the Whiteface cam). If there's no summit station, say so: "No summit station. Nearest is
+  Saranac Lake airport, 3,700 ft lower." Then valley stations, then road weather (fresh only),
+  then air quality (see question 2).
+- **Snow:** avalanche (full panel in season, one line out of season) → snow on the ground nearby
+  (reporting stations only) → recent snowfall reports → chance of snow → snow cover maps
+  (collapsed) → avalanche weather hour by hour (collapsed, with legend).
+- **Maps:** unchanged apart from the plain names and local times.
+- **More:** sun and moon, place facts, land and access, Sources for this page.
+
+Expected result: the Forecast tab drops from about 6,000–8,700 px to about 3,000 px on a phone,
+with nothing an expert uses taken away.
+
+## 6. Speed (note only)
+
+On a cold load the hub took 9.7 s and a Forecast tab about 4.7 s. Once the layout is settled,
+stream each panel in with its own loading state, so the hero shows first and a slow source
+holds up only its own panel.
+
+## Order of work
+
+1. **Correctness** (section 1): small and safe, and each fix gets a test.
+2. **Source line and Sources for this page** (sections 4a and 4b), plus removing the dev text.
+3. **Plain words** (section 3).
+4. **Restructure tabs and remove duplicates** (sections 2 and 5), screenshotted before and after
+   with `npm run shots`.
+5. **`/mountain-weather/sources`** (section 4c).
+6. **Hub, Conditions and speed** (section 2's Conditions item, the hub wording, section 6).
+
+Each step is its own commit and can be previewed on Vercel on its own.
