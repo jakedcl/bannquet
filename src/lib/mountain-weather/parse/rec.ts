@@ -25,7 +25,8 @@ function parseStructuredBands(block: string): RecStructuredBand[] {
       if (kv) {
         const key = kv[1].trim();
         const value = kv[2].trim().replace(/\.$/, '');
-        fields[key] = value || null;
+        // Forecasters sometimes write the word Null for a field with no value.
+        fields[key] = value && !/^null$/i.test(value) ? value : null;
       }
     }
     if (Object.keys(fields).length > 0) {

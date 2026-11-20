@@ -97,3 +97,17 @@ test('grid weather layer formats coverage, type and intensity', () => {
   );
   assert.equal(instant?.weather, 'snow_showers');
 });
+
+test('a band field the forecaster wrote as Null has no value', () => {
+  const text = `
+.THACHER PARK...
+Wind...Null.
+Weather...Dry.
+&&
+`;
+  const bulletin = parseRecBulletin(text, null, null);
+  const fields = bulletin.sections.flatMap((section) => section.bands ?? []).flatMap((band) => Object.entries(band.fields));
+  assert.ok(fields.some(([key]) => key === 'Weather'), 'other fields still parse');
+  const wind = fields.find(([key]) => key === 'Wind');
+  if (wind) assert.equal(wind[1], null);
+});
