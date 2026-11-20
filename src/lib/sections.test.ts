@@ -169,7 +169,7 @@ test('the menu reaches every section and its sub-pages', () => {
   for (const href of [
     '/', '/mountain-weather', '/mountain-weather/conditions', '/mountain-weather/snow', '/mountain-weather/snow/avalanche',
     '/mountain-weather/maps', '/peak-finder', '/map', '/peaks', '/fishing', '/fishing/freshwater', '/fishing/saltwater',
-    '/fishing/stocking', '/fishing/guides', '/community', '/photos', '/posts', '/chat', '/members',
+    '/fishing/stocking', '/community', '/photos', '/posts', '/chat', '/members',
   ]) {
     assert.ok(hrefs.includes(href), href);
   }

@@ -64,6 +64,11 @@
   --color-kind-route: #1f4e9c;
   --color-kind-photo: #e67e22;
 
+  /* Tide chart: night and day bands, grid lines. */
+  --color-chart-night: #d5e2f2;
+  --color-chart-day: #e4dccd;
+  --color-chart-grid: #9a8b74;
+
   /* Avalanche danger, official North American scale (1 Low to 5 Extreme).
      A center's own color from its data wins over these. */
   --color-avy-1: #50b848;

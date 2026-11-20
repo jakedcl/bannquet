@@ -21,6 +21,8 @@ const list = process.argv.includes('--list') || strict;
 const ALLOW = [
   // MapLibre paint properties need literal colors.
   'src/components/mountain-weather/MountainWeatherPlacesMap.tsx',
+  'src/components/fishing/FishingMap.tsx',
+  'src/components/fishing/ShoreMap.tsx',
 ];
 
 const RULES = [

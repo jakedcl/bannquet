@@ -73,7 +73,7 @@ export function SaltwaterConditions({
         </div>
 
         {marine && marine.alerts.length > 0 ? (
-          <div className="retro-box-inset bg-white p-3">
+          <div className="well bg-white p-3">
             <p className="mb-2 text-sm font-bold uppercase">Marine alerts</p>
             <ul className="space-y-1">
               {marine.alerts.map((alert) => (
@@ -84,7 +84,7 @@ export function SaltwaterConditions({
         ) : null}
 
         {tides && (tides.curve.length > 1 || tides.extremes.length > 1) ? (
-          <div className="retro-box-inset bg-white">
+          <div className="well bg-white">
             <TideChart
               curve={tides.curve}
               extremes={tides.extremes}
@@ -135,10 +135,10 @@ export function SaltwaterConditions({
 
 function Metric({ label, value, detail }: { label: string; value: string; detail?: string | null }) {
   return (
-    <div className="retro-box-inset min-w-0 bg-white px-2 py-2">
+    <div className="well min-w-0 bg-white px-2 py-2">
       <p className="text-xs font-bold uppercase">{label}</p>
       <p className="break-words text-sm font-bold">{value}</p>
-      {detail ? <p className="truncate text-xs text-gray-700">{detail}</p> : null}
+      {detail ? <p className="truncate text-xs text-ink-2">{detail}</p> : null}
     </div>
   );
 }

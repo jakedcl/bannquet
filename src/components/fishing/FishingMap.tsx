@@ -90,9 +90,9 @@ function parkingPopup(properties: Record<string, string>): HTMLElement {
   root.className = 'space-y-1 text-sm';
   line(root, properties.water || 'Parking', 'pr-6 font-bold');
   const place = [properties.town, properties.county].filter(Boolean).join(', ');
-  if (place) line(root, place, 'text-gray-700');
-  if (properties.road) line(root, properties.road, 'text-gray-700');
-  if (properties.parkingNumber) line(root, `Parking ${properties.parkingNumber}`, 'text-gray-700');
+  if (place) line(root, place, 'text-ink-2');
+  if (properties.road) line(root, properties.road, 'text-ink-2');
+  if (properties.parkingNumber) line(root, `Parking ${properties.parkingNumber}`, 'text-ink-2');
   if (properties.stocked) line(root, `Stocked: ${properties.stocked}`, '');
   if (properties.troutPresent) line(root, `Trout present: ${properties.troutPresent}`, '');
   for (const [href, label] of [
@@ -115,7 +115,7 @@ function placePopup(properties: Record<string, string>): HTMLElement {
   const root = document.createElement('div');
   root.className = 'space-y-1 text-sm';
   line(root, properties.name || 'Water', 'pr-6 font-bold');
-  if (properties.kind) line(root, properties.kind, 'text-gray-700');
+  if (properties.kind) line(root, properties.kind, 'text-ink-2');
   if (properties.status) line(root, properties.status, '');
   if (properties.href) {
     const link = document.createElement('a');

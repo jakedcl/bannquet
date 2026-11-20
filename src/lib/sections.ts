@@ -143,7 +143,6 @@ export const MENU_SECTIONS: MenuSection[] = [
       { href: '/fishing/freshwater', label: 'Freshwater' },
       { href: '/fishing/saltwater', label: 'Saltwater' },
       { href: '/fishing/stocking', label: 'Stocking' },
-      { href: '/fishing/guides', label: 'Guides' },
     ],
   },
   {

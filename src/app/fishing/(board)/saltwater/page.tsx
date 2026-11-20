@@ -78,7 +78,7 @@ export default async function SaltwaterPage({
               headers={{ name: 'Species', detail: 'Status', extra: 'Size and bag' }}
               empty="No regulations listed."
             />
-            <p className="mt-3 text-sm text-gray-700">
+            <p className="mt-3 text-sm text-ink-2">
               NY Bight limits, including Staten Island.{' '}
               <a href={MARINE_REGS_SOURCE} target="_blank" rel="noopener noreferrer" className="underline">
                 Last checked {MARINE_REGS_CHECKED}
@@ -97,7 +97,7 @@ export default async function SaltwaterPage({
             headers={{ name: 'Water', detail: 'Fish', extra: 'General / sensitive' }}
             empty="No advisories listed."
           />
-          <p className="mt-3 text-sm text-gray-700">
+          <p className="mt-3 text-sm text-ink-2">
             Do not eat crab or lobster tomalley.{' '}
             <a href={ADVISORIES_SOURCE} target="_blank" rel="noopener noreferrer" className="underline">
               Last checked {ADVISORIES_CHECKED}
