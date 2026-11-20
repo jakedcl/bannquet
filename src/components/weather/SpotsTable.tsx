@@ -4,11 +4,26 @@ import { BrowseTable } from '@/components/ui/BrowseTable';
 import type { DataColumn } from '@/components/ui/DataTable';
 import type { ExtremeSpot } from '@/lib/weather-extremes';
 
-export function SpotsTable({ spots }: { spots: ExtremeSpot[] }) {
+/** One row per station: peaks that read the same station are listed together ("Camel's Hump, Bolton"). */
+export function groupSpotsByStation(spots: ExtremeSpot[]): ExtremeSpot[] {
+  const groups = new Map<string, ExtremeSpot[]>();
+  for (const spot of spots) {
+    const key = spot.stationId ?? `${spot.mountain}-${spot.state}`;
+    groups.set(key, [...(groups.get(key) ?? []), spot]);
+  }
+  return [...groups.values()].map((group) => ({
+    ...group[0],
+    mountain: group.map((spot) => spot.mountain).join(', '),
+    state: [...new Set(group.map((spot) => spot.state))].join(' / '),
+  }));
+}
+
+export function SpotsTable({ spots: allSpots }: { spots: ExtremeSpot[] }) {
+  const spots = groupSpotsByStation(allSpots);
   const columns: DataColumn<ExtremeSpot>[] = [
     {
       id: 'spot',
-      header: 'Spot',
+      header: 'Spots',
       sticky: true,
       sortValue: (row) => row.mountain,
       cell: (row) => `${row.mountain}, ${row.state}`,
