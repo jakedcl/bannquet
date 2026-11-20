@@ -9,7 +9,15 @@ and Gunks Ridge. Source data was checked against the raw NWS API where something
 quality is a plain link; when no avalanche forecast is issued, the avalanche bar is hidden
 (the Snow tab panel still says so).
 
-**Status:** Step 3 (clear titles) is done. Every panel title says what the panel is, and the
+**Status:** Step 4 (duplicates and tab order) is done. Phone heights before → after:
+Forecast tab, Washington 6,259 → 3,119 px, Mansfield 8,704 → 5,034, Marcy 8,499 → 4,617,
+Katahdin 4,711 → 2,500, Gunks 4,663 → 2,798. Snow tab, Washington 6,644 → 2,808, Mansfield
+8,564 → 3,952. "Forecast at a glance" is deleted. "This hour" starts closed. REC bands share
+one panel, and the allLocations copy shows only when that office's REC failed. Long tables
+show the next 24 rows or the next 2 days, with the rest behind a toggle. The Measured tab
+says when a summit has no station.
+
+Step 3 (clear titles) is done. Every panel title says what the panel is, and the
 official product name is the subtitle. Helpers in `format-display.ts`: `gridElevationNote`
 (hero line), `tidyLabel` (ALL-CAPS labels), `reflowProductText` and `discussionHeading` (AFD
 text reflows on phones). Hub cards read "Wind up to 54 mph · next 48 hours" with a high / low

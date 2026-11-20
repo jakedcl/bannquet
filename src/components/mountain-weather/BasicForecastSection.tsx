@@ -52,11 +52,19 @@ export function BaselineError({ result }: { result: Baseline }) {
 }
 
 /** Right now, from the forecast grid (not a measurement). */
-export function ForecastNowPanel({ result, placeElevationFt }: { result: Baseline; placeElevationFt: number | null }) {
+export function ForecastNowPanel({
+  result,
+  placeElevationFt,
+  defaultOpen = true,
+}: {
+  result: Baseline;
+  placeElevationFt: number | null;
+  defaultOpen?: boolean;
+}) {
   const data = result.data;
   if (!data) return null;
   return (
-    <CollapsibleSection title="This hour (forecast)" subtitle={gridLine(result, placeElevationFt)}>
+    <CollapsibleSection title="This hour (forecast)" subtitle={gridLine(result, placeElevationFt)} defaultOpen={defaultOpen}>
       <ReadingGrid>
         <ReadingTile
           label="Temp"
@@ -118,7 +126,12 @@ export function SevenDayPanel({ result }: { result: Baseline }) {
     <CollapsibleSection title="7-day forecast" subtitle="NWS forecast periods, with the forecaster's wording">
       <div className="space-y-3">
         {daily.length ? <DailyList periods={daily} /> : null}
-        {periods.length ? <PeriodNarratives periods={periods} /> : null}
+        {periods.length ? <PeriodNarratives periods={periods.slice(0, 4)} /> : null}
+        {periods.length > 4 ? (
+          <CollapsibleSection title={`Rest of the week (${periods.length - 4} more periods)`} defaultOpen={false}>
+            <PeriodNarratives periods={periods.slice(4)} />
+          </CollapsibleSection>
+        ) : null}
       </div>
       <GridReceipt result={result} product="7-day forecast" />
     </CollapsibleSection>

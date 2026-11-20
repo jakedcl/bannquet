@@ -11,7 +11,6 @@ import {
   Next48Panel,
   SevenDayPanel,
 } from '@/components/mountain-weather/BasicForecastSection';
-import { ForecastAtAGlance } from '@/components/mountain-weather/ForecastAtAGlance';
 import { AllLocationsSection } from '@/components/mountain-weather/AllLocationsSection';
 import { MountainForecastSection } from '@/components/mountain-weather/MountainForecastSection';
 import { AvgForecastSection } from '@/components/mountain-weather/AvgForecastSection';
@@ -147,35 +146,42 @@ export default async function MountainPlacePage({
 
         {tab === 'forecast' ? (
           <>
+            {/* Order: the hero already says now; then the next two days, the week, what the
+                forecasters wrote for the mountains, and the expert detail closed at the end. */}
             <BaselineError result={baseline} />
-            <ForecastAtAGlance result={baseline} placeName={place.name} placeElevationFt={place.elevationFt} />
-            <MountainForecastSection result={mtnPoint} placeName={place.name} />
-            <ForecastNowPanel result={baseline} placeElevationFt={place.elevationFt} />
+            <ForecastNowPanel result={baseline} placeElevationFt={place.elevationFt} defaultOpen={false} />
             <Next48Panel result={baseline} />
             <SevenDayPanel result={baseline} />
             <RecForecastSection results={rec ?? []} />
-            <AllLocationsSection results={allLocations ?? []} />
-            <BalloonForecastSection result={balloon} />
+            <AllLocationsSection results={allLocationsNotInRec(allLocations, rec)} />
+            <MountainForecastSection result={mtnPoint} placeName={place.name} />
             <MansfieldPackSection pack={mansfieldPack} part="forecast" />
-            <GridDetailsPanel result={baseline} />
             <BulletinsSection bundle={bulletins} />
+            <GridDetailsPanel result={baseline} />
+            <BalloonForecastSection result={balloon} />
           </>
         ) : null}
 
         {tab === 'measured' ? (
           <>
             <MansfieldPackSection pack={mansfieldPack} part="measured" />
-            <ObservationsSection data={observations} placeElevationFt={place.elevationFt} />
+            <ObservationsSection
+              data={observations}
+              placeElevationFt={place.elevationFt}
+              isBase={place.isBase}
+              hasSummitSensor={Boolean(mansfieldPack)}
+            />
             {ground ? <RoadAndAirSection data={ground} /> : null}
           </>
         ) : null}
 
         {tab === 'snow' ? (
           <>
-            {avalanche ? <div id="avalanche-guidance"><AvalancheSection data={avalanche} /></div> : null}
-            {!avalanche ? <AvgForecastSection results={avg ?? []} /> : null}
-            <MansfieldPackSection pack={mansfieldPack} part="snow" />
-            {snow ? <SnowSection data={snow} placeName={place.name} /> : null}
+            {/* Avalanche first, then what is on the ground and falling, then maps, then the
+                hour-by-hour avalanche weather table for experts. */}
+            {avalanche ? <div id="avalanche-guidance"><AvalancheSection data={avalanche} showAvg={false} /></div> : null}
+            {snow ? <SnowSection data={snow} placeName={place.name} mansfield={<MansfieldPackSection pack={mansfieldPack} part="snow" />} /> : <MansfieldPackSection pack={mansfieldPack} part="snow" />}
+            <AvgForecastSection results={avalanche?.avg ?? avg ?? []} collapsed />
           </>
         ) : null}
 
@@ -213,4 +219,16 @@ async function PlaceSources({
   const landHrefs = new Set((await readPlaceGround(place, stateCode, sectionId)).landLinks.map((l) => l.href));
   const tabHref = (tab: PageSourceTab) => (tab === 'forecast' ? path : `${path}?tab=${tab}`);
   return <PageSourcesSection sources={{ ...sources, links: sources.links.filter((l) => !landHrefs.has(l.href)) }} tabHref={tabHref} />;
+}
+
+/**
+ * GYX and CAR publish the same recreation text twice: as the REC product and in the
+ * allLocations map file. Show the map file only for an office whose REC did not load.
+ */
+function allLocationsNotInRec(
+  allLocations: Awaited<ReturnType<typeof readAllLocationsForPlace>>,
+  rec: Awaited<ReturnType<typeof readRecForPlace>>,
+) {
+  const recOffices = new Set((rec ?? []).filter((r) => r.data && r.status !== 'error').map((r) => r.data!.office as string));
+  return (allLocations ?? []).filter((a) => !a.data || !recOffices.has(a.data.office));
 }

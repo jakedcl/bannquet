@@ -210,18 +210,34 @@ function AsrcBlock({
 export function ObservationsSection({
   data,
   placeElevationFt,
+  isBase = false,
+  hasSummitSensor = false,
 }: {
   data: PlaceObservationsData | null;
   placeElevationFt: number | null;
+  isBase?: boolean;
+  /** True where another panel already shows a summit reading (Mansfield). */
+  hasSummitSensor?: boolean;
 }) {
   if (!data) return null;
   if (data.stations.length === 0 && !data.asrc) return null;
+  const onSummit = data.stations.some((s) => s.binding.kind === 'summit' || s.binding.kind === 'nearby-higher');
+  const nearest = data.stations[0]?.binding ?? null;
 
   return (
   <>
     <p className="text-meta text-ink-2">
       Live readings from weather stations. Each one says whether it is on the summit or in the valley, and how far away.
     </p>
+    {!isBase && !onSummit && !hasSummitSensor && nearest ? (
+      <Notice tone="warn">
+        No weather station on this summit. The nearest is {tidyLabel(nearest.stationName) ?? nearest.stationId}
+        {nearest.elevationDiffFt !== null && nearest.elevationDiffFt > 0
+          ? `, ${nearest.elevationDiffFt.toLocaleString('en-US')} ft lower`
+          : ''}
+        . Expect the summit to be colder and windier than it reads. The Forecast tab is the better guide up high.
+      </Notice>
+    ) : null}
     {data.stations.map((block) => (
       <StationBlock key={block.binding.stationId + block.binding.kind} block={block} placeElevationFt={placeElevationFt} />
     ))}

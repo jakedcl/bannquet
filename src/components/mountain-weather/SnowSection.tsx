@@ -15,12 +15,14 @@ import { tidyLabel } from '@/lib/mountain-weather/format-display';
 
 function SnowImageGrid({
   title,
+  defaultOpen = true,
   product,
   org,
   sourceUrl,
   images,
 }: {
   title: string;
+  defaultOpen?: boolean;
   /** Official product name, shown under the plain title. */
   product: string;
   org: string;
@@ -29,7 +31,7 @@ function SnowImageGrid({
 }) {
   if (!images.length) return null;
   return (
-    <CollapsibleSection title={title} subtitle={`${product} · ${shortOrg(org)}`}>
+    <CollapsibleSection title={title} subtitle={`${product} · ${shortOrg(org)}`} defaultOpen={defaultOpen}>
       <div className="grid gap-3 sm:grid-cols-2">
         {images.map((img) => (
           <figure key={img.id} className="space-y-1">
@@ -116,7 +118,22 @@ function MeasuredBlock({ data }: { data: PlaceSnowData }) {
   );
 }
 
-export function SnowSection({ data, placeName, isHub = false }: { data: PlaceSnowData; placeName?: string; isHub?: boolean }) {
+/**
+ * Snow tab order: what is on the ground (stations, Mansfield), what fell recently, then the
+ * chance of more, then model maps (closed).
+ */
+export function SnowSection({
+  data,
+  placeName,
+  isHub = false,
+  mansfield,
+}: {
+  data: PlaceSnowData;
+  placeName?: string;
+  isHub?: boolean;
+  /** Mansfield's own snow panels, placed with the other on-the-ground readings. */
+  mansfield?: React.ReactNode;
+}) {
   const pnsDef = nwsPnsSourceDef(data.office);
   const lsrDef = iemLsrSnowSourceDef(data.office);
 
@@ -137,10 +154,7 @@ export function SnowSection({ data, placeName, isHub = false }: { data: PlaceSno
         </a>
         </> : null}
       </p>
-      <SnowImageGrid title="Chance of snow" product="Probabilistic Snowfall (PWPF)" org={WPC_PWPF_SNOW_DEF.org} sourceUrl={WPC_SNOW_PAGE_URL} images={data.wpcImages} />
-      {!data.wpcImages.length ? <p className="text-sm text-ink-2">Current WPC graphics are unavailable here. Use the official WPC snow forecast linked above.</p> : null}
-      <SnowImageGrid title="Snow cover maps (model)" product="NOHRSC snow model: depth, SWE (water in the snowpack), melt" org={NOHRSC_NE_INDEX_DEF.org} sourceUrl={NOHRSC_NE_INDEX_DEF.url} images={data.nohrscImages} />
-      <SnowImageGrid title="Snow cover maps (river forecast center)" product="NERFC snow composites" org={NERFC_SNOW_OPS_DEF.org} sourceUrl={NERFC_SNOW_OPS_DEF.url} images={data.nerfcImages} />
+      <MeasuredBlock data={data} />
       {data.mansfieldStake ? (
         <CollapsibleSection title="Mount Mansfield snow stake" subtitle={`Hydrologic Summary (HYD) · ${shortOrg(NWS_BTV_MANSFIELD_HYD_DEF.org)}`} defaultOpen>
           <p className="text-sm">
@@ -155,9 +169,24 @@ export function SnowSection({ data, placeName, isHub = false }: { data: PlaceSno
           />
         </CollapsibleSection>
       ) : null}
-      <MeasuredBlock data={data} />
+      {mansfield}
+      {placeName ? (
+      <CollapsibleSection title="Recent snowfall reports" subtitle={`Local Storm Reports (LSR) · ${lsrDef.org} · within ${LOCAL_SNOW_RADIUS_MI} mi of ${placeName}, past 14 days`}>
+          {data.lsrSnow.length ? (
+          <ul className="space-y-1 text-xs">
+            {data.lsrSnow.slice(0, 25).map((e) => (
+              <li key={e.id}>
+                {e.distanceMi?.toFixed(1) ?? '—'} mi away · {formatEt(e.valid)} · {e.city ?? '—'}, {e.county ?? ''} {e.state ?? ''} · {e.magnitude ?? '—'} {e.unit ?? ''}{' '}
+                {e.remark && !/^[\s&$]*$/.test(e.remark) ? `· ${e.remark}` : ''}
+              </li>
+            ))}
+          </ul>
+          ) : <p className="text-sm">No nearby snowfall reports in the past 14 days. This does not mean there is no snow.</p>}
+        <SourceReceipt org={lsrDef.org} product="Local Storm Reports (LSR)" href={lsrDef.url} />
+      </CollapsibleSection>
+      ) : null}
       {data.pns ? (
-      <CollapsibleSection title="Office storm bulletin" subtitle={`Public Information Statement (PNS) · ${shortOrg(pnsDef.org)} · may include distant places`}>
+      <CollapsibleSection title="Office storm bulletin" subtitle={`Public Information Statement (PNS) · ${shortOrg(pnsDef.org)} · may include distant places`} defaultOpen={false}>
           <>
             {data.pns.parseReliable ? (
               <ul className="space-y-1 text-xs">
@@ -186,21 +215,10 @@ export function SnowSection({ data, placeName, isHub = false }: { data: PlaceSno
           </>
       </CollapsibleSection>
       ) : null}
-      {placeName ? (
-      <CollapsibleSection title="Recent snowfall reports" subtitle={`Local Storm Reports (LSR) · ${lsrDef.org} · within ${LOCAL_SNOW_RADIUS_MI} mi of ${placeName}, past 14 days`}>
-          {data.lsrSnow.length ? (
-          <ul className="space-y-1 text-xs">
-            {data.lsrSnow.slice(0, 25).map((e) => (
-              <li key={e.id}>
-                {e.distanceMi?.toFixed(1) ?? '—'} mi away · {formatEt(e.valid)} · {e.city ?? '—'}, {e.county ?? ''} {e.state ?? ''} · {e.magnitude ?? '—'} {e.unit ?? ''}{' '}
-                {e.remark && !/^[\s&$]*$/.test(e.remark) ? `· ${e.remark}` : ''}
-              </li>
-            ))}
-          </ul>
-          ) : <p className="text-sm">No nearby snowfall reports in the past 14 days. This does not mean there is no snow.</p>}
-        <SourceReceipt org={lsrDef.org} product="Local Storm Reports (LSR)" href={lsrDef.url} />
-      </CollapsibleSection>
-      ) : null}
+      <SnowImageGrid title="Chance of snow" product="Probabilistic Snowfall (PWPF)" org={WPC_PWPF_SNOW_DEF.org} sourceUrl={WPC_SNOW_PAGE_URL} images={data.wpcImages} />
+      {!data.wpcImages.length ? <p className="text-sm text-ink-2">Current WPC graphics are unavailable here. Use the official WPC snow forecast linked above.</p> : null}
+      <SnowImageGrid title="Snow cover maps (model)" product="NOHRSC snow model: depth, SWE (water in the snowpack), melt" org={NOHRSC_NE_INDEX_DEF.org} sourceUrl={NOHRSC_NE_INDEX_DEF.url} images={data.nohrscImages} defaultOpen={false} />
+      <SnowImageGrid title="Snow cover maps (river forecast center)" product="NERFC snow composites" org={NERFC_SNOW_OPS_DEF.org} sourceUrl={NERFC_SNOW_OPS_DEF.url} images={data.nerfcImages} defaultOpen={false} />
     </>
   );
 }

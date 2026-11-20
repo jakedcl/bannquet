@@ -40,6 +40,46 @@ function fmtWind(row: {
   return [compass, mph !== '—' ? mph : null].filter(Boolean).join(' ');
 }
 
+/** Rows shown before "Rest of the table": about the next day. */
+const FIRST_ROWS = 24;
+
+function HourlyRows({ rows, meta }: { rows: ReturnType<typeof buildMtnDisplay>['hourly']; meta: ReturnType<typeof buildMtnDisplay>['meta'] }) {
+  return (
+          <div className="overflow-x-auto">
+            <table className="min-w-full whitespace-nowrap text-caption [&_td]:whitespace-nowrap">
+              <thead className="bg-surface-gray text-tag uppercase tracking-label">
+                <tr className="text-left uppercase tracking-wide">
+                  <th className="px-2 py-1">Period</th>
+                  <th className="px-2 py-1">Temp</th>
+                  <th className="px-2 py-1">Wind</th>
+                  {meta.showGust ? <th className="px-2 py-1">Gust</th> : null}
+                  <th className="px-2 py-1">Wind chill</th>
+                  <th className="px-2 py-1">Precip</th>
+                  <th className="px-2 py-1">Sky</th>
+                  {meta.showLightning ? <th className="px-2 py-1">Lightning</th> : null}
+                </tr>
+              </thead>
+              <tbody>
+                {rows.map((row) => (
+                  <tr key={`${row.label}-${row.tempF}-${row.windMph}`} className="border-t border-hairline">
+                    <td className="whitespace-nowrap px-2 py-1 font-bold">{row.label}</td>
+                    <td className="px-2 py-1 tabular-nums">{fmtNum(row.tempF, '°')}</td>
+                    <td className="px-2 py-1">{fmtWind(row)}</td>
+                    {meta.showGust ? <td className="px-2 py-1 tabular-nums">{fmtNum(row.gustMph, ' mph')}</td> : null}
+                    <td className="px-2 py-1 tabular-nums">{fmtNum(row.windChillF, '°')}</td>
+                    <td className="px-2 py-1 tabular-nums">{fmtNum(row.precipPct, '%')}</td>
+                    <td className="px-2 py-1">{row.sky ?? '—'}</td>
+                    {meta.showLightning ? (
+                      <td className="px-2 py-1">{fmtMtnLightning(row.lightning)}</td>
+                    ) : null}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+  );
+}
+
 export function MountainForecastSection({
   result,
   placeName,
@@ -79,38 +119,12 @@ export function MountainForecastSection({
         {data.standard?.narratives?.length ? (
           <NarrativeList narratives={data.standard.narratives} placeName={placeName} />
         ) : null}
-        <div className="overflow-x-auto">
-          <table className="min-w-full whitespace-nowrap text-caption [&_td]:whitespace-nowrap">
-            <thead className="bg-surface-gray text-tag uppercase tracking-label">
-              <tr className="text-left uppercase tracking-wide">
-                <th className="px-2 py-1">Period</th>
-                <th className="px-2 py-1">Temp</th>
-                <th className="px-2 py-1">Wind</th>
-                {meta.showGust ? <th className="px-2 py-1">Gust</th> : null}
-                <th className="px-2 py-1">Wind chill</th>
-                <th className="px-2 py-1">Precip</th>
-                <th className="px-2 py-1">Sky</th>
-                {meta.showLightning ? <th className="px-2 py-1">Lightning</th> : null}
-              </tr>
-            </thead>
-            <tbody>
-              {hourly.map((row) => (
-                <tr key={`${row.label}-${row.tempF}-${row.windMph}`} className="border-t border-hairline">
-                  <td className="whitespace-nowrap px-2 py-1 font-bold">{row.label}</td>
-                  <td className="px-2 py-1 tabular-nums">{fmtNum(row.tempF, '°')}</td>
-                  <td className="px-2 py-1">{fmtWind(row)}</td>
-                  {meta.showGust ? <td className="px-2 py-1 tabular-nums">{fmtNum(row.gustMph, ' mph')}</td> : null}
-                  <td className="px-2 py-1 tabular-nums">{fmtNum(row.windChillF, '°')}</td>
-                  <td className="px-2 py-1 tabular-nums">{fmtNum(row.precipPct, '%')}</td>
-                  <td className="px-2 py-1">{row.sky ?? '—'}</td>
-                  {meta.showLightning ? (
-                    <td className="px-2 py-1">{fmtMtnLightning(row.lightning)}</td>
-                  ) : null}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <HourlyRows rows={hourly.slice(0, FIRST_ROWS)} meta={meta} />
+        {hourly.length > FIRST_ROWS ? (
+          <CollapsibleSection title={`Rest of the table (${hourly.length - FIRST_ROWS} more rows)`} defaultOpen={false}>
+            <HourlyRows rows={hourly.slice(FIRST_ROWS)} meta={meta} />
+          </CollapsibleSection>
+        ) : null}
         {meta.showSnowBlocks && snowIce.length > 0 ? (
           <div className="overflow-x-auto">
             <p className="text-xs font-bold uppercase text-ink-2">6-hour snow and ice totals</p>

@@ -98,7 +98,7 @@ function AvgLegend() {
   );
 }
 
-function AvgBlock({ result }: { result: SourceResult<AvgPlaceSlice> }) {
+function AvgBlock({ result, collapsed = false }: { result: SourceResult<AvgPlaceSlice>; collapsed?: boolean }) {
   const def = result.data ? OFFICE_DEF[result.data.office] : null;
   const seasonal = result.status === 'seasonal-off';
 
@@ -122,7 +122,7 @@ function AvgBlock({ result }: { result: SourceResult<AvgPlaceSlice> }) {
     <CollapsibleSection
       title="Avalanche weather, hour by hour"
       subtitle={`Avalanche Weather Guidance (AVG) · ${shortOrg(def?.org ?? '')} · ${tidyLabel(data.point.title)}${elev && !/\bft\b/i.test(data.point.title) ? ` · ${elev}` : ''}${data.nearbyLabel ? ` · ${data.nearbyLabel}` : ''}${seasonal ? ' · off season' : ''}`}
-      defaultOpen={!seasonal}
+      defaultOpen={!seasonal && !collapsed}
     >
       <div className="space-y-3 text-sm">
         {seasonal ? (
@@ -150,12 +150,19 @@ function AvgBlock({ result }: { result: SourceResult<AvgPlaceSlice> }) {
   );
 }
 
-export function AvgForecastSection({ results }: { results: SourceResult<AvgPlaceSlice>[] | null }) {
+export function AvgForecastSection({
+  results,
+  collapsed = false,
+}: {
+  results: SourceResult<AvgPlaceSlice>[] | null;
+  /** Start closed (the place Snow tab puts it last, for experts). */
+  collapsed?: boolean;
+}) {
   if (!results || results.length === 0) return null;
   return (
     <>
       {results.map((result, idx) => (
-        <AvgBlock key={`${result.data?.pointMatch ?? 'err'}-${idx}`} result={result} />
+        <AvgBlock key={`${result.data?.pointMatch ?? 'err'}-${idx}`} result={result} collapsed={collapsed} />
       ))}
     </>
   );

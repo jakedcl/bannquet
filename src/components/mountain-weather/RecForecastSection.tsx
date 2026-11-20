@@ -54,12 +54,15 @@ function recArea(title: string | null | undefined): string {
   return rest.charAt(0).toUpperCase() + rest.slice(1);
 }
 
-function RecBlock({ result }: { result: SourceResult<RecPlaceSlice> }) {
+const PANEL_TITLE = "Forecaster's mountain forecast";
+
+/** One REC slice. In a group (several elevation bands), titled by its band; alone, by the panel title. */
+function RecBlock({ result, inGroup = false }: { result: SourceResult<RecPlaceSlice>; inGroup?: boolean }) {
   const def = result.data ? recSourceDef(result.data.office) : null;
 
   if (result.status === 'not-in-issuance') {
     return (
-      <CollapsibleSection title="Forecaster's mountain forecast" subtitle={`Recreation Forecast (REC) · ${shortOrg(def?.org ?? 'NWS')} · not in this issue`}>
+      <CollapsibleSection title={PANEL_TITLE} subtitle={`Recreation Forecast (REC) · ${shortOrg(def?.org ?? 'NWS')} · not in this issue`}>
         <NotInIssuanceNote
           label="Recreation forecast (REC)"
           href={result.sourceUrl ?? def?.url ?? 'https://api.weather.gov/'}
@@ -72,7 +75,7 @@ function RecBlock({ result }: { result: SourceResult<RecPlaceSlice> }) {
   if (result.status === 'error' || !result.data) {
     return (
       <CollapsibleSection
-        title="Forecaster's mountain forecast"
+        title={PANEL_TITLE}
         subtitle="Recreation Forecast (REC) (could not load)"
       >
         <SourceErrorNote
@@ -89,8 +92,8 @@ function RecBlock({ result }: { result: SourceResult<RecPlaceSlice> }) {
 
   return (
     <CollapsibleSection
-      title="Forecaster's mountain forecast"
-      subtitle={`Recreation Forecast (REC) · ${shortOrg(def?.org ?? '')} · ${recArea(title)}${data.nearbyLabel && !/feet|ft/i.test(title ?? '') ? ` · ${data.nearbyLabel}` : ''}${data.notInLatestIssuance ? ' · earlier issue' : ''}`}
+      title={inGroup ? recArea(title) : PANEL_TITLE}
+      subtitle={`Recreation Forecast (REC) · ${shortOrg(def?.org ?? '')}${inGroup ? '' : ` · ${recArea(title)}`}${data.nearbyLabel && !/feet|ft/i.test(title ?? '') ? ` · ${data.nearbyLabel}` : ''}${data.notInLatestIssuance ? ' · earlier issue' : ''}`}
       defaultOpen
     >
       {data.notInLatestIssuance ? (
@@ -154,11 +157,19 @@ function RecBlock({ result }: { result: SourceResult<RecPlaceSlice> }) {
 
 export function RecForecastSection({ results }: { results: SourceResult<RecPlaceSlice>[] | null }) {
   if (!results || results.length === 0) return null;
+  if (results.length === 1) return <RecBlock result={results[0]} />;
+  // Several elevation bands (GYX summits and 2,500-4,000 ft): one panel, one block per band.
+  const org = results.find((r) => r.data)?.data;
   return (
-    <>
-      {results.map((result, idx) => (
-        <RecBlock key={`${result.data?.sectionMatch ?? 'err'}-${idx}`} result={result} />
-      ))}
-    </>
+    <CollapsibleSection
+      title={PANEL_TITLE}
+      subtitle={`Recreation Forecast (REC)${org ? ` · ${shortOrg(recSourceDef(org.office).org)}` : ''} · ${results.length} elevation bands`}
+    >
+      <div className="space-y-2">
+        {results.map((result, idx) => (
+          <RecBlock key={`${result.data?.sectionMatch ?? 'err'}-${idx}`} result={result} inGroup />
+        ))}
+      </div>
+    </CollapsibleSection>
   );
 }
