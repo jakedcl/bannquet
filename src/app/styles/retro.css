@@ -258,8 +258,8 @@ td.cell-primary :is(img, .avatar-frame, svg) {
   background: var(--color-surface-cream);
   color: var(--color-ink);
   border-bottom: var(--border-control) solid var(--color-hairline);
-  min-height: 3.25rem;
-  padding: 0.375rem 0.875rem;
+  min-height: 2.75rem;
+  padding: 0.25rem 0.875rem;
   padding-left: max(0.75rem, calc((100% - 72rem) / 2 + 0.75rem));
   padding-right: max(0.75rem, calc((100% - 72rem) / 2 + 0.75rem));
 }
