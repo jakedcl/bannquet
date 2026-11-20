@@ -75,7 +75,7 @@ export default async function HomePage() {
       <div className="mx-auto max-w-3xl space-y-4 px-4 pb-12 pt-4">
         <div className="grid grid-cols-2 gap-3">
           <Link href="/mountain-weather" className={buttonClass('yellow', 'lg')}>Mountain weather</Link>
-          <Link href="/peak-finder" className={buttonClass('green', 'lg')}>Peak Finder</Link>
+          <Link href="/fishing" className={buttonClass('green', 'lg')}>Fishing</Link>
         </div>
 
         <WeatherTicker />
