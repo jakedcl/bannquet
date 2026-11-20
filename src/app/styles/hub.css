@@ -4,7 +4,7 @@
 .hub,
 .hub-bar {
   font-family: var(--font-sans);
-  color: var(--ui-label);
+  color: var(--color-ink);
 }
 
 /* Type scale, mapped onto the tokens. Headings use the heading font in caps. */
@@ -47,7 +47,7 @@
 }
 
 .ui-row-press:hover { background: var(--color-surface-cream); }
-.ui-row-press:active { background: var(--ui-fill); }
+.ui-row-press:active { background: var(--color-surface-gray); }
 
 .hub a:focus-visible,
 .hub button:focus-visible,

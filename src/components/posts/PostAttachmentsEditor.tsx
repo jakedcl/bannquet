@@ -148,7 +148,7 @@ export function PostAttachmentsEditor({
       <dialog
         ref={createRef}
         aria-label={createKind ? CREATE_LABEL[createKind] : 'New'}
-        className="m-auto w-[min(40rem,calc(100%-2rem))] max-h-[min(40rem,calc(100%-2rem))] overflow-y-auto border-4 border-brown bg-beige p-4 shadow-[0_16px_40px_rgba(0,0,0,0.22)] backdrop:bg-black/40"
+        className="m-auto w-[min(40rem,calc(100%-2rem))] max-h-[min(40rem,calc(100%-2rem))] overflow-y-auto border-4 border-brown bg-surface-gray p-4 shadow-[0_16px_40px_rgba(0,0,0,0.22)] backdrop:bg-black/40"
         onClose={() => setCreateKind(null)}
         onClick={(event) => {
           if (event.target === createRef.current) createRef.current.close();

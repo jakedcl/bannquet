@@ -4,9 +4,7 @@
  * apply these classes; pages should use those components, not the classes.
  *
  * Everything is in @layer components so Tailwind utilities on an element can
- * still adjust spacing or size. Legacy class names that old code still uses
- * (retro-button*, ui-card, ...) are listed next to the new ones and are
- * removed in stage 5 once nothing uses them.
+ * still adjust spacing or size.
  */
 
 @layer base {
@@ -80,8 +78,7 @@
   /* ---- Buttons ------------------------------------------------------
      40px tall (sm 32, lg 44), 13px bold caps. Long labels wrap and center.
      Kinds: gray (default), yellow (primary), green, brown, danger. */
-  .btn,
-  .retro-button {
+  .btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -110,27 +107,23 @@
     transition: transform var(--duration-fast) ease-out, filter var(--duration-fast) ease-out, box-shadow var(--duration-fast) ease-out;
   }
 
-  .btn:hover,
-  .retro-button:hover {
+  .btn:hover {
     filter: brightness(0.97);
   }
 
-  .btn:active:not(:disabled, [aria-disabled="true"]),
-  .retro-button:active:not(:disabled, [aria-disabled="true"]) {
+  .btn:active:not(:disabled, [aria-disabled="true"]) {
     transform: translate(1px, 1px);
     box-shadow: var(--shadow-button-pressed);
   }
 
   .btn:disabled,
-  .btn[aria-disabled="true"],
-  .retro-button:disabled {
+  .btn[aria-disabled="true"] {
     cursor: default;
     opacity: 0.6;
     filter: none;
   }
 
-  .btn-yellow,
-  .retro-button-yellow {
+  .btn-yellow {
     border: var(--border-bevel) outset var(--color-yellow-edge);
     background-color: var(--color-yellow-deep);
     background-image: var(--gradient-yellow);
@@ -138,9 +131,7 @@
     color: var(--color-brand-dark);
   }
 
-  .btn-green,
-  .retro-button-green,
-  .retro-button-primary {
+  .btn-green {
     border: var(--border-bevel) outset var(--color-brand-dark);
     background-color: var(--color-brand);
     background-image: var(--gradient-green);
@@ -149,8 +140,7 @@
   }
 
   /* Trail-sign brown with yellow lettering ("blue" is the old name). */
-  .btn-brown,
-  .retro-button-blue {
+  .btn-brown {
     border: var(--border-bevel) outset var(--color-brown-dark);
     background-color: var(--color-brown);
     background-image: var(--gradient-brown);
@@ -433,8 +423,7 @@
   }
 
   /* ---- Panels ------------------------------------------------------- */
-  .panel,
-  .ui-card {
+  .panel {
     min-width: 0;
     overflow: hidden;
     border: var(--border-bevel) outset var(--color-bevel);
@@ -458,8 +447,7 @@
   }
 
   /* Green title bar with faint wood lines. Title text is always white. */
-  .panel-bar,
-  .ui-card-bar {
+  .panel-bar {
     display: flex;
     min-width: 0;
     align-items: center;
@@ -477,15 +465,13 @@
     text-transform: uppercase;
   }
 
-  .panel-bar a,
-  .ui-card-bar a {
+  .panel-bar a {
     color: var(--color-on-dark);
     text-decoration: none;
   }
 
   /* Inset well inside a panel (lists, numbers). */
-  .well,
-  .ui-inset {
+  .well {
     border: var(--border-control) solid;
     border-color: var(--color-bevel-dark) var(--color-bevel) var(--color-bevel) var(--color-bevel-dark);
     border-radius: var(--radius-control);
@@ -494,8 +480,7 @@
   }
 
   /* Small cream box: reading tiles, chips of facts. */
-  .tile,
-  .ui-tile {
+  .tile {
     border: var(--border-control) solid var(--color-hairline);
     border-radius: var(--radius-control);
     corner-shape: squircle;

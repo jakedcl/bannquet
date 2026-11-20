@@ -17,7 +17,7 @@ export function ResetMemberPassword({ userId }: { userId: string }) {
         Also email a reset link
       </label>
       <SubmitButton
-        tone="admin"
+        kind="admin"
         pendingLabel="Making a link…"
         title={resetAdmin.title}
         ariaLabel={resetAdmin.ariaLabel}
@@ -25,7 +25,7 @@ export function ResetMemberPassword({ userId }: { userId: string }) {
         Reset password
       </SubmitButton>
       {state?.error ? <p className="text-sm font-bold text-red-700">{state.error}</p> : null}
-      {state?.emailNote ? <p className="text-sm text-brand-green-dark">{state.emailNote}</p> : null}
+      {state?.emailNote ? <p className="text-sm text-brand-dark">{state.emailNote}</p> : null}
       {state?.url ? (
         <label className="block space-y-1">
           <span className="text-sm font-bold">Reset link</span>

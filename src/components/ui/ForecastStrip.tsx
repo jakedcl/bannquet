@@ -18,7 +18,7 @@ export function ForecastStrip({
   if (items.length === 0) return null;
 
   return (
-    <section className="min-w-0 max-w-full space-y-2 border border-border-gray bg-beige/40 px-3 py-2">
+    <section className="min-w-0 max-w-full space-y-2 border border-hairline bg-surface-cream px-3 py-2">
       <h3 className="text-sm font-bold uppercase">{label}</h3>
       <ul className="flex w-full min-w-0 gap-2 overflow-x-auto overscroll-x-contain pb-1">
         {items.map((period) => (

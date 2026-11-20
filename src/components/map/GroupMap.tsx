@@ -487,7 +487,7 @@ export default function GroupMap({
 
   if (mapFailed) {
     return (
-      <div className={`flex h-full min-h-48 w-full flex-col items-center justify-center border border-brown/40 bg-beige/90 p-4 text-center ${className}`}>
+      <div className={`flex h-full min-h-48 w-full flex-col items-center justify-center border border-brown/40 bg-surface-gray/90 p-4 text-center ${className}`}>
         <p className="text-sm font-bold text-ink">Map unavailable</p>
         <p className="mt-2 max-w-md text-sm text-ink">
           This browser cannot use WebGL2, so the interactive map did not start. Lists, weather, and other pages still

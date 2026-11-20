@@ -54,7 +54,7 @@ export function NewPostForm({
         onChange={setAttached}
       />
       {state?.error ? <p className="text-sm font-bold text-red-700">{state.error}</p> : null}
-      <SubmitButton tone="yellow" pendingLabel="Saving…">Save post</SubmitButton>
+      <SubmitButton kind="yellow" pendingLabel="Saving…">Save post</SubmitButton>
     </form>
   );
 }

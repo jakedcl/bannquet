@@ -193,7 +193,7 @@ export function PinForm({
       <PhotoFields photos={photos} onChange={onPhotos} onBusy={setPhotoBusy} />
       {state?.error ? <p className="text-sm font-bold text-red-700">{state.error}</p> : null}
       <SubmitButton
-        tone={adminPower ? 'admin' : 'green'}
+        kind={adminPower ? 'admin' : 'green'}
         pendingLabel="Saving…"
         disabled={photoBusy}
         title={saveAdmin?.title}

@@ -48,7 +48,7 @@ export function HomeScreenTip({ show }: { show: boolean }) {
               setDismissed(true);
             }}
           >
-            <SubmitButton tone="yellow" pendingLabel="Saving…" className="w-full">Got it</SubmitButton>
+            <SubmitButton kind="yellow" pendingLabel="Saving…" className="w-full">Got it</SubmitButton>
           </form>
         </div>
       </div>

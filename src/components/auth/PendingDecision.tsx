@@ -99,7 +99,7 @@ function PendingDecision({ userId, onDone }: { userId: string; onDone: () => voi
         <form action={approve}>
           <input type="hidden" name="userId" value={userId} />
           <SubmitButton
-            tone="admin"
+            kind="admin"
             pendingLabel="Approving…"
             disabled={denyPending || finished}
             title={approveAdmin.title}
@@ -111,7 +111,7 @@ function PendingDecision({ userId, onDone }: { userId: string; onDone: () => voi
         <form action={deny}>
           <input type="hidden" name="userId" value={userId} />
           <SubmitButton
-            tone="admin"
+            kind="admin"
             pendingLabel="Removing…"
             disabled={approvePending || finished}
             title={denyAdmin.title}

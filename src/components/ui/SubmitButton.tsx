@@ -2,12 +2,12 @@
 
 import type { MouseEvent, ReactNode } from 'react';
 import { useFormStatus } from 'react-dom';
-import { BUTTON_TONE_CLASS, buttonClass, type ButtonTone } from '@/components/hub/Button';
+import { buttonClass, type ButtonKind } from '@/components/hub/Button';
 
 export function SubmitButton({
   children,
   pendingLabel = 'Sending…',
-  tone = 'default',
+  kind = 'gray',
   className = '',
   disabled = false,
   name,
@@ -20,7 +20,7 @@ export function SubmitButton({
 }: {
   children: ReactNode;
   pendingLabel?: string;
-  tone?: ButtonTone;
+  kind?: ButtonKind;
   className?: string;
   disabled?: boolean;
   name?: string;
@@ -40,14 +40,14 @@ export function SubmitButton({
     ? `inline-flex items-center justify-center gap-2 disabled:opacity-60 ${className}`
     : icon
       ? buttonClass('yellow', 'icon', `shrink-0 text-lg ${className}`)
-      : `${BUTTON_TONE_CLASS[tone]} ${tone === 'admin' ? '!p-0' : ''} ${className}`;
+      : buttonClass(kind, 'md', className);
 
   const label = spinning ? (
     <>
       <Spinner />
       {icon ? <span className="sr-only">{pendingLabel}</span> : pendingLabel}
     </>
-  ) : tone === 'admin' ? (
+  ) : kind === 'admin' ? (
     <span className="btn-admin-label">{children}</span>
   ) : (
     children

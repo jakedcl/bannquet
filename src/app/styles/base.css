@@ -1,4 +1,4 @@
-/* Base: layout utilities, header logo, chat composer, legacy color variables and body/heading defaults. */
+/* Base: layout utilities, header logo, chat composer, and body and heading defaults. */
 
 @utility h-header {
   height: 72px;
@@ -56,7 +56,7 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: bold;
 }
 
-button, .retro-button {
+button, .btn {
   font-family: var(--font-sans);
 }
 

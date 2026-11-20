@@ -84,7 +84,7 @@ export function EditPostForm({
       {state?.error ? <p className="text-sm font-bold text-red-700">{state.error}</p> : null}
       {state?.saved ? <p className="text-sm">Saved.</p> : null}
       <SubmitButton
-        tone="yellow"
+        kind="yellow"
         pendingLabel="Saving…"
         title={saveAdmin?.title}
         ariaLabel={saveAdmin?.ariaLabel}

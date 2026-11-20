@@ -15,7 +15,7 @@ export function ListGroup({
   'aria-label'?: string;
 }) {
   return (
-    <ul aria-label={label} className={`ui-list min-w-0 ${bare ? '' : 'ui-inset'} ${className}`}>
+    <ul aria-label={label} className={`ui-list min-w-0 ${bare ? '' : 'well'} ${className}`}>
       {children}
     </ul>
   );

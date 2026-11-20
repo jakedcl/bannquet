@@ -72,7 +72,7 @@ export function SignUpForm({ stamp, next = '' }: { stamp: string; next?: string 
       />
       <PasswordField name="confirm" label="Password again" autoComplete="new-password" />
       {state?.error ? <p className="text-sm font-bold text-red-700">{state.error}</p> : null}
-      <SubmitButton tone="green" pendingLabel="Making the account…">Create account</SubmitButton>
+      <SubmitButton kind="green" pendingLabel="Making the account…">Create account</SubmitButton>
       <p className="text-sm">
         Already have one?{' '}
         <Link href={signIn} className="underline">

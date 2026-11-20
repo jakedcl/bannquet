@@ -80,7 +80,7 @@ export async function GaugeForecast({ gauge }: { gauge: GaugeView }) {
   const nws = `https://forecast.weather.gov/MapClick.php?lat=${gauge.lat}&lon=${gauge.lon}`;
 
   return (
-    <section className="min-w-0 max-w-full space-y-2 border border-border-gray bg-beige/40 px-3 py-2">
+    <section className="min-w-0 max-w-full space-y-2 border border-hairline bg-surface-cream px-3 py-2">
       <h2 className="text-sm font-bold uppercase">Forecast</h2>
       <p className="break-words text-sm">
         {typeof weather.temperature === 'number' ? `Air ${weather.temperature}°F` : 'Air temperature missing'}

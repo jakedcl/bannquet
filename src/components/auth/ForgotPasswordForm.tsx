@@ -25,11 +25,11 @@ export function ForgotPasswordForm() {
       </label>
       {state?.error ? <p className="text-sm font-bold text-red-700">{state.error}</p> : null}
       {state?.sent ? (
-        <p className="text-sm text-brand-green-dark">
+        <p className="text-sm text-brand-dark">
           If that email can sign in, a reset link is on the way. It can take a minute.
         </p>
       ) : null}
-      <SubmitButton tone="green" pendingLabel="Sending…">Email me a reset link</SubmitButton>
+      <SubmitButton kind="green" pendingLabel="Sending…">Email me a reset link</SubmitButton>
       <p className="text-sm">
         <Link href="/sign-in" className="inline-flex min-h-11 items-center underline">
           Back to sign in

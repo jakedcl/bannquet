@@ -7,28 +7,12 @@
 }
 
 :is(
-  .retro-button,
-  .retro-button-blue,
-  .retro-button-yellow,
-  .retro-button-green,
-  .retro-button-orange,
-  .retro-button-pink,
-  .retro-button-purple,
-  .retro-button-primary,
   button
 ) {
   transition: transform var(--motion) var(--motion-ease), opacity var(--motion) var(--motion-ease);
 }
 
 :is(
-  .retro-button,
-  .retro-button-blue,
-  .retro-button-yellow,
-  .retro-button-green,
-  .retro-button-orange,
-  .retro-button-pink,
-  .retro-button-purple,
-  .retro-button-primary,
   button
 ):active:not(:disabled) {
   transform: translate(1px, 1px);
@@ -227,28 +211,12 @@ dialog[open]::backdrop {
   }
 
   :is(
-    .retro-button,
-    .retro-button-blue,
-    .retro-button-yellow,
-    .retro-button-green,
-    .retro-button-orange,
-    .retro-button-pink,
-    .retro-button-purple,
-    .retro-button-primary,
       button
   ) {
     transition: none;
   }
 
   :is(
-    .retro-button,
-    .retro-button-blue,
-    .retro-button-yellow,
-    .retro-button-green,
-    .retro-button-orange,
-    .retro-button-pink,
-    .retro-button-purple,
-    .retro-button-primary,
       button
   ):active:not(:disabled) {
     transform: none;

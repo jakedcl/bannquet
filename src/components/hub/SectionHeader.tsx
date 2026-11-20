@@ -19,10 +19,10 @@ export function SectionHeader({
   return (
     <div className={`min-w-0 ${className}`}>
       <div className="ui-section-title flex min-w-0 items-end justify-between gap-3">
-        <Tag id={id} className="t-title2 min-w-0 text-ui-label">{title}</Tag>
+        <Tag id={id} className="t-title2 min-w-0 text-ink">{title}</Tag>
         {action ? <div className="t-subhead shrink-0">{action}</div> : null}
       </div>
-      {subtitle ? <p className="t-subhead mt-1 text-ui-label-2">{subtitle}</p> : null}
+      {subtitle ? <p className="t-subhead mt-1 text-ink-2">{subtitle}</p> : null}
     </div>
   );
 }
@@ -43,8 +43,8 @@ export function LargeTitle({
     <header className="ui-page-title flex min-w-0 items-end justify-between gap-4">
       <div className="min-w-0">
         {eyebrow ? <p className="t-eyebrow mb-1">{eyebrow}</p> : null}
-        <h1 className="t-large-title break-words text-ui-label">{title}</h1>
-        {subtitle ? <p className="t-body mt-1 text-ui-label-2">{subtitle}</p> : null}
+        <h1 className="t-large-title break-words text-ink">{title}</h1>
+        {subtitle ? <p className="t-body mt-1 text-ink-2">{subtitle}</p> : null}
       </div>
       {trailing ? <div className="shrink-0">{trailing}</div> : null}
     </header>

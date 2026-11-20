@@ -72,7 +72,7 @@ export function CreateAccountForm({
       />
       <PasswordField name="confirm" label="Password again" autoComplete="new-password" />
       {state?.error ? <p className="text-sm font-bold text-red-700">{state.error}</p> : null}
-      <SubmitButton tone="green" pendingLabel="Making the account…">Create account</SubmitButton>
+      <SubmitButton kind="green" pendingLabel="Making the account…">Create account</SubmitButton>
     </form>
   );
 }

@@ -86,7 +86,7 @@ export function ProfileForm({ member }: { member: Member }) {
       {state?.error || photoError ? (
         <p className="text-sm font-bold text-red-700">{photoError || state?.error}</p>
       ) : null}
-      <SubmitButton tone="green" pendingLabel="Saving…" disabled={photoBusy}>
+      <SubmitButton kind="green" pendingLabel="Saving…" disabled={photoBusy}>
         {photoBusy ? 'Preparing photo…' : 'Save profile'}
       </SubmitButton>
     </form>

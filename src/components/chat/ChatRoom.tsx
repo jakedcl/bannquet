@@ -150,7 +150,7 @@ export function ChatRoom({
 
   return (
     <div className="space-y-3">
-      <div ref={scroller} className="max-h-[28rem] space-y-3 overflow-y-auto bg-beige p-3 well">
+      <div ref={scroller} className="max-h-[28rem] space-y-3 overflow-y-auto bg-surface-gray p-3 well">
         {messages.length === 0 ? (
           <p className="text-sm text-ink-2">No messages yet. Say what you are up to.</p>
         ) : messages.map((message) => (
@@ -217,7 +217,7 @@ export function ChatRoom({
               className="composer-field w-full bg-white px-3 text-sm"
             />
           </label>
-          <SubmitButton tone="yellow" pendingLabel="Sending…" disabled={!canSend} className="composer-control shrink-0 px-3">
+          <SubmitButton kind="yellow" pendingLabel="Sending…" disabled={!canSend} className="composer-control shrink-0 px-3">
             Send
           </SubmitButton>
         </div>
@@ -226,7 +226,7 @@ export function ChatRoom({
       <dialog
         ref={dialogRef}
         aria-label="Attach a pin, route, or photo"
-        className="m-auto w-[min(32rem,calc(100%-2rem))] max-h-[min(36rem,calc(100%-2rem))] border-4 border-brown bg-beige p-4 shadow-[0_16px_40px_rgba(0,0,0,0.22)] backdrop:bg-black/40"
+        className="m-auto w-[min(32rem,calc(100%-2rem))] max-h-[min(36rem,calc(100%-2rem))] border-4 border-brown bg-surface-gray p-4 shadow-[0_16px_40px_rgba(0,0,0,0.22)] backdrop:bg-black/40"
         onClick={(event) => {
           if (event.target === dialogRef.current) dialogRef.current.close();
         }}
@@ -406,7 +406,7 @@ function ChatLine({
             >
               <input type="hidden" name="id" value={message.id} />
               <SubmitButton
-                tone={adminDelete ? 'admin' : 'yellow'}
+                kind={adminDelete ? 'admin' : 'yellow'}
                 pendingLabel="Deleting…"
                 className="px-3"
                 title={deleteAdmin?.title}

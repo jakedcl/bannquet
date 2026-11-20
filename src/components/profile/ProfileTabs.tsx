@@ -25,7 +25,7 @@ export function ProfileTabs({ tabs }: { tabs: ProfileTab[] }) {
             type="button"
             onClick={() => setActive(tab.id)}
             aria-current={current?.id === tab.id ? 'true' : undefined}
-            className={`min-h-11 px-3 text-sm font-bold uppercase ${current?.id === tab.id ? 'bg-brand-green text-white' : 'underline'}`}
+            className={`min-h-11 px-3 text-sm font-bold uppercase ${current?.id === tab.id ? 'bg-brand text-white' : 'underline'}`}
           >
             {tab.label}
           </button>

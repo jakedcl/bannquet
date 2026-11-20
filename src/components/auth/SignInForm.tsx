@@ -29,7 +29,7 @@ export function SignInForm({ next = '' }: { next?: string }) {
       </label>
       <PasswordField name="password" label="Password" autoComplete="current-password" />
       {state?.error ? <p className="text-sm font-bold text-red-700">{state.error}</p> : null}
-      <SubmitButton tone="green" pendingLabel="Signing in…">Sign in</SubmitButton>
+      <SubmitButton kind="green" pendingLabel="Signing in…">Sign in</SubmitButton>
       <p className="text-sm">
         <Link href="/forgot-password" className="inline-flex min-h-11 items-center underline">
           Forgot your password?

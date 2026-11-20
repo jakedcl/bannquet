@@ -22,7 +22,7 @@ export function InviteForm() {
         />
       </label>
       {state?.error ? <p className="text-sm font-bold text-red-700">{state.error}</p> : null}
-      {state?.emailNote ? <p className="text-sm text-brand-green-dark">{state.emailNote}</p> : null}
+      {state?.emailNote ? <p className="text-sm text-brand-dark">{state.emailNote}</p> : null}
       {state?.url ? (
         <label className="block space-y-1">
           <span className="text-sm font-bold">Page link</span>
@@ -30,7 +30,7 @@ export function InviteForm() {
         </label>
       ) : null}
       <SubmitButton
-        tone="admin"
+        kind="admin"
         pendingLabel="Sending…"
         title={inviteAdmin.title}
         ariaLabel={inviteAdmin.ariaLabel}

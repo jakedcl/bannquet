@@ -78,7 +78,7 @@ export function EditForm({
       {state?.error ? <p className="text-sm font-bold text-red-700">{state.error}</p> : null}
       {state?.saved && !inline ? <p className="text-sm">Saved.</p> : null}
       <SubmitButton
-        tone={adminPower ? 'admin' : 'default'}
+        kind={adminPower ? 'admin' : 'gray'}
         pendingLabel="Saving…"
         title={saveAdmin?.title}
         ariaLabel={saveAdmin?.ariaLabel}

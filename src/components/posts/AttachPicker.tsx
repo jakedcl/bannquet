@@ -41,7 +41,7 @@ export const AttachPicker = forwardRef<AttachPickerHandle, {
     <dialog
       ref={dialogRef}
       aria-label="Attach a pin, route, or photo"
-      className="m-auto w-[min(32rem,calc(100%-2rem))] max-h-[min(36rem,calc(100%-2rem))] border-4 border-brown bg-beige p-4 shadow-[0_16px_40px_rgba(0,0,0,0.22)] backdrop:bg-black/40"
+      className="m-auto w-[min(32rem,calc(100%-2rem))] max-h-[min(36rem,calc(100%-2rem))] border-4 border-brown bg-surface-gray p-4 shadow-[0_16px_40px_rgba(0,0,0,0.22)] backdrop:bg-black/40"
       onClick={(event) => {
         if (event.target === dialogRef.current) dialogRef.current.close();
       }}

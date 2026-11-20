@@ -6,9 +6,6 @@
  *
  * Values come from the design handoff boards (docs/design-handoff on the
  * design-handoff-clean branch). Light only.
- *
- * The "Legacy names" section at the bottom maps the old names onto these
- * tokens until every caller has moved over (UI revamp stage 5 deletes it).
  */
 
 @theme {
@@ -142,38 +139,7 @@
   /* ---- Motion ----------------------------------------------------- */
   --ease-soft: cubic-bezier(0.2, 0, 0, 1);
 
-  /* ---- Legacy theme entries (kept until stage 5) ----------------- */
-  --color-background: var(--color-page);
-  --color-foreground: var(--color-ink);
-  --color-beige: var(--color-surface-gray);
-  --color-border-gray: #999999;
-  --color-brand-green: var(--color-brand);
-  --color-brand-green-light: var(--color-brand-light);
-  --color-brand-green-dark: var(--color-brand-dark);
-  --color-accent-yellow: var(--color-yellow);
-  --color-accent-orange: #ff8c00;
-
-  --shadow-retro: 4px 4px 8px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.9);
-  --shadow-retro-inset: inset 2px 2px 4px rgba(0, 0, 0, 0.2);
-  --shadow-retro-button: var(--shadow-button);
-  --shadow-retro-button-active: var(--shadow-button-pressed);
-
-  --animate-fade-in: fadeIn 0.5s ease-in-out;
-  --animate-slide-up: slideUp 0.5s ease-in-out;
-  --animate-slide-down: slideDown 0.5s ease-in-out;
-
-  @keyframes fadeIn {
-    0% { opacity: 0; }
-    100% { opacity: 1; }
-  }
-  @keyframes slideUp {
-    0% { transform: translateY(20px); opacity: 0; }
-    100% { transform: translateY(0); opacity: 1; }
-  }
-  @keyframes slideDown {
-    0% { transform: translateY(-20px); opacity: 0; }
-    100% { transform: translateY(0); opacity: 1; }
-  }
+  /* Peak Finder loading bar. */
   @keyframes peakFinderBar {
     0% { transform: translateX(-120%); }
     100% { transform: translateX(320%); }
@@ -242,55 +208,4 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: var(--tracking-caps);
-}
-
-/* ---- Legacy names (kept until stage 5) ---------------------------- */
-:root {
-  --ui-bg: var(--color-page);
-  --ui-surface: var(--color-surface);
-  --ui-surface-2: var(--color-surface-cream);
-  --ui-label: var(--color-ink);
-  --ui-label-2: var(--color-ink-2);
-  --ui-label-3: var(--color-ink-3);
-  --ui-separator: var(--color-hairline);
-  --ui-fill: var(--color-surface-gray);
-  --ui-fill-2: var(--color-surface-sunken);
-  --ui-accent: var(--color-brand);
-  --ui-accent-strong: var(--color-brand-dark);
-  --ui-accent-soft: var(--color-brand-soft);
-  --ui-on-accent: var(--color-on-dark);
-  --ui-danger: var(--color-danger);
-  --ui-warn-bg: var(--color-yellow-soft);
-  --ui-warn: var(--color-brown);
-
-  --background: var(--color-page);
-  --foreground: var(--color-ink);
-  --brand-green: var(--color-brand);
-  --brand-green-light: var(--color-brand-light);
-  --brand-green-dark: var(--color-brand-dark);
-  --background-beige: var(--color-surface-gray);
-  --text-primary: var(--color-ink);
-  --accent-yellow: var(--color-yellow);
-  --accent-orange: #ff8c00;
-  --border-gray: #999999;
-  --shadow-color: rgba(0, 0, 0, 0.3);
-}
-
-@theme inline {
-  --color-ui-bg: var(--ui-bg);
-  --color-ui-surface: var(--ui-surface);
-  --color-ui-surface-2: var(--ui-surface-2);
-  --color-ui-label: var(--ui-label);
-  --color-ui-label-2: var(--ui-label-2);
-  --color-ui-label-3: var(--ui-label-3);
-  --color-ui-separator: var(--ui-separator);
-  --color-ui-fill: var(--ui-fill);
-  --color-ui-fill-2: var(--ui-fill-2);
-  --color-ui-accent: var(--ui-accent);
-  --color-ui-accent-strong: var(--ui-accent-strong);
-  --color-ui-accent-soft: var(--ui-accent-soft);
-  --color-ui-on-accent: var(--ui-on-accent);
-  --color-ui-danger: var(--ui-danger);
-  --color-ui-warn: var(--ui-warn);
-  --color-ui-warn-bg: var(--ui-warn-bg);
 }
