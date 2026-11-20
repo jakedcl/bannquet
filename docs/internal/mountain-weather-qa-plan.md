@@ -10,8 +10,28 @@ quality is a plain link; when no avalanche forecast is issued, the avalanche bar
 (the Snow tab panel still says so).
 
 **Status:** Step 6 (small version) is done: Conditions shows one row per station, peaks that
-share it listed together (`groupSpotsByStation` in `SpotsTable.tsx`). Not done: load speed
-(stream each panel) and the optional live status column on the Sources page.
+share it listed together (`groupSpotsByStation` in `SpotsTable.tsx`). Panel streaming is now implemented: place pages start independent feeds together and render
+source groups behind named Suspense loading states. The baseline hero no longer waits for sun
+times, avalanche guidance, or tab-specific feeds. REC renders independently; its allLocations
+fallback still waits for REC to prevent duplicate text. Shared data promises preserve the
+Measured summit-sensor decision and the Snow panel's Mansfield data. Hub navigation/search and
+the Conditions heading render before their reports.
+
+Validation for the streaming pass (local production build): typecheck, build, lint (21
+warnings, no errors), and UI tokens pass. With `NODE_USE_ENV_PROXY=1`, 396 of 398 tests pass;
+the two live-link checks fail on HTTP 403s from USDA, SPC and WPC. No test expectations were
+changed. The hub's loading shell arrived in 478 ms (complete in 3.1 s); Conditions' shell
+arrived in 36 ms while its feeds took 28.8 s. All five Washington tabs returned HTTP 200 and
+streamed content. At 390 px they finished without browser page errors, horizontal overflow,
+or stuck loading states. These are local observations, not production latency guarantees.
+
+### What's left
+
+- Verify cold-load streaming and mobile layout on a Vercel preview with live feeds.
+- Optional: live status on the public Sources catalog. It still deliberately avoids fetching
+  every feed on load; per-place status remains in More → Sources for this page.
+- Further granularity inside aggregate readers (for example, each station or snow feed) is
+  separate work; this pass isolates the page-level source groups.
 
 Step 5 (public Sources page) is done: `/mountain-weather/sources`, built from `SOURCE_REGISTRY`
 through `src/lib/mountain-weather/source-catalog.ts` (plain names, tab, who runs it, how often,

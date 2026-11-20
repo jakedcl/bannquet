@@ -19,7 +19,8 @@ import { BalloonForecastSection } from '@/components/mountain-weather/BalloonFor
 import { MansfieldPackSection } from '@/components/mountain-weather/MansfieldPackSection';
 import { WeatherHazardsHeader } from '@/components/mountain-weather/WeatherHazardsHeader';
 import { PageSourcesSection } from '@/components/mountain-weather/PageSourcesSection';
-import { Suspense } from 'react';
+import { Suspense, type ReactNode } from 'react';
+import { WeatherLoading } from '@/components/mountain-weather/WeatherLoading';
 import { BulletinsSection } from '@/components/mountain-weather/BulletinsSection';
 import { ObservationsSection } from '@/components/mountain-weather/ObservationsSection';
 import { AvalancheSection } from '@/components/mountain-weather/AvalancheSection';
@@ -27,7 +28,11 @@ import { AvalancheStatus } from '@/components/mountain-weather/AvalancheStatus';
 import { SnowSection } from '@/components/mountain-weather/SnowSection';
 import { MapsSection } from '@/components/mountain-weather/MapsSection';
 import { SkySection } from '@/components/mountain-weather/SkySection';
-import { LandAccessSection, RoadAndAirSection, groundSourceNotes } from '@/components/mountain-weather/GroundAccessSection';
+import {
+  LandAccessSection,
+  RoadAndAirSection,
+  groundSourceNotes,
+} from '@/components/mountain-weather/GroundAccessSection';
 import {
   getMountainPlace,
   getMountainSection,
@@ -98,80 +103,131 @@ export default async function MountainPlacePage({
   const bulletinOffice = bulletinOfficeForPlace(place.id)?.office ?? null;
   const skip = Promise.resolve(null);
 
-  // Header data on every tab; the rest only for the open tab.
-  const [baseline, avalanche, sky] = await Promise.all([
-    readNwsGridBaseline(place),
-    readPlaceAvalanche(place.id),
-    readPlaceSky(place),
-  ]);
-  const [mtnPoint, rec, allLocations, balloon, bulletins, mansfieldPack, observations, ground, avg, snow, maps] =
-    await Promise.all([
-      tab === 'forecast' ? readMtnPointForPlace(place.id) : skip,
-      tab === 'forecast' ? readRecForPlace(place.id) : skip,
-      tab === 'forecast' ? readAllLocationsForPlace(place.id) : skip,
-      tab === 'forecast' ? readBalloonForPlace(place.id) : skip,
-      tab === 'forecast' && bulletinOffice ? readOfficeBulletins(bulletinOffice) : skip,
-      tab === 'forecast' || tab === 'measured' || tab === 'snow' ? readMansfieldPack(place.id) : skip,
-      tab === 'measured' ? readPlaceObservations(place.id) : skip,
-      tab === 'measured' || tab === 'more' ? readPlaceGround(place, stateCode, sectionId) : skip,
-      tab === 'snow' && !avalanche ? readAvgForPlace(place.id) : skip,
-      tab === 'snow' ? readPlaceSnow(place) : skip,
-      tab === 'maps' ? readPlaceMaps(place, { state: stateCode, sectionId }) : skip,
-    ]);
-
-  const today = sky.days[0];
-  const sunrise = formatClock12(today?.sunEvents.find((event) => event.phen === 'Rise')?.display);
-  const sunset = formatClock12(today?.sunEvents.find((event) => event.phen === 'Set')?.display);
+  // Start independent sources together. Each boundary below waits only for the
+  // sources it displays; related panels share these same promises.
+  const baseline = readNwsGridBaseline(place);
+  const avalanche = readPlaceAvalanche(place.id);
+  const sky = readPlaceSky(place);
+  const mtnPoint = tab === 'forecast' ? readMtnPointForPlace(place.id) : skip;
+  const rec = tab === 'forecast' ? readRecForPlace(place.id) : skip;
+  const allLocations = tab === 'forecast' ? readAllLocationsForPlace(place.id) : skip;
+  const balloon = tab === 'forecast' ? readBalloonForPlace(place.id) : skip;
+  const bulletins = tab === 'forecast' && bulletinOffice ? readOfficeBulletins(bulletinOffice) : skip;
+  const mansfieldPack = ['forecast', 'measured', 'snow'].includes(tab) ? readMansfieldPack(place.id) : skip;
+  const observations = tab === 'measured' ? readPlaceObservations(place.id) : skip;
+  const ground = tab === 'measured' || tab === 'more' ? readPlaceGround(place, stateCode, sectionId) : skip;
+  const avg = tab === 'snow' ? avalanche.then((data) => (data ? data.avg : readAvgForPlace(place.id))) : skip;
+  const snow = tab === 'snow' ? readPlaceSnow(place) : skip;
+  const maps = tab === 'maps' ? readPlaceMaps(place, { state: stateCode, sectionId }) : skip;
 
   return (
     <PageWrapper leaf={place.name}>
-      <PlaceHero
-        place={place}
-        eyebrow={`${section.title} · ${stateCode.toUpperCase()}${place.elevationFt != null ? ` · ${place.elevationFt.toLocaleString('en-US')} ft` : ''}`}
-        baseline={baseline}
-      />
+      <Stream label={`${place.name} forecast`} data={baseline}>
+        {(baseline) => (
+          <PlaceHero
+            place={place}
+            eyebrow={`${section.title} · ${stateCode.toUpperCase()}${place.elevationFt != null ? ` · ${place.elevationFt.toLocaleString('en-US')} ft` : ''}`}
+            baseline={baseline}
+          />
+        )}
+      </Stream>
       <div className="mx-auto max-w-3xl space-y-4 px-4 pb-12 pt-4">
-        <Switcher label="Weather for this place" value={tab} items={TABS.map((t) => ({ id: t.id, label: t.label, href: tabHref(t.id) }))} />
-        {baseline.data?.hazards?.length ? <WeatherHazardsHeader hazards={baseline.data.hazards} /> : null}
-        <AvalancheStatus data={avalanche} snowHref={tabHref('snow')} onlyIssued />
-        {sunrise || sunset ? (
-          <p className="panel flex items-center gap-4 px-3.5 py-2.5 text-meta">
-            <span>Sunrise <b>{sunrise ?? '—'}</b></span>
-            <span>Sunset <b>{sunset ?? '—'}</b></span>
-            {tab !== 'more' ? (
-              <a href={`${tabHref('more')}#sun-moon`} className="ml-auto font-bold underline">More ›</a>
-            ) : null}
-          </p>
-        ) : null}
+        <Switcher
+          label="Weather for this place"
+          value={tab}
+          items={TABS.map((t) => ({
+            id: t.id,
+            label: t.label,
+            href: tabHref(t.id),
+          }))}
+        />
+        <Stream label="Weather alerts" data={baseline}>
+          {(baseline) =>
+            baseline.data?.hazards?.length ? <WeatherHazardsHeader hazards={baseline.data.hazards} /> : null
+          }
+        </Stream>
+        <Stream label="Avalanche status" data={avalanche}>
+          {(avalanche) => <AvalancheStatus data={avalanche} snowHref={tabHref('snow')} onlyIssued />}
+        </Stream>
+        <Stream label="Sunrise and sunset" data={sky}>
+          {(sky) => {
+            const today = sky.days[0];
+            const sunrise = formatClock12(today?.sunEvents.find((event) => event.phen === 'Rise')?.display);
+            const sunset = formatClock12(today?.sunEvents.find((event) => event.phen === 'Set')?.display);
+            return sunrise || sunset ? (
+              <p className="panel flex items-center gap-4 px-3.5 py-2.5 text-meta">
+                <span>
+                  Sunrise <b>{sunrise ?? '—'}</b>
+                </span>
+                <span>
+                  Sunset <b>{sunset ?? '—'}</b>
+                </span>
+                {tab !== 'more' ? (
+                  <a href={`${tabHref('more')}#sun-moon`} className="ml-auto font-bold underline">
+                    More ›
+                  </a>
+                ) : null}
+              </p>
+            ) : null;
+          }}
+        </Stream>
 
         {tab === 'forecast' ? (
           <>
             {/* Order: the hero already says now; then the next two days, the week, what the
                 forecasters wrote for the mountains, and the expert detail closed at the end. */}
-            <BaselineError result={baseline} />
-            <ForecastNowPanel result={baseline} placeElevationFt={place.elevationFt} defaultOpen={false} />
-            <Next48Panel result={baseline} />
-            <SevenDayPanel result={baseline} />
-            <RecForecastSection results={rec ?? []} />
-            <AllLocationsSection results={allLocationsNotInRec(allLocations, rec)} />
-            <MountainForecastSection result={mtnPoint} placeName={place.name} />
-            <MansfieldPackSection pack={mansfieldPack} part="forecast" />
-            <BulletinsSection bundle={bulletins} />
-            <GridDetailsPanel result={baseline} />
-            <BalloonForecastSection result={balloon} />
+            <Stream label="Forecast" data={baseline}>
+              {(baseline) => (
+                <>
+                  <BaselineError result={baseline} />
+                  <ForecastNowPanel result={baseline} placeElevationFt={place.elevationFt} defaultOpen={false} />
+                  <Next48Panel result={baseline} />
+                  <SevenDayPanel result={baseline} />
+                </>
+              )}
+            </Stream>
+            <Stream label="Mountain forecast" data={rec}>
+              {(rec) => <RecForecastSection results={rec ?? []} />}
+            </Stream>
+            <Stream label="Additional mountain forecast" data={Promise.all([rec, allLocations])}>
+              {([rec, allLocations]) => <AllLocationsSection results={allLocationsNotInRec(allLocations, rec)} />}
+            </Stream>
+            <Stream label="Hourly mountain forecast" data={mtnPoint}>
+              {(mtnPoint) => <MountainForecastSection result={mtnPoint} placeName={place.name} />}
+            </Stream>
+            <Stream label="Mansfield forecast" data={mansfieldPack}>
+              {(mansfieldPack) => <MansfieldPackSection pack={mansfieldPack} part="forecast" />}
+            </Stream>
+            <Stream label="Forecaster discussion" data={bulletins}>
+              {(bulletins) => <BulletinsSection bundle={bulletins} />}
+            </Stream>
+            <Stream label="Grid details" data={baseline}>
+              {(baseline) => <GridDetailsPanel result={baseline} />}
+            </Stream>
+            <Stream label="Winds aloft" data={balloon}>
+              {(balloon) => <BalloonForecastSection result={balloon} />}
+            </Stream>
           </>
         ) : null}
 
         {tab === 'measured' ? (
           <>
-            <MansfieldPackSection pack={mansfieldPack} part="measured" />
-            <ObservationsSection
-              data={observations}
-              placeElevationFt={place.elevationFt}
-              isBase={place.isBase}
-              hasSummitSensor={Boolean(mansfieldPack)}
-            />
-            {ground ? <RoadAndAirSection data={ground} /> : null}
+            <Stream label="Measured conditions" data={Promise.all([mansfieldPack, observations])}>
+              {([mansfieldPack, observations]) => (
+                <>
+                  <MansfieldPackSection pack={mansfieldPack} part="measured" />
+                  <ObservationsSection
+                    data={observations}
+                    placeElevationFt={place.elevationFt}
+                    isBase={place.isBase}
+                    hasSummitSensor={Boolean(mansfieldPack)}
+                  />
+                </>
+              )}
+            </Stream>
+            <Stream label="Road weather" data={ground}>
+              {(ground) => (ground ? <RoadAndAirSection data={ground} /> : null)}
+            </Stream>
           </>
         ) : null}
 
@@ -179,23 +235,63 @@ export default async function MountainPlacePage({
           <>
             {/* Avalanche first, then what is on the ground and falling, then maps, then the
                 hour-by-hour avalanche weather table for experts. */}
-            {avalanche ? <div id="avalanche-guidance"><AvalancheSection data={avalanche} showAvg={false} /></div> : null}
-            {snow ? <SnowSection data={snow} placeName={place.name} mansfield={<MansfieldPackSection pack={mansfieldPack} part="snow" />} /> : <MansfieldPackSection pack={mansfieldPack} part="snow" />}
-            <AvgForecastSection results={avalanche?.avg ?? avg ?? []} collapsed />
+            <Stream label="Avalanche forecast" data={avalanche}>
+              {(avalanche) =>
+                avalanche ? (
+                  <div id="avalanche-guidance">
+                    <AvalancheSection data={avalanche} showAvg={false} />
+                  </div>
+                ) : null
+              }
+            </Stream>
+            <Stream label="Snow reports" data={Promise.all([snow, mansfieldPack])}>
+              {([snow, mansfieldPack]) =>
+                snow ? (
+                  <SnowSection
+                    data={snow}
+                    placeName={place.name}
+                    mansfield={<MansfieldPackSection pack={mansfieldPack} part="snow" />}
+                  />
+                ) : (
+                  <MansfieldPackSection pack={mansfieldPack} part="snow" />
+                )
+              }
+            </Stream>
+            <Stream label="Avalanche weather" data={avg}>
+              {(avg) => <AvgForecastSection results={avg ?? []} collapsed />}
+            </Stream>
           </>
         ) : null}
 
-        {tab === 'maps' && maps ? <MapsSection data={maps} place={place} /> : null}
+        {tab === 'maps' ? (
+          <Stream label="Maps" data={maps}>
+            {(maps) => (maps ? <MapsSection data={maps} place={place} /> : null)}
+          </Stream>
+        ) : null}
 
         {tab === 'more' ? (
           <>
-            <div id="sun-moon"><SkySection data={sky} /></div>
+            <Stream label="Sun and moon" data={sky}>
+              {(sky) => (
+                <div id="sun-moon">
+                  <SkySection data={sky} />
+                </div>
+              )}
+            </Stream>
             <PlaceFactsSection place={place} stateName={stateEntry.name} sectionTitle={section.title} />
-            {ground ? <LandAccessSection data={ground} /> : null}
-            <Suspense fallback={<p className="panel px-3.5 py-3 text-meta text-ink-2">Checking every source for this page…</p>}>
+            <Stream label="Land and access" data={ground}>
+              {(ground) => (ground ? <LandAccessSection data={ground} /> : null)}
+            </Stream>
+            <Suspense
+              fallback={<p className="panel px-3.5 py-3 text-meta text-ink-2">Checking every source for this page…</p>}
+            >
               <PlaceSources place={place} stateCode={stateCode} sectionId={sectionId} path={path} />
             </Suspense>
-            <AboutSourcesSection notes={[...(ground ? groundSourceNotes(ground) : []), USNO_API_TWILIGHT_NOTE]} />
+            <Stream label="About sources" data={ground}>
+              {(ground) => (
+                <AboutSourcesSection notes={[...(ground ? groundSourceNotes(ground) : []), USNO_API_TWILIGHT_NOTE]} />
+              )}
+            </Stream>
           </>
         ) : null}
       </div>
@@ -218,7 +314,15 @@ async function PlaceSources({
   const sources = await readPageSources(place, stateCode, sectionId);
   const landHrefs = new Set((await readPlaceGround(place, stateCode, sectionId)).landLinks.map((l) => l.href));
   const tabHref = (tab: PageSourceTab) => (tab === 'forecast' ? path : `${path}?tab=${tab}`);
-  return <PageSourcesSection sources={{ ...sources, links: sources.links.filter((l) => !landHrefs.has(l.href)) }} tabHref={tabHref} />;
+  return (
+    <PageSourcesSection
+      sources={{
+        ...sources,
+        links: sources.links.filter((l) => !landHrefs.has(l.href)),
+      }}
+      tabHref={tabHref}
+    />
+  );
 }
 
 /**
@@ -229,6 +333,21 @@ function allLocationsNotInRec(
   allLocations: Awaited<ReturnType<typeof readAllLocationsForPlace>>,
   rec: Awaited<ReturnType<typeof readRecForPlace>>,
 ) {
-  const recOffices = new Set((rec ?? []).filter((r) => r.data && r.status !== 'error').map((r) => r.data!.office as string));
+  const recOffices = new Set(
+    (rec ?? []).filter((r) => r.data && r.status !== 'error').map((r) => r.data!.office as string),
+  );
   return (allLocations ?? []).filter((a) => !a.data || !recOffices.has(a.data.office));
+}
+
+/** The render callback stays on the server; no source data or functions cross a client boundary. */
+function Stream<T>({ label, data, children }: { label: string; data: Promise<T>; children: (data: T) => ReactNode }) {
+  return (
+    <Suspense fallback={<WeatherLoading label={label} />}>
+      <Resolved data={data}>{children}</Resolved>
+    </Suspense>
+  );
+}
+
+async function Resolved<T>({ data, children }: { data: Promise<T>; children: (data: T) => ReactNode }) {
+  return children(await data);
 }
