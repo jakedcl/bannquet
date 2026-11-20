@@ -980,7 +980,7 @@ export function PeakFinder() {
     const startUi = startScreenUi(offlineMode, offlineAreas.length);
     return (
       <div className="relative flex h-full flex-col items-center justify-center gap-4 overflow-y-auto bg-surface-gray px-6 py-4 text-center text-ink">
-        <h1 className="text-xl font-bold text-brand">Peak Finder</h1>
+        <h1 className="text-xl font-bold text-brand">Peak Finder (beta)</h1>
         {startUi.showOfflineBadge ? (
           <span className="rounded border-2 border-brown bg-yellow px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide">
             Offline

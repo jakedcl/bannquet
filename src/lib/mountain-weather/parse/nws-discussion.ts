@@ -9,6 +9,21 @@ function sectionKey(title: string): string {
     .slice(0, 80);
 }
 
+/**
+ * Drop the transmission header ("000", "FXUS61 KGYX 192310", "AFDGYX") that precedes the
+ * product title, and squeeze runs of blank lines. The full product stays on the source link.
+ */
+function cleanPreamble(lines: string[]): string {
+  const kept = lines.filter((line, i) => {
+    const t = line.trim();
+    if (i < 4 && /^\d{3}$/.test(t)) return false;
+    if (/^[A-Z]{4}\d{2}\s+K[A-Z]{3}\s+\d{6}(\s+[A-Z]{3})?$/.test(t)) return false;
+    if (i < 6 && /^[A-Z]{3}[A-Z0-9]{3}$/.test(t)) return false;
+    return true;
+  });
+  return kept.join('\n').replace(/\n{3,}/g, '\n\n').trim();
+}
+
 /** Split NWS AFD/HWO productText into preamble and dot-prefixed sections; keep full body text. */
 export function parseNwsDiscussionSections(productText: string): { preamble: string; sections: DiscussionSection[] } {
   const lines = productText.replace(/\r\n/g, '\n').split('\n');
@@ -29,6 +44,7 @@ export function parseNwsDiscussionSections(productText: string): { preamble: str
   };
 
   for (const line of lines) {
+    if (/^\s*\$\$\s*$/.test(line)) continue;
     if (/^\s*&&\s*$/.test(line)) {
       flush();
       continue;
@@ -45,7 +61,7 @@ export function parseNwsDiscussionSections(productText: string): { preamble: str
   flush();
 
   return {
-    preamble: preambleLines.join('\n').trim(),
+    preamble: cleanPreamble(preambleLines),
     sections,
   };
 }

@@ -36,7 +36,7 @@ export default async function MountainSnowHubPage() {
       <div className="mx-auto max-w-3xl space-y-4 px-4 pb-12 pt-4">
         <Card padded={false}>
           <ListGroup bare>
-            <ListRow href="/mountain-weather/snow/avalanche" title="Avalanche" subtitle="MWAC, NYSAC and NWS avalanche weather guidance" />
+            <ListRow href="/mountain-weather/snow/avalanche" title="Avalanche" subtitle="Avalanche centers (MWAC, NYSAC) and NWS avalanche weather" />
             <ListRow
               href="/mountain-weather/new-york/adirondack-high-peaks/mount-marcy?tab=snow"
               title="Snow near a place"

@@ -17,9 +17,9 @@ const WPC_48H_CYCLES_URL = 'https://www.wpc.ncep.noaa.gov/pwpf/displayfiles_prb_
 export const WPC_SNOW_PAGE_URL = 'https://www.wpc.ncep.noaa.gov/pwpf/wwd_percentiles_new.php';
 
 const THRESHOLDS = [
-  { id: 'ge01', label: '≥ 1 in' },
-  { id: 'ge04', label: '≥ 4 in' },
-  { id: 'ge08', label: '≥ 8 in' },
+  { id: 'ge01', label: '1 in or more' },
+  { id: 'ge04', label: '4 in or more' },
+  { id: 'ge08', label: '8 in or more' },
 ] as const;
 
 export function firstWpcCycle(text: string, leadHours: number): string | null {
@@ -47,14 +47,14 @@ function buildImages(cycle24: string | null, cycle48: string | null): SnowImageA
   for (const t of THRESHOLDS) {
     if (currentCycle(cycle24)) images.push({
       id: `wpc-24h-${t.id}`,
-      label: `Probabilistic 24h snow ${t.label}`,
+      label: `Chance of ${t.label} in 24 hours`,
       url: `https://www.wpc.ncep.noaa.gov/pwpf_24hr/prb_24hsnow_${t.id}_${cycle24}.gif`,
       org: 'WPC',
       validTimeLabel: validWindow(cycle24, 24),
     });
     if (currentCycle(cycle48)) images.push({
       id: `wpc-48h-${t.id}`,
-      label: `Probabilistic 48h snow ${t.label}`,
+      label: `Chance of ${t.label} in 48 hours`,
       url: `https://www.wpc.ncep.noaa.gov/pwpf_48hr/prb_48hsnow_${t.id}_${cycle48}.gif`,
       org: 'WPC',
       validTimeLabel: validWindow(cycle48, 48),

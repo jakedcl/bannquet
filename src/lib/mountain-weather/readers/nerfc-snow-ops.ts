@@ -15,28 +15,28 @@ export const NERFC_SNOW_OPS_DEF: SourceDef = {
 const STATIC_IMAGES: SnowImageAsset[] = [
   {
     id: 'nerfc-nohrsc-sd',
-    label: 'NOHRSC modeled snow depth (NERFC composite)',
+    label: 'Modeled snow depth',
     url: 'https://www.weather.gov/images/nerfc/ops/nohrsc_full_sd.png',
     org: 'NERFC / NOHRSC',
     validTimeLabel: 'Composite from NERFC snow page',
   },
   {
     id: 'nerfc-nohrsc-swe',
-    label: 'NOHRSC modeled SWE',
+    label: 'Modeled water in the snowpack (SWE)',
     url: 'https://www.weather.gov/images/nerfc/ops/NOHRSC_model_SWE.png',
     org: 'NERFC / NOHRSC',
     validTimeLabel: null,
   },
   {
     id: 'nerfc-nohrsc-melt',
-    label: 'NOHRSC 24h melt',
+    label: 'Snowmelt, 24 hours',
     url: 'https://www.weather.gov/images/nerfc/ops/NOHRSC_melt_24.png',
     org: 'NERFC / NOHRSC',
     validTimeLabel: null,
   },
   {
     id: 'nerfc-wpc-regional',
-    label: 'WPC regional snowfall (NERFC strip)',
+    label: 'Forecast snowfall (WPC)',
     url: 'https://www.weather.gov/images/nerfc/ops/WPC_Regional_Snow.png',
     org: 'NERFC / WPC',
     validTimeLabel: null,

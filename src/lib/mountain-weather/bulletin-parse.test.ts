@@ -44,3 +44,9 @@ test('mixed states and sections enumerate every covering WFO', () => {
   assert.deepEqual(bulletinOfficesForSection('vt', 'southern-greens'), ['BTV', 'ALY']);
   assert.deepEqual(bulletinOfficesForSection('ny', 'adirondack-high-peaks'), ['BTV']);
 });
+test('discussion preamble drops the transmission header and $$ lines', () => {
+  const text = '000\nFXUS61 KGYX 192310\nAFDGYX\n\nArea Forecast Discussion\nNational Weather Service Gray ME\n610 PM EST Thu Nov 19 2026\n\n\n\n\n.KEY MESSAGES...\nWindy.\n\n$$\n';
+  const { preamble, sections } = parseNwsDiscussionSections(text);
+  assert.equal(preamble, 'Area Forecast Discussion\nNational Weather Service Gray ME\n610 PM EST Thu Nov 19 2026');
+  assert.ok(!sections.some((s) => s.body.includes('$$')));
+});

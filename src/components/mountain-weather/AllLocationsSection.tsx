@@ -1,8 +1,8 @@
 import { CollapsibleSection } from '@/components/mountain-weather/CollapsibleSection';
 import { NotInIssuanceNote } from '@/components/mountain-weather/NotInIssuanceNote';
 import { SourceErrorNote } from '@/components/mountain-weather/SourceErrorNote';
-import { SourceLink } from '@/components/mountain-weather/SourceLink';
-import { allLocationsSourceLinkLabel } from '@/lib/mountain-weather/all-locations-labels';
+import { SourceReceipt, shortOrg } from '@/components/mountain-weather/kit';
+import { tidyLabel } from '@/lib/mountain-weather/format-display';
 import type { AllLocationsPlaceSlice } from '@/lib/mountain-weather/all-locations-types';
 import { defaultResumeHint } from '@/lib/mountain-weather/parse/seasonal-off';
 import {
@@ -37,7 +37,7 @@ function AllLocationsBlock({ result }: { result: SourceResult<AllLocationsPlaceS
   if (result.status === 'not-in-issuance') {
     return (
       <CollapsibleSection
-        title="allLocations narrative"
+        title="Forecaster's mountain forecast (map file)"
         subtitle={def ? `${def.org} · not in this issuance${stale}` : 'allLocations not in this issuance'}
       >
         <NotInIssuanceNote
@@ -52,7 +52,7 @@ function AllLocationsBlock({ result }: { result: SourceResult<AllLocationsPlaceS
   if (result.status === 'error' || !result.data) {
     return (
       <CollapsibleSection
-        title="allLocations narrative"
+        title="Forecaster's mountain forecast (map file)"
         subtitle={def ? `${def.org} (unavailable)${stale}` : 'allLocations unavailable'}
       >
         <SourceErrorNote label="allLocations narrative" href={result.sourceUrl ?? def?.url ?? 'https://www.weather.gov/'} />
@@ -64,8 +64,8 @@ function AllLocationsBlock({ result }: { result: SourceResult<AllLocationsPlaceS
 
   return (
     <CollapsibleSection
-      title="allLocations narrative"
-      subtitle={`${def?.org} · ${loc}${bandLabel ? ` · ${bandLabel}` : ''}${marker.type ? ` · ${marker.type}` : ''}${seasonal ? ' · off season' : ''}${stale}`}
+      title="Forecaster's mountain forecast (map file)"
+      subtitle={`allLocations · ${shortOrg(def?.org ?? '')} · ${tidyLabel(loc)}${bandLabel ? ` · ${bandLabel}` : ''}${seasonal ? ' · off season' : ''}`}
       defaultOpen={!seasonal}
     >
       <div className="space-y-2 text-sm">
@@ -78,15 +78,15 @@ function AllLocationsBlock({ result }: { result: SourceResult<AllLocationsPlaceS
         ) : (
           <p className="whitespace-pre-wrap text-ink">{marker.narrative || '—'}</p>
         )}
-        <p className="text-xs text-ink-2">
-          {marker.lat !== null && marker.lon !== null
-            ? `NWS point ${marker.lat}, ${marker.lon} · `
-            : null}
-          <SourceLink href={result.sourceUrl ?? def?.url ?? 'https://www.weather.gov/'}>
-            {allLocationsSourceLinkLabel(result.data.office)}
-          </SourceLink>
-          {result.issuedAt ? ` · Last-Modified ${formatEt(result.issuedAt)} ET` : null}
-        </p>
+        <SourceReceipt
+          org={def?.org ?? 'National Weather Service'}
+          product={`allLocations map file${marker.lat !== null && marker.lon !== null ? ` · point ${marker.lat}, ${marker.lon}` : ''}`}
+          at={result.issuedAt}
+          verb="updated"
+          status={result.status}
+          expectedEveryHours={def?.expectedEveryHours}
+          href={result.sourceUrl ?? def?.url ?? 'https://www.weather.gov/'}
+        />
       </div>
     </CollapsibleSection>
   );

@@ -84,8 +84,8 @@ export async function readPlaceSnow(place: MountainPlace): Promise<PlaceSnowData
       units: 'in',
       windowLabel:
         binding.element === 'snowdepth'
-          ? 'Snow depth (NOHRSC station table — not 6 h snowfall)'
-          : 'Report window per NOHRSC station table',
+          ? 'total snow on the ground, not new snow'
+          : 'report period as listed by NOHRSC',
       element: binding.element,
       dedupeKey,
     });

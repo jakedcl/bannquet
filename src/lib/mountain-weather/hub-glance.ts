@@ -12,7 +12,7 @@ import {
   type GlancePeriod,
 } from '@/lib/weather-glance';
 
-const SUMMARY_WINDOW = 'Next 48 hours';
+const SUMMARY_WINDOW = 'next 48 hours';
 
 export type HubGlance = {
   title: string;
@@ -42,7 +42,7 @@ function periodsFromDaily(data: BaselineForecast): GlancePeriod[] {
         startTime: period.startTime,
         endTime: end.toISOString(),
         temperature: period.temperature,
-        isDaytime: true,
+        isDaytime: period.isDaytime !== false,
         precip: period.precipChance ?? null,
         windMph: parseMph(period.windSpeed),
         shortForecast: period.shortForecast ?? '',

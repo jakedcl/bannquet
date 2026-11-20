@@ -24,7 +24,8 @@ export type NavAccount = {
   role: 'member' | 'admin' | 'pending';
 } | null;
 
-export const PEAK_FINDER_LINK: NavLink = { href: '/peak-finder', label: 'Peak Finder' };
+/** Peak Finder is in beta: every place it is named says so. */
+export const PEAK_FINDER_LINK: NavLink = { href: '/peak-finder', label: 'Peak Finder (beta)' };
 
 export const COMMUNITY_LINKS: NavLink[] = [
   { href: '/chat', label: 'Chat' },
@@ -333,6 +334,16 @@ export function pageTrail(pathname: string, search: string, account: NavAccount,
     return { parentHref: '/mountain-weather/snow/avalanche', crumbs };
   }
 
+  if (pathname === '/mountain-weather/sources') {
+    return {
+      parentHref: '/mountain-weather',
+      crumbs: [
+        { href: '/mountain-weather', label: 'Mountain Weather' },
+        { href: '/mountain-weather/sources', label: 'Sources' },
+      ],
+    };
+  }
+
   if (pathname === '/mountain-weather/conditions') {
     return {
       parentHref: '/mountain-weather',
@@ -537,7 +548,7 @@ export function pageTrail(pathname: string, search: string, account: NavAccount,
   }
 
   if (pathname === '/peak-finder') {
-    return { parentHref: '/', crumbs: [{ href: '/peak-finder', label: 'Peak Finder' }] };
+    return { parentHref: '/', crumbs: [{ href: PEAK_FINDER_LINK.href, label: PEAK_FINDER_LINK.label }] };
   }
 
   const segment = decodeURIComponent(pathname.split('/').filter(Boolean).at(-1) ?? '');

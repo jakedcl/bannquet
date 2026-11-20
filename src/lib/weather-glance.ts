@@ -82,14 +82,20 @@ export type DailyHighLowRow = {
   secondaryTemp?: number;
   startTime: string;
   name?: string;
+  isDaytime?: boolean;
 };
 
-/** NWS daily rows store high on `temperature` and tonight's low on `secondaryTemp` (all marked daytime). */
+/** NWS daily rows store the day's high on `temperature` and that night's low on `secondaryTemp`; a leading night row is low only. */
 export function dailyHighLowFromSnippets(
   rows: DailyHighLowRow[],
 ): { high: number | null; low: number | null } {
   const first = rows[0];
   if (!first || !Number.isFinite(first.temperature)) return { high: null, low: null };
+  // A leading "Tonight" row carries only the low; the high is the next day's.
+  if (first.isDaytime === false) {
+    const day = rows[1];
+    return { high: day && Number.isFinite(day.temperature) ? day.temperature : null, low: first.temperature };
+  }
   return {
     high: first.temperature,
     low: typeof first.secondaryTemp === 'number' ? first.secondaryTemp : null,
@@ -129,10 +135,10 @@ export function formatWindSummary(
   const g = gust != null && gust > 0 ? Math.round(gust) : null;
   if (s == null && g == null) return { line: null, sustained: s, gust: g };
   if (g != null && s != null && g > s) {
-    return { line: `${s} mph sustained · gusts to ${g} mph`, sustained: s, gust: g };
+    return { line: `Wind up to ${s} mph, gusts to ${g}`, sustained: s, gust: g };
   }
-  if (s != null) return { line: `${s} mph sustained`, sustained: s, gust: g };
-  return { line: `${g} mph gusts`, sustained: s, gust: g };
+  if (s != null) return { line: `Wind up to ${s} mph`, sustained: s, gust: g };
+  return { line: `Gusts to ${g} mph`, sustained: s, gust: g };
 }
 
 function spellWhen(period: GlancePeriod): string {

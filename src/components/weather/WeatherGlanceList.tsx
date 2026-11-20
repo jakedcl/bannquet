@@ -12,7 +12,7 @@ function degrees(high: number | null, low: number | null): string {
 
 export function WeatherGlanceRow({ glance }: { glance: HubGlance & { id?: string } }) {
   const extras = [
-    glance.precip == null ? null : `${Math.round(glance.precip)}% precip`,
+    glance.precip == null ? null : `${Math.round(glance.precip)}% chance of precip`,
     glance.wind ?? null,
   ].filter(Boolean).join(' · ');
   return (
@@ -38,6 +38,9 @@ export function WeatherGlanceRow({ glance }: { glance: HubGlance & { id?: string
         </span>
         <span className="shrink-0 self-start pt-0.5 text-right">
           <span className="block text-heading font-bold tabular-nums text-ink">{degrees(glance.high, glance.low)}</span>
+          {glance.high != null || glance.low != null ? (
+            <span className="block text-caption text-ink-3">high / low</span>
+          ) : null}
         </span>
       </Link>
     </li>

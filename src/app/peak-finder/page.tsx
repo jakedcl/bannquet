@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { PeakFinder } from '@/components/peak-finder/PeakFinder';
 
 export const metadata: Metadata = {
-  title: 'Peak Finder',
+  title: 'Peak Finder (beta)',
   description: 'See the peaks around a spot. Hold up your phone, or drop a pin and drag the skyline.',
 };
 

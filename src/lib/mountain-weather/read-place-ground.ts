@@ -35,6 +35,8 @@ function emptyCompass(): SourceResult<CompassEssRow | null> {
   };
 }
 
+const COMPASS_MAX_AGE_HOURS = 6;
+
 async function nearestCompassEss(
   lat: number,
   lon: number,
@@ -64,12 +66,11 @@ async function nearestCompassEss(
     .filter((x) => {
       const name = (x.row.name ?? '').trim();
       if (/^crew\s+\d+/i.test(name)) return false;
-      const vis = x.row.fields.visibility.raw;
-      const staleDays = 3;
+      // A road station that hasn't reported in 6 hours is not "nearest conditions" (Mansfield's
+      // nearest had last reported in March and rendered as a row of dashes).
       const ts = resolveCompassTimestamp(x.row.timestampRaw, fetchAt, data.liveConfirmed);
-      const ageDays =
-        ts.instant != null ? (fetchAt.getTime() - ts.instant.getTime()) / (24 * 60 * 60 * 1000) : Infinity;
-      if (vis === 0 && ageDays > staleDays) return false;
+      const ageHours = ts.instant != null ? (fetchAt.getTime() - ts.instant.getTime()) / (60 * 60 * 1000) : Infinity;
+      if (ageHours > COMPASS_MAX_AGE_HOURS) return false;
       return true;
     })
     .sort((a, b) => a.distanceMi - b.distanceMi);

@@ -69,3 +69,18 @@ test('shared valley station is attributed as one measurement', () => {
   assert.equal(stats.length, 3);
   assert.match(stats[0].location, /Adirondack Regional Airport \(KSLK, valley station\)/);
 });
+
+test('wind and cold come from summit stations when any reported', () => {
+  const valley: ExtremeSpot = { ...spots[0], mountain: 'Mansfield', windSpeed: 7, windGust: null, windChill: -10, stationId: 'KMPV', stationKind: 'valley' };
+  const summit: ExtremeSpot = { ...spots[1], windSpeed: 41, windGust: null, windChill: 17, stationId: 'KMWN', stationKind: 'summit' };
+  const byLabel = Object.fromEntries(extremeStatsFromSpots([valley, summit]).map((stat) => [stat.label, stat]));
+  assert.equal(byLabel['HIGHEST SUMMIT WIND'].value, '41 mph');
+  assert.equal(byLabel['COLDEST SUMMIT FEELS-LIKE'].value, '17°F');
+  assert.equal(byLabel['HIGHEST TEMP'].value, '18°F');
+});
+
+test('with no summit station reporting, wind and cold are labeled valley', () => {
+  const valley: ExtremeSpot = { ...spots[0], stationId: 'KMPV', stationKind: 'valley' };
+  const labels = extremeStatsFromSpots([valley]).map((stat) => stat.label);
+  assert.deepEqual(labels, ['HIGHEST VALLEY WIND', 'HIGHEST TEMP', 'COLDEST VALLEY FEELS-LIKE']);
+});

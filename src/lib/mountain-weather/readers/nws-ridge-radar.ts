@@ -43,7 +43,7 @@ async function loadImage(def: SourceDef, label: string): Promise<SourceResult<Ma
 const readNeMosaicCached = cachedSourceRead({
   cacheKey: [NWS_RIDGE_NE_MOSAIC_DEF.id],
   def: NWS_RIDGE_NE_MOSAIC_DEF,
-  read: () => loadImage(NWS_RIDGE_NE_MOSAIC_DEF, 'Northeast radar mosaic loop'),
+  read: () => loadImage(NWS_RIDGE_NE_MOSAIC_DEF, 'Radar loop: whole Northeast (mosaic)'),
 });
 
 const siteReaders = new Map<string, () => Promise<SourceResult<MapImageAsset>>>();
@@ -55,7 +55,7 @@ function readerForSite(siteId: string) {
     reader = cachedSourceRead({
       cacheKey: [def.id],
       def,
-      read: () => loadImage(def, `${radarSiteLabel(siteId)} base reflectivity loop`),
+      read: () => loadImage(def, `Radar loop: nearest radar, ${radarSiteLabel(siteId)} (base reflectivity)`),
     });
     siteReaders.set(siteId, reader);
   }

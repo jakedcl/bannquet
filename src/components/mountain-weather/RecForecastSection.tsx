@@ -1,6 +1,8 @@
 import { CollapsibleSection } from '@/components/mountain-weather/CollapsibleSection';
 import { NotInIssuanceNote } from '@/components/mountain-weather/NotInIssuanceNote';
 import { SourceErrorNote } from '@/components/mountain-weather/SourceErrorNote';
+import { SourceReceipt, shortOrg } from '@/components/mountain-weather/kit';
+import { tidyLabel } from '@/lib/mountain-weather/format-display';
 import type { RecPlaceSlice } from '@/lib/mountain-weather/rec-types';
 import type { SourceResult } from '@/lib/mountain-weather/source-types';
 import type { RecOffice } from '@/lib/mountain-weather/rec-types';
@@ -45,13 +47,22 @@ function formatEt(value: string | null): string {
   });
 }
 
-function RecBlock({ result }: { result: SourceResult<RecPlaceSlice> }) {
+/** "Recreation forecast for summits above 4000 feet in ..." -> "Summits above 4000 feet in ...". */
+function recArea(title: string | null | undefined): string {
+  const t = tidyLabel(title) ?? '';
+  const rest = t.replace(/^recreation(al)? forecast for\s+/i, '');
+  return rest.charAt(0).toUpperCase() + rest.slice(1);
+}
+
+const PANEL_TITLE = "Forecaster's mountain forecast";
+
+/** One REC slice. In a group (several elevation bands), titled by its band; alone, by the panel title. */
+function RecBlock({ result, inGroup = false }: { result: SourceResult<RecPlaceSlice>; inGroup?: boolean }) {
   const def = result.data ? recSourceDef(result.data.office) : null;
-  const stale = result.status === 'stale' ? ' · stale' : '';
 
   if (result.status === 'not-in-issuance') {
     return (
-      <CollapsibleSection title="Recreation forecast (REC)" subtitle={`${def?.org ?? 'NWS'} · not in this issuance${stale}`}>
+      <CollapsibleSection title={PANEL_TITLE} subtitle={`Recreation Forecast (REC) · ${shortOrg(def?.org ?? 'NWS')} · not in this issue`}>
         <NotInIssuanceNote
           label="Recreation forecast (REC)"
           href={result.sourceUrl ?? def?.url ?? 'https://api.weather.gov/'}
@@ -64,8 +75,8 @@ function RecBlock({ result }: { result: SourceResult<RecPlaceSlice> }) {
   if (result.status === 'error' || !result.data) {
     return (
       <CollapsibleSection
-        title="Recreation forecast (REC)"
-        subtitle={def ? `${def.org} (unavailable)${stale}` : 'REC unavailable'}
+        title={PANEL_TITLE}
+        subtitle="Recreation Forecast (REC) (could not load)"
       >
         <SourceErrorNote
           label="Recreation forecast (REC)"
@@ -81,26 +92,24 @@ function RecBlock({ result }: { result: SourceResult<RecPlaceSlice> }) {
 
   return (
     <CollapsibleSection
-      title="Recreation forecast (REC)"
-      subtitle={`${def?.org} · ${title}${data.nearbyLabel ? ` · ${data.nearbyLabel}` : ''}${data.notInLatestIssuance ? ' · prior issuance' : ''}${stale}`}
+      title={inGroup ? recArea(title) : PANEL_TITLE}
+      subtitle={`Recreation Forecast (REC) · ${shortOrg(def?.org ?? '')}${inGroup ? '' : ` · ${recArea(title)}`}${data.nearbyLabel && !/feet|ft/i.test(title ?? '') ? ` · ${data.nearbyLabel}` : ''}${data.notInLatestIssuance ? ' · earlier issue' : ''}`}
       defaultOpen
     >
       {data.notInLatestIssuance ? (
         <p className="mb-2 text-xs text-ink-2">
           Not in latest bulletin ({formatEt(data.latestIssuanceTime)} ET). Showing{' '}
-          {formatEt(result.issuedAt)} ET instead. Matched header: {data.matchedSectionTitle}
+          {formatEt(result.issuedAt)} ET instead.
         </p>
-      ) : (
-        <p className="mb-2 text-xs text-ink-2">Matched header: {data.matchedSectionTitle}</p>
-      )}
+      ) : null}
       <div className="space-y-3 text-sm">
-        {section.zoneHeader ? <p className="text-xs font-bold uppercase text-ink-2">{section.zoneHeader}</p> : null}
         {section.periods.length > 0 ? (
           <ul className="space-y-2">
             {section.periods.map((period) => (
               <li key={period.name}>
                 <p className="font-bold">{period.name}</p>
-                <p className="text-ink whitespace-pre-wrap">{period.text}</p>
+                {/* Bulletins wrap at 66 columns; join those lines so the text reflows on a phone. */}
+                <p className="text-ink">{period.text.replace(/\s*\n\s*/g, ' ')}</p>
               </li>
             ))}
           </ul>
@@ -133,12 +142,14 @@ function RecBlock({ result }: { result: SourceResult<RecPlaceSlice> }) {
             </table>
           </div>
         ) : null}
-        <p className="text-xs text-ink-2">
-          Issued {formatEt(result.issuedAt)} ET ·{' '}
-          <a href={result.sourceUrl} className="font-bold underline" target="_blank" rel="noopener noreferrer">
-            NWS REC ({data.office})
-          </a>
-        </p>
+        <SourceReceipt
+          org={def?.org ?? `National Weather Service ${data.office}`}
+          product="Recreation Forecast (REC)"
+          at={result.issuedAt}
+          status={result.status}
+          expectedEveryHours={def?.expectedEveryHours}
+          href={result.sourceUrl}
+        />
       </div>
     </CollapsibleSection>
   );
@@ -146,11 +157,19 @@ function RecBlock({ result }: { result: SourceResult<RecPlaceSlice> }) {
 
 export function RecForecastSection({ results }: { results: SourceResult<RecPlaceSlice>[] | null }) {
   if (!results || results.length === 0) return null;
+  if (results.length === 1) return <RecBlock result={results[0]} />;
+  // Several elevation bands (GYX summits and 2,500-4,000 ft): one panel, one block per band.
+  const org = results.find((r) => r.data)?.data;
   return (
-    <>
-      {results.map((result, idx) => (
-        <RecBlock key={`${result.data?.sectionMatch ?? 'err'}-${idx}`} result={result} />
-      ))}
-    </>
+    <CollapsibleSection
+      title={PANEL_TITLE}
+      subtitle={`Recreation Forecast (REC)${org ? ` · ${shortOrg(recSourceDef(org.office).org)}` : ''} · ${results.length} elevation bands`}
+    >
+      <div className="space-y-2">
+        {results.map((result, idx) => (
+          <RecBlock key={`${result.data?.sectionMatch ?? 'err'}-${idx}`} result={result} inGroup />
+        ))}
+      </div>
+    </CollapsibleSection>
   );
 }

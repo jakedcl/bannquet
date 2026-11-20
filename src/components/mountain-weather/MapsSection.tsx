@@ -1,5 +1,6 @@
 import { CollapsibleSection } from '@/components/mountain-weather/CollapsibleSection';
 import { SourceErrorNote } from '@/components/mountain-weather/SourceErrorNote';
+import { ImageCaption, SourceReceipt } from '@/components/mountain-weather/kit';
 import { MapImageGrid } from '@/components/mountain-weather/MapImageGrid';
 import { MapRemoteImage } from '@/components/mountain-weather/MapRemoteImage';
 import { MountainWeatherPlacesMap } from '@/components/mountain-weather/MountainWeatherPlacesMap';
@@ -10,7 +11,6 @@ import { GOES19_NE_GEOCOLOR_DEF, GOES19_NE_GLM_DEF } from '@/lib/mountain-weathe
 import { radarSiteLabel, nwsRidgeLoopUrl } from '@/lib/mountain-weather/radar-sites';
 import { NWS_ALERTS_ACTIVE_NE_DEF as ALERTS_DEF } from '@/lib/mountain-weather/readers/nws-alerts-active-ne';
 import { SPC_CONVECTIVE_OUTLOOK_DEF } from '@/lib/mountain-weather/readers/spc-convective-outlook';
-import { formatEt } from '@/lib/mountain-weather/format-display';
 
 function formatValid(summary: { effective: string | null; expires: string | null; onset: string | null; ends: string | null }) {
   const from = summary.effective ?? summary.onset;
@@ -29,15 +29,14 @@ export function MapsSection({ data, place }: MapsSectionProps) {
   );
 
   const alertBundle = data.alerts.status === 'ok' && data.alerts.data ? data.alerts.data : null;
-  const issued = data.alerts.issuedAt ? formatEt(data.alerts.issuedAt) : null;
 
   return (
-    <CollapsibleSection title="Maps & imagery" subtitle="Radar, satellite, lightning, alerts — government sources only">
+    <CollapsibleSection title="Maps" subtitle="Radar, satellite, lightning, alerts and outlooks, from government sources">
       {place && data.radarSiteId ? (
         <p className="text-sm text-ink-2">
-          Nearest WSR-88D loop for NWS {place.office}: {radarSiteLabel(data.radarSiteId)} ·{' '}
+          Nearest radar: {radarSiteLabel(data.radarSiteId)} (WSR-88D) ·{' '}
           <a href={nwsRidgeLoopUrl(data.radarSiteId)} className="font-bold underline" target="_blank" rel="noopener noreferrer">
-            RIDGE loop
+            Full-size loop ›
           </a>
         </p>
       ) : null}
@@ -46,20 +45,20 @@ export function MapsSection({ data, place }: MapsSectionProps) {
         title="Radar"
         sourceUrl={NWS_RIDGE_NE_MOSAIC_DEF.url}
         images={radarImages}
-        refreshNote="NWS RIDGE loops · refresh ~5 min"
+        refreshNote="Radar loops (RIDGE), refreshed about every 5 minutes"
       />
 
       <MapImageGrid
         title="Satellite"
         sourceUrl={GOES19_NE_GEOCOLOR_DEF.url}
         images={satelliteImages}
-        refreshNote="NOAA STAR GOES-19 Northeast sector · refresh ~5 min"
+        refreshNote="GOES-19 Northeast sector, refreshed about every 5 minutes"
       />
 
       <section className="panel panel-cream p-4">
-        <h3 className="text-sm font-bold uppercase tracking-wide">NWS active alerts</h3>
+        <h3 className="text-sm font-bold uppercase tracking-wide">Weather alerts</h3>
         <p className="text-xs text-ink-2">
-          {ALERTS_DEF.org} · {alertBundle?.alerts.length ?? 0} for NY/VT/NH/ME · {alertBundle?.mapGeoJson.features.length ?? 0} polygons on map
+          Active alerts (NWS) · {alertBundle?.alerts.length ?? 0} in NY, VT, NH and ME · {alertBundle?.mapGeoJson.features.length ?? 0} shaded on the map below
         </p>
         {data.alerts.status === 'error' ? (
           <SourceErrorNote label="NWS active alerts" href={data.alerts.sourceUrl ?? ALERTS_DEF.url} />
@@ -67,7 +66,6 @@ export function MapsSection({ data, place }: MapsSectionProps) {
         {alertBundle && alertBundle.alerts.length === 0 ? (
           <p className="text-sm">No active alerts in NY, VT, NH, or ME right now.</p>
         ) : null}
-        {issued ? <p className="text-xs text-ink-2">Feed fetched: {issued}</p> : null}
         <ul className="list-disc space-y-1 pl-5 text-sm">
           {(alertBundle?.alerts ?? []).slice(0, place ? 6 : 20).map((row) => (
             <li key={row.id}>
@@ -78,25 +76,24 @@ export function MapsSection({ data, place }: MapsSectionProps) {
             </li>
           ))}
         </ul>
-        <p className="text-xs text-ink-2">
-          <a href={NWS_ALERTS_MAP_URL} className="font-bold underline" target="_blank" rel="noopener noreferrer">
-            NWS national warnings map
-          </a>
-          {' · '}
-          <a href={ALERTS_DEF.url} className="font-bold underline" target="_blank" rel="noopener noreferrer">
-            Alerts API
-          </a>
-        </p>
+        <SourceReceipt
+          org={ALERTS_DEF.org}
+          product="Active alerts"
+          at={data.alerts.issuedAt}
+          verb="checked"
+          status={data.alerts.status}
+          href={data.alerts.sourceUrl ?? ALERTS_DEF.url}
+          extra={
+            <a href={NWS_ALERTS_MAP_URL} className="font-bold underline" target="_blank" rel="noopener noreferrer">
+              National warnings map ›
+            </a>
+          }
+        />
       </section>
 
       <section className="panel panel-cream p-4">
-        <h3 className="text-sm font-bold uppercase tracking-wide">SPC &amp; CPC outlooks</h3>
-        <p className="text-xs text-ink-2">
-          Official thunderstorm outlook maps ·{' '}
-          <a href={SPC_CONVECTIVE_OUTLOOK_DEF.url} className="font-bold underline" target="_blank" rel="noopener noreferrer">
-            SPC source
-          </a>
-        </p>
+        <h3 className="text-sm font-bold uppercase tracking-wide">Thunderstorm and long-range outlooks</h3>
+        <p className="text-xs text-ink-2">Official thunderstorm outlook maps and longer-range outlooks.</p>
         <ul className="list-disc space-y-2 pl-5 text-sm">
           {data.outlooks.map((link) => (
             <li key={link.id}>
@@ -111,16 +108,12 @@ export function MapsSection({ data, place }: MapsSectionProps) {
           {data.spcImages.map((img) => (
             <figure key={img.id} className="space-y-1">
               <figcaption className="text-xs font-bold">{img.label}</figcaption>
-              <p className="text-[10px] text-ink-2">Valid/cycle: {img.validTimeLabel ?? '—'}</p>
               <MapRemoteImage src={img.url} alt={img.label} expectedOk={img.httpOk} />
-              <p className="text-[10px] text-ink-2">
-                <a href={img.pageUrl} className="font-bold underline" target="_blank" rel="noopener noreferrer">
-                  SPC page
-                </a>
-              </p>
+              <ImageCaption label={img.validTimeLabel} href={img.pageUrl} prefix="Issued" />
             </figure>
           ))}
         </div>
+        <SourceReceipt org={SPC_CONVECTIVE_OUTLOOK_DEF.org} product="Convective outlooks" href={SPC_CONVECTIVE_OUTLOOK_DEF.url} linkLabel="Source page" />
         {data.spcImages.length === 0 ? (
           <p className="text-sm font-bold text-red-800">SPC outlook images could not be resolved (pages or PNG checks failed).</p>
         ) : null}

@@ -1,5 +1,7 @@
 import { CollapsibleSection } from '@/components/mountain-weather/CollapsibleSection';
 import { SourceErrorNote } from '@/components/mountain-weather/SourceErrorNote';
+import { SourceReceipt, shortOrg } from '@/components/mountain-weather/kit';
+import { tidyLabel } from '@/lib/mountain-weather/format-display';
 import { buildMtnDisplay, fmtMtnAmount, fmtMtnLightning } from '@/lib/mountain-weather/mtn-display';
 import type { MtnPointBundle } from '@/lib/mountain-weather/mtn-point-types';
 import { windDirFromDegrees } from '@/lib/mountain-weather/parse/mtn-sky';
@@ -38,6 +40,46 @@ function fmtWind(row: {
   return [compass, mph !== '—' ? mph : null].filter(Boolean).join(' ');
 }
 
+/** Rows shown before "Rest of the table": about the next day. */
+const FIRST_ROWS = 24;
+
+function HourlyRows({ rows, meta }: { rows: ReturnType<typeof buildMtnDisplay>['hourly']; meta: ReturnType<typeof buildMtnDisplay>['meta'] }) {
+  return (
+          <div className="overflow-x-auto">
+            <table className="min-w-full whitespace-nowrap text-caption [&_td]:whitespace-nowrap">
+              <thead className="bg-surface-gray text-tag uppercase tracking-label">
+                <tr className="text-left uppercase tracking-wide">
+                  <th className="px-2 py-1">Period</th>
+                  <th className="px-2 py-1">Temp</th>
+                  <th className="px-2 py-1">Wind</th>
+                  {meta.showGust ? <th className="px-2 py-1">Gust</th> : null}
+                  <th className="px-2 py-1">Wind chill</th>
+                  <th className="px-2 py-1">Precip</th>
+                  <th className="px-2 py-1">Sky</th>
+                  {meta.showLightning ? <th className="px-2 py-1">Lightning</th> : null}
+                </tr>
+              </thead>
+              <tbody>
+                {rows.map((row) => (
+                  <tr key={`${row.label}-${row.tempF}-${row.windMph}`} className="border-t border-hairline">
+                    <td className="whitespace-nowrap px-2 py-1 font-bold">{row.label}</td>
+                    <td className="px-2 py-1 tabular-nums">{fmtNum(row.tempF, '°')}</td>
+                    <td className="px-2 py-1">{fmtWind(row)}</td>
+                    {meta.showGust ? <td className="px-2 py-1 tabular-nums">{fmtNum(row.gustMph, ' mph')}</td> : null}
+                    <td className="px-2 py-1 tabular-nums">{fmtNum(row.windChillF, '°')}</td>
+                    <td className="px-2 py-1 tabular-nums">{fmtNum(row.precipPct, '%')}</td>
+                    <td className="px-2 py-1">{row.sky ?? '—'}</td>
+                    {meta.showLightning ? (
+                      <td className="px-2 py-1">{fmtMtnLightning(row.lightning)}</td>
+                    ) : null}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+  );
+}
+
 export function MountainForecastSection({
   result,
   placeName,
@@ -48,13 +90,12 @@ export function MountainForecastSection({
   if (!result) return null;
 
   const source = result.data ? sourceLabel(result.data.office) : null;
-  const stale = result.status === 'stale' ? ' · stale' : '';
 
   if (result.status === 'error' || !result.data) {
     return (
       <CollapsibleSection
-        title="Mountain forecast"
-        subtitle={source ? `${source.org} (unavailable)${stale}` : 'Mountain point forecast unavailable'}
+        title="Mountain forecast, hour by hour"
+        subtitle="Mountain Point Forecast (could not load)"
       >
         <SourceErrorNote label="Mountain forecast" href={result.sourceUrl ?? NWS_MTN_BTV_STANDARD_DEF.url} />
       </CollapsibleSection>
@@ -65,12 +106,12 @@ export function MountainForecastSection({
   const display = buildMtnDisplay(data);
   const { meta, hourly, snowIce } = display;
   const elev =
-    meta.nwsElevationFt !== null ? `${meta.nwsElevationFt.toLocaleString('en-US')} ft (NWS)` : null;
+    meta.nwsElevationFt !== null ? `${meta.nwsElevationFt.toLocaleString('en-US')} ft` : null;
 
   return (
     <CollapsibleSection
-      title="Mountain forecast"
-      subtitle={`${source?.org} · ${data.loc}${data.enhanced ? ' · enhanced hourly table' : ' · standard table'}${elev ? ` · ${elev}` : ''}${stale}`}
+      title="Mountain forecast, hour by hour"
+      subtitle={`Mountain Point Forecast (${data.enhanced ? 'enhanced' : 'standard'}) · ${shortOrg(source?.org ?? '')} · ${tidyLabel(data.loc)}${elev ? ` · ${elev}` : ''}`}
       defaultOpen
     >
       <div className="space-y-4 text-sm">
@@ -78,38 +119,12 @@ export function MountainForecastSection({
         {data.standard?.narratives?.length ? (
           <NarrativeList narratives={data.standard.narratives} placeName={placeName} />
         ) : null}
-        <div className="overflow-x-auto">
-          <table className="min-w-full whitespace-nowrap text-caption [&_td]:whitespace-nowrap">
-            <thead className="bg-surface-gray text-tag uppercase tracking-label">
-              <tr className="text-left uppercase tracking-wide">
-                <th className="px-2 py-1">Period</th>
-                <th className="px-2 py-1">Temp</th>
-                <th className="px-2 py-1">Wind</th>
-                {meta.showGust ? <th className="px-2 py-1">Gust</th> : null}
-                <th className="px-2 py-1">Chill</th>
-                <th className="px-2 py-1">PoP</th>
-                <th className="px-2 py-1">Sky</th>
-                {meta.showLightning ? <th className="px-2 py-1">Lightning</th> : null}
-              </tr>
-            </thead>
-            <tbody>
-              {hourly.map((row) => (
-                <tr key={`${row.label}-${row.tempF}-${row.windMph}`} className="border-t border-hairline">
-                  <td className="whitespace-nowrap px-2 py-1 font-bold">{row.label}</td>
-                  <td className="px-2 py-1 tabular-nums">{fmtNum(row.tempF, '°')}</td>
-                  <td className="px-2 py-1">{fmtWind(row)}</td>
-                  {meta.showGust ? <td className="px-2 py-1 tabular-nums">{fmtNum(row.gustMph, ' mph')}</td> : null}
-                  <td className="px-2 py-1 tabular-nums">{fmtNum(row.windChillF, '°')}</td>
-                  <td className="px-2 py-1 tabular-nums">{fmtNum(row.precipPct, '%')}</td>
-                  <td className="px-2 py-1">{row.sky ?? '—'}</td>
-                  {meta.showLightning ? (
-                    <td className="px-2 py-1">{fmtMtnLightning(row.lightning)}</td>
-                  ) : null}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <HourlyRows rows={hourly.slice(0, FIRST_ROWS)} meta={meta} />
+        {hourly.length > FIRST_ROWS ? (
+          <CollapsibleSection title={`Rest of the table (${hourly.length - FIRST_ROWS} more rows)`} defaultOpen={false}>
+            <HourlyRows rows={hourly.slice(FIRST_ROWS)} meta={meta} />
+          </CollapsibleSection>
+        ) : null}
         {meta.showSnowBlocks && snowIce.length > 0 ? (
           <div className="overflow-x-auto">
             <p className="text-xs font-bold uppercase text-ink-2">6-hour snow and ice totals</p>
@@ -133,15 +148,15 @@ export function MountainForecastSection({
             </table>
           </div>
         ) : null}
-        <p className="text-xs text-ink-2">
-          Source: {source?.org} ·{' '}
-          <a href={result.sourceUrl} className="font-bold underline" target="_blank" rel="noopener noreferrer">
-            NWS mountain XML ({data.office})
-          </a>
-          {result.issuedAt
-            ? ` · file Last-Modified ${new Date(result.issuedAt).toLocaleString('en-US', { timeZone: 'America/New_York' })} ET`
-            : null}
-        </p>
+        <SourceReceipt
+          org={data.office === 'BTV' ? NWS_MTN_BTV_ENHANCED_DEF.org : NWS_MTN_ALY_ENHANCED_DEF.org}
+          product={`Mountain Point Forecast (${data.enhanced ? 'enhanced' : 'standard'})`}
+          at={result.issuedAt}
+          verb="updated"
+          status={result.status}
+          expectedEveryHours={NWS_MTN_BTV_ENHANCED_DEF.expectedEveryHours}
+          href={result.sourceUrl}
+        />
       </div>
     </CollapsibleSection>
   );
@@ -156,7 +171,7 @@ function NarrativeList({
 }) {
   return (
     <div>
-      <p className="text-xs font-bold uppercase text-ink-2">Narrative · {placeName}</p>
+      <p className="text-xs font-bold uppercase text-ink-2">Forecaster&rsquo;s words · {placeName}</p>
       <ul className="mt-1 space-y-2">
         {narratives.map((block) => (
           <li key={block.name}>

@@ -1,4 +1,5 @@
 import { CollapsibleSection } from '@/components/mountain-weather/CollapsibleSection';
+import { SourceReceipt } from '@/components/mountain-weather/kit';
 import { SourceErrorNote } from '@/components/mountain-weather/SourceErrorNote';
 import { AvgForecastSection } from '@/components/mountain-weather/AvgForecastSection';
 import type { AvalancheDangerBand, AvalancheProblem, AvalancheProductBundle } from '@/lib/mountain-weather/avalanche-types';
@@ -118,8 +119,8 @@ function CenterBlock({ result }: { result: SourceResult<AvalancheProductBundle> 
 
   return (
     <CollapsibleSection
-      title={`${centerId} · ${data?.zoneName ?? 'Avalanche forecast'}`}
-      subtitle={`${productDef.org} · official · ${headline}`}
+      title={`Avalanche forecast${data?.zoneName ? `: ${data.zoneName}` : ''}`}
+      subtitle={`${productDef.org} (${centerId}) · ${headline}`}
       defaultOpen={result.status === 'ok'}
     >
       {result.status === 'error' && !data ? (
@@ -128,7 +129,7 @@ function CenterBlock({ result }: { result: SourceResult<AvalancheProductBundle> 
         <div className="space-y-3 text-sm">
           {(result.status === 'seasonal-off' || data.offSeason) && (
             <p className="border border-hairline bg-surface p-2 text-xs font-bold">
-              Not issued / off-season. This is not low danger.
+              No forecast is issued right now (off-season). That does not mean low danger.
               {data.mapLayer.startDate && data.mapLayer.endDate
                 ? ` Issued ${formatEt(data.mapLayer.startDate)} ET, expires ${formatEt(data.mapLayer.endDate)} ET.`
                 : data.lastKnownIssued
@@ -179,12 +180,13 @@ function CenterBlock({ result }: { result: SourceResult<AvalancheProductBundle> 
           ) : null}
         </div>
       ) : null}
-      <p className="text-xs text-ink-2">
-        {layerDef.org} · map-layer + product ·{' '}
-        <a href={result.sourceUrl} className="font-bold underline" target="_blank" rel="noopener noreferrer">
-          Source
-        </a>
-      </p>
+      <SourceReceipt
+        org={layerDef.org}
+        product="Avalanche forecast (map layer and product)"
+        at={result.issuedAt}
+        status={result.status}
+        href={result.sourceUrl}
+      />
     </CollapsibleSection>
   );
 }

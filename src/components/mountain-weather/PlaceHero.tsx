@@ -1,4 +1,5 @@
 import { WindArrow } from '@/components/mountain-weather/kit';
+import { gridElevationNote } from '@/lib/mountain-weather/format-display';
 import type { BaselineForecast } from '@/lib/mountain-weather/baseline-forecast';
 import type { MountainPlace } from '@/lib/mountain-weather/places';
 import type { SourceResult } from '@/lib/mountain-weather/source-types';
@@ -27,6 +28,7 @@ export function PlaceHero({
   const now = baseline.data;
   const temp = now?.temperature != null ? Math.round(now.temperature) : null;
   const at = timeEt(now?.timestamp);
+  const elevationNote = gridElevationNote(now?.gridExtras?.elevationFt, place.elevationFt, place.isBase);
   return (
     <header className="page-hero relative overflow-hidden rounded-b-hero squircle">
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 [background-image:var(--texture-scanlines)]" />
@@ -51,7 +53,8 @@ export function PlaceHero({
               </div>
             </div>
             <p className="mt-2 text-caption text-on-dark/85">
-              NWS forecast for this map point{at ? ` · ${at} ET` : ''} · not a measured reading
+              Forecast{at ? ` for ${at}` : ''}, not a live reading. Live readings are on Measured.
+              {elevationNote ? ` ${elevationNote}` : ''}
             </p>
           </>
         ) : (

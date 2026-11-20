@@ -71,7 +71,7 @@ async function loadSectionGlance(
   const glance = hubGlanceFromBaseline(result, {
     title: section.title,
     href,
-    representativeNote: `NWS grid near ${representative.name}`,
+    representativeNote: `Forecast for ${representative.name}`,
   }, now);
   return { id: section.id, ...glance };
 }

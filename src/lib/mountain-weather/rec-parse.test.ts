@@ -111,3 +111,13 @@ Weather...Dry.
   const wind = fields.find(([key]) => key === 'Wind');
   if (wind) assert.equal(wind[1], null);
 });
+
+test('forecast prose with "..." is not read as a band field', () => {
+  const block = `.FRIDAY...
+Highs in the mid 40s...except in the upper 30s at elevations above 5000 feet.
+Sky/weather...Mostly sunny.
+`;
+  const bulletin = parseRecBulletin(`REC\n\n${block}\n$$\n`, null, null);
+  const fields = bulletin.sections.flatMap((section) => section.bands ?? []).flatMap((band) => Object.keys(band.fields));
+  assert.ok(!fields.some((key) => key.startsWith('Highs')));
+});

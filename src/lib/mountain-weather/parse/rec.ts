@@ -22,7 +22,9 @@ function parseStructuredBands(block: string): RecStructuredBand[] {
       const trimmed = line.trim();
       if (!trimmed) continue;
       const kv = trimmed.match(/^([A-Za-z][^:]+)\.\.\.(.+)$/);
-      if (kv) {
+      // Field names are short labels ("Sky/weather", "Max temp"). Prose that happens to use
+      // "..." ("Highs in the mid 40s...except") is a forecast sentence, not a field.
+      if (kv && kv[1].trim().length <= 28 && !/\d/.test(kv[1])) {
         const key = kv[1].trim();
         const value = kv[2].trim().replace(/\.$/, '');
         // Forecasters sometimes write the word Null for a field with no value.

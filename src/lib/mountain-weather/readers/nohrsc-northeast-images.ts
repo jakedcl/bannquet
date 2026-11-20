@@ -16,9 +16,9 @@ export const NOHRSC_NE_INDEX_DEF: SourceDef = {
 
 const LAYERS: { id: string; layer: string; label: string }[] = [
   { id: 'nohrsc-depth', layer: 'nsm_depth', label: 'Modeled snow depth' },
-  { id: 'nohrsc-swe', layer: 'nsm_swe', label: 'Modeled SWE' },
-  { id: 'nohrsc-swe-24', layer: 'nsm_swe_change_24hr', label: '24h SWE change' },
-  { id: 'nohrsc-melt-24', layer: 'nsm_melt_24hr', label: '24h melt' },
+  { id: 'nohrsc-swe', layer: 'nsm_swe', label: 'Modeled water in the snowpack (SWE)' },
+  { id: 'nohrsc-swe-24', layer: 'nsm_swe_change_24hr', label: 'Change in snowpack water, 24 hours (SWE)' },
+  { id: 'nohrsc-melt-24', layer: 'nsm_melt_24hr', label: 'Snowmelt, 24 hours' },
 ];
 
 async function load(): Promise<SourceResult<SnowImageAsset[]>> {

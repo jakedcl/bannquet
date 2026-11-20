@@ -1,7 +1,7 @@
 import { buildSourceResult, cachedSourceRead, fetchSourceBody } from '@/lib/mountain-weather/fetch-source';
 import { freshnessFromIssued, mergeFreshness } from '@/lib/mountain-weather/freshness';
 import type { NwsStationLatest } from '@/lib/mountain-weather/mansfield-types';
-import { parseNwsStationLatest } from '@/lib/mountain-weather/parse/nws-station-latest';
+import { parseNwsStationRecent } from '@/lib/mountain-weather/parse/nws-station-latest';
 import { stationHasReadableMeasurements } from '@/lib/mountain-weather/parse/nws-station-units';
 import type { SourceDef, SourceResult } from '@/lib/mountain-weather/source-types';
 
@@ -12,7 +12,7 @@ export function nwsStationSourceDef(stationId: string): SourceDef {
     org: 'National Weather Service',
     kind: 'measured',
     terms: 'reuse-ok',
-    url: `https://api.weather.gov/stations/${encodeURIComponent(stationId)}/observations/latest`,
+    url: `https://api.weather.gov/stations/${encodeURIComponent(stationId)}/observations?limit=6`,
     ttlSeconds: 600,
     expectedEveryHours: 1,
   };
@@ -40,9 +40,11 @@ function loadFactory(stationId: string): () => Promise<SourceResult<NwsStationLa
     }
     const base = buildSourceResult({
       fetched,
-      parse: parseNwsStationLatest,
+      parse: parseNwsStationRecent,
       issuedAt: fetched.ok ? fetched.issuedAt : null,
     });
+    // The observation list has no Last-Modified header; the newest report's time is its issue time.
+    if (base.data?.timestamp) base.issuedAt = base.data.timestamp;
     if (base.status === 'error' || !base.data) return base;
 
     if (!stationHasReadableMeasurements(base.data.fields)) {
@@ -62,7 +64,7 @@ export function readNwsStationLatest(stationId: string): Promise<SourceResult<Nw
     const def = nwsStationSourceDef(stationId);
     const load = loadFactory(stationId);
     reader = cachedSourceRead({
-      cacheKey: [def.id],
+      cacheKey: [def.id, 'recent-v2'],
       def,
       read: load,
     });

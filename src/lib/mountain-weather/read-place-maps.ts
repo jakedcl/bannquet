@@ -31,19 +31,19 @@ async function mapPool<T, R>(items: T[], limit: number, fn: (item: T) => Promise
 export const MAP_OUTLOOK_LINKS: OutlookLink[] = [
   {
     id: 'spc-outlook',
-    label: 'Storm Prediction Center convective outlooks',
+    label: 'Thunderstorm outlooks, days 1–8 (SPC)',
     href: 'https://www.spc.noaa.gov/products/outlook/',
     org: 'SPC',
   },
   {
     id: 'cpc-610',
-    label: 'CPC 6–10 day temperature/precip outlooks',
+    label: 'Warmer or colder, wetter or drier: 6–10 days (CPC)',
     href: 'https://www.cpc.ncep.noaa.gov/products/predictions/610day/',
     org: 'CPC',
   },
   {
     id: 'cpc-814',
-    label: 'CPC 8–14 day outlooks',
+    label: 'Warmer or colder, wetter or drier: 8–14 days (CPC)',
     href: 'https://www.cpc.ncep.noaa.gov/products/predictions/814day/',
     org: 'CPC',
   },

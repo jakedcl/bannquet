@@ -2,6 +2,10 @@ import { CollapsibleSection } from '@/components/mountain-weather/CollapsibleSec
 import { SourceErrorNote } from '@/components/mountain-weather/SourceErrorNote';
 import type { MansfieldPackData } from '@/lib/mountain-weather/read-mansfield-pack';
 import { mansfieldPackSourceDefs } from '@/lib/mountain-weather/read-mansfield-pack';
+import { Notice } from '@/components/hub/Notice';
+import { SourceReceipt } from '@/components/mountain-weather/kit';
+import { formatStationFieldDisplay, stationHasReadableMeasurements } from '@/lib/mountain-weather/parse/nws-station-units';
+import { SHEF_CODE_LABELS } from '@/lib/mountain-weather/parse/rr2-mansfield';
 import { defaultResumeHint } from '@/lib/mountain-weather/parse/seasonal-off';
 import type { MmnDepthPoint } from '@/lib/mountain-weather/mansfield-types';
 import type { SourceResult } from '@/lib/mountain-weather/source-types';
@@ -22,14 +26,29 @@ function formatEt(value: string | null): string {
   });
 }
 
-function Footer({ def, issuedAt, sourceUrl }: { def: SourceDef; issuedAt: string | null; sourceUrl: string }) {
+function Footer({
+  def,
+  product,
+  issuedAt,
+  status,
+  sourceUrl,
+}: {
+  def: SourceDef;
+  product?: string;
+  issuedAt: string | null;
+  status: string;
+  sourceUrl: string;
+}) {
   return (
-    <p className="text-xs text-ink-2">
-      {def.org} · {def.kind} · Issued {formatEt(issuedAt)} ET ·{' '}
-      <a href={sourceUrl} className="font-bold underline" target="_blank" rel="noopener noreferrer">
-        Source
-      </a>
-    </p>
+    <SourceReceipt
+      org={def.org}
+      product={product}
+      at={issuedAt}
+      verb={def.kind === 'measured' ? 'observed' : 'issued'}
+      status={status}
+      expectedEveryHours={def.expectedEveryHours}
+      href={sourceUrl}
+    />
   );
 }
 
@@ -58,11 +77,14 @@ function mergeClimatology(pack: MansfieldPackData['climatology']) {
 
 function PackBlock<T>({
   title,
+  subtitleName,
   def,
   result,
   children,
 }: {
   title: string;
+  /** Official product name, shown under the plain title. */
+  subtitleName?: string;
   def: SourceDef;
   result: SourceResult<T>;
   children: React.ReactNode;
@@ -72,9 +94,9 @@ function PackBlock<T>({
 
   if (result.status === 'error' || !result.data) {
     return (
-      <CollapsibleSection title={title} subtitle={`${def.org} (unavailable)${stale}`}>
+      <CollapsibleSection title={title} subtitle={`${subtitleName ? `${subtitleName} · ` : ''}${def.org} (unavailable)${stale}`}>
         <SourceErrorNote label={title} href={result.sourceUrl ?? def.url} />
-        <Footer def={def} issuedAt={result.issuedAt} sourceUrl={result.sourceUrl} />
+        <Footer def={def} product={subtitleName} issuedAt={result.issuedAt} status={result.status} sourceUrl={result.sourceUrl} />
       </CollapsibleSection>
     );
   }
@@ -82,11 +104,11 @@ function PackBlock<T>({
   return (
     <CollapsibleSection
       title={title}
-      subtitle={`${def.org} · ${def.kind}${seasonal ? ' · off season' : ''}${stale}`}
+      subtitle={`${subtitleName ? `${subtitleName} · ` : ''}${def.org}${seasonal ? ' · off season' : ''}${stale}`}
       defaultOpen={!seasonal}
     >
       <div className="space-y-2 text-sm">{children}</div>
-      <Footer def={def} issuedAt={result.issuedAt} sourceUrl={result.sourceUrl} />
+      <Footer def={def} product={subtitleName} issuedAt={result.issuedAt} status={result.status} sourceUrl={result.sourceUrl} />
     </CollapsibleSection>
   );
 }
@@ -112,62 +134,67 @@ export function MansfieldPackSection({ pack, part }: { pack: MansfieldPackData |
   return (
     <>
       {show.measured ? (
-      <PackBlock title="Summit station (MMNV1)" def={defs.station} result={pack.station}>
-        {pack.station.data ? (
+      <PackBlock title="Mansfield summit temperature" subtitleName="Summit report (RR2, SHEF) · MMNV1" def={defs.rr2Summit} result={pack.rr2Summit}>
+        {pack.rr2Summit.data ? (
           <>
-            <p className="text-xs font-bold uppercase text-ink">{pack.station.data.stationName ?? 'MMNV1'}</p>
-            {pack.station.data.fields.length === 0 ? (
-              <p className="text-xs text-ink-2">No scalar fields in the latest observation (check RR2 SHEF below).</p>
+            {pack.rr2Summit.data.summitTempF !== null ? (
+              <p>
+                <span className="text-3xl font-bold text-ink">{pack.rr2Summit.data.summitTempF}°F</span>
+                {pack.rr2Summit.data.observedAt ? (
+                  <span className="ml-2 text-meta text-ink-2">at {formatEt(pack.rr2Summit.data.observedAt)} ET</span>
+                ) : null}
+              </p>
             ) : (
-              <ul className="grid gap-1 sm:grid-cols-2">
-                {pack.station.data.fields.map((f) => (
-                  <li key={f.key}>
-                    <span className="font-bold">{f.label}:</span>{' '}
-                    {f.value === null ? '—' : `${f.value}${f.unit ? ` ${f.unit}` : ''}`}
-                    {f.qcFailed ? (
-                      <span className="text-ink-2"> (failed NWS quality check)</span>
-                    ) : f.qualityControl ? (
-                      <span className="text-ink-2"> (QC {f.qualityControl})</span>
-                    ) : null}
+              <Notice>No summit temperature in the latest report.</Notice>
+            )}
+            <ul className="space-y-1 text-meta">
+              {pack.rr2Summit.data.shefFields
+                .filter((f) => !/^DH/i.test(f.code))
+                .map((f) => (
+                  <li key={f.code}>
+                    {SHEF_CODE_LABELS[f.code] ? <span className="font-bold">{SHEF_CODE_LABELS[f.code]}</span> : null}{' '}
+                    <span className="font-mono text-ink-2">{f.code}</span> {f.value ?? '—'}
                   </li>
                 ))}
-              </ul>
-            )}
-            {pack.station.data.timestamp ? (
-              <p className="text-xs text-ink-2">Observation {formatEt(pack.station.data.timestamp)} ET</p>
-            ) : null}
+            </ul>
+            <p className="font-mono text-xs text-ink-2 [overflow-wrap:anywhere]">{pack.rr2Summit.data.rawLine}</p>
           </>
         ) : null}
       </PackBlock>
       ) : null}
 
       {show.measured ? (
-      <PackBlock title="RR2 summit (SHEF)" def={defs.rr2Summit} result={pack.rr2Summit}>
-        {pack.rr2Summit.data ? (
+      <PackBlock title="Mansfield summit station" subtitleName="NWS observations · MMNV1" def={defs.station} result={pack.station}>
+        {pack.station.data ? (
           <>
-            {pack.rr2Summit.data.reportHeader ? (
-              <p className="font-mono text-xs text-ink">{pack.rr2Summit.data.reportHeader}</p>
+            <p className="text-xs font-bold uppercase text-ink">{pack.station.data.stationName ?? 'MMNV1'}</p>
+            {!stationHasReadableMeasurements(pack.station.data.fields) ? (
+              <Notice>No readings passed the NWS quality check in the last few reports. The summit temperature above comes from the separate RR2 report.</Notice>
             ) : null}
-            <ul className="space-y-1 text-sm">
-              {pack.rr2Summit.data.shefFields.map((f) => (
-                <li key={f.code}>
-                  <span className="font-bold">{f.code}:</span> {f.value ?? '—'}
+            <ul className="grid gap-1 sm:grid-cols-2 text-meta">
+              {pack.station.data.fields.map((f) => (
+                <li key={f.key}>
+                  <span className="font-bold">{f.label}:</span>{' '}
+                  {f.value === null || f.value === '' ? '—' : formatStationFieldDisplay(f)}
+                  {f.qcFailed ? (
+                    <span className="text-ink-2"> (failed NWS quality check)</span>
+                  ) : f.qualityControl ? (
+                    <span className="text-ink-2"> (QC {f.qualityControl})</span>
+                  ) : null}
+                  {f.observedAt ? <span className="text-ink-2"> · at {formatEt(f.observedAt)}</span> : null}
                 </li>
               ))}
             </ul>
-            {pack.rr2Summit.data.summitTempF !== null ? (
-              <p className="text-xs text-ink-2">
-                <span className="font-bold">TAIRGZZ (°F):</span> {pack.rr2Summit.data.summitTempF}
-              </p>
+            {pack.station.data.timestamp ? (
+              <p className="text-xs text-ink-2">Newest report {formatEt(pack.station.data.timestamp)} ET</p>
             ) : null}
-            <p className="font-mono text-xs text-ink">{pack.rr2Summit.data.rawLine}</p>
           </>
         ) : null}
       </PackBlock>
       ) : null}
 
       {show.forecast ? (
-      <PackBlock title="Elevation profile" def={defs.profile} result={pack.profile}>
+      <PackBlock title="Elevation profile" subtitleName="Worked out from the Mountain Point Forecast" def={defs.profile} result={pack.profile}>
         {pack.profile.data ? (
           <>
             <div className="overflow-x-auto">
@@ -216,7 +243,7 @@ export function MansfieldPackSection({ pack, part }: { pack: MansfieldPackData |
       ) : null}
 
       {show.snow ? (
-      <PackBlock title="Mansfield snow stake (HYD)" def={defs.hyd} result={pack.hyd}>
+      <PackBlock title="Mansfield snow stake" subtitleName="Hydrologic Summary (HYD)" def={defs.hyd} result={pack.hyd}>
         {pack.hyd.status === 'seasonal-off' ? (
           <p className="border border-hairline bg-surface p-2 text-xs font-bold">
             {defaultResumeHint('stake')}
@@ -260,7 +287,7 @@ export function MansfieldPackSection({ pack, part }: { pack: MansfieldPackData |
       ) : null}
 
       {show.snow ? (
-      <PackBlock title="Snow depth climatology (in)" def={defs.climatology} result={pack.climatology}>
+      <PackBlock title="Snow depth climatology (in)" subtitleName="Mount Mansfield snow depth record" def={defs.climatology} result={pack.climatology}>
         {pack.climatology.data ? (
           <div className="max-h-96 overflow-auto">
             <table className="min-w-full border border-hairline text-[11px]">

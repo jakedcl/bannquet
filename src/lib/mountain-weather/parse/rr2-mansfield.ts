@@ -29,6 +29,28 @@ function parseShefTail(tail: string): Rr2ShefField[] {
   return fields;
 }
 
+/** SHEF codes in the Mansfield RR2 line, in words. */
+export const SHEF_CODE_LABELS: Record<string, string> = {
+  TAIRGZZ: 'Air temperature (°F)',
+  TA: 'Air temperature (°F)',
+  SD: 'Snow depth (in)',
+  SF: 'New snow (in)',
+  PP: 'Precipitation (in)',
+  US: 'Wind speed (mph)',
+  UD: 'Wind direction (°)',
+  UG: 'Wind gust (mph)',
+  XR: 'Relative humidity (%)',
+};
+
+/** `.A MMNV1 261120 Z` + `DH0148` -> 2026-11-20T01:48:00Z. */
+export function shefObservedAt(reportHeader: string | null, tail: string): string | null {
+  const date = reportHeader?.match(/\s(\d{2})(\d{2})(\d{2})\s+Z\b/i);
+  const time = tail.match(/\bDH(\d{2})(\d{2})?/i);
+  if (!date || !time) return null;
+  const iso = `20${date[1]}-${date[2]}-${date[3]}T${time[1]}:${time[2] ?? '00'}:00Z`;
+  return Number.isNaN(Date.parse(iso)) ? null : iso;
+}
+
 export function parseRr2MansfieldSummit(productText: string): MansfieldRr2Summit | null {
   const lines = productText.split('\n').map((l) => l.trim()).filter(Boolean);
   for (const line of lines) {
@@ -41,6 +63,7 @@ export function parseRr2MansfieldSummit(productText: string): MansfieldRr2Summit
         reportHeader: null,
         shefFields: [],
         summitTempF: null,
+        observedAt: null,
       };
     }
     const reportHeader = headerMatch[1].trim();
@@ -57,6 +80,7 @@ export function parseRr2MansfieldSummit(productText: string): MansfieldRr2Summit
       reportHeader,
       shefFields,
       summitTempF: summitTempF !== null && Number.isFinite(summitTempF) ? summitTempF : null,
+      observedAt: shefObservedAt(reportHeader, tail),
     };
   }
   return null;

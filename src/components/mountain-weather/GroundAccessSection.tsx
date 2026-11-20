@@ -1,5 +1,6 @@
 import { CollapsibleSection } from '@/components/mountain-weather/CollapsibleSection';
 import { SourceErrorNote } from '@/components/mountain-weather/SourceErrorNote';
+import { SourceReceipt } from '@/components/mountain-weather/kit';
 import type { PlaceGroundData } from '@/lib/mountain-weather/ground-access-types';
 import { GROUND_ACCESS_NOTES } from '@/lib/mountain-weather/read-place-ground';
 import { USDM_COUNTY_DROUGHT_DEF } from '@/lib/mountain-weather/readers/usdm-county-drought';
@@ -9,8 +10,8 @@ import { formatObservationAge } from '@/lib/mountain-weather/format-display';
 /** Road weather stations and air quality near the place (Measured tab). */
 export function RoadAndAirSection({ data }: { data: PlaceGroundData }) {
   return (
-    <CollapsibleSection title="Roads and air" subtitle="NE Compass road weather · AirNow air quality">
-      <SubBlock title="Nearest NE Compass road weather (ESS)">
+    <CollapsibleSection title="Roads and air quality" subtitle="Road weather stations (New England Compass) · AirNow">
+      <SubBlock title="Nearest road weather station">
         {data.compassEss.status === 'error' ? (
           <SourceErrorNote
             label="Compass ESS"
@@ -20,7 +21,7 @@ export function RoadAndAirSection({ data }: { data: PlaceGroundData }) {
           <div>
             <p className="font-bold">{data.compassEss.data.name}</p>
             <p className="text-xs text-ink">
-              {data.compassEss.data.distanceMi} mi · {data.compassEss.data.lat.toFixed(4)}, {data.compassEss.data.lon.toFixed(4)}
+              {data.compassEss.data.distanceMi} mi away, beside a road · {data.compassEss.data.lat.toFixed(4)}, {data.compassEss.data.lon.toFixed(4)}
             </p>
             {data.compassEss.data.distant ? (
               <p className="text-xs font-bold text-amber-950">
@@ -45,18 +46,19 @@ export function RoadAndAirSection({ data }: { data: PlaceGroundData }) {
                 }
                 className="sm:col-span-2"
               />
-              <Field
-                label="Timestamp rule"
-                value={data.compassEss.data.timestampInterpretation}
-                className="sm:col-span-2"
-              />
             </dl>
-            <p className="text-xs text-ink-2">{data.compassEss.data.timestampNote}</p>
           </div>
         ) : (
-          <p className="text-sm text-ink-2">No Compass ESS within range for this state or distance.</p>
+          <p className="text-sm text-ink-2">No road weather station within range has reported in the last 6 hours.</p>
         )}
-        <p className="mt-1 text-xs text-ink-2">{COMPASS_NE_ESS_DEF.org} · $0 public XML</p>
+        <SourceReceipt
+          org={COMPASS_NE_ESS_DEF.org}
+          product="Road weather stations (ESS)"
+          at={data.compassEss.data?.observedAt ?? null}
+          verb="observed"
+          status={data.compassEss.status}
+          href={data.compassEss.sourceUrl ?? COMPASS_NE_ESS_DEF.url}
+        />
       </SubBlock>
 
       <SubBlock title="Air quality">
@@ -80,12 +82,10 @@ export function RoadAndAirSection({ data }: { data: PlaceGroundData }) {
           </div>
         ) : (
           <p className="text-sm">
+            {data.airNowKeyConfigured ? 'No air quality monitor in range right now. ' : null}
             <a href={data.airNowLink} className="font-bold underline" target="_blank" rel="noopener noreferrer">
-              AirNow.gov
-            </a>{' '}
-            {data.airNowKeyConfigured
-              ? '(no monitors in regional feed for this point)'
-              : '(no live AQI without API key)'}
+              Check air quality on AirNow.gov ›
+            </a>
           </p>
         )}
       </SubBlock>
@@ -112,7 +112,7 @@ export function LandAccessSection({ data }: { data: PlaceGroundData }) {
         </SubBlock>
       ) : null}
 
-      <SubBlock title="County drought (U.S. Drought Monitor)">
+      <SubBlock title="County drought">
         {data.drought.status === 'error' ? (
           <SourceErrorNote label="County drought" href={data.drought.sourceUrl ?? USDM_COUNTY_DROUGHT_DEF.url} />
         ) : data.drought.data ? (
@@ -122,7 +122,7 @@ export function LandAccessSection({ data }: { data: PlaceGroundData }) {
             <Field label="Map date" value={data.drought.data.mapDate} />
             <Field label="Worst category present" value={data.drought.data.dominant} />
             <Field
-              label="Area %"
+              label="Share of county (D0 abnormally dry to D4 exceptional drought)"
               value={`None ${data.drought.data.nonePct}% · D0 ${data.drought.data.d0Pct}% · D1 ${data.drought.data.d1Pct}% · D2 ${data.drought.data.d2Pct}% · D3 ${data.drought.data.d3Pct}% · D4 ${data.drought.data.d4Pct}%`}
               className="sm:col-span-2"
             />
@@ -130,11 +130,15 @@ export function LandAccessSection({ data }: { data: PlaceGroundData }) {
         ) : (
           <p className="text-sm text-ink-2">County-level drought information is unavailable for this place.</p>
         )}
-        <p className="mt-1 text-xs text-ink-2">
-          <a href={USDM_COUNTY_DROUGHT_DEF.url} className="underline" target="_blank" rel="noopener noreferrer">
-            {USDM_COUNTY_DROUGHT_DEF.org}
-          </a>
-        </p>
+        <SourceReceipt
+          org={USDM_COUNTY_DROUGHT_DEF.org}
+          product="U.S. Drought Monitor, county statistics"
+          at={data.drought.issuedAt}
+          verb="updated"
+          status={data.drought.status}
+          expectedEveryHours={USDM_COUNTY_DROUGHT_DEF.expectedEveryHours}
+          href={data.drought.sourceUrl ?? USDM_COUNTY_DROUGHT_DEF.url}
+        />
       </SubBlock>
 
     </CollapsibleSection>

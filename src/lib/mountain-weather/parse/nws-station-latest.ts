@@ -97,3 +97,38 @@ export function parseNwsStationLatest(jsonText: string): NwsStationLatest {
     fields,
   };
 }
+
+/** Older reports may fill a missing field only if they are this close to the newest report. */
+const BACKFILL_WINDOW_MS = 3 * 60 * 60 * 1000;
+
+/**
+ * Parse `/stations/{id}/observations?limit=N` (newest reports first). The newest report is the
+ * base; any field it lacks (or that failed QC) is filled from the newest earlier report within
+ * three hours that has it, with `observedAt` set so the page can show that reading's own time.
+ * `/observations/latest` drops QC-flagged values entirely, which blanked KMWN's temp and wind.
+ */
+export function parseNwsStationRecent(jsonText: string): NwsStationLatest {
+  const doc = JSON.parse(jsonText) as { features?: unknown };
+  if (!Array.isArray(doc.features)) return parseNwsStationLatest(jsonText);
+  const reports = (doc.features as Record<string, unknown>[])
+    .map((feature) => parseNwsStationLatest(JSON.stringify(feature)))
+    .filter((r) => r.timestamp)
+    .sort((a, b) => Date.parse(b.timestamp!) - Date.parse(a.timestamp!));
+  if (reports.length === 0) throw new Error('No observations published for this station');
+
+  const [newest, ...older] = reports;
+  const newestMs = Date.parse(newest.timestamp!);
+  const hasValue = (f: NwsStationField | undefined) =>
+    Boolean(f) && f!.value !== null && f!.value !== '' && !f!.qcFailed;
+
+  const fields = newest.fields.map((field) => {
+    if (hasValue(field)) return field;
+    for (const report of older) {
+      if (newestMs - Date.parse(report.timestamp!) > BACKFILL_WINDOW_MS) break;
+      const earlier = report.fields.find((f) => f.key === field.key);
+      if (hasValue(earlier)) return { ...earlier!, observedAt: report.timestamp };
+    }
+    return field;
+  });
+  return { ...newest, fields };
+}

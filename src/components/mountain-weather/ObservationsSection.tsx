@@ -1,9 +1,10 @@
 import { CollapsibleSection } from '@/components/mountain-weather/CollapsibleSection';
+import { tidyLabel } from '@/lib/mountain-weather/format-display';
 import { NotInIssuanceNote } from '@/components/mountain-weather/NotInIssuanceNote';
 import { SourceErrorNote } from '@/components/mountain-weather/SourceErrorNote';
 import { Notice } from '@/components/hub/Notice';
 import { tagClass } from '@/components/hub/Button';
-import { ReadingGrid, ReadingTile, SourceLine, WindArrow } from '@/components/mountain-weather/kit';
+import { ReadingGrid, ReadingTile, SourceReceipt, WindArrow } from '@/components/mountain-weather/kit';
 import type { PlaceObservationsData, StationObservationBlock } from '@/lib/mountain-weather/read-place-observations';
 import type { PlaceStationObservationBinding } from '@/lib/mountain-weather/station-bindings';
 import type { SourceDef } from '@/lib/mountain-weather/source-types';
@@ -30,54 +31,56 @@ function formatEt(value: string | null): string {
   });
 }
 
-function kindTitle(
-  kind: PlaceStationObservationBinding['kind'],
-  stationId: string,
-  stationName: string | null,
-  network: string,
-): string {
-  const label = stationName ? `${stationName} (${stationId})` : stationId;
-  const net = network ? ` · ${network}` : '';
-  if (kind === 'summit') return `Summit station · ${label}${net}`;
-  if (kind === 'nearby-higher') return `Nearby higher station · ${label}${net}`;
-  if (kind === 'valley') return `Valley / nearby · ${label}${net}`;
-  return `Nearby · ${label}${net}`;
+function kindTitle(kind: PlaceStationObservationBinding['kind'], stationId: string, stationName: string | null): string {
+  const name = tidyLabel(stationName) ?? stationId;
+  if (kind === 'summit') return `Summit right now: ${name}`;
+  if (kind === 'nearby-higher') return `Higher station: ${name}`;
+  if (kind === 'valley') return `Valley station: ${name}`;
+  return `Nearby station: ${name}`;
 }
 
+/** "ASOS/AWOS airport" -> "airport weather station"; other network names pass through. */
+function networkWords(network: string): string {
+  if (/ASOS|AWOS/i.test(network)) return 'airport weather station (ASOS/AWOS)';
+  return network;
+}
+
+/** "13.2 mi away · 1,047 ft · 5,241 ft lower than this place". */
 function placementNote(binding: PlaceStationObservationBinding, placeElevationFt: number | null): string {
-  const parts = [`${binding.distanceMi} mi from this place`, binding.network];
-  if (binding.stationElevationFt !== null) {
-    const src = binding.elevationSource ? ` (${binding.elevationSource})` : '';
-    parts.push(`${binding.stationElevationFt.toLocaleString('en-US')} ft station elevation${src}`);
-  }
-  if (placeElevationFt !== null && binding.elevationDiffFt !== null) {
-    if (binding.kind === 'nearby-higher' && binding.elevationDiffFt !== null && binding.elevationDiffFt < 0) {
-      parts.push(
-        `${Math.abs(binding.elevationDiffFt).toLocaleString('en-US')} ft higher than catalog (${placeElevationFt.toLocaleString('en-US')} ft)`,
-      );
-    } else if (binding.kind === 'valley' || binding.elevationDiffFt >= 700) {
-      parts.push(
-        `${binding.elevationDiffFt.toLocaleString('en-US')} ft below catalog summit (${placeElevationFt.toLocaleString('en-US')} ft)`,
-      );
-    } else if (binding.elevationDiffFt <= 0) {
-      parts.push(
-        `station is ${Math.abs(binding.elevationDiffFt).toLocaleString('en-US')} ft above catalog elevation`,
-      );
-    } else {
-      parts.push(`${binding.elevationDiffFt.toLocaleString('en-US')} ft below catalog elevation`);
-    }
+  const parts = [binding.distanceMi < 0.5 ? 'At this place' : `${binding.distanceMi} mi away`];
+  if (binding.stationElevationFt !== null) parts.push(`${binding.stationElevationFt.toLocaleString('en-US')} ft`);
+  const diff = binding.elevationDiffFt;
+  if (placeElevationFt !== null && diff !== null && Math.abs(diff) >= 100) {
+    parts.push(`${Math.abs(diff).toLocaleString('en-US')} ft ${diff > 0 ? 'lower' : 'higher'} than this place`);
   }
   return parts.join(' · ');
 }
 
-function SourceFooter({ def, issuedAt, sourceUrl }: { def: SourceDef; issuedAt: string | null; sourceUrl: string }) {
+function SourceFooter({
+  def,
+  product,
+  at,
+  status,
+  sourceUrl,
+  verb = 'observed',
+}: {
+  def: SourceDef;
+  product: string;
+  at: string | null;
+  status: string;
+  sourceUrl: string;
+  verb?: string;
+}) {
   return (
-    <p className="text-xs text-ink-2">
-      {def.org} · {def.kind} · measured · Issued {formatEt(issuedAt)} ET ·{' '}
-      <a href={sourceUrl} className="font-bold underline" target="_blank" rel="noopener noreferrer">
-        Source
-      </a>
-    </p>
+    <SourceReceipt
+      org={def.org}
+      product={product}
+      at={at}
+      verb={verb}
+      status={status}
+      expectedEveryHours={def.expectedEveryHours}
+      href={sourceUrl}
+    />
   );
 }
 
@@ -89,12 +92,11 @@ function StationBlock({
   placeElevationFt: number | null;
 }) {
   const { binding, def, result } = block;
-  const stale = result.status === 'stale' ? ' · stale' : '';
 
   return (
     <CollapsibleSection
-      title={kindTitle(binding.kind, binding.stationId, binding.stationName, binding.network)}
-      subtitle={`${def.org} · measured${stale}`}
+      title={kindTitle(binding.kind, binding.stationId, binding.stationName)}
+      subtitle={`Station observations · ${binding.stationId}${binding.network ? ` · ${networkWords(binding.network)}` : ''}`}
       defaultOpen={binding.kind === 'summit'}
     >
       <p className="mb-2 flex flex-wrap items-center gap-2">
@@ -103,7 +105,6 @@ function StationBlock({
         </span>
         <span className="text-caption text-ink-2">{placementNote(binding, placeElevationFt)}</span>
       </p>
-      {result.data?.timestamp ? <div className="mb-2"><SourceLine source="Last report" at={result.data.timestamp} verb="observed" /></div> : null}
       {(binding.kind === 'valley' || binding.kind === 'base') && binding.distanceMi > 25 ? (
         <Notice tone="warn">Distant station: {binding.distanceMi} mi away, may not reflect conditions here.</Notice>
       ) : null}
@@ -140,6 +141,7 @@ function StationBlock({
                     ) : (
                       formatStationFieldDisplay(f)
                     )}
+                    {f.observedAt ? <span className="text-ink-2"> · {earlierNote(f)}</span> : null}
                     {f.qcFailed ? (
                       <span className="text-ink-2"> · failed NWS quality check</span>
                     ) : f.qualityControl ? (
@@ -150,14 +152,15 @@ function StationBlock({
               ))}
             </ul>
           </CollapsibleSection>
-          {result.data.timestamp ? (
-            <p className="text-xs text-ink-2">Observation time {formatEt(result.data.timestamp)} ET</p>
-          ) : (
-            <p className="text-xs text-ink-2">Observation time: null</p>
-          )}
         </>
       )}
-      <SourceFooter def={def} issuedAt={result.issuedAt} sourceUrl={result.sourceUrl} />
+      <SourceFooter
+        def={def}
+        product={`Station observations · ${binding.stationId}`}
+        at={result.data?.timestamp ?? result.issuedAt}
+        status={result.status}
+        sourceUrl={result.sourceUrl}
+      />
     </CollapsibleSection>
   );
 }
@@ -170,7 +173,7 @@ function AsrcBlock({
   result: SourceResult<AscrWhitefaceTimelapse>;
 }) {
   return (
-    <CollapsibleSection title="Whiteface summit timelapse (ASRC)" subtitle={`${def.org} · measured`} defaultOpen>
+    <CollapsibleSection title="Whiteface summit camera" subtitle={`Timelapse · ${def.org}`} defaultOpen>
       {result.status === 'error' || !result.data ? (
         <SourceErrorNote label="Whiteface timelapse" href={result.sourceUrl ?? ASRC_WHITEFACE_TIMELAPSE_DEF.url} />
       ) : (
@@ -190,12 +193,16 @@ function AsrcBlock({
               ASRC Whiteface dashboard
             </a>
           </p>
-          {result.data.dataFeedStatus === 'unavailable' ? (
-            <p className="text-xs text-ink-2">{result.data.dataFeedNote}</p>
-          ) : null}
         </>
       )}
-      <SourceFooter def={def} issuedAt={result.issuedAt} sourceUrl={result.sourceUrl} />
+      <SourceFooter
+        def={def}
+        product="Whiteface summit timelapse"
+        at={result.issuedAt}
+        status={result.status}
+        sourceUrl={result.sourceUrl}
+        verb="updated"
+      />
     </CollapsibleSection>
   );
 }
@@ -203,18 +210,34 @@ function AsrcBlock({
 export function ObservationsSection({
   data,
   placeElevationFt,
+  isBase = false,
+  hasSummitSensor = false,
 }: {
   data: PlaceObservationsData | null;
   placeElevationFt: number | null;
+  isBase?: boolean;
+  /** True where another panel already shows a summit reading (Mansfield). */
+  hasSummitSensor?: boolean;
 }) {
   if (!data) return null;
   if (data.stations.length === 0 && !data.asrc) return null;
+  const onSummit = data.stations.some((s) => s.binding.kind === 'summit' || s.binding.kind === 'nearby-higher');
+  const nearest = data.stations[0]?.binding ?? null;
 
   return (
   <>
     <p className="text-meta text-ink-2">
-      Measured readings from government and university stations. Each station says whether it is on the summit or in the valley.
+      Live readings from weather stations. Each one says whether it is on the summit or in the valley, and how far away.
     </p>
+    {!isBase && !onSummit && !hasSummitSensor && nearest ? (
+      <Notice tone="warn">
+        No weather station on this summit. The nearest is {tidyLabel(nearest.stationName) ?? nearest.stationId}
+        {nearest.elevationDiffFt !== null && nearest.elevationDiffFt > 0
+          ? `, ${nearest.elevationDiffFt.toLocaleString('en-US')} ft lower`
+          : ''}
+        . Expect the summit to be colder and windier than it reads. The Forecast tab is the better guide up high.
+      </Notice>
+    ) : null}
     {data.stations.map((block) => (
       <StationBlock key={block.binding.stationId + block.binding.kind} block={block} placeElevationFt={placeElevationFt} />
     ))}
@@ -233,6 +256,14 @@ const TILE_KEYS: Array<{ key: string; label: string }> = [
   { key: 'dewpoint', label: 'Dewpoint' },
   { key: 'windChill', label: 'Wind chill' },
 ];
+
+/** "at 7:05 PM" when a reading came from an earlier report than the newest one. */
+function earlierNote(field: NwsStationField): string | undefined {
+  if (!field.observedAt) return undefined;
+  const d = new Date(field.observedAt);
+  if (Number.isNaN(d.getTime())) return undefined;
+  return `At ${d.toLocaleTimeString('en-US', { timeZone: 'America/New_York', hour: 'numeric', minute: '2-digit' })}`;
+}
 
 function hasValue(field: NwsStationField | undefined): field is NwsStationField {
   return Boolean(field) && field!.value !== null && field!.value !== undefined && field!.value !== '' && !field!.qcFailed;
@@ -262,11 +293,15 @@ function KeyReadings({ fields }: { fields: NwsStationField[] }) {
                     {formatStationFieldDisplay(field)}
                   </span>
                 }
-                sub={deg !== null && Number.isFinite(deg) ? `From ${Math.round(deg)}°` : undefined}
+                sub={
+                  [deg !== null && Number.isFinite(deg) ? `From ${Math.round(deg)}°` : null, earlierNote(field)]
+                    .filter(Boolean)
+                    .join(' · ') || undefined
+                }
               />
             );
           }
-          return <ReadingTile key={key} label={label} value={formatStationFieldDisplay(field)} />;
+          return <ReadingTile key={key} label={label} value={formatStationFieldDisplay(field)} sub={earlierNote(field)} />;
         })}
       </ReadingGrid>
     </div>

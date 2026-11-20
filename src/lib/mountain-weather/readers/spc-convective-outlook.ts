@@ -48,7 +48,7 @@ async function loadDay(entry: (typeof DAYS)[number]): Promise<SpcOutlookImage | 
   const issued = parseIssuedUtc(page.text);
   return {
     id: entry.id,
-    label: `SPC Day ${entry.day} categorical outlook (${cycle}Z)`,
+    label: `Thunderstorm outlook: ${entry.day === 1 ? 'today' : entry.day === 2 ? 'tomorrow' : `day ${entry.day}`} (SPC Day ${entry.day}, ${cycle}Z)`,
     url: imageUrl,
     org: 'SPC',
     validTimeLabel: issued ?? `${cycle}Z cycle`,

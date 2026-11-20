@@ -506,20 +506,23 @@ function applyIngestedModes(entries: MoreSourceEntry[], ctx: CatalogContext): Mo
 
 function groupEntries(entries: MoreSourceEntry[]): MoreSourceGroups {
   const strip = entries.map(({ id: _id, scope: _s, states: _st, sections: _sec, offices: _o, placeIds: _p, ...link }) => link);
+  // One row per address: the same link was listed twice when two entries named it.
   const unique = new Map<string, MoreSourceLink>();
   for (const link of strip) {
-    const key = `${link.org}:${link.href}`;
-    const prev = unique.get(key);
-    if (!prev || (link.mode === 'ui' && prev.mode === 'link')) unique.set(key, link);
+    const prev = unique.get(link.href);
+    if (!prev || (link.mode === 'ui' && prev.mode === 'link')) unique.set(link.href, link);
   }
-  const links = [...unique.values()];
-
-  return {
-    office: links.filter((l) => l.org.startsWith('NWS') || l.org.includes('Mesonet') || l.org.includes('CoCoRaHS')),
-    mountain: links.filter((l) => /WPC|NOHRSC|GOES|radar|Mountain|REC|MWOBS|avalanche/i.test(`${l.org} ${l.label}`)),
-    land: links.filter((l) => /DEC|Forest|Park|NPS|GMC|USFS|Fire/i.test(`${l.org} ${l.label}`)),
-    national: links.filter((l) => !/NWS|DEC|Forest|Park|NPS|GMC|USFS|Fire|WPC|NOHRSC|GOES|radar|Mountain|REC|MWOBS|avalanche|Mesonet|CoCoRaHS/i.test(`${l.org} ${l.label}`)),
-  };
+  const groups: MoreSourceGroups = { office: [], mountain: [], land: [], national: [] };
+  // Each link goes in exactly one group, first match wins. (The old overlapping filters put
+  // links in two groups; /REC/i also matched "forecast".)
+  for (const l of unique.values()) {
+    const text = `${l.org} ${l.label}`;
+    if (/\bDEC\b|Forest|Park|\bNPS\b|\bGMC\b|USFS|Fire|Mountain Club|Trail/i.test(text)) groups.land.push(l);
+    else if (/^NWS|Mesonet|CoCoRaHS/.test(l.org)) groups.office.push(l);
+    else if (/WPC|NOHRSC|NERFC|NOAA STAR|MWOBS|MWAC|avalanche/i.test(text)) groups.mountain.push(l);
+    else groups.national.push(l);
+  }
+  return groups;
 }
 
 function select(pageScope: MoreSourceScope, ctx: CatalogContext): MoreSourceGroups {
