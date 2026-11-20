@@ -52,30 +52,40 @@ that is repeated content:
   airport. WRSV1 appears for both Waterbury and Camel's Hump.
   → Group the rows by station, with "Used for: Camel's Hump, Bolton".
 
-## 3. Plain words, with expert detail kept
+## 3. Titles that say what it is (nothing dumbed down)
 
-The rule is plain label first, detail behind a tap. Nothing is removed for experts. The jargon
-moves into a "What's this?" line or the original text.
+Jake (2026-11-20): not dumbing it down. Each panel gets a **title that says what it is**, and
+the official product name stays right under it as the subtitle. All the data, codes and tables
+stay. The plain title tells a novice what they're looking at. The subtitle tells an expert
+exactly which product it is.
 
-| Now | Becomes |
+| Title (new, big) | Subtitle (kept, small) |
 |---|---|
-| "NWS forecast for this map point · not a measured reading" | "Forecast, not a live reading. Live readings are on Measured." |
-| "grid 5,650 ft · place 6,288 ft" | "Forecast is for 5,650 ft. The summit is 640 ft higher, so expect about 2° colder." (worked out at about 3.5°F per 1,000 ft) |
-| "Wind chill 17° · heat index — · apparent 17°" | "Feels like 17° (wind chill)" |
-| "Thunder —", "Precip amount 0.00 in · Grid now" | Hidden when there's nothing to report |
-| Recreation forecast (REC), ALLLOCATIONS NARRATIVE, Mountain forecast | **Forecaster's mountain forecast** |
-| Bulletins · AFD | **What the forecasters are thinking** (Forecast discussion) |
-| Avalanche weather guidance (AVG), codes BK/OV/SC/FW | **Avalanche weather, hour by hour**. Codes decoded (BK means mostly cloudy), with a one-line legend for snow ratio and density |
-| Ridge / balloon wind forecast | **Winds aloft** |
-| RR2 summit (SHEF), MMNV1, NEPP site | **Mansfield summit sensor** |
-| Nearest NE Compass road weather (ESS), `raw 97`, `TIMESTAMP RULE clock-as-utc`, `$0 public XML` | **Nearest road weather station**: road surface, air temp and wind. The developer text goes to the Sources page |
-| NOHRSC modeled layers, NERFC composites, SWE | **Snow cover maps (model)**, with SWE explained as "water in the snowpack" |
-| WPC probabilistic snowfall | **Chance of snow**: 1, 4 and 8 inches, over 24 and 48 h |
-| WSR-88D / RIDGE loop, GOES-19 GeoColor, GLM | **Radar**, **Satellite**, **Lightning** |
-| "valid/frame: Fri, 20 Nov 2026 01:55:03 GMT" | "Image from 8:55 PM" |
-| SPC Day 1 categorical outlook (0100Z) | **Thunderstorm outlook: today** |
-| Whiteface: "Numeric WFMS feeds … unavailable when checked for M10" | Removed (it's a dev note) |
-| Hub card: "54 mph sustained · Next 48 hours · 41°/32°" | "Wind up to 54 mph in the next 48 h · High 41° · Low 32°" |
+| **Forecaster's mountain forecast** | Recreation Forecast (REC) · NWS Gray · summits above 4,000 ft |
+| **Forecaster's mountain forecast** (merged with the above, no duplicate text) | allLocations narrative · NWS Gray |
+| **Mountain forecast, hour by hour** | Mountain Point Forecast (enhanced) · NWS Burlington |
+| **What the forecasters are thinking** | Area Forecast Discussion (AFD) · NWS Gray |
+| **Avalanche weather, hour by hour** | Avalanche Weather Guidance (AVG) · NWS Gray. Codes such as BK and OV stay, with a legend |
+| **Winds aloft** | Ridge / Hot Air Balloon Forecast · NWS Burlington |
+| **Mansfield summit sensor** | RR2 (SHEF) · MMNV1 · NWS Burlington. The code `TAIRGZZ` stays next to the decoded "Air temp 40.7°F" |
+| **Nearest road weather station** | NE Compass ESS / RWIS. Raw values stay, the developer notes (`clock-as-utc`, `$0 public XML`) move to the Sources page |
+| **Chance of snow** | WPC Probabilistic Snowfall (PWPF) |
+| **Snow cover maps (model)** | NOHRSC modeled depth / SWE / melt, NERFC composites |
+| **Snow on the ground nearby** | NOHRSC / CoCoRaHS station depths |
+| **Recent snowfall reports** | Local Storm Reports (LSR) via IEM |
+| **Radar** / **Satellite** / **Lightning** | NWS RIDGE · KGYX WSR-88D / GOES-19 GeoColor / GOES-19 GLM |
+| **Thunderstorm outlook: today** | SPC Day 1 Categorical Outlook (0100Z) |
+| **This hour (forecast)** | NWS gridpoint at 5,650 ft · summit 6,288 ft, about 2° colder |
+
+Other wording fixes:
+- Times are shown in local time first, with the original UTC time beside it where the product
+  issues one (radar frames, SPC).
+- "Feels like 17°" is the headline. The wind chill, heat index and apparent temperature
+  breakdown stays under it.
+- Hub cards: "Wind up to 54 mph in the next 48 h · High 41° · Low 32°" replaces
+  "54 mph sustained · Next 48 hours · 41°/32°".
+- Only true developer notes are moved to the Sources page ("unavailable when checked for M10",
+  the timestamp rule). No data is removed.
 
 ## 4. "Where is this from, and is it working?": one pattern everywhere
 
@@ -132,7 +142,7 @@ holds up only its own panel.
 
 1. **Correctness** (section 1): small and safe, and each fix gets a test.
 2. **Source line and Sources for this page** (sections 4a and 4b), plus removing the dev text.
-3. **Plain words** (section 3).
+3. **Clear titles, with the official names kept as subtitles** (section 3).
 4. **Restructure tabs and remove duplicates** (sections 2 and 5), screenshotted before and after
    with `npm run shots`.
 5. **`/mountain-weather/sources`** (section 4c).
