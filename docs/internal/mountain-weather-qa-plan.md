@@ -9,7 +9,17 @@ and Gunks Ridge. Source data was checked against the raw NWS API where something
 quality is a plain link; when no avalanche forecast is issued, the avalanche bar is hidden
 (the Snow tab panel still says so).
 
-**Status:** Step 4 (duplicates and tab order) is done. Phone heights before → after:
+**Status:** Step 6 (small version) is done: Conditions shows one row per station, peaks that
+share it listed together (`groupSpotsByStation` in `SpotsTable.tsx`). Not done: load speed
+(stream each panel) and the optional live status column on the Sources page.
+
+Step 5 (public Sources page) is done: `/mountain-weather/sources`, built from `SOURCE_REGISTRY`
+through `src/lib/mountain-weather/source-catalog.ts` (plain names, tab, who runs it, how often,
+terms, link, and the developer notes in plain words). It is linked from the hub and from every
+place's "Sources for this page". A test fails if a new registry feed has no plain name. Live
+up/down status stays per place (More tab); the page does not fetch every feed on load.
+
+Step 4 (duplicates and tab order) is done. Phone heights before → after:
 Forecast tab, Washington 6,259 → 3,119 px, Mansfield 8,704 → 5,034, Marcy 8,499 → 4,617,
 Katahdin 4,711 → 2,500, Gunks 4,663 → 2,798. Snow tab, Washington 6,644 → 2,808, Mansfield
 8,564 → 3,952. "Forecast at a glance" is deleted. "This hour" starts closed. REC bands share
