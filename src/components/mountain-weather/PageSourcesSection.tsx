@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { CollapsibleSection } from '@/components/mountain-weather/CollapsibleSection';
 import { RECEIPT_DOT, RECEIPT_WORD, freshnessOf, receiptState, shortOrg, type ReceiptState } from '@/components/mountain-weather/kit';
 import type { PageSourceRow, PageSourceTab, PageSources } from '@/lib/mountain-weather/page-sources';
@@ -39,7 +40,8 @@ export function PageSourcesSection({ sources, tabHref }: { sources: PageSources;
   return (
     <CollapsibleSection title="Sources for this page" subtitle={summary || 'Every source this page reads'}>
       <p className="text-meta text-ink-2">
-        Everything on this page comes from these sources. The dot shows whether each one is working right now. Tap a row to see the original.
+        Everything on this page comes from these sources. The dot shows whether each one is working right now. Tap a row to see the original.{' '}
+        <Link href="/mountain-weather/sources" className="font-bold underline">All sources on Bannquet ›</Link>
       </p>
       <div className="mt-3 space-y-4">
         {tabs.map((tab) => (

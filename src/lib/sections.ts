@@ -334,6 +334,16 @@ export function pageTrail(pathname: string, search: string, account: NavAccount,
     return { parentHref: '/mountain-weather/snow/avalanche', crumbs };
   }
 
+  if (pathname === '/mountain-weather/sources') {
+    return {
+      parentHref: '/mountain-weather',
+      crumbs: [
+        { href: '/mountain-weather', label: 'Mountain Weather' },
+        { href: '/mountain-weather/sources', label: 'Sources' },
+      ],
+    };
+  }
+
   if (pathname === '/mountain-weather/conditions') {
     return {
       parentHref: '/mountain-weather',

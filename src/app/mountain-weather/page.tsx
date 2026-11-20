@@ -57,6 +57,7 @@ export default async function MountainWeatherPage({
         </div>
         <Card padded={false}>
           <ListGroup bare>
+            <ListRow href="/mountain-weather/sources" title="Sources" subtitle="Every feed behind these pages, and how often it updates" />
             <ListRow href="/mountain-weather/conditions" title="Conditions" subtitle="Live station readings and the forecast for every place" />
             <ListRow href="/mountain-weather/snow" title="Snow" subtitle="Chance of snow, snow cover and avalanche forecasts" />
             <ListRow href="/mountain-weather/maps" title="Maps" subtitle="Radar, satellite, lightning, alerts and outlooks" />
