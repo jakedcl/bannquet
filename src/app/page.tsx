@@ -6,6 +6,7 @@ import { Card } from '@/components/hub/Card';
 import { PageHero } from '@/components/hub/PageHero';
 import { ListGroup, ListRow } from '@/components/hub/ListRow';
 import { SmallPhotoImage } from '@/components/ui/SmallPhotoImage';
+import { HomeTiles } from '@/components/home/HomeTiles';
 import { WeatherGlanceList } from '@/components/weather/WeatherGlanceList';
 import { isDatabaseConfigured } from '@/db';
 import { listGalleryPhotos, type GalleryPhoto } from '@/lib/gallery';
@@ -74,7 +75,7 @@ export default async function HomePage() {
       <PageHero photo title="Bannquet" subtitle="Northeast peaks, weather, maps and fishing." />
       <div className="mx-auto max-w-3xl space-y-4 px-4 pb-12 pt-4">
         <div className="grid grid-cols-2 gap-3">
-          <Link href="/mountain-weather" className={buttonClass('yellow', 'lg')}>Mountain weather</Link>
+          <Link href="/mountain-weather" className={buttonClass('green', 'lg')}>Mountain weather</Link>
           <Link href="/fishing" className={buttonClass('green', 'lg')}>Fishing</Link>
         </div>
 
@@ -84,7 +85,9 @@ export default async function HomePage() {
           <WeatherGlanceList items={summits} />
         </Card>
 
-        <Card title="Map" action={<Link href="/map" className="-my-2 inline-flex min-h-11 items-center no-underline">Open map ›</Link>} padded={false}>
+        <HomeTiles />
+
+        <Card title="Latest from the crew" action={<Link href="/map" className="-my-2 inline-flex min-h-11 items-center no-underline">Open map ›</Link>} padded={false}>
           {latest.feed.length > 0 ? (
             <ListGroup bare>
               {latest.feed.map((item) => (
@@ -100,16 +103,6 @@ export default async function HomePage() {
           ) : (
             <p className="px-3.5 py-3 text-meta text-ink-2">Pins, routes and photos from the crew, on one map.</p>
           )}
-          <div className="border-t border-hairline p-3">
-            <Link href="/map" className={buttonClass('gray', 'full')}>Open the map</Link>
-          </div>
-        </Card>
-
-        <Card title="Fishing" action={<Link href="/fishing" className="-my-2 inline-flex min-h-11 items-center no-underline">Fishing ›</Link>} padded={false}>
-          <ListGroup bare>
-            <ListRow href="/fishing/freshwater" title="Stream levels" subtitle="Freshwater gauges and the stocking map" />
-            <ListRow href="/fishing/saltwater" title="Tides" subtitle="Tides, water temperature and wind for shore spots" />
-          </ListGroup>
         </Card>
 
         {latest.photos.length > 0 ? (
