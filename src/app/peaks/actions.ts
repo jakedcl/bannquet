@@ -14,7 +14,6 @@ function refresh(handle: string | null, peakSlug: string) {
   if (peakSlug) revalidatePath(`/peaks/${peakSlug}`);
   if (handle) {
     revalidatePath(`/user/${handle}`);
-    revalidatePath(`/user/${handle}/peaks`);
   }
 }
 

@@ -2,7 +2,6 @@ import { AvatarImage } from '@/components/ui/AvatarImage';
 import { notFound, redirect } from 'next/navigation';
 import PageWrapper from '@/components/ui/PageWrapper';
 import { PeakRows, PhotoGrid, PinRows, PostRows, RouteRows, SeeAll } from '@/components/profile/ProfileLists';
-import { ChallengeBadge } from '@/components/stats/ChallengeBadge';
 import { Tag } from '@/components/hub/Button';
 import { Button } from '@/components/hub/Button';
 import { SubmitButton } from '@/components/ui/SubmitButton';
@@ -115,22 +114,36 @@ export default async function UserPage({ params }: { params: Promise<{ username:
               content: (
                 <div className="space-y-4">
                   {startedChallenges.length > 0 ? (
-                    <Card title="Challenges">
-                      <div className="flex flex-wrap gap-4">
+                    <Card title="Challenges" padded={false}>
+                      <ul className="ui-list">
                         {startedChallenges.map(({ challenge, progress }) => (
-                          <div key={challenge.id} className="space-y-1">
-                            <p className="text-sm font-bold">{challenge.short}</p>
-                            <p className="text-sm">{progress.climbed} of {progress.total} peaks</p>
-                            {progress.complete ? <ChallengeBadge short={challenge.short} /> : null}
-                          </div>
+                          <li key={challenge.id} className="px-3.5 py-3">
+                            <div className="flex items-center justify-between gap-3">
+                              <p className="min-w-0 font-heading text-meta font-bold uppercase [overflow-wrap:anywhere]">{challenge.short}</p>
+                              {progress.complete ? (
+                                <Tag kind="green">Done</Tag>
+                              ) : (
+                                <span className="shrink-0 text-caption text-ink-2">{progress.climbed} of {progress.total} peaks</span>
+                              )}
+                            </div>
+                            <div
+                              className="well mt-2 h-3 overflow-hidden"
+                              role="progressbar"
+                              aria-label={`${challenge.short}: ${progress.climbed} of ${progress.total} peaks`}
+                              aria-valuemin={0}
+                              aria-valuemax={progress.total}
+                              aria-valuenow={progress.climbed}
+                            >
+                              <div className="h-full bg-brand-light" style={{ width: `${progress.total > 0 ? Math.round((progress.climbed / progress.total) * 100) : 0}%` }} />
+                            </div>
+                          </li>
                         ))}
-                      </div>
+                      </ul>
                     </Card>
                   ) : null}
                   {ownPeaks.length > 0 ? (
                     <Card title={`Peaks (${ownPeaks.length})`}>
                       <PeakRows peaks={ownPeaks} names={Object.fromEntries(peakNames)} manage={manage} collapsed viewer={viewer} ownerId={member.id} />
-                      <SeeAll href={`${profilePath}/peaks`} total={ownPeaks.length} />
                     </Card>
                   ) : null}
                 </div>

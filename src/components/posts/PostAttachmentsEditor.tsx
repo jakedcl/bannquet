@@ -7,7 +7,9 @@ import { PhotoUpload, RouteUpload } from '@/components/posts/ProfileAdds';
 import { AttachPicker, type AttachPickerHandle } from '@/components/posts/AttachPicker';
 import type { ChatCatalogItem } from '@/lib/chat-view';
 import type { DraftItem } from '@/lib/trip-draft';
-import { smallButtonClass } from '@/components/hub/Button';
+import { buttonClass } from '@/components/hub/Button';
+
+const ATTACH_BUTTON = buttonClass('gray', 'md', 'w-full');
 
 const CREATE_LABEL = { pin: 'New pin', route: 'New route', photo: 'New photo' } as const;
 
@@ -117,17 +119,18 @@ export function PostAttachmentsEditor({
             ))}
           </ul>
         )}
-        <div className="flex flex-wrap gap-2">
-          <button type="button" className={smallButtonClass} onClick={() => pickerRef.current?.open()}>
+        {/* One grid of equal buttons: same height and width, 40px tap targets. */}
+        <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+          <button type="button" className={ATTACH_BUTTON} onClick={() => pickerRef.current?.open()}>
             Attach existing
           </button>
-          <button type="button" className={smallButtonClass} onClick={() => openCreate('pin')}>
+          <button type="button" className={ATTACH_BUTTON} onClick={() => openCreate('pin')}>
             + New pin
           </button>
-          <button type="button" className={smallButtonClass} onClick={() => openCreate('route')}>
+          <button type="button" className={ATTACH_BUTTON} onClick={() => openCreate('route')}>
             + New route
           </button>
-          <button type="button" className={smallButtonClass} onClick={() => openCreate('photo')}>
+          <button type="button" className={ATTACH_BUTTON} onClick={() => openCreate('photo')}>
             + New photo
           </button>
         </div>
