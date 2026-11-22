@@ -32,7 +32,7 @@ export default async function AdminPage() {
 
   return (
     <PageWrapper>
-      <HubPage title="Admin" width="3xl">
+      <HubPage title="Admin" width="5xl">
         <Card title="Invites">
           <InviteForm />
         </Card>

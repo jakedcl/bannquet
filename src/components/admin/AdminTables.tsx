@@ -77,13 +77,13 @@ export function AdminMemberTable({ rows }: { rows: AdminMemberRow[] }) {
       id: 'role',
       header: 'Role',
       sortValue: (row) => row.role,
-      cell: (row) => row.role,
+      cell: (row) => <span className="whitespace-nowrap">{row.role}</span>,
     },
     {
       id: 'lastSignIn',
       header: 'Last sign-in',
       sortValue: (row) => row.lastSignIn,
-      cell: (row) => row.lastSignIn,
+      cell: (row) => <span className="whitespace-nowrap">{row.lastSignIn}</span>,
     },
     {
       id: 'password',
