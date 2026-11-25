@@ -1,0 +1,158 @@
+/* /map explorer: photo and pin markers, the photo popup, the 3D hint and the pile strip. */
+
+.explore-marker {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  line-height: 0;
+  cursor: pointer;
+}
+
+/* The button only positions the marker; the visible part is an inner layer so it can grow without
+   MapLibre's position transform growing with it. */
+.explore-marker-face {
+  display: block;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  transition:
+    scale 220ms cubic-bezier(0.22, 1, 0.36, 1),
+    filter 220ms ease,
+    opacity 150ms ease;
+}
+
+.explore-marker-photo {
+  width: 30px;
+  height: 30px;
+}
+
+.explore-marker-photo .explore-marker-face {
+  border: 2px solid var(--color-surface);
+  border-radius: 4px;
+  background-color: var(--color-ink);
+  background-position: center;
+  background-size: cover;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
+}
+
+/* A pin with a photo: the thumbnail with the pin's colour as its frame. */
+.explore-marker-pin-photo .explore-marker-face {
+  border-color: var(--pin-color);
+}
+
+.explore-marker-pin {
+  width: 18px;
+  height: 18px;
+}
+
+.explore-marker-pin .explore-marker-face {
+  border: 3px solid var(--color-surface);
+  border-radius: 9999px;
+  background: var(--pin-color);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+}
+
+/* The item you're looking at lifts off the map. */
+button.maplibregl-marker[data-active='true'] {
+  z-index: 100000 !important;
+}
+
+button.maplibregl-marker[data-active='true'] .explore-marker-face {
+  scale: 1.9;
+  filter: drop-shadow(0 12px 12px rgba(0, 0, 0, 0.5)) drop-shadow(0 3px 5px rgba(0, 0, 0, 0.4));
+}
+
+/* With its popup open, a photo steps aside: the popup's pointer marks the spot instead. */
+button.maplibregl-marker[data-open='true'] {
+  pointer-events: none;
+}
+
+button.maplibregl-marker[data-open='true'] .explore-marker-face {
+  opacity: 0;
+}
+
+.explore-scrub-dot {
+  width: 16px;
+  height: 16px;
+  border: 3px solid var(--scrub-color);
+  border-radius: 9999px;
+  background: var(--color-surface);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+  pointer-events: none;
+}
+
+.explore-popup.maplibregl-popup {
+  z-index: 50000;
+}
+
+.explore-popup .maplibregl-popup-content {
+  padding: 0;
+  background: transparent;
+  box-shadow: none;
+  border-radius: 0;
+}
+
+.explore-popup.maplibregl-popup-anchor-bottom .maplibregl-popup-tip {
+  border-width: 9px 8px 0;
+  border-top-color: var(--color-surface);
+  filter: drop-shadow(0 3px 3px rgba(0, 0, 0, 0.28));
+}
+
+.explore-map .maplibregl-ctrl-attrib {
+  font-size: 11px;
+}
+
+/* On phones the pile strip owns the bottom of the map, so the credits step aside. */
+@media (max-width: 767px) {
+  [data-strip='true'] .explore-map .maplibregl-ctrl-bottom-right,
+  [data-strip='true'] .explore-map .maplibregl-ctrl-bottom-left {
+    opacity: 0;
+    pointer-events: none;
+  }
+}
+
+@keyframes explore-card-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes explore-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes explore-hint {
+  0% { opacity: 0; transform: translateY(6px); }
+  8%, 88% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(0); }
+}
+
+@keyframes explore-strip-in {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.explore-card { animation: explore-card-in 280ms cubic-bezier(0.22, 1, 0.36, 1); }
+.explore-lightbox { animation: explore-fade-in 180ms ease-out; }
+.explore-hint { animation: explore-hint 5s ease-out forwards; }
+.explore-strip > * { animation: explore-strip-in 260ms cubic-bezier(0.22, 1, 0.36, 1); }
+
+/* The popup already animates via .explore-card; skip the shared popup fade. */
+.explore-popup.maplibregl-popup { animation: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .explore-card,
+  .explore-lightbox,
+  .explore-hint,
+  .explore-strip > *,
+  .explore-marker-face {
+    animation: none;
+    transition: none;
+  }
+}
