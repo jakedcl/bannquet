@@ -115,3 +115,30 @@ test('a pile is the tapped item plus whatever is drawn on top of it', () => {
   assert.deepEqual(pile.map((item) => item.id), ['p1', 'p2', 't1']);
   assert.equal(pileTolerancePx(15), 8);
 });
+
+test('photos along a route are the ones near its line, in order from the start', async () => {
+  const { photosAlongRoute, metersToLine } = await import('./map-explore');
+  const line: [number, number][] = [[-74, 44], [-73.99, 44], [-73.98, 44]];
+  assert.ok(metersToLine(-73.99, 44.001, line) > 100 && metersToLine(-73.99, 44.001, line) < 120);
+  const pts: MapFeatureCollection = {
+    type: 'FeatureCollection',
+    features: [
+      point(-74, 44, { kind: 'route', title: 'R', trackId: 'r', href: '/routes/r' }),
+      point(-73.981, 44.0005, { kind: 'photo', title: 'End', href: '/photos/b', thumb: 'https://t/b' }),
+      point(-73.999, 44.0005, { kind: 'photo', title: 'Start', href: '/photos/a', thumb: 'https://t/a' }),
+      point(-73.99, 44.05, { kind: 'photo', title: 'Far', href: '/photos/c', thumb: 'https://t/c' }),
+      point(-73.99, 44, { kind: 'pin', title: 'No photo', href: '/pins/n' }),
+    ],
+  };
+  const lns: MapFeatureCollection = {
+    type: 'FeatureCollection',
+    features: [{ type: 'Feature', geometry: { type: 'LineString', coordinates: line }, properties: { trackId: 'r' } }],
+  };
+  assert.deepEqual(photosAlongRoute(exploreData(pts, lns), 'r').map((item) => item.title), ['Start', 'End']);
+});
+
+test('the pan limit is everything plus a wide margin', async () => {
+  const { panLimit } = await import('./map-explore');
+  assert.equal(panLimit([]), null);
+  assert.deepEqual(panLimit([[-74, 44], [-73, 45]]), [[-80, 40], [-67, 49]]);
+});

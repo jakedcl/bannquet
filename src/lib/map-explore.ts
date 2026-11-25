@@ -309,3 +309,73 @@ export function pileAt(
   }
   return out;
 }
+
+/* ---- Photos along a route ----------------------------------------------- */
+
+/** Metres from a point to a line, on a flat local projection (good to a few metres at trail scale). */
+export function metersToLine(lng: number, lat: number, line: [number, number][]): number {
+  if (line.length === 0) return Infinity;
+  const kx = 111_320 * Math.cos((lat * Math.PI) / 180);
+  const ky = 110_574;
+  const project = ([x, y]: [number, number]) => ({ x: (x - lng) * kx, y: (y - lat) * ky });
+  let best = Infinity;
+  let a = project(line[0]!);
+  if (line.length === 1) return Math.hypot(a.x, a.y);
+  for (let i = 1; i < line.length; i += 1) {
+    const b = project(line[i]!);
+    const dx = b.x - a.x;
+    const dy = b.y - a.y;
+    const len2 = dx * dx + dy * dy;
+    const t = len2 === 0 ? 0 : Math.max(0, Math.min(1, (-a.x * dx - a.y * dy) / len2));
+    best = Math.min(best, Math.hypot(a.x + t * dx, a.y + t * dy));
+    a = b;
+  }
+  return best;
+}
+
+/** Photos (and pins with a photo) taken within `meters` of a route, ordered along it from the start. */
+export function photosAlongRoute(data: ExploreData, routeId: string, meters = 250): MapItem[] {
+  const line = data.lines.get(routeId);
+  if (!line || line.length < 2) return [];
+  const near: { item: MapItem; at: number }[] = [];
+  for (const item of data.items) {
+    if (item.kind === 'route' || !thumbSrc(item)) continue;
+    if (metersToLine(item.lng, item.lat, line) > meters) continue;
+    // Position along the route: index of the closest vertex.
+    let at = 0;
+    let bestD = Infinity;
+    line.forEach(([x, y], index) => {
+      const d = (x - item.lng) ** 2 + (y - item.lat) ** 2;
+      if (d < bestD) {
+        bestD = d;
+        at = index;
+      }
+    });
+    near.push({ item, at });
+  }
+  return near.sort((a, b) => a.at - b.at).map((entry) => entry.item);
+}
+
+/**
+ * The area the map may be panned to: everything on it plus a generous margin, so you can look around and zoom
+ * out a little but can't drift off into empty ocean. Null with nothing on the map.
+ */
+export function panLimit(points: [number, number][]): [[number, number], [number, number]] | null {
+  if (points.length === 0) return null;
+  let west = Infinity;
+  let east = -Infinity;
+  let south = Infinity;
+  let north = -Infinity;
+  for (const [lng, lat] of points) {
+    west = Math.min(west, lng);
+    east = Math.max(east, lng);
+    south = Math.min(south, lat);
+    north = Math.max(north, lat);
+  }
+  const lngMargin = Math.max((east - west) * 0.75, 6);
+  const latMargin = Math.max((north - south) * 0.75, 4);
+  return [
+    [Math.max(-180, west - lngMargin), Math.max(-85, south - latMargin)],
+    [Math.min(180, east + lngMargin), Math.min(85, north + latMargin)],
+  ];
+}

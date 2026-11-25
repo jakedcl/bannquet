@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect, useRef } from 'react';
 import { CloseIcon } from '@/components/hub/Icons';
 import { findItem, itemKey, thumbSrc, type ExploreData, type ItemKind, type MapItem } from '@/lib/map-explore';
 import { formatTripDate } from '@/lib/utils';
@@ -17,6 +18,32 @@ export function PileStrip({ data, members, index, onIndexChange, onOpen, onClose
   /** Room to leave under the strip for a sheet covering the bottom of the map (phones). */
   bottomOffset?: number;
 }) {
+  const scroller = useRef<HTMLDivElement | null>(null);
+  const latest = useRef({ index, count: members.length, onClose });
+  useEffect(() => {
+    latest.current = { index, count: members.length, onClose };
+  });
+  // ← and → step through the stack; Escape closes it.
+  useEffect(() => {
+    const onKey = (event: KeyboardEvent) => {
+      const target = event.target as HTMLElement | null;
+      if (target?.closest('input, textarea, select, [contenteditable="true"]')) return;
+      const { index: at, count, onClose: close } = latest.current;
+      if (event.key === 'Escape') {
+        close();
+        return;
+      }
+      const step = event.key === 'ArrowRight' ? 1 : event.key === 'ArrowLeft' ? -1 : 0;
+      if (!step) return;
+      event.preventDefault();
+      const next = Math.min(count - 1, Math.max(0, at + step));
+      const card = scroller.current?.children[next] as HTMLElement | undefined;
+      card?.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, []);
+
   const onScroll = (event: React.UIEvent<HTMLDivElement>) => {
     const node = event.currentTarget;
     const first = node.firstElementChild as HTMLElement | null;
@@ -43,6 +70,7 @@ export function PileStrip({ data, members, index, onIndexChange, onOpen, onClose
         </button>
       </div>
       <div
+        ref={scroller}
         onScroll={onScroll}
         className="pointer-events-auto flex snap-x snap-mandatory gap-3 overflow-x-auto px-[calc(50%-110px)] pb-2 [mask-image:linear-gradient(to_right,transparent,black_24px,black_calc(100%-24px),transparent)] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >

@@ -26,6 +26,7 @@ import {
   findItem,
   itemKey,
   pileAt,
+  panLimit,
   pileTolerancePx,
   thumbSrc,
   type ExploreData,
@@ -422,6 +423,9 @@ export function ExploreCanvas(props: Props) {
       } else {
         fitAll(map, p.data, p.items);
       }
+      // Room to look around, but not to drift off into empty ocean.
+      const limit = panLimit(p.data.items.map((item) => [item.lng, item.lat] as [number, number]));
+      if (limit) map.setMaxBounds(limit);
       if (p.threeD) applyTerrain(map, true, true);
       const attrib = container.querySelector('.maplibregl-ctrl-attrib');
       attrib?.classList.remove('maplibregl-compact-show');
@@ -617,12 +621,26 @@ export function ExploreCanvas(props: Props) {
       else if (card.right > view.right - 12) dx = view.right - 12 - card.right;
       content.style.translate = `${Math.round(dx)}px 0px`;
     };
+    // Scrolling over the card zooms the map, unless the card itself has more to scroll.
+    const popupEl = popup.getElement();
+    const passWheelToMap = (event: WheelEvent) => {
+      const cardEl = popupEl.querySelector('article');
+      if (cardEl && cardEl.scrollHeight > cardEl.clientHeight + 1) {
+        const atTop = cardEl.scrollTop <= 0;
+        const atBottom = cardEl.scrollTop + cardEl.clientHeight >= cardEl.scrollHeight - 1;
+        if (event.deltaY < 0 ? !atTop : !atBottom) return;
+      }
+      event.preventDefault();
+      map.getCanvasContainer().dispatchEvent(new WheelEvent('wheel', event));
+    };
+    popupEl.addEventListener('wheel', passWheelToMap, { passive: false });
     map.on('move', keepOnScreen);
     const watcher = new ResizeObserver(keepOnScreen);
     watcher.observe(node);
     requestAnimationFrame(keepOnScreen);
     return () => {
       map.off('move', keepOnScreen);
+      popupEl.removeEventListener('wheel', passWheelToMap);
       watcher.disconnect();
       popup.remove();
       queueMicrotask(() => root.unmount());

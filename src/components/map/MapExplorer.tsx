@@ -10,6 +10,7 @@ import {
   filterOptions,
   findItem,
   itemKey,
+  photosAlongRoute,
   resultList,
   samePills,
   visibleItems,
@@ -179,6 +180,8 @@ export function MapExplorer({ points, lines, initialSelection }: {
       key={itemKey(cardItem)}
       item={cardItem}
       coords={cardItem.kind === 'route' ? data.lines.get(cardItem.id) ?? null : null}
+      along={cardItem.kind === 'route' ? photosAlongRoute(data, cardItem.id).filter((photo) => visibleKeys.has(itemKey(photo))) : []}
+      onOpenItem={(photo) => select({ kind: photo.kind, id: photo.id, fly: true })}
       onBack={() => select(null)}
       onScrub={onScrub}
     />

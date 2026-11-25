@@ -340,8 +340,11 @@ const OPEN_LABEL: Record<MapItem['kind'], string> = { route: 'Open route', photo
  * The selected route, pin or photo in the sidebar or the sheet: a back control, a cover, the title and stats, the
  * elevation profile for a route, and links to share or open its page. Escape does the same as Back.
  */
-export function DetailsPanel({ item, coords, onBack, onScrub }: {
+export function DetailsPanel({ item, coords, along = [], onOpenItem, onBack, onScrub }: {
   item: MapItem;
+  /** Photos taken along this route (routes only). */
+  along?: MapItem[];
+  onOpenItem?: (item: MapItem) => void;
   /** Route geometry, for the elevation profile. */
   coords: [number, number][] | null;
   onBack: () => void;
@@ -361,14 +364,16 @@ export function DetailsPanel({ item, coords, onBack, onScrub }: {
         </button>
       </div>
       <div data-sheet-scroll className="min-h-0 flex-1 overflow-y-auto overscroll-contain pb-[env(safe-area-inset-bottom)]">
-        <DetailsBody item={item} coords={coords} onClose={onBack} onScrub={onScrub} />
+        <DetailsBody item={item} coords={coords} along={along} onOpenItem={onOpenItem} onClose={onBack} onScrub={onScrub} />
       </div>
     </div>
   );
 }
 
-function DetailsBody({ item, coords, onClose, onScrub }: {
+function DetailsBody({ item, coords, along, onOpenItem, onClose, onScrub }: {
   item: MapItem;
+  along: MapItem[];
+  onOpenItem?: (item: MapItem) => void;
   coords: [number, number][] | null;
   onClose: () => void;
   onScrub: (point: RouteScrubPoint | null) => void;
@@ -409,6 +414,28 @@ function DetailsBody({ item, coords, onClose, onScrub }: {
           {stats.map((stat) => (
             <span key={stat} className="rounded-full bg-surface-gray px-3 py-1 text-caption font-bold text-ink-2">{stat}</span>
           ))}
+        </div>
+      ) : null}
+      {along.length > 0 && onOpenItem ? (
+        <div className="pt-3">
+          <p className="px-4 pb-1.5 text-tag font-bold uppercase tracking-eyebrow text-ink-3">
+            {along.length === 1 ? '1 photo along the way' : `${along.length} photos along the way`}
+          </p>
+          <div className="flex gap-1.5 overflow-x-auto px-4 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            {along.map((photo) => (
+              <button
+                key={itemKey(photo)}
+                type="button"
+                onClick={() => onOpenItem(photo)}
+                aria-label={photo.title}
+                title={photo.title}
+                className="h-16 w-20 shrink-0 overflow-hidden rounded-tag ring-1 ring-hairline active:scale-95"
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={thumbSrc(photo, 160) ?? ''} alt="" loading="lazy" className="h-full w-full object-cover" />
+              </button>
+            ))}
+          </div>
         </div>
       ) : null}
       {coords && coords.length > 1 ? (
