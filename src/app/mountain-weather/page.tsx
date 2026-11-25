@@ -16,6 +16,8 @@ import { isRegionCode } from '@/lib/regions';
 import { mountainWeatherPath } from '@/lib/mountain-weather/slugs';
 import type { MountainStateCode } from '@/lib/mountain-weather/slugs';
 
+export const metadata = { title: 'Mountain weather' };
+
 export const dynamic = 'force-dynamic';
 
 export default async function MountainWeatherPage({ searchParams }: { searchParams: Promise<{ state?: string }> }) {

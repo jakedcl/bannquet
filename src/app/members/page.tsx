@@ -6,6 +6,8 @@ import { listApprovedMembers } from '@/lib/members-directory';
 import { loadFailed } from '@/lib/load-error';
 import { HubPage } from '@/components/hub/Page';
 
+export const metadata = { title: 'Members' };
+
 export const dynamic = 'force-dynamic';
 
 export default async function MembersPage() {

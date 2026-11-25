@@ -6,6 +6,8 @@ import { AvalancheSection } from '@/components/mountain-weather/AvalancheSection
 import { avalancheAvgPoints } from '@/lib/mountain-weather/avalanche-bindings';
 import { readAvalancheHub } from '@/lib/mountain-weather/read-place-avalanche';
 
+export const metadata = { title: 'Avalanche forecasts' };
+
 export const dynamic = 'force-dynamic';
 
 export default async function AvalancheHubPage() {

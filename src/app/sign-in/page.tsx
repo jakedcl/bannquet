@@ -7,6 +7,8 @@ import { nextStopForMember, profileNeedsNames } from '@/lib/handles';
 import { safeNextPath } from '@/lib/sign-in-next';
 import { HubPage } from '@/components/hub/Page';
 
+export const metadata = { title: 'Sign in' };
+
 export const dynamic = 'force-dynamic';
 
 const ERRORS: Record<string, string> = {

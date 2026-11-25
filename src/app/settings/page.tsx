@@ -3,6 +3,8 @@ import { getViewer } from '@/app/sign-in/actions';
 import { settingsHref } from '@/lib/sections';
 import { signInPath } from '@/lib/sign-in-next';
 
+export const metadata = { title: 'Settings' };
+
 export const dynamic = 'force-dynamic';
 
 export default async function SettingsPage({

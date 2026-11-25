@@ -13,7 +13,7 @@ export const dynamic = 'force-dynamic';
 
 export const metadata = {
   metadataBase: new URL('https://www.bannquet.com'),
-  title: 'Bannquet',
+  title: { default: 'Bannquet', template: '%s · Bannquet' },
   description: 'Mountain weather, a trail map, fishing conditions, and a hiking crew’s peaks, posts and photos for the Northeast',
   appleWebApp: {
     capable: true,

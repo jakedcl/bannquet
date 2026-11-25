@@ -8,6 +8,8 @@ import { safeNextPath } from '@/lib/sign-in-next';
 import { issueSignupStamp } from '@/lib/signup-guard';
 import { HubPage } from '@/components/hub/Page';
 
+export const metadata = { title: 'Sign up' };
+
 export const dynamic = 'force-dynamic';
 
 export default async function SignUpPage({ searchParams }: { searchParams: Promise<{ next?: string }> }) {

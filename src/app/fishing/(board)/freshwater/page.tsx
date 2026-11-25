@@ -26,6 +26,8 @@ import { loadMountainGauges } from '@/lib/fishing/usgs';
 import { chipClass } from '@/components/hub/Button';
 import { HubPage } from '@/components/hub/Page';
 
+export const metadata = { title: 'Freshwater fishing' };
+
 export const dynamic = 'force-dynamic';
 
 const TABS: { id: FreshwaterTab; label: string }[] = [

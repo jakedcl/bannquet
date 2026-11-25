@@ -150,7 +150,7 @@ async function viewerOwnsHiddenEnds(viewerId: string): Promise<boolean> {
 
 const loadCachedPublicMapData = unstable_cache(
   async () => selectMapData(null, null, true),
-  ['map-data-v3'],
+  ['map-data-v4'],
   { tags: [MAP_TAG] },
 );
 
@@ -196,7 +196,8 @@ async function selectMapData(
         ST_Y(${markerPointSql()}) as lat,
         ST_X(${markerPointSql()}) as lng,
         ST_AsGeoJSON(ST_StartPoint(cut.line)) as zone_start,
-        ST_AsGeoJSON(ST_EndPoint(cut.line)) as zone_end
+        ST_AsGeoJSON(ST_EndPoint(cut.line)) as zone_end,
+        t.distance_m, t.elev_gain_m
       from tracks t
       left join users u on u.id = t.user_id
       cross join lateral (${routeCutSql()}) cut
@@ -208,7 +209,8 @@ async function selectMapData(
         null::text as activity,
         p.taken_at::date::text as trip_date,
         coalesce(nullif(u.display_name, ''), nullif(u.handle, ''), 'Friend') as who,
-        ST_Y(p.point::geometry) as lat, ST_X(p.point::geometry) as lng
+        ST_Y(p.point::geometry) as lat, ST_X(p.point::geometry) as lng,
+        p.blob_url, p.thumb_url, p.width, p.height
       from photos p
       left join users u on u.id = p.user_id
       where p.point is not null and p.pin_id is null${within('p.point')}
@@ -217,9 +219,16 @@ async function selectMapData(
       select p.id::text as id, p.title, p.activity::text as activity, p.kind::text as kind,
         p.visited_on::text as trip_date,
         coalesce(nullif(u.display_name, ''), nullif(u.handle, ''), 'Friend') as who,
-        ST_Y(p.point::geometry) as lat, ST_X(p.point::geometry) as lng
+        ST_Y(p.point::geometry) as lat, ST_X(p.point::geometry) as lng,
+        cover.blob_url, cover.thumb_url
       from pins p
       left join users u on u.id = p.created_by
+      left join lateral (
+        select ph.blob_url, ph.thumb_url from photos ph
+        where ph.pin_id = p.id
+        order by ph.sort_order, ph.created_at
+        limit 1
+      ) cover on true
       where true${within('p.point')}
     `),
   ]);
@@ -246,6 +255,8 @@ async function selectMapData(
         color: colorFor(activity),
         trackId: id,
         href: `/routes/${id}`,
+        distanceM: num(row.distance_m),
+        elevGainM: num(row.elev_gain_m),
       },
     });
     const geojson = text(row.geojson);
@@ -291,6 +302,10 @@ async function selectMapData(
         color: colorFor(activity),
         trackId: '',
         href: `/photos/${id}`,
+        image: text(row.blob_url),
+        thumb: text(row.thumb_url),
+        width: num(row.width),
+        height: num(row.height),
       },
     });
   }
@@ -315,6 +330,8 @@ async function selectMapData(
         color: colorFor(activity),
         trackId: '',
         href: `/pins/${id}`,
+        image: text(row.blob_url),
+        thumb: text(row.thumb_url),
       },
     });
   }

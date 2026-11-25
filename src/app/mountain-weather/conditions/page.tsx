@@ -7,6 +7,8 @@ import { loadWeatherExtremes } from '@/lib/weather-extremes';
 import { loadFailed } from '@/lib/load-error';
 import { HubPage } from '@/components/hub/Page';
 
+export const metadata = { title: 'Trail conditions' };
+
 export const dynamic = 'force-dynamic';
 
 export default async function ConditionsPage() {

@@ -12,6 +12,8 @@ import { tideStation } from '@/lib/fishing/tide-stations';
 import { loadTides, type TideSet } from '@/lib/fishing/tides';
 import { HubPage } from '@/components/hub/Page';
 
+export const metadata = { title: 'Saltwater fishing' };
+
 export const dynamic = 'force-dynamic';
 
 export default async function SaltwaterPage({

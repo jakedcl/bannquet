@@ -16,6 +16,8 @@ import { loadTides, nextExtreme, type TideSet } from '@/lib/fishing/tides';
 import { loadMountainGauges } from '@/lib/fishing/usgs';
 import { HubPage } from '@/components/hub/Page';
 
+export const metadata = { title: 'Fishing' };
+
 export const dynamic = 'force-dynamic';
 
 const UNAVAILABLE = 'Data unavailable';

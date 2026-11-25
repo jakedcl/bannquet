@@ -7,7 +7,7 @@ import { MountainWeatherPlacesMap } from '@/components/mountain-weather/Mountain
 import type { MapsSectionProps } from '@/lib/mountain-weather/map-types';
 import { NWS_ALERTS_MAP_URL } from '@/lib/mountain-weather/read-place-maps';
 import { NWS_RIDGE_NE_MOSAIC_DEF } from '@/lib/mountain-weather/readers/nws-ridge-radar';
-import { GOES19_NE_GEOCOLOR_DEF, GOES19_NE_GLM_DEF } from '@/lib/mountain-weather/readers/goes-19-ne';
+import { GOES19_NE_GEOCOLOR_DEF } from '@/lib/mountain-weather/readers/goes-19-ne';
 import { radarSiteLabel, nwsRidgeLoopUrl } from '@/lib/mountain-weather/radar-sites';
 import { NWS_ALERTS_ACTIVE_NE_DEF as ALERTS_DEF } from '@/lib/mountain-weather/readers/nws-alerts-active-ne';
 import { SPC_CONVECTIVE_OUTLOOK_DEF } from '@/lib/mountain-weather/readers/spc-convective-outlook';

@@ -8,7 +8,6 @@ import { windDirFromDegrees } from '@/lib/mountain-weather/parse/mtn-sky';
 import type { SourceResult } from '@/lib/mountain-weather/source-types';
 import {
   NWS_MTN_ALY_ENHANCED_DEF,
-  NWS_MTN_ALY_STANDARD_DEF,
   NWS_MTN_BTV_ENHANCED_DEF,
   NWS_MTN_BTV_STANDARD_DEF,
 } from '@/lib/mountain-weather/registry';

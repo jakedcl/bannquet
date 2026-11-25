@@ -1,4 +1,4 @@
-import { cachedSourceRead, buildSourceResult, fetchSourceBody } from '@/lib/mountain-weather/fetch-source';
+import { cachedSourceRead, buildSourceResult } from '@/lib/mountain-weather/fetch-source';
 import type { MountainWfo } from '@/lib/mountain-weather/nws-office';
 import { parsePnsSnowReports } from '@/lib/mountain-weather/parse/pns';
 import type { StormReportProduct } from '@/lib/mountain-weather/snow-types';

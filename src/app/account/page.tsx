@@ -8,6 +8,8 @@ import { getViewer, signOutAction } from '@/app/sign-in/actions';
 import { APPROVAL_WAIT, canContribute } from '@/lib/membership';
 import { signInPath } from '@/lib/sign-in-next';
 
+export const metadata = { title: 'Account' };
+
 export const dynamic = 'force-dynamic';
 
 export default async function AccountPage({

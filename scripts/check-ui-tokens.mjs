@@ -27,6 +27,7 @@ const ALLOW = [
   'src/components/peak-finder/SkylineStage.tsx',
   'src/components/peak-finder/SpotPicker.tsx',
   'src/components/map/GroupMap.tsx',
+  'src/components/map/ExploreCanvas.tsx',
   'src/components/fishing/FishingMap.tsx',
   'src/components/fishing/ShoreMap.tsx',
 ];
