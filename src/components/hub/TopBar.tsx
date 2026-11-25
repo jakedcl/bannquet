@@ -37,7 +37,7 @@ export function TopBar({ account }: { account: BarAccount }) {
 
   return (
     <header className="site-header hub-bar fixed inset-x-0 top-0 z-50 border-b-4 border-brand-dark bg-banner text-on-dark shadow-bar" style={{ height: 'var(--bar-h)' }}>
-      <div className="mx-auto flex h-full w-full max-w-6xl items-center gap-2 px-3.5">
+      <div className="flex h-full w-full items-center gap-2 px-3.5 sm:px-6">
         <Link href="/" aria-label="Bannquet home" className="ui-press flex min-h-11 shrink-0 items-center">
           <Image src="/logo.png" alt="BANNQUET" width={398} height={114} priority unoptimized className="header-logo !h-[34px]" />
         </Link>

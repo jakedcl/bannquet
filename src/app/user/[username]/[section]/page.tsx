@@ -2,17 +2,15 @@ import type { ReactNode } from 'react';
 import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
 import PageWrapper from '@/components/ui/PageWrapper';
-import { PeakRows, Pager, PhotoGrid, PinRows, PostRows, RouteRows } from '@/components/profile/ProfileLists';
+import { Pager, PhotoGrid, PinRows, PostRows, RouteRows } from '@/components/profile/ProfileLists';
 import { Card } from '@/components/hub/Card';
 import { HubPage } from '@/components/hub/Page';
 import { getViewer } from '@/app/sign-in/actions';
-import { allPeaks } from '@/lib/challenges';
 import { listPage, slicePage } from '@/lib/list-page';
 import { loadProfilePins } from '@/lib/pins';
 import { loadProfileLibrary } from '@/lib/posts';
 import { profileMember } from '@/lib/profile-member';
 import { canDeleteOwned } from '@/lib/membership';
-import { listMemberPeakRows } from '@/lib/summits';
 import { listPostsByOwner } from '@/lib/feed-posts';
 import { loadFailed } from '@/lib/load-error';
 
@@ -23,7 +21,6 @@ const SECTIONS = {
   routes: 'Routes',
   pins: 'Pins',
   photos: 'Photos',
-  peaks: 'Peaks',
 } as const;
 
 type Section = keyof typeof SECTIONS;
@@ -36,8 +33,7 @@ type ProfileSectionData =
   | { kind: 'posts'; total: number; pages: number; page: number; posts: Awaited<ReturnType<typeof listPostsByOwner>> }
   | { kind: 'routes'; total: number; pages: number; page: number; routes: Awaited<ReturnType<typeof loadProfileLibrary>>['routes'] }
   | { kind: 'pins'; total: number; pages: number; page: number; pins: Awaited<ReturnType<typeof loadProfilePins>> }
-  | { kind: 'photos'; total: number; pages: number; page: number; photos: Awaited<ReturnType<typeof loadProfileLibrary>>['photos'] }
-  | { kind: 'peaks'; total: number; pages: number; page: number; peaks: Awaited<ReturnType<typeof listMemberPeakRows>>; names: Record<string, string> };
+  | { kind: 'photos'; total: number; pages: number; page: number; photos: Awaited<ReturnType<typeof loadProfileLibrary>>['photos'] };
 
 async function loadProfileSection(section: Section, memberId: string, page: number): Promise<ProfileSectionData> {
   if (section === 'posts') {
@@ -52,13 +48,8 @@ async function loadProfileSection(section: Section, memberId: string, page: numb
     const pins = await loadProfilePins(memberId);
     return { kind: 'pins', pins, total: pins.length, pages: 1, page: 1 };
   }
-  if (section === 'photos') {
-    const sliced = slicePage((await loadProfileLibrary(memberId)).photos, page);
-    return { kind: 'photos', photos: sliced.rows, total: sliced.total, pages: sliced.pages, page: sliced.page };
-  }
-  const names = Object.fromEntries(allPeaks().map((peak) => [peak.slug, peak.name]));
-  const peaks = (await listMemberPeakRows(memberId)).reverse();
-  return { kind: 'peaks', peaks, names, total: peaks.length, pages: 1, page: 1 };
+  const sliced = slicePage((await loadProfileLibrary(memberId)).photos, page);
+  return { kind: 'photos', photos: sliced.rows, total: sliced.total, pages: sliced.pages, page: sliced.page };
 }
 
 function sectionBody(
@@ -74,10 +65,7 @@ function sectionBody(
     return <RouteRows routes={loaded.routes} manage={manage} profilePath={`/user/${handle}`} viewer={viewer} ownerId={ownerId} />;
   }
   if (loaded.kind === 'pins') return <PinRows pins={loaded.pins} manage={manage} viewer={viewer} ownerId={ownerId} />;
-  if (loaded.kind === 'photos') {
-    return <PhotoGrid photos={loaded.photos} manage={manage} profilePath={`/user/${handle}`} viewer={viewer} ownerId={ownerId} />;
-  }
-  return <PeakRows peaks={loaded.peaks} names={loaded.names} manage={manage} viewer={viewer} ownerId={ownerId} />;
+  return <PhotoGrid photos={loaded.photos} manage={manage} profilePath={`/user/${handle}`} viewer={viewer} ownerId={ownerId} />;
 }
 
 export default async function ProfileSectionPage({
@@ -88,8 +76,9 @@ export default async function ProfileSectionPage({
   searchParams: Promise<{ page?: string }>;
 }) {
   const { username, section } = await params;
-  // The old address for this list, from when peaks were called climbs.
-  if (section === 'climbs') redirect(`/user/${encodeURIComponent(username)}/peaks`);
+  // Peaks has no page of its own: the profile's Peaks tab shows the whole list. Old links
+  // (including the earlier /climbs address) land there.
+  if (section === 'peaks' || section === 'climbs') redirect(`/user/${encodeURIComponent(username)}`);
   if (!isSection(section)) notFound();
   const member = await profileMember(username, section);
   const viewer = await getViewer();

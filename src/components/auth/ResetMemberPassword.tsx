@@ -10,21 +10,22 @@ export function ResetMemberPassword({ userId }: { userId: string }) {
   const resetAdmin = adminPowerLabel('Reset member password');
 
   return (
-    <form action={action} className="space-y-2">
+    <form action={action} className="flex w-44 flex-col gap-2">
       <input type="hidden" name="userId" value={userId} />
-      <label className="flex items-center gap-2 text-sm">
+      <label className="flex items-center gap-2 whitespace-nowrap text-caption">
         <input type="checkbox" name="emailToo" value="yes" />
-        Also email a reset link
+        Email the link too
       </label>
       <SubmitButton
         kind="admin"
+        className="w-full whitespace-nowrap"
         pendingLabel="Making a link…"
         title={resetAdmin.title}
         ariaLabel={resetAdmin.ariaLabel}
       >
         Reset password
       </SubmitButton>
-      {state?.error ? <p className="text-sm font-bold text-red-700">{state.error}</p> : null}
+      {state?.error ? <p className="text-sm font-bold text-danger">{state.error}</p> : null}
       {state?.emailNote ? <p className="text-sm text-brand-dark">{state.emailNote}</p> : null}
       {state?.url ? (
         <label className="block space-y-1">
