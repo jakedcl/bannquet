@@ -10,6 +10,8 @@ import { inviteState } from '@/lib/membership';
 import { signInPath } from '@/lib/sign-in-next';
 import { HubPage } from '@/components/hub/Page';
 
+export const metadata = { title: 'Admin' };
+
 export const dynamic = 'force-dynamic';
 
 function formatLastSignIn(value: Date | null): string {

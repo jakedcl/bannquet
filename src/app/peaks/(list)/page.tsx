@@ -10,6 +10,8 @@ import { isDatabaseConfigured } from '@/db';
 import { loadFailed } from '@/lib/load-error';
 import { HubPage } from '@/components/hub/Page';
 
+export const metadata = { title: 'Peaks' };
+
 export const dynamic = 'force-dynamic';
 
 const STATES: Record<string, string> = {

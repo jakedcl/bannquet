@@ -3,6 +3,8 @@ import { ResetPasswordForm } from '@/components/auth/ResetPasswordForm';
 import { Card } from '@/components/hub/Card';
 import { HubPage } from '@/components/hub/Page';
 
+export const metadata = { title: 'Reset password' };
+
 export const dynamic = 'force-dynamic';
 
 export default async function ResetPasswordPage({

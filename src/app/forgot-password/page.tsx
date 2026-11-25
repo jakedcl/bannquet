@@ -6,6 +6,8 @@ import { getViewer } from '@/app/sign-in/actions';
 import { nextStopForMember } from '@/lib/handles';
 import { HubPage } from '@/components/hub/Page';
 
+export const metadata = { title: 'Forgot password' };
+
 export const dynamic = 'force-dynamic';
 
 export default async function ForgotPasswordPage() {

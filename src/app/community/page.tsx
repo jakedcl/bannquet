@@ -16,6 +16,8 @@ import { PIN_KIND_LABELS, isPinKind } from '@/lib/pin-kinds';
 import { recentCrewPeaks } from '@/lib/summits';
 import { listPostsPeek } from '@/lib/feed-posts';
 
+export const metadata = { title: 'Community' };
+
 export const dynamic = 'force-dynamic';
 
 const PHOTOS = 9;

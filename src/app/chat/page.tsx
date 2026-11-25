@@ -8,6 +8,8 @@ import { isDatabaseConfigured } from '@/db';
 import { loadFailed } from '@/lib/load-error';
 import { HubPage } from '@/components/hub/Page';
 
+export const metadata = { title: 'Chat' };
+
 export const dynamic = 'force-dynamic';
 
 export default async function ChatPage() {

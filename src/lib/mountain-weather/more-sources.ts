@@ -32,15 +32,6 @@ const OFFICE_HUB: Record<MountainPlace['office'], string> = {
   OKX: 'https://www.weather.gov/okx',
 };
 
-const STATE_FOR_OFFICE: Record<MountainPlace['office'], string> = {
-  BTV: 'VT',
-  ALY: 'NY',
-  GYX: 'NH',
-  CAR: 'ME',
-  BOX: 'MA',
-  OKX: 'NY',
-};
-
 /** Tabular State Forecast location codes (not always the WFO id). */
 const SFT_LOCATION_FOR_OFFICE: Record<MountainPlace['office'], string> = {
   BTV: 'VT',

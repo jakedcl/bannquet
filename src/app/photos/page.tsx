@@ -10,6 +10,8 @@ import { viewerCanContribute } from '@/lib/membership';
 import { loadFailed } from '@/lib/load-error';
 import { HubPage } from '@/components/hub/Page';
 
+export const metadata = { title: 'Photos' };
+
 export const dynamic = 'force-dynamic';
 
 export default async function PhotosPage({

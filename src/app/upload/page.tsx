@@ -14,6 +14,8 @@ import { presetFromCatalog } from '@/lib/trip-draft';
 import { signInPath } from '@/lib/sign-in-next';
 import { HubPage } from '@/components/hub/Page';
 
+export const metadata = { title: 'Upload' };
+
 export const dynamic = 'force-dynamic';
 
 const KINDS = [

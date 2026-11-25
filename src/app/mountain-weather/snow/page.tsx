@@ -7,6 +7,8 @@ import { readSnowHub } from '@/lib/mountain-weather/read-place-snow';
 import { nwsWinterPageUrl, wssiUrlForOffice } from '@/lib/mountain-weather/readers/wpc-pwpf-snow';
 import type { PlaceSnowData } from '@/lib/mountain-weather/snow-types';
 
+export const metadata = { title: 'Snow' };
+
 export const dynamic = 'force-dynamic';
 
 export default async function MountainSnowHubPage() {

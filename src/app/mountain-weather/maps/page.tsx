@@ -4,6 +4,8 @@ import { MapsSection } from '@/components/mountain-weather/MapsSection';
 import { readMapsHub } from '@/lib/mountain-weather/read-place-maps';
 import { placeCount } from '@/lib/mountain-weather/places';
 
+export const metadata = { title: 'Weather maps' };
+
 export const dynamic = 'force-dynamic';
 
 export default async function MountainMapsHubPage() {

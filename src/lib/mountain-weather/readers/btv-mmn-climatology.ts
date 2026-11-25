@@ -1,4 +1,4 @@
-import { cachedSourceRead, buildSourceResult, fetchSourceBody } from '@/lib/mountain-weather/fetch-source';
+import { cachedSourceRead, fetchSourceBody } from '@/lib/mountain-weather/fetch-source';
 import { freshnessFromIssued, mergeFreshness } from '@/lib/mountain-weather/freshness';
 import type { MansfieldSnowClimatology } from '@/lib/mountain-weather/mansfield-types';
 import { parseMmnHighchartsSeries } from '@/lib/mountain-weather/parse/mmn-depth';

@@ -26,7 +26,7 @@ export function RouteUpload({
   const refreshed = useRef(false);
   const continued = useRef('');
   const held = useRef('');
-  const [state, action, pending] = useActionState(publishProfileTrack, null);
+  const [state, action] = useActionState(publishProfileTrack, null);
   const suggestions = state?.suggestions ?? [];
   const saveId = state?.created?.[0]?.id ?? '';
   useReportCreated(inline && suggestions.length === 0, state?.created, onCreated);
@@ -165,7 +165,7 @@ export function PhotoUpload({
   const router = useRouter();
   const refreshed = useRef<unknown>(null);
   const [photos, setPhotos] = useState<UploadedPhoto[]>([]);
-  const [state, action, pending] = useActionState(publishProfilePhotos, null);
+  const [state, action] = useActionState(publishProfilePhotos, null);
   const [fieldsKey, setFieldsKey] = useState(0);
   const [seenState, setSeenState] = useState(state);
   if (state !== seenState) {

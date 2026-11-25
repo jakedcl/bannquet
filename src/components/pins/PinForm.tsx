@@ -42,7 +42,7 @@ export function PinForm({
 }) {
   const saveAdmin = adminPower ? adminPowerLabel('Save pin') : null;
   const action = initial ? updatePinAction : createPinAction;
-  const [state, formAction, pending] = useActionState(action, null);
+  const [state, formAction] = useActionState(action, null);
   useReportCreated(inline, state?.created, onCreated);
   const [photos, setPhotos] = useState<UploadedPhoto[]>([]);
   const [photoBusy, setPhotoBusy] = useState(false);

@@ -11,6 +11,8 @@ import { HubPage } from '@/components/hub/Page';
 import { ListGroup, ListRow } from '@/components/hub/ListRow';
 import { APPROVAL_WAIT } from '@/lib/membership';
 
+export const metadata = { title: 'Posts' };
+
 export const dynamic = 'force-dynamic';
 
 function formatWhen(value: string): string {

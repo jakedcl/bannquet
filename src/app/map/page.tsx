@@ -4,6 +4,8 @@ import { isDatabaseConfigured } from '@/db';
 import { selectionFromParams } from '@/lib/map-explore';
 import { loadMapData } from '@/lib/posts';
 
+export const metadata = { title: 'Map' };
+
 export const dynamic = 'force-dynamic';
 
 const EMPTY = { type: 'FeatureCollection' as const, features: [] };
