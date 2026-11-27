@@ -39,6 +39,14 @@ test('a short downhill bump is not counted as gain', () => {
   assert.equal(stats.elevGainM, 0);
 });
 
+test('dense points still accumulate real gain under the 2 m threshold', () => {
+  const points = [];
+  for (let step = 0; step <= 40; step += 1) {
+    points.push({ lat: 44, lng: -74, ele: 500 + step * 0.5 });
+  }
+  assert.equal(trackStats(points).elevGainM, 20);
+});
+
 test('long tracks are shortened without dropping the ends', () => {
   const points = Array.from({ length: 20 }, (_, index) => index);
   const simplified = simplifyTrack(points, 5);

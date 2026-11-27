@@ -5,6 +5,7 @@ import {
   PHOTO_MAX_EDGE,
   PHOTO_THUMB_MAX_EDGE,
   fittedSize,
+  jpegDimensions,
   formLatLng,
   isPublicBlobUrl,
   smallPhotoImageProps,
@@ -47,4 +48,15 @@ test('a blank map point is no point, not 0, 0', () => {
   assert.equal(formLatLng('91', '0'), null);
   assert.deepEqual(formLatLng('44.13817', '-74.0942'), { lat: 44.13817, lng: -74.0942 });
   assert.deepEqual(formLatLng(' 0 ', '0'), { lat: 0, lng: 0 });
+});
+
+test('jpegDimensions reads width and height from a SOF marker', () => {
+  const jpeg = Uint8Array.from([
+    0xff, 0xd8,
+    0xff, 0xc0, 0x00, 0x0b,
+    0x08, 0x07, 0x80, 0x05, 0xdc, 0x03, 0x01, 0x22, 0x00,
+    0xff, 0xd9,
+  ]);
+  assert.deepEqual(jpegDimensions(jpeg), { width: 1500, height: 1920 });
+  assert.equal(jpegDimensions(Uint8Array.from([0x00, 0x01])), null);
 });

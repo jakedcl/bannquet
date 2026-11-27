@@ -25,6 +25,39 @@ export function fittedSize(
   return { width: Math.max(1, Math.round(width * scale)), height: Math.max(1, Math.round(height * scale)) };
 }
 
+
+/** Width and height from a JPEG, or null if the buffer is not a JPEG with a size marker. */
+export function jpegDimensions(data: Uint8Array): { width: number; height: number } | null {
+  if (data.length < 4 || data[0] !== 0xff || data[1] !== 0xd8) return null;
+  let offset = 2;
+  while (offset + 8 < data.length) {
+    if (data[offset] !== 0xff) {
+      offset += 1;
+      continue;
+    }
+    const marker = data[offset + 1]!;
+    if (marker === 0xd8 || marker === 0xd9 || marker === 0x00 || (marker >= 0xd0 && marker <= 0xd7)) {
+      offset += 2;
+      continue;
+    }
+    const length = (data[offset + 2]! << 8) | data[offset + 3]!;
+    if (length < 2) return null;
+    const isSof =
+      (marker >= 0xc0 && marker <= 0xc3) ||
+      (marker >= 0xc5 && marker <= 0xc7) ||
+      (marker >= 0xc9 && marker <= 0xcb) ||
+      (marker >= 0xcd && marker <= 0xcf);
+    if (isSof) {
+      const height = (data[offset + 5]! << 8) | data[offset + 6]!;
+      const width = (data[offset + 7]! << 8) | data[offset + 8]!;
+      if (width > 0 && height > 0) return { width, height };
+      return null;
+    }
+    offset += 2 + length;
+  }
+  return null;
+}
+
 export function isPublicBlobUrl(value: string): boolean {
   try {
     const url = new URL(value);

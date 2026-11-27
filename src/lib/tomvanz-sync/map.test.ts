@@ -17,6 +17,8 @@ test('Sanity image refs map to CDN URLs with requested params', () => {
   const url = sanityImageDownloadUrl(ref, 2000, 85);
   assert.match(url!, /cdn\.sanity\.io\/images\/lee2r8sa\/production\/abc123-1536x2048\.jpg/);
   assert.ok(url!.includes('w=2000'));
+  assert.ok(url!.includes('h=2000'));
+  assert.ok(url!.includes('fit=max'));
   assert.ok(url!.includes('fm=jpg'));
   assert.ok(url!.includes('q=85'));
   assert.ok(!url!.includes('auto=format'));

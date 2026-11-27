@@ -19,14 +19,14 @@ function emptyStats(): SyncRunStats {
   };
 }
 
-export async function runTomvanzSync(dryRun: boolean): Promise<SyncRunStats> {
+export async function runTomvanzSync(dryRun: boolean, force = false): Promise<SyncRunStats> {
   const stats = emptyStats();
   const docs = await listPublishedSanityDocs();
   const sanityIds = new Set(docs.map((doc) => doc._id));
 
   for (const doc of docs) {
     try {
-      const result = await syncOne(doc._id, { dryRun });
+      const result = await syncOne(doc._id, { dryRun, force });
       stats[result.outcome] += 1;
       if (result.outcome === 'failed') stats.failures.push({ id: doc._id, detail: result.detail });
     } catch (error) {
@@ -42,7 +42,7 @@ export async function runTomvanzSync(dryRun: boolean): Promise<SyncRunStats> {
   for (const id of linked) {
     if (sanityIds.has(id)) continue;
     try {
-      const result = await syncOne(id, { dryRun });
+      const result = await syncOne(id, { dryRun, force });
       stats[result.outcome] += 1;
       if (result.outcome === 'failed') stats.failures.push({ id, detail: result.detail });
     } catch (error) {

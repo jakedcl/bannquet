@@ -1,6 +1,6 @@
 import type { Activity } from '@/lib/activities';
 import { lineWkt, parseGpx, trackStats, type TrackPoint } from '@/lib/gpx';
-import { fittedSize } from '@/lib/photos';
+import { fittedSize, PHOTO_MAX_EDGE } from '@/lib/photos';
 
 const ASSET_REF_PATTERN = /^image-([a-f0-9]+)-(\d+)x(\d+)-(\w+)$/;
 
@@ -30,6 +30,7 @@ export function sanityImageDownloadUrl(ref: string, maxEdge: number, quality: nu
   const base = sanityCdnImageUrl(parsed.hash, parsed.width, parsed.height, parsed.ext);
   const url = new URL(base);
   url.searchParams.set('w', String(maxEdge));
+  url.searchParams.set('h', String(maxEdge));
   url.searchParams.set('fit', 'max');
   url.searchParams.set('fm', 'jpg');
   url.searchParams.set('q', String(quality));
@@ -80,7 +81,7 @@ export function trackLineWkt(points: TrackPoint[]): string | null {
 }
 
 export function fittedRenditionSize(origW: number, origH: number): { width: number; height: number } {
-  return fittedSize(origW, origH, 2000);
+  return fittedSize(origW, origH, PHOTO_MAX_EDGE);
 }
 
 export function elevGainFromGpxXml(xml: string): number | null {

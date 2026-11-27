@@ -8,7 +8,6 @@ import { TOMVANZ_EXTERNAL_SOURCE, TOMVANZ_OWNER_ID } from './constants';
 import { isSyncExcluded } from './exclusions';
 import {
   elevGainFromGpxXml,
-  fittedRenditionSize,
   isPublishedSanityId,
   mapSanityActivity,
   movingSeconds,
@@ -144,13 +143,13 @@ async function loadTrackAdoptCandidates(): Promise<AdoptCandidate[]> {
   });
 }
 
-async function syncPhoto(doc: SanityPhoto, dryRun: boolean): Promise<SyncOneResult> {
+async function syncPhoto(doc: SanityPhoto, dryRun: boolean, force: boolean): Promise<SyncOneResult> {
   const assetRef = doc.image?.asset?._ref;
   const parsed = parseSanityImageRef(assetRef ?? null);
   if (!parsed) return { outcome: 'failed', detail: 'Photo has no image asset.' };
 
   const existing = await findSyncedRow(doc._id);
-  if (existing && !sanityRevIsNewer(existing.externalRev, doc._updatedAt)) {
+  if (existing && !force && !sanityRevIsNewer(existing.externalRev, doc._updatedAt)) {
     return { outcome: 'skipped' };
   }
 
@@ -160,9 +159,6 @@ async function syncPhoto(doc: SanityPhoto, dryRun: boolean): Promise<SyncOneResu
   const lat = doc.location?.lat;
   const lng = doc.location?.lng;
   const hasPoint = lat != null && lng != null && Number.isFinite(lat) && Number.isFinite(lng);
-  const origW = num(doc.dimensions?.width) ?? parsed.width;
-  const origH = num(doc.dimensions?.height) ?? parsed.height;
-  const fitted = fittedRenditionSize(origW, origH);
 
   if (dryRun) {
     return { outcome: existing ? 'updated' : 'created' };
@@ -176,8 +172,8 @@ async function syncPhoto(doc: SanityPhoto, dryRun: boolean): Promise<SyncOneResu
       update photos set
         blob_url = ${urls.blobUrl},
         thumb_url = ${urls.thumbUrl},
-        width = ${fitted.width},
-        height = ${fitted.height},
+        width = ${urls.width},
+        height = ${urls.height},
         taken_at = ${takenAt}::timestamptz,
         caption = ${caption},
         alt = ${alt},
@@ -199,8 +195,8 @@ async function syncPhoto(doc: SanityPhoto, dryRun: boolean): Promise<SyncOneResu
       ${TOMVANZ_OWNER_ID},
       ${urls.blobUrl},
       ${urls.thumbUrl},
-      ${fitted.width},
-      ${fitted.height},
+      ${urls.width},
+      ${urls.height},
       ${takenAt}::timestamptz,
       ${hasPoint ? sql`ST_SetSRID(ST_MakePoint(${lng!}, ${lat!}), 4326)::geography` : null},
       ${hasPoint ? 'manual' : null},
@@ -216,7 +212,7 @@ async function syncPhoto(doc: SanityPhoto, dryRun: boolean): Promise<SyncOneResu
   return { outcome: 'created' };
 }
 
-async function syncTrack(doc: SanityTrack, dryRun: boolean): Promise<SyncOneResult> {
+async function syncTrack(doc: SanityTrack, dryRun: boolean, force: boolean): Promise<SyncOneResult> {
   const activity = mapSanityActivity(doc.activity);
   if (activity === 'skip') {
     return { outcome: 'failed', detail: `Skipped activity "${doc.activity ?? 'unknown'}".` };
@@ -252,7 +248,7 @@ async function syncTrack(doc: SanityTrack, dryRun: boolean): Promise<SyncOneResu
   }
 
   const existing = await findSyncedRow(doc._id);
-  if (existing && !sanityRevIsNewer(existing.externalRev, doc._updatedAt)) {
+  if (existing && !force && !sanityRevIsNewer(existing.externalRev, doc._updatedAt)) {
     return { outcome: 'skipped' };
   }
 
@@ -334,17 +330,18 @@ async function syncTrack(doc: SanityTrack, dryRun: boolean): Promise<SyncOneResu
   return { outcome: 'created' };
 }
 
-export async function syncOne(sanityId: string, options: { dryRun?: boolean } = {}): Promise<SyncOneResult> {
+export async function syncOne(sanityId: string, options: { dryRun?: boolean; force?: boolean } = {}): Promise<SyncOneResult> {
   const dryRun = options.dryRun ?? false;
+  const force = options.force ?? false;
 
   const early = earlySyncGate(sanityId, await isSyncExcluded(TOMVANZ_EXTERNAL_SOURCE, sanityId));
   if (early) return early;
 
   const photoOnly = await fetchSanityPhoto(sanityId);
-  if (photoOnly?._id) return syncPhoto(photoOnly, dryRun);
+  if (photoOnly?._id) return syncPhoto(photoOnly, dryRun, force);
 
   const trackOnly = await fetchSanityTrack(sanityId);
-  if (trackOnly?._id) return syncTrack(trackOnly, dryRun);
+  if (trackOnly?._id) return syncTrack(trackOnly, dryRun, force);
 
   const existing = await findSyncedRow(sanityId);
   if (existing) {
