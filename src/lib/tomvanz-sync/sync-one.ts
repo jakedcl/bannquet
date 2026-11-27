@@ -1,3 +1,5 @@
+// Full Tomvanz ↔ Bannquet sync rules: https://github.com/jakedcl/tomvanz (project docs).
+
 import { sql } from 'drizzle-orm';
 import { getDb } from '@/db';
 import { removePhotoFiles } from '@/lib/blobs';
@@ -350,6 +352,20 @@ async function syncTrack(doc: SanityTrack, dryRun: boolean, force: boolean): Pro
     await autoLinkTrack(trackId);
   }
   return { outcome: 'created' };
+}
+
+/** Auto-link and map cache refresh after a webhook or manual sync by Sanity document id. */
+export async function postSyncSideEffects(sanityId: string): Promise<void> {
+  const row = await findSyncedRow(sanityId);
+  if (!row) return;
+  if (row.table === 'photos') {
+    const { autoLinkPhoto } = await import('@/lib/photo-route-links');
+    await autoLinkPhoto(row.id);
+  } else {
+    const { autoLinkTrack } = await import('@/lib/photo-route-links');
+    await autoLinkTrack(row.id);
+  }
+  bumpMapCache();
 }
 
 export async function syncOne(sanityId: string, options: { dryRun?: boolean; force?: boolean } = {}): Promise<SyncOneResult> {

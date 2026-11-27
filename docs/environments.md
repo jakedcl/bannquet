@@ -20,6 +20,9 @@ Neon project: `hidden-cherry-64820503`. All PR previews share the one `preview` 
 - **Vercel Blob** (photos): a photo uploaded on a preview is stored with the real photos. Delete test uploads.
 - Everything else in Vercel env vars (`ADMIN_EMAIL`, USGS key, cookie secret) is the same in both.
 
+## Production-only secrets
+- **`SANITY_WEBHOOK_SECRET`**: verifies `POST /api/sync/sanity` from Tom’s Sanity project (`lee2r8sa/production`). Set on **production** only; previews do not receive live webhooks. Match the secret configured at [sanity.io/manage](https://www.sanity.io/manage).
+
 ## Data vs structure
 - **Data never moves from preview to main.** Merging a PR carries code only.
 - **Structure (tables, columns) is changed by migrations**, which live in `drizzle/` as SQL files and merge with the code. Each database has to have each migration run on it separately.

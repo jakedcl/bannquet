@@ -283,6 +283,12 @@ export const peaks = pgTable(
   (table) => [index('peaks_point_idx').using('gist', table.point)],
 );
 
+/** Seen Sanity webhook idempotency keys (dedupe retries). */
+export const webhookDeliveries = pgTable('webhook_deliveries', {
+  idempotencyKey: text('idempotency_key').primaryKey(),
+  createdAt,
+});
+
 /** Items removed on Bannquet that must not be re-imported from an external feed. */
 export const syncExclusions = pgTable(
   'sync_exclusions',
