@@ -184,10 +184,12 @@ async function syncPhoto(doc: SanityPhoto, dryRun: boolean, force: boolean): Pro
       where id = ${existing.id}::uuid
     `);
     bumpMapCache();
+    const { autoLinkPhoto } = await import('@/lib/photo-route-links');
+    await autoLinkPhoto(existing.id);
     return { outcome: 'updated' };
   }
 
-  await db.execute(sql`
+  const created = await db.execute(sql`
     insert into photos (
       user_id, blob_url, thumb_url, width, height, taken_at, point, point_source,
       caption, alt, pin_id, external_source, external_id, external_rev
@@ -207,8 +209,14 @@ async function syncPhoto(doc: SanityPhoto, dryRun: boolean, force: boolean): Pro
       ${doc._id},
       ${doc._updatedAt}
     )
+    returning id::text as id
   `);
+  const newPhotoId = text(asRows(created)[0]?.id);
   if (hasPoint) bumpMapCache();
+  if (newPhotoId) {
+    const { autoLinkPhoto } = await import('@/lib/photo-route-links');
+    await autoLinkPhoto(newPhotoId);
+  }
   return { outcome: 'created' };
 }
 
@@ -235,6 +243,7 @@ async function syncTrack(doc: SanityTrack, dryRun: boolean, force: boolean): Pro
   const distanceM = Math.round(num(doc.distanceMeters) ?? 0);
   const title = doc.title?.trim() || 'Route';
   const startedAt = doc.startedAt ?? null;
+  const endedAt = doc.endedAt ?? null;
   const movingS = movingSeconds(doc.startedAt, doc.endedAt);
 
   let elevGainM: number | null = null;
@@ -276,10 +285,13 @@ async function syncTrack(doc: SanityTrack, dryRun: boolean, force: boolean): Pro
         elev_gain_m = ${elevGainM},
         moving_s = ${movingS},
         started_at = ${startedAt}::timestamptz,
+        ended_at = ${endedAt}::timestamptz,
         hide_ends = false
       where id = ${adopt.id}::uuid
     `);
     bumpMapCache();
+    const { autoLinkTrack } = await import('@/lib/photo-route-links');
+    await autoLinkTrack(adopt.id);
     return { outcome: 'adopted', detail: adopt.id };
   }
 
@@ -297,18 +309,21 @@ async function syncTrack(doc: SanityTrack, dryRun: boolean, force: boolean): Pro
         elev_gain_m = ${elevGainM},
         moving_s = ${movingS},
         started_at = ${startedAt}::timestamptz,
+        ended_at = ${endedAt}::timestamptz,
         hide_ends = false,
         external_rev = ${doc._updatedAt}
       where id = ${existing.id}::uuid
     `);
     bumpMapCache();
+    const { autoLinkTrack } = await import('@/lib/photo-route-links');
+    await autoLinkTrack(existing.id);
     return { outcome: 'updated' };
   }
 
-  await db.execute(sql`
+  const created = await db.execute(sql`
     insert into tracks (
       user_id, source, name, title, activity, line, distance_m, elev_gain_m, moving_s,
-      started_at, hide_ends, external_source, external_id, external_rev
+      started_at, ended_at, hide_ends, external_source, external_id, external_rev
     ) values (
       ${TOMVANZ_OWNER_ID},
       'gpx',
@@ -320,13 +335,20 @@ async function syncTrack(doc: SanityTrack, dryRun: boolean, force: boolean): Pro
       ${elevGainM},
       ${movingS},
       ${startedAt}::timestamptz,
+      ${endedAt}::timestamptz,
       false,
       ${TOMVANZ_EXTERNAL_SOURCE},
       ${doc._id},
       ${doc._updatedAt}
     )
+    returning id::text as id
   `);
   bumpMapCache();
+  const trackId = text(asRows(created)[0]?.id);
+  if (trackId) {
+    const { autoLinkTrack } = await import('@/lib/photo-route-links');
+    await autoLinkTrack(trackId);
+  }
   return { outcome: 'created' };
 }
 

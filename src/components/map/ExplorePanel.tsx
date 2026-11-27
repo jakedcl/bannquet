@@ -340,10 +340,12 @@ const OPEN_LABEL: Record<MapItem['kind'], string> = { route: 'Open route', photo
  * The selected route, pin or photo in the sidebar or the sheet: a back control, a cover, the title and stats, the
  * elevation profile for a route, and links to share or open its page. Escape does the same as Back.
  */
-export function DetailsPanel({ item, coords, along = [], onOpenItem, onBack, onScrub }: {
+export function DetailsPanel({ item, coords, linked = [], nearby = [], onOpenItem, onBack, onScrub }: {
   item: MapItem;
-  /** Photos taken along this route (routes only). */
-  along?: MapItem[];
+  /** Saved photo-to-route links (routes only). */
+  linked?: MapItem[];
+  /** Distance-only matches, excluding saved links (routes only). */
+  nearby?: MapItem[];
   onOpenItem?: (item: MapItem) => void;
   /** Route geometry, for the elevation profile. */
   coords: [number, number][] | null;
@@ -364,15 +366,40 @@ export function DetailsPanel({ item, coords, along = [], onOpenItem, onBack, onS
         </button>
       </div>
       <div data-sheet-scroll className="min-h-0 flex-1 overflow-y-auto overscroll-contain pb-[env(safe-area-inset-bottom)]">
-        <DetailsBody item={item} coords={coords} along={along} onOpenItem={onOpenItem} onClose={onBack} onScrub={onScrub} />
+        <DetailsBody item={item} coords={coords} linked={linked} nearby={nearby} onOpenItem={onOpenItem} onClose={onBack} onScrub={onScrub} />
       </div>
     </div>
   );
 }
 
-function DetailsBody({ item, coords, along, onOpenItem, onClose, onScrub }: {
+function PhotoStrip({ title, items, onOpenItem }: { title: string; items: MapItem[]; onOpenItem: (item: MapItem) => void }) {
+  if (items.length === 0) return null;
+  return (
+    <div className="pt-3">
+      <p className="px-4 pb-1.5 text-tag font-bold uppercase tracking-eyebrow text-ink-3">{title}</p>
+      <div className="flex gap-1.5 overflow-x-auto px-4 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        {items.map((photo) => (
+          <button
+            key={itemKey(photo)}
+            type="button"
+            onClick={() => onOpenItem(photo)}
+            aria-label={photo.title}
+            title={photo.title}
+            className="h-16 w-20 shrink-0 overflow-hidden rounded-tag ring-1 ring-hairline active:scale-95"
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={thumbSrc(photo, 160) ?? ''} alt="" loading="lazy" className="h-full w-full object-cover" />
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function DetailsBody({ item, coords, linked, nearby, onOpenItem, onClose, onScrub }: {
   item: MapItem;
-  along: MapItem[];
+  linked: MapItem[];
+  nearby: MapItem[];
   onOpenItem?: (item: MapItem) => void;
   coords: [number, number][] | null;
   onClose: () => void;
@@ -416,27 +443,18 @@ function DetailsBody({ item, coords, along, onOpenItem, onClose, onScrub }: {
           ))}
         </div>
       ) : null}
-      {along.length > 0 && onOpenItem ? (
-        <div className="pt-3">
-          <p className="px-4 pb-1.5 text-tag font-bold uppercase tracking-eyebrow text-ink-3">
-            {along.length === 1 ? '1 photo along the way' : `${along.length} photos along the way`}
-          </p>
-          <div className="flex gap-1.5 overflow-x-auto px-4 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-            {along.map((photo) => (
-              <button
-                key={itemKey(photo)}
-                type="button"
-                onClick={() => onOpenItem(photo)}
-                aria-label={photo.title}
-                title={photo.title}
-                className="h-16 w-20 shrink-0 overflow-hidden rounded-tag ring-1 ring-hairline active:scale-95"
-              >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={thumbSrc(photo, 160) ?? ''} alt="" loading="lazy" className="h-full w-full object-cover" />
-              </button>
-            ))}
-          </div>
-        </div>
+      {item.kind === 'photo' && item.linkedTrackId && item.linkedRouteTitle ? (
+        <p className="px-4 pt-2.5 text-caption text-ink-2">
+          <Link href={`/routes/${item.linkedTrackId}`} className="font-bold underline">
+            On route: {item.linkedRouteTitle}
+          </Link>
+        </p>
+      ) : null}
+      {onOpenItem ? (
+        <>
+          <PhotoStrip title="Photos from this route" items={linked} onOpenItem={onOpenItem} />
+          <PhotoStrip title="Nearby photos" items={nearby} onOpenItem={onOpenItem} />
+        </>
       ) : null}
       {coords && coords.length > 1 ? (
         <div className="px-4 pt-3">
@@ -496,6 +514,13 @@ export function PhotoPopupCard({ item, onClose }: { item: MapItem; onClose: () =
           {meta ? <p className="mt-0.5 text-caption text-on-dark/80">{meta}</p> : null}
         </div>
       </div>
+      {item.linkedTrackId && item.linkedRouteTitle ? (
+        <p className="px-3 pb-1 text-caption text-ink-2">
+          <Link href={`/routes/${item.linkedTrackId}`} className="font-bold underline">
+            On route: {item.linkedRouteTitle}
+          </Link>
+        </p>
+      ) : null}
       <div className="p-3">
         <Link href={item.href} className={buttonClass('yellow', 'md', 'w-full')}>Open photo</Link>
       </div>

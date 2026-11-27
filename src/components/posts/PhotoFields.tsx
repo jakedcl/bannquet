@@ -77,6 +77,7 @@ export function PhotoFields({
           lat: photo.lat,
           lng: photo.lng,
           source: photo.source,
+          takenAt: photo.takenAt,
         })))}
       />
       <div className="space-y-3">

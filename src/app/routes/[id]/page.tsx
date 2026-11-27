@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import PageWrapper from '@/components/ui/PageWrapper';
 import { MapCanvas } from '@/components/map/MapCanvas';
 import { ConfirmDelete } from '@/components/delete/ConfirmDelete';
+import { RoutePhotoGrid, RoutePhotoLinkManager } from '@/components/routes/RoutePhotoLinks';
 import { RouteTitleForm } from '@/components/routes/RouteTitleForm';
 import { Card } from '@/components/hub/Card';
 import { deleteRouteAction } from '@/app/library/actions';
@@ -75,7 +76,12 @@ export default async function RoutePage({
     ownerId: route.userId,
   }));
   const editAdminPower = deleteAdminPower;
-  const map = route.lat != null && route.lng != null ? await loadMapDataNear(viewer?.id ?? null, { routeId: route.id }).catch(() => null) : null;
+  const { loadLinkedPhotosForRoute, loadOwnerPhotosForRouteLink } = await import('@/lib/photo-route-links');
+  const [map, linkedPhotos, pickerPhotos] = await Promise.all([
+    route.lat != null && route.lng != null ? loadMapDataNear(viewer?.id ?? null, { routeId: route.id }).catch(() => null) : null,
+    loadLinkedPhotosForRoute(route.id, viewer?.id ?? null),
+    manage && route.userId ? loadOwnerPhotosForRouteLink(route.id, route.userId) : Promise.resolve([]),
+  ]);
 
   return (
     <PageWrapper leaf={route.name}>
@@ -112,10 +118,20 @@ export default async function RoutePage({
             />
           ) : null}
         </Card>
+        {linkedPhotos.length > 0 ? (
+          <Card title="Photos on this route">
+            <RoutePhotoGrid photos={linkedPhotos} />
+          </Card>
+        ) : null}
         {map && route.lat != null && route.lng != null ? (
           <div className="h-80 min-h-[420px] overflow-hidden bg-white panel">
             <MapCanvas points={map.points} lines={map.lines} focus={{ lng: route.lng, lat: route.lat, zoom: 12 }} />
           </div>
+        ) : null}
+        {manage && pickerPhotos.length > 0 ? (
+          <Card title="Photos">
+            <RoutePhotoLinkManager trackId={route.id} photos={pickerPhotos} />
+          </Card>
         ) : null}
         {manage && viewer ? (
           <Card title="Manage">

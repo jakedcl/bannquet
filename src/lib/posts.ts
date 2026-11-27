@@ -28,6 +28,7 @@ export type PreparedPhoto = {
   lat: number | null;
   lng: number | null;
   source: 'exif' | 'manual' | null;
+  takenAt: string | null;
 };
 
 /** A photo's location is optional. Photos without one stay off the maps. */
@@ -53,6 +54,8 @@ export function parseUploadedPhotos(raw: string): { photos: PreparedPhoto[]; err
     const source = record.source === 'exif' || record.source === 'manual' ? record.source : 'manual';
     const thumbRaw = typeof record.thumbUrl === 'string' ? record.thumbUrl : '';
     const thumbUrl = thumbRaw && isPublicBlobUrl(thumbRaw) ? thumbRaw : null;
+    const takenRaw = typeof record.takenAt === 'string' ? record.takenAt.trim() : '';
+    const takenAt = takenRaw && Number.isFinite(Date.parse(takenRaw)) ? new Date(takenRaw).toISOString() : null;
     photos.push({
       url,
       thumbUrl,
@@ -61,6 +64,7 @@ export function parseUploadedPhotos(raw: string): { photos: PreparedPhoto[]; err
       lat: located ? lat : null,
       lng: located ? lng : null,
       source: located ? source : null,
+      takenAt,
     });
   }
   return { photos, error: null };
@@ -160,7 +164,7 @@ async function viewerOwnsHiddenEnds(viewerId: string): Promise<boolean> {
 
 const loadCachedPublicMapData = unstable_cache(
   async () => selectMapData(null, null, true),
-  ['map-data-v4'],
+  ['map-data-v5'],
   { tags: [MAP_TAG] },
 );
 
@@ -193,6 +197,8 @@ async function selectMapData(
   simplifyLines: boolean,
 ): Promise<MapData> {
   const db = getDb();
+  const { loadPhotoRouteLinksForMap } = await import('@/lib/photo-route-links');
+  const photoLinks = await loadPhotoRouteLinksForMap(viewerId);
   // Routes test both the stored line (uses the index) and the part this viewer may see.
   const within = (column: string) => near
     ? sql` and ST_DWithin(${sql.raw(column)}, ${anchorSql(near.anchor)}, ${near.radiusM})`
@@ -300,6 +306,7 @@ async function selectMapData(
     const lng = num(row.lng);
     if (!id || lat == null || lng == null) continue;
     const activity = text(row.activity);
+    const link = photoLinks.get(id);
     points.push({
       type: 'Feature',
       geometry: { type: 'Point', coordinates: [lng, lat] },
@@ -316,6 +323,8 @@ async function selectMapData(
         thumb: text(row.thumb_url),
         width: num(row.width),
         height: num(row.height),
+        linkedTrackId: link?.trackId ?? '',
+        linkedRouteTitle: link?.routeTitle ?? '',
       },
     });
   }
@@ -373,7 +382,7 @@ export async function addProfileTrack(input: {
     const existingId = text(asRows(existing)[0]?.id);
     if (existingId) return existingId;
     const inserted = await tx.execute(sql`
-      insert into tracks (user_id, source, name, title, notes, activity, line, distance_m, elev_gain_m, started_at, hide_ends)
+      insert into tracks (user_id, source, name, title, notes, activity, line, distance_m, elev_gain_m, started_at, ended_at, hide_ends)
       values (
         ${input.userId},
         'gpx',
@@ -384,7 +393,8 @@ export async function addProfileTrack(input: {
         ST_GeogFromText(${wkt}),
         ${input.track.distanceM},
         ${input.track.elevGainM},
-        coalesce(${input.track.startedAt ?? null}::timestamptz, now()),
+        ${input.track.startedAt ?? null}::timestamptz,
+        ${input.track.endedAt ?? null}::timestamptz,
         ${input.hideEnds ?? false}
       )
       returning id::text as id
@@ -392,6 +402,8 @@ export async function addProfileTrack(input: {
     const id = text(asRows(inserted)[0]?.id);
     if (!id) throw new Error('Could not save that route.');
     bumpMapCache();
+    const { autoLinkTrack } = await import('@/lib/photo-route-links');
+    await autoLinkTrack(id);
     return id;
   });
 }
@@ -416,13 +428,14 @@ export async function addProfilePhotos(
       continue;
     }
     const inserted = await db.execute(sql`
-      insert into photos (user_id, blob_url, thumb_url, width, height, point, point_source, sort_order, alt)
+      insert into photos (user_id, blob_url, thumb_url, width, height, taken_at, point, point_source, sort_order, alt)
       values (
         ${input.userId},
         ${photo.url},
         ${photo.thumbUrl},
         ${photo.width || null},
         ${photo.height || null},
+        ${photo.takenAt ?? null}::timestamptz,
         ${located ? sql`ST_SetSRID(ST_MakePoint(${photo.lng}, ${photo.lat}), 4326)::geography` : null},
         ${located ? photo.source : null},
         ${index},
@@ -434,6 +447,8 @@ export async function addProfilePhotos(
     if (id) {
       saved.push({ id, url: photo.url, thumbUrl: photo.thumbUrl });
       if (located) bumpMapCache();
+      const { autoLinkPhoto } = await import('@/lib/photo-route-links');
+      await autoLinkPhoto(id);
     }
   }
   return saved;

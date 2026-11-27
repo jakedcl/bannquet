@@ -14,6 +14,8 @@ import {
   toggleGroupFilter,
   toggleKindFilter,
   togglePinKindFilter,
+  linkedPhotosForRoute,
+  nearbyPhotosForRoute,
   visibleItems,
 } from './map-explore';
 import type { MapFeatureCollection } from './posts';
@@ -135,6 +137,25 @@ test('photos along a route are the ones near its line, in order from the start',
     features: [{ type: 'Feature', geometry: { type: 'LineString', coordinates: line }, properties: { trackId: 'r' } }],
   };
   assert.deepEqual(photosAlongRoute(exploreData(pts, lns), 'r').map((item) => item.title), ['Start', 'End']);
+});
+
+test('nearby photos on a route skip ones already saved as links', () => {
+  const line: [number, number][] = [[-74, 44], [-73.99, 44], [-73.98, 44]];
+  const pts: MapFeatureCollection = {
+    type: 'FeatureCollection',
+    features: [
+      point(-74, 44, { kind: 'route', title: 'R', trackId: 'r', href: '/routes/r' }),
+      point(-73.999, 44.0005, { kind: 'photo', title: 'Start', href: '/photos/a', thumb: 'https://t/a', linkedTrackId: 'r', linkedRouteTitle: 'R' }),
+      point(-73.981, 44.0005, { kind: 'photo', title: 'End', href: '/photos/b', thumb: 'https://t/b' }),
+    ],
+  };
+  const lns: MapFeatureCollection = {
+    type: 'FeatureCollection',
+    features: [{ type: 'Feature', geometry: { type: 'LineString', coordinates: line }, properties: { trackId: 'r' } }],
+  };
+  const data = exploreData(pts, lns);
+  assert.deepEqual(linkedPhotosForRoute(data, 'r').map((item) => item.title), ['Start']);
+  assert.deepEqual(nearbyPhotosForRoute(data, 'r').map((item) => item.title), ['End']);
 });
 
 test('the pan limit is everything plus a wide margin', async () => {
