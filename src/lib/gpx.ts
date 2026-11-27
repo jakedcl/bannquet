@@ -69,18 +69,32 @@ function haversineMeters(a: TrackPoint, b: TrackPoint): number {
   return 2 * radius * Math.asin(Math.min(1, Math.sqrt(h)));
 }
 
-/** Ignore bumps under 2 meters so a jittery GPS does not invent a climb. */
+/**
+ * Ignore bumps under 2 meters so a jittery GPS does not invent a climb.
+ * The threshold is measured from the last significant elevation, not from the
+ * previous raw point, so a dense 1 Hz hike still totals its real gain.
+ */
 export function trackStats(points: TrackPoint[]): { distanceM: number; elevGainM: number } {
   let distanceM = 0;
   let elevGainM = 0;
-  for (let index = 1; index < points.length; index += 1) {
-    const previous = points[index - 1];
+  let anchorEle: number | null = null;
+  for (let index = 0; index < points.length; index += 1) {
     const current = points[index];
-    if (!previous || !current) continue;
-    distanceM += haversineMeters(previous, current);
-    if (previous.ele == null || current.ele == null) continue;
-    const climb = current.ele - previous.ele;
-    if (climb >= 2) elevGainM += climb;
+    if (!current) continue;
+    if (index > 0) {
+      const previous = points[index - 1];
+      if (previous) distanceM += haversineMeters(previous, current);
+    }
+    if (current.ele == null) continue;
+    if (anchorEle == null) {
+      anchorEle = current.ele;
+      continue;
+    }
+    const delta = current.ele - anchorEle;
+    if (delta >= 2 || delta <= -2) {
+      if (delta >= 2) elevGainM += delta;
+      anchorEle = current.ele;
+    }
   }
   return { distanceM: Math.round(distanceM), elevGainM: Math.round(elevGainM) };
 }

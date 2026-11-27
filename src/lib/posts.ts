@@ -1,5 +1,5 @@
 import { sql } from 'drizzle-orm';
-import { unstable_cache, updateTag } from 'next/cache';
+import { revalidateTag, unstable_cache, updateTag } from 'next/cache';
 import { getDb } from '@/db';
 import { isActivity, mapColorForActivity, type Activity } from '@/lib/activities';
 import { lineWkt, type PackedTrack } from '@/lib/gpx';
@@ -126,7 +126,17 @@ export type MapData = { points: MapFeatureCollection; lines: MapFeatureCollectio
 export const MAP_TAG = 'map';
 
 export function bumpMapCache(): void {
-  updateTag(MAP_TAG);
+  try {
+    updateTag(MAP_TAG);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    if (!message.includes('Server Action')) throw error;
+    try {
+      revalidateTag(MAP_TAG, 'max');
+    } catch {
+      // CLI scripts have no Next.js cache. After a scripted import, POST /api/admin/map-cache.
+    }
+  }
 }
 
 /** How far around one item a small map reaches. */
