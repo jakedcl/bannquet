@@ -10,6 +10,7 @@ import {
   primaryKey,
   text,
   timestamp,
+  uniqueIndex,
   uuid,
 } from 'drizzle-orm/pg-core';
 import { ACTIVITIES } from '../lib/activities';
@@ -156,11 +157,16 @@ export const tracks = pgTable(
     startedAt: timestamp('started_at', { withTimezone: true }),
     /** Hide the first and last stretch from everyone but the owner. */
     hideEnds: boolean('hide_ends').notNull().default(false),
+    externalSource: text('external_source'),
+    externalId: text('external_id'),
+    /** Sanity document `_updatedAt` at last import; used to decide whether to re-sync. */
+    externalRev: text('external_rev'),
     createdAt,
   },
   (table) => [
     index('tracks_line_idx').using('gist', table.line),
     index('tracks_user_idx').on(table.userId),
+    uniqueIndex('tracks_external_sync_unique').on(table.externalSource, table.externalId),
   ],
 );
 
@@ -180,11 +186,16 @@ export const photos = pgTable(
     alt: text('alt'),
     pinId: uuid('pin_id').references(() => pins.id, { onDelete: 'set null' }),
     legacySanityAssetId: text('legacy_sanity_asset_id'),
+    externalSource: text('external_source'),
+    externalId: text('external_id'),
+    /** Sanity document `_updatedAt` at last import; used to decide whether to re-sync. */
+    externalRev: text('external_rev'),
     sortOrder: integer('sort_order').notNull().default(0),
     createdAt,
   },
   (table) => [
     index('photos_point_idx').using('gist', table.point),
+    uniqueIndex('photos_external_sync_unique').on(table.externalSource, table.externalId),
   ],
 );
 
@@ -243,6 +254,17 @@ export const peaks = pgTable(
     info: text('info'),
   },
   (table) => [index('peaks_point_idx').using('gist', table.point)],
+);
+
+/** Items removed on Bannquet that must not be re-imported from an external feed. */
+export const syncExclusions = pgTable(
+  'sync_exclusions',
+  {
+    externalSource: text('external_source').notNull(),
+    externalId: text('external_id').notNull(),
+    createdAt,
+  },
+  (table) => [primaryKey({ columns: [table.externalSource, table.externalId] })],
 );
 
 export const summits = pgTable(

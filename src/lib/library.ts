@@ -3,6 +3,7 @@ import { getDb } from '@/db';
 import { removePhotoFiles } from '@/lib/blobs';
 import { cleanRouteTitle, routeTitle } from '@/lib/route-title';
 import { bumpMapCache } from '@/lib/posts';
+import { recordSyncExclusion } from '@/lib/tomvanz-sync/exclusions';
 import { markerPointSql, routeCutSql, shownLineSql } from '@/lib/route-privacy-sql';
 import type { MemberRole } from '@/lib/membership';
 
@@ -244,26 +245,45 @@ export async function updatePhotoCaption(id: string, caption: string | null, act
 }
 
 export async function deleteRoute(id: string, actor: Actor): Promise<boolean> {
-  const result = await getDb().execute(sql`
-    delete from tracks
-    where id = ${id}::uuid and (${isAdmin(actor)} or user_id = ${actor.id})
-    returning id::text as id
-  `);
-  const ok = Boolean(text(asRows(result)[0]?.id));
+  const db = getDb();
+  const ok = await db.transaction(async (tx) => {
+    const found = await tx.execute(sql`
+      select external_source, external_id from tracks
+      where id = ${id}::uuid and (${isAdmin(actor)} or user_id = ${actor.id})
+    `);
+    const row = asRows(found)[0];
+    if (!row) return false;
+    await recordSyncExclusion(tx, text(row.external_source), text(row.external_id));
+    const deleted = await tx.execute(sql`
+      delete from tracks
+      where id = ${id}::uuid and (${isAdmin(actor)} or user_id = ${actor.id})
+      returning id::text as id
+    `);
+    return Boolean(text(asRows(deleted)[0]?.id));
+  });
   if (ok) bumpMapCache();
   return ok;
 }
 
 export async function deletePhoto(id: string, actor: Actor): Promise<boolean> {
   const db = getDb();
-  const found = await db.execute(sql`
-    select blob_url, thumb_url from photos
-    where id = ${id}::uuid and (${isAdmin(actor)} or user_id = ${actor.id})
-  `);
-  const row = asRows(found)[0];
-  if (!row) return false;
-  await db.execute(sql`delete from photos where id = ${id}::uuid`);
-  await removePhotoFiles([text(row.blob_url), text(row.thumb_url)]);
+  const files = await db.transaction(async (tx) => {
+    const found = await tx.execute(sql`
+      select blob_url, thumb_url, external_source, external_id from photos
+      where id = ${id}::uuid and (${isAdmin(actor)} or user_id = ${actor.id})
+    `);
+    const row = asRows(found)[0];
+    if (!row) return null;
+    await recordSyncExclusion(tx, text(row.external_source), text(row.external_id));
+    const deleted = await tx.execute(sql`
+      delete from photos where id = ${id}::uuid and (${isAdmin(actor)} or user_id = ${actor.id})
+      returning id::text as id
+    `);
+    if (!text(asRows(deleted)[0]?.id)) return null;
+    return { blobUrl: text(row.blob_url), thumbUrl: text(row.thumb_url) };
+  });
+  if (!files) return false;
+  await removePhotoFiles([files.blobUrl, files.thumbUrl]);
   bumpMapCache();
   return true;
 }
