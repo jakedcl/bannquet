@@ -161,12 +161,11 @@ export type PhotoDetail = {
   lng: number | null;
 };
 
-const NEAR_ROUTE_METERS = 200;
-
-/** `viewerId` keeps a route's hidden ends out of the nearby-route match. */
+/** `viewerId` keeps a saved route link off photos that sit in a hidden-ends zone. */
 export async function loadPhoto(id: string, viewerId: string | null): Promise<PhotoDetail | null> {
   const db = getDb();
-  const [result, routeResult] = await Promise.all([
+  const { loadSavedPhotoRoute } = await import('@/lib/photo-route-links');
+  const [result, savedRoute] = await Promise.all([
     db.execute(sql`
       select p.id::text as id, p.blob_url as url, p.caption, p.user_id, p.pin_id::text as pin_id,
         pin.title as pin_title,
@@ -180,24 +179,12 @@ export async function loadPhoto(id: string, viewerId: string | null): Promise<Ph
       left join pins pin on pin.id = p.pin_id
       where p.id = ${id}::uuid
     `),
-    db.execute(sql`
-      select t.id::text as id, t.title
-      from photos p
-      join tracks t on t.user_id = p.user_id
-      cross join lateral (${routeCutSql()}) cut
-      cross join lateral (select ${shownLineSql(viewerId)} as line) shown
-      where p.id = ${id}::uuid and p.point is not null
-        and ST_DWithin(shown.line::geography, p.point, ${NEAR_ROUTE_METERS})
-      order by ST_Distance(shown.line::geography, p.point)
-      limit 1
-    `),
+    loadSavedPhotoRoute(id, viewerId),
   ]);
   const row = asRows(result)[0];
   const photoId = text(row?.id);
   const url = text(row?.url);
   if (!row || !photoId || !url) return null;
-  const routeRow = asRows(routeResult)[0];
-  const routeId = text(routeRow?.id);
   return {
     id: photoId,
     url,
@@ -209,7 +196,7 @@ export async function loadPhoto(id: string, viewerId: string | null): Promise<Ph
     pinTitle: text(row.pin_title),
     takenOn: text(row.taken_on),
     addedOn: text(row.added_on),
-    route: routeId ? { id: routeId, title: routeTitle(text(routeRow?.title)) } : null,
+    route: savedRoute,
     lat: num(row.lat),
     lng: num(row.lng),
   };

@@ -16,8 +16,24 @@ export type UploadedPhoto = {
   lat: number | null;
   lng: number | null;
   source: 'exif' | 'manual' | null;
+  /** ISO capture time from EXIF DateTimeOriginal when present. */
+  takenAt: string | null;
   previewUrl: string;
 };
+
+function exifTakenAtIso(file: File): Promise<string | null> {
+  return exifr
+    .parse(file, { pick: ['DateTimeOriginal', 'CreateDate', 'ModifyDate'] })
+    .then((meta) => {
+      if (!meta || typeof meta !== 'object') return null;
+      const record = meta as Record<string, unknown>;
+      const value = record.DateTimeOriginal ?? record.CreateDate ?? record.ModifyDate;
+      if (value instanceof Date && Number.isFinite(value.getTime())) return value.toISOString();
+      if (typeof value === 'string' && Number.isFinite(Date.parse(value))) return new Date(value).toISOString();
+      return null;
+    })
+    .catch(() => null);
+}
 
 async function jpegBlob(
   bitmap: ImageBitmap,
@@ -58,7 +74,7 @@ async function jpegSizes(file: File): Promise<{
 }
 
 export async function preparePhoto(file: File): Promise<UploadedPhoto> {
-  const gps = await exifr.gps(file).catch(() => null);
+  const [gps, takenAt] = await Promise.all([exifr.gps(file).catch(() => null), exifTakenAtIso(file)]);
   const lat = typeof gps?.latitude === 'number' ? gps.latitude : null;
   const lng = typeof gps?.longitude === 'number' ? gps.longitude : null;
   const located = lat != null && lng != null && isLatLng(lat, lng);
@@ -90,6 +106,7 @@ export async function preparePhoto(file: File): Promise<UploadedPhoto> {
     lat: located ? lat : null,
     lng: located ? lng : null,
     source: located ? 'exif' : null,
+    takenAt,
     previewUrl: URL.createObjectURL(resized.blob),
   };
 }

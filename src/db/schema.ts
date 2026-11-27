@@ -48,6 +48,7 @@ export const pinKindEnum = pgEnum('pin_kind', [
 ]);
 export const trackSourceEnum = pgEnum('track_source', ['strava', 'gpx']);
 export const pointSourceEnum = pgEnum('point_source', ['exif', 'manual']);
+export const photoRouteSourceEnum = pgEnum('photo_route_source', ['auto', 'manual']);
 
 export const users = pgTable('users', {
   id: text('id').primaryKey(),
@@ -155,6 +156,7 @@ export const tracks = pgTable(
     elevGainM: integer('elev_gain_m'),
     movingS: integer('moving_s'),
     startedAt: timestamp('started_at', { withTimezone: true }),
+    endedAt: timestamp('ended_at', { withTimezone: true }),
     /** Hide the first and last stretch from everyone but the owner. */
     hideEnds: boolean('hide_ends').notNull().default(false),
     externalSource: text('external_source'),
@@ -224,6 +226,31 @@ export const postPhotos = pgTable(
     photoId: uuid('photo_id').notNull().references(() => photos.id, { onDelete: 'cascade' }),
   },
   (table) => [primaryKey({ columns: [table.postId, table.photoId] })],
+);
+
+export const photoRoutes = pgTable(
+  'photo_routes',
+  {
+    photoId: uuid('photo_id').notNull().references(() => photos.id, { onDelete: 'cascade' }),
+    trackId: uuid('track_id').notNull().references(() => tracks.id, { onDelete: 'cascade' }),
+    source: photoRouteSourceEnum('source').notNull(),
+    createdAt,
+  },
+  (table) => [
+    primaryKey({ columns: [table.photoId, table.trackId] }),
+    index('photo_routes_track_idx').on(table.trackId),
+    index('photo_routes_photo_idx').on(table.photoId),
+  ],
+);
+
+export const photoRouteUnlinks = pgTable(
+  'photo_route_unlinks',
+  {
+    photoId: uuid('photo_id').notNull().references(() => photos.id, { onDelete: 'cascade' }),
+    trackId: uuid('track_id').notNull().references(() => tracks.id, { onDelete: 'cascade' }),
+    createdAt,
+  },
+  (table) => [primaryKey({ columns: [table.photoId, table.trackId] })],
 );
 
 export const chatMessages = pgTable(

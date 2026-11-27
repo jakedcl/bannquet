@@ -34,6 +34,8 @@ export type MapItem = {
   height: number | null;
   distanceM: number | null;
   elevGainM: number | null;
+  linkedTrackId: string | null;
+  linkedRouteTitle: string | null;
 };
 
 /** What is selected, and whether the map should fly to it (a list pick or a link does; a tap on the map doesn't). */
@@ -96,6 +98,8 @@ export function exploreData(points: MapFeatureCollection, lines: MapFeatureColle
       height: num(props.height),
       distanceM: num(props.distanceM),
       elevGainM: num(props.elevGainM),
+      linkedTrackId: str(props.linkedTrackId),
+      linkedRouteTitle: str(props.linkedRouteTitle),
     });
   }
   const routeLines = new Map<string, [number, number][]>();
@@ -331,6 +335,18 @@ export function metersToLine(lng: number, lat: number, line: [number, number][])
     a = b;
   }
   return best;
+}
+
+export function linkedPhotosForRoute(data: ExploreData, routeId: string): MapItem[] {
+  return data.items.filter(
+    (item) => item.kind === 'photo' && item.linkedTrackId === routeId && thumbSrc(item),
+  );
+}
+
+/** Photos near the line but not already saved on this route. */
+export function nearbyPhotosForRoute(data: ExploreData, routeId: string, meters = 250): MapItem[] {
+  const linked = new Set(linkedPhotosForRoute(data, routeId).map((item) => item.id));
+  return photosAlongRoute(data, routeId, meters).filter((item) => !linked.has(item.id));
 }
 
 /** Photos (and pins with a photo) taken within `meters` of a route, ordered along it from the start. */

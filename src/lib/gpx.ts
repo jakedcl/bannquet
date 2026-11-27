@@ -35,12 +35,18 @@ function numberOrNull(value: string | undefined): number | null {
   return Number.isFinite(parsed) ? parsed : null;
 }
 
-export function parseGpx(xml: string): { name: string | null; points: TrackPoint[]; startedAt: string | null } {
+export function parseGpx(xml: string): {
+  name: string | null;
+  points: TrackPoint[];
+  startedAt: string | null;
+  endedAt: string | null;
+} {
   const trackName = xml.match(/<trk\b[^>]*>[\s\S]*?<name>([^<]*)<\/name>/i);
   const anyName = xml.match(/<name>([^<]*)<\/name>/i);
   const name = decodeXml(trackName?.[1] ?? anyName?.[1] ?? '') || null;
   const points: TrackPoint[] = [];
   let startedAt: string | null = null;
+  let endedAt: string | null = null;
 
   for (const match of xml.matchAll(POINT_PATTERN)) {
     const attrs = match[2] ?? '';
@@ -50,13 +56,17 @@ export function parseGpx(xml: string): { name: string | null; points: TrackPoint
     if (lat == null || lng == null) continue;
     if (lat < -90 || lat > 90 || lng < -180 || lng > 180) continue;
     const ele = numberOrNull(body.match(ELE_PATTERN)?.[1] ?? undefined);
-    if (!startedAt) startedAt = activityTime(body.match(TIME_PATTERN)?.[1]);
+    const pointTime = activityTime(body.match(TIME_PATTERN)?.[1]);
+    if (pointTime) {
+      if (!startedAt) startedAt = pointTime;
+      endedAt = pointTime;
+    }
     points.push({ lat, lng, ele });
   }
   // Some apps only stamp the file, not each point.
   if (!startedAt) startedAt = activityTime(xml.match(/<metadata\b[^>]*>[\s\S]*?<time>([^<]+)<\/time>/i)?.[1]);
 
-  return { name, points, startedAt };
+  return { name, points, startedAt, endedAt };
 }
 
 function haversineMeters(a: TrackPoint, b: TrackPoint): number {
@@ -213,6 +223,8 @@ export type PackedTrack = {
   elevGainM: number;
   /** When the activity started, from the GPX. Null when the file has no times. */
   startedAt?: string | null;
+  /** When the activity ended, from the last GPX point time. Null when the file has no times. */
+  endedAt?: string | null;
 };
 
 /**
@@ -230,6 +242,7 @@ export function packTrack(xml: string): PackedTrack | null {
     distanceM: stats.distanceM,
     elevGainM: stats.elevGainM,
     startedAt: parsed.startedAt,
+    endedAt: parsed.endedAt,
   };
 }
 
@@ -274,7 +287,8 @@ export function unpackTrack(raw: string): { track: PackedTrack | null; error: st
   }
   const name = typeof record.name === 'string' ? record.name.trim().slice(0, 160) || null : null;
   const startedAt = typeof record.startedAt === 'string' ? activityTime(record.startedAt) : null;
-  return { track: { name, points, distanceM, elevGainM, startedAt }, error: null };
+  const endedAt = typeof record.endedAt === 'string' ? activityTime(record.endedAt) : null;
+  return { track: { name, points, distanceM, elevGainM, startedAt, endedAt }, error: null };
 }
 
 export function formatMiles(meters: number): string {
